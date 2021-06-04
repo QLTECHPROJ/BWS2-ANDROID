@@ -30,12 +30,14 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/rounded_light_gray"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            tools:ignore="UselessParent">
 
                             <ImageView
                                 android:id="@+id/ivBanner"
@@ -78,7 +80,8 @@
                                         android:layout_height="wrap_content"
                                         android:src="@drawable/ic_left_arrow_icon"
                                         app:tint="@color/white"
-                                        android:contentDescription="@string/todo" />
+                                        android:contentDescription="@string/todo"
+                                        tools:ignore="TooDeepLayout" />
 
                                 </LinearLayout>
 
@@ -88,7 +91,8 @@
                                     android:layout_height="match_parent"
                                     android:layout_alignParentEnd="true"
                                     android:gravity="center"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    tools:ignore="RelativeOverlap">
 
                                     <LinearLayout
                                         android:id="@+id/llReminder"
@@ -291,7 +295,8 @@
                                             android:paddingLeft="@dimen/_10sdp"
                                             android:paddingRight="@dimen/_10sdp"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_10sdp" />
+                                            android:textSize="@dimen/_10sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                 </LinearLayout>
@@ -317,33 +322,36 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="@dimen/_62sdp"
                         android:background="@drawable/round_blue_border"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
+                            android:orientation="horizontal"
+                            tools:ignore="UselessParent">
 
                             <ImageView
                                 android:layout_width="@dimen/_50sdp"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:background="@drawable/ic_moon_sleep" />
+                                android:layout_marginStart="@dimen/_17sdp"
+                                android:layout_marginTop="@dimen/_6sdp"
+                                android:background="@drawable/ic_moon_sleep"
+                                android:contentDescription="@string/todo" />
 
 
                             <TextView
+                                android:id="@+id/tvSleepTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:paddingLeft="@dimen/_9sdp"
-                                android:text="Your average sleep time is 7 hours"
+                                android:paddingStart="@dimen/_10sdp"
                                 android:textColor="@color/text_new_light_blue"
-                                android:textSize="@dimen/_14sdp" />
+                                android:textSize="@dimen/_14sdp"
+                                tools:ignore="SpUsage" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -351,7 +359,6 @@
                         android:id="@+id/llStepTwo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/llPlayer"
                         android:layout_marginTop="@dimen/_21sdp"
                         android:orientation="vertical">
 
@@ -363,7 +370,7 @@
                                 android:id="@+id/ivEditCategory"
                                 android:layout_width="@dimen/_20sdp"
                                 android:layout_height="@dimen/_20sdp"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:src="@drawable/ic_edit_number_icon"
                                 app:tint="@color/light_black" />
 
@@ -372,10 +379,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
+                                android:gravity="start"
                                 android:text="Area of focus"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_18sdp" />
+                                android:textSize="@dimen/_16sdp"
+                                tools:ignore="SpUsage" />
                         </RelativeLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -398,7 +406,8 @@
                     <LinearLayout
                         android:id="@+id/llSearch"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_84sdp">
+                        android:layout_height="@dimen/_84sdp"
+                        tools:ignore="DisableBaselineAlignment">
 
                         <RelativeLayout
                             android:id="@+id/rlSearch"
@@ -410,14 +419,15 @@
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="2"
                             android:background="@drawable/rounded_gray_corner"
-                            android:visibility="visible">
+                            android:visibility="visible"
+                            tools:ignore="UselessParent">
 
                             <ImageView
                                 android:id="@+id/button1"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/_14sdp"
+                                android:layout_marginStart="@dimen/_14sdp"
                                 android:src="@drawable/ic_search_icon"
                                 app:tint="@color/dark_blue_gray" />
 
@@ -429,20 +439,21 @@
                                 android:layout_marginLeft="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_20sdp"
                                 android:layout_marginRight="@dimen/_16sdp"
-                                android:layout_toRightOf="@id/button1"
+                                android:layout_toEndOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
                                 android:text=""
                                 android:textColor="@color/light_gray"
                                 android:textSize="@dimen/_14sdp"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                tools:ignore="SpUsage" />
 
                             <androidx.appcompat.widget.SearchView
                                 android:id="@+id/searchView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
+                                android:layout_toEndOf="@id/button1"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
@@ -484,7 +495,8 @@
                             android:text="@string/no_data_found"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_11sdp"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
 
@@ -518,7 +530,8 @@
                                     android:text="@string/Audios_in_Playlist"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_16sdp"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    tools:ignore="SpUsage" />
 
                                 <LinearLayout
                                     android:id="@+id/llSpace"

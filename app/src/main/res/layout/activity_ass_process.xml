@@ -175,7 +175,7 @@
                         android:layout_toEndOf="@id/ivForth"
                         android:rotation="348"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:contentDescription="@string/todo" />
 
                     <ImageView
@@ -198,12 +198,13 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginEnd="@dimen/_2sdp"
+                        android:gravity="center"
                         android:layout_marginBottom="@dimen/_14sdp"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvIndexScore"
-                            android:layout_width="@dimen/_52sdp"
+                            android:layout_width="@dimen/_54sdp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginEnd="@dimen/_4sdp"
@@ -217,11 +218,12 @@
                             android:id="@+id/tvTag"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_6sdp"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:layout_gravity="center"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_10sdp"
+                            android:textSize="@dimen/_8sdp"
                             tools:ignore="SpUsage" />
 
                     </LinearLayout>

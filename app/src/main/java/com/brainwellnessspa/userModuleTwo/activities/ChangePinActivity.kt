@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -85,37 +86,44 @@ class ChangePinActivity : AppCompatActivity() {
 
     private fun changePin() {
         if (binding.etCurrentPIN.text.toString() == "") {
-            binding.flCurrentPIN.error = "Current Login PIN is required"
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = ""
+            binding.txtCurrentPINError.text = "Current login PIN is required"
+            binding.txtCurrentPINError.visibility = View.VISIBLE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length != 4) {
-            binding.flCurrentPIN.error = "Please enter valid Current Login PIN"
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = ""
+            binding.txtCurrentPINError.text = "Please enter valid current login PIN"
+            binding.txtCurrentPINError.visibility = View.VISIBLE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() == "") {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = "New Login PIN is required"
-            binding.flConfirmPIN.error = ""
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.VISIBLE
+            binding.txtNewPINError.text = "New login PIN is required"
+            binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = "Please enter valid New Login PIN"
-            binding.flConfirmPIN.error = ""
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.VISIBLE
+            binding.txtNewPINError.text = "Please enter valid new login PIN"
+            binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etConfirmPIN.text.toString() == "") {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = "Confirm new Login PIN is required"
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.VISIBLE
+            binding.txtConfirmPINError.error = "Confirm new login PIN is required"
         } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = "Please enter valid Confirm new Login PIN"
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.VISIBLE
+            binding.txtConfirmPINError.error = "Please enter valid confirm new login PIN"
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = "New & Confirm Login PIN not match"
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.VISIBLE
+            binding.txtConfirmPINError.error = "Please check if both the PINs are same"
         } else {
-            binding.flCurrentPIN.error = ""
-            binding.flNewPIN.error = ""
-            binding.flConfirmPIN.error = ""
+            binding.txtCurrentPINError.visibility = View.GONE
+            binding.txtNewPINError.visibility = View.GONE
+            binding.txtConfirmPINError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
                 val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(userID,
@@ -124,9 +132,9 @@ class ChangePinActivity : AppCompatActivity() {
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {
                         try {
-                            binding.flCurrentPIN.error = ""
-                            binding.flNewPIN.error = ""
-                            binding.flConfirmPIN.error = ""
+                            binding.txtCurrentPINError.visibility = View.GONE
+                            binding.txtNewPINError.visibility = View.GONE
+                            binding.txtConfirmPINError.visibility = View.GONE
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
                             val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {

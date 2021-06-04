@@ -118,26 +118,49 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvAudioName"
+        <LinearLayout
+            android:id="@+id/llNameData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rlLayout"
-            android:layout_marginHorizontal="@dimen/_40sdp"
+            android:orientation="vertical"
             android:layout_marginTop="@dimen/_20sdp"
-            android:fontFamily="@font/montserrat_bold"
-            android:gravity="center"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_20sdp"
-            tools:ignore="SpUsage" />
+            android:layout_below="@id/rlLayout">
+
+            <TextView
+                android:id="@+id/tvPlaylistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_40sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:visibility="gone"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/tvAudioName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_40sdp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp"
+                tools:ignore="SpUsage" />
+
+        </LinearLayout>
 
         <com.google.android.exoplayer2.ui.PlayerControlView
             android:id="@+id/player_control_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvAudioName"
+            android:layout_below="@+id/llNameData"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/_40sdp"
             app:bar_gravity="center"

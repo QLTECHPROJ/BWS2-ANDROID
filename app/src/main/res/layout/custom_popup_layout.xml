@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -30,7 +30,8 @@
             android:gravity="center"
             android:text="@string/logout"
             android:textColor="@color/black"
-            android:textSize="@dimen/_18sdp" />
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/tvHeader"
@@ -41,9 +42,11 @@
             android:layout_marginTop="@dimen/_18sdp"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
+            android:lineSpacingExtra="@dimen/_4sdp"
             android:text="@string/logout_quotes"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="SpUsage" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,10 +66,11 @@
                 android:background="@drawable/ripple_bg"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
-                android:text="Ok"
+                android:text="@string/ok"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvGoBack"
@@ -75,10 +79,11 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
-                android:text="Close"
+                android:text="@string/Close"
                 android:textAllCaps="true"
                 android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="SpUsage" />
 
         </LinearLayout>
     </LinearLayout>

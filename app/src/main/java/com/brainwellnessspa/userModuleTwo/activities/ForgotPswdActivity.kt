@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
@@ -68,13 +69,15 @@ class ForgotPswdActivity : AppCompatActivity() {
 
     private fun prepareData() {
         if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
-            binding.flEmail.error = "Email address is required"
+            binding.txtEmailError.visibility = View.VISIBLE
+            binding.txtEmailError.text = "Please provide a email address"
         } else if (!binding.etEmail.text.toString().equals("")
             && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
         ) {
-            binding.flEmail.error = "Valid Email address is required"
+            binding.txtEmailError.visibility = View.VISIBLE
+            binding.txtEmailError.text = "Please provide a valid email address"
         } else {
-            binding.flEmail.error = ""
+            binding.txtEmailError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(
                     binding.progressBar,

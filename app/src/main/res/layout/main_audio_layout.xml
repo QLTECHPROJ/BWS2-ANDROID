@@ -24,7 +24,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_19sdp" />
+                android:textSize="@dimen/_16sdp" />
 
             <TextView
                 android:id="@+id/tvViewAll"

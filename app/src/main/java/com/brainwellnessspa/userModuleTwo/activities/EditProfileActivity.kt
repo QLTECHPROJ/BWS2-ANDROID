@@ -311,11 +311,12 @@ class EditProfileActivity : AppCompatActivity() {
                 ageDate = dayOfMonth
                 birthYear = getAge(ageYear, ageMonth, ageDate)
                 if (birthYear < 18) {
-                    binding.tlCalendar.error = "You must be 18 years of age to register"
+                    binding.txtDobError.visibility = View.VISIBLE
+                    binding.txtDobError.text = "You must be 18 years of age to register"
                     binding.btnSave.isEnabled = false
                     binding.btnSave.isClickable = false
                 } else {
-                    binding.tlCalendar.error = ""
+                    binding.txtDobError.visibility = View.GONE
                     binding.btnSave.isEnabled = true
                     binding.btnSave.isClickable = true
                 }

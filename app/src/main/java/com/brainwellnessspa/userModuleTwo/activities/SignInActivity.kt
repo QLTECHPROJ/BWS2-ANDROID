@@ -58,6 +58,18 @@ class SignInActivity : AppCompatActivity() {
                     binding.btnLoginAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 }
             }
+
+            if (pass.equals("", ignoreCase = true)) {
+                binding.ivVisible.isClickable = false
+                binding.ivVisible.isEnabled = false
+                binding.ivInVisible.isClickable = false
+                binding.ivInVisible.isEnabled = false
+            } else {
+                binding.ivVisible.isClickable = true
+                binding.ivVisible.isEnabled = true
+                binding.ivInVisible.isClickable = true
+                binding.ivInVisible.isEnabled = true
+            }
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -82,6 +94,13 @@ class SignInActivity : AppCompatActivity() {
         binding.tvForgotPswd.setOnClickListener {
             val i = Intent(this@SignInActivity, ForgotPswdActivity::class.java)
             startActivity(i)
+        }
+
+        if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
+            binding.ivVisible.isClickable = false
+            binding.ivVisible.isEnabled = false
+            binding.ivInVisible.isClickable = false
+            binding.ivInVisible.isEnabled = false
         }
 
         binding.ivVisible.visibility = View.VISIBLE
@@ -137,24 +156,28 @@ class SignInActivity : AppCompatActivity() {
             fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
         }
         if (binding.etEmail.text.toString() == "") {
-            binding.flEmail.error = "Email address is required"
-            binding.flPassword.error = ""
+            binding.txtEmailError.visibility = View.VISIBLE
+            binding.txtEmailError.text = "Please provide a email address"
+            binding.txtPassowrdError.visibility = View.GONE
         } else if (binding.etEmail.text.toString() != ""
             && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
         ) {
-            binding.flEmail.error = "Valid Email address is required"
-            binding.flPassword.error = ""
+            binding.txtEmailError.visibility = View.VISIBLE
+            binding.txtEmailError.text = "Please provide a valid email address"
+            binding.txtPassowrdError.visibility = View.GONE
         } else if (binding.etPassword.text.toString() == "") {
-            binding.flEmail.error = ""
-            binding.flPassword.error = "Password is required"
+            binding.txtEmailError.visibility = View.GONE
+            binding.txtPassowrdError.visibility = View.VISIBLE
+            binding.txtPassowrdError.text = "Please enter password"
         } else if (binding.etPassword.text.toString().length < 8
             || !isValidPassword(binding.etPassword.text.toString())
         ) {
-            binding.flEmail.error = ""
-            binding.flPassword.error = "Password length must be atleast 8 character"
+            binding.txtEmailError.visibility = View.GONE
+            binding.txtPassowrdError.visibility = View.VISIBLE
+            binding.txtPassowrdError.text = "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
         } else {
-            binding.flEmail.error = ""
-            binding.flPassword.error = ""
+            binding.txtEmailError.visibility = View.GONE
+            binding.txtPassowrdError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(
                     binding.progressBar,
@@ -174,8 +197,8 @@ class SignInActivity : AppCompatActivity() {
                         response: Response<SignInModel>
                     ) {
                         try {
-                            binding.flEmail.error = ""
-                            binding.flPassword.error = ""
+                            binding.txtEmailError.visibility = View.GONE
+                            binding.txtPassowrdError.visibility = View.GONE
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,

@@ -61,14 +61,14 @@
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:paddingTop="@dimen/_12sdp"
                 android:text="@string/signin_quotes"
-                android:textColor="@color/light_gray"
+                android:textColor="@color/light_black"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:id="@+id/llEmail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_74sdp"
+                android:layout_height="@dimen/_64sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/textview_background_two"
                 android:orientation="vertical">
@@ -81,7 +81,7 @@
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_6sdp"
                     android:focusableInTouchMode="true"
-                    android:textColorHint="@color/black"
+                    android:textColorHint="@color/light_gray"
                     app:errorEnabled="true"
                     app:errorTextAppearance="@style/ErrorText"
                     app:hintTextColor="@color/black">
@@ -98,6 +98,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
+                        android:textColor="@color/black"
                         android:singleLine="true"
                         android:textColorHint="@color/dim_light_gray"
                         android:textCursorDrawable="@null"
@@ -108,10 +109,24 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtEmailError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
             <LinearLayout
                 android:id="@+id/llPassword"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_74sdp"
+                android:layout_height="@dimen/_64sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/textview_background_two"
                 android:orientation="vertical">
@@ -129,7 +144,7 @@
                         android:layout_marginTop="@dimen/_6sdp"
                         android:layout_marginEnd="@dimen/_48sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -143,6 +158,7 @@
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
                             android:hint="@string/Password"
+                            android:textColor="@color/black"
                             android:imeOptions="actionNext"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -181,6 +197,20 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtPassowrdError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvForgotPswd"

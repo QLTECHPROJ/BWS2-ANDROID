@@ -83,11 +83,11 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/flUser"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/_66sdp"
                         android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -95,7 +95,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUser"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
@@ -105,6 +105,7 @@
                             android:maxLength="16"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_13sdp"
@@ -114,6 +115,20 @@
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtNameError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,8 +152,8 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_calendar_icon"
-                        android:contentDescription="@string/todo" />
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/ic_calendar_icon" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -149,11 +164,11 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tlCalendar"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/_66sdp"
                         android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -161,7 +176,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCalendar"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
@@ -172,15 +187,30 @@
                             android:inputType="number"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_13sdp"
-                            tools:targetApi="lollipop"
-                            tools:ignore="SpUsage" />
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtDobError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,8 +234,8 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_mobile_icon"
-                        android:contentDescription="@string/todo" />
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/ic_mobile_icon" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -216,11 +246,11 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tlMobileNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/_66sdp"
                         android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -228,7 +258,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etMobileNumber"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
@@ -238,11 +268,12 @@
                             android:inputType="number"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_13sdp"
-                            tools:targetApi="lollipop"
-                            tools:ignore="SpUsage" />
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -260,101 +291,138 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/_10sdp"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_check_icon"
-                        android:visibility="gone"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="gone" />
                 </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llEmailApply"
+            <TextView
+                android:id="@+id/txtNumberError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_60sdp"
-                android:background="@drawable/light_gray_round_cornors"
-                android:weightSum="1"
-                tools:ignore="DisableBaselineAlignment">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.13"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/ivEmail"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_16sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_email_icon"
-                        android:contentDescription="@string/todo" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="@dimen/_0sdp"
+                    android:id="@+id/llEmailApply"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.76">
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:background="@drawable/light_gray_round_cornors"
+                    android:weightSum="1"
+                    tools:ignore="DisableBaselineAlignment">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tlEmail"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
-                        app:errorEnabled="true"
-                        app:errorTextAppearance="@style/ErrorText"
-                        app:hintTextColor="@color/black">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
-                            android:background="@null"
-                            android:backgroundTint="@color/black"
-                            android:cursorVisible="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Email_Address"
-                            android:imeOptions="actionDone"
-                            android:importantForAutofill="auto"
-                            android:inputType="textEmailAddress"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColorHint="@color/black"
-                            android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp"
-                            tools:targetApi="lollipop"
-                            tools:ignore="SpUsage" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.1"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/ivCheckEmail"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:src="@drawable/ic_check_icon"
-                        android:visibility="gone"
-                        android:contentDescription="@string/todo" />
+                        android:layout_weight="0.13"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ivEmail"
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_16sdp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_email_icon" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.76">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tlEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_66sdp"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:focusableInTouchMode="true"
+                            android:textColorHint="@color/light_gray"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_31sdp"
+                                android:background="@null"
+                                android:backgroundTint="@color/black"
+                                android:cursorVisible="true"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:hint="@string/Email_Address"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="auto"
+                                android:inputType="textEmailAddress"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/black"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_13sdp"
+                                tools:ignore="SpUsage"
+                                tools:targetApi="lollipop" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.1"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/ivCheckEmail"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_check_icon"
+                            android:visibility="gone" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtEmailError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_31sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible"
+                    tools:ignore="SpUsage" />
             </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout

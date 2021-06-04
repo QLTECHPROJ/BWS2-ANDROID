@@ -387,4 +387,20 @@
     <string name="thank_you_for_providing_us_with_the_information_we_are_preparing_personlalised_playlists_for_you">Thank you for providing us with the information, We are preparing personlalised playlists for you.</string>
     <string name="preparing_your_personalised_playlist">Preparing your personalised playlist</string>
     <string name="your_mental_health_check_up">Your Mental health check up</string>
+    <string name="add_new_user">Add New User</string>
+    <string name="it_s_good_to_have_you_here">It\'s good to have you here…</string>
+    <string name="tap_anywhere_to_continue">TAP anywhere to continue</string>
+    <string name="confirm">Confirm</string>
+    <string name="log_in">Log in</string>
+    <string name="i_forgot_my_pin">I forgot my Pin</string>
+    <string name="send_pin">Send PIN</string>
+    <string name="send_new_pin">Send New PIN</string>
+    <string name="confirm_new_login_pin">Confirm new login PIN</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="current_login_pin">Current login PIN</string>
+    <string name="new_login_pin">New login PIN</string>
+    <string name="confirm_new_login_password">Confirm new login Password</string>
+    <string name="new_login_password">New login Password</string>
+    <string name="current_login_password">Current login Password</string>
+    <string name="change_password">Change Password</string>
 </resources>

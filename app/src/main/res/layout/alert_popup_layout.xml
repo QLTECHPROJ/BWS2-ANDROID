@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,21 +34,23 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_regular"
-                android:gravity="left"
+                android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore."
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,10 +76,11 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Confirm"
+                        android:text="@string/confirm"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_14sdp"
+                        tools:ignore="SpUsage" />
 
                 </RelativeLayout>
 
@@ -88,10 +92,11 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center_vertical|right"
                     android:text="ok"
-                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:textAllCaps="false"
-                    android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="HardcodedText,RtlHardcoded,SpUsage" />
 
             </LinearLayout>
         </LinearLayout>

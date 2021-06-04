@@ -13,7 +13,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:id="@+id/llNoInternet"
@@ -79,7 +80,8 @@
                             android:layout_marginStart="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_9sdp"
                             android:layout_marginEnd="@dimen/_16sdp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            tools:ignore="DisableBaselineAlignment">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -104,7 +106,8 @@
                                         android:paddingStart="@dimen/_12sdp"
                                         android:text="@string/Enhance"
                                         android:textColor="@color/dark_blue_gray"
-                                        android:textSize="@dimen/_15sdp" />
+                                        android:textSize="@dimen/_18sdp"
+                                        tools:ignore="RtlSymmetry,SpUsage" />
 
                                 </LinearLayout>
                             </LinearLayout>
@@ -116,7 +119,7 @@
                                 android:layout_gravity="center"
                                 android:layout_marginEnd="@dimen/_10sdp"
                                 android:layout_weight="0.1"
-                                android:gravity="right"
+                                android:gravity="end"
                                 android:orientation="horizontal">
 
                                 <ImageView
@@ -126,7 +129,8 @@
                                     android:layout_gravity="center"
                                     android:layout_marginStart="@dimen/_12sdp"
                                     android:src="@drawable/ic_search_icon"
-                                    app:tint="@color/gray" />
+                                    app:tint="@color/gray"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -143,7 +147,8 @@
                         android:backgroundTint="#1597AA"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="gone"
+                        tools:targetApi="lollipop">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -190,7 +195,8 @@
                                                 android:paddingLeft="@dimen/_5sdp"
                                                 android:paddingRight="@dimen/_5sdp"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/_12sdp" />
+                                                android:textSize="@dimen/_12sdp"
+                                                tools:ignore="SpUsage" />
                                         </LinearLayout>
                                     </LinearLayout>
 
@@ -208,7 +214,7 @@
                                             android:id="@+id/llPlayerView1"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_gravity="left"
+                                            android:layout_gravity="start"
                                             android:layout_weight="1.2"
                                             android:orientation="horizontal" />
 
@@ -287,10 +293,11 @@
                                                 android:layout_centerVertical="true"
                                                 android:layout_weight="7"
                                                 android:fontFamily="@font/montserrat_regular"
-                                                android:gravity="left"
+                                                android:gravity="start"
                                                 android:text="Sleep start in your brain"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/_13sdp" />
+                                                android:textSize="@dimen/_13sdp"
+                                                tools:ignore="SpUsage" />
 
                                             <TextView
                                                 android:id="@+id/tvTime"
@@ -298,9 +305,10 @@
                                                 android:layout_height="wrap_content"
                                                 android:layout_weight="3"
                                                 android:fontFamily="@font/montserrat_regular"
-                                                android:gravity="right"
+                                                android:gravity="end"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/_13sdp" />
+                                                android:textSize="@dimen/_13sdp"
+                                                tools:ignore="SpUsage" />
                                         </LinearLayout>
 
                                         <LinearLayout
@@ -336,7 +344,8 @@
                             <ImageView
                                 android:layout_width="@dimen/_50sdp"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/ic_moon_sleep" />
+                                android:background="@drawable/ic_moon_sleep"
+                                android:contentDescription="@string/todo" />
 
                             <TextView
                                 android:id="@+id/tvSleepTime"
@@ -344,10 +353,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/_9sdp"
+                                android:gravity="start"
+                                android:paddingStart="@dimen/_10sdp"
                                 android:textColor="@color/text_new_light_blue"
-                                android:textSize="@dimen/_14sdp" />
+                                android:textSize="@dimen/_14sdp"
+                                tools:ignore="RtlSymmetry,SpUsage" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -358,7 +368,6 @@
                         android:layout_below="@+id/llPlayer"
                         android:orientation="vertical"
                         android:visibility="gone">
-
 
                         <LinearLayout
                             android:id="@+id/llMainLayout"
@@ -376,11 +385,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.7"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
+                                android:gravity="start"
                                 android:text="Playlist"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp"
-                                android:visibility="visible" />
+                                android:textSize="@dimen/_16sdp"
+                                android:visibility="visible"
+                                tools:ignore="SpUsage" />
 
                             <TextView
                                 android:id="@+id/tvViewAll"
@@ -388,11 +398,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.3"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:gravity="right"
+                                android:gravity="end"
                                 android:text="@string/View_all"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_13sdp"
-                                android:visibility="visible" />
+                                android:visibility="visible"
+                                tools:ignore="SpUsage" />
 
                         </LinearLayout>
 
@@ -400,7 +411,7 @@
                             android:id="@+id/llSpace"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_8sdp"
+                            android:layout_marginStart="@dimen/_8sdp"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
@@ -432,7 +443,8 @@
                                                 android:id="@+id/ivCreatePlaylist"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:src="@drawable/ic_create_playlist" />
+                                                android:src="@drawable/ic_create_playlist"
+                                                android:contentDescription="@string/todo" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
@@ -444,7 +456,8 @@
                                                 android:paddingBottom="@dimen/_8sdp"
                                                 android:text="Create \nNew Playlist"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/_12sdp" />
+                                                android:textSize="@dimen/_12sdp"
+                                                tools:ignore="SpUsage" />
                                             <!-- <ImageView
                                                  android:id="@+id/ivLock"
                                                  android:layout_width="@dimen/_24sdp"

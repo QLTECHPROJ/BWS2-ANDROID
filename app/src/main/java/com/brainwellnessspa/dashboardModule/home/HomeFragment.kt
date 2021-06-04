@@ -141,7 +141,7 @@ class HomeFragment : Fragment() {
             binding.llSleepTime.visibility = View.VISIBLE
         }
 
-        binding.tvSleepTime.text = "Your average sleep time is $sleepTime"
+        binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
         DB = getAudioDataBase(ctx)
         binding.tvName.text = userName
         val name: String?
@@ -569,7 +569,7 @@ class HomeFragment : Fragment() {
                         } else {
                             binding.llSleepTime.visibility = View.VISIBLE
                         }
-                        binding.tvSleepTime.text = "Your average sleep time is $sleepTime"
+                        binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
 
                         binding.llPlayerView1.setOnClickListener {
                             callPlaylistDetails()

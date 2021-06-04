@@ -71,14 +71,14 @@
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:paddingTop="@dimen/_8sdp"
                         android:text="@string/create_ac_qutoes"
-                        android:textColor="@color/light_gray"
+                        android:textColor="@color/light_black"
                         android:textSize="@dimen/_11sdp"
                         tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:id="@+id/llName"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_74sdp"
+                        android:layout_height="@dimen/_64sdp"
                         android:layout_marginTop="@dimen/_18sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -90,7 +90,7 @@
                             android:layout_marginHorizontal="@dimen/_12sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:focusableInTouchMode="true"
-                            android:textColorHint="@color/black"
+                            android:textColorHint="@color/light_gray"
                             app:errorEnabled="true"
                             app:errorTextAppearance="@style/ErrorText"
                             app:hintTextColor="@color/black">
@@ -108,6 +108,7 @@
                                 android:maxLength="16"
                                 android:maxLines="1"
                                 android:singleLine="true"
+                                android:textColor="@color/black"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
                                 android:textSize="@dimen/_13sdp"
@@ -117,10 +118,24 @@
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/txtNameError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
+
                     <LinearLayout
                         android:id="@+id/llNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_74sdp"
+                        android:layout_height="@dimen/_64sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="horizontal">
@@ -175,7 +190,7 @@
                             android:layout_marginHorizontal="@dimen/_12sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:focusableInTouchMode="true"
-                            android:textColorHint="@color/black"
+                            android:textColorHint="@color/light_gray"
                             app:errorEnabled="true"
                             app:errorTextAppearance="@style/ErrorText"
                             app:hintTextColor="@color/black">
@@ -194,6 +209,7 @@
                                 android:maxLength="13"
                                 android:maxLines="1"
                                 android:singleLine="true"
+                                android:textColor="@color/black"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
                                 android:textSize="@dimen/_13sdp"
@@ -203,10 +219,24 @@
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/txtNumberError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
+
                     <LinearLayout
                         android:id="@+id/llEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_74sdp"
+                        android:layout_height="@dimen/_64sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -218,7 +248,9 @@
                             android:layout_marginHorizontal="@dimen/_12sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:focusableInTouchMode="true"
-                            android:textColorHint="@color/black"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:textColorHint="@color/light_gray"
                             app:errorEnabled="true"
                             app:errorTextAppearance="@style/ErrorText"
                             app:hintTextColor="@color/black">
@@ -236,6 +268,7 @@
                                 android:inputType="textEmailAddress"
                                 android:maxLines="1"
                                 android:singleLine="true"
+                                android:textColor="@color/black"
                                 android:textColorHint="@color/dim_light_gray"
                                 android:textCursorDrawable="@null"
                                 android:textSize="@dimen/_13sdp"
@@ -245,10 +278,24 @@
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/txtEmailError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
+
                     <LinearLayout
                         android:id="@+id/llPassword"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_74sdp"
+                        android:layout_height="@dimen/_64sdp"
                         android:layout_marginTop="@dimen/_14sdp"
                         android:background="@drawable/textview_background_two"
                         android:orientation="vertical">
@@ -266,7 +313,7 @@
                                 android:layout_marginTop="@dimen/_6sdp"
                                 android:layout_marginEnd="@dimen/_48sdp"
                                 android:focusableInTouchMode="true"
-                                android:textColorHint="@color/black"
+                                android:textColorHint="@color/light_gray"
                                 app:errorEnabled="true"
                                 app:errorTextAppearance="@style/ErrorText"
                                 app:hintTextColor="@color/black">
@@ -283,6 +330,7 @@
                                     android:imeOptions="actionDone"
                                     android:maxLines="1"
                                     android:singleLine="true"
+                                    android:textColor="@color/black"
                                     android:textColorHint="@color/dim_light_gray"
                                     android:textCursorDrawable="@null"
                                     android:textSize="@dimen/_13sdp"
@@ -318,6 +366,21 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtPassowrdError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
+
                 </LinearLayout>
 
                 <LinearLayout

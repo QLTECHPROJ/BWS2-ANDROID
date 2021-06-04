@@ -409,8 +409,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="center"
-                            android:paddingStart="@dimen/_9sdp"
+                            android:gravity="start"
+                            android:paddingStart="@dimen/_10sdp"
                             android:textColor="@color/text_new_light_blue"
                             android:textSize="@dimen/_14sdp"
                             tools:ignore="RtlSymmetry,SpUsage" />
@@ -455,7 +455,7 @@
                                 android:gravity="start"
                                 android:text="@string/area_of_focus"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_18sdp"
+                                android:textSize="@dimen/_16sdp"
                                 tools:ignore="RelativeOverlap,SpUsage" />
                         </RelativeLayout>
 
@@ -490,7 +490,7 @@
                                 android:gravity="start"
                                 android:text="@string/your_mental_health_check_up"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_18sdp"
+                                android:textSize="@dimen/_16sdp"
                                 tools:ignore="SpUsage" />
                         </LinearLayout>
 
@@ -569,7 +569,7 @@
                             android:gravity="start"
                             android:text="@string/index_score"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_18sdp"
+                            android:textSize="@dimen/_16sdp"
                             tools:ignore="SpUsage" />
 
                         <TextView
@@ -700,7 +700,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -710,7 +710,7 @@
                             android:gravity="start"
                             android:text="@string/my_activities"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_18sdp"
+                            android:textSize="@dimen/_16sdp"
                             tools:ignore="SpUsage" />
 
                         <com.github.mikephil.charting.charts.BarChart
@@ -884,7 +884,7 @@
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
                                         android:text="@string/_2"
-                                        android:textColor="@color/app_theme_color"
+                                        android:textColor="#005baa"
                                         android:textSize="@dimen/_22sdp"
                                         tools:ignore="SpUsage" />
 
@@ -926,7 +926,7 @@
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
                                         android:text="@string/_11_38_47"
-                                        android:textColor="@color/app_theme_color"
+                                        android:textColor="#005baa"
                                         android:textSize="@dimen/_22sdp"
                                         tools:ignore="SpUsage" />
 
@@ -968,8 +968,8 @@
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
                                         android:text="@string/_60"
-                                        android:textColor="@color/app_theme_color"
-                                        android:textSize="@dimen/_12sdp"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_22sdp"
                                         tools:ignore="SpUsage" />
 
                                 </LinearLayout>

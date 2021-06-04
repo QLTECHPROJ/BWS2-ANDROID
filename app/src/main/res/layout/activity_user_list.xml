@@ -9,33 +9,26 @@
         android:background="@color/white"
         tools:context=".userModuleTwo.activities.UserListActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_36sdp">
+        <LinearLayout
+            android:id="@+id/llBack"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_left_icon_two"
+                android:visibility="invisible"
+                app:tint="@color/black"
+                android:contentDescription="@string/todo" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_left_icon_two"
-                    android:visibility="invisible"
-                    app:tint="@color/black" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rlLayout"
+            android:layout_below="@id/llBack"
             android:layout_marginBottom="@dimen/_80sdp">
 
             <LinearLayout
@@ -53,18 +46,20 @@
                     android:gravity="top"
                     android:text="@string/welcome_quotes"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_26sdp" />
+                    android:textSize="@dimen/_26sdp"
+                    tools:ignore="SpUsage" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:paddingTop="@dimen/_12sdp"
                     android:text="@string/couser_quotes"
-                    android:textColor="@color/light_gray"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textColor="@color/light_black"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="SpUsage" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -87,7 +82,9 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_16sdp"
                     android:paddingVertical="@dimen/_18sdp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    tools:ignore="DisableBaselineAlignment"
+                    tools:targetApi="lollipop">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -98,7 +95,8 @@
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
                             android:layout_gravity="center_horizontal"
-                            android:src="@drawable/ic_add_user_icon" />
+                            android:src="@drawable/ic_add_user_icon"
+                            android:contentDescription="@string/todo" />
 
                     </LinearLayout>
 
@@ -107,7 +105,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.69"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/_13sdp">
+                        android:paddingStart="@dimen/_13sdp"
+                        tools:ignore="RtlSymmetry">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -115,9 +114,10 @@
                             android:layout_gravity="center_vertical"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center_vertical"
-                            android:text="Add New User"
+                            android:text="@string/add_new_user"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_14sdp"
+                            tools:ignore="SpUsage" />
                     </LinearLayout>
 
                     <RelativeLayout
@@ -128,9 +128,10 @@
                         <ImageView
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:src="@drawable/add_icon"
-                            android:visibility="invisible" />
+                            android:visibility="invisible"
+                            android:contentDescription="@string/todo" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -155,7 +156,7 @@
                 android:enabled="false"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
-                android:text="Log in"
+                android:text="@string/log_in"
                 android:textColor="@color/white" />
 
             <TextView
@@ -168,9 +169,10 @@
                 android:enabled="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="I forgot my Pin"
+                android:text="@string/i_forgot_my_pin"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
 
         </LinearLayout>
 
@@ -186,7 +188,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

@@ -128,7 +128,7 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_gravity="left"
+                                        android:layout_gravity="start"
                                         android:layout_weight="1.2" />
 
                                     <LinearLayout
@@ -160,7 +160,7 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_gravity="right"
+                                        android:layout_gravity="end"
                                         android:layout_weight="1.2" />
                                 </LinearLayout>
 
@@ -187,7 +187,8 @@
                                             android:fontFamily="@font/montserrat_bold"
                                             android:gravity="center"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_25sdp" />
+                                            android:textSize="@dimen/_25sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout
@@ -202,7 +203,6 @@
                                         <TextView
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
                                             android:fontFamily="@font/montserrat_regular"
                                             android:gravity="center"
                                             android:maxLines="3"
@@ -237,7 +237,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="@dimen/_62sdp"
                             android:background="@drawable/round_blue_border"
                             android:orientation="vertical">
 
@@ -249,19 +249,20 @@
                                 <ImageView
                                     android:layout_width="@dimen/_50sdp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginStart="@dimen/_5sdp"
+                                    android:layout_marginStart="@dimen/_17sdp"
+                                    android:layout_marginTop="@dimen/_6sdp"
                                     android:background="@drawable/ic_moon_sleep"
                                     android:contentDescription="@string/todo" />
 
 
                                 <TextView
+                                    android:id="@+id/tvSleepTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="center"
-                                    android:paddingStart="@dimen/_9sdp"
-                                    android:text="Your average sleep time is 7 hours"
+                                    android:gravity="left"
+                                    android:paddingStart="@dimen/_10sdp"
                                     android:textColor="@color/text_new_light_blue"
                                     android:textSize="@dimen/_14sdp"
                                     tools:ignore="SpUsage" />
@@ -296,7 +297,7 @@
                                     android:gravity="start"
                                     android:text="Area of focus"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_18sdp"
+                                    android:textSize="@dimen/_16sdp"
                                     tools:ignore="SpUsage" />
                             </RelativeLayout>
 

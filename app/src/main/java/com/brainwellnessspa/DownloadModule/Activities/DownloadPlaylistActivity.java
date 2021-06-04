@@ -93,7 +93,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     PlayListsAdpater adpater;
     String IsPlayDisclimer, PlaylistDescription = "", Created = "", CoUserID, UserID, SearchFlag = "", AudioPlayerFlag = "",
             PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "",
-            PlaylistImageDetails = "";
+            PlaylistImageDetails = "", SLEEPTIME = "";
     EditText searchEditText;
     List<String> downloadAudioDetailsList = new ArrayList<>();
     Context ctx;
@@ -157,12 +157,14 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
+        SLEEPTIME = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
 
         ctx = DownloadPlaylistActivity.this;
         act = DownloadPlaylistActivity.this;
         activity = DownloadPlaylistActivity.this;
         addDisclaimer();
-
+        binding.tvSleepTime.setText("Your average sleep time is \n" + SLEEPTIME);
         DB = getAudioDataBase(ctx);
         if (getIntent() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
@@ -344,49 +346,46 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             binding.searchView.setQuery("", false);
         });
 
-        binding.llDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-                String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
-                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-                int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
-                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", activity);
-                } else {
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.custom_popup_layout);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.llDelete.setOnClickListener(view -> {
+            SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            String AudioPlayerFlag1 = shared11.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+            String MyPlaylist1 = shared11.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            String PlayFrom1 = shared11.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
+            int PlayerPosition1 = shared11.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+            if (AudioPlayerFlag1.equalsIgnoreCase("Downloadlist") && MyPlaylist1.equalsIgnoreCase(PlaylistID)) {
+                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", activity);
+            } else {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.custom_popup_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                    final Button Btn = dialog.findViewById(R.id.Btn);
-                    tvTitle.setText("Remove playlist");
-                    tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
-                    Btn.setText("Confirm");
-                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss();
-                        }
-                        return false;
-                    });
-
-                    Btn.setOnClickListener(v -> {
-                        getDownloadData();
-                        GetPlaylistMedia(PlaylistID);
-                        finish();
-                        comeDeletePlaylist = 1;
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                final Button Btn = dialog.findViewById(R.id.Btn);
+                tvTitle.setText("Remove playlist");
+                tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
+                Btn.setText("Confirm");
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
-                    });
-                    tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                    dialog.show();
-                    dialog.setCancelable(false);
+                    }
+                    return false;
+                });
 
-                }
+                Btn.setOnClickListener(v -> {
+                    getDownloadData();
+                    GetPlaylistMedia(PlaylistID);
+                    finish();
+                    comeDeletePlaylist = 1;
+                    dialog.dismiss();
+                });
+                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+
             }
         });
 
@@ -491,7 +490,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     private void getMedia(String playlistID) {
-        DB.taskDao().getAllAudioByPlaylist1(PlaylistID,CoUserID).observe(this, audioList -> {
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, audioList -> {
             adpater = new PlayListsAdpater(audioList, ctx);
             LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvPlayLists.setAdapter(adpater);
@@ -499,7 +498,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     public void GetPlaylistMedia(String playlistID) {
-        DB.taskDao().getAllAudioByPlaylist1(PlaylistID,CoUserID).observe(this, audioList -> {
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, audioList -> {
             deleteDownloadFile(getApplicationContext(), playlistID);
             if (audioList.size() != 0) {
                 GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, 0);
@@ -509,13 +508,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
 
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId,CoUserID));
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
         deletePlaylist(PlaylistID);
 
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
-        DB.taskDao().getLastIdByuId1(AudioFile,CoUserID).observe(this, audioList1 -> {
+        DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe(this, audioList1 -> {
             try {
                 if (audioList1.size() != 0) {
                     if (audioList1.size() == 1) {
@@ -535,7 +534,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     private void deletePlaylist(String playlistId) {
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId,CoUserID));
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
     }
 
     private void addDisclaimer() {
@@ -717,7 +716,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             }
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
-                    downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete",CoUserID);
+                    downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete", CoUserID);
                 });
             }
             binding.llPlayPause.setOnClickListener(view -> {
@@ -777,7 +776,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                             editor.commit();
                                             callAddTranFrag();
                                         }
-                                    }else{
+                                    } else {
                                         callAddTranFrag();
                                     }
                                 } else {
@@ -854,7 +853,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                         editor.commit();
                                         callAddTranFrag();
                                     }
-                                }else{
+                                } else {
                                     callAddTranFrag();
                                 }
                             } else {
@@ -963,7 +962,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 //                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                         }
-                    }else{
+                    } else {
                         callAddTranFrag();
                     }
                     SegmentTag();

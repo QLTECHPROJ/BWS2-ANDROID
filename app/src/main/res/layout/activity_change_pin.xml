@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -24,6 +24,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_left_arrow_icon"
                     app:tint="@color/black" />
 
@@ -35,9 +36,10 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Change PIN"
+                android:text="@string/change_pin"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -57,16 +59,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/flCurrentPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -74,46 +77,63 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCurrentPIN"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
-                            android:paddingLeft="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="Current login PIN"
+                            android:hint="@string/current_login_pin"
                             android:imeOptions="actionNext"
+                            android:inputType="number"
                             android:maxLength="4"
                             android:maxLines="1"
-                            android:inputType="number"
+                            android:paddingStart="@dimen/_16sdp"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:targetApi="lollipop"
+                            tools:ignore="RtlSymmetry,SpUsage" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtCurrentPINError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 android:background="@drawable/light_gray_round_cornors">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/flNewPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -121,46 +141,63 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etNewPIN"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="New login PIN"
+                            android:hint="@string/new_login_pin"
                             android:imeOptions="actionNext"
-                            android:maxLength="4"
                             android:inputType="number"
-                            android:paddingLeft="@dimen/_16sdp"
+                            android:maxLength="4"
                             android:maxLines="1"
+                            android:paddingStart="@dimen/_16sdp"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="RtlSymmetry,SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtNewPINError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 android:background="@drawable/light_gray_round_cornors">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/flConfirmPIN"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:focusableInTouchMode="true"
-                        android:textColorHint="@color/black"
+                        android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
                         app:errorTextAppearance="@style/ErrorText"
                         app:hintTextColor="@color/black">
@@ -168,25 +205,41 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etConfirmPIN"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
+                            android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="Confirm new login PIN"
+                            android:hint="@string/confirm_new_login_pin"
                             android:imeOptions="actionDone"
-                            android:maxLength="4"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:maxLines="1"
-                            android:paddingLeft="@dimen/_16sdp"
+                            android:paddingStart="@dimen/_16sdp"
                             android:singleLine="true"
                             android:textColorHint="@color/black"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="RtlSymmetry,SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtConfirmPINError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
         </LinearLayout>
 
@@ -199,11 +252,11 @@
             android:layout_marginHorizontal="@dimen/_48sdp"
             android:layout_marginBottom="@dimen/_26sdp"
             android:background="@drawable/gray_round_cornor"
+            android:enabled="false"
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="Save"
-            android:enabled="false"
+            android:text="@string/save"
             android:textColor="@color/white" />
 
         <LinearLayout
@@ -218,7 +271,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

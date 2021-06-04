@@ -27,7 +27,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_get_started_banner" />
+                    android:src="@drawable/ic_get_started_banner"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -42,7 +43,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    tools:ignore="UselessParent">
 
                     <TextView
                         android:id="@+id/tvTitle"
@@ -55,21 +57,21 @@
                         android:gravity="center"
                         android:text="@string/get_started_quotes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_20sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvSubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvTitle"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:text="@string/get_started_subtitle_quotes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_15sdp" />
 
                     <Button
                         android:id="@+id/btnGetStarted"

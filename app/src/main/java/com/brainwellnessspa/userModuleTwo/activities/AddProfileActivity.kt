@@ -196,27 +196,32 @@ class   AddProfileActivity : AppCompatActivity() {
 
         binding.btnSendPin.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.flUser.error = "Name is required"
-                binding.flMobileNumber.error = ""
-                binding.flEmail.error = ""
+                binding.txtNameError.text = "Please provide  a Name"
+                binding.txtNameError.visibility = View.VISIBLE
+                binding.txtNumberError.visibility = View.GONE
+                binding.txtEmailError.visibility = View.GONE
             } else if (binding.etMobileNumber.text.toString().equals("", ignoreCase = true)) {
-                binding.flUser.error = ""
-                binding.flMobileNumber.error = "Mobile number is required"
-                binding.flEmail.error = ""
+                binding.txtNameError.visibility = View.GONE
+                binding.txtNumberError.visibility = View.VISIBLE
+                binding.txtNumberError.text = "Please provide a mobile number"
+                binding.txtEmailError.visibility = View.GONE
             } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 ||
                 binding.etMobileNumber.text.toString().length > 10
             ) {
-                binding.flUser.error = ""
-                binding.flMobileNumber.error = "Valid Mobile number is required"
-                binding.flEmail.error = ""
+                binding.txtNameError.visibility = View.GONE
+                binding.txtNumberError.visibility = View.VISIBLE
+                binding.txtNumberError.text = "Please provide a valid mobile number"
+                binding.txtEmailError.visibility = View.GONE
             } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
-                binding.flUser.error = ""
-                binding.flMobileNumber.error = ""
-                binding.flEmail.error = "Email address is required"
+                binding.txtNameError.visibility = View.GONE
+                binding.txtNumberError.visibility = View.GONE
+                binding.txtEmailError.visibility = View.VISIBLE
+                binding.txtEmailError.text = "Please provide a email address"
             } else if (!binding.etEmail.text.toString().isEmailValid()) {
-                binding.flUser.error = ""
-                binding.flMobileNumber.error = ""
-                binding.flEmail.error = "Valid Email address is required"
+                binding.txtNameError.visibility = View.GONE
+                binding.txtNumberError.visibility = View.GONE
+                binding.txtEmailError.visibility = View.VISIBLE
+                binding.txtEmailError.text = "Please provide a valid email address"
             } else {
                 if (isNetworkConnected(this)) {
                     showProgressBar(

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -19,9 +19,10 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/welcome_banner" />
+                android:src="@drawable/welcome_banner"
+                android:contentDescription="@string/todo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,21 +36,23 @@
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_200sdp"
+                    android:layout_marginTop="@dimen/_280sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_28sdp" />
+                    android:textSize="@dimen/_28sdp"
+                    tools:ignore="SpUsage" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_29sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="It's good to have you here..."
+                    android:text="@string/it_s_good_to_have_you_here"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_20sdp" />
+                    android:textSize="@dimen/_20sdp"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
@@ -91,13 +94,15 @@
                     android:text="@string/step_one"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
-                    android:src="@drawable/ic_step_one_icon" />
+                    android:src="@drawable/ic_step_one_icon"
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,7 +113,8 @@
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="@string/step_one_quotes"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
 
             </LinearLayout>
@@ -120,10 +126,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/_80sdp"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="TAP anywhere to continue"
+                android:text="@string/tap_anywhere_to_continue"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_16sdp" />
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -149,13 +156,15 @@
                     android:text="@string/step_two"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
-                    android:src="@drawable/ic_step_two_icon" />
+                    android:src="@drawable/ic_step_two_icon"
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -166,7 +175,8 @@
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="Let's assess how you are \ncurrently doing"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
@@ -180,7 +190,8 @@
                 android:text="TAP anywhere to continue"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_16sdp" />
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -206,13 +217,15 @@
                     android:text="@string/step_three"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
-                    android:src="@drawable/ic_step_three_icon" />
+                    android:src="@drawable/ic_step_three_icon"
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -223,7 +236,8 @@
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="we're analysing your inputs"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
 
 
             </LinearLayout>
@@ -239,7 +253,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16sdp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 

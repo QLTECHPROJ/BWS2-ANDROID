@@ -1,5 +1,6 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -59,6 +60,43 @@ class ChangePasswordActivity : AppCompatActivity() {
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
+
+            if (currentPaswd.equals("", ignoreCase = true)) {
+                binding.ivCurrentPswdVisible.isClickable = false
+                binding.ivCurrentPswdVisible.isEnabled = false
+                binding.ivCurrentPswdInVisible.isClickable = false
+                binding.ivCurrentPswdInVisible.isEnabled = false
+            } else {
+                binding.ivCurrentPswdVisible.isClickable = true
+                binding.ivCurrentPswdVisible.isEnabled = true
+                binding.ivCurrentPswdInVisible.isClickable = true
+                binding.ivCurrentPswdInVisible.isEnabled = true
+            }
+
+            if (newPswd.equals("", ignoreCase = true)) {
+                binding.ivNewPswdVisible.isClickable = false
+                binding.ivNewPswdVisible.isEnabled = false
+                binding.ivNewPswdInVisible.isClickable = false
+                binding.ivNewPswdInVisible.isEnabled = false
+            } else {
+                binding.ivNewPswdVisible.isClickable = true
+                binding.ivNewPswdVisible.isEnabled = true
+                binding.ivNewPswdInVisible.isClickable = true
+                binding.ivNewPswdInVisible.isEnabled = true
+            }
+
+            if (confirmPswd.equals("", ignoreCase = true)) {
+                binding.ivConfirmPswdVisible.isClickable = false
+                binding.ivConfirmPswdVisible.isEnabled = false
+                binding.ivConfirmPswdInVisible.isClickable = false
+                binding.ivConfirmPswdInVisible.isEnabled = false
+            } else {
+                binding.ivConfirmPswdVisible.isClickable = true
+                binding.ivConfirmPswdVisible.isEnabled = true
+                binding.ivConfirmPswdInVisible.isClickable = true
+                binding.ivConfirmPswdInVisible.isEnabled = true
+            }
+
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -88,6 +126,28 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.etNewPswd.addTextChangedListener(userTextWatcher)
         binding.etConfirmPswd.addTextChangedListener(userTextWatcher)
 
+        if (binding.etCurrentPswd.text.toString().trim().equals("", ignoreCase = true)) {
+            binding.ivCurrentPswdVisible.isClickable = false
+            binding.ivCurrentPswdVisible.isEnabled = false
+            binding.ivCurrentPswdInVisible.isClickable = false
+            binding.ivCurrentPswdInVisible.isEnabled = false
+        }
+
+        if (binding.etNewPswd.text.toString().trim().equals("", ignoreCase = true)) {
+            binding.ivNewPswdVisible.isClickable = false
+            binding.ivNewPswdVisible.isEnabled = false
+            binding.ivNewPswdInVisible.isClickable = false
+            binding.ivNewPswdInVisible.isEnabled = false
+        }
+
+        if (binding.etConfirmPswd.text.toString().trim().equals("", ignoreCase = true)) {
+            binding.ivConfirmPswdVisible.isClickable = false
+            binding.ivConfirmPswdVisible.isEnabled = false
+            binding.ivConfirmPswdInVisible.isClickable = false
+            binding.ivConfirmPswdInVisible.isEnabled = false
+        }
+
+
         binding.llBack.setOnClickListener {
             val i = Intent(this, AccountInfoActivity::class.java)
             startActivity(i)
@@ -98,7 +158,8 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
 
         binding.ivCurrentPswdVisible.setOnClickListener {
-            binding.etCurrentPswd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            binding.etCurrentPswd.transformationMethod =
+                HideReturnsTransformationMethod.getInstance()
             binding.ivCurrentPswdVisible.visibility = View.GONE
             binding.ivCurrentPswdInVisible.visibility = View.VISIBLE
             binding.etCurrentPswd.setSelection(binding.etCurrentPswd.text.toString().length)
@@ -124,7 +185,8 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
 
         binding.ivConfirmPswdVisible.setOnClickListener {
-            binding.etConfirmPswd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            binding.etConfirmPswd.transformationMethod =
+                HideReturnsTransformationMethod.getInstance()
             binding.ivConfirmPswdVisible.visibility = View.GONE
             binding.ivConfirmPswdInVisible.visibility = View.VISIBLE
             binding.etConfirmPswd.setSelection(binding.etConfirmPswd.text.toString().length)
@@ -138,46 +200,56 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun changePassword() {
         if (binding.etCurrentPswd.text.toString() == "") {
-            binding.flCurrentPswd.error = "Current Login Password is required"
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = ""
+            binding.txtCurrentPswdError.text = "Current login password is required"
+            binding.txtCurrentPswdError.visibility = View.VISIBLE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etCurrentPswd.text.toString().length < 8
             || !isValidPassword(binding.etCurrentPswd.text.toString())
         ) {
-            binding.flCurrentPswd.error = "Valid current Login Password is required"
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = ""
+            binding.txtCurrentPswdError.text = "Valid current login password is required"
+            binding.txtCurrentPswdError.visibility = View.VISIBLE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etNewPswd.text.toString() == "") {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = "New Login Password is required"
-            binding.flConfirmPswd.error = ""
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.VISIBLE
+            binding.txtNewPswdError.text = "New login password is required"
+            binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etNewPswd.text.toString().length < 8
             || !isValidPassword(binding.etNewPswd.text.toString())
         ) {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = "Valid new Login Password is required"
-            binding.flConfirmPswd.error = ""
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.VISIBLE
+            binding.txtNewPswdError.text =
+                "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
+            binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etConfirmPswd.text.toString() == "") {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = "Confirm new Login Password is required"
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.VISIBLE
+            binding.txtConfirmPswdError.text = "Confirm new login password is required"
         } else if (binding.etConfirmPswd.text.toString().length < 8
             || !isValidPassword(binding.etConfirmPswd.text.toString())
         ) {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = "Valid confirm new Login Password is required"
-        }  else if (binding.etConfirmPswd.text.toString() != binding.etNewPswd.text.toString()
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.VISIBLE
+            binding.txtConfirmPswdError.text =
+                "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
+        } else if (binding.etConfirmPswd.text.toString() != binding.etNewPswd.text.toString()
         ) {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = "New & Confirm Login Password not match"
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.VISIBLE
+            binding.txtConfirmPswdError.text = "Please check if both the passwords are same"
         } else {
-            binding.flCurrentPswd.error = ""
-            binding.flNewPswd.error = ""
-            binding.flConfirmPswd.error = ""
+            binding.txtCurrentPswdError.visibility = View.GONE
+            binding.txtNewPswdError.visibility = View.GONE
+            binding.txtConfirmPswdError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(
                     binding.progressBar,
@@ -196,9 +268,9 @@ class ChangePasswordActivity : AppCompatActivity() {
                         response: Response<ChangePasswordModel>
                     ) {
                         try {
-                            binding.flCurrentPswd.error = ""
-                            binding.flNewPswd.error = ""
-                            binding.flConfirmPswd.error = ""
+                            binding.txtCurrentPswdError.visibility = View.GONE
+                            binding.txtNewPswdError.visibility = View.GONE
+                            binding.txtConfirmPswdError.visibility = View.GONE
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,

@@ -219,6 +219,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 com.google.common.reflect.TypeToken<java.util.ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
+        binding.tvSleepTime.text = "Your average sleep time is \n$SLEEPTIME"
         val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
         layoutManager.alignItems = AlignItems.STRETCH

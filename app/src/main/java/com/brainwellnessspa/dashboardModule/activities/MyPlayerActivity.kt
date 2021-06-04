@@ -188,12 +188,12 @@ class MyPlayerActivity : AppCompatActivity() {
         }
 
         LocalBroadcastManager.getInstance(ctx)
-                .registerReceiver(listener1, IntentFilter("Reminder"))
+            .registerReceiver(listener1, IntentFilter("Reminder"))
         exoBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(this),
-                R.layout.audio_player_new_layout,
-                binding.playerControlView,
-                false
+            LayoutInflater.from(this),
+            R.layout.audio_player_new_layout,
+            binding.playerControlView,
+            false
         )
 
         binding.playerControlView.addView(exoBinding.getRoot())
@@ -201,16 +201,16 @@ class MyPlayerActivity : AppCompatActivity() {
 
         binding.llInfo.setOnClickListener {
             if (isNetworkConnected(ctx)) {
-            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-            val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
-            AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-            callAudioDetails(
+                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
+                AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                callAudioDetails(
                     mainPlayModelList[position].id, ctx, act, CoUserID, "audioPlayer",
                     arrayListOf<DownloadAudioDetails>(),
                     arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(),
                     arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(),
                     mainPlayModelList, position
-            )
+                )
             } else {
                 showToast(getString(R.string.no_server_found), act)
             }
@@ -427,8 +427,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
             val arrayList =
                 gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(
-                        json,
-                        type
+                    json,
+                    type
                 )
             listSize = arrayList.size
             for (i in 0 until listSize) {
@@ -480,7 +480,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             audioClick = true
                             isDisclaimer = 0
                             val shared =
-                                    getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                                getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                             editor.apply()
@@ -537,9 +537,9 @@ class MyPlayerActivity : AppCompatActivity() {
                                     p.putValue("audioService", appStatus(ctx))
                                     p.putValue("sound", hundredVolume.toString())
                                     addToSegment(
-                                            "Disclaimer Playing",
-                                            p,
-                                            CONSTANTS.track
+                                        "Disclaimer Playing",
+                                        p,
+                                        CONSTANTS.track
                                     )
                                 } else if (!player.playWhenReady) {
                                     exoBinding.llPlay.visibility = View.VISIBLE
@@ -575,11 +575,11 @@ class MyPlayerActivity : AppCompatActivity() {
                             exoBinding.exoProgress.setPosition(player.currentPosition)
                             exoBinding.exoProgress.setDuration(player.duration)
                             exoBinding.tvStartTime.text = String.format(
-                                    "%02d:%02d",
-                                    TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
-                                    TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(
-                                            TimeUnit.MILLISECONDS.toMinutes(player.currentPosition)
-                                    )
+                                "%02d:%02d",
+                                TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
+                                TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(
+                                    TimeUnit.MILLISECONDS.toMinutes(player.currentPosition)
+                                )
                             )
                         }
                     }
@@ -771,8 +771,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
             val arrayList =
                 gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(
-                        json,
-                        type
+                    json,
+                    type
                 )
             val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
             mainPlayModelList = gson.fromJson(json1, type1)
@@ -875,9 +875,9 @@ class MyPlayerActivity : AppCompatActivity() {
             if (player != null) {
                 if (!mainPlayModelList[position].id.equals("0", ignoreCase = true)) {
                     if (mainPlayModelList[player.currentWindowIndex].id.equals(
-                                    mainPlayModelList[mainPlayModelList.size - 1].id,
-                                    ignoreCase = true
-                            )
+                            mainPlayModelList[mainPlayModelList.size - 1].id,
+                            ignoreCase = true
+                        )
                         && player.duration - player.currentPosition <= 20
                     ) {
                         player.seekTo(position, 0)
@@ -929,6 +929,13 @@ class MyPlayerActivity : AppCompatActivity() {
         if (mainPlayModelList[ps].playlistID == null) {
             mainPlayModelList[ps].playlistID = ""
         }
+        if ("PlaylistName".equals("", ignoreCase = true)) {
+            binding.tvPlaylistName.visibility = View.GONE
+        } else {
+            binding.tvPlaylistName.visibility = View.VISIBLE
+            binding.tvPlaylistName.text = ("PlaylistName")
+
+        }
         binding.tvAudioName.text = (name)
         if (player == null) {
             exoBinding.tvStartTime.text = "00:00"
@@ -954,12 +961,12 @@ class MyPlayerActivity : AppCompatActivity() {
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition)
             //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
             exoBinding.tvStartTime.text = (String.format(
-                    "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
-                    TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(
-                            TimeUnit.MILLISECONDS.toMinutes(
-                                    positionx
-                            )
+                "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx),
+                TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(
+                    TimeUnit.MILLISECONDS.toMinutes(
+                        positionx
                     )
+                )
             ))
             if (player != null) {
                 exoBinding.exoProgress.setDuration(player.duration)
@@ -989,11 +996,11 @@ class MyPlayerActivity : AppCompatActivity() {
             if (audioClick) {
                 val globalInitExoPlayer = GlobalInitExoPlayer()
                 globalInitExoPlayer.GlobleInItPlayer(
-                        ctx,
-                        position,
-                        downloadAudioDetailsList,
-                        mainPlayModelList,
-                        "Main"
+                    ctx,
+                    position,
+                    downloadAudioDetailsList,
+                    mainPlayModelList,
+                    "Main"
                 )
                 setPlayerCtrView()
             }
@@ -1007,16 +1014,16 @@ class MyPlayerActivity : AppCompatActivity() {
             player.setHandleAudioBecomingNoisy(true)
             player.addListener(object : Player.EventListener {
                 override fun onTracksChanged(
-                        trackGroups: TrackGroupArray,
-                        trackSelections: TrackSelectionArray
+                    trackGroups: TrackGroupArray,
+                    trackSelections: TrackSelectionArray
                 ) {
                     Log.e("TAG", "Listener-onTracksChanged... Main Activity")
                     oldSongPos = 0
                     val sharedsa =
-                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                     val gson = Gson()
                     val json =
-                            sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+                        sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                     if (!json.equals(gson.toString(), ignoreCase = true)) {
                         val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                         mainPlayModelList = gson.fromJson(json, type)
@@ -1029,7 +1036,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                     editor.apply()
                     if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
-                            || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+                        || AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
                     ) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     }
@@ -1086,12 +1093,12 @@ class MyPlayerActivity : AppCompatActivity() {
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
                     exoBinding.exoProgress.setDuration(player.duration)
                     exoBinding.tvStartTime.setText(
-                            String.format(
-                                    "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
-                                    TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(
-                                            TimeUnit.MILLISECONDS.toMinutes(player.currentPosition)
-                                    )
+                        String.format(
+                            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.currentPosition),
+                            TimeUnit.MILLISECONDS.toSeconds(player.currentPosition) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(player.currentPosition)
                             )
+                        )
                     )
                     if (player.currentPosition >= oldSongPos + 299500 && player.currentPosition <= oldSongPos + 310000) {
                         oldSongPos = player.currentPosition
@@ -1188,9 +1195,9 @@ class MyPlayerActivity : AppCompatActivity() {
                             p.putValue("sound", hundredVolume.toString())
                             addToSegment("Audio Completed", p, CONSTANTS.track)
                             if (mainPlayModelList[player.currentWindowIndex].id.equals(
-                                            mainPlayModelList[mainPlayModelList.size - 1].id,
-                                            ignoreCase = true
-                                    )
+                                    mainPlayModelList[mainPlayModelList.size - 1].id,
+                                    ignoreCase = true
+                                )
                             ) {
                                 exoBinding.llPlay.visibility = View.VISIBLE
                                 exoBinding.llPause.visibility = View.GONE
@@ -1205,16 +1212,16 @@ class MyPlayerActivity : AppCompatActivity() {
                                 p.putValue("audioDescription", "")
                                 p.putValue("directions", mainPlayModelList[position].audioDirection)
                                 p.putValue(
-                                        "masterCategory",
-                                        mainPlayModelList[position].audiomastercat
+                                    "masterCategory",
+                                    mainPlayModelList[position].audiomastercat
                                 )
                                 p.putValue(
-                                        "subCategory",
-                                        mainPlayModelList[position].audioSubCategory
+                                    "subCategory",
+                                    mainPlayModelList[position].audioSubCategory
                                 )
                                 p.putValue(
-                                        "audioDuration",
-                                        mainPlayModelList[position].audioDuration
+                                    "audioDuration",
+                                    mainPlayModelList[position].audioDuration
                                 )
                                 p.putValue("position", GetCurrentAudioPosition())
                                 if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
@@ -1229,39 +1236,39 @@ class MyPlayerActivity : AppCompatActivity() {
                                 p.putValue("sound", hundredVolume.toString())
                                 val source = GetSourceName(ctx)
                                 if (!source.equals("Playlist", ignoreCase = true) && !source.equals(
-                                                "Downloaded Playlists",
-                                                ignoreCase = true
-                                        )
+                                        "Downloaded Playlists",
+                                        ignoreCase = true
+                                    )
                                 ) {
                                     addToSegment("Audio Playback Completed", p, CONSTANTS.track)
                                 }
                                 if (AudioPlayerFlag.equals(
-                                                "playlist",
-                                                ignoreCase = true
-                                        ) || AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)
+                                        "playlist",
+                                        ignoreCase = true
+                                    ) || AudioPlayerFlag.equals("Downloadlist", ignoreCase = true)
                                 ) {
                                     val shared1 = ctx.getSharedPreferences(
-                                            CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST,
-                                            MODE_PRIVATE
+                                        CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST,
+                                        MODE_PRIVATE
                                     )
                                     val PlaylistID =
-                                            shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, "")
                                     val PlaylistName =
-                                            shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, "")
                                     val PlaylistDescription = shared1.getString(
-                                            CONSTANTS.PREF_KEY_PlaylistDescription,
-                                            ""
+                                        CONSTANTS.PREF_KEY_PlaylistDescription,
+                                        ""
                                     )
                                     val PlaylistType =
-                                            shared1.getString(CONSTANTS.PREF_KEY_PlaylistType, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_PlaylistType, "")
                                     val Totalhour =
-                                            shared1.getString(CONSTANTS.PREF_KEY_Totalhour, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_Totalhour, "")
                                     val Totalminute =
-                                            shared1.getString(CONSTANTS.PREF_KEY_Totalminute, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_Totalminute, "")
                                     val TotalAudio =
-                                            shared1.getString(CONSTANTS.PREF_KEY_TotalAudio, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_TotalAudio, "")
                                     val ScreenView =
-                                            shared1.getString(CONSTANTS.PREF_KEY_ScreenView, "")
+                                        shared1.getString(CONSTANTS.PREF_KEY_ScreenView, "")
                                     val p = Properties()
                                     p.putValue("userId", UserID)
                                     p.putValue("playlistId", PlaylistID)
@@ -1274,15 +1281,18 @@ class MyPlayerActivity : AppCompatActivity() {
                                     }
                                     when {
                                         Totalhour.equals("", ignoreCase = true) -> {
-                                            p.putValue("playlistDuration", "0h " + Totalminute + "m")
+                                            p.putValue(
+                                                "playlistDuration",
+                                                "0h " + Totalminute + "m"
+                                            )
                                         }
                                         Totalminute.equals("", ignoreCase = true) -> {
                                             p.putValue("playlistDuration", Totalhour + "h 0m")
                                         }
                                         else -> {
                                             p.putValue(
-                                                    "playlistDuration",
-                                                    Totalhour + "h " + Totalminute + "m"
+                                                "playlistDuration",
+                                                Totalhour + "h " + Totalminute + "m"
                                             )
                                         }
                                     }
@@ -1327,13 +1337,13 @@ class MyPlayerActivity : AppCompatActivity() {
                     p.putValue("position", GetCurrentAudioPosition())
                     var audioType = ""
                     audioType =
-                            if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                                p.putValue("audioType", "Downloaded")
-                                "Downloaded"
-                            } else {
-                                p.putValue("audioType", "Streaming")
-                                "Streaming"
-                            }
+                        if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
+                            p.putValue("audioType", "Downloaded")
+                            "Downloaded"
+                        } else {
+                            p.putValue("audioType", "Streaming")
+                            "Streaming"
+                        }
                     p.putValue("source", GetSourceName(ctx))
                     p.putValue("playerType", "Main")
                     p.putValue("audioService", appStatus(ctx))
@@ -1343,35 +1353,35 @@ class MyPlayerActivity : AppCompatActivity() {
                     when (error.type) {
                         ExoPlaybackException.TYPE_SOURCE -> {
                             p.putValue(
-                                    "interruptionMethod",
-                                    error.message + " " + error.sourceException.message
+                                "interruptionMethod",
+                                error.message + " " + error.sourceException.message
                             )
                             intruptMethod = error.message + " " + error.sourceException.message
                             Log.e(
-                                    "onPlaybackError",
-                                    error.message + " " + error.sourceException.message
+                                "onPlaybackError",
+                                error.message + " " + error.sourceException.message
                             )
                         }
                         ExoPlaybackException.TYPE_RENDERER -> {
                             p.putValue(
-                                    "interruptionMethod",
-                                    error.message + " " + error.rendererException.message
+                                "interruptionMethod",
+                                error.message + " " + error.rendererException.message
                             )
                             intruptMethod = error.message + " " + error.rendererException.message
                             Log.e(
-                                    "onPlaybackError",
-                                    error.message + " " + error.rendererException.message
+                                "onPlaybackError",
+                                error.message + " " + error.rendererException.message
                             )
                         }
                         ExoPlaybackException.TYPE_UNEXPECTED -> {
                             p.putValue(
-                                    "interruptionMethod",
-                                    error.message + " " + error.unexpectedException.message
+                                "interruptionMethod",
+                                error.message + " " + error.unexpectedException.message
                             )
                             intruptMethod = error.message + " " + error.unexpectedException.message
                             Log.e(
-                                    "onPlaybackError",
-                                    error.message + " " + error.unexpectedException.message
+                                "onPlaybackError",
+                                error.message + " " + error.unexpectedException.message
                             )
                         }
                         ExoPlaybackException.TYPE_REMOTE -> {
@@ -1407,41 +1417,41 @@ class MyPlayerActivity : AppCompatActivity() {
                     try {
                         if (isNetworkConnected(ctx)) {
                             val listCall = APINewClient.getClient().getAudioInterruption(
-                                    CoUserID,
-                                    this@MyPlayerActivity.UserID,
-                                    mainPlayModelList[position].id,
-                                    mainPlayModelList[position].name,
-                                    "",
-                                    mainPlayModelList[position].audioDirection,
-                                    mainPlayModelList[position].audiomastercat,
-                                    mainPlayModelList[position].audioSubCategory,
-                                    mainPlayModelList[position].audioDuration,
-                                    "",
-                                    audioType,
-                                    "Main",
-                                    hundredVolume.toString(),
-                                    appStatus(ctx),
-                                    GetSourceName(ctx),
-                                    GetCurrentAudioPosition(),
-                                    "",
-                                    intruptMethod,
-                                    batLevel.toString(),
-                                    BatteryStatus,
-                                    downSpeed.toString(),
-                                    upSpeed.toString(),
-                                    "Android"
+                                CoUserID,
+                                this@MyPlayerActivity.UserID,
+                                mainPlayModelList[position].id,
+                                mainPlayModelList[position].name,
+                                "",
+                                mainPlayModelList[position].audioDirection,
+                                mainPlayModelList[position].audiomastercat,
+                                mainPlayModelList[position].audioSubCategory,
+                                mainPlayModelList[position].audioDuration,
+                                "",
+                                audioType,
+                                "Main",
+                                hundredVolume.toString(),
+                                appStatus(ctx),
+                                GetSourceName(ctx),
+                                GetCurrentAudioPosition(),
+                                "",
+                                intruptMethod,
+                                batLevel.toString(),
+                                BatteryStatus,
+                                downSpeed.toString(),
+                                upSpeed.toString(),
+                                "Android"
                             )
                             listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                                 override fun onResponse(
-                                        call: Call<AudioInterruptionModel?>,
-                                        response: Response<AudioInterruptionModel?>
+                                    call: Call<AudioInterruptionModel?>,
+                                    response: Response<AudioInterruptionModel?>
                                 ) {
                                     val listModel = response.body()
                                 }
 
                                 override fun onFailure(
-                                        call: Call<AudioInterruptionModel?>,
-                                        t: Throwable
+                                    call: Call<AudioInterruptionModel?>,
+                                    t: Throwable
                                 ) {
                                 }
                             })
@@ -1500,12 +1510,12 @@ class MyPlayerActivity : AppCompatActivity() {
                     exoBinding.exoProgress.setPosition(pos)
                     exoBinding.exoProgress.setDuration(player.duration)
                     exoBinding.tvStartTime.text = String.format(
-                            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
-                            TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(
-                                    TimeUnit.MILLISECONDS.toMinutes(
-                                            pos
-                                    )
+                        "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos),
+                        TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(
+                            TimeUnit.MILLISECONDS.toMinutes(
+                                pos
                             )
+                        )
                     )
                     val globalInitExoPlayer = GlobalInitExoPlayer()
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
@@ -1692,8 +1702,8 @@ class MyPlayerActivity : AppCompatActivity() {
             val listCall = APINewClient.getClient().getRecentlyPlayed(CoUserID, id)
             listCall.enqueue(object : Callback<SucessModel?> {
                 override fun onResponse(
-                        call: Call<SucessModel?>,
-                        response: Response<SucessModel?>
+                    call: Call<SucessModel?>,
+                    response: Response<SucessModel?>
                 ) {
                     try {
                         val model: SucessModel = response.body()!!
@@ -1780,11 +1790,11 @@ class MyPlayerActivity : AppCompatActivity() {
     private fun disableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_done_icon)
         binding.ivDownloads.setColorFilter(
-                ContextCompat.getColor(
-                        ctx,
-                        R.color.white
-                ),
-                PorterDuff.Mode.SRC_IN
+            ContextCompat.getColor(
+                ctx,
+                R.color.white
+            ),
+            PorterDuff.Mode.SRC_IN
         )
 
         binding.llDownload.isClickable = false
@@ -1796,11 +1806,11 @@ class MyPlayerActivity : AppCompatActivity() {
         binding.llDownload.isClickable = true
         binding.llDownload.isEnabled = true
         binding.ivDownloads.setColorFilter(
-                ContextCompat.getColor(
-                        ctx,
-                        R.color.white
-                ),
-                PorterDuff.Mode.SRC_IN
+            ContextCompat.getColor(
+                ctx,
+                R.color.white
+            ),
+            PorterDuff.Mode.SRC_IN
         )
     }
 
@@ -1851,7 +1861,8 @@ class MyPlayerActivity : AppCompatActivity() {
     fun GetMedia2() {
         DB = getAudioDataBase(ctx)
         try {
-            DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", CoUserID).observe(
+            DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", CoUserID)
+                .observe(
                     this,
                     { audiolist: List<DownloadAudioDetails> ->
                         if (audiolist.isNotEmpty()) {
@@ -1865,8 +1876,12 @@ class MyPlayerActivity : AppCompatActivity() {
                                 GetMediaPer()
                             }
                             DB!!.taskDao()
-                                    .getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", CoUserID)
-                                    .removeObserver { audiolistx: List<DownloadAudioDetails?>? -> }
+                                .getaudioByPlaylist1(
+                                    mainPlayModelList[position].audioFile,
+                                    "",
+                                    CoUserID
+                                )
+                                .removeObserver { audiolistx: List<DownloadAudioDetails?>? -> }
                         } else {
                             /* boolean entryNot = false;
              for (int i = 0; i < fileNameList.size(); i++) {
@@ -1884,7 +1899,7 @@ class MyPlayerActivity : AppCompatActivity() {
         GetMediaPer();
         disableDownload();
     }*/DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", CoUserID)
-                                    .removeObserver { }
+                                .removeObserver { }
                         }
                     })
         } catch (e: java.lang.Exception) {
@@ -1898,17 +1913,17 @@ class MyPlayerActivity : AppCompatActivity() {
         if (fileNameList.size != 0) {
             for (i in fileNameList.indices) {
                 if (fileNameList.get(i).equals(
-                                mainPlayModelList[position].name,
-                                ignoreCase = true
-                        ) && playlistDownloadId.get(i).equals("", ignoreCase = true)
+                        mainPlayModelList[position].name,
+                        ignoreCase = true
+                    ) && playlistDownloadId.get(i).equals("", ignoreCase = true)
                 ) {
                     if (!DownloadMedia.filename.equals(
-                                    "",
-                                    ignoreCase = true
-                            ) && DownloadMedia.filename.equals(
-                                    mainPlayModelList[position].name,
-                                    ignoreCase = true
-                            )
+                            "",
+                            ignoreCase = true
+                        ) && DownloadMedia.filename.equals(
+                            mainPlayModelList[position].name,
+                            ignoreCase = true
+                        )
                     ) {
                         if (DownloadMedia.downloadProgress <= 100) {
                             if (DownloadMedia.downloadProgress == 100) {
@@ -1980,15 +1995,15 @@ class MyPlayerActivity : AppCompatActivity() {
         try {
             DB.taskDao()
                 .geAllDataBYDownloadedForAll("Complete").observe(this, { audioList: List<String?> ->
-                        downloadAudioDetailsList = audioList as ArrayList<String>
-                        audioClick = true;
-                        if (!downloadClick) {
-                            getPrepareShowData()
-                        }
-                        DB.taskDao()
-                                .geAllDataBYDownloadedForAll("Complete")
-                                .removeObserver { }
-                    })
+                    downloadAudioDetailsList = audioList as ArrayList<String>
+                    audioClick = true;
+                    if (!downloadClick) {
+                        getPrepareShowData()
+                    }
+                    DB.taskDao()
+                        .geAllDataBYDownloadedForAll("Complete")
+                        .removeObserver { }
+                })
         } catch (e: java.lang.Exception) {
             println(e.message)
         } catch (e: OutOfMemoryError) {
@@ -2012,15 +2027,15 @@ class MyPlayerActivity : AppCompatActivity() {
         return downloadAudioDetailsListGloble
     }*/
 
-    fun GetAllMedia1(DB:AudioDatabase): List<String?> {
+    fun GetAllMedia1(DB: AudioDatabase): List<String?> {
         try {
             DB.taskDao()
                 .geAllDataBYDownloadedForAll("Complete").observe(this, { audioList: List<String?> ->
-                        downloadAudioDetailsList = audioList as ArrayList<String>
-                        DB.taskDao()
-                                .geAllDataBYDownloadedForAll("Complete")
-                                .removeObserver { }
-                    })
+                    downloadAudioDetailsList = audioList as ArrayList<String>
+                    DB.taskDao()
+                        .geAllDataBYDownloadedForAll("Complete")
+                        .removeObserver { }
+                })
         } catch (e: java.lang.Exception) {
             println(e.message)
         } catch (e: OutOfMemoryError) {

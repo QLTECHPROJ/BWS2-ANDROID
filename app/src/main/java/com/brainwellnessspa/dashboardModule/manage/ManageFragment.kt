@@ -115,11 +115,11 @@ class ManageFragment : Fragment() {
             binding.llSleepTime.visibility = View.VISIBLE
 
         }
-        binding.tvSleepTime.text = "Your average sleep time is $SLEEPTIME"
+        binding.tvSleepTime.text = "Your average sleep time is \n$SLEEPTIME"
 
         networkCheck()
         binding.llSearch.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(ctx, AddAudioActivity::class.java)
                 i.putExtra("PlaylistID", "")
                 startActivity(i)
@@ -129,7 +129,7 @@ class ManageFragment : Fragment() {
         }
 
         binding.tvViewAll.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 val audioFragment: Fragment = MainPlaylistFragment()
                 val fragmentManager1 = requireActivity().supportFragmentManager
                 fragmentManager1.beginTransaction()
@@ -203,7 +203,7 @@ class ManageFragment : Fragment() {
                 false
             }
             btnSendCode.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                if (isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
@@ -298,7 +298,7 @@ class ManageFragment : Fragment() {
     }
 
     fun networkCheck() {
-        if (BWSApplication.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             binding.llSetReminder.visibility = View.VISIBLE
             binding.llUser.visibility = View.VISIBLE
             binding.ivLightBg.visibility = View.VISIBLE
@@ -369,7 +369,7 @@ class ManageFragment : Fragment() {
                     audioAdapter = AudioAdapter(listModel, ctx, binding, act, fragmentManager1, DB)
                     binding.rvMainAudioList.adapter = audioAdapter
                 } else {
-                    if (BWSApplication.isNetworkConnected(act)) {
+                    if (isNetworkConnected(act)) {
                         val fragmentManager1: FragmentManager =
                             (ctx as FragmentActivity).supportFragmentManager
                         audioAdapter =
@@ -402,7 +402,7 @@ class ManageFragment : Fragment() {
                         ignoreCase = true
                     )) && PlayFrom.equals(views, ignoreCase = true)
         ) {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.playWhenReady) {
@@ -435,7 +435,7 @@ class ManageFragment : Fragment() {
                     }
                 }
             } else {
-                if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
+                if (views.equals("My Downloads") && !isNetworkConnected(ctx)) {
                     Log.e("download audio in gm", downloadAudioDetailsList.toString())
                     getMedia(
                         views!!,
@@ -487,10 +487,10 @@ class ManageFragment : Fragment() {
                     listModelList2.add(position, mainPlayModel)
                 }
             }
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 callPlayer(position, views, listModelList2, ctx, act, audioc)
             } else {
-                if (views.equals("My Downloads") && !BWSApplication.isNetworkConnected(ctx)) {
+                if (views.equals("My Downloads") && !isNetworkConnected(ctx)) {
                     getMedia(
                         views!!,
                         AudioPlayerFlag!!,
@@ -723,7 +723,7 @@ class ManageFragment : Fragment() {
     }
 
     private fun prepareData() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
+        if (isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.getClient().getHomeData(CoUserID)
             listCall.enqueue(object : Callback<HomeDataModel?> {
@@ -885,7 +885,7 @@ class ManageFragment : Fragment() {
                     LocalBroadcastManager.getInstance(ctx)
                         .registerReceiver(listener, IntentFilter("play_pause_Action"))
                     binding.llPlayPause.setOnClickListener {
-                        if (BWSApplication.isNetworkConnected(activity)) {
+                        if (isNetworkConnected(activity)) {
                             val shared1 = ctx.getSharedPreferences(
                                 CONSTANTS.PREF_KEY_PLAYER,
                                 AppCompatActivity.MODE_PRIVATE
@@ -952,7 +952,7 @@ class ManageFragment : Fragment() {
                 }
 
                 private fun callPlaylistDetails() {
-                    if (BWSApplication.isNetworkConnected(activity)) {
+                    if (isNetworkConnected(activity)) {
                         try {
                             val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                             i.putExtra("New", "0")
@@ -1239,7 +1239,7 @@ class ManageFragment : Fragment() {
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (MyDownloads.equals("1", true)) {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
                         playlistID,
                         ignoreCase = true
@@ -1505,7 +1505,7 @@ class ManageFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvViewAll.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                if (isNetworkConnected(ctx)) {
                     val bundle = Bundle()
                     bundle.putString("ID", listModel[position].homeAudioID)
                     bundle.putString("Name", listModel[position].view)
@@ -1769,7 +1769,7 @@ class ManageFragment : Fragment() {
 
 
             holder.binding.rlMainLayout.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                if (isNetworkConnected(ctx)) {
                     try {
                         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                         i.putExtra("New", "0")
@@ -2195,7 +2195,7 @@ class ManageFragment : Fragment() {
                 .into(holder.binding.ivRestaurantImage)
 
             holder.binding.llMainLayout.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                if (isNetworkConnected(ctx)) {
                     val bundle = Bundle()
                     bundle.putString("ID", homeView)
                     bundle.putString("Name", viewString)
