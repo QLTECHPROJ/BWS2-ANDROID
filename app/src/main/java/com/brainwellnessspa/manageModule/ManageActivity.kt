@@ -2,10 +2,13 @@ package com.brainwellnessspa.manageModule
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -27,6 +30,7 @@ import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
 import com.brainwellnessspa.databinding.VideoSeriesBoxLayoutBinding
+import com.brainwellnessspa.webView.TncActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -78,6 +82,41 @@ class ManageActivity : AppCompatActivity() {
 
         binding.btnFreeJoin.setOnClickListener {
             startActivity(i)
+        }
+
+        binding.tvtncs.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "Tnc")
+            startActivity(i)
+        }
+
+        binding.tvPrivacyPolicys.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
+            startActivity(i)
+        }
+
+        binding.tvDisclaimers.setOnClickListener {
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.full_desc_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+            val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+            val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
+            tvTitle.setText(R.string.Disclaimer)
+            tvDesc.setText(R.string.Disclaimer_text)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            tvClose.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(true)
         }
 
         binding.simpleSeekbar.progress = 1

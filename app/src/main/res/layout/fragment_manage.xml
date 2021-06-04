@@ -354,6 +354,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
+                                android:lineSpacingExtra="@dimen/_4sdp"
                                 android:paddingStart="@dimen/_10sdp"
                                 android:textColor="@color/text_new_light_blue"
                                 android:textSize="@dimen/_14sdp"

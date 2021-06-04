@@ -339,7 +339,7 @@ public class BWSApplication extends Application {
                         GetMedia(AudioFile, ctx, audioFileName, ivDownloads, tvDownloads, llDownload);
                         try {
                             Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
-                                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(12))).priority(Priority.HIGH)
+                                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -787,11 +787,11 @@ public class BWSApplication extends Application {
                             ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                             if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                                 Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f)
-                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                             } else {
                                 Glide.with(ctx).load(R.drawable.ic_playlist_bg).thumbnail(0.05f)
-                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).priority(Priority.HIGH)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                             }
 
