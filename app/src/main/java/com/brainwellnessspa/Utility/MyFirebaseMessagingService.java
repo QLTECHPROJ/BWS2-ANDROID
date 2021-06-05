@@ -164,6 +164,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                }
             } else {
                 resultIntent = new Intent(this, BottomNavigationActivity.class);
+                resultIntent.putExtra("IsFirst","0");
                 taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);

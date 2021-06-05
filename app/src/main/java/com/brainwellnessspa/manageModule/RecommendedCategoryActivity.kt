@@ -357,7 +357,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                    }
                                 } else {
                                     showToast(
-                                        "You can Select only three Problems Please unselect Old for new select",
+                                        "You can choose maximus of three areas of focus. In case you wish to change your choices then simply unselct the ones you had selected earlier.",
                                         activity
                                     )
                                 }

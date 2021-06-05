@@ -1507,6 +1507,7 @@ class HomeFragment : Fragment() {
                                                             act,
                                                             BottomNavigationActivity::class.java
                                                         )
+                                                        intent.putExtra("IsFirst","1")
                                                         act.startActivity(intent)
                                                         act.finish()
                                                     }

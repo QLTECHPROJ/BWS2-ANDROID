@@ -1,5 +1,6 @@
 package com.brainwellnessspa.dashboardModule.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
@@ -32,26 +33,29 @@ class NotificationListActivity : AppCompatActivity() {
     lateinit var binding: ActivityNotificationListBinding
     lateinit var adapter: NotiListAdapter
     lateinit var activity: Activity
-    var USERID: String? = null
-    var CoUserID: String? = null
+    var userId: String? = null
+    var coUserId: String? = null
+    var userName: String? = null
     lateinit var ctx: Context
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
         activity = this@NotificationListActivity
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         ctx = this@NotificationListActivity
         binding.llBack.setOnClickListener {
             finish()
         }
         val p = Properties()
-        p.putValue("coUserId", CoUserID)
+        p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Notification List Viewed", p, CONSTANTS.screen)
         binding.llError.visibility = View.GONE
-        binding.tvFound.text = "No result found"
+        binding.tvFound.text = "Welcome " + userName + " hope you're doing great!!"
         prepareNotiData()
     }
 
@@ -59,7 +63,7 @@ class NotificationListActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<NotificationlistModel> =
-                APINewClient.getClient().getNotificationlist(USERID, CoUserID)
+                APINewClient.getClient().getNotificationlist(userId, coUserId)
             listCall.enqueue(object : Callback<NotificationlistModel> {
                 override fun onResponse(
                     call: Call<NotificationlistModel>,
@@ -79,7 +83,7 @@ class NotificationListActivity : AppCompatActivity() {
                         ) {
                             binding.rvNotiList.layoutManager =
                                 LinearLayoutManager(this@NotificationListActivity)
-                            if (listModel.responseData!!.size == 0) {
+                            if (listModel.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.VISIBLE
                                 binding.rvNotiList.visibility = View.GONE
                             } else {
@@ -109,16 +113,13 @@ class NotificationListActivity : AppCompatActivity() {
     }
 
     class NotiListAdapter(
-        listModel: List<NotificationlistModel.ResponseData?>,
-        activity: Activity
+        private val listModel: List<NotificationlistModel.ResponseData?>,
+        var activity: Activity
     ) :
         RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
-        private val listModel: List<NotificationlistModel.ResponseData?> = listModel
-        var activity: Activity = activity
 
-        inner class MyViewHolder(bindingAdapter: NotificationListLayoutBinding) :
+        inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) :
             RecyclerView.ViewHolder(bindingAdapter.root) {
-            var bindingAdapter: NotificationListLayoutBinding = bindingAdapter
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

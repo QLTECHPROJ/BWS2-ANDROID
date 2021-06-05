@@ -298,6 +298,7 @@ class SplashActivity : AppCompatActivity() {
         ) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
+                intent.putExtra("IsFirst","0")
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())

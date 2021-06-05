@@ -176,12 +176,12 @@ class SignInActivity : AppCompatActivity() {
             && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
         ) {
             binding.txtEmailError.visibility = View.VISIBLE
-            binding.txtEmailError.text = "Please provide a valid email address"
+            binding.txtEmailError.text = "Please  provide a valid email address"
             binding.txtPassowrdError.visibility = View.GONE
         } else if (binding.etPassword.text.toString() == "") {
             binding.txtEmailError.visibility = View.GONE
             binding.txtPassowrdError.visibility = View.VISIBLE
-            binding.txtPassowrdError.text = "Please enter password"
+            binding.txtPassowrdError.text = "Please provide a password"
         } else if (binding.etPassword.text.toString().length < 8
             || !isValidPassword(binding.etPassword.text.toString())
         ) {

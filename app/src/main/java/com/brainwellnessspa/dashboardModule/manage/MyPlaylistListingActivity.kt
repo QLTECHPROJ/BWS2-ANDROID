@@ -1825,7 +1825,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.tvTag.visibility = View.GONE
                         binding.rvPlayLists2.visibility = View.GONE
 //                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
-                        binding.tvFound.setText("No result found")
+                        binding.tvFound.setText("Please use another term and try searching again")
 //                        Log.e("search", SearchFlag)
                     } else {
                         binding.llError.visibility = View.GONE

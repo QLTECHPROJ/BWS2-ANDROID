@@ -31,7 +31,7 @@
                 android:layout_marginTop="@dimen/_33sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/Delete_Reminder"
+                android:text="Remove Reminder"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
 
@@ -44,7 +44,7 @@
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
-                android:text="@string/reminder_quotes"
+                android:text="Are you sure you want to remove the reminder?"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 

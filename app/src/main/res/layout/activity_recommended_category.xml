@@ -12,8 +12,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:paddingBottom="@dimen/_80sdp">
+            android:overScrollMode="never">
 
             <RelativeLayout
                 android:id="@+id/rlstep2"
@@ -133,6 +132,7 @@
                             android:visibility="visible"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:itemCount="3"
+                            android:layout_marginBottom="@dimen/_76sdp"
                             tools:listitem="@layout/all_category_raw"
                             tools:targetApi="lollipop" />
 

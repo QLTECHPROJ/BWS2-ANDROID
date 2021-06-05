@@ -244,10 +244,22 @@ class EditProfileActivity : AppCompatActivity() {
                             if (!viewModel.responseData!!.email.equals("", ignoreCase = true)) {
                                 binding.etEmail.isEnabled = false
                                 binding.etEmail.isClickable = false
+                                binding.etEmail.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.light_gray
+                                    )
+                                )
                                 binding.ivCheckEmail.isEnabled = false
                                 binding.ivCheckEmail.isClickable = false
 
                             } else {
+                                binding.etEmail.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.black
+                                    )
+                                )
                                 binding.etEmail.isEnabled = true
                                 binding.etEmail.isClickable = true
                             }
@@ -255,7 +267,21 @@ class EditProfileActivity : AppCompatActivity() {
                             if (!viewModel.responseData!!.mobile.equals("", ignoreCase = true)) {
                                 binding.etMobileNumber.isEnabled = false
                                 binding.etMobileNumber.isClickable = false
+                                binding.etMobileNumber.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.light_gray
+                                    )
+                                )
+                                binding.ivCheckNumber.isEnabled = false
+                                binding.ivCheckNumber.isClickable = false
                             } else {
+                                binding.etMobileNumber.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.black
+                                    )
+                                )
                                 binding.etMobileNumber.isEnabled = true
                                 binding.etMobileNumber.isClickable = true
                             }
@@ -263,7 +289,19 @@ class EditProfileActivity : AppCompatActivity() {
                             if (!viewModel.responseData!!.dob.equals("", ignoreCase = true)) {
                                 binding.etCalendar.isEnabled = false
                                 binding.etCalendar.isClickable = false
+                                binding.etMobileNumber.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.light_gray
+                                    )
+                                )
                             } else {
+                                binding.etMobileNumber.setTextColor(
+                                    ContextCompat.getColor(
+                                        ctx,
+                                        R.color.black
+                                    )
+                                )
                                 binding.etCalendar.isEnabled = true
                                 binding.etCalendar.isClickable = true
                             }
@@ -312,7 +350,7 @@ class EditProfileActivity : AppCompatActivity() {
                 birthYear = getAge(ageYear, ageMonth, ageDate)
                 if (birthYear < 18) {
                     binding.txtDobError.visibility = View.VISIBLE
-                    binding.txtDobError.text = "You must be 18 years of age to register"
+                    binding.txtDobError.text = "Please confirm whether you are above 18 years of age"
                     binding.btnSave.isEnabled = false
                     binding.btnSave.isClickable = false
                 } else {

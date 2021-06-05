@@ -37,6 +37,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
             }
             if(BackClick.equals("0",true)){
                 val intent = Intent(this@PlaylistDoneActivity, BottomNavigationActivity::class.java)
+                intent.putExtra("IsFirst","1")
                 startActivity(intent)
                 finish()
             }else if(BackClick.equals("1",true)){

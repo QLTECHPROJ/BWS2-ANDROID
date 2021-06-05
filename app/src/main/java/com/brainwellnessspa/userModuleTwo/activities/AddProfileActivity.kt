@@ -26,7 +26,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class   AddProfileActivity : AppCompatActivity() {
+class AddProfileActivity : AppCompatActivity() {
     var userID: String? = null
     var coUserID: String? = null
     var coEMAIL: String? = null
@@ -196,7 +196,7 @@ class   AddProfileActivity : AppCompatActivity() {
 
         binding.btnSendPin.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.txtNameError.text = "Please provide  a Name"
+                binding.txtNameError.text = "Please provide a Name"
                 binding.txtNameError.visibility = View.VISIBLE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE

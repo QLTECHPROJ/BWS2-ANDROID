@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/_28sdp"
     android:background="@drawable/popup_background"
-    android:elevation="@dimen/_110sdp">
+    android:elevation="@dimen/_110sdp"
+    tools:targetApi="lollipop">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/white"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_33sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="@string/Playlist"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_17sdp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:text="@string/sucess_playlist"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="SpUsage" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/white"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_28sdp"
+            android:layout_marginBottom="@dimen/_26sdp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
+            <RelativeLayout
+                android:id="@+id/rlCreate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_24sdp"
-                android:layout_marginTop="@dimen/_33sdp"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="@string/Playlist"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_17sdp" />
-
-            <TextView
-                android:id="@+id/tvHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_50sdp"
-                android:layout_marginTop="@dimen/_18sdp"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="@string/sucess_playlist"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_42sdp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_28sdp"
-                android:layout_marginBottom="@dimen/_26sdp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/rlCreate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_42sdp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:background="@drawable/light_green_rounded_filled"
-                    android:paddingHorizontal="@dimen/_18sdp">
-
-                    <TextView
-                        android:id="@+id/tvAction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:text="Go to playlist"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_13sdp" />
-
-                </RelativeLayout>
+                android:background="@drawable/light_green_rounded_filled"
+                android:paddingHorizontal="@dimen/_18sdp">
 
                 <TextView
-                    android:id="@+id/tvCancel"
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center"
-                    android:text="@string/Cancel"
+                    android:id="@+id/tvAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="@string/go_to_playlist"
                     android:textAllCaps="true"
-                    android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
 
-            </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvCancel"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="@string/Cancel"
+                android:textAllCaps="true"
+                android:textColor="@color/dark_blue_gray"
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="SpUsage" />
+
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

@@ -915,7 +915,7 @@ public class BWSApplication extends Application {
                                     final TextView tvGoBack = dialoged.findViewById(R.id.tvGoBack);
                                     final TextView tvHeader = dialoged.findViewById(R.id.tvHeader);
                                     final RelativeLayout tvconfirm = dialoged.findViewById(R.id.tvconfirm);
-                                    tvHeader.setText("Are you sure you want to delete " + PlaylistName + " playlist?");
+                                    tvHeader.setText("Are you sure you want to delete " + PlaylistName + " ?");
                                     dialoged.setOnKeyListener((v44, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialoged.dismiss();
@@ -2268,8 +2268,9 @@ public class BWSApplication extends Application {
             this.Time = Time;
         }
 
+        @NotNull
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
             ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                     , R.layout.reminder_selectionlist_layout, parent, false);
             return new MyViewHolder(v);
@@ -2336,7 +2337,7 @@ public class BWSApplication extends Application {
                                 TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<SetReminderOldModel>() {
                             @Override
-                            public void onResponse(Call<SetReminderOldModel> call, Response<SetReminderOldModel> response) {
+                            public void onResponse(@NotNull Call<SetReminderOldModel> call, @NotNull Response<SetReminderOldModel> response) {
                                 try {
                                     SetReminderOldModel listModel = response.body();
                                     if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
@@ -2383,6 +2384,7 @@ public class BWSApplication extends Application {
 
     public static class TimePickerThemeclass extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
+        @NotNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -2492,6 +2494,7 @@ public class BWSApplication extends Application {
             }
         }
     }
+
     public static void callObserve2(Context ctx) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);

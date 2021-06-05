@@ -387,6 +387,7 @@ class UserListActivity : AppCompatActivity() {
                                                                         activity,
                                                                         BottomNavigationActivity::class.java
                                                                 )
+                                                                intent.putExtra("IsFirst","1")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             }

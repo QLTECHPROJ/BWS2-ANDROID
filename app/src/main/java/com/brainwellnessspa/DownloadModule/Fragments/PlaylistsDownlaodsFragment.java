@@ -409,6 +409,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
                     final Button Btn = dialog.findViewById(R.id.Btn);
                     tvTitle.setText("Remove playlist");
+                    tvHeader.setText("Playlist has been removed");
                     tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
                     Btn.setText("Confirm");
                     dialog.setOnKeyListener((v, keyCode, event) -> {

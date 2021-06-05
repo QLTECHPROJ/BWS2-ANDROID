@@ -5,6 +5,7 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyBatteryReceiver;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding;
@@ -40,13 +42,13 @@ import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
 
-public class BottomNavigationActivity extends AppCompatActivity  implements NetworkChangeReceiver_navigator {
+public class BottomNavigationActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static int miniPlayer = 0;
     public static boolean audioClick = false, tutorial = false;
     ActivityBottomNavigationBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     boolean backpressed = false;
-    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
+    String IsFirst = "", userId = "", coUserId = "", userName = "", Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
     UiModeManager uiModeManager;
     MyNetworkReceiver myNetworkReceiver;
     MyBatteryReceiver myBatteryReceiver;
@@ -66,6 +68,21 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
         }
+        SharedPreferences shared1 =
+                getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
+
+        if (getIntent().getExtras() != null) {
+            IsFirst = getIntent().getStringExtra("IsFirst");
+        }
+
+        if (IsFirst.equalsIgnoreCase("1")) {
+            BWSApplication.showToast("Welcome " + userName + "!!", BottomNavigationActivity.this);
+        } else {
+//            nothing
+        }
         uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
                 || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
@@ -74,7 +91,7 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
 
             Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
         }
-        registerReceiver(myBatteryReceiver = new MyBatteryReceiver(),new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        registerReceiver(myBatteryReceiver = new MyBatteryReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -93,6 +110,7 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -109,6 +127,7 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     protected void onResume() {
         NetWatch.builder(this)
@@ -129,6 +148,7 @@ public class BottomNavigationActivity extends AppCompatActivity  implements Netw
                 .build();
         super.onResume();
     }
+
     @Override
     protected void onDestroy() {
         NetWatch.unregister(this);

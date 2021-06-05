@@ -243,21 +243,21 @@ class ChangePasswordActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun changePassword() {
         if (binding.etCurrentPswd.text.toString() == "") {
-            binding.txtCurrentPswdError.text = "Current login password is required"
+            binding.txtCurrentPswdError.text = "Please provide the current password"
             binding.txtCurrentPswdError.visibility = View.VISIBLE
             binding.txtNewPswdError.visibility = View.GONE
             binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etCurrentPswd.text.toString().length < 8
             || !isValidPassword(binding.etCurrentPswd.text.toString())
         ) {
-            binding.txtCurrentPswdError.text = "Valid current login password is required"
+            binding.txtCurrentPswdError.text = "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
             binding.txtCurrentPswdError.visibility = View.VISIBLE
             binding.txtNewPswdError.visibility = View.GONE
             binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etNewPswd.text.toString() == "") {
             binding.txtCurrentPswdError.visibility = View.GONE
             binding.txtNewPswdError.visibility = View.VISIBLE
-            binding.txtNewPswdError.text = "New login password is required"
+            binding.txtNewPswdError.text = "Please provide the new password"
             binding.txtConfirmPswdError.visibility = View.GONE
         } else if (binding.etNewPswd.text.toString().length < 8
             || !isValidPassword(binding.etNewPswd.text.toString())
@@ -271,7 +271,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.txtCurrentPswdError.visibility = View.GONE
             binding.txtNewPswdError.visibility = View.GONE
             binding.txtConfirmPswdError.visibility = View.VISIBLE
-            binding.txtConfirmPswdError.text = "Confirm new login password is required"
+            binding.txtConfirmPswdError.text = "Please provide the confirm new password"
         } else if (binding.etConfirmPswd.text.toString().length < 8
             || !isValidPassword(binding.etConfirmPswd.text.toString())
         ) {

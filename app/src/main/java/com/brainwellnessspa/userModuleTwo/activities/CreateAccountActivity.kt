@@ -146,7 +146,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.txtNameError.text = "Please provide  a Name"
+                binding.txtNameError.text = "Please provide a Name"
                 binding.txtNameError.visibility = View.VISIBLE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE
@@ -182,7 +182,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE
                 binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text = "Please enter password"
+                binding.txtPassowrdError.text = "Please provide a password"
             } else if (binding.etPassword.text.toString().length < 8 || !isValidPassword(binding.etPassword.text.toString())
             ) {
                 binding.txtNameError.visibility = View.GONE

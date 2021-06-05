@@ -599,8 +599,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                tvTitle.setText("Delete Reminder");
-                tvSubTitle.setText("Are you sure you want to delete your reminder?");
+                tvTitle.setText("Remove Reminder");
+                tvSubTitle.setText("Are you sure you want to remove the reminder?");
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();

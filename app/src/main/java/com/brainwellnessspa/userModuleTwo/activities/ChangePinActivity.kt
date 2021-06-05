@@ -86,35 +86,35 @@ class ChangePinActivity : AppCompatActivity() {
 
     private fun changePin() {
         if (binding.etCurrentPIN.text.toString() == "") {
-            binding.txtCurrentPINError.text = "Current login PIN is required"
+            binding.txtCurrentPINError.text = "Please provide a current valid PIN"
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length != 4) {
-            binding.txtCurrentPINError.text = "Please enter valid current login PIN"
+            binding.txtCurrentPINError.text = "Please provide a current valid PIN"
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() == "") {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "New login PIN is required"
+            binding.txtNewPINError.text = "Please provide the latest PIN to login"
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "Please enter valid new login PIN"
+            binding.txtNewPINError.text = "Please provide the latest PIN to login"
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etConfirmPIN.text.toString() == "") {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Confirm new login PIN is required"
+            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
         } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please enter valid confirm new login PIN"
+            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE

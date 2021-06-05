@@ -249,7 +249,8 @@ public class AddAudioActivity extends AppCompatActivity {
                                 if (listModel.getResponseData().size() == 0) {
                                     binding.rvSerachList.setVisibility(View.GONE);
                                     binding.llError.setVisibility(View.VISIBLE);
-                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
+                                    binding.tvFound.setText("Please use another term and try searching again");
+//                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
                                     binding.llError.setVisibility(View.GONE);
                                     binding.rvSerachList.setVisibility(View.VISIBLE);

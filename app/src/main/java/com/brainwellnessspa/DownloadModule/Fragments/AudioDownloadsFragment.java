@@ -748,7 +748,8 @@ public class AudioDownloadsFragment extends Fragment {
             final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
             final Button Btn = dialog.findViewById(R.id.Btn);
             tvTitle.setText("Remove audio");
-            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
+//            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
+            tvHeader.setText("Audio has been removed");
             Btn.setText("Confirm");
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {

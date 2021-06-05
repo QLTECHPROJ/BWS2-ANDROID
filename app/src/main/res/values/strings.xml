@@ -150,7 +150,7 @@
     <string name="Resource">Resource</string>
     <string name="Resources">Resources</string>
     <string name="Select_reason">Select reason</string>
-    <string name="logout_quotes">Are you sure you want to log out Brain Wellness Spa?</string>
+    <string name="logout_quotes">Are you sure you want to log out Brain Wellness App?</string>
     <string name="Discover_More">Discover More</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="no_server_found">You are not currently connected to internet. Please try again.!</string>
@@ -403,4 +403,5 @@
     <string name="new_login_password">New login Password</string>
     <string name="current_login_password">Current login Password</string>
     <string name="change_password">Change Password</string>
+    <string name="go_to_playlist">Go to playlist</string>
 </resources>
