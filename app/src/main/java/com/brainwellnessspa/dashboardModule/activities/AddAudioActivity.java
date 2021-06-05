@@ -810,6 +810,7 @@ public class AddAudioActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Search Audio");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchModelAudio");
             editor.apply();
@@ -1068,6 +1069,7 @@ public class AddAudioActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio");
             editor.apply();

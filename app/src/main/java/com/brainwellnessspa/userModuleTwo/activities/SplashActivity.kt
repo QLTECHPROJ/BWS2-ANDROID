@@ -162,10 +162,6 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<VersionModel>, t: Throwable) {
                 }
             })
-        } else {
-            setAnalytics(getString(R.string.segment_key_real))
-            askBattyPermission()
-            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
         }
     }
 
@@ -240,8 +236,10 @@ class SplashActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<CoUserDetailsModel>, t: Throwable) {
                 }
             })
-        } else {
+        }  else {
+            setAnalytics(getString(R.string.segment_key_real))
             askBattyPermission()
+            BWSApplication.showToast(ctx.getString(R.string.no_server_found), act)
         }
     }
 

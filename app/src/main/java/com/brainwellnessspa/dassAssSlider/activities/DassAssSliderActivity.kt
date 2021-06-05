@@ -217,7 +217,16 @@ class DassAssSliderActivity : AppCompatActivity() {
                             binding.lpIndicator.max = listModel.responseData!!.questions!!.size
                             binding.lpIndicator.progress = 0
 //                            binding.tvNumberOfQus.text = myPos.toString()
-//                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString()
+//                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString
+                            if(assQus.size!=0){
+                                val mod = assQus.size % 2
+                                if(mod==0){
+                                    myPos = assQus.size
+                                }else{
+                                    myPos = assQus.size - 1
+                                }
+                                Log.e("My Pos...",myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." +assQus.size.toString())
+                            }
                             if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
                                 firstListAdapter = OptionsFirstListAdapter(

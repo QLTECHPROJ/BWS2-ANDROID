@@ -757,6 +757,7 @@ public class ViewAllAudioFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, Name);
             editor.apply();
             audioClick = audioc;

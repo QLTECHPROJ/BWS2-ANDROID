@@ -51,7 +51,6 @@ public class OrderSummaryActivity extends AppCompatActivity {
     String json = "";
     Gson gson = new Gson();
     Activity activity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

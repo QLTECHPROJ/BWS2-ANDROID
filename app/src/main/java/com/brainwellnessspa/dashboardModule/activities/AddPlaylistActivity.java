@@ -376,6 +376,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName);
                                     editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created");
                                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                     editor.commit();

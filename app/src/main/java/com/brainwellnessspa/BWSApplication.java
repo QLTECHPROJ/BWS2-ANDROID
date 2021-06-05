@@ -87,6 +87,7 @@ import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
+import com.brainwellnessspa.userModuleTwo.activities.SplashActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -166,6 +167,7 @@ public class BWSApplication extends Application {
     static BWSApplication BWSApplication;
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
+
     static TextView tvTime;
     public static AudioDatabase DB;
     public static int comeReminder = 0, isPlayPlaylist = 0;
@@ -1733,6 +1735,7 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, PlayerPosition);
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
             editor.commit();
@@ -2026,7 +2029,8 @@ public class BWSApplication extends Application {
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
         if(analytics==null){
-
+            SplashActivity sp = new SplashActivity();
+            sp.setAnalytics(getContext().getString(R.string.segment_key_real));
         }
         try {
             if (methodName.equalsIgnoreCase("track")) {
@@ -2275,62 +2279,51 @@ public class BWSApplication extends Application {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             holder.binding.cbChecked.setText(selectionModels[position].getDay());
 
-            Log.e("Reminder Day", RDay);
+            if(position==0) {
+                Log.e("Reminder RDay", RDay);
 
-            if (RDay.contains(selectionModels[position].toString())) {
-                remiderDays.add(String.valueOf(position));
-                holder.binding.cbChecked.setSelected(true);
-            }
-
-            holder.binding.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (holder.binding.cbChecked.isChecked()) {
-                    if (!remiderDays.contains(selectionModels[position].toString())) {
-                        remiderDays.add(String.valueOf(position));
-                    }
-                } else {
-                    remiderDays.remove(String.valueOf(position));
+                if (remiderDays.size() == selectionModels.length) {
+                    cbCheck.setChecked(true);
                 }
-
-
                 if (remiderDays.size() == 0) {
-                    Log.e("remiderDays", "no data");
+                    tvSelectAll.setText("Select All");
                 } else {
-                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                    tvSelectAll.setText("Unselect All");
                 }
-            });
-
-            if (remiderDays.size() == 0) {
-                tvSelectAll.setText("Select All");
-            } else {
-                tvSelectAll.setText("Unselect All");
             }
-
-            cbCheck.setOnClickListener(view -> {
-                if (cbCheck.isChecked()) {
-                    remiderDays.clear();
-                    RDay = "";
-                    for (int i = 0; i < selectionModels.length; i++) {
-                        remiderDays.add(String.valueOf(i));
-                        RDay = TextUtils.join(",", remiderDays);
-                    }
-                } else {
-                    remiderDays.clear();
-                    RDay = "";
-                }
-
-                Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                notifyDataSetChanged();
-            });
-
             if (RDay.contains(String.valueOf(position))) {
+                remiderDays.add(String.valueOf(position));
                 holder.binding.cbChecked.setChecked(true);
-            } else {
+            }else{
                 holder.binding.cbChecked.setChecked(false);
             }
 
-            if (remiderDays.size() == selectionModels.length) {
-                cbCheck.setChecked(true);
-            }
+            holder.binding.cbChecked.setOnClickListener(v -> {
+                if (holder.binding.cbChecked.isChecked()) {
+                    remiderDays.add(String.valueOf(position));
+                    RDay = "";
+                    RDay = TextUtils.join(",", remiderDays);
+                } else {
+                    remiderDays.remove(String.valueOf(position));
+                    RDay = "";
+                    RDay = TextUtils.join(",", remiderDays);
+                }
+                if (remiderDays.size() == 0) {
+                    Log.e("remiderDays", "no data");
+                } else {
+                    Log.e("remiderDays R", RDay);
+                }
+            });
+
+            cbCheck.setOnClickListener(view -> {
+                remiderDays.clear();
+                RDay = "";
+                if (cbCheck.isChecked()) {
+                    RDay = "0, 1, 2, 3, 4, 5, 6";
+                }
+                Log.e("remiderDays R cb ch", RDay);
+                notifyDataSetChanged();
+            });
 
             btnNext.setOnClickListener(v -> {
                 if (remiderDays.size() == 0) {

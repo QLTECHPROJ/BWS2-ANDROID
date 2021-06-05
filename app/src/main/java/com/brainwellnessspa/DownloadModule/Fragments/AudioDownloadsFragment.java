@@ -723,6 +723,7 @@ public class AudioDownloadsFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.apply();
@@ -889,6 +890,7 @@ public class AudioDownloadsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
             editor.apply();

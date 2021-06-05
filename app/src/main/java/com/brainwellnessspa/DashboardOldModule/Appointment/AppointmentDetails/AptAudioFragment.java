@@ -574,6 +574,7 @@ public class AptAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "AppointmentDetailList");
                 editor.commit();
@@ -670,6 +671,7 @@ public class AptAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.commit();
