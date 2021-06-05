@@ -3,6 +3,7 @@ package com.brainwellnessspa.userModuleTwo.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -64,11 +65,20 @@ class ChangePasswordActivity : AppCompatActivity() {
             if (currentPaswd.equals("", ignoreCase = true)) {
                 binding.ivCurrentPswdVisible.isClickable = false
                 binding.ivCurrentPswdVisible.isEnabled = false
+                binding.ivCurrentPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.light_gray),
+                    PorterDuff.Mode.SRC_IN
+                )
+                binding.ivCurrentPswdVisible.isEnabled = false
                 binding.ivCurrentPswdInVisible.isClickable = false
                 binding.ivCurrentPswdInVisible.isEnabled = false
             } else {
                 binding.ivCurrentPswdVisible.isClickable = true
                 binding.ivCurrentPswdVisible.isEnabled = true
+                binding.ivCurrentPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.black),
+                    PorterDuff.Mode.SRC_IN
+                )
                 binding.ivCurrentPswdInVisible.isClickable = true
                 binding.ivCurrentPswdInVisible.isEnabled = true
             }
@@ -76,11 +86,20 @@ class ChangePasswordActivity : AppCompatActivity() {
             if (newPswd.equals("", ignoreCase = true)) {
                 binding.ivNewPswdVisible.isClickable = false
                 binding.ivNewPswdVisible.isEnabled = false
+                binding.ivNewPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.light_gray),
+                    PorterDuff.Mode.SRC_IN
+                )
+
                 binding.ivNewPswdInVisible.isClickable = false
                 binding.ivNewPswdInVisible.isEnabled = false
             } else {
                 binding.ivNewPswdVisible.isClickable = true
                 binding.ivNewPswdVisible.isEnabled = true
+                binding.ivNewPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.black),
+                    PorterDuff.Mode.SRC_IN
+                )
                 binding.ivNewPswdInVisible.isClickable = true
                 binding.ivNewPswdInVisible.isEnabled = true
             }
@@ -88,11 +107,20 @@ class ChangePasswordActivity : AppCompatActivity() {
             if (confirmPswd.equals("", ignoreCase = true)) {
                 binding.ivConfirmPswdVisible.isClickable = false
                 binding.ivConfirmPswdVisible.isEnabled = false
+                binding.ivConfirmPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.light_gray),
+                    PorterDuff.Mode.SRC_IN
+                )
+
                 binding.ivConfirmPswdInVisible.isClickable = false
                 binding.ivConfirmPswdInVisible.isEnabled = false
             } else {
                 binding.ivConfirmPswdVisible.isClickable = true
                 binding.ivConfirmPswdVisible.isEnabled = true
+                binding.ivConfirmPswdVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.black),
+                    PorterDuff.Mode.SRC_IN
+                )
                 binding.ivConfirmPswdInVisible.isClickable = true
                 binding.ivConfirmPswdInVisible.isEnabled = true
             }
@@ -129,6 +157,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         if (binding.etCurrentPswd.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivCurrentPswdVisible.isClickable = false
             binding.ivCurrentPswdVisible.isEnabled = false
+            binding.ivCurrentPswdVisible.setColorFilter(
+                ContextCompat.getColor(activity, R.color.light_gray),
+                PorterDuff.Mode.SRC_IN
+            )
             binding.ivCurrentPswdInVisible.isClickable = false
             binding.ivCurrentPswdInVisible.isEnabled = false
         }
@@ -136,6 +168,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         if (binding.etNewPswd.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivNewPswdVisible.isClickable = false
             binding.ivNewPswdVisible.isEnabled = false
+            binding.ivNewPswdVisible.setColorFilter(
+                ContextCompat.getColor(activity, R.color.light_gray),
+                PorterDuff.Mode.SRC_IN
+            )
             binding.ivNewPswdInVisible.isClickable = false
             binding.ivNewPswdInVisible.isEnabled = false
         }
@@ -143,6 +179,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         if (binding.etConfirmPswd.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivConfirmPswdVisible.isClickable = false
             binding.ivConfirmPswdVisible.isEnabled = false
+            binding.ivConfirmPswdVisible.setColorFilter(
+                ContextCompat.getColor(activity, R.color.light_gray),
+                PorterDuff.Mode.SRC_IN
+            )
             binding.ivConfirmPswdInVisible.isClickable = false
             binding.ivConfirmPswdInVisible.isEnabled = false
         }

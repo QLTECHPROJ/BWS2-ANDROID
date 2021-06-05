@@ -913,7 +913,7 @@ public class BWSApplication extends Application {
                                     final TextView tvGoBack = dialoged.findViewById(R.id.tvGoBack);
                                     final TextView tvHeader = dialoged.findViewById(R.id.tvHeader);
                                     final RelativeLayout tvconfirm = dialoged.findViewById(R.id.tvconfirm);
-                                    tvHeader.setText("Are you sure you want to delete " + PlaylistName + "  playlist?");
+                                    tvHeader.setText("Are you sure you want to delete " + PlaylistName + " playlist?");
                                     dialoged.setOnKeyListener((v44, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialoged.dismiss();

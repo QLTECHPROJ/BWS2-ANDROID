@@ -346,10 +346,7 @@ class UserListActivity : AppCompatActivity() {
                                                                         activity,
                                                                         WalkScreenActivity::class.java
                                                                 )
-                                                                intent.putExtra(
-                                                                        CONSTANTS.ScreenView,
-                                                                        "ProfileView"
-                                                                )
+                                                                intent.putExtra(CONSTANTS.ScreenView, "1")
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
                                                             } else if (responseData.isAssessmentCompleted.equals(

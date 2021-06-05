@@ -199,7 +199,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginEnd="@dimen/_2sdp"
                         android:gravity="center"
-                        android:layout_marginBottom="@dimen/_14sdp"
+                        android:layout_marginBottom="@dimen/_18sdp"
                         android:orientation="vertical">
 
                         <TextView
@@ -211,7 +211,7 @@
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_36sdp"
+                            android:textSize="@dimen/_26sdp"
                             tools:ignore="SpUsage" />
 
                         <TextView

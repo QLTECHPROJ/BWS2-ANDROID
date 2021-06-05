@@ -252,8 +252,9 @@ class AssProcessActivity : AppCompatActivity() {
         }
 
         binding.btnDoAss.setOnClickListener {
-            val i = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
-            startActivity(i)
+            val intent = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
+            intent.putExtra(CONSTANTS.ScreenView, "2")
+            startActivity(intent)
             finish()
         }
 

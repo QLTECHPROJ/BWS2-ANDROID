@@ -22,6 +22,7 @@ import com.brainwellnessspa.userModuleTwo.models.VersionModel
 import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
@@ -277,8 +278,14 @@ class SplashActivity : AppCompatActivity() {
             }, (2 * 800).toLong())
         } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, WalkScreenActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenView, "2")
+                val intent = Intent(
+                    this@SplashActivity,
+                    AssProcessActivity::class.java
+                )
+                intent.putExtra(
+                    CONSTANTS.ASSPROCESS,
+                    "0"
+                )
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())

@@ -109,17 +109,17 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.error = "Confirm new login PIN is required"
+            binding.txtConfirmPINError.text = "Confirm new login PIN is required"
         } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.error = "Please enter valid confirm new login PIN"
+            binding.txtConfirmPINError.text = "Please enter valid confirm new login PIN"
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.error = "Please check if both the PINs are same"
+            binding.txtConfirmPINError.text = "Please check if both the PINs are same"
         } else {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE

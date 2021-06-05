@@ -137,7 +137,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_14sdp"
                 tools:ignore="SpUsage" />
 
             <TextView
@@ -151,7 +151,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
 
         </LinearLayout>

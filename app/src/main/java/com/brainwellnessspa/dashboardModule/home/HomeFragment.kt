@@ -7,6 +7,8 @@ import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
@@ -43,6 +45,7 @@ import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
+import com.brainwellnessspa.manageModule.SleepTimeActivity
 import com.brainwellnessspa.userModuleTwo.activities.AddProfileActivity
 import com.brainwellnessspa.userModuleTwo.activities.WalkScreenActivity
 import com.brainwellnessspa.userModuleTwo.models.AddedUserListModel
@@ -109,8 +112,8 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
@@ -185,19 +188,20 @@ class HomeFragment : Fragment() {
         binding.rvAreaOfFocusCategory.adapter = adapter
 
         binding.llCheckIndexscore.setOnClickListener {
-            val intent = Intent(ctx, WalkScreenActivity::class.java)
-            intent.putExtra(CONSTANTS.ScreenView, "2")
-            startActivity(intent)
+            val intent = Intent(activity, AssProcessActivity::class.java)
+            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+            act.startActivity(intent)
+            act.finish()
         }
         networkCheck()
 
         binding.llBottomView.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(
-                        LayoutInflater.from(act),
-                        R.layout.user_list_custom_layout,
-                        null,
-                        false
+                    LayoutInflater.from(act),
+                    R.layout.user_list_custom_layout,
+                    null,
+                    false
                 )
                 mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
                 mBottomSheetDialog!!.setContentView(layoutBinding.root)
@@ -209,9 +213,9 @@ class HomeFragment : Fragment() {
                 layoutBinding.rvUserList.layoutManager = mLayoutManager
                 layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
                 prepareUserData(
-                        layoutBinding.rvUserList,
-                        layoutBinding.progressBar,
-                        layoutBinding.llAddNewUser, mBottomSheetDialog!!
+                    layoutBinding.rvUserList,
+                    layoutBinding.progressBar,
+                    layoutBinding.llAddNewUser, mBottomSheetDialog!!
                 )
                 layoutBinding.llAddNewUser.setOnClickListener {
                     val i = Intent(act, AddProfileActivity::class.java)
@@ -290,9 +294,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun prepareUserData(
-            rvUserList: RecyclerView,
-            progressBar: ProgressBar,
-            llAddNewUser: LinearLayout, mBottomSheetDialog: BottomSheetDialog
+        rvUserList: RecyclerView,
+        progressBar: ProgressBar,
+        llAddNewUser: LinearLayout, mBottomSheetDialog: BottomSheetDialog
     ) {
         if (isNetworkConnected(act)) {
             progressBar.visibility = View.VISIBLE
@@ -300,8 +304,8 @@ class HomeFragment : Fragment() {
             val listCall = APINewClient.getClient().getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
                 override fun onResponse(
-                        call: Call<AddedUserListModel>,
-                        response: Response<AddedUserListModel>
+                    call: Call<AddedUserListModel>,
+                    response: Response<AddedUserListModel>
                 ) {
                     try {
                         progressBar.visibility = View.GONE
@@ -351,8 +355,8 @@ class HomeFragment : Fragment() {
         val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         var fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")
         val DeviceId = Settings.Secure.getString(
-                BWSApplication.getContext().contentResolver,
-                Settings.Secure.ANDROID_ID
+            BWSApplication.getContext().contentResolver,
+            Settings.Secure.ANDROID_ID
         )
 
         Log.e("newToken", fcm_id.toString())
@@ -379,30 +383,30 @@ class HomeFragment : Fragment() {
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor", "SetTextI18n")
                 override fun onResponse(
-                        call: Call<HomeScreenModel?>,
-                        response: Response<HomeScreenModel?>
+                    call: Call<HomeScreenModel?>,
+                    response: Response<HomeScreenModel?>
                 ) {
                     try {
                         hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                act
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            act
                         )
                         val listModel = response.body()!!
                         val gson = Gson()
                         homelistModel = response.body()!!
                         val shared = ctx.getSharedPreferences(
-                                CONSTANTS.PREF_KEY_LOGIN,
-                                AppCompatActivity.MODE_PRIVATE
+                            CONSTANTS.PREF_KEY_LOGIN,
+                            AppCompatActivity.MODE_PRIVATE
                         )
                         val editor = shared.edit()
                         editor.putString(
-                                CONSTANTS.PREF_KEY_IsDisclimer,
-                                listModel.responseData!!.shouldPlayDisclaimer
+                            CONSTANTS.PREF_KEY_IsDisclimer,
+                            listModel.responseData!!.shouldPlayDisclaimer
                         )
                         editor.putString(
-                                CONSTANTS.PREF_KEY_Disclimer,
-                                gson.toJson(listModel.responseData!!.disclaimerAudio)
+                            CONSTANTS.PREF_KEY_Disclimer,
+                            gson.toJson(listModel.responseData!!.disclaimerAudio)
                         )
                         editor.apply()
                         when {
@@ -410,77 +414,77 @@ class HomeFragment : Fragment() {
                                 binding.llCheckPercent.visibility = View.INVISIBLE
                             }
                             listModel.responseData!!.scoreIncDec.equals(
-                                    "Increase",
-                                    ignoreCase = true
+                                "Increase",
+                                ignoreCase = true
                             ) -> {
                                 binding.llCheckPercent.visibility = View.VISIBLE
                                 binding.tvPercent.setTextColor(
-                                        ContextCompat.getColor(
-                                                act,
-                                                R.color.redtheme
-                                        )
+                                    ContextCompat.getColor(
+                                        act,
+                                        R.color.redtheme
+                                    )
                                 )
                                 binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                             }
                             listModel.responseData!!.scoreIncDec.equals(
-                                    "Decrease",
-                                    ignoreCase = true
+                                "Decrease",
+                                ignoreCase = true
                             ) -> {
                                 binding.llCheckPercent.visibility = View.VISIBLE
                                 binding.tvPercent.setTextColor(
-                                        ContextCompat.getColor(act, R.color.green_dark_s)
+                                    ContextCompat.getColor(act, R.color.green_dark_s)
                                 )
                                 binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                             }
                         }
                         LocalBroadcastManager.getInstance(ctx)
-                                .registerReceiver(listener, IntentFilter("play_pause_Action"))
+                            .registerReceiver(listener, IntentFilter("play_pause_Action"))
                         LocalBroadcastManager.getInstance(ctx)
-                                .registerReceiver(listener1, IntentFilter("Reminder"))
+                            .registerReceiver(listener1, IntentFilter("Reminder"))
                         binding.tvPercent.text =
-                                listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
+                            listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
                         binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
                         binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
 
                         binding.tvPlaylistName.text =
-                                listModel.responseData!!.suggestedPlaylist!!.playlistName
+                            listModel.responseData!!.suggestedPlaylist!!.playlistName
                         binding.tvTime.text =
-                                listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
+                            listModel.responseData!!.suggestedPlaylist!!.totalhour.toString() + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute.toString()
 
 
                         if (listModel.responseData!!.shouldCheckIndexScore.equals("0", true)) {
                             binding.llCheckIndexscore.visibility = View.GONE
                         } else if (listModel.responseData!!.shouldCheckIndexScore.equals(
-                                        "1",
-                                        ignoreCase = true
-                                )
+                                "1",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.llCheckIndexscore.visibility = View.VISIBLE
                         }
 
 
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "0",
-                                        ignoreCase = true
-                                )
-                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "",
-                                        ignoreCase = true
-                                )
+                                "0",
+                                ignoreCase = true
+                            )
+                            || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                "",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.tvReminder.text = "Set reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "1",
-                                        ignoreCase = true
-                                )
+                                "1",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.tvReminder.text = "Update reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                        "2",
-                                        ignoreCase = true
-                                )
+                                "2",
+                                ignoreCase = true
+                            )
                         ) {
                             binding.tvReminder.text = "Update reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -488,79 +492,79 @@ class HomeFragment : Fragment() {
 
                         binding.tvReminder.setOnClickListener {
                             if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                            "0",
-                                            ignoreCase = true
-                                    )
-                                    || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                            "",
-                                            ignoreCase = true
-                                    )
+                                    "0",
+                                    ignoreCase = true
+                                )
+                                || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
+                                    "",
+                                    ignoreCase = true
+                                )
                             ) {
                                 binding.tvReminder.text = "Set reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                 getReminderDay(
-                                        ctx,
-                                        act,
-                                        coUserId,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                        activity!!,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                    ctx,
+                                    act,
+                                    coUserId,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                    activity!!,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                            "1",
-                                            ignoreCase = true
-                                    )
+                                    "1",
+                                    ignoreCase = true
+                                )
                             ) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                                 getReminderDay(
-                                        ctx,
-                                        act,
-                                        coUserId,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                        activity!!,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                    ctx,
+                                    act,
+                                    coUserId,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                    activity!!,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals(
-                                            "2",
-                                            ignoreCase = true
-                                    )
+                                    "2",
+                                    ignoreCase = true
+                                )
                             ) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                 getReminderDay(
-                                        ctx,
-                                        act,
-                                        coUserId,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                        listModel.responseData!!.suggestedPlaylist!!.playlistName,
-                                        activity!!,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                        listModel.responseData!!.suggestedPlaylist!!.reminderDay
+                                    ctx,
+                                    act,
+                                    coUserId,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                    listModel.responseData!!.suggestedPlaylist!!.playlistName,
+                                    activity!!,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                    listModel.responseData!!.suggestedPlaylist!!.reminderDay
                                 )
                             }
                         }
 
                         getPlaylistDetail(
-                                listModel.responseData!!.suggestedPlaylist!!.playlistID!!,
-                                DB
+                            listModel.responseData!!.suggestedPlaylist!!.playlistID!!,
+                            DB
                         )
 
                         getPastIndexScore(
-                                homelistModel.responseData!!,
-                                binding.barChart,
-                                act
+                            homelistModel.responseData!!,
+                            binding.barChart,
+                            act
                         )
 
                         setPlayPauseIcon()
 
                         val sharedd = ctx.getSharedPreferences(
-                                CONSTANTS.RecommendedCatMain,
-                                Context.MODE_PRIVATE
+                            CONSTANTS.RecommendedCatMain,
+                            Context.MODE_PRIVATE
                         )
                         sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -584,8 +588,8 @@ class HomeFragment : Fragment() {
                         binding.llPlayPause.setOnClickListener {
                             if (isNetworkConnected(activity)) {
                                 val shared1 = ctx.getSharedPreferences(
-                                        CONSTANTS.PREF_KEY_PLAYER,
-                                        AppCompatActivity.MODE_PRIVATE
+                                    CONSTANTS.PREF_KEY_PLAYER,
+                                    AppCompatActivity.MODE_PRIVATE
                                 )
 //                            val AudioPlayerFlag =
 //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -593,7 +597,7 @@ class HomeFragment : Fragment() {
 //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "")
 //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                 val PlayerPosition =
-                                        shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                    shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                 when (isPlayPlaylist) {
                                     1 -> {
                                         player.playWhenReady = false
@@ -604,23 +608,23 @@ class HomeFragment : Fragment() {
                                     2 -> {
                                         if (player != null) {
                                             val lastIndexID =
-                                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
                                             if (PlayerAudioId.equals(
-                                                            lastIndexID,
-                                                            ignoreCase = true
-                                                    )
-                                                    && player.duration - player.currentPosition <= 20
+                                                    lastIndexID,
+                                                    ignoreCase = true
+                                                )
+                                                && player.duration - player.currentPosition <= 20
                                             ) {
                                                 val sharedd = ctx.getSharedPreferences(
-                                                        CONSTANTS.PREF_KEY_PLAYER,
-                                                        Context.MODE_PRIVATE
+                                                    CONSTANTS.PREF_KEY_PLAYER,
+                                                    Context.MODE_PRIVATE
                                                 )
                                                 val editor = sharedd.edit()
                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                                 editor.apply()
                                                 player.seekTo(0, 0)
                                                 PlayerAudioId =
-                                                        listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                                    listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
                                                 player.playWhenReady = true
                                             } else {
                                                 player.playWhenReady = true
@@ -632,15 +636,15 @@ class HomeFragment : Fragment() {
                                     }
                                     else -> {
                                         PlayerAudioId =
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
                                         callMainPlayerSuggested(
-                                                0,
-                                                "",
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
-                                                ctx,
-                                                act,
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistID!!,
-                                                listModel.responseData!!.suggestedPlaylist!!.playlistName!!
+                                            0,
+                                            "",
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!,
+                                            ctx,
+                                            act,
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistID!!,
+                                            listModel.responseData!!.suggestedPlaylist!!.playlistName!!
                                         )
                                         binding.llPlay.visibility = View.GONE
                                         binding.llPause.visibility = View.VISIBLE
@@ -661,16 +665,16 @@ class HomeFragment : Fragment() {
                             val i = Intent(ctx, MyPlaylistListingActivity::class.java)
                             i.putExtra("New", "0")
                             i.putExtra(
-                                    "PlaylistID",
-                                    homelistModel.responseData!!.suggestedPlaylist!!.playlistID
+                                "PlaylistID",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistID
                             )
                             i.putExtra(
-                                    "PlaylistName",
-                                    homelistModel.responseData!!.suggestedPlaylist!!.playlistName
+                                "PlaylistName",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistName
                             )
                             i.putExtra(
-                                    "PlaylistImage",
-                                    homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
+                                "PlaylistImage",
+                                homelistModel.responseData!!.suggestedPlaylist!!.playlistImage
                             )
                             i.putExtra("PlaylistSource", "")
                             i.putExtra("MyDownloads", "0")
@@ -688,9 +692,9 @@ class HomeFragment : Fragment() {
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
                     hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            act
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        act
                     )
                 }
             })
@@ -708,9 +712,9 @@ class HomeFragment : Fragment() {
 //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if (MyDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                            ignoreCase = true
-                    )
+                    homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (player != null) {
                     if (player.playWhenReady) {
@@ -736,9 +740,9 @@ class HomeFragment : Fragment() {
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
-                            homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
-                            ignoreCase = true
-                    )
+                    homelistModel.responseData!!.suggestedPlaylist!!.playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (player != null) {
                     if (player.playWhenReady) {
@@ -764,12 +768,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun callMainPlayerSuggested(
-            position: Int,
-            view: String?,
-            listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity?,
-            playlistID: String,playlistName:String
+        position: Int,
+        view: String?,
+        listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity?,
+        playlistID: String, playlistName: String
     ) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -782,9 +786,9 @@ class HomeFragment : Fragment() {
         if (MyDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
                 if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                                playlistID,
-                                ignoreCase = true
-                        )
+                        playlistID,
+                        ignoreCase = true
+                    )
                 ) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -796,8 +800,8 @@ class HomeFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act!!)
                         showToast(
-                                "The audio shall start playing after the disclaimer",
-                                act
+                            "The audio shall start playing after the disclaimer",
+                            act
                         )
                     } else {
                         if (player != null) {
@@ -805,8 +809,8 @@ class HomeFragment : Fragment() {
                                 player.seekTo(position, 0)
                                 player.playWhenReady = true
                                 val sharedxx = ctx.getSharedPreferences(
-                                        CONSTANTS.PREF_KEY_PLAYER,
-                                        Context.MODE_PRIVATE
+                                    CONSTANTS.PREF_KEY_PLAYER,
+                                    Context.MODE_PRIVATE
                                 )
                                 val editor = sharedxx.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -815,13 +819,13 @@ class HomeFragment : Fragment() {
                             callMyPlayer(ctx, act!!)
                         } else {
                             callPlayerSuggested(
-                                    position,
-                                    view,
-                                    listModel,
-                                    ctx,
-                                    act!!,
-                                    playlistID,playlistName,
-                                    true
+                                position,
+                                view,
+                                listModel,
+                                ctx,
+                                act!!,
+                                playlistID, playlistName,
+                                true
                             )
                         }
                     }
@@ -835,8 +839,8 @@ class HomeFragment : Fragment() {
                         object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                     val arrayList =
                         gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(
-                                DisclimerJson,
-                                type
+                            DisclimerJson,
+                            type
                         )
                     val mainPlayModel =
                         HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
@@ -869,31 +873,31 @@ class HomeFragment : Fragment() {
                         }
                     }
                     callPlayerSuggested(
-                            position,
-                            view,
-                            listModelList2,
-                            ctx,
-                            act!!,
-                            playlistID, playlistName,
-                            audioc
+                        position,
+                        view,
+                        listModelList2,
+                        ctx,
+                        act!!,
+                        playlistID, playlistName,
+                        audioc
                     )
                 }
             } else {
                 getAllCompletedMedia(
-                        AudioPlayerFlag,
-                        playlistID,playlistName,
-                        position,
-                        listModel,
-                        ctx,
-                        act!!,
-                        DB
+                    AudioPlayerFlag,
+                    playlistID, playlistName,
+                    position,
+                    listModel,
+                    ctx,
+                    act!!,
+                    DB
                 )
             }
         } else {
             if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(
-                            playlistID,
-                            ignoreCase = true
-                    )
+                    playlistID,
+                    ignoreCase = true
+                )
             ) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
@@ -905,8 +909,8 @@ class HomeFragment : Fragment() {
                     }
                     callMyPlayer(ctx, act!!)
                     showToast(
-                            "The audio shall start playing after the disclaimer",
-                            act
+                        "The audio shall start playing after the disclaimer",
+                        act
                     )
                 } else {
                     if (player != null) {
@@ -914,8 +918,8 @@ class HomeFragment : Fragment() {
                             player.seekTo(position, 0)
                             player.playWhenReady = true
                             val shared = ctx.getSharedPreferences(
-                                    CONSTANTS.PREF_KEY_PLAYER,
-                                    Context.MODE_PRIVATE
+                                CONSTANTS.PREF_KEY_PLAYER,
+                                Context.MODE_PRIVATE
                             )
                             val editor = shared.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -923,7 +927,16 @@ class HomeFragment : Fragment() {
                         }
                         callMyPlayer(ctx, act!!)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, act!!, playlistID,playlistName, true)
+                        callPlayerSuggested(
+                            position,
+                            view,
+                            listModel,
+                            ctx,
+                            act!!,
+                            playlistID,
+                            playlistName,
+                            true
+                        )
                     }
                 }
             } else {
@@ -965,18 +978,27 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, act!!, playlistID,playlistName, audioc)
+                callPlayerSuggested(
+                    position,
+                    view,
+                    listModelList2,
+                    ctx,
+                    act!!,
+                    playlistID,
+                    playlistName,
+                    audioc
+                )
             }
         }
     }
 
     private fun getAllCompletedMedia(
-            AudioFlag: String?,
-            pID: String,pName:String,
-            position: Int,
-            listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity, DB: AudioDatabase
+        AudioFlag: String?,
+        pID: String, pName: String,
+        position: Int,
+        listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity, DB: AudioDatabase
     ) {
         AudioDatabase.databaseWriteExecutor.execute {
             downloadAudioDetailsList =
@@ -990,9 +1012,9 @@ class HomeFragment : Fragment() {
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(
-                        pID,
-                        ignoreCase = true
-                )
+                pID,
+                ignoreCase = true
+            )
         ) {
             if (isDisclaimer == 1) {
                 if (player != null) {
@@ -1017,7 +1039,7 @@ class HomeFragment : Fragment() {
                         positionSaved = position
                         PlayerAudioId = listModel[position].id
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID,pName, true)
+                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, true)
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), act)
                         }
@@ -1077,12 +1099,21 @@ class HomeFragment : Fragment() {
                 if (listModelList2.size != 0) {
                     if (!listModelList2[pos].id.equals("0")) {
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, act, pID,pName, audioc)
+                            callPlayerSuggested(
+                                pos,
+                                "",
+                                listModelList2,
+                                ctx,
+                                act,
+                                pID,
+                                pName,
+                                audioc
+                            )
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID,pName, audioc)
+                        callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, audioc)
                     } else {
                         showToast(ctx.getString(R.string.no_server_found), act)
                     }
@@ -1113,13 +1144,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun callPlayerSuggested(
-            position: Int,
-            view: String?,
-            listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
-            ctx: Context,
-            act: Activity,
-            playlistID: String,playlistName: String,
-            audioc: Boolean
+        position: Int,
+        view: String?,
+        listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>,
+        ctx: Context,
+        act: Activity,
+        playlistID: String, playlistName: String,
+        audioc: Boolean
     ) {
         if (audioc) {
             callNewPlayerRelease()
@@ -1164,9 +1195,9 @@ class HomeFragment : Fragment() {
     }
 
     class AreaOfFocusAdapter(
-            var binding: FragmentHomeBinding,
-            var ctx: Context,
-            private var selectedCategoriesName: ArrayList<String>
+        var binding: FragmentHomeBinding,
+        var ctx: Context,
+        private var selectedCategoriesName: ArrayList<String>
     ) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) :
@@ -1174,10 +1205,10 @@ class HomeFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: SelectedCategoryRawBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.selected_category_raw,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.selected_category_raw,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1223,18 +1254,18 @@ class HomeFragment : Fragment() {
     }
 
     inner class UserListAdapter(
-            private val model: AddedUserListModel.ResponseData,
-            val mBottomSheetDialog: BottomSheetDialog
+        private val model: AddedUserListModel.ResponseData,
+        val mBottomSheetDialog: BottomSheetDialog
     ) :
         RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         var pos = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: MultipleProfileChangeLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.multiple_profile_change_layout,
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                R.layout.multiple_profile_change_layout,
+                parent,
+                false
             )
             return MyViewHolder(v)
         }
@@ -1296,8 +1327,8 @@ class HomeFragment : Fragment() {
                     dialog.setContentView(R.layout.comfirm_pin_layout)
                     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     dialog.window!!.setLayout(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                     val btnDone = dialog.findViewById<Button>(R.id.btnDone)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
@@ -1310,44 +1341,44 @@ class HomeFragment : Fragment() {
                     tvTitle.text = "Unlock"
                     editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
                     edtOTP1.addTextChangedListener(
-                            PinTextWatcher(
-                                    0,
-                                    edtOTP1,
-                                    edtOTP2,
-                                    edtOTP3,
-                                    edtOTP4,
-                                    btnDone
-                            )
+                        PinTextWatcher(
+                            0,
+                            edtOTP1,
+                            edtOTP2,
+                            edtOTP3,
+                            edtOTP4,
+                            btnDone
+                        )
                     )
                     edtOTP2.addTextChangedListener(
-                            PinTextWatcher(
-                                    1,
-                                    edtOTP1,
-                                    edtOTP2,
-                                    edtOTP3,
-                                    edtOTP4,
-                                    btnDone
-                            )
+                        PinTextWatcher(
+                            1,
+                            edtOTP1,
+                            edtOTP2,
+                            edtOTP3,
+                            edtOTP4,
+                            btnDone
+                        )
                     )
                     edtOTP3.addTextChangedListener(
-                            PinTextWatcher(
-                                    2,
-                                    edtOTP1,
-                                    edtOTP2,
-                                    edtOTP3,
-                                    edtOTP4,
-                                    btnDone
-                            )
+                        PinTextWatcher(
+                            2,
+                            edtOTP1,
+                            edtOTP2,
+                            edtOTP3,
+                            edtOTP4,
+                            btnDone
+                        )
                     )
                     edtOTP4.addTextChangedListener(
-                            PinTextWatcher(
-                                    3,
-                                    edtOTP1,
-                                    edtOTP2,
-                                    edtOTP3,
-                                    edtOTP4,
-                                    btnDone
-                            )
+                        PinTextWatcher(
+                            3,
+                            edtOTP1,
+                            edtOTP2,
+                            edtOTP3,
+                            edtOTP4,
+                            btnDone
+                        )
                     )
                     edtOTP1.setOnKeyListener(PinOnKeyListener(0))
                     edtOTP2.setOnKeyListener(PinOnKeyListener(1))
@@ -1376,27 +1407,27 @@ class HomeFragment : Fragment() {
                                 progressBar.visibility = View.VISIBLE
                                 progressBar.invalidate()
                                 val listCall = APINewClient.getClient().getVerifyPin(
-                                        modelList[position].coUserId,
-                                        edtOTP1.text.toString() + "" +
-                                                edtOTP2.text.toString() + "" +
-                                                edtOTP3.text.toString() + "" +
-                                                edtOTP4.text.toString()
+                                    modelList[position].coUserId,
+                                    edtOTP1.text.toString() + "" +
+                                            edtOTP2.text.toString() + "" +
+                                            edtOTP3.text.toString() + "" +
+                                            edtOTP4.text.toString()
                                 )
                                 listCall.enqueue(object : Callback<VerifyPinModel?> {
                                     @SuppressLint("HardwareIds")
                                     override fun onResponse(
-                                            call: Call<VerifyPinModel?>,
-                                            response: Response<VerifyPinModel?>
+                                        call: Call<VerifyPinModel?>,
+                                        response: Response<VerifyPinModel?>
                                     ) {
                                         try {
                                             progressBar.visibility = View.GONE
                                             val listModel = response.body()
                                             val responseData: VerifyPinModel.ResponseData? =
-                                                    listModel!!.responseData
+                                                listModel!!.responseData
                                             when {
                                                 listModel.responseCode.equals(
-                                                        getString(R.string.ResponseCodesuccess),
-                                                        ignoreCase = true
+                                                    getString(R.string.ResponseCodesuccess),
+                                                    ignoreCase = true
                                                 ) -> {
                                                     dialog.dismiss()
                                                     mBottomSheetDialog.hide()
@@ -1414,215 +1445,225 @@ class HomeFragment : Fragment() {
                                                         callObserve2(ctx)
                                                     }*/
                                                     Log.e(
-                                                            "New UserId MobileNo",
-                                                            listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId
+                                                        "New UserId MobileNo",
+                                                        listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId
                                                     )
                                                     Log.e(
-                                                            "Old UserId MobileNo",
-                                                            "$userId.....$coUserId"
+                                                        "Old UserId MobileNo",
+                                                        "$userId.....$coUserId"
                                                     )
                                                     logout = false
                                                     userId = listModel.responseData!!.userID
                                                     coUserId = listModel.responseData!!.coUserId
                                                     if (responseData!!.isProfileCompleted.equals(
-                                                                    "0",
-                                                                    ignoreCase = true
-                                                            )
+                                                            "0",
+                                                            ignoreCase = true
+                                                        )
                                                     ) {
                                                         val intent =
-                                                                Intent(
-                                                                        act,
-                                                                        WalkScreenActivity::class.java
-                                                                )
+                                                            Intent(
+                                                                act,
+                                                                WalkScreenActivity::class.java
+                                                            )
                                                         intent.putExtra(
-                                                                CONSTANTS.ScreenView,
-                                                                "ProfileView"
+                                                            CONSTANTS.ScreenView,
+                                                            "1"
                                                         )
                                                         act.startActivity(intent)
                                                         act.finish()
                                                     } else if (responseData.isAssessmentCompleted.equals(
-                                                                    "0",
-                                                                    ignoreCase = true
-                                                            )
+                                                            "0",
+                                                            ignoreCase = true
+                                                        )
                                                     ) {
-                                                        val intent =
-                                                                Intent(
-                                                                        act,
-                                                                        AssProcessActivity::class.java
-                                                                )
+                                                        val intent = Intent(
+                                                            activity,
+                                                            AssProcessActivity::class.java
+                                                        )
                                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                         act.startActivity(intent)
                                                         act.finish()
-                                                    } else if (responseData.isProfileCompleted.equals(
-                                                                    "1",
-                                                                    ignoreCase = true
-                                                            ) &&
-                                                            responseData.isAssessmentCompleted.equals(
-                                                                    "1",
-                                                                    ignoreCase = true
-                                                            )
+                                                    } else if (responseData.avgSleepTime.equals(
+                                                            "",
+                                                            ignoreCase = true
+                                                        )
                                                     ) {
                                                         val intent = Intent(
-                                                                act,
-                                                                BottomNavigationActivity::class.java
+                                                            activity,
+                                                            SleepTimeActivity::class.java
+                                                        )
+                                                        act.startActivity(intent)
+                                                        act.finish()
+                                                    } else if (responseData.isProfileCompleted.equals(
+                                                            "1",
+                                                            ignoreCase = true
+                                                        ) &&
+                                                        responseData.isAssessmentCompleted.equals(
+                                                            "1",
+                                                            ignoreCase = true
+                                                        )
+                                                    ) {
+                                                        val intent = Intent(
+                                                            act,
+                                                            BottomNavigationActivity::class.java
                                                         )
                                                         act.startActivity(intent)
                                                         act.finish()
                                                     }
                                                     val shared = act.getSharedPreferences(
-                                                            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                                            AppCompatActivity.MODE_PRIVATE
+                                                        CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                                        AppCompatActivity.MODE_PRIVATE
                                                     )
                                                     val editor = shared.edit()
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_UserID,
-                                                            listModel.responseData!!.userID
+                                                        CONSTANTS.PREFE_ACCESS_UserID,
+                                                        listModel.responseData!!.userID
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_CoUserID,
-                                                            listModel.responseData!!.coUserId
+                                                        CONSTANTS.PREFE_ACCESS_CoUserID,
+                                                        listModel.responseData!!.coUserId
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_EMAIL,
-                                                            listModel.responseData!!.email
+                                                        CONSTANTS.PREFE_ACCESS_EMAIL,
+                                                        listModel.responseData!!.email
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_NAME,
-                                                            listModel.responseData!!.name
+                                                        CONSTANTS.PREFE_ACCESS_NAME,
+                                                        listModel.responseData!!.name
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_MOBILE,
-                                                            listModel.responseData!!.mobile
+                                                        CONSTANTS.PREFE_ACCESS_MOBILE,
+                                                        listModel.responseData!!.mobile
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                            listModel.responseData!!.avgSleepTime
+                                                        CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                        listModel.responseData!!.avgSleepTime
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                                            listModel.responseData!!.indexScore
+                                                        CONSTANTS.PREFE_ACCESS_INDEXSCORE,
+                                                        listModel.responseData!!.indexScore
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                                            listModel.responseData!!.isProfileCompleted
+                                                        CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
+                                                        listModel.responseData!!.isProfileCompleted
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                                            listModel.responseData!!.isAssessmentCompleted
+                                                        CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
+                                                        listModel.responseData!!.isAssessmentCompleted
                                                     )
                                                     editor.putString(
-                                                            CONSTANTS.PREFE_ACCESS_IMAGE,
-                                                            responseData.image
+                                                        CONSTANTS.PREFE_ACCESS_IMAGE,
+                                                        responseData.image
                                                     )
                                                     editor.apply()
                                                     val sharedd =
-                                                            act.getSharedPreferences(
-                                                                    CONSTANTS.RecommendedCatMain,
-                                                                    Context.MODE_PRIVATE
-                                                            )
+                                                        act.getSharedPreferences(
+                                                            CONSTANTS.RecommendedCatMain,
+                                                            Context.MODE_PRIVATE
+                                                        )
                                                     val editord = sharedd.edit()
                                                     editord.putString(
-                                                            CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                            listModel.responseData!!.avgSleepTime
+                                                        CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                                        listModel.responseData!!.avgSleepTime
                                                     )
                                                     val selectedCategoriesTitle =
-                                                            arrayListOf<String>()
+                                                        arrayListOf<String>()
                                                     val selectedCategoriesName =
-                                                            arrayListOf<String>()
+                                                        arrayListOf<String>()
                                                     val gson = Gson()
                                                     for (i in listModel.responseData!!.areaOfFocus!!) {
                                                         selectedCategoriesTitle.add(i.mainCat!!)
                                                         selectedCategoriesName.add(i.recommendedCat!!)
                                                     }
                                                     editord.putString(
-                                                            CONSTANTS.selectedCategoriesTitle,
-                                                            gson.toJson(selectedCategoriesTitle)
+                                                        CONSTANTS.selectedCategoriesTitle,
+                                                        gson.toJson(selectedCategoriesTitle)
                                                     ) //Friend
                                                     editord.putString(
-                                                            CONSTANTS.selectedCategoriesName,
-                                                            gson.toJson(selectedCategoriesName)
+                                                        CONSTANTS.selectedCategoriesName,
+                                                        gson.toJson(selectedCategoriesName)
                                                     ) //Friend
                                                     editord.apply()
                                                     prepareHomeData()
                                                     showToast(
-                                                            listModel.responseMessage,
-                                                            act
+                                                        listModel.responseMessage,
+                                                        act
                                                     )
 
                                                     analytics.identify(
-                                                            Traits()
-                                                                    .putEmail(listModel.responseData!!.email)
-                                                                    .putName(listModel.responseData!!.name)
-                                                                    .putPhone(listModel.responseData!!.mobile)
-                                                                    .putValue(
-                                                                            "coUserId",
-                                                                            listModel.responseData!!.coUserId
-                                                                    )
-                                                                    .putValue(
-                                                                            "userId",
-                                                                            listModel.responseData!!.userID
-                                                                    )
-                                                                    .putValue(
-                                                                            "deviceId",
-                                                                            Settings.Secure.getString(
-                                                                                    act.contentResolver,
-                                                                                    Settings.Secure.ANDROID_ID
-                                                                            )
-                                                                    )
-                                                                    .putValue("deviceType", "Android")
-                                                                    .putValue(
-                                                                            "name",
-                                                                            listModel.responseData!!.name
-                                                                    )
-                                                                    .putValue("countryCode", "")
-                                                                    .putValue("countryName", "")
-                                                                    .putValue(
-                                                                            "phone",
-                                                                            listModel.responseData!!.mobile
-                                                                    )
-                                                                    .putValue(
-                                                                            "email",
-                                                                            listModel.responseData!!.email
-                                                                    )
-                                                                    .putValue(
-                                                                            "DOB",
-                                                                            listModel.responseData!!.dob
-                                                                    )
-                                                                    .putValue(
-                                                                            "profileImage",
-                                                                            listModel.responseData!!.image
-                                                                    )
-                                                                    .putValue("plan", "")
-                                                                    .putValue("planStatus", "")
-                                                                    .putValue("planStartDt", "")
-                                                                    .putValue("planExpiryDt", "")
-                                                                    .putValue("clinikoId", "")
-                                                                    .putValue(
-                                                                            "isProfileCompleted",
-                                                                            listModel.responseData!!.isProfileCompleted
-                                                                    )
-                                                                    .putValue(
-                                                                            "isAssessmentCompleted",
-                                                                            listModel.responseData!!.isAssessmentCompleted
-                                                                    )
-                                                                    .putValue(
-                                                                            "indexScore",
-                                                                            listModel.responseData!!.indexScore
-                                                                    )
-                                                                    .putValue("scoreLevel", "")
-                                                                    .putValue(
-                                                                            "areaOfFocus",
-                                                                            listModel.responseData!!.areaOfFocus
-                                                                    )
-                                                                    .putValue(
-                                                                            "avgSleepTime",
-                                                                            listModel.responseData!!.avgSleepTime
-                                                                    )
+                                                        Traits()
+                                                            .putEmail(listModel.responseData!!.email)
+                                                            .putName(listModel.responseData!!.name)
+                                                            .putPhone(listModel.responseData!!.mobile)
+                                                            .putValue(
+                                                                "coUserId",
+                                                                listModel.responseData!!.coUserId
+                                                            )
+                                                            .putValue(
+                                                                "userId",
+                                                                listModel.responseData!!.userID
+                                                            )
+                                                            .putValue(
+                                                                "deviceId",
+                                                                Settings.Secure.getString(
+                                                                    act.contentResolver,
+                                                                    Settings.Secure.ANDROID_ID
+                                                                )
+                                                            )
+                                                            .putValue("deviceType", "Android")
+                                                            .putValue(
+                                                                "name",
+                                                                listModel.responseData!!.name
+                                                            )
+                                                            .putValue("countryCode", "")
+                                                            .putValue("countryName", "")
+                                                            .putValue(
+                                                                "phone",
+                                                                listModel.responseData!!.mobile
+                                                            )
+                                                            .putValue(
+                                                                "email",
+                                                                listModel.responseData!!.email
+                                                            )
+                                                            .putValue(
+                                                                "DOB",
+                                                                listModel.responseData!!.dob
+                                                            )
+                                                            .putValue(
+                                                                "profileImage",
+                                                                listModel.responseData!!.image
+                                                            )
+                                                            .putValue("plan", "")
+                                                            .putValue("planStatus", "")
+                                                            .putValue("planStartDt", "")
+                                                            .putValue("planExpiryDt", "")
+                                                            .putValue("clinikoId", "")
+                                                            .putValue(
+                                                                "isProfileCompleted",
+                                                                listModel.responseData!!.isProfileCompleted
+                                                            )
+                                                            .putValue(
+                                                                "isAssessmentCompleted",
+                                                                listModel.responseData!!.isAssessmentCompleted
+                                                            )
+                                                            .putValue(
+                                                                "indexScore",
+                                                                listModel.responseData!!.indexScore
+                                                            )
+                                                            .putValue("scoreLevel", "")
+                                                            .putValue(
+                                                                "areaOfFocus",
+                                                                listModel.responseData!!.areaOfFocus
+                                                            )
+                                                            .putValue(
+                                                                "avgSleepTime",
+                                                                listModel.responseData!!.avgSleepTime
+                                                            )
                                                     )
                                                 }
                                                 listModel.responseCode.equals(
-                                                        getString(R.string.ResponseCodefail),
-                                                        ignoreCase = true
+                                                    getString(R.string.ResponseCodefail),
+                                                    ignoreCase = true
                                                 ) -> {
                                                     txtError.visibility = View.VISIBLE
                                                     txtError.text = listModel.responseMessage
@@ -1638,8 +1679,8 @@ class HomeFragment : Fragment() {
                                     }
 
                                     override fun onFailure(
-                                            call: Call<VerifyPinModel?>,
-                                            t: Throwable
+                                        call: Call<VerifyPinModel?>,
+                                        t: Throwable
                                     ) {
                                         progressBar.visibility = View.GONE
                                     }
@@ -1663,12 +1704,12 @@ class HomeFragment : Fragment() {
     }
 
     inner class PinTextWatcher internal constructor(
-            private val currentIndex: Int,
-            var edtOTP1: EditText,
-            var edtOTP2: EditText,
-            var edtOTP3: EditText,
-            var edtOTP4: EditText,
-            var btnDone: Button
+        private val currentIndex: Int,
+        var edtOTP1: EditText,
+        var edtOTP2: EditText,
+        var edtOTP3: EditText,
+        var edtOTP4: EditText,
+        var btnDone: Button
     ) : TextWatcher {
         private var isFirst = false
         private var isLast = false

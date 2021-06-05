@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dassAssSlider.activities.DassAssSliderActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 
 class WalkScreenActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class WalkScreenActivity : AppCompatActivity() {
     var email: String? = ""
     var name: String? = ""
     var screenView: String? = ""
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,25 +39,22 @@ class WalkScreenActivity : AppCompatActivity() {
         binding.rlStepOne.visibility = View.GONE
         binding.rlStepTwo.visibility = View.GONE
         binding.rlStepThree.visibility = View.GONE
-        when {
-            screenView.equals("1") -> {
-                binding.rlWelcome.visibility = View.VISIBLE
-                binding.rlStepOne.visibility = View.GONE
-                binding.rlStepTwo.visibility = View.GONE
-                binding.rlStepThree.visibility = View.GONE
-            }
-            screenView.equals("2") -> {
-                binding.rlWelcome.visibility = View.GONE
-                binding.rlStepOne.visibility = View.GONE
-                binding.rlStepTwo.visibility = View.VISIBLE
-                binding.rlStepThree.visibility = View.GONE
-            }
-            screenView.equals("3") -> {
-                binding.rlWelcome.visibility = View.GONE
-                binding.rlStepOne.visibility = View.GONE
-                binding.rlStepTwo.visibility = View.GONE
-                binding.rlStepThree.visibility = View.VISIBLE
-            }
+
+        if (screenView.equals("1", ignoreCase = true)) {
+            binding.rlWelcome.visibility = View.VISIBLE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.GONE
+            binding.rlStepThree.visibility = View.GONE
+        } else if (screenView.equals("2", ignoreCase = true)) {
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.VISIBLE
+            binding.rlStepThree.visibility = View.GONE
+        } else if (screenView.equals("3", ignoreCase = true)) {
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.GONE
+            binding.rlStepTwo.visibility = View.GONE
+            binding.rlStepThree.visibility = View.VISIBLE
         }
 
         binding.btnContinue.setOnClickListener {
@@ -72,8 +71,7 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.rlStepTwo.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, AssProcessActivity::class.java)
-            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+            val intent = Intent(this@WalkScreenActivity, DassAssSliderActivity::class.java)
             startActivity(intent)
             finish()
         }

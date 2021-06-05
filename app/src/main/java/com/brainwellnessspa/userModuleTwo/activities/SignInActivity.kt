@@ -3,6 +3,7 @@ package com.brainwellnessspa.userModuleTwo.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
@@ -62,11 +63,19 @@ class SignInActivity : AppCompatActivity() {
             if (pass.equals("", ignoreCase = true)) {
                 binding.ivVisible.isClickable = false
                 binding.ivVisible.isEnabled = false
+                binding.ivVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.light_gray),
+                    PorterDuff.Mode.SRC_IN
+                )
                 binding.ivInVisible.isClickable = false
                 binding.ivInVisible.isEnabled = false
             } else {
                 binding.ivVisible.isClickable = true
                 binding.ivVisible.isEnabled = true
+                binding.ivVisible.setColorFilter(
+                    ContextCompat.getColor(activity, R.color.black),
+                    PorterDuff.Mode.SRC_IN
+                )
                 binding.ivInVisible.isClickable = true
                 binding.ivInVisible.isEnabled = true
             }
@@ -99,6 +108,10 @@ class SignInActivity : AppCompatActivity() {
         if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivVisible.isClickable = false
             binding.ivVisible.isEnabled = false
+            binding.ivVisible.setColorFilter(
+                ContextCompat.getColor(activity, R.color.light_gray),
+                PorterDuff.Mode.SRC_IN
+            )
             binding.ivInVisible.isClickable = false
             binding.ivInVisible.isEnabled = false
         }
