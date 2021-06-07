@@ -356,7 +356,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             String PlayFrom1 = shared11.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition1 = shared11.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag1.equalsIgnoreCase("Downloadlist") && MyPlaylist1.equalsIgnoreCase(PlaylistID)) {
-                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", activity);
+                BWSApplication.showToast("Unable to remove as this playlist is in player right now", activity);
             } else {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

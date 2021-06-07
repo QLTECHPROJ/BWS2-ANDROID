@@ -904,7 +904,7 @@ public class BWSApplication extends Application {
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                 if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistId)) {
-                                    showToast("Currently this playlist is in player,so you can't delete this playlist as of now", act);
+                                    showToast("Unable to remove as this playlist is in player right now", act);
                                 } else {
                                     final Dialog dialoged = new Dialog(ctx);
                                     dialoged.requestWindowFeature(Window.FEATURE_NO_TITLE);

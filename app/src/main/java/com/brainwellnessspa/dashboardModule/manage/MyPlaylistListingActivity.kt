@@ -1627,7 +1627,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         )
                 ) {
                     showToast(
-                            "Currently this playlist is in player,so you can't delete this playlist as of now",
+                            "Unable to remove as this playlist is in player right now",
                             activity
                     )
                 } else {
