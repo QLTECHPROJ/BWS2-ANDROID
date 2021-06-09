@@ -748,8 +748,7 @@ public class AudioDownloadsFragment extends Fragment {
             final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
             final Button Btn = dialog.findViewById(R.id.Btn);
             tvTitle.setText("Remove audio");
-//            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
-            tvHeader.setText("Audio has been removed");
+            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
             Btn.setText("Confirm");
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -872,6 +871,7 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     }
                     deleteDownloadFile(AudioFile, AudioName, position);
+                    BWSApplication.showToast("Audio has been removed", getActivity());
                     notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch (Exception e) {

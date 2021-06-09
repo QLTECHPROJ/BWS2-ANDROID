@@ -357,7 +357,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                                    }
                                 } else {
                                     showToast(
-                                        "You can choose maximus of three areas of focus. In case you wish to change your choices then simply unselct the ones you had selected earlier.",
+                                        "You can choose maximum of three areas of focus. In case you wish to change your choices then simply unselect the ones you had selected earlier.",
                                         activity
                                     )
                                 }

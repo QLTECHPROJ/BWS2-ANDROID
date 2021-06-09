@@ -289,7 +289,7 @@
     <string name="step_three">Step 3</string>
     <string name="Unlock_the_app">Unlock the app</string>
     <string name="Your_Assessment_Result">Your Assessment Result</string>
-    <string name="ass_quotes">We\'re done with the first part.\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
+    <string name="ass_quotes">We\'re done with the first part.\n\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
     <string name="noti_title">Your Notifications</string>
     <string name="title_activity_bottom_navigation">MainActivity</string>
     <string name="title_home">Home</string>
@@ -318,11 +318,11 @@
     <string name="time_suffix">2</string>
     <string name="create_ac_qutoes">We just need few details to get you started!!</string>
     <string name="signin_quotes">Hope you\'re feeling much better than you felt before!!</string>
-    <string name="couser_quotes">Simply sign-in to your account and continue your journey towards mental &amp; emotional transformation></string>
+    <string name="couser_quotes">Simply sign-in to your account and continue your journey towards mental &amp; emotional transformation</string>
     <string name="step_one_quotes">Simply fill in your assessment form and we\'ll recommend the programs best suited to your needs</string>
     <string name="drug_quotes">Have you ever taken any illicit drugs in your life?</string>
     <string name="index_quotes">The index score determines the intensity of your mental health challenge and based on your score we will recommend the programs to help you.</string>
-    <string name="doing_good_quotes">We are analysing the information you provided and in the process of devising a personalised treatment plan for you.</string>
+    <string name="doing_good_quotes">We are analysing the information you have provided and devising a personalised treatment plan for just for you.</string>
     <string name="good_quotes">You are Doing Good</string>
     <string name="get_started_quotes">The Brain Wellness Spa App</string>
     <string name="get_started_subtitle_quotes">Your one-stop solution for mental &amp; emotional health challenges</string>
@@ -384,7 +384,7 @@
     <string name="no_result_found">No Result Found</string>
     <string name="you_can_select_upto_three_areas_of_focus_to_further_customise_your_journey_towards_mental_transformation">You can select upto three areas of focus to further customise your journey towards mental transformation.</string>
     <string name="recommended_category">Recommended Category</string>
-    <string name="thank_you_for_providing_us_with_the_information_we_are_preparing_personlalised_playlists_for_you">Thank you for providing us with the information, We are preparing personlalised playlists for you.</string>
+    <string name="thank_you_for_providing_us_with_the_information_we_are_preparing_personlalised_playlists_for_you">Thank you for providing us with the information, We are preparing personalised playlists for you.</string>
     <string name="preparing_your_personalised_playlist">Preparing your personalised playlist</string>
     <string name="your_mental_health_check_up">Your Mental health check up</string>
     <string name="add_new_user">Add New User</string>

@@ -73,7 +73,7 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
-        BWSApplication.showToast("Downloading file...",act);
+
         Log.e("Downloading file..", String.valueOf(downloadProgress));
         DB = getAudioDataBase(ctx);
         localIntent = new Intent("DownloadProgress");
@@ -92,6 +92,11 @@ public class DownloadMedia implements OnDownloadListener {
         audioFile = DOWNLOAD_AUDIO_URL;
         playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
+        if(playlistDownloadId.equals("")){
+            BWSApplication.showToast("Downloading playlist file...",act);
+        }else {
+            BWSApplication.showToast("Downloading Audio file...",act);
+        }
         try {
             downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(ctx), FILE_NAME.get(0) + CONSTANTS.FILE_EXT)
                     .build()

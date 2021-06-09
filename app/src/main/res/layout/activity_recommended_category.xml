@@ -61,7 +61,7 @@
                             android:paddingTop="@dimen/_12sdp"
                             android:text="@string/you_can_select_upto_three_areas_of_focus_to_further_customise_your_journey_towards_mental_transformation"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_11sdp"
                             tools:ignore="SpUsage" />
 
                         <TextView

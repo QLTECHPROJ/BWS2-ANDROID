@@ -413,7 +413,7 @@ class MainPlaylistFragment : Fragment() {
                                             )
                                         ) {
                                             BWSApplication.showToast(listModel.responseMessage, act)
-                                            dialog.dismiss()
+//                                            dialog.dismiss()
                                         } else if (listModel.responseData!!.iscreate.equals(
                                                 "1",
                                                 ignoreCase = true

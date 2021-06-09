@@ -446,6 +446,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         }
                         p.putValue("source", "Downloaded Playlists");
                         BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
+                        BWSApplication.showToast("Playlist has been removed", getActivity());
+
                         notifyItemRemoved(position);
                         dialog.dismiss();
                     });

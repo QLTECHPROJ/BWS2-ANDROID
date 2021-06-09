@@ -25,6 +25,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
 import com.brainwellnessspa.userModuleTwo.models.ProfileSaveDataModel
 import com.segment.analytics.Properties
@@ -515,7 +516,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                     ContextCompat.getColor(activity, R.color.black),
                     PorterDuff.Mode.SRC_ATOP
                 )
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnYes.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -528,7 +534,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 )
                 binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNo.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
@@ -597,8 +608,8 @@ class ProfileProgressActivity : AppCompatActivity() {
                                 CONSTANTS.track
                             )
                             val i =
-                                Intent(this@ProfileProgressActivity, WalkScreenActivity::class.java)
-                            i.putExtra(CONSTANTS.ScreenView, "2")
+                                Intent(this@ProfileProgressActivity, AssProcessActivity::class.java)
+                            i.putExtra(CONSTANTS.ASSPROCESS, "0")
                             startActivity(i)
                             finish()
                         } else {
@@ -640,7 +651,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                     ContextCompat.getColor(activity, R.color.black),
                     PorterDuff.Mode.SRC_ATOP
                 )
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnYes.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -653,7 +669,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 )
                 binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNo.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
@@ -824,7 +845,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                     ContextCompat.getColor(activity, R.color.black),
                     PorterDuff.Mode.SRC_ATOP
                 )
-                binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnOpn1.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnOpn2.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -841,7 +867,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 )
                 binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn2.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnOpn2.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnOpn2.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnOpn3.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -858,7 +889,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
                 binding.btnOpn2.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn3.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnOpn3.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnOpn3.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnOpn4.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn4.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -875,7 +911,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnOpn2.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
                 binding.btnOpn3.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnOpn3.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnOpn4.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnOpn4.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnOpn4.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
@@ -972,7 +1013,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                     ContextCompat.getColor(activity, R.color.black),
                     PorterDuff.Mode.SRC_ATOP
                 )
-                binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnMale.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnMale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -1007,7 +1053,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
                 binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnGenX.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.light_blue_theme
+                    )
+                )
                 binding.btnGenX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {

@@ -80,6 +80,7 @@ class HomeFragment : Fragment() {
     var userId: String? = null
     var userName: String? = null
     var userImage: String? = null
+    var scoreLevel: String? = null
     var Download = ""
     var Liked = ""
     var MyDownloads: String? = ""
@@ -125,6 +126,7 @@ class HomeFragment : Fragment() {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+        scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
 
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -444,6 +446,7 @@ class HomeFragment : Fragment() {
                         binding.tvPercent.text =
                             listModel.responseData!!.indexScoreDiff!!.split(".")[0] + "%"
                         binding.tvSevere.text = listModel.responseData!!.indexScore.toString()
+                        binding.tvSevereTxt.text = scoreLevel
                         binding.llIndicate.progress = listModel.responseData!!.indexScore!!.toInt()
 
                         binding.tvPlaylistName.text =
@@ -1586,10 +1589,10 @@ class HomeFragment : Fragment() {
                                                     ) //Friend
                                                     editord.apply()
                                                     prepareHomeData()
-                                                    showToast(
-                                                        listModel.responseMessage,
-                                                        act
-                                                    )
+//                                                    showToast(
+//                                                        listModel.responseMessage,
+//                                                        act
+//                                                    )
 
                                                     analytics.identify(
                                                         Traits()

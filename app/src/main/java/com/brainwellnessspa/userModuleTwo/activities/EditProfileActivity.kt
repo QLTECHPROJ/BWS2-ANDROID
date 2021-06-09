@@ -156,6 +156,10 @@ class EditProfileActivity : AppCompatActivity() {
                             binding.progressBarHolder,
                             activity
                         )
+                        BWSApplication.showToast(
+                            viewModel.responseMessage,
+                            activity
+                        )
                         profileViewData(ctx)
                         val shared =
                             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
@@ -186,6 +190,10 @@ class EditProfileActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
+                            activity
+                        )
+                        BWSApplication.showToast(
+                            viewModel.responseMessage,
                             activity
                         )
                     }
@@ -289,14 +297,14 @@ class EditProfileActivity : AppCompatActivity() {
                             if (!viewModel.responseData!!.dob.equals("", ignoreCase = true)) {
                                 binding.etCalendar.isEnabled = false
                                 binding.etCalendar.isClickable = false
-                                binding.etMobileNumber.setTextColor(
+                                binding.etCalendar.setTextColor(
                                     ContextCompat.getColor(
                                         ctx,
                                         R.color.light_gray
                                     )
                                 )
                             } else {
-                                binding.etMobileNumber.setTextColor(
+                                binding.etCalendar.setTextColor(
                                     ContextCompat.getColor(
                                         ctx,
                                         R.color.black
@@ -350,7 +358,8 @@ class EditProfileActivity : AppCompatActivity() {
                 birthYear = getAge(ageYear, ageMonth, ageDate)
                 if (birthYear < 18) {
                     binding.txtDobError.visibility = View.VISIBLE
-                    binding.txtDobError.text = "Please confirm whether you are above 18 years of age"
+                    binding.txtDobError.text =
+                        "Please confirm whether you are above 18 years of age"
                     binding.btnSave.isEnabled = false
                     binding.btnSave.isClickable = false
                 } else {

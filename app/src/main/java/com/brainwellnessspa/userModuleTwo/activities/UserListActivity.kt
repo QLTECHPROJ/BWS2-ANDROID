@@ -293,7 +293,7 @@ class UserListActivity : AppCompatActivity() {
                                     response: Response<VerifyPinModel>
                                 ) {
                                     try {
-                                        BWSApplication.hideProgressBar(
+                                        hideProgressBar(
                                             binding.progressBar,
                                             binding.progressBarHolder,
                                             activity
@@ -355,12 +355,12 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                             ) {
                                                                 val intent = Intent(
-                                                                        activity,
-                                                                        AssProcessActivity::class.java
+                                                                    activity,
+                                                                    AssProcessActivity::class.java
                                                                 )
                                                                 intent.putExtra(
-                                                                        CONSTANTS.ASSPROCESS,
-                                                                        "0"
+                                                                    CONSTANTS.ASSPROCESS,
+                                                                    "0"
                                                                 )
                                                                 activity.startActivity(intent)
                                                                 activity.finish()
@@ -573,7 +573,7 @@ class UserListActivity : AppCompatActivity() {
                                                             p1.putValue("scoreLevel", listModel.responseData!!.scoreLevel)
                                                             p1.putValue("areaOfFocus",  listModel.responseData!!.areaOfFocus)
                                                             p1.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
-                                                            BWSApplication.addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         }
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
@@ -588,10 +588,10 @@ class UserListActivity : AppCompatActivity() {
                                             })
 
                                             userList.dialog.dismiss()
-                                            BWSApplication.showToast(
-                                                listModel.responseMessage,
-                                                activity
-                                            )
+//                                            showToast(
+//                                                listModel.responseMessage,
+//                                                activity
+//                                            )
                                         } else if (listModel.responseCode.equals(
                                                 activity.getString(
                                                     R.string.ResponseCodefail
@@ -610,7 +610,7 @@ class UserListActivity : AppCompatActivity() {
                                 }
 
                                 override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
-                                    BWSApplication.hideProgressBar(
+                                    hideProgressBar(
                                         binding.progressBar,
                                         binding.progressBarHolder,
                                         activity
@@ -618,7 +618,7 @@ class UserListActivity : AppCompatActivity() {
                                 }
                             })
                         } else {
-                            BWSApplication.showToast(
+                            showToast(
                                 activity.getString(R.string.no_server_found),
                                 activity
                             )
@@ -754,7 +754,7 @@ class UserListActivity : AppCompatActivity() {
                     response: Response<AddedUserListModel>
                 ) {
                     try {
-                        BWSApplication.hideProgressBar(
+                        hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
                             activity
@@ -798,7 +798,7 @@ class UserListActivity : AppCompatActivity() {
                             p.putValue("userID", USERID)
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                             p.putValue("coUserList", gson.toJson(section))
-                            BWSApplication.addToSegment("Couser List Viewed", p, CONSTANTS.screen)
+                            addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                         } else {
 //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
                         }
@@ -809,7 +809,7 @@ class UserListActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AddedUserListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
+                    hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
                         activity
@@ -817,7 +817,7 @@ class UserListActivity : AppCompatActivity() {
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 }

@@ -619,12 +619,12 @@
                                     tools:ignore="SpUsage" />
 
                                 <TextView
+                                    android:id="@+id/tvSevereTxt"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
-                                    android:text="@string/severe"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_15sdp"
                                     tools:ignore="SpUsage" />

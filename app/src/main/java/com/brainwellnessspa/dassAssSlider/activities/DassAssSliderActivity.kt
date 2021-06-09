@@ -225,6 +225,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 }else{
                                     myPos = assQus.size - 1
                                 }
+                                binding.lpIndicator.progress = myPos
                                 Log.e("My Pos...",myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." +assQus.size.toString())
                             }
                             if (myPos < listModel.responseData!!.questions!!.size) {
