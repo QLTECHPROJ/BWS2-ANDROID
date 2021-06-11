@@ -130,8 +130,22 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginEnd="@dimen/_33sdp"
-                        android:layout_marginBottom="@dimen/_86sdp"
+                        android:layout_marginEnd="@dimen/_40sdp"
+                        android:layout_marginBottom="@dimen/_80sdp"
+                        android:layout_toStartOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
+                        android:rotation="322"
+                        android:src="@drawable/ic_score_arrow"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/ivSeventeen"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="@dimen/_34sdp"
+                        android:layout_marginBottom="@dimen/_90sdp"
                         android:layout_toStartOf="@id/llSeverse"
                         android:contentDescription="@string/todo"
                         android:rotation="326"
@@ -147,10 +161,10 @@
                         android:layout_marginEnd="@dimen/_22sdp"
                         android:layout_marginBottom="@dimen/_100sdp"
                         android:layout_toStartOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
                         android:rotation="335"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivFifth"
@@ -160,10 +174,23 @@
                         android:layout_marginStart="-16dp"
                         android:layout_marginBottom="@dimen/_115sdp"
                         android:layout_toEndOf="@id/ivForth"
+                        android:contentDescription="@string/todo"
                         android:rotation="356"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/ivFifteen"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="-8dp"
+                        android:layout_marginBottom="@dimen/_115sdp"
+                        android:layout_toEndOf="@id/ivForth"
+                        android:contentDescription="@string/todo"
+                        android:rotation="358"
+                        android:src="@drawable/ic_score_arrow"
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivThirTeen"
@@ -173,10 +200,10 @@
                         android:layout_marginStart="-22dp"
                         android:layout_marginBottom="@dimen/_110sdp"
                         android:layout_toEndOf="@id/ivForth"
+                        android:contentDescription="@string/todo"
                         android:rotation="348"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="gone"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/ivSixth"
@@ -186,10 +213,10 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="@dimen/_118sdp"
                         android:layout_toEndOf="@id/ivFifth"
+                        android:contentDescription="@string/todo"
                         android:rotation="370"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                     <LinearLayout
                         android:id="@+id/llSeverse"
@@ -198,8 +225,8 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginEnd="@dimen/_2sdp"
-                        android:gravity="center"
                         android:layout_marginBottom="@dimen/_18sdp"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
@@ -218,10 +245,10 @@
                             android:id="@+id/tvTag"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/_4sdp"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:layout_marginEnd="@dimen/_4sdp"
-                            android:layout_gravity="center"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_8sdp"
                             tools:ignore="SpUsage" />
@@ -237,10 +264,10 @@
                         android:layout_marginEnd="-8dp"
                         android:layout_marginBottom="113dp"
                         android:layout_toStartOf="@id/ivNineth"
+                        android:contentDescription="@string/todo"
                         android:rotation="38"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivEighth"
@@ -251,10 +278,24 @@
                         android:layout_marginEnd="15dp"
                         android:layout_marginBottom="@dimen/_118sdp"
                         android:layout_toStartOf="@id/ivNineth"
+                        android:contentDescription="@string/todo"
                         android:rotation="26"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/ivForteen"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="@dimen/_118sdp"
+                        android:layout_toStartOf="@id/ivNineth"
+                        android:contentDescription="@string/todo"
+                        android:rotation="26"
+                        android:src="@drawable/ic_score_arrow"
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivNineth"
@@ -265,10 +306,24 @@
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginBottom="101dp"
                         android:layout_toEndOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
                         android:rotation="56"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/ivSixteen"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_22sdp"
+                        android:layout_marginBottom="90dp"
+                        android:layout_toEndOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
+                        android:rotation="56"
+                        android:src="@drawable/ic_score_arrow"
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivTenth"
@@ -279,10 +334,10 @@
                         android:layout_marginStart="@dimen/_26sdp"
                         android:layout_marginBottom="85dp"
                         android:layout_toEndOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
                         android:rotation="64"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivEleventh"
@@ -293,10 +348,10 @@
                         android:layout_marginStart="@dimen/_38sdp"
                         android:layout_marginBottom="68dp"
                         android:layout_toEndOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
                         android:rotation="80"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/ivTwelveth"
@@ -307,10 +362,10 @@
                         android:layout_marginStart="@dimen/_43sdp"
                         android:layout_marginBottom="@dimen/_50sdp"
                         android:layout_toEndOf="@id/llSeverse"
+                        android:contentDescription="@string/todo"
                         android:rotation="91"
                         android:src="@drawable/ic_score_arrow"
-                        android:visibility="invisible"
-                        android:contentDescription="@string/todo" />
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 

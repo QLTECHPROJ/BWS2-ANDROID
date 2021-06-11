@@ -67,6 +67,7 @@ import com.brainwellnessspa.DashboardOldModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
@@ -147,7 +148,7 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
-    public static final Migration MIGRATION_2_3 = new Migration(2,3) {
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'UserID' TEXT");
@@ -199,7 +200,7 @@ public class BWSApplication extends Application {
 
     public static List<String> GetAllMediaDownload(Context ctx) {
         SharedPreferences shared1 =
-            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB = getAudioDataBase(ctx);
@@ -214,7 +215,7 @@ public class BWSApplication extends Application {
 
     private static void CallObserverMethodGetAllMedia(Context ctx) {
         SharedPreferences shared1 =
-            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB = getAudioDataBase(ctx);
@@ -233,7 +234,7 @@ public class BWSApplication extends Application {
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
-                .getPlaylist1(PlaylistID,CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+                .getPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
 
             if (audioList.size() != 0) {
                 ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
@@ -595,6 +596,7 @@ public class BWSApplication extends Application {
                                 }
                             }
                         }
+
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
                             hideProgressBar(progressBar, progressBarHolder, act);
@@ -1041,19 +1043,23 @@ public class BWSApplication extends Application {
                                 btnSendCode.setOnClickListener(view1 -> {
                                     if (isNetworkConnected(ctx)) {
                                         showProgressBar(progressBar, progressBarHolder, act);
-                                        Call<SucessModel> listCall1 = APINewClient.getClient().getRenameNewPlaylist(CoUSERID, PlaylistID, edtCreate.getText().toString());
-                                        listCall1.enqueue(new Callback<SucessModel>() {
+                                        Call<RenameNewPlaylistModel> listCall1 = APINewClient.getClient().getRenameNewPlaylist(CoUSERID, PlaylistID, edtCreate.getText().toString());
+                                        listCall1.enqueue(new Callback<RenameNewPlaylistModel>() {
                                             @Override
-                                            public void onResponse(Call<SucessModel> call1, Response<SucessModel> response1) {
+                                            public void onResponse(Call<RenameNewPlaylistModel> call1, Response<RenameNewPlaylistModel> response1) {
                                                 try {
                                                     hideProgressBar(progressBar, progressBarHolder, act);
-                                                    SucessModel listModel = response1.body();
+                                                    RenameNewPlaylistModel listModel = response1.body();
                                                     if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodesuccess))) {
-                                                        showToast(listModel.getResponseMessage(), act);
-                                                        tvName.setText(edtCreate.getText().toString());
-                                                        dialogs.dismiss();
-                                                        localIntent.putExtra("MyReminder", "update");
-                                                        localBroadcastManager.sendBroadcast(localIntent);
+                                                        if (listModel.getResponseData().getIsRename().equalsIgnoreCase("0")) {
+                                                            showToast(listModel.getResponseMessage(), act);
+                                                        } else if (listModel.getResponseData().getIsRename().equalsIgnoreCase("1")) {
+                                                            showToast(listModel.getResponseMessage(), act);
+                                                            tvName.setText(edtCreate.getText().toString());
+                                                            localIntent.putExtra("MyReminder", "update");
+                                                            localBroadcastManager.sendBroadcast(localIntent);
+                                                            dialogs.dismiss();
+                                                        }
 //                                        Properties p = new Properties();
 //                                        p.putValue("userId", UserID);
 //                                        p.putValue("playlistId", PlaylistID);
@@ -1082,7 +1088,7 @@ public class BWSApplication extends Application {
                                             }
 
                                             @Override
-                                            public void onFailure(Call<SucessModel> call1, Throwable t) {
+                                            public void onFailure(Call<RenameNewPlaylistModel> call1, Throwable t) {
                                                 hideProgressBar(progressBar, progressBarHolder, act);
                                             }
                                         });
@@ -1291,19 +1297,20 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static AudioDatabase getAudioDataBase(Context ctx){
+    public static AudioDatabase getAudioDataBase(Context ctx) {
         DB = Room.databaseBuilder(ctx,
                 AudioDatabase.class,
                 "Audio_database")
                 .addMigrations(MIGRATION_2_3)
-               .build();
-       return DB;
+                .build();
+        return DB;
     }
+
     private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs,
                                      String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
         DB = getAudioDataBase(ctx);
         downloadPlaylistDetails.setUserId(CoUserId);
-         Properties p = new Properties();
+        Properties p = new Properties();
         p.putValue("userId", CoUserId);
         p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
         p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
@@ -1366,13 +1373,13 @@ public class BWSApplication extends Application {
 
     public static void GetMedia(String AudioFile, Context ctx, String audioFileName,
                                 ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
-        DB=getAudioDataBase(ctx);
+        DB = getAudioDataBase(ctx);
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB.taskDao()
-                .getaudioByPlaylist1(AudioFile, "",CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+                .getaudioByPlaylist1(AudioFile, "", CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile1 = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
@@ -2028,7 +2035,7 @@ public class BWSApplication extends Application {
         properties.putValue("batteryState", BatteryStatus);
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
-        if(analytics==null){
+        if (analytics == null) {
             SplashActivity sp = new SplashActivity();
             sp.setAnalytics(getContext().getString(R.string.segment_key_real));
         }
@@ -2280,7 +2287,7 @@ public class BWSApplication extends Application {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             holder.binding.cbChecked.setText(selectionModels[position].getDay());
 
-            if(position==0) {
+            if (position == 0) {
                 Log.e("Reminder RDay", RDay);
 
                 if (remiderDays.size() == selectionModels.length) {
@@ -2295,7 +2302,7 @@ public class BWSApplication extends Application {
             if (RDay.contains(String.valueOf(position))) {
                 remiderDays.add(String.valueOf(position));
                 holder.binding.cbChecked.setChecked(true);
-            }else{
+            } else {
                 holder.binding.cbChecked.setChecked(false);
             }
 
@@ -2501,7 +2508,7 @@ public class BWSApplication extends Application {
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
         DB.taskDao()
-                .geAllData12(CoUserID).observe((LifecycleOwner) ctx , audioList -> {
+                .geAllData12(CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();

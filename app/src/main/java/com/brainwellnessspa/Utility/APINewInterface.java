@@ -10,6 +10,7 @@ import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel;
 import com.brainwellnessspa.dashboardModule.models.NotificationlistModel;
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel;
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel;
+import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel;
 import com.brainwellnessspa.dashboardModule.models.SearchPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.SearchBothModel;
@@ -154,9 +155,9 @@ public interface APINewInterface {
 
     @POST("renameplaylist")
     @FormUrlEncoded
-    Call<SucessModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
-                                           @Field("PlaylistId") String PlaylistId,
-                                           @Field("PlaylistNewName") String PlaylistNewName);
+    Call<RenameNewPlaylistModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
+                                                      @Field("PlaylistId") String PlaylistId,
+                                                      @Field("PlaylistNewName") String PlaylistNewName);
 
     @POST("deleteplaylist")
     @FormUrlEncoded

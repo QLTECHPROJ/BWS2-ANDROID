@@ -5,9 +5,11 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.widget.DatePicker
@@ -51,33 +53,64 @@ class EditProfileActivity : AppCompatActivity() {
     var ageMonth: Int = 0
     var ageDate: Int = 0
 
+    //    UserName = viewModel.responseData!!.name
+//    UserCalendar = viewModel.responseData!!.dob
+//    UserMobileNumber = viewModel.responseData!!.mobile
+//    UserEmail = viewModel.responseData!!.email
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val user = binding.etUser.text.toString().trim()
-            val calendar = binding.etCalendar.text.toString().trim()
-            if (user.equals(UserName, ignoreCase = true) &&
-                calendar.equals(UserCalendar, ignoreCase = true)
+            val ckName: String = binding.etUser.text.toString().trim()
+            val ckCalendar: String = binding.etCalendar.text.toString().trim()
+            val ckNumber: String = binding.etMobileNumber.text.toString().trim()
+            val ckEmail: String = binding.etEmail.text.toString().trim()
+            if (ckName.equals(UserName, ignoreCase = true) &&
+                ckCalendar.equals(UserCalendar, ignoreCase = true) &&
+                ckNumber.equals(UserMobileNumber, ignoreCase = true) &&
+                ckEmail.equals(UserEmail, ignoreCase = true)
             ) {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (user.equals("", ignoreCase = true)) {
+            } else if (ckName.equals("", ignoreCase = true)) {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!user.equals(UserName, ignoreCase = true)) {
-                binding.btnSave.isEnabled = true
+            } else if (ckCalendar.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
-            } else if (!calendar.equals(UserCalendar, ignoreCase = true)) {
-                binding.btnSave.isEnabled = true
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ckNumber.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else if (ckEmail.equals("", ignoreCase = true)) {
+                binding.btnSave.isEnabled = false
+                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            }
+
+            if (ckNumber.equals("", ignoreCase = true)) {
+                binding.ivCheckNumber.visibility = View.GONE
+            } else if (binding.etMobileNumber.text.toString().length == 1
+                || binding.etMobileNumber.text.toString().length < 8
+                || binding.etMobileNumber.text.toString().length > 10
+            ) {
+                binding.ivCheckNumber.visibility = View.GONE
+            } else {
+                binding.ivCheckNumber.visibility = View.VISIBLE
+            }
+
+            if (ckEmail.equals("", ignoreCase = true)) {
+                binding.ivCheckEmail.visibility = View.GONE
+            } else if (!ckEmail.equals("", ignoreCase = true) && !ckEmail.isEmailValid()) {
+                binding.ivCheckEmail.visibility = View.GONE
+            } else {
+                binding.ivCheckEmail.visibility = View.VISIBLE
             }
         }
 
@@ -120,93 +153,161 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
+            .matches()
+    }
+
     fun profileUpdate() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            var dob = ""
-            if (binding.etCalendar.text.toString().isNotEmpty()) {
-                dob = binding.etCalendar.text.toString()
-                var spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
-                var newDate = Date()
-                try {
-                    newDate = spf.parse(dob)
-                } catch (e: ParseException) {
-                    e.printStackTrace()
-                }
-                spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-                dob = spf.format(newDate)
-            }
-            val listCall = APINewClient.getClient().getEditProfile(
-                coUserId, binding.etUser.text.toString(), dob,
-                binding.etMobileNumber.text.toString(), binding.etEmail.text.toString()
-            )
-            listCall.enqueue(object : Callback<EditProfileModel> {
-                override fun onResponse(
-                    call: Call<EditProfileModel>,
-                    response: Response<EditProfileModel>
-                ) {
-                    val viewModel = response.body()
-                    if (viewModel!!.responseCode.equals(
-                            getString(R.string.ResponseCodesuccess),
-                            ignoreCase = true
-                        )
-                    ) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
-                        BWSApplication.showToast(
-                            viewModel.responseMessage,
-                            activity
-                        )
-                        profileViewData(ctx)
-                        val shared =
-                            getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                        val editor = shared.edit()
-                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
-                        editor.apply()
-
-                        analytics.identify(
-                            Traits()
-                                .putEmail(viewModel.responseData!!.email)
-                                .putName(viewModel.responseData!!.name)
-                                .putPhone(viewModel.responseData!!.phoneNumber)
-                                .putValue("coUserId", coUserId)
-                                .putValue("userId", userId)
-                                .putValue("name", viewModel.responseData!!.name)
-                                .putValue("phone", viewModel.responseData!!.phoneNumber)
-                                .putValue("email", viewModel.responseData!!.email)
-                        )
-                        val p = Properties()
-                        p.putValue("coUserId", coUserId)
-                        p.putValue("name", viewModel.responseData!!.name)
-                        p.putValue("dob", viewModel.responseData!!.dob)
-                        p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
-                        p.putValue("email", viewModel.responseData!!.email)
-                        BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
-                        finish()
-                    } else {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
-                        BWSApplication.showToast(
-                            viewModel.responseMessage,
-                            activity
-                        )
+        try {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                BWSApplication.showProgressBar(
+                    binding.progressBar,
+                    binding.progressBarHolder,
+                    activity
+                )
+                var dob = ""
+                if (binding.etCalendar.text.toString().isNotEmpty()) {
+                    dob = binding.etCalendar.text.toString()
+                    var spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
+                    var newDate = Date()
+                    try {
+                        newDate = spf.parse(dob)
+                    } catch (e: ParseException) {
+                        e.printStackTrace()
                     }
+                    spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+                    dob = spf.format(newDate)
                 }
 
-                override fun onFailure(call: Call<EditProfileModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
+                if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
+                    binding.txtNameError.text = "Please provide a Name"
+                    binding.txtNameError.visibility = View.VISIBLE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.GONE
+                    binding.txtEmailError.visibility = View.GONE
+                } else if (binding.etCalendar.text.toString().equals("", ignoreCase = true)) {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.VISIBLE
+                    binding.txtDobError.text = "Please provide a dob"
+                    binding.txtNumberError.visibility = View.GONE
+                    binding.txtEmailError.visibility = View.GONE
+                } else if (binding.etMobileNumber.text.toString().equals("", ignoreCase = true)) {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.VISIBLE
+                    binding.txtNumberError.text = "Please provide a mobile number"
+                    binding.txtEmailError.visibility = View.GONE
+                } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 ||
+                    binding.etMobileNumber.text.toString().length > 10
+                ) {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.VISIBLE
+                    binding.txtNumberError.text = "Please provide a valid mobile number"
+                    binding.txtEmailError.visibility = View.GONE
+                } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.GONE
+                    binding.txtEmailError.visibility = View.VISIBLE
+                    binding.txtEmailError.text = "Please provide a email address"
+                } else if (!binding.etEmail.text.toString().isEmailValid()) {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.GONE
+                    binding.txtEmailError.visibility = View.VISIBLE
+                    binding.txtEmailError.text = "Please provide a valid email address"
+                } else {
+                    binding.txtNameError.visibility = View.GONE
+                    binding.txtDobError.visibility = View.GONE
+                    binding.txtNumberError.visibility = View.GONE
+                    binding.txtEmailError.visibility = View.GONE
+                    val listCall = APINewClient.getClient().getEditProfile(
+                        coUserId, binding.etUser.text.toString(), dob,
+                        binding.etMobileNumber.text.toString(), binding.etEmail.text.toString()
                     )
+                    listCall.enqueue(object : Callback<EditProfileModel> {
+                        override fun onResponse(
+                            call: Call<EditProfileModel>,
+                            response: Response<EditProfileModel>
+                        ) {
+                            val viewModel = response.body()
+                            if (viewModel!!.responseCode.equals(
+                                    getString(R.string.ResponseCodesuccess),
+                                    ignoreCase = true
+                                )
+                            ) {
+                                BWSApplication.hideProgressBar(
+                                    binding.progressBar,
+                                    binding.progressBarHolder,
+                                    activity
+                                )
+                                BWSApplication.showToast(
+                                    viewModel.responseMessage,
+                                    activity
+                                )
+                                profileViewData(ctx)
+                                val shared =
+                                    getSharedPreferences(
+                                        CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                        MODE_PRIVATE
+                                    )
+                                val editor = shared.edit()
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_NAME,
+                                    viewModel.responseData!!.name
+                                )
+                                editor.apply()
+
+                                analytics.identify(
+                                    Traits()
+                                        .putEmail(viewModel.responseData!!.email)
+                                        .putName(viewModel.responseData!!.name)
+                                        .putPhone(viewModel.responseData!!.phoneNumber)
+                                        .putValue("coUserId", coUserId)
+                                        .putValue("userId", userId)
+                                        .putValue("name", viewModel.responseData!!.name)
+                                        .putValue("phone", viewModel.responseData!!.phoneNumber)
+                                        .putValue("email", viewModel.responseData!!.email)
+                                )
+                                val p = Properties()
+                                p.putValue("coUserId", coUserId)
+                                p.putValue("name", viewModel.responseData!!.name)
+                                p.putValue("dob", viewModel.responseData!!.dob)
+                                p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
+                                p.putValue("email", viewModel.responseData!!.email)
+                                BWSApplication.addToSegment(
+                                    "Edit Profile Saved",
+                                    p,
+                                    CONSTANTS.track
+                                )
+                                finish()
+                            } else {
+                                BWSApplication.hideProgressBar(
+                                    binding.progressBar,
+                                    binding.progressBarHolder,
+                                    activity
+                                )
+                                BWSApplication.showToast(
+                                    viewModel.responseMessage,
+                                    activity
+                                )
+                            }
+                        }
+
+                        override fun onFailure(call: Call<EditProfileModel>, t: Throwable) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                        }
+                    })
                 }
-            })
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -249,70 +350,6 @@ class EditProfileActivity : AppCompatActivity() {
                             binding.etEmail.setText(viewModel.responseData!!.email)
                             binding.etCalendar.setText(viewModel.responseData!!.dob)
 
-                            if (!viewModel.responseData!!.email.equals("", ignoreCase = true)) {
-                                binding.etEmail.isEnabled = false
-                                binding.etEmail.isClickable = false
-                                binding.etEmail.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.light_gray
-                                    )
-                                )
-                                binding.ivCheckEmail.isEnabled = false
-                                binding.ivCheckEmail.isClickable = false
-
-                            } else {
-                                binding.etEmail.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.black
-                                    )
-                                )
-                                binding.etEmail.isEnabled = true
-                                binding.etEmail.isClickable = true
-                            }
-
-                            if (!viewModel.responseData!!.mobile.equals("", ignoreCase = true)) {
-                                binding.etMobileNumber.isEnabled = false
-                                binding.etMobileNumber.isClickable = false
-                                binding.etMobileNumber.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.light_gray
-                                    )
-                                )
-                                binding.ivCheckNumber.isEnabled = false
-                                binding.ivCheckNumber.isClickable = false
-                            } else {
-                                binding.etMobileNumber.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.black
-                                    )
-                                )
-                                binding.etMobileNumber.isEnabled = true
-                                binding.etMobileNumber.isClickable = true
-                            }
-
-                            if (!viewModel.responseData!!.dob.equals("", ignoreCase = true)) {
-                                binding.etCalendar.isEnabled = false
-                                binding.etCalendar.isClickable = false
-                                binding.etCalendar.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.light_gray
-                                    )
-                                )
-                            } else {
-                                binding.etCalendar.setTextColor(
-                                    ContextCompat.getColor(
-                                        ctx,
-                                        R.color.black
-                                    )
-                                )
-                                binding.etCalendar.isEnabled = true
-                                binding.etCalendar.isClickable = true
-                            }
                         } else {
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,

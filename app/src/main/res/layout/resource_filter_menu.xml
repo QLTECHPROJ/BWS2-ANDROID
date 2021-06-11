@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/_4sdp"
+    android:background="@drawable/background_shadow"
     android:elevation="@dimen/_110sdp"
-    android:background="@drawable/background_shadow">
+    tools:targetApi="lollipop">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -16,34 +17,37 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_8sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:id="@+id/ivFilter"
                     android:layout_width="@dimen/_17sdp"
                     android:layout_height="@dimen/_16sdp"
                     android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_blue_icon"
                     android:visibility="invisible"
                     app:tint="@color/app_theme_color"
-                    android:src="@drawable/ic_arrow_blue_icon" />
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:id="@+id/tvAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_4sdp"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textColor="@color/black"
                     android:text="All"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
@@ -52,11 +56,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
-                android:paddingRight="@dimen/_20sdp"
-                tools:listitem="@layout/filter_list_layout"/>
+                android:paddingEnd="@dimen/_20sdp"
+                tools:listitem="@layout/filter_list_layout"
+                tools:ignore="RtlSymmetry" />
         </LinearLayout>
-
-
     </RelativeLayout>
 
 </RelativeLayout>
