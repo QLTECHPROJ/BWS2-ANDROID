@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_theme_color"
@@ -28,7 +29,8 @@
             android:gravity="center"
             android:text="@string/give_playlist_name"
             android:textColor="@color/white"
-            android:textSize="@dimen/_17sdp" />
+            android:textSize="@dimen/_17sdp"
+            tools:ignore="SpUsage" />
 
         <EditText
             android:id="@+id/edtCreate"
@@ -43,7 +45,9 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/_18sdp" />
+            android:textSize="@dimen/_18sdp"
+            tools:targetApi="lollipop"
+            tools:ignore="SpUsage" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,7 +83,8 @@
                 android:text="@string/Cancel"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="SpUsage" />
 
         </LinearLayout>
     </LinearLayout>
@@ -96,7 +101,8 @@
             android:layout_height="@dimen/_50sdp"
             android:indeterminateTint="@color/blue"
             android:scaleType="centerInside"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:targetApi="lollipop" />
 
     </LinearLayout>
 

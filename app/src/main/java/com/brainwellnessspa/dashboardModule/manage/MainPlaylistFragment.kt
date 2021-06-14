@@ -347,7 +347,7 @@ class MainPlaylistFragment : Fragment() {
                 val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
                 val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
                 val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
-                edtCreate.requestFocus()
+                edtCreate.clearFocus()
                 val popupTextWatcher: TextWatcher = object : TextWatcher {
                     override fun beforeTextChanged(
                         s: CharSequence,

@@ -990,7 +990,7 @@ public class BWSApplication extends Application {
                                 Button btnSendCode = dialogs.findViewById(R.id.btnSendCode);
                                 tvHeading.setText(R.string.Rename_your_playlist);
                                 btnSendCode.setText(R.string.Save);
-                                edtCreate.requestFocus();
+                                edtCreate.clearFocus();
                                 edtCreate.setText(model.getResponseData().getPlaylistName());
                                 int position1 = edtCreate.getText().length();
                                 Editable editObj = edtCreate.getText();
