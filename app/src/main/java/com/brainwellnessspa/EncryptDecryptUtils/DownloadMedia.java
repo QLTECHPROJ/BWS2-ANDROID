@@ -12,9 +12,6 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.room.Room;
-
-import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
@@ -34,9 +31,11 @@ import java.util.List;
 
 
 import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.addToSegment;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.logout;
+import static com.brainwellnessspa.BWSApplication.showToast;
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
@@ -73,7 +72,7 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
-            BWSApplication.showToast("Downloading file...",act);
+//            showToast("Downloading file...",act);
 
         Log.e("Downloading file..", String.valueOf(downloadProgress));
         DB = getAudioDataBase(ctx);
@@ -183,21 +182,21 @@ public class DownloadMedia implements OnDownloadListener {
 
     public byte[] decrypt(String FILE_NAME) {
         byte[] decryptedBytes = null;
-//        BWSApplication.showToast("Retrieve file...", context);
+//        showToast("Retrieve file...", context);
         try {
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(ctx, FILE_NAME));
             decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(ctx).getSecretKey(), fileData);
-//            BWSApplication.showToast("File Retrieve Done", context);
+//            showToast("File Retrieve Done", context);
             return decryptedBytes;
         } catch (Exception e) {
-//            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+//            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
             try {
                 byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(ctx, FILE_NAME));
                 decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(ctx).getSecretKey(), fileData);
-//            BWSApplication.showToast("File Retrieve Done", context);
+//            showToast("File Retrieve Done", context);
                 return decryptedBytes;
             } catch (Exception ez) {
-//            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+//            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
                 Log.e("erssssssssssss", ez.getMessage());
             }
             Log.e("erssssssssssss", e.getMessage());
@@ -235,95 +234,42 @@ public class DownloadMedia implements OnDownloadListener {
                     playlistDownloadId.addAll(playlistId1);
                 }
             }
-
-            try {
-                if (playlistDownloadId.get(0).equalsIgnoreCase("")) {
-                  /*  DatabaseClient
-                            .getInstance(context)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getaudioByPlaylist1(fileNameList.get(0), "").observe(context, audioList -> {
-                        Myaudiolist = new ArrayList<>();
-                            Myaudiolist = audioList;});*/
-                    p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("audioName", fileNameList.get(0));
-                        /*p.putValue("audioId", Myaudiolist.get(0).getID());
-                        p.putValue("audioDescription", "");
-                        p.putValue("directions", Myaudiolist.get(0).getAudioDirection());
-                        p.putValue("masterCategory", Myaudiolist.get(0).getAudiomastercat());
-                        p.putValue("subCategory", Myaudiolist.get(0).getAudioSubCategory());
-                        p.putValue("audioDuration", Myaudiolist.get(0).getAudioDuration());*/
-                    p.putValue("playerType", PlayerStatus);
-                    p.putValue("audioService", appStatus(ctx));
-                    p.putValue("position", GetCurrentAudioPosition());
-                    p.putValue("source", "Downloaded Audios");
-                    p.putValue("bitRate", "");
-                    p.putValue("sound", GetDeviceVolume(ctx));
-                    BWSApplication.addToSegment("Audio Download Completed", p, CONSTANTS.track);
-                } else if (!playlistDownloadId.get(0).equalsIgnoreCase("")) {
-                    if (playlistDownloadId.size() > 1) {
-                        if (!playlistDownloadId.get(0).equalsIgnoreCase(playlistDownloadId.get(1))) {
-                            p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("playlistId", playlistDownloadId);
-                            /*
-                            p.putValue("playlistName", PlaylistName);
-                            p.putValue("playlistDescription", PlaylistDescription);
-                            if (Created.equalsIgnoreCase("1")) {
-                                p.putValue("playlistType", "Created");
-                            } else if (Created.equalsIgnoreCase("0")) {
-                                p.putValue("playlistType", "Default");
-                            }
-
-                            if (Totalhour.equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", "0h " + Totalminute + "m");
-                            } else if (Totalminute.equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", Totalhour + "h 0m");
-                            } else {
-                                p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-                            }
-                            p.putValue("audioCount", TotalAudio);*/
-                            p.putValue("playerType", PlayerStatus);
-                            p.putValue("source", "Downloaded Playlists");
-                            p.putValue("audioService", appStatus(ctx));
-                            p.putValue("sound", GetDeviceVolume(ctx));
-                            BWSApplication.addToSegment("Playlist Download Completed", p, CONSTANTS.track);
-                        }
-                    } else {
-                        if (!playlistDownloadId.get(0).equalsIgnoreCase(playlistDownloadId.get(1))) {
-                            p = new Properties();
-                            p.putValue("userId", UserID);
-                            p.putValue("playlistId", playlistDownloadId);
-                            /*
-                            p.putValue("playlistName", PlaylistName);
-                            p.putValue("playlistDescription", PlaylistDescription);
-                            if (Created.equalsIgnoreCase("1")) {
-                                p.putValue("playlistType", "Created");
-                            } else if (Created.equalsIgnoreCase("0")) {
-                                p.putValue("playlistType", "Default");
-                            }
-
-                            if (Totalhour.equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", "0h " + Totalminute + "m");
-                            } else if (Totalminute.equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", Totalhour + "h 0m");
-                            } else {
-                                p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-                            }
-                            p.putValue("audioCount", TotalAudio);*/
-                            p.putValue("playerType", PlayerStatus);
-                            p.putValue("source", "Downloaded Playlists");
-                            p.putValue("audioService", appStatus(ctx));
-                            p.putValue("sound", GetDeviceVolume(ctx));
-                            BWSApplication.addToSegment("Playlist Download Completed", p, CONSTANTS.track);
-                        }
+            if(playlistDownloadId.get(0).equalsIgnoreCase("")){
+                p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioName", fileNameList.get(0));
+                p.putValue("playerType", PlayerStatus);
+                p.putValue("audioService", appStatus(ctx));
+                p.putValue("position", GetCurrentAudioPosition());
+                p.putValue("source", "Downloaded Audios");
+                p.putValue("bitRate", "");
+                p.putValue("sound", GetDeviceVolume(ctx));
+                addToSegment("Audio Download Completed", p, CONSTANTS.track);
+                showToast("Your audio has been downloaded",act);
+            }else if(!playlistDownloadId.get(0).equalsIgnoreCase("")) {
+                DB = getAudioDataBase(ctx);
+                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+                UserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
+                CoUserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+                DB = getAudioDataBase(ctx);
+                DB.taskDao()
+                        .getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).observe((LifecycleOwner) ctx, audioList -> {
+                    if (audioList.size() == 0) {
+                        showToast("Your playlist has been downloaded", act);
+                        p = new Properties();
+                        p.putValue("userId", UserID);
+                        p.putValue("playlistId", playlistDownloadId);
+                        p.putValue("playerType", PlayerStatus);
+                        p.putValue("source", "Downloaded Playlists");
+                        p.putValue("audioService", appStatus(ctx));
+                        p.putValue("sound", GetDeviceVolume(ctx));
+                        addToSegment("Playlist Download Completed", p, CONSTANTS.track);
                     }
-                }
-            } catch (Exception | OutOfMemoryError e) {
-                e.printStackTrace();
+                    DB.taskDao()
+                            .getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).removeObserver(audioListx -> {
+                    });
+                });
             }
-
             fileNameList.remove(0);
             audioFile.remove(0);
             playlistDownloadId.remove(0);
@@ -344,7 +290,7 @@ public class DownloadMedia implements OnDownloadListener {
                 updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
-                BWSApplication.showToast("Download Complete...", (Activity) ctx);
+//                showToast("Download Complete...", (Activity) ctx);
                 Log.e("Downloading file..", String.valueOf(downloadProgress));
                 downloadProgress = 0;
                 filename = "";

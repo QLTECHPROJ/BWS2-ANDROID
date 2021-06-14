@@ -606,7 +606,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         binding.tvDescription.text = listModel.playlistDesc
         try {
 //            if(!MyDownloads.equals("1")) {
-
             if (isNetworkConnected(ctx)) {
                 if (!listModel.created.equals("2")) {
                     if (!listModel.playlistImageDetail.equals("")) {
@@ -2422,6 +2421,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
             }
+            showToast("Downloading the playlist right now",act)
             saveAllMedia(ctx, playlistSongs, DB)
         } else {
             var downloadOrNot = false
@@ -2487,8 +2487,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     fileNameList = name
                     playlistDownloadId = downloadPlaylistId
                 }
+                showToast("Your audio has been downloaded",act)
                 SaveMedia(playlistSongs, position, llDownload, ivDownloads, 0, ctx, DB)
             } else {
+                showToast("Downloading the audio right now",act)
                 SaveMedia(playlistSongs, position, llDownload, ivDownloads, 100, ctx, DB)
             }
             val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)

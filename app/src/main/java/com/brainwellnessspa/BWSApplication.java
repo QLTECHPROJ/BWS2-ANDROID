@@ -1279,6 +1279,7 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
+        showToast("Downloading the playlist right now",act);
         savePlaylist(ctx, downloadPlaylistDetails);
         saveAllMedia(playlistSongsList, PlaylistID, CoUserId, ctx, downloadPlaylistDetails);
     }
@@ -1571,6 +1572,7 @@ public class BWSApplication extends Application {
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
+                showToast("Downloading the audio right now",act);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -1627,6 +1629,7 @@ public class BWSApplication extends Application {
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
+                    showToast("Your audio has been downloaded",act);
                 }
             }
         } catch (Exception e) {
@@ -2502,7 +2505,7 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void callObserve2(Context ctx) {
+    public static void callObserve2(Context ctx,Activity act) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
@@ -2532,7 +2535,11 @@ public class BWSApplication extends Application {
             editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editorxc.commit();
-            isDownloading = false;
+            if (fileNameList.size() != 0) {
+                isDownloading = true;
+                DownloadMedia downloadMedia = new DownloadMedia(ctx, act);
+                downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
+            }
         });
     }
 

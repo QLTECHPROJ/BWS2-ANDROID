@@ -1724,6 +1724,7 @@ class MyPlayerActivity : AppCompatActivity() {
         if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
             disableDownload()
             SaveMedia(100)
+            showToast("Downloading the audio right now",act)
         } else {
             fileNameList = ArrayList()
             audioFile1 = ArrayList()
@@ -1762,6 +1763,7 @@ class MyPlayerActivity : AppCompatActivity() {
             GetMediaPer()
             disableDownload()
             SaveMedia(0)
+            showToast("Your audio has been downloaded",act)
             val p = Properties()
             p.putValue("userId", UserID)
             p.putValue("audioId", mainPlayModelList[position].id)

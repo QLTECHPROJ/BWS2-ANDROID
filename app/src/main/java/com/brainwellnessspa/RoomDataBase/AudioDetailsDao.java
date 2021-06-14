@@ -43,6 +43,10 @@ public interface AudioDetailsDao {
 // ORDER BY uid ASC
     LiveData<List<DownloadAudioDetails>> getNotDownloadData(String IsDownload,String UserID);
 
+   @Query("SELECT * FROM audio_table WHERE IsDownload !=:IsDownload And UserID=:UserID and PlaylistId =:PlaylistId")
+// ORDER BY uid ASC
+    LiveData<List<DownloadAudioDetails>> getNotDownloadPlayListData(String IsDownload,String UserID, String PlaylistId);
+
     @Query("SELECT DISTINCT Name FROM audio_table WHERE IsDownload =:IsDownload And UserID=:UserID")
 // ORDER BY uid ASC
     LiveData<List<String>> geAllDataBYDownloaded1(String IsDownload,String UserID);
