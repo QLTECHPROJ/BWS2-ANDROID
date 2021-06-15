@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
@@ -55,8 +56,10 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
     val gson = Gson()
 
     //TODO : Oauth Client ID
-    //861076939494-lg98i6qsqreefk9ftjslerikvtj0ot34.apps.googleusercontent.com
-//ids
+    //861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//TODO : Oauth Client Secret
+    //CLIENT_SECRET = "0hQBynI-gzUrHQtSR-ayUFaK"
+            // code :- 4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q
     /*   MD5: 4D:09:22:47:FD:AD:E3:8B:DD:61:4F:65:BA:66:99:37
     SHA1: F5:37:43:D2:FC:73:4E:6C:51:8C:D7:E7:BE:88:D7:3A:4E:BC:37:4F
     SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
@@ -512,10 +515,32 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            loadAllSKUsUpdate(list!![0].skus.toString(),list!![0].purchaseToken)
+//                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)
 //                            consumePurchases(list!![0].purchaseToken)
                             val gson = Gson()
-                            Log.e("purchase list", gson.toJson(list))
+                            val dateString: String = DateFormat.format("MM/dd/yyyy", Date(list!![0].purchaseTime)).toString()
+                            Log.e("purchase list", dateString)
+                            val params = SkuDetailsParams.newBuilder()
+                            params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
+                            billingClient.querySkuDetailsAsync(params.build(), object : SkuDetailsResponseListener {
+                                fun onSkuDetailsResponse(responseCode: Int, skuDetailsList: List<SkuDetails>?) {
+                                    if (skuDetailsList == null) {
+                                        return
+                                    }
+                                    for (skuDetail in skuDetailsList) {
+                                        if (skuDetail.sku == list[0].skus[0]) {
+                                            val period = skuDetail.subscriptionPeriod
+                                            // boolean expired = purchaseTime + period < now
+                                            Log.e("purchase list", period)
+
+                                        }
+                                    }
+                                }
+
+                                override fun onSkuDetailsResponse(p0: BillingResult, p1: MutableList<SkuDetails>?) {
+                                    TODO("Not yet implemented")
+                                }
+                            })
                         }
                     }
                 }
@@ -524,7 +549,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
             override fun onBillingServiceDisconnected() {}
         })
     }
-    private fun loadAllSKUsUpdate(oldsku:String,token: String) =
+    private fun loadAllSKUsUpdate(oldsku: String, token: String) =
             if (billingClient.isReady) {
                 val params = SkuDetailsParams
                         .newBuilder()
@@ -611,4 +636,120 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
             Log.e("Consume aaa ", billingResult.debugMessage)
         }
     }
-}
+}/*
+   public static String GOOGLE_AUTHORIZATION = "authorization_code";
+    public static String GOOGLE_CLIENT_ID = "861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com";
+    public static String GOOGLE_CLIENT_SECRET = "0hQBynI-gzUrHQtSR-ayUFaK";
+    public static String GOOGLE_CODE = "4/0AY0e-g7LoHIAy2ulpKIfeciuZSkBrFBh6RseKYb372xyxSb7Gmleh-vHyywKqAEGWlTiMg";
+//    public static String GOOGLE_CODE = "4/0AY0e-g611fwyaxP6xRR4fEMDBbIxZExfTJ_sB8TKGji28VzLM3XTViiPv6yNuY-BOk_b5Q";
+//            "4/0AY0e-g7QBZ_mWlvZnM0WncCwEo9Y6YslTFbyc61ToQwcG4pqJLSKgR99ibIbkEBZaQanxQ";
+//    public static String GOOGLE_CODE = "4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q";
+//                                         4%2F0AY0e-g611fwyaxP6xRR4fEMDBbIxZExfTJ_sB8TKGji28VzLM3XTViiPv6yNuY-BOk_b5Q
+//                                        4%2F0AY0e-g7QBZ_mWlvZnM0WncCwEo9Y6YslTFbyc61ToQwcG4pqJLSKgR99ibIbkEBZaQanxQ
+//                                          4%2F0AY0e-g75th0nAoXj0X5W9BeW7e3NwbqzAN_eNk_MLrkwxIlmAV30tGHCObjHPawlYdNpEQ
+    public static String GOOGLE_REDIRECT_URI = "https://brainwellnessspa.com.au/";
+    public static String GOOGLE_ACCESS_TYPE = "offline";
+    public static String GOOGLE_REDIRECT_URI1 = "https://brainwellnessspa.com.au/?code=4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fandroidpublisher/";
+
+   public static SubscriptionPurchase getRefreshToken() {
+        String refreshToken = "";
+        String accessToken = "";
+        SubscriptionPurchase subscription = new SubscriptionPurchase();
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
+        try {
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&redirect_uri=https://brainwellnessspa.com.au/&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=https://brainwellnessspa.com.au/&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+            List<NameValuePair> nameValuePairs = new ArrayList<>(6);
+            nameValuePairs.add(new BasicNameValuePair("grant_type",GOOGLE_AUTHORIZATION));
+            nameValuePairs.add(new BasicNameValuePair("client_id",GOOGLE_CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret",GOOGLE_CLIENT_SECRET));
+            nameValuePairs.add(new BasicNameValuePair("code",GOOGLE_CODE));
+            nameValuePairs.add(new BasicNameValuePair("redirect_uri",GOOGLE_REDIRECT_URI));
+//            nameValuePairs.add(new BasicNameValuePair("access_type",GOOGLE_ACCESS_TYPE));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = client.execute(post);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer buffer = new StringBuffer();
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                buffer.append(line);
+            }
+            JSONObject json = new JSONObject(buffer.toString());
+            refreshToken = json.getString("refresh_token");
+//            refreshToken = json.getString("access_token");
+            Log.e("purchase refreshToken", refreshToken);
+            subscription = getAccessToken(refreshToken);
+          /*  SharedPreferences shared1 = getContext().getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE);
+            String purchaseToken = shared1.getString(CONSTANTS.PREF_KEY_PurchaseToken, "");
+            String purchaseID = shared1.getString(CONSTANTS.PREF_KEY_PurchaseID, "");
+            subscription = getSubscriptionExpire(accessToken, refreshToken, purchaseID, purchaseToken);*/
+            return subscription;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return subscription;
+    }
+    public static SubscriptionPurchase getAccessToken(String refreshToken) {
+        String accessToken = "";
+        SubscriptionPurchase subscription = new SubscriptionPurchase();
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            nameValuePairs.add(new BasicNameValuePair("grant_type", "refresh_token"));
+            nameValuePairs.add(new BasicNameValuePair("client_id", GOOGLE_CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret", GOOGLE_CLIENT_SECRET));
+//            nameValuePairs.add(new BasicNameValuePair("access_type",GOOGLE_ACCESS_TYPE));
+            nameValuePairs.add(new BasicNameValuePair("refresh_token", refreshToken));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = client.execute(post);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuffer buffer = new StringBuffer();
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                buffer.append(line);
+            }
+            SharedPreferences shared1 = getContext().getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE);
+            String purchaseToken = shared1.getString(CONSTANTS.PREF_KEY_PurchaseToken, "");
+            String purchaseID = shared1.getString(CONSTANTS.PREF_KEY_PurchaseID, "");
+            JSONObject json = new JSONObject(buffer.toString());
+            accessToken = json.getString("access_token");
+
+            Log.e("purchase accessToken", accessToken);
+            subscription = getSubscriptionExpire(accessToken, refreshToken, purchaseID, purchaseToken);
+            return subscription;
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return subscription;
+    }
+    private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    private static JsonFactory JSON_FACTORY = new JacksonFactory();
+
+    public static SubscriptionPurchase getSubscriptionExpire(String accessToken, String refreshToken, String subscriptionId, String purchaseToken){
+        SubscriptionPurchase subscription = new SubscriptionPurchase();
+        try{
+            TokenResponse tokenResponse = new TokenResponse();
+            tokenResponse.setAccessToken(accessToken);
+//            tokenResponse.setRefreshToken(refreshToken);
+            tokenResponse.setExpiresInSeconds(3600L);
+            tokenResponse.setScope("https://www.googleapis.com/auth/androidpublisher");
+            tokenResponse.setTokenType("Bearer");
+            HttpRequestInitializer credential =  new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
+                    .setJsonFactory(JSON_FACTORY)
+                    .setClientSecrets(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+                    .build()
+                    .setFromTokenResponse(tokenResponse);
+
+            AndroidPublisher publisher = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).
+                    setApplicationName(getContext().getString(R.string.app_name)).
+                    build();
+            AndroidPublisher.Purchases purchases = publisher.purchases();
+            AndroidPublisher.Purchases.Subscriptions.Get get = purchases.subscriptions().get(getContext().getPackageName(), subscriptionId, purchaseToken);
+            subscription = get.execute();
+            Log.e("purchase exp time ", subscription.toString());
+            return subscription;
+        }
+        catch (IOException e) { e.printStackTrace(); }
+        return subscription;
+    }*/
