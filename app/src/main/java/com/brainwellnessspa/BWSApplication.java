@@ -155,6 +155,7 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'audio_table' ADD COLUMN 'UserID' TEXT");
         }
     };
+
     public static String BatteryStatus = "", IsLock;
     public static long oldSongPos = 0;
     public static String PlayerAudioId = "";
