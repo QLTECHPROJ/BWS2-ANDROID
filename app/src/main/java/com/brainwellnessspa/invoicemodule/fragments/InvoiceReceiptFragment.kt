@@ -99,7 +99,7 @@ class InvoiceReceiptFragment : DialogFragment() {
                                 binding.progressBarHolder,
                                 activity
                             )
-                            invoiceAmount = "$" + listModel.responseData.totalAmount
+                            invoiceAmount = "$" + listModel.responseData!!.totalAmount
                             binding.tvFromTitle.text = "From"
                             binding.tvDateTitle.text = "Order Date:"
                             binding.tvOrderIdTitle.text = "Order #:"
@@ -116,8 +116,8 @@ class InvoiceReceiptFragment : DialogFragment() {
                                 } else if (flag.equals("2", ignoreCase = true)) {
                                     p.putValue("invoiceType", "Appointment")
                                 }
-                                p.putValue("invoiceAmount", listModel.responseData.amount)
-                                p.putValue("invoiceDate", listModel.responseData.invoiceDate)
+                                p.putValue("invoiceAmount", listModel.responseData!!.amount)
+                                p.putValue("invoiceDate", listModel.responseData!!.invoiceDate)
                                 p.putValue("invoiceCurrency", "")
                                 p.putValue("plan", "")
                                 p.putValue("planStartDt", "")
@@ -128,12 +128,12 @@ class InvoiceReceiptFragment : DialogFragment() {
                             }
                             if (flag.equals("1", ignoreCase = true)) {
                                 binding.tvSession.visibility = View.GONE
-                                if (listModel.responseData.amount.equals(
+                                if (listModel.responseData!!.amount.equals(
                                         "0.00",
                                         ignoreCase = true
                                     ) ||
-                                    listModel.responseData.amount.equals("0", ignoreCase = true) ||
-                                    listModel.responseData.amount.equals("", ignoreCase = true)
+                                    listModel.responseData!!.amount.equals("0", ignoreCase = true) ||
+                                    listModel.responseData!!.amount.equals("", ignoreCase = true)
                                 ) {
                                     binding.tvText.visibility = View.GONE
                                     binding.views.visibility = View.GONE
@@ -143,8 +143,8 @@ class InvoiceReceiptFragment : DialogFragment() {
                                     binding.tvText.visibility = View.VISIBLE
                                     binding.views.visibility = View.VISIBLE
                                     binding.tvPaymentDetails.text =
-                                        """${listModel.responseData.cardBrand} ending **** ${listModel.responseData.cardDigit}
-${listModel.responseData.email}"""
+                                        """${listModel.responseData!!.cardBrand} ending **** ${listModel.responseData!!.cardDigit}
+${listModel.responseData!!.email}"""
                                 }
                             } else if (flag.equals("2", ignoreCase = true)) {
                                 binding.tvSession.visibility = View.VISIBLE
@@ -152,35 +152,35 @@ ${listModel.responseData.email}"""
                                 binding.views.visibility = View.GONE
                                 binding.tvPaymentDetails.visibility = View.GONE
                             }
-                            binding.tvOrderId.text = listModel.responseData.invoiceNumber
-                            binding.tvDate.text = listModel.responseData.invoiceDate
-                            binding.tvTotal.text = "$" + listModel.responseData.totalAmount
-                            binding.tvOrderTotal.text = "$" + listModel.responseData.amount
-                            binding.tvTitle.text = listModel.responseData.name
-                            binding.tvQty.text = "Qty: " + listModel.responseData.qty
-                            binding.tvSession.text = "Session: " + listModel.responseData.session
-                            binding.tvItems.text = "$" + listModel.responseData.amount
-                            binding.tvFromAddress.text = listModel.responseData.invoiceFrom
-                            if (listModel.responseData.invoiceTo.equals("", ignoreCase = true)) {
+                            binding.tvOrderId.text = listModel.responseData!!.invoiceNumber
+                            binding.tvDate.text = listModel.responseData!!.invoiceDate
+                            binding.tvTotal.text = "$" + listModel.responseData!!.totalAmount
+                            binding.tvOrderTotal.text = "$" + listModel.responseData!!.amount
+                            binding.tvTitle.text = listModel.responseData!!.name
+                            binding.tvQty.text = "Qty: " + listModel.responseData!!.qty
+                            binding.tvSession.text = "Session: " + listModel.responseData!!.session
+                            binding.tvItems.text = "$" + listModel.responseData!!.amount
+                            binding.tvFromAddress.text = listModel.responseData!!.invoiceFrom
+                            if (listModel.responseData!!.invoiceTo.equals("", ignoreCase = true)) {
                                 binding.llBilledTo.visibility = View.GONE
                             } else {
                                 binding.llBilledTo.visibility = View.VISIBLE
                                 binding.tvBilledToTitle.text = "Billed to"
-                                binding.tvBilledTo.text = listModel.responseData.invoiceTo
+                                binding.tvBilledTo.text = listModel.responseData!!.invoiceTo
                             }
-                            binding.tvGst.text = "$" + listModel.responseData.gstAmount
-                            if (listModel.responseData.totalAmount.equals(
+                            binding.tvGst.text = "$" + listModel.responseData!!.gstAmount
+                            if (listModel.responseData!!.totalAmount.equals(
                                     "0.00",
                                     ignoreCase = true
                                 )
                             ) {
                                 binding.views.visibility = View.GONE
                                 binding.tvOrderTotalAmount.text =
-                                    "$" + listModel.responseData.totalAmount
+                                    "$" + listModel.responseData!!.totalAmount
                             } else {
                                 binding.views.visibility = View.VISIBLE
                                 binding.tvOrderTotalAmount.text =
-                                    "$" + listModel.responseData.totalAmount
+                                    "$" + listModel.responseData!!.totalAmount
                             }
                         }
                     } catch (e: Exception) {

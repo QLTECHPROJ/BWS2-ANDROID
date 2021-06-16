@@ -424,7 +424,7 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
                         val listModel = response.body()
                         if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-                            if (listModel.responseData.codeExist.equals("0", ignoreCase = true)) {
+                            if (listModel.responseData!!.codeExist.equals("0", ignoreCase = true)) {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
