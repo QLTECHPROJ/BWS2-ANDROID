@@ -66,7 +66,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.brainwellnessspa.DashboardOldModule.Adapters.DirectionAdapter;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
@@ -136,7 +136,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;

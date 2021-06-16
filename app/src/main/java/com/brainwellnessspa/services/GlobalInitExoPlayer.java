@@ -41,8 +41,8 @@ import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
 import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 
@@ -97,7 +97,7 @@ import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.BWSApplication.IsLock;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 
 public class GlobalInitExoPlayer extends Service {
     public static SimpleExoPlayer player;

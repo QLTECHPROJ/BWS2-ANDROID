@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,8 +16,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
 
 public class MyNetworkReceiver extends BroadcastReceiver {

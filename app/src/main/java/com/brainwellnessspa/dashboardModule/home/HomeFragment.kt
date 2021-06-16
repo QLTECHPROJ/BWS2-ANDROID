@@ -56,7 +56,7 @@ import com.google.android.flexbox.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult

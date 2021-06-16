@@ -30,8 +30,8 @@ import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
@@ -62,9 +62,9 @@ import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivi
 
 
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;

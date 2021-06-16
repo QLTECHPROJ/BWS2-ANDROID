@@ -1,4 +1,4 @@
-package com.brainwellnessspa.EncryptDecryptUtils;
+package com.brainwellnessspa.encryptDecryptUtils;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

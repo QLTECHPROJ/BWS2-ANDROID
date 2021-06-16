@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 
@@ -62,9 +62,9 @@ import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;

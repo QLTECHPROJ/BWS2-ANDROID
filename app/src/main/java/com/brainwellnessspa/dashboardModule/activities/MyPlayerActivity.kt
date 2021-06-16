@@ -25,7 +25,7 @@ import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel
-import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.R
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 

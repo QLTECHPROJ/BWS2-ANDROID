@@ -1,4 +1,4 @@
-package com.brainwellnessspa.EncryptDecryptUtils;
+package com.brainwellnessspa.encryptDecryptUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
