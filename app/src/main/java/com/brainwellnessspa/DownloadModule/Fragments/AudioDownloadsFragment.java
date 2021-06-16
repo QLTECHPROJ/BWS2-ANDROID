@@ -563,14 +563,14 @@ public class AudioDownloadsFragment extends Fragment {
                                 BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
                             } else {
                                 if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-                                    BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                                    BWSApplication.showToast("The audio is currently in play mode.", ctx);
                                 } else {
                                     deleteAudio(holder.getAdapterPosition());
                                 }
                             }
                         } else {
                             if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                                BWSApplication.showToast("The audio is currently in play mode.", ctx);
                             } else {
                                 deleteAudio(holder.getAdapterPosition());
                             }
