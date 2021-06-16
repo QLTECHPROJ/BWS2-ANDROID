@@ -1,302 +1,287 @@
-package com.brainwellnessspa.invoicemodule.activities;
+package com.brainwellnessspa.invoicemodule.activities
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
+import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
+import com.brainwellnessspa.R
+import com.brainwellnessspa.Services.GlobalInitExoPlayer
+import com.brainwellnessspa.Utility.APIClient
+import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.databinding.ActivityInvoiceBinding
+import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity
+import com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment
+import com.brainwellnessspa.invoicemodule.fragments.MembershipInvoiceFragment
+import com.brainwellnessspa.invoicemodule.models.InvoiceListModel
+import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.Appointment
+import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.MemberShip
+import com.brainwellnessspa.invoicemodule.models.SegmentMembership
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
+import com.google.gson.Gson
+import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.brainwellnessspa.invoicemodule.models.SegmentMembership;
-import com.google.android.material.tabs.TabLayout;
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
-import com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment;
-import com.brainwellnessspa.invoicemodule.fragments.MembershipInvoiceFragment;
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.databinding.ActivityInvoiceBinding;
-import com.google.gson.Gson;
-import com.segment.analytics.Properties;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.tutorial;
-import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
-public class InvoiceActivity extends AppCompatActivity {
-    ActivityInvoiceBinding binding;
-    ArrayList<InvoiceListModel.Appointment> appointmentList;
-    ArrayList<InvoiceListModel.MemberShip> memberShipList;
-    String UserID, ComeFrom = "";
-    Context context;
-    Activity activity;
-    public static int invoiceToDashboard = 0;
-    public static int invoiceToRecepit = 0;
-    Properties p;
-    private int numStarted = 0;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice);
-        context = InvoiceActivity.this;
-        activity = InvoiceActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
-        if (getIntent() != null) {
-            ComeFrom = getIntent().getStringExtra("ComeFrom");
+class InvoiceActivity : AppCompatActivity() {
+    lateinit var binding: ActivityInvoiceBinding
+    lateinit var appointmentList: ArrayList<Appointment>
+    lateinit var memberShipList: ArrayList<MemberShip>
+    var UserID: String? = null
+    var ComeFrom: String? = ""
+    var context: Context? = null
+    var activity: Activity? = null
+    var p: Properties? = null
+    private var numStarted = 0
+    var stackStatus = 0
+    var myBackPress = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice)
+        context = this@InvoiceActivity
+        activity = this@InvoiceActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        if (intent != null) {
+            ComeFrom = intent.getStringExtra("ComeFrom")
         }
-
-        Properties p = new Properties();
-        p.putValue("userId", UserID);
-        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen);
-
-        binding.llBack.setOnClickListener(view -> {
-            callBack();
-        });
-
+        val p = Properties()
+        p.putValue("userId", UserID)
+        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen)
+        binding.llBack.setOnClickListener { view: View? -> callBack() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
-        prepareData();
+        prepareData()
     }
 
-    private void callBack() {
-        myBackPress = true;
+    private fun callBack() {
+        myBackPress = true
         if (invoiceToRecepit == 0) {
-            invoiceToRecepit = 1;
-            tutorial = false;
-            if (ComeFrom.equalsIgnoreCase("1")) {
-                invoiceToDashboard = 1;
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
-                finish();
-            } else if (ComeFrom.equalsIgnoreCase("")) {
-                invoiceToDashboard = 1;
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
+            invoiceToRecepit = 1
+            DashboardActivity.tutorial = false
+            if (ComeFrom.equals("1", ignoreCase = true)) {
+                invoiceToDashboard = 1
+                val i = Intent(context, DashboardActivity::class.java)
+                startActivity(i)
+                finish()
+            } else if (ComeFrom.equals("", ignoreCase = true)) {
+                invoiceToDashboard = 1
+                val i = Intent(context, DashboardActivity::class.java)
+                startActivity(i)
             } else {
-                comefromDownload = "0";
-                finish();
+                AudioDownloadsFragment.comefromDownload = "0"
+                finish()
             }
         } else if (invoiceToRecepit == 1) {
-            if (ComeFrom.equalsIgnoreCase("")) {
-                invoiceToDashboard = 0;
-                finish();
+            if (ComeFrom.equals("", ignoreCase = true)) {
+                invoiceToDashboard = 0
+                finish()
             } else {
-                comefromDownload = "0";
-                invoiceToRecepit = 1;
-                Intent i = new Intent(context, DashboardActivity.class);
-                startActivity(i);
-                finish();
+                AudioDownloadsFragment.comefromDownload = "0"
+                invoiceToRecepit = 1
+                val i = Intent(context, DashboardActivity::class.java)
+                startActivity(i)
+                finish()
             }
-        } else {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    public void prepareData() {
+    fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1");
-            listCall.enqueue(new Callback<InvoiceListModel>() {
-                @Override
-                public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1")
+            listCall.enqueue(object : Callback<InvoiceListModel?> {
+                override fun onResponse(
+                    call: Call<InvoiceListModel?>,
+                    response: Response<InvoiceListModel?>
+                ) {
                     try {
-                        InvoiceListModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            appointmentList = new ArrayList<>();
-                            memberShipList = new ArrayList<>();
-                            appointmentList = listModel.getResponseData().getAppointment();
-                            memberShipList = listModel.getResponseData().getMemberShip();
-                            binding.viewPager.setOffscreenPageLimit(2);
-                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Manage"));
-                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Wellness"));
-                            binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-                            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount());
-                            binding.viewPager.setAdapter(adapter);
-                            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
-                            binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                                @Override
-                                public void onTabSelected(TabLayout.Tab tab) {
-                                    binding.viewPager.setCurrentItem(tab.getPosition());
-                                    p = new Properties();
-                                    p.putValue("userId", UserID);
-                                    if (tab.getPosition() == 0) {
-                                        p.putValue("invoiceType", "Memebrship");
-                                        ArrayList<SegmentMembership> section1 = new ArrayList<>();
-                                        SegmentMembership e = new SegmentMembership();
-                                        Gson gson = new Gson();
-                                        for (int i = 0; i < memberShipList.size(); i++) {
-                                            e.setInvoiceId(memberShipList.get(i).getInvoiceId());
-                                            e.setInvoiceAmount(memberShipList.get(i).getAmount());
-                                            e.setInvoiceDate(memberShipList.get(i).getDate());
-                                            e.setInvoiceCurrency("");
-                                            e.setPlan("");
-                                            e.setPlanStartDt("");
-                                            e.setPlanExpiryDt("");
-                                            section1.add(e);
+                        val listModel = response.body()
+                        if (listModel!!.responseCode.equals(
+                                getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true
+                            )
+                        ) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            appointmentList = ArrayList()
+                            memberShipList = ArrayList()
+                            appointmentList = listModel.responseData.appointment
+                            memberShipList = listModel.responseData.memberShip
+                            binding.viewPager.offscreenPageLimit = 2
+                            binding.tabLayout.addTab(
+                                binding.tabLayout.newTab().setText("Manage")
+                            )
+                            binding.tabLayout.addTab(
+                                binding.tabLayout.newTab().setText("Wellness")
+                            )
+                            binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+                            val adapter = TabAdapter(
+                                supportFragmentManager, binding.tabLayout.tabCount
+                            )
+                            binding.viewPager.adapter = adapter
+                            binding.viewPager.addOnPageChangeListener(
+                                TabLayoutOnPageChangeListener(
+                                    binding.tabLayout
+                                )
+                            )
+                            binding.tabLayout.addOnTabSelectedListener(object :
+                                OnTabSelectedListener {
+                                override fun onTabSelected(tab: TabLayout.Tab) {
+                                    binding!!.viewPager.currentItem = tab.position
+                                    p = Properties()
+                                    p!!.putValue("userId", UserID)
+                                    if (tab.position == 0) {
+                                        p!!.putValue("invoiceType", "Memebrship")
+                                        val section1 = ArrayList<SegmentMembership>()
+                                        val e = SegmentMembership()
+                                        val gson = Gson()
+                                        for (i in memberShipList.indices) {
+                                            e.invoiceId = memberShipList.get(i).invoiceId
+                                            e.invoiceAmount = memberShipList.get(i).amount
+                                            e.invoiceDate = memberShipList.get(i).date
+                                            e.invoiceCurrency = ""
+                                            e.plan = ""
+                                            e.planStartDt = ""
+                                            e.planExpiryDt = ""
+                                            section1.add(e)
                                         }
-                                        p.putValue("membership", gson.toJson(section1));
-                                    } else if (tab.getPosition() == 1) {
-                                        p.putValue("invoiceType", "Appointment");
+                                        p!!.putValue("membership", gson.toJson(section1))
+                                    } else if (tab.position == 1) {
+                                        p!!.putValue("invoiceType", "Appointment")
                                     }
-                                    BWSApplication.addToSegment("Invoice Screen Viewed", p, CONSTANTS.screen);
+                                    BWSApplication.addToSegment(
+                                        "Invoice Screen Viewed",
+                                        p,
+                                        CONSTANTS.screen
+                                    )
                                 }
 
-                                @Override
-                                public void onTabUnselected(TabLayout.Tab tab) {
-
-                                }
-
-                                @Override
-                                public void onTabReselected(TabLayout.Tab tab) {
-
-                                }
-                            });
+                                override fun onTabUnselected(tab: TabLayout.Tab) {}
+                                override fun onTabReselected(tab: TabLayout.Tab) {}
+                            })
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<InvoiceListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<InvoiceListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding!!.progressBar,
+                        binding!!.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this);
+            BWSApplication.showToast(getString(R.string.no_server_found), this)
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        callBack();
+    override fun onBackPressed() {
+        callBack()
     }
 
-    public class TabAdapter extends FragmentStatePagerAdapter {
-        int totalTabs;
-
-        public TabAdapter(FragmentManager fm, int totalTabs) {
-            super(fm);
-            this.totalTabs = totalTabs;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    Bundle bundle = new Bundle();
-                    MembershipInvoiceFragment membershipInvoiceFragment = new MembershipInvoiceFragment();
-                    bundle.putParcelableArrayList("membershipInvoiceFragment", memberShipList);
-                    membershipInvoiceFragment.setArguments(bundle);
-                    return membershipInvoiceFragment;
-                case 1:
-                    bundle = new Bundle();
-                    AppointmentInvoiceFragment appointmentInvoiceFragment = new AppointmentInvoiceFragment();
-                    bundle.putParcelableArrayList("appointmentInvoiceFragment", appointmentList);
-                    appointmentInvoiceFragment.setArguments(bundle);
-                    return appointmentInvoiceFragment;
-                default:
-                    return null;
+    inner class TabAdapter(fm: FragmentManager?, var totalTabs: Int) : FragmentStatePagerAdapter(
+        fm!!
+    ) {
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    val bundle = Bundle()
+                    val membershipInvoiceFragment = MembershipInvoiceFragment()
+                    bundle.putParcelableArrayList("membershipInvoiceFragment", memberShipList)
+                    membershipInvoiceFragment.arguments = bundle
+                    membershipInvoiceFragment
+                }
+                1 -> {
+                    val bundle = Bundle()
+                    val appointmentInvoiceFragment = AppointmentInvoiceFragment()
+                    bundle.putParcelableArrayList("appointmentInvoiceFragment", appointmentList)
+                    appointmentInvoiceFragment.arguments = bundle
+                    appointmentInvoiceFragment
+                }
+                else -> getItem(position)
             }
         }
 
-        @Override
-        public int getCount() {
-            return totalTabs;
+        override fun getCount(): Int {
+            return totalTabs
         }
     }
 
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
+    internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
-                stackStatus = 1;
-                Log.e("APPLICATION", "APP IN FOREGROUND");
+                stackStatus = 1
+                Log.e("APPLICATION", "APP IN FOREGROUND")
                 //app went to foreground
             }
-            numStarted++;
+            numStarted++
         }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {
+            numStarted--
             if (numStarted == 0) {
                 if (!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
+                    Log.e("APPLICATION", "Back press false")
+                    stackStatus = 2
                 } else {
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
+                    myBackPress = true
+                    stackStatus = 1
+                    Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND");
+                Log.e("APPLICATION", "App is in BACKGROUND")
                 // app went to background
             }
         }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                Log.e("Destroy", "Activity Destoryed")
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
-                Log.e("Destroy", "Activity go in main activity");
+                Log.e("Destroy", "Activity go in main activity")
             }
         }
     }
 
+    companion object {
+        @JvmField
+        var invoiceToDashboard = 0
+        @JvmField
+        var invoiceToRecepit = 0
+    }
 }

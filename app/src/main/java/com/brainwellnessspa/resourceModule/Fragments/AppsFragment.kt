@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
-import com.brainwellnessspa.resourceModule.Models.ResourceListModel
+import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.Utility.APINewClient
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.databinding.AppsListLayoutBinding

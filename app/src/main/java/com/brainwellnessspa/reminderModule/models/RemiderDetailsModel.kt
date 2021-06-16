@@ -1,166 +1,64 @@
-package com.brainwellnessspa.reminderModule.models;
+package com.brainwellnessspa.reminderModule.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
-
-public class RemiderDetailsModel {
+class RemiderDetailsModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    var responseData: List<ResponseData>? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    private String responseCode;
+    var responseCode: String? = null
+
     @SerializedName("ResponseMessage")
     @Expose
-    private String responseMessage;
+    var responseMessage: String? = null
+
     @SerializedName("ResponseStatus")
     @Expose
-    private String responseStatus;
+    var responseStatus: String? = null
 
-    public List<ResponseData> getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(List<ResponseData> responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public class ResponseData {
+    inner class ResponseData {
         @SerializedName("PlaylistId")
         @Expose
-        private String playlistId;
+        var playlistId: String? = null
+
         @SerializedName("PlaylistName")
         @Expose
-        private String playlistName;
+        var playlistName: String? = null
+
         @SerializedName("ReminderDay")
         @Expose
-        private String reminderDay;
+        var reminderDay: String? = null
+
         @SerializedName("ReminderTime")
         @Expose
-        private String reminderTime;
+        var reminderTime: String? = null
+
         @SerializedName("IsLock")
         @Expose
-        private String IsLock;
+        var isLock: String? = null
+
         @SerializedName("IsActive")
         @Expose
-        private String IsActive;
+        var isActive: String? = null
+
         @SerializedName("RDay")
         @Expose
-        private String RDay;
+        var rDay: String? = null
+
         @SerializedName("IsCheck")
         @Expose
-        private String isCheck;
+        var isCheck: String? = null
+
         @SerializedName("ReminderId")
         @Expose
-        private String reminderId;
+        var reminderId: String? = null
+
         @SerializedName("Created")
         @Expose
-        private String created;
-
-        public String getPlaylistId() {
-            return playlistId;
-        }
-
-        public void setPlaylistId(String playlistId) {
-            this.playlistId = playlistId;
-        }
-
-        public String getPlaylistName() {
-            return playlistName;
-        }
-
-        public void setPlaylistName(String playlistName) {
-            this.playlistName = playlistName;
-        }
-
-        public String getReminderDay() {
-            return reminderDay;
-        }
-
-        public void setReminderDay(String reminderDay) {
-            this.reminderDay = reminderDay;
-        }
-
-        public String getReminderTime() {
-            return reminderTime;
-        }
-
-        public void setReminderTime(String reminderTime) {
-            this.reminderTime = reminderTime;
-        }
-
-        public String getIsCheck() {
-            return isCheck;
-        }
-
-        public void setIsCheck(String isCheck) {
-            this.isCheck = isCheck;
-        }
-
-        public String getRDay() {
-            return RDay;
-        }
-
-        public void setRDay(String RDay) {
-            this.RDay = RDay;
-        }
-
-        public String getIsLock() {
-            return IsLock;
-        }
-
-        public void setIsLock(String isLock) {
-            IsLock = isLock;
-        }
-
-        public String getIsActive() {
-            return IsActive;
-        }
-
-        public void setIsActive(String isActive) {
-            IsActive = isActive;
-        }
-
-        public String getReminderId() {
-            return reminderId;
-        }
-
-        public void setReminderId(String reminderId) {
-            this.reminderId = reminderId;
-        }
-
-        public String getCreated() {
-            return created;
-        }
-
-        public void setCreated(String created) {
-            this.created = created;
-        }
+        var created: String? = null
     }
 }

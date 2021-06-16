@@ -1,230 +1,88 @@
-package com.brainwellnessspa.invoicemodule.models;
+package com.brainwellnessspa.invoicemodule.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-public class InvoiceDetailModel {
+class InvoiceDetailModel {
     @SerializedName("ResponseData")
     @Expose
-    private ResponseData responseData;
+    var responseData: ResponseData? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    private String responseCode;
+    var responseCode: String? = null
+
     @SerializedName("ResponseMessage")
     @Expose
-    private String responseMessage;
+    var responseMessage: String? = null
+
     @SerializedName("ResponseStatus")
     @Expose
-    private String responseStatus;
+    var responseStatus: String? = null
 
-    public ResponseData getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(ResponseData responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public class ResponseData {
+    inner class ResponseData {
         @SerializedName("InvoiceNumber")
         @Expose
-        private String invoiceNumber;
+        var invoiceNumber: String? = null
+
         @SerializedName("Name")
         @Expose
-        private String name;
+        var name: String? = null
+
         @SerializedName("Qty")
         @Expose
-        private String qty;
+        var qty: String? = null
+
         @SerializedName("Session")
         @Expose
-        private String session;
+        var session: String? = null
+
         @SerializedName("TotalAmount")
         @Expose
-        private String totalAmount;
+        var totalAmount: String? = null
+
         @SerializedName("TaxAmount")
         @Expose
-        private String taxAmount;
+        var taxAmount: String? = null
+
         @SerializedName("NetAmount")
         @Expose
-        private String netAmount;
+        var netAmount: String? = null
+
         @SerializedName("DiscountedAmount")
         @Expose
-        private String discountedAmount;
+        var discountedAmount: String? = null
+
         @SerializedName("InvoiceTo")
         @Expose
-        private String invoiceTo;
+        var invoiceTo: String? = null
+
         @SerializedName("InvoiceDate")
         @Expose
-        private String invoiceDate;
+        var invoiceDate: String? = null
+
         @SerializedName("Email")
         @Expose
-        private String email;
+        var email: String? = null
+
         @SerializedName("CardBrand")
         @Expose
-        private String cardBrand;
+        var cardBrand: String? = null
+
         @SerializedName("CardDigit")
         @Expose
-        private String cardDigit;
+        var cardDigit: String? = null
+
         @SerializedName("GSTAmount")
         @Expose
-        private String gstAmount;
+        var gstAmount: String? = null
+
         @SerializedName("Amount")
         @Expose
-        private String amount;
+        var amount: String? = null
+
         @SerializedName("InvoiceFrom")
         @Expose
-        private String invoiceFrom;
-
-        public String getCardBrand() {
-            return cardBrand;
-        }
-
-        public void setCardBrand(String cardBrand) {
-            this.cardBrand = cardBrand;
-        }
-
-        public String getCardDigit() {
-            return cardDigit;
-        }
-
-        public void setCardDigit(String cardDigit) {
-            this.cardDigit = cardDigit;
-        }
-
-        public String getQty() {
-            return qty;
-        }
-
-        public void setQty(String qty) {
-            this.qty = qty;
-        }
-
-        public String getSession() {
-            return session;
-        }
-
-        public void setSession(String session) {
-            this.session = session;
-        }
-
-        public String getInvoiceNumber() {
-            return invoiceNumber;
-        }
-
-        public void setInvoiceNumber(String invoiceNumber) {
-            this.invoiceNumber = invoiceNumber;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getTotalAmount() {
-            return totalAmount;
-        }
-
-        public void setTotalAmount(String totalAmount) {
-            this.totalAmount = totalAmount;
-        }
-
-        public String getTaxAmount() {
-            return taxAmount;
-        }
-
-        public void setTaxAmount(String taxAmount) {
-            this.taxAmount = taxAmount;
-        }
-
-        public String getNetAmount() {
-            return netAmount;
-        }
-
-        public void setNetAmount(String netAmount) {
-            this.netAmount = netAmount;
-        }
-
-        public String getDiscountedAmount() {
-            return discountedAmount;
-        }
-
-        public void setDiscountedAmount(String discountedAmount) {
-            this.discountedAmount = discountedAmount;
-        }
-
-        public String getInvoiceDate() {
-            return invoiceDate;
-        }
-
-        public void setInvoiceDate(String invoiceDate) {
-            this.invoiceDate = invoiceDate;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getGstAmount() {
-            return gstAmount;
-        }
-
-        public void setGstAmount(String gstAmount) {
-            this.gstAmount = gstAmount;
-        }
-
-        public String getAmount() {
-            return amount;
-        }
-
-        public void setAmount(String amount) {
-            this.amount = amount;
-        }
-
-        public String getInvoiceFrom() {
-            return invoiceFrom;
-        }
-
-        public void setInvoiceFrom(String invoiceFrom) {
-            this.invoiceFrom = invoiceFrom;
-        }
-
-        public String getInvoiceTo() {
-            return invoiceTo;
-        }
-
-        public void setInvoiceTo(String invoiceTo) {
-            this.invoiceTo = invoiceTo;
-        }
+        var invoiceFrom: String? = null
     }
 }

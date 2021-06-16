@@ -1,78 +1,32 @@
-package com.brainwellnessspa.reminderModule.models;
+package com.brainwellnessspa.reminderModule.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
-
-public class SelectPlaylistModel {
+class SelectPlaylistModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    var responseData: List<ResponseData>? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    private String responseCode;
+    var responseCode: String? = null
+
     @SerializedName("ResponseMessage")
     @Expose
-    private String responseMessage;
+    var responseMessage: String? = null
+
     @SerializedName("ResponseStatus")
     @Expose
-    private String responseStatus;
+    var responseStatus: String? = null
 
-    public List<ResponseData> getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(List<ResponseData> responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public class ResponseData {
+    inner class ResponseData {
         @SerializedName("ID")
         @Expose
-        private String iD;
+        var iD: String? = null
+
         @SerializedName("Name")
         @Expose
-        private String name;
-
-        public String getID() {
-            return iD;
-        }
-
-        public void setID(String iD) {
-            this.iD = iD;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+        var name: String? = null
     }
 }
