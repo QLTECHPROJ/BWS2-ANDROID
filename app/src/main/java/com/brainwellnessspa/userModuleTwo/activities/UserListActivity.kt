@@ -301,9 +301,9 @@ class UserListActivity : AppCompatActivity() {
                                             )
                                         ) {
                                             val UserID: String =
-                                                listModel.responseData!!.userID.toString()
+                                                listModel.responseData!!.mainAccountID.toString()
                                             val CoUserId: String =
-                                                listModel.responseData!!.coUserId.toString()
+                                                listModel.responseData!!.userId.toString()
                                             val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
                                             val Logout_UserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
                                             val Logout_CoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
@@ -314,7 +314,7 @@ class UserListActivity : AppCompatActivity() {
                                             } else {
                                                 callObserve2(ctx)
                                             }*/
-                                            Log.e("New UserId MobileNo", listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId)
+                                            Log.e("New UserId MobileNo", listModel.responseData!!.mainAccountID + "....." + listModel.responseData!!.userId)
                                             Log.e("Old UserId MobileNo", "$Logout_UserID.....$Logout_CoUserId")
                                             BWSApplication.logout = false
                                               val listCall: Call<CoUserDetailsModel> =
@@ -394,11 +394,11 @@ class UserListActivity : AppCompatActivity() {
                                                             val editor = shared.edit()
                                                             editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_mainAccountID,
-                                                                    listModel.responseData!!.userID
+                                                                    listModel.responseData!!.mainAccountID
                                                             )
                                                             editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_UserId,
-                                                                    listModel.responseData!!.coUserId
+                                                                    listModel.responseData!!.userId
                                                             )
                                                             editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_EMAIL,
@@ -545,8 +545,8 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                             )
                                                             val p1 = Properties()
-                                                            p1.putValue("CoUserID", listModel.responseData!!.coUserId)
-                                                            p1.putValue("userID", listModel.responseData!!.userID)
+                                                            p1.putValue("CoUserID", listModel.responseData!!.userId)
+                                                            p1.putValue("userID", listModel.responseData!!.mainAccountID)
                                                             p1.putValue("deviceId", Settings.Secure.getString(
                                                                 activity.contentResolver,
                                                                 Settings.Secure.ANDROID_ID
