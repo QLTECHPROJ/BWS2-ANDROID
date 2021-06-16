@@ -1,65 +1,28 @@
-package com.brainwellnessspa.referralModule.models;
+package com.brainwellnessspa.referralModule.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-public class CheckReferCodeModel {
+class CheckReferCodeModel {
     @SerializedName("ResponseData")
     @Expose
-    private ResponseData responseData;
+    var responseData: ResponseData? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    private String responseCode;
+    var responseCode: String? = null
+
     @SerializedName("ResponseMessage")
     @Expose
-    private String responseMessage;
+    var responseMessage: String? = null
+
     @SerializedName("ResponseStatus")
     @Expose
-    private String responseStatus;
+    var responseStatus: String? = null
 
-    public ResponseData getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(ResponseData responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public class ResponseData {
+    inner class ResponseData {
         @SerializedName("CodeExist")
         @Expose
-        private String codeExist;
-
-        public String getCodeExist() {
-            return codeExist;
-        }
-
-        public void setCodeExist(String codeExist) {
-            this.codeExist = codeExist;
-        }
+        var codeExist: String? = null
     }
 }

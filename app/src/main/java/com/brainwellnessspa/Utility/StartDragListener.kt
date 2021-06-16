@@ -1,8 +1,7 @@
-package com.brainwellnessspa.Utility;
+package com.brainwellnessspa.Utility
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
-public interface StartDragListener {
-    void requestDrag(RecyclerView.ViewHolder viewHolder);
-
+interface StartDragListener {
+    fun requestDrag(viewHolder: RecyclerView.ViewHolder?)
 }

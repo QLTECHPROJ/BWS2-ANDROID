@@ -1,55 +1,20 @@
-package com.brainwellnessspa.referralModule.models;
+package com.brainwellnessspa.referralModule.models
 
-public class FavContactlistModel implements Comparable<ContactlistModel> {
-    private String ContactImage;
-    private String ContactName;
-    private String ContactNumber;
-    private boolean checked;
-
-    public String getContactImage() {
-        return ContactImage;
-    }
-
-    public void setContactImage(String contactImage) {
-        ContactImage = contactImage;
-    }
-
-    public String getContactName() {
-        return ContactName;
-    }
-
-    public void setContactName(String contactName) {
-        ContactName = contactName;
-    }
-
-    public String getContactNumber() {
-        return ContactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        ContactNumber = contactNumber;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    @Override
-    public String toString() {
+class FavContactlistModel : Comparable<ContactlistModel?> {
+    var contactImage: String? = null
+    var contactName: String? = null
+    var contactNumber: String? = null
+    var isChecked = false
+    override fun toString(): String {
         return "FavContactlistModel{" +
-                "ContactImage='" + ContactImage + '\'' +
-                ", ContactName='" + ContactName + '\'' +
-                ", ContactNumber='" + ContactNumber + '\'' +
-                ", checked=" + checked +
-                '}';
+                "ContactImage='" + contactImage + '\'' +
+                ", ContactName='" + contactName + '\'' +
+                ", ContactNumber='" + contactNumber + '\'' +
+                ", checked=" + isChecked +
+                '}'
     }
 
-    @Override
-    public int compareTo(ContactlistModel o) {
-        return 0;
+    override fun compareTo(other: ContactlistModel?): Int {
+        return 0
     }
 }

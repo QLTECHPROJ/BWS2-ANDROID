@@ -1,52 +1,41 @@
-package com.brainwellnessspa.Utility;
+package com.brainwellnessspa.Utility
 
-import android.app.Notification;
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
+import android.app.Notification
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.util.Log
+import android.widget.Toast
 
-public class NotificationService extends Service {
-    Notification status;
-    private final String LOG_TAG = "NotificationService";
+class NotificationService : Service() {
+    var status: Notification? = null
+    private val LOG_TAG = "NotificationService"
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        if (intent.getAction().equals(CONSTANTS.ACTION.STARTFOREGROUND_ACTION)) {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        if (intent.action == CONSTANTS.ACTION.STARTFOREGROUND_ACTION) {
 //            showNotification();
-            Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
-        } else if (intent.getAction().equals(CONSTANTS.ACTION.PREV_ACTION)) {
-            Toast.makeText(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
-            Log.i(LOG_TAG, "Clicked Previous");
-        } else if (intent.getAction().equals(CONSTANTS.ACTION.PLAY_ACTION)) {
-            Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show();
-            Log.i(LOG_TAG, "Clicked Play");
-        } else if (intent.getAction().equals(CONSTANTS.ACTION.NEXT_ACTION)) {
-            Toast.makeText(this, "Clicked Next", Toast.LENGTH_SHORT).show();
-            Log.i(LOG_TAG, "Clicked Next");
-        } else if (intent.getAction().equals(CONSTANTS.ACTION.STOPFOREGROUND_ACTION)) {
-            Log.i(LOG_TAG, "Received Stop Foreground Intent");
-            Toast.makeText(this, "Service Stoped", Toast.LENGTH_SHORT).show();
-            stopForeground(true);
-            stopSelf();
+            Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show()
+        } else if (intent.action == CONSTANTS.ACTION.PREV_ACTION) {
+            Toast.makeText(this, "Clicked Previous", Toast.LENGTH_SHORT).show()
+            Log.i(LOG_TAG, "Clicked Previous")
+        } else if (intent.action == CONSTANTS.ACTION.PLAY_ACTION) {
+            Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show()
+            Log.i(LOG_TAG, "Clicked Play")
+        } else if (intent.action == CONSTANTS.ACTION.NEXT_ACTION) {
+            Toast.makeText(this, "Clicked Next", Toast.LENGTH_SHORT).show()
+            Log.i(LOG_TAG, "Clicked Next")
+        } else if (intent.action == CONSTANTS.ACTION.STOPFOREGROUND_ACTION) {
+            Log.i(LOG_TAG, "Received Stop Foreground Intent")
+            Toast.makeText(this, "Service Stoped", Toast.LENGTH_SHORT).show()
+            stopForeground(true)
+            stopSelf()
         }
-        return START_STICKY;
-    }
-
-  /*  private void showNotification() {
+        return START_STICKY
+    } /*  private void showNotification() {
         // Using RemoteViews to bind custom layouts into Notification
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.status_bar);
         RemoteViews bigViews = new RemoteViews(getPackageName(), R.layout.status_bar_expanded);
@@ -98,5 +87,4 @@ public class NotificationService extends Service {
         status.contentIntent = pendingIntent;
         startForeground(CONSTANTS.NOTIFICATION_ID.FOREGROUND_SERVICE, status);
     }*/
-
 }

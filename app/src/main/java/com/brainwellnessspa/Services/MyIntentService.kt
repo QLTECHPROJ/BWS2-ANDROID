@@ -1,25 +1,22 @@
-package com.brainwellnessspa.Services;
+package com.brainwellnessspa.Services
 
-import android.app.IntentService;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.IntentService
+import android.app.NotificationManager
+import android.content.Intent
+import androidx.core.app.NotificationCompat
 
-import androidx.core.app.NotificationCompat;
-
-public class MyIntentService extends IntentService {
-    public static final int NOTIFICATION_ID = 1;
-    private NotificationManager notificationManager;
-    NotificationCompat.Builder builder;
-    public MyIntentService() {
-        super("MyIntentService");
-    }
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
+class MyIntentService : IntentService("MyIntentService") {
+    private val notificationManager: NotificationManager? = null
+    var builder: NotificationCompat.Builder? = null
+    override fun onHandleIntent(intent: Intent?) {
+        val extras = intent!!.extras
         // Do the work that requires your app to keep the CPU running.
         // ...
         // Release the wake lock provided by the WakefulBroadcastReceiver.
-        MyWakefulReceiver.completeWakefulIntent(intent);
+        MyWakefulReceiver.completeWakefulIntent(intent)
+    }
+
+    companion object {
+        const val NOTIFICATION_ID = 1
     }
 }

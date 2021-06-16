@@ -1,116 +1,101 @@
-package com.brainwellnessspa.reminderModule.activities;
+package com.brainwellnessspa.reminderModule.activities
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.Dialog
+import android.app.NotificationManager
+import android.content.*
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
+import android.view.*
+import android.view.animation.AnimationUtils
+import android.widget.CompoundButton
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
+import com.brainwellnessspa.Services.GlobalInitExoPlayer
+import com.brainwellnessspa.Utility.APINewClient
+import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding
+import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding
+import com.brainwellnessspa.reminderModule.models.DeleteRemiderModel
+import com.brainwellnessspa.reminderModule.models.ReminderListModel
+import com.brainwellnessspa.reminderModule.models.ReminderStatusModel
+import com.brainwellnessspa.reminderModule.models.SegmentReminder
+import com.google.gson.Gson
+import com.segment.analytics.Properties
+import me.toptas.fancyshowcase.FancyShowCaseQueue
+import me.toptas.fancyshowcase.FancyShowCaseView
+import me.toptas.fancyshowcase.FocusShape
+import me.toptas.fancyshowcase.listener.OnViewInflateListener
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
-import android.animation.ValueAnimator;
-import android.app.Activity;
-import android.app.Application;
-import android.app.Dialog;
-import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.reminderModule.models.DeleteRemiderModel;
-import com.brainwellnessspa.reminderModule.models.ReminderListModel;
-import com.brainwellnessspa.reminderModule.models.ReminderStatusModel;
-import com.brainwellnessspa.reminderModule.models.SegmentReminder;
-import com.brainwellnessspa.Utility.APINewClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding;
-import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
-import com.google.gson.Gson;
-import com.segment.analytics.Properties;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import me.toptas.fancyshowcase.FancyShowCaseQueue;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.FocusShape;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
-
-public class ReminderDetailsActivity extends AppCompatActivity {
-    ActivityReminderDetailsBinding binding;
-    String USERID, CoUSERID, ReminderFirstLogin = "0";
-    Context ctx;
-    Activity activity;
-    ArrayList<String> remiderIds = new ArrayList<>();
-    RemiderDetailsAdapter adapter;
-    FancyShowCaseView fancyShowCaseView1, fancyShowCaseView2;
-    FancyShowCaseQueue queue;
-    ReminderListModel listReminderModel;
-    Properties p;
-    private int numStarted = 0;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-    boolean notificationStatus = false; 
-    private final BroadcastReceiver listener1 = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) { 
+class ReminderDetailsActivity : AppCompatActivity() {
+    lateinit var binding: ActivityReminderDetailsBinding
+    var USERID: String? = null
+    var CoUSERID: String? = null
+    var ReminderFirstLogin: String? = "0"
+    var ctx: Context? = null
+    lateinit var activity: Activity
+    var remiderIds = ArrayList<String?>()
+    var adapter: RemiderDetailsAdapter? = null
+    var fancyShowCaseView1: FancyShowCaseView? = null
+    var fancyShowCaseView2: FancyShowCaseView? = null
+    var queue: FancyShowCaseQueue? = null
+    var listReminderModel: ReminderListModel? = null
+    var p: Properties? = null
+    private var numStarted = 0
+    var stackStatus = 0
+    var myBackPress = false
+    var notificationStatus = false
+    private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
             if (intent.hasExtra("MyReminder")) {
-                prepareData();
+                prepareData()
             }
         }
-    };
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details);
-        ctx = ReminderDetailsActivity.this;
-        activity = ReminderDetailsActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
-        CoUSERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        binding.rvReminderDetails.setLayoutManager(mLayoutManager);
-        binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
-        notificationStatus = false;
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details)
+        ctx = this@ReminderDetailsActivity
+        activity = this@ReminderDetailsActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+        binding.rvReminderDetails.layoutManager = mLayoutManager
+        binding.rvReminderDetails.itemAnimator = DefaultItemAnimator()
+        notificationStatus = false
         /*ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/
-
-        binding.llBack.setOnClickListener(view -> {
-            myBackPress = true;
-            finish();
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+        itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/binding.llBack.setOnClickListener {
+            myBackPress = true
+            finish()
         }
-     /*   binding.btnAddReminder.setOnClickListener(view -> {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
+        }
+        /*   binding.btnAddReminder.setOnClickListener(view -> {
             notificationStatus = true;
             myBackPress = false;
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -131,289 +116,309 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });*/
     }
 
-    @Override
-    protected void onResume() {
-        prepareData();
-        super.onResume();
+    override fun onResume() {
+        prepareData()
+        super.onResume()
     }
 
-    @Override
-    public void onBackPressed() {
-        myBackPress = true;
-        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1);
-        finish();
+    override fun onBackPressed() {
+        myBackPress = true
+        LocalBroadcastManager.getInstance(ctx!!).unregisterReceiver(listener1)
+        finish()
     }
 
-    private void prepareData() {
+    private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderListModel> listCall = APINewClient.getClient().getReminderList(CoUSERID);
-            listCall.enqueue(new Callback<ReminderListModel>() {
-                @Override
-                public void onResponse(Call<ReminderListModel> call, Response<ReminderListModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APINewClient.getClient().getReminderList(CoUSERID)
+            listCall.enqueue(object : Callback<ReminderListModel?> {
+                override fun onResponse(
+                    call: Call<ReminderListModel?>,
+                    response: Response<ReminderListModel?>
+                ) {
                     try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            ReminderListModel listModel = response.body();
-                            listReminderModel = listModel;
-                            adapter = new RemiderDetailsAdapter(listModel.getResponseData());
-                            binding.rvReminderDetails.setAdapter(adapter);
-                            binding.btnAddReminder.setVisibility(View.GONE);
-                            showTooltips();
-                            LocalBroadcastManager.getInstance(ctx)
-                                    .registerReceiver(listener1,new IntentFilter("Reminder"));
-                            p = new Properties();
-                            p.putValue("coUserId", CoUSERID);
-                            if (listModel.getResponseData().size() == 0) {
-                                binding.llError.setVisibility(View.VISIBLE);
-                                binding.rvReminderDetails.setVisibility(View.GONE);
-                                p.putValue("reminders ", "");
+                        if (response.isSuccessful) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            val listModel = response.body()
+                            listReminderModel = listModel
+                            adapter = RemiderDetailsAdapter(listModel!!.responseData)
+                            binding.rvReminderDetails.adapter = adapter
+                            binding.btnAddReminder.visibility = View.GONE
+                            showTooltips()
+                            LocalBroadcastManager.getInstance(ctx!!)
+                                .registerReceiver(listener1, IntentFilter("Reminder"))
+                            p = Properties()
+                            p!!.putValue("coUserId", CoUSERID)
+                            if (listModel.responseData!!.isEmpty()) {
+                                binding.llError.visibility = View.VISIBLE
+                                binding.rvReminderDetails.visibility = View.GONE
+                                p!!.putValue("reminders ", "")
                             } else {
-                                binding.llError.setVisibility(View.GONE);
-                                binding.rvReminderDetails.setVisibility(View.VISIBLE);
-                                ArrayList<SegmentReminder> section1 = new ArrayList<>();
-                                SegmentReminder e = new SegmentReminder();
-                                Gson gson = new Gson();
-                                for (int i = 0; i < listModel.getResponseData().size(); i++) {
-                                    e.setReminderId(listModel.getResponseData().get(i).getReminderId());
-                                    e.setPlaylistId(listModel.getResponseData().get(i).getPlaylistId());
-                                    e.setPlaylistName(listModel.getResponseData().get(i).getPlaylistName());
-                                    e.setPlaylistType("");
-                                    if (listModel.getResponseData().get(i).isCheck().equalsIgnoreCase("1")) {
-                                        e.setReminderStatus("on");
+                                binding.llError.visibility = View.GONE
+                                binding.rvReminderDetails.visibility = View.VISIBLE
+                                val section1 = ArrayList<SegmentReminder>()
+                                val e = SegmentReminder()
+                                val gson = Gson()
+                                for (i in listModel.responseData!!.indices) {
+                                    e.reminderId = listModel.responseData!![i]!!.reminderId
+                                    e.playlistId = listModel.responseData!![i]!!.playlistId
+                                    e.playlistName = listModel.responseData!![i]!!.playlistName
+                                    e.playlistType = ""
+                                    if (listModel.responseData!![i]!!.isCheck.equals(
+                                            "1",
+                                            ignoreCase = true
+                                        )
+                                    ) {
+                                        e.reminderStatus = "on"
                                     } else {
-                                        e.setReminderStatus("off");
+                                        e.reminderStatus = "off"
                                     }
-                                    e.setReminderTime(listModel.getResponseData().get(i).getReminderTime());
-                                    e.setReminderDay(listModel.getResponseData().get(i).getReminderDay());
-                                    section1.add(e);
+                                    e.reminderTime = listModel.responseData!![i]!!.reminderTime
+                                    e.reminderDay = listModel.responseData!![i]!!.reminderDay
+                                    section1.add(e)
                                 }
-                                p.putValue("reminders ", gson.toJson(section1));
+                                p!!.putValue("reminders ", gson.toJson(section1))
                             }
-                            BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen);
-                            if (remiderIds.size() == 0) {
-                                binding.llSelectAll.setVisibility(View.GONE);
-                                binding.btnAddReminder.setVisibility(View.GONE);
-                                binding.btnDeleteReminder.setVisibility(View.GONE);
+                            BWSApplication.addToSegment(
+                                "Reminder Screen Viewed",
+                                p,
+                                CONSTANTS.screen
+                            )
+                            if (remiderIds.size == 0) {
+                                binding.llSelectAll.visibility = View.GONE
+                                binding.btnAddReminder.visibility = View.GONE
+                                binding.btnDeleteReminder.visibility = View.GONE
                             } else {
-                                binding.llSelectAll.setVisibility(View.VISIBLE);
-                                binding.btnAddReminder.setVisibility(View.GONE);
-                                binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                                binding.llSelectAll.visibility = View.VISIBLE
+                                binding.btnAddReminder.visibility = View.GONE
+                                binding.btnDeleteReminder.visibility = View.VISIBLE
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<ReminderListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<ReminderListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
-
-        binding.btnDeleteReminder.setOnClickListener(view -> {
-            notificationStatus = true;
-            myBackPress = false;
-            final Dialog dialog = new Dialog(ctx);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.delete_reminder);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-
-            dialog.setOnKeyListener((v, keyCode, event) -> {
+        binding.btnDeleteReminder.setOnClickListener {
+            notificationStatus = true
+            myBackPress = false
+            val dialog = Dialog(ctx!!)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.delete_reminder)
+            dialog.window!!.setBackgroundDrawable(
+                ColorDrawable(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.dark_blue_gray
+                    )
+                )
+            )
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+            val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    return true;
+                    dialog.dismiss()
+                    return@setOnKeyListener true
                 }
-                return false;
-            });
-
-            tvconfirm.setOnClickListener(v -> {
+                false
+            }
+            tvconfirm.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    Call<DeleteRemiderModel> listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
-                            TextUtils.join(",", remiderIds));
-                    listCall.enqueue(new Callback<DeleteRemiderModel>() {
-                        @Override
-                        public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
+                    val listCall = APINewClient.getClient().getDeleteRemider(
+                        CoUSERID,
+                        TextUtils.join(",", remiderIds)
+                    )
+                    listCall.enqueue(object : Callback<DeleteRemiderModel?> {
+                        override fun onResponse(
+                            call: Call<DeleteRemiderModel?>,
+                            response: Response<DeleteRemiderModel?>
+                        ) {
                             try {
-                                DeleteRemiderModel model = response.body();
-                                if (model.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    remiderIds.clear();
-                                    BWSApplication.showToast(model.getResponseMessage(), activity);
-                                    dialog.dismiss();
-                                    prepareData();
+                                val model = response.body()
+                                if (model!!.responseCode.equals(
+                                        getString(R.string.ResponseCodesuccess),
+                                        ignoreCase = true
+                                    )
+                                ) {
+                                    remiderIds.clear()
+                                    BWSApplication.showToast(model.responseMessage, activity)
+                                    dialog.dismiss()
+                                    prepareData()
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
                         }
 
-                        @Override
-                        public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), activity);
-                }
-            });
-
-            tvGoBack.setOnClickListener(v -> {
-                dialog.dismiss();
-            });
-            dialog.show();
-            dialog.setCancelable(false);
-        });
-    }
-
-    private void showTooltips() {
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        ReminderFirstLogin = (shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0"));
-
-        if (ReminderFirstLogin.equalsIgnoreCase("1")) {
-            Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
-            Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
-            fancyShowCaseView1 = new FancyShowCaseView.Builder(activity)
-                    .customView(R.layout.layout_reminder_status, view -> {
-                        RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
-                        anim.setDuration(1500);
-                        anim.addUpdateListener(animation -> {
-                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
-                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
-                        });
-                        anim.setRepeatCount(ValueAnimator.INFINITE);
-                        anim.setRepeatMode(ValueAnimator.REVERSE);
-                        anim.start();
-                        rlNext.setOnClickListener(v -> fancyShowCaseView1.hide());
-                    }).focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
-
-            fancyShowCaseView2 = new FancyShowCaseView.Builder(activity)
-                    .customView(R.layout.layout_reminder_remove, view -> {
-                        RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                        ImageView ivLibraryImage = view.findViewById(R.id.ivLibraryImage);
-                        final ValueAnimator anim = ValueAnimator.ofFloat(0.9f, 1f);
-                        anim.setDuration(1500);
-                        anim.addUpdateListener(animation -> {
-                            ivLibraryImage.setScaleX((Float) animation.getAnimatedValue());
-                            ivLibraryImage.setScaleY((Float) animation.getAnimatedValue());
-                        });
-                        anim.setRepeatCount(ValueAnimator.INFINITE);
-                        anim.setRepeatMode(ValueAnimator.REVERSE);
-                        anim.start();
-                        rlDone.setOnClickListener(v -> {
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0");
-                            editor.commit();
-                            fancyShowCaseView2.hide();
-                        });
+                        override fun onFailure(call: Call<DeleteRemiderModel?>, t: Throwable) {}
                     })
-                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                    .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
-
-            queue = new FancyShowCaseQueue().add(fancyShowCaseView1).add(fancyShowCaseView2);
-            queue.show();
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                }
+            }
+            tvGoBack.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(false)
         }
     }
 
-    public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
-        private final List<ReminderListModel.ResponseData> model;
+    private fun showTooltips() {
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        ReminderFirstLogin = shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
+        if (ReminderFirstLogin.equals("1", ignoreCase = true)) {
+            val enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top)
+            val exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom)
+            fancyShowCaseView1 = FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_reminder_status, object : OnViewInflateListener {
+                    override fun onViewInflated(view: View) {
+                        val rlNext = view.findViewById<RelativeLayout>(R.id.rlNext)
+                        val ivLibraryImage = view.findViewById<ImageView>(R.id.ivLibraryImage)
+                        val anim = ValueAnimator.ofFloat(0.9f, 1f)
+                        anim.duration = 1500
+                        anim.addUpdateListener { animation: ValueAnimator ->
+                            ivLibraryImage.scaleX = (animation.animatedValue as Float)
+                            ivLibraryImage.scaleY = (animation.animatedValue as Float)
+                        }
+                        anim.repeatCount = ValueAnimator.INFINITE
+                        anim.repeatMode = ValueAnimator.REVERSE
+                        anim.start()
+                        rlNext.setOnClickListener { fancyShowCaseView1!!.hide() }
+                    }
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false)
+                .build()
+            fancyShowCaseView2 = FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_reminder_remove, object : OnViewInflateListener {
+                    override fun onViewInflated(view: View) {
+                        val rlDone = view.findViewById<RelativeLayout>(R.id.rlDone)
+                        val ivLibraryImage = view.findViewById<ImageView>(R.id.ivLibraryImage)
+                        val anim = ValueAnimator.ofFloat(0.9f, 1f)
+                        anim.duration = 1500
+                        anim.addUpdateListener { animation: ValueAnimator ->
+                            ivLibraryImage.scaleX = (animation.animatedValue as Float)
+                            ivLibraryImage.scaleY = (animation.animatedValue as Float)
+                        }
+                        anim.repeatCount = ValueAnimator.INFINITE
+                        anim.repeatMode = ValueAnimator.REVERSE
+                        anim.start()
+                        rlDone.setOnClickListener {
+                            val shared =
+                                getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
+                            editor.apply()
+                            fancyShowCaseView2!!.hide()
+                        }
+                    }
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false)
+                .build()
+            queue = FancyShowCaseQueue().add(fancyShowCaseView1!!).add(fancyShowCaseView2!!)
+            queue!!.show()
+        }
+    }
 
-        public RemiderDetailsAdapter(List<ReminderListModel.ResponseData> model) {
-            this.model = model;
+    inner class RemiderDetailsAdapter(private val model: List<ReminderListModel.ResponseData?>?) :
+        RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: RemiderDetailsLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context), R.layout.remider_details_layout, parent, false
+            )
+            return MyViewHolder(v)
         }
 
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            RemiderDetailsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.remider_details_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.bind.tvName.setText(model.get(position).getPlaylistName());
-            holder.bind.tvDate.setText(model.get(position).getReminderDay());
-            holder.bind.tvTime.setText(model.get(position).getReminderTime());
-            holder.bind.view.setClickable(false);
-            holder.bind.view.setEnabled(false);
-
-            holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (holder.bind.cbChecked.isChecked()) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.bind.tvName.text = model!![position]!!.playlistName
+            holder.bind.tvDate.text = model[position]!!.reminderDay
+            holder.bind.tvTime.text = model[position]!!.reminderTime
+            holder.bind.view.isClickable = false
+            holder.bind.view.isEnabled = false
+            holder.bind.cbChecked.setOnCheckedChangeListener { _: CompoundButton?, _: Boolean ->
+                if (holder.bind.cbChecked.isChecked) {
 //                    notifyDataSetChanged();
-                    if (!remiderIds.contains(model.get(position).getReminderId())) {
-                        remiderIds.add(model.get(position).getReminderId());
-                        binding.tvSelectAll.setText(remiderIds.size() + " selected");
-                    } else {
+                    if (!remiderIds.contains(model[position]!!.reminderId)) {
+                        remiderIds.add(model[position]!!.reminderId)
+                        binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
                     }
                 } else {
-                    remiderIds.remove(model.get(position).getReminderId());
-                    binding.tvSelectAll.setText(remiderIds.size() + " selected");
+                    remiderIds.remove(model[position]!!.reminderId)
+                    binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
                 }
-                if (remiderIds.size() == 0) {
-                    binding.llSelectAll.setVisibility(View.GONE);
-                    binding.btnAddReminder.setVisibility(View.GONE);
-                    binding.btnDeleteReminder.setVisibility(View.GONE);
+                if (remiderIds.size == 0) {
+                    binding.llSelectAll.visibility = View.GONE
+                    binding.btnAddReminder.visibility = View.GONE
+                    binding.btnDeleteReminder.visibility = View.GONE
                 } else {
-                    binding.llSelectAll.setVisibility(View.VISIBLE);
-                    binding.btnAddReminder.setVisibility(View.GONE);
-                    binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                    binding.llSelectAll.visibility = View.VISIBLE
+                    binding.btnAddReminder.visibility = View.GONE
+                    binding.btnDeleteReminder.visibility = View.VISIBLE
                 }
-                if (remiderIds.size() == model.size()) {
-                    binding.cbChecked.setChecked(true);
-                    binding.tvSelectAll.setText(remiderIds.size() + " selected");
+                if (remiderIds.size == model.size) {
+                    binding.cbChecked.isChecked = true
+                    binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
                 }
-//                Log.e("remiderIds", TextUtils.join(",", remiderIds));
-            });
-
-            binding.llClose.setOnClickListener(view -> {
-                remiderIds.clear();
-                binding.llSelectAll.setVisibility(View.GONE);
-                binding.cbChecked.setChecked(false);
-                notifyDataSetChanged();
-            });
-
-            binding.cbChecked.setOnClickListener(view -> {
-                if (binding.cbChecked.isChecked()) {
-                    remiderIds.clear();
-                    for (int i = 0; i < model.size(); i++) {
-                        remiderIds.add(model.get(i).getReminderId());
+            }
+            binding.llClose.setOnClickListener {
+                remiderIds.clear()
+                binding.llSelectAll.visibility = View.GONE
+                binding.cbChecked.isChecked = false
+                notifyDataSetChanged()
+            }
+            binding.cbChecked.setOnClickListener {
+                if (binding.cbChecked.isChecked) {
+                    remiderIds.clear()
+                    for (i in model.indices) {
+                        remiderIds.add(model[i]!!.reminderId)
                     }
                 } else {
-                    binding.llSelectAll.setVisibility(View.GONE);
-                    remiderIds.clear();
+                    binding.llSelectAll.visibility = View.GONE
+                    remiderIds.clear()
                 }
-//                Log.e("remiderIds", TextUtils.join(",", remiderIds));
-                notifyDataSetChanged();
-            });
-
-            if (remiderIds.contains(model.get(position).getReminderId())) {
-                holder.bind.cbChecked.setChecked(true);
-                binding.tvSelectAll.setText(remiderIds.size() + " selected");
+                //                Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                notifyDataSetChanged()
+            }
+            if (remiderIds.contains(model[position]!!.reminderId)) {
+                holder.bind.cbChecked.isChecked = true
+                binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
             } else {
-                holder.bind.cbChecked.setChecked(false);
-                binding.tvSelectAll.setText(remiderIds.size() + " selected");
+                holder.bind.cbChecked.isChecked = false
+                binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
             }
-            if (remiderIds.size() == model.size()) {
-                binding.cbChecked.setChecked(true);
-                binding.tvSelectAll.setText(remiderIds.size() + " selected");
+            if (remiderIds.size == model.size) {
+                binding.cbChecked.isChecked = true
+                binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
             }
-            if (model.get(position).isCheck().equalsIgnoreCase("1")) {
-                holder.bind.switchStatus.setChecked(true);
+            if (model[position]!!.isCheck.equals("1", ignoreCase = true)) {
+                holder.bind.switchStatus.isChecked = true
             } else {
-                holder.bind.switchStatus.setChecked(false);
+                holder.bind.switchStatus.isChecked = false
             }
-//            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+            //            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
 //                holder.bind.switchStatus.setClickable(false);
 //                holder.bind.switchStatus.setEnabled(false);
 //                holder.bind.llSwitchStatus.setClickable(true);
@@ -432,224 +437,225 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
 //                });
 //            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
-            holder.bind.switchStatus.setClickable(true);
-            holder.bind.switchStatus.setEnabled(true);
-            holder.bind.llSwitchStatus.setClickable(false);
-            holder.bind.llSwitchStatus.setEnabled(false);
-            holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+            holder.bind.switchStatus.isClickable = true
+            holder.bind.switchStatus.isEnabled = true
+            holder.bind.llSwitchStatus.isClickable = false
+            holder.bind.llSwitchStatus.isEnabled = false
+            holder.bind.switchStatus.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
                 if (checked) {
-                    prepareSwitchStatus("1", model.get(position).getPlaylistId());
+                    prepareSwitchStatus("1", model[position]!!.playlistId)
                 } else {
-                    prepareSwitchStatus("0", model.get(position).getPlaylistId());
+                    prepareSwitchStatus("0", model[position]!!.playlistId)
                 }
-            });
-//            }
-
-            holder.bind.llMainLayout.setOnClickListener(view -> {
+            }
+            //            }
+            holder.bind.llMainLayout.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(activity)) {
-                notificationStatus = true;
-                myBackPress = false;
-                BWSApplication.getReminderDay(ctx, activity, CoUSERID, model.get(position).getPlaylistId(),
-                        model.get(position).getPlaylistName(), (FragmentActivity) activity,
-                        model.get(position).getReminderTime(), model.get(position).getRDay());
-                 } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
-                    }
-              /*  Intent i = new Intent(ctx, ReminderActivity.class);
-                i.putExtra("ComeFrom", "1");
-                i.putExtra("ReminderId", model.get(position).getReminderId());
-                i.putExtra("PlaylistID", model.get(position).getPlaylistId());
-                i.putExtra("PlaylistName", model.get(position).getPlaylistName());
-                i.putExtra("Time", model.get(position).getReminderTime());
-                i.putExtra("Day", model.get(position).getRDay());
-                i.putExtra("ReminderDay", model.get(position).getReminderDay());
-                i.putExtra("IsCheck", model.get(position).isCheck());
-                startActivity(i);
-                finish();*/
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return model.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            RemiderDetailsLayoutBinding bind;
-
-            public MyViewHolder(RemiderDetailsLayoutBinding bind) {
-                super(bind.getRoot());
-                this.bind = bind;
+                    notificationStatus = true
+                    myBackPress = false
+                    BWSApplication.getReminderDay(
+                        ctx, activity, CoUSERID, model[position]!!.playlistId,
+                        model[position]!!.playlistName, activity as FragmentActivity?,
+                        model[position]!!.reminderTime, model[position]!!.rDay
+                    )
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                }
             }
         }
+
+        override fun getItemCount(): Int {
+            return model!!.size
+        }
+
+        inner class MyViewHolder(var bind: RemiderDetailsLayoutBinding) : RecyclerView.ViewHolder(
+            bind.root
+        )
     }
 
-    private void prepareSwitchStatus(String reminderStatus, String PlaylistID) {
+    private fun prepareSwitchStatus(reminderStatus: String, PlaylistID: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APINewClient.getClient().getReminderStatus(CoUSERID, PlaylistID, reminderStatus);/*set 1 or not 0 */
-            listCall.enqueue(new Callback<ReminderStatusModel>() {
-                @Override
-                public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APINewClient.getClient()
+                .getReminderStatus(CoUSERID, PlaylistID, reminderStatus) /*set 1 or not 0 */
+            listCall.enqueue(object : Callback<ReminderStatusModel?> {
+                override fun onResponse(
+                    call: Call<ReminderStatusModel?>,
+                    response: Response<ReminderStatusModel?>
+                ) {
                     try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            ReminderStatusModel listModel = response.body();
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                        if (response.isSuccessful) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            val listModel = response.body()
+                            BWSApplication.showToast(listModel!!.responseMessage, activity)
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<ReminderStatusModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
+    internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
-                stackStatus = 1;
-                Log.e("APPLICATION", "APP IN FOREGROUND");
+                stackStatus = 1
+                Log.e("APPLICATION", "APP IN FOREGROUND")
                 //app went to foreground
             }
-            numStarted++;
+            numStarted++
         }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {
+            numStarted--
             if (numStarted == 0) {
                 if (!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
+                    Log.e("APPLICATION", "Back press false")
+                    stackStatus = 2
                 } else {
-                    notificationStatus = false;
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
+                    notificationStatus = false
+                    myBackPress = true
+                    stackStatus = 1
+                    Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND");
+                Log.e("APPLICATION", "App is in BACKGROUND")
                 // app went to background
             }
         }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 if (!notificationStatus) {
-                    if (player != null) {
-                        Log.e("Destroy", "Activity Destoryed");
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(notificationId);
-                        relesePlayer(ctx);
+                    if (GlobalInitExoPlayer.player != null) {
+                        Log.e("Destroy", "Activity Destoryed")
+                        val notificationManager =
+                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                        notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                        GlobalInitExoPlayer.relesePlayer(ctx)
                     }
                 }
             } else {
-                Log.e("Destroy", "Activity go in main activity");
+                Log.e("Destroy", "Activity go in main activity")
             }
         }
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
+    var simpleCallback: ItemTouchHelper.SimpleCallback =
+        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
-        @Override
-        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-            final int position = viewHolder.getAbsoluteAdapterPosition();
-            if (direction == ItemTouchHelper.LEFT) {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.reminder_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                tvTitle.setText("Remove Reminder");
-                tvSubTitle.setText("Are you sure you want to remove the reminder?");
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        return true;
+            @SuppressLint("SetTextI18n")
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.absoluteAdapterPosition
+                if (direction == ItemTouchHelper.LEFT) {
+                    val dialog = Dialog(ctx!!)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.reminder_layout)
+                    dialog.window!!.setBackgroundDrawable(
+                        ColorDrawable(
+                            ContextCompat.getColor(
+                                activity,
+                                R.color.dark_blue_gray
+                            )
+                        )
+                    )
+                    dialog.window!!.setLayout(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                    val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                    val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                    val tvconfirm = dialog.findViewById<RelativeLayout>(R.id.tvconfirm)
+                    tvTitle.text = "Remove Reminder"
+                    tvSubTitle.text = "Are you sure you want to remove the reminder?"
+                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+                            return@setOnKeyListener true
+                        }
+                        false
                     }
-                    return false;
-                });
-
-                tvconfirm.setOnClickListener(v -> {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<DeleteRemiderModel> listCall = APINewClient.getClient().getDeleteRemider(CoUSERID,
-                                listReminderModel.getResponseData().get(position).getReminderId());
-                        listCall.enqueue(new Callback<DeleteRemiderModel>() {
-                            @Override
-                            public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
-                                try {
-                                    if (response.isSuccessful()) {
-                                        DeleteRemiderModel model = response.body();
-                                        BWSApplication.showToast(model.getResponseMessage(), activity);
-                                        prepareData();
-                                        dialog.dismiss();
+                    tvconfirm.setOnClickListener {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            val listCall = APINewClient.getClient().getDeleteRemider(
+                                CoUSERID,
+                                listReminderModel!!.responseData!![position]!!.reminderId
+                            )
+                            listCall.enqueue(object : Callback<DeleteRemiderModel?> {
+                                override fun onResponse(
+                                    call: Call<DeleteRemiderModel?>,
+                                    response: Response<DeleteRemiderModel?>
+                                ) {
+                                    try {
+                                        if (response.isSuccessful) {
+                                            val model = response.body()
+                                            BWSApplication.showToast(
+                                                model!!.responseMessage,
+                                                activity
+                                            )
+                                            prepareData()
+                                            dialog.dismiss()
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
+                                override fun onFailure(
+                                    call: Call<DeleteRemiderModel?>,
+                                    t: Throwable
+                                ) {
+                                }
+                            })
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                        }
                     }
-                });
+                    tvGoBack.setOnClickListener {
+                        dialog.dismiss()
+                        prepareData()
+                    }
+                    dialog.show()
+                    dialog.setCancelable(false)
+                }
+            }
 
-                tvGoBack.setOnClickListener(v -> {
-                    dialog.dismiss();
-                    prepareData();
-                });
-                dialog.show();
-                dialog.setCancelable(false);
+            override fun getSwipeDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val position = viewHolder.absoluteAdapterPosition
+                return super.getSwipeDirs(recyclerView, viewHolder)
             }
         }
-
-        @Override
-        public int getSwipeDirs(RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder) {
-            final int position = viewHolder.getAbsoluteAdapterPosition();
-            return super.getSwipeDirs(recyclerView, viewHolder);
-        }
-    };
 }
