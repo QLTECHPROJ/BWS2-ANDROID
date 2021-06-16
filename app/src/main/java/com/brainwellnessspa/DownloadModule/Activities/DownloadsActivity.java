@@ -17,7 +17,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SegmentAudio;
@@ -25,7 +24,6 @@ import com.brainwellnessspa.DashboardOldModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
 
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
@@ -73,8 +71,8 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
         }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         p = new Properties();
         binding.llBack.setOnClickListener(view -> {

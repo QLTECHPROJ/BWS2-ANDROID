@@ -35,7 +35,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
@@ -156,8 +155,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_download_playlist);
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
         SLEEPTIME = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
 

@@ -67,8 +67,8 @@ class ManageActivity : AppCompatActivity() {
         activity = this@ManageActivity
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@ManageActivity
 
         val p = Properties()

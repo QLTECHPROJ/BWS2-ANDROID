@@ -23,7 +23,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity;
@@ -206,8 +205,8 @@ public class AptAudioFragment extends Fragment {
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
 
         DB = getAudioDataBase(ctx);
         DB.taskDao()
@@ -588,8 +587,8 @@ public class AptAudioFragment extends Fragment {
         private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, RelativeLayout llDownload) {
             SharedPreferences shared1 =
                     ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-            String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-            String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+            String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+            String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
 
             DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
             downloadAudioDetails.setUserId(CoUserID);

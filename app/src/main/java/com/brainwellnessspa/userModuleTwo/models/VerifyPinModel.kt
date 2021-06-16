@@ -21,13 +21,13 @@ class VerifyPinModel {
     var responseStatus: String? = null
 
     class ResponseData {
-        @SerializedName("UserID")
+        @SerializedName("MainAccountID")
         @Expose
-        var userID: String? = null
+        var mainAccountID: String? = null
 
-        @SerializedName("CoUserId")
+        @SerializedName("UserId")
         @Expose
-        var coUserId: String? = null
+        var userId: String? = null
 
         @SerializedName("Name")
         @Expose

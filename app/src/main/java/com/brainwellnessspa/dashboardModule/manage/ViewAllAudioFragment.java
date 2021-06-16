@@ -78,8 +78,8 @@ public class ViewAllAudioFragment extends Fragment {
         activity = getActivity();
         SharedPreferences shared1 =
                 getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         if (getArguments() != null) {
             binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_audio, container, false);

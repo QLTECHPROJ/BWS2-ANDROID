@@ -221,8 +221,8 @@ public class GlobalInitExoPlayer extends Service {
 
     public static void relesePlayer(Context context) {
         SharedPreferences shared2 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-        String CoUserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        String UserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
+        String CoUserID = (shared2.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("Screen", "Dashboard");
@@ -352,8 +352,8 @@ Appointment Audios dddd*/
 //        relesePlayer();
 
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-        String CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        String UserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
+        String CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -552,7 +552,7 @@ Appointment Audios dddd*/
                 }
                 try {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<AudioInterruptionModel> listCall = APINewClient.getClient().getAudioInterruption(CoUserID,UserID,
+                        Call<AudioInterruptionModel> listCall = APINewClient.getClient().getAudioInterruption(CoUserID,
                                 mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(),
                                 "", mainPlayModelList.get(position).getAudioDirection()
                                 , mainPlayModelList.get(position).getAudiomastercat(),
@@ -1422,8 +1422,8 @@ Appointment Audios dddd*/
 
     private void getPending(Context ctx,Activity activity) {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        String UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
                 .getNotDownloadData("Complete",CoUserID).observe((LifecycleOwner) ctx, audioList -> {

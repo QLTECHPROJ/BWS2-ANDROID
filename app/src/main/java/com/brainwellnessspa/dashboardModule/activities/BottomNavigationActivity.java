@@ -17,14 +17,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MyBatteryReceiver;
 import com.brainwellnessspa.Utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -70,8 +68,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Netwo
         }
         SharedPreferences shared1 =
                 getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
 
         if (getIntent().getExtras() != null) {

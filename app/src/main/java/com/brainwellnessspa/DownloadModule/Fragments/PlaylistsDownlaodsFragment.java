@@ -30,7 +30,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
@@ -93,8 +92,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         View view = binding.getRoot();
 
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
 
         DB = getAudioDataBase(getActivity());
         playlistList = new ArrayList<>();

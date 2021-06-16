@@ -99,7 +99,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_SIGNIN_COUSER = "CoUser";
     public static final String PREFE_ACCESS_SLEEPTIME_CAT = "Sleeptime cat";
     public static final String PREFE_ACCESS_SIGNIN_COUSER_TEMP = "CoUserTemp";
-    public static final String PREFE_ACCESS_UserID = "UserID";
+    public static final String PREFE_ACCESS_mainAccountID = "mainAccountID";
     public static final String PREFE_ACCESS_NAME = "Name";
     public static final String PREFE_ACCESS_IMAGE = "Image";
     public static final String PREFE_ACCESS_USEREMAIL = "UserEmail";
@@ -112,7 +112,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_SCORELEVEL = "scoreLevel";
     public static final String PREFE_ACCESS_EMAIL = "Email";
     public static final String PREFE_ACCESS_MOBILE = "mobile";
-    public static final String PREFE_ACCESS_CoUserID = "CoUserID";
+    public static final String PREFE_ACCESS_UserId = "UserId";
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_Splash = "Splash";
     public static final String PREF_KEY_SplashKey = "SplashKey";

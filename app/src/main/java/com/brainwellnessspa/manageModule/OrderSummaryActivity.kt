@@ -14,7 +14,6 @@ import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingClient.SkuType
 import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
@@ -82,8 +81,8 @@ class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,Purch
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
         val shared1: SharedPreferences =
                 getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@OrderSummaryActivity
         activity = this@OrderSummaryActivity
 

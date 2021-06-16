@@ -147,8 +147,8 @@ class MyPlayerActivity : AppCompatActivity() {
         ctx = this@MyPlayerActivity
         act = this@MyPlayerActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        this.UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        this.UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         DB = getAudioDataBase(ctx)
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         if (intent.hasExtra("notification")) {
@@ -1418,7 +1418,6 @@ class MyPlayerActivity : AppCompatActivity() {
                         if (isNetworkConnected(ctx)) {
                             val listCall = APINewClient.getClient().getAudioInterruption(
                                 CoUserID,
-                                this@MyPlayerActivity.UserID,
                                 mainPlayModelList[position].id,
                                 mainPlayModelList[position].name,
                                 "",

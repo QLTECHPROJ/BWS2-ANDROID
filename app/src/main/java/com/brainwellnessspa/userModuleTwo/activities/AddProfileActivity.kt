@@ -116,7 +116,7 @@ class AddProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_profile)
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
+        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         activity = this@AddProfileActivity
 
         if (intent.extras != null) {
@@ -291,7 +291,7 @@ class AddProfileActivity : AppCompatActivity() {
                     activity
                 )
                 val listCall: Call<SucessModel> =
-                    APINewClient.getClient().getForgotPin(userID, coUserID, coEMAIL)
+                    APINewClient.getClient().getForgotPin(coUserID, coEMAIL)
                 listCall.enqueue(object : Callback<SucessModel> {
                     override fun onResponse(
                         call: Call<SucessModel>,

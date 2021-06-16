@@ -69,8 +69,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
 
         val p = Properties()

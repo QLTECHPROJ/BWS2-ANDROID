@@ -52,8 +52,8 @@ class DocumentariesFragment : Fragment() {
         }
         val shared1: SharedPreferences =
             requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
         binding.rvDocumentariesList.layoutManager = mLayoutManager
         binding.rvDocumentariesList.itemAnimator = DefaultItemAnimator()

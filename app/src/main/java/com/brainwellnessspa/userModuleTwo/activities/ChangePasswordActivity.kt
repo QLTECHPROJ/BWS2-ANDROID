@@ -135,8 +135,8 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_password)
         activity = this@ChangePasswordActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
         p.putValue("userId", userID)
         p.putValue("coUserId", coUserID)

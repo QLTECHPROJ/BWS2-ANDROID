@@ -32,10 +32,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
@@ -136,8 +134,8 @@ public class AudioDownloadsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);

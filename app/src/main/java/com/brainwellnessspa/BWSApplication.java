@@ -202,8 +202,8 @@ public class BWSApplication extends Application {
     public static List<String> GetAllMediaDownload(Context ctx) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
                 .geAllDataBYDownloadedForAll("Complete").observe((LifecycleOwner) ctx, audioList -> {
@@ -217,8 +217,8 @@ public class BWSApplication extends Application {
     private static void CallObserverMethodGetAllMedia(Context ctx) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
                 .geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
@@ -231,8 +231,8 @@ public class BWSApplication extends Application {
                                           LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
                 .getPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
@@ -1289,8 +1289,8 @@ public class BWSApplication extends Application {
         DB = getAudioDataBase(ctx);
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadPlaylistDetails.setUserId(CoUserID);
         try {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
@@ -1378,8 +1378,8 @@ public class BWSApplication extends Application {
         DB = getAudioDataBase(ctx);
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB.taskDao()
                 .getaudioByPlaylist1(AudioFile, "", CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
@@ -1647,8 +1647,8 @@ public class BWSApplication extends Application {
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadAudioDetails.setUserId(CoUserID);
         if (comeFrom.equalsIgnoreCase("downloadList")) {
             downloadAudioDetails.setID(mDataDownload.get(i).getID());
@@ -2510,8 +2510,8 @@ public class BWSApplication extends Application {
     public static void callObserve2(Context ctx,Activity act) {
         SharedPreferences shared1 =
                 ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB.taskDao()
                 .geAllData12(CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();

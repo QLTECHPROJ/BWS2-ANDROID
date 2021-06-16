@@ -101,8 +101,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         ctx = ViewSuggestedActivity.this;
         activity = ViewSuggestedActivity.this;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());

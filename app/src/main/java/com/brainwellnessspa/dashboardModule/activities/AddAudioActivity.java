@@ -126,8 +126,8 @@ public class AddAudioActivity extends AppCompatActivity {
         }
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
 
         notificationStatus = false;

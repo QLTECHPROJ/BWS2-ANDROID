@@ -43,7 +43,7 @@ class FaqActivity : AppCompatActivity() {
         activity = this@FaqActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         modelList = ArrayList()
         section = ArrayList()
         gsonBuilder = GsonBuilder()

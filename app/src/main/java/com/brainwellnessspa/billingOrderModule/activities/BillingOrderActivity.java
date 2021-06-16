@@ -15,10 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.billingOrderModule.fragments.PaymentFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment;
@@ -45,8 +43,8 @@ public class BillingOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        userId = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        userId = (shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
+        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
         activity = BillingOrderActivity.this;
         binding.llBack.setOnClickListener(view -> {
             myBackPressbill = true;

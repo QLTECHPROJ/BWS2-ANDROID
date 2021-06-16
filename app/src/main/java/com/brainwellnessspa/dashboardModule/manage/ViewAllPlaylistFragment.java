@@ -66,8 +66,8 @@ public class ViewAllPlaylistFragment extends Fragment {
     SharedPreferences shared1 =
         requireActivity()
             .getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-    USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-    coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+    USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+    coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
     UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
     SharedPreferences shared =
         requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);

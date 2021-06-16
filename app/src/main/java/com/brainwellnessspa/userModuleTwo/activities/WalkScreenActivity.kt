@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.Utility.CONSTANTS
 import com.brainwellnessspa.dassAssSlider.activities.DassAssSliderActivity
@@ -25,8 +24,8 @@ class WalkScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_walk_screen)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         name = shared.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
 

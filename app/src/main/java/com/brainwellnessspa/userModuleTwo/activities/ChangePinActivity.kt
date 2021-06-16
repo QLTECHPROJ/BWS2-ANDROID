@@ -64,8 +64,8 @@ class ChangePinActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_pin)
         activity = this@ChangePinActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
         p.putValue("coUserId", coUserID)
         BWSApplication.addToSegment("Change Pin Screen Viewed", p, CONSTANTS.screen)
@@ -126,8 +126,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtConfirmPINError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
-                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(userID,
-                        coUserID, binding.etCurrentPIN.text.toString(),
+                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(coUserID, binding.etCurrentPIN.text.toString(),
                         binding.etConfirmPIN.text.toString())
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {

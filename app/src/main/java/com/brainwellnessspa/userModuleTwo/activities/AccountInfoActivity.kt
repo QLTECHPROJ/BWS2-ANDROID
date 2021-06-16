@@ -20,8 +20,8 @@ class AccountInfoActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_account_info)
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.llBack.setOnClickListener {
             finish()
         }

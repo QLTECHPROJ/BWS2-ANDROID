@@ -204,8 +204,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         DB = getAudioDataBase(ctx)
         callObserveMethodGetAllMedia(ctx, DB)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.tvSearch.setOnClickListener {
             val i = Intent(ctx, AddAudioActivity::class.java)
             i.putExtra("PlaylistID", listMOdelGloble.responseData!!.playlistID)
@@ -1111,7 +1111,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             var CoUserID: String? = ""
             val shared =
                 this.ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-            CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+            CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             if (isNetworkConnected(this.ctx)) {
                 showProgressBar(
                     binding.progressBar,
@@ -1675,7 +1675,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                         AppCompatActivity.MODE_PRIVATE
                     )
-                    CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+                    CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
                     Btn.setOnClickListener {
                         getDeleteDownloadData(ctx)
                         GetPlaylistMedia(PlaylistID!!, ctx, DB, CoUserID)

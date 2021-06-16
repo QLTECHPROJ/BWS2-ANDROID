@@ -120,9 +120,9 @@ class HomeFragment : Fragment() {
         ctx = requireActivity()
         act = requireActivity()
         val shared1 =
-            ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
@@ -1467,16 +1467,16 @@ class HomeFragment : Fragment() {
                                                         callObserve2(ctx)
                                                     }*/
                                                     Log.e(
-                                                        "New UserId MobileNo",
-                                                        listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId
+                                                            "New UserId MobileNo",
+                                                            listModel.responseData!!.mainAccountID + "....." + listModel.responseData!!.userId
                                                     )
                                                     Log.e(
                                                         "Old UserId MobileNo",
                                                         "$userId.....$coUserId"
                                                     )
                                                     logout = false
-                                                    userId = listModel.responseData!!.userID
-                                                    coUserId = listModel.responseData!!.coUserId
+                                                    userId = listModel.responseData!!.mainAccountID
+                                                    coUserId = listModel.responseData!!.userId
                                                     if (responseData!!.isProfileCompleted.equals(
                                                             "0",
                                                             ignoreCase = true
@@ -1539,12 +1539,12 @@ class HomeFragment : Fragment() {
                                                     )
                                                     val editor = shared.edit()
                                                     editor.putString(
-                                                        CONSTANTS.PREFE_ACCESS_UserID,
-                                                        listModel.responseData!!.userID
+                                                            CONSTANTS.PREFE_ACCESS_mainAccountID,
+                                                            listModel.responseData!!.mainAccountID
                                                     )
                                                     editor.putString(
-                                                        CONSTANTS.PREFE_ACCESS_CoUserID,
-                                                        listModel.responseData!!.coUserId
+                                                            CONSTANTS.PREFE_ACCESS_UserId,
+                                                            listModel.responseData!!.userId
                                                     )
                                                     editor.putString(
                                                         CONSTANTS.PREFE_ACCESS_EMAIL,
@@ -1614,74 +1614,74 @@ class HomeFragment : Fragment() {
 //                                                    )
 
                                                     analytics.identify(
-                                                        Traits()
-                                                            .putEmail(listModel.responseData!!.email)
-                                                            .putName(listModel.responseData!!.name)
-                                                            .putPhone(listModel.responseData!!.mobile)
-                                                            .putValue(
-                                                                "coUserId",
-                                                                listModel.responseData!!.coUserId
-                                                            )
-                                                            .putValue(
-                                                                "userId",
-                                                                listModel.responseData!!.userID
-                                                            )
-                                                            .putValue(
-                                                                "deviceId",
-                                                                Settings.Secure.getString(
-                                                                    act.contentResolver,
-                                                                    Settings.Secure.ANDROID_ID
-                                                                )
-                                                            )
-                                                            .putValue("deviceType", "Android")
-                                                            .putValue(
-                                                                "name",
-                                                                listModel.responseData!!.name
-                                                            )
-                                                            .putValue("countryCode", "")
-                                                            .putValue("countryName", "")
-                                                            .putValue(
-                                                                "phone",
-                                                                listModel.responseData!!.mobile
-                                                            )
-                                                            .putValue(
-                                                                "email",
-                                                                listModel.responseData!!.email
-                                                            )
-                                                            .putValue(
-                                                                "DOB",
-                                                                listModel.responseData!!.dob
-                                                            )
-                                                            .putValue(
-                                                                "profileImage",
-                                                                listModel.responseData!!.image
-                                                            )
-                                                            .putValue("plan", "")
-                                                            .putValue("planStatus", "")
-                                                            .putValue("planStartDt", "")
-                                                            .putValue("planExpiryDt", "")
-                                                            .putValue("clinikoId", "")
-                                                            .putValue(
-                                                                "isProfileCompleted",
-                                                                listModel.responseData!!.isProfileCompleted
-                                                            )
-                                                            .putValue(
-                                                                "isAssessmentCompleted",
-                                                                listModel.responseData!!.isAssessmentCompleted
-                                                            )
-                                                            .putValue(
-                                                                "indexScore",
-                                                                listModel.responseData!!.indexScore
-                                                            )
-                                                            .putValue("scoreLevel", "")
-                                                            .putValue(
-                                                                "areaOfFocus",
-                                                                listModel.responseData!!.areaOfFocus
-                                                            )
-                                                            .putValue(
-                                                                "avgSleepTime",
-                                                                listModel.responseData!!.avgSleepTime
-                                                            )
+                                                            Traits()
+                                                                    .putEmail(listModel.responseData!!.email)
+                                                                    .putName(listModel.responseData!!.name)
+                                                                    .putPhone(listModel.responseData!!.mobile)
+                                                                    .putValue(
+                                                                            "coUserId",
+                                                                            listModel.responseData!!.userId
+                                                                    )
+                                                                    .putValue(
+                                                                            "userId",
+                                                                            listModel.responseData!!.mainAccountID
+                                                                    )
+                                                                    .putValue(
+                                                                            "deviceId",
+                                                                            Settings.Secure.getString(
+                                                                                    act.contentResolver,
+                                                                                    Settings.Secure.ANDROID_ID
+                                                                            )
+                                                                    )
+                                                                    .putValue("deviceType", "Android")
+                                                                    .putValue(
+                                                                            "name",
+                                                                            listModel.responseData!!.name
+                                                                    )
+                                                                    .putValue("countryCode", "")
+                                                                    .putValue("countryName", "")
+                                                                    .putValue(
+                                                                            "phone",
+                                                                            listModel.responseData!!.mobile
+                                                                    )
+                                                                    .putValue(
+                                                                            "email",
+                                                                            listModel.responseData!!.email
+                                                                    )
+                                                                    .putValue(
+                                                                            "DOB",
+                                                                            listModel.responseData!!.dob
+                                                                    )
+                                                                    .putValue(
+                                                                            "profileImage",
+                                                                            listModel.responseData!!.image
+                                                                    )
+                                                                    .putValue("plan", "")
+                                                                    .putValue("planStatus", "")
+                                                                    .putValue("planStartDt", "")
+                                                                    .putValue("planExpiryDt", "")
+                                                                    .putValue("clinikoId", "")
+                                                                    .putValue(
+                                                                            "isProfileCompleted",
+                                                                            listModel.responseData!!.isProfileCompleted
+                                                                    )
+                                                                    .putValue(
+                                                                            "isAssessmentCompleted",
+                                                                            listModel.responseData!!.isAssessmentCompleted
+                                                                    )
+                                                                    .putValue(
+                                                                            "indexScore",
+                                                                            listModel.responseData!!.indexScore
+                                                                    )
+                                                                    .putValue("scoreLevel", "")
+                                                                    .putValue(
+                                                                            "areaOfFocus",
+                                                                            listModel.responseData!!.areaOfFocus
+                                                                    )
+                                                                    .putValue(
+                                                                            "avgSleepTime",
+                                                                            listModel.responseData!!.avgSleepTime
+                                                                    )
                                                     )
                                                 }
                                                 listModel.responseCode.equals(

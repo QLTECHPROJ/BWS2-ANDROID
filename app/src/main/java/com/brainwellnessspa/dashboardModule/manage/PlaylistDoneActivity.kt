@@ -21,8 +21,8 @@ class PlaylistDoneActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_done)
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         val p = Properties()
         p.putValue("coUserId", CoUserID)

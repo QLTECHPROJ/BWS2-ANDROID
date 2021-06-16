@@ -65,8 +65,8 @@ class UserListActivity : AppCompatActivity() {
         activity = this@UserListActivity
         ctx = this@UserListActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         /* binding.llBack.setOnClickListener {
              finish()
@@ -97,10 +97,6 @@ class UserListActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finishAffinity()
-    }
-
-    fun getUserDetails(userID: String, coUserId: String) {
-
     }
 
     class UserListAdapter(
@@ -321,10 +317,9 @@ class UserListActivity : AppCompatActivity() {
                                             Log.e("New UserId MobileNo", listModel.responseData!!.userID + "....." + listModel.responseData!!.coUserId)
                                             Log.e("Old UserId MobileNo", "$Logout_UserID.....$Logout_CoUserId")
                                             BWSApplication.logout = false
-                                            UserListActivity().getUserDetails(UserID, CoUserId)
-                                            val listCall: Call<CoUserDetailsModel> =
+                                              val listCall: Call<CoUserDetailsModel> =
                                                 APINewClient.getClient()
-                                                    .getCoUserDetails(UserID, CoUserId)
+                                                    .getCoUserDetails(CoUserId)
                                             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                                                 @SuppressLint("HardwareIds")
                                                 override fun onResponse(
@@ -398,11 +393,11 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                             val editor = shared.edit()
                                                             editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_UserID,
+                                                                    CONSTANTS.PREFE_ACCESS_mainAccountID,
                                                                     listModel.responseData!!.userID
                                                             )
                                                             editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_CoUserID,
+                                                                    CONSTANTS.PREFE_ACCESS_UserId,
                                                                     listModel.responseData!!.coUserId
                                                             )
                                                             editor.putString(
@@ -483,11 +478,11 @@ class UserListActivity : AppCompatActivity() {
                                                                     .putPhone(listModel.responseData!!.mobile)
                                                                     .putValue(
                                                                         "coUserId",
-                                                                        listModel.responseData!!.coUserId
+                                                                        listModel.responseData!!.userId
                                                                     )
                                                                     .putValue(
                                                                         "userId",
-                                                                        listModel.responseData!!.userID
+                                                                        listModel.responseData!!.mainAccountID
                                                                     )
                                                                     .putValue(
                                                                         "deviceId",

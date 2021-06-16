@@ -79,8 +79,8 @@ public class DownloadMedia implements OnDownloadListener {
         localIntent = new Intent("DownloadProgress");
         ctx.registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         lBM = LocalBroadcastManager.getInstance(ctx);
 // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
@@ -207,9 +207,10 @@ public class DownloadMedia implements OnDownloadListener {
     @Override
     public void onDownloadComplete() {
         downloadProgress2 = 0;
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         try {
+            SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
+            UserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+            CoUserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson1 = new Gson();
@@ -248,9 +249,6 @@ public class DownloadMedia implements OnDownloadListener {
                 showToast("Your audio has been downloaded",act);
             }else if(!playlistDownloadId.get(0).equalsIgnoreCase("")) {
                 DB = getAudioDataBase(ctx);
-                SharedPreferences sharedxx = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-                UserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-                CoUserID = sharedxx.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
                 DB = getAudioDataBase(ctx);
                 DB.taskDao()
                         .getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).observe((LifecycleOwner) ctx, audioList -> {
@@ -322,8 +320,8 @@ public class DownloadMedia implements OnDownloadListener {
 
     private void getPending(Context ctx) {
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
-        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "");
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "");
+        UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao()
                 .getNotDownloadData("Complete",CoUserID).observe((LifecycleOwner) ctx, audioList -> {

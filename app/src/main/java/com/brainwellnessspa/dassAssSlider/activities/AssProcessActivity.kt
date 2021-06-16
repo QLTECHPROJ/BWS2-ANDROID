@@ -26,8 +26,8 @@ class AssProcessActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
         val shared1 =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         if (intent.extras != null) {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()

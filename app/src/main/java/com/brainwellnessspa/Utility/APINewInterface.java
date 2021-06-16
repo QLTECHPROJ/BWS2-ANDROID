@@ -86,7 +86,7 @@ public interface APINewInterface {
 
     @POST("addcouser")
     @FormUrlEncoded
-    Call<AddUserModel> getAddUser(@Field("UserID") String userID,
+    Call<AddUserModel> getAddUser(@Field("MainAccountID") String MainAccountID,
                                   @Field("UserName") String userName,
                                   @Field("Email") String email,
                                   @Field("MobileNo") String mobileNo);
@@ -98,28 +98,25 @@ public interface APINewInterface {
 
     @POST("verifypin")
     @FormUrlEncoded
-    Call<VerifyPinModel> getVerifyPin(@Field("CoUserId") String CoUserId,
+    Call<VerifyPinModel> getVerifyPin(@Field("UserId") String UserId,
                                       @Field("Pin") String pin);
 
     @POST("userlist")
     @FormUrlEncoded
-    Call<AddedUserListModel> getUserList(@Field("UserID") String userID);
+    Call<AddedUserListModel> getUserList(@Field("MainAccountID") String MainAccountID);
 
     @POST("getcouserdetails")
     @FormUrlEncoded
-    Call<CoUserDetailsModel> getCoUserDetails(@Field("UserID") String userID,
-                                              @Field("CoUserId") String CoUserId);
+    Call<CoUserDetailsModel> getCoUserDetails(@Field("UserId") String UserId);
 
     @POST("forgotpin")
     @FormUrlEncoded
-    Call<SucessModel> getForgotPin(@Field("UserID") String userID,
-                                      @Field("CoUserId") String CoUserId,
-                                      @Field("Email") String email);
+    Call<SucessModel> getForgotPin(@Field("UserId") String UserId,
+                                   @Field("Email") String email);
 
     @POST("profilesaveans")
     @FormUrlEncoded
-    Call<ProfileSaveDataModel> getProfileSaveData(@Field("UserID") String userID,
-                                                  @Field("CoUserId") String CoUserId,
+    Call<ProfileSaveDataModel> getProfileSaveData(@Field("UserId") String UserId,
                                                   @Field("profileType") String profileType,
                                                   @Field("gender") String gender,
                                                   @Field("genderX") String genderX,
@@ -129,93 +126,92 @@ public interface APINewInterface {
 
     @POST("assesmentsaveans")
     @FormUrlEncoded
-    Call<AssessmentSaveDataModel> getAssessmentSaveData(@Field("UserID") String userID,
-                                                        @Field("CoUserId") String CoUserId,
+    Call<AssessmentSaveDataModel> getAssessmentSaveData(@Field("UserId") String UserId,
                                                         @Field("ans") String ans);
 
     @POST("audiodetail")
     @FormUrlEncoded
-    Call<AudioDetailModel> getAudioDetail(@Field("CoUserId") String CoUserId,
+    Call<AudioDetailModel> getAudioDetail(@Field("UserId") String UserId,
                                           @Field("AudioId") String AudioId);
 
     @POST("createplaylist")
     @FormUrlEncoded
-    Call<CreateNewPlaylistModel> getCreatePlaylist(@Field("CoUserId") String CoUserId,
+    Call<CreateNewPlaylistModel> getCreatePlaylist(@Field("UserId") String UserId,
                                                    @Field("PlaylistName") String AudioId);
 
     @POST("playlistdetails")
     @FormUrlEncoded
-    Call<PlaylistDetailsModel> getPlaylistDetail(@Field("CoUserId") String CoUserId,
+    Call<PlaylistDetailsModel> getPlaylistDetail(@Field("UserId") String UserId,
                                                  @Field("PlaylistId") String PlaylistId);
 
     @POST("getcreatedplaylist")
     @FormUrlEncoded
-    Call<CreatePlaylistingModel> getPlaylisting(@Field("CoUserId") String CoUserId);
+    Call<CreatePlaylistingModel> getPlaylisting(@Field("UserId") String UserId);
 
     @POST("renameplaylist")
     @FormUrlEncoded
-    Call<RenameNewPlaylistModel> getRenameNewPlaylist(@Field("CoUserId") String CoUserId,
+    Call<RenameNewPlaylistModel> getRenameNewPlaylist(@Field("UserId") String UserId,
                                                       @Field("PlaylistId") String PlaylistId,
                                                       @Field("PlaylistNewName") String PlaylistNewName);
 
     @POST("deleteplaylist")
     @FormUrlEncoded
-    Call<SucessModel> getDeletePlaylist(@Field("CoUserId") String userID,
+    Call<SucessModel> getDeletePlaylist(@Field("UserId") String userID,
                                         @Field("PlaylistId") String playlistId);
 
 
     @POST("removeaudiofromplaylist")
     @FormUrlEncoded
-    Call<SucessModel> RemoveAudio(@Field("CoUserId") String CoUserId,
+    Call<SucessModel> RemoveAudio(@Field("UserId") String UserId,
                                   @Field("AudioId") String AudioId,
                                   @Field("PlaylistId") String PlaylistId);
 
     @POST("sortingplaylistaudio")
     @FormUrlEncoded
-    Call<SucessModel> SortAudio(@Field("CoUserId") String CoUserId,
+    Call<SucessModel> SortAudio(@Field("UserId") String UserId,
                                 @Field("PlaylistId") String PlaylistId,
                                 @Field("PlaylistAudioId") String PlaylistAudioId);
 
     @POST("suggestedaudio")
     @FormUrlEncoded
-    Call<SuggestedModel> getSuggestedLists(@Field("CoUserId") String CoUserId);
+    Call<SuggestedModel> getSuggestedLists(@Field("UserId") String UserId);
 
     @POST("suggestedplaylist")
     @FormUrlEncoded
-    Call<SearchPlaylistModel> getSuggestedPlayLists(@Field("CoUserId") String CoUserId);
+    Call<SearchPlaylistModel> getSuggestedPlayLists(@Field("UserId") String UserId);
 
     @POST("addaptoplaylist")
     @FormUrlEncoded
-    Call<AddToPlaylistModel> getAddSearchAudioFromPlaylist(@Field("CoUserId") String CoUserId,
+    Call<AddToPlaylistModel> getAddSearchAudioFromPlaylist(@Field("UserId") String UserId,
                                                            @Field("AudioId") String audioId,
                                                            @Field("PlaylistId") String playlistId,
                                                            @Field("FromPlaylistId") String fromPlaylistId);
 
     @POST("searchonsuggestedlist")
     @FormUrlEncoded
-    Call<SearchBothModel> getSearchBoth(@Field("CoUserId") String CoUserId,
+    Call<SearchBothModel> getSearchBoth(@Field("UserId") String UserId,
                                         @Field("SuggestedName") String suggestedName);
 
     @POST("getallplaylist")
     @FormUrlEncoded
-    Call<SelectPlaylistModel> getAllPlayListing(@Field("CoUserId") String CoUserId);
+    Call<SelectPlaylistModel> getAllPlayListing(@Field("UserId") String UserId);
 
     @POST("playlistonviewall")
     @FormUrlEncoded
-    Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("CoUserId") String CoUserId,
+    Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("UserId") String UserId,
                                                    @Field("GetLibraryId") String getLibraryId);
 
     @POST("playlistlibrary")
     @FormUrlEncoded
-    Call<MainPlaylistLibraryModel> getMainPlayLists(@Field("CoUserId") String CoUserId);
+    Call<MainPlaylistLibraryModel> getMainPlayLists(@Field("UserId") String UserId);
 
     @POST("managehomescreen")
     @FormUrlEncoded
-    Call<HomeDataModel> getHomeData(@Field("CoUserId") String CoUserId);
+    Call<HomeDataModel> getHomeData(@Field("UserId") String UserId);
 
     @POST("managehomeviewallaudio")
     @FormUrlEncoded
-    Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("CoUserId") String CoUserId,
+    Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("UserId") String UserId,
                                                      @Field("GetHomeAudioId") String GetHomeAudioId,
                                                      @Field("CategoryName") String CategoryName);
 
@@ -224,59 +220,58 @@ public interface APINewInterface {
 
     @POST("getrecommendedcategory")
     @FormUrlEncoded
-    Call<RecommendedCategoryModel> getRecommendedCategory(@Field("CoUserId") String CoUserId);
+    Call<RecommendedCategoryModel> getRecommendedCategory(@Field("UserId") String UserId);
 
     @POST("saverecommendedcategory")
     @FormUrlEncoded
-    Call<SaveRecommendedCatModel> getSaveRecommendedCategory(@Field("CoUserId") String CoUserId,
+    Call<SaveRecommendedCatModel> getSaveRecommendedCategory(@Field("UserId") String UserId,
                                                              @Field("CatName") String CatName,
                                                              @Field("AvgSleepTime") String AvgSleepTime);
 
     @POST("recentlyplayed")
     @FormUrlEncoded
-    Call<SucessModel> getRecentlyPlayed(@Field("CoUserId") String CoUserId,
+    Call<SucessModel> getRecentlyPlayed(@Field("UserId") String UserId,
                                         @Field("AudioId") String AudioId);
 
     @POST("homescreen")
     @FormUrlEncoded
-    Call<HomeScreenModel> getHomeScreenData(@Field("CoUserId") String CoUserId);
+    Call<HomeScreenModel> getHomeScreenData(@Field("UserId") String UserId);
 
     @POST("logout")
     @FormUrlEncoded
-    Call<SucessModel> getLogout(@Field("UserID") String UserID,
+    Call<SucessModel> getLogout(@Field("UserId") String UserId,
                                 @Field("Token") String Token,
                                 @Field("DeviceType") String DeviceType);
 
     @POST("changepin")
     @FormUrlEncoded
-    Call<ChangePinModel> getChangePin(@Field("UserID") String UserID,
-                                      @Field("CoUserId") String CoUserId,
+    Call<ChangePinModel> getChangePin(@Field("UserId") String UserId,
                                       @Field("OldPin") String OldPin,
                                       @Field("NewPin") String NewPin);
 
     @POST("changepassword")
     @FormUrlEncoded
-    Call<ChangePasswordModel> getChangePassword(@Field("UserID") String UserID,
-                                                @Field("CoUserId") String CoUserId,
+    Call<ChangePasswordModel> getChangePassword(@Field("MainAccountID") String MainAccountID ,
+                                                @Field("UserId") String UserId,
                                                 @Field("OldPassword") String OldPassword,
                                                 @Field("NewPassword") String NewPassword);
 
     @POST("resourcelist")
     @FormUrlEncoded
-    Call<ResourceListModel> getResourceList(@Field("CoUserId") String CoUserId,
+    Call<ResourceListModel> getResourceList(@Field("UserId") String UserId,
                                             @Field("ResourceTypeId") String ResourceTypeId,
                                             @Field("Category") String Category);
 
     @POST("resourcecatlist")
     @FormUrlEncoded
-    Call<ResourceFilterModel> getResourceCatList(@Field("CoUserId") String CoUserId);
+    Call<ResourceFilterModel> getResourceCatList(@Field("UserId") String UserId);
 
     @GET("faqlist")
     Call<FaqListModel> getFaqLists();
 
     @POST("setreminder")
     @FormUrlEncoded
-    Call<SetReminderOldModel> getSetReminder(@Field("CoUserId") String CoUserId,
+    Call<SetReminderOldModel> getSetReminder(@Field("UserId") String UserId,
                                              @Field("PlaylistId") String PlaylistId,
                                              @Field("ReminderDay") String ReminderDay,
                                              @Field("ReminderTime") String ReminderTime,
@@ -285,27 +280,28 @@ public interface APINewInterface {
 
     @POST("reminderlist")
     @FormUrlEncoded
-    Call<ReminderListModel> getReminderList(@Field("CoUserId") String CoUserId);
+    Call<ReminderListModel> getReminderList(@Field("UserId") String UserId);
 
 
     @POST("deletereminder")
     @FormUrlEncoded
-    Call<DeleteRemiderModel> getDeleteRemider(@Field("CoUserId") String CoUserId,
+    Call<DeleteRemiderModel> getDeleteRemider(@Field("UserId") String UserId,
                                               @Field("ReminderId") String ReminderId);
 
     @POST("reminderstatus")
     @FormUrlEncoded
-    Call<ReminderStatusModel> getReminderStatus(@Field("CoUserId") String CoUserId,
+    Call<ReminderStatusModel> getReminderStatus(@Field("UserId") String UserId,
                                                 @Field("PlaylistId") String PlaylistId,
                                                 @Field("ReminderStatus") String ReminderStatus);
 
     @POST("removeprofileimg")
     @FormUrlEncoded
-    Call<RemoveProfileModel> getRemoveProfile(@Field("CoUserId") String CoUserId);
+    Call<RemoveProfileModel> getRemoveProfile(@Field("UserId") String UserId);
 
     @POST("editprofile")
     @FormUrlEncoded
-    Call<EditProfileModel> getEditProfile(@Field("CoUserId") String CoUserId,
+    Call<EditProfileModel> getEditProfile(@Field("MainAccountID") String MainAccountID,
+                                          @Field("UserId") String UserId,
                                           @Field("Name") String Name,
                                           @Field("Dob") String Dob,
                                           @Field("MobileNo") String MobileNo,
@@ -313,17 +309,15 @@ public interface APINewInterface {
 
     @POST("planlist")
     @FormUrlEncoded
-    Call<PlanlistInappModel> getPlanlistInapp(@Field("CoUserId") String CoUserId);
+    Call<PlanlistInappModel> getPlanlistInapp(@Field("UserId") String UserId);
 
     @POST("getnotificationlist")
     @FormUrlEncoded
-    Call<NotificationlistModel> getNotificationlist(@Field("UserID") String UserID,
-                                                    @Field("CoUserId") String CoUserId);
+    Call<NotificationlistModel> getNotificationlist(@Field("UserId") String UserId);
 
     @POST("audiointerruption")
     @FormUrlEncoded
-    Call<AudioInterruptionModel> getAudioInterruption(@Field("CoUserId") String CoUserId,
-                                                      @Field("userId") String userId,
+    Call<AudioInterruptionModel> getAudioInterruption(@Field("UserId") String UserId,
                                                       @Field("audioId") String audioId,
                                                       @Field("audioName") String audioName,
                                                       @Field("audioDescription") String audioDescription,

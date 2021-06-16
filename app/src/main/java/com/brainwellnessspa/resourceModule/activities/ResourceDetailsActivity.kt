@@ -53,7 +53,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
         act = this@ResourceDetailsActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
-        coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent.extras != null) {
             id = intent.getStringExtra("id")
             title = intent.getStringExtra(CONSTANTS.title)

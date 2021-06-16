@@ -44,8 +44,8 @@ class NotificationListActivity : AppCompatActivity() {
         activity = this@NotificationListActivity
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         ctx = this@NotificationListActivity
         binding.llBack.setOnClickListener {
@@ -63,7 +63,7 @@ class NotificationListActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<NotificationlistModel> =
-                APINewClient.getClient().getNotificationlist(userId, coUserId)
+                APINewClient.getClient().getNotificationlist(coUserId)
             listCall.enqueue(object : Callback<NotificationlistModel> {
                 override fun onResponse(
                     call: Call<NotificationlistModel>,

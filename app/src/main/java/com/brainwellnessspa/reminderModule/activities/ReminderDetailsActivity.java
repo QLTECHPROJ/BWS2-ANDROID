@@ -93,8 +93,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         ctx = ReminderDetailsActivity.this;
         activity = ReminderDetailsActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-        CoUSERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
+        CoUSERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());

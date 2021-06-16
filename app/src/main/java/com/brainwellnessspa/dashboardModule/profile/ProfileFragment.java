@@ -119,8 +119,8 @@ public class ProfileFragment extends Fragment {
         SharedPreferences shared1 =
                 requireActivity()
                         .getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, ""));
-        CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        USERID = (shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, ""));
+        CoUserID = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
         UserName = (shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, ""));
         UserEmail = (shared1.getString(CONSTANTS.PREFE_ACCESS_USEREMAIL, ""));
         userImage = (shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, ""));
@@ -615,7 +615,7 @@ public class ProfileFragment extends Fragment {
             BWSApplication.showProgressBar(
                     binding.progressBar, binding.progressBarHolder, requireActivity());
             Call<CoUserDetailsModel> listCall =
-                    APINewClient.getClient().getCoUserDetails(USERID, CoUserID);
+                    APINewClient.getClient().getCoUserDetails(CoUserID);
             listCall.enqueue(
                     new Callback<CoUserDetailsModel>() {
                         @Override
@@ -824,8 +824,8 @@ public class ProfileFragment extends Fragment {
                 requireActivity()
                         .getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
-        edit.remove(CONSTANTS.PREFE_ACCESS_UserID);
-        edit.remove(CONSTANTS.PREFE_ACCESS_CoUserID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_UserId);
         edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER);
         edit.remove(CONSTANTS.PREFE_ACCESS_NAME);
         edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL);

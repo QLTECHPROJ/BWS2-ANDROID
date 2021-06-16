@@ -40,7 +40,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         userId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, ""));
+        coUserId = (shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, ""));
 
         Properties p = new Properties();
         p.putValue("coUserId", coUserId);

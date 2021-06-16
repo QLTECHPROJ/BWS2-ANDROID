@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -122,8 +121,8 @@ class EditProfileActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile)
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@EditProfileActivity
         activity = this@EditProfileActivity
 
@@ -224,7 +223,7 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.txtNumberError.visibility = View.GONE
                     binding.txtEmailError.visibility = View.GONE
                     val listCall = APINewClient.getClient().getEditProfile(
-                        coUserId, binding.etUser.text.toString(), dob,
+                        userId,coUserId, binding.etUser.text.toString(), dob,
                         binding.etMobileNumber.text.toString(), binding.etEmail.text.toString()
                     )
                     listCall.enqueue(object : Callback<EditProfileModel> {
@@ -314,7 +313,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun profileViewData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getCoUserDetails(userId, coUserId)
+            val listCall = APINewClient.getClient().getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                 override fun onResponse(
                     call: Call<CoUserDetailsModel>,

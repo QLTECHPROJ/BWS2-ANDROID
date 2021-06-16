@@ -53,8 +53,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_progress)
         ctx = this@ProfileProgressActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         activity = this@ProfileProgressActivity
         val p = Properties()
@@ -569,7 +569,6 @@ class ProfileProgressActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<ProfileSaveDataModel> = APINewClient.getClient().getProfileSaveData(
-                userId,
                 coUserId,
                 profileType,
                 gender,

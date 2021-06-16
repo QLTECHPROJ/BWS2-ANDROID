@@ -1,23 +1,15 @@
 package com.brainwellnessspa.dassAssSlider.activities
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -66,8 +58,8 @@ class DassAssSliderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         EMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         ctx = this@DassAssSliderActivity
         activity = this@DassAssSliderActivity
@@ -478,7 +470,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient()
-                .getAssessmentSaveData(USERID, CoUserID, gson.toJson(assAns).toString())
+                .getAssessmentSaveData(CoUserID, gson.toJson(assAns).toString())
             listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
                 override fun onResponse(
                     call: Call<AssessmentSaveDataModel>,

@@ -97,8 +97,8 @@ class ManageFragment : Fragment() {
             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
             AppCompatActivity.MODE_PRIVATE
         )
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.rvMainPlayList.layoutManager =
             LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMainAudioList.layoutManager =
@@ -514,8 +514,8 @@ class ManageFragment : Fragment() {
             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
             AppCompatActivity.MODE_PRIVATE
         )
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         DB.taskDao()
             .geAllLiveDataBYDownloaded("Complete", CoUserID)
             .observe(ctx as (LifecycleOwner), { audioList: List<String> ->
@@ -539,8 +539,8 @@ class ManageFragment : Fragment() {
             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
             AppCompatActivity.MODE_PRIVATE
         )
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
+        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         DB.taskDao()
             .geAllLiveDataBYDownloaded("Complete", CoUserID)
             .observe(ctx as (LifecycleOwner), { audioList: List<String> ->
