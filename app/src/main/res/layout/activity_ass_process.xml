@@ -389,7 +389,7 @@
                     android:layout_marginTop="@dimen/_70sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="Lorem ipsum"
+                    android:text="What is Index Score ?"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     tools:ignore="SpUsage" />

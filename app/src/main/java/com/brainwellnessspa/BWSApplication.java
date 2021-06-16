@@ -2095,6 +2095,7 @@ public class BWSApplication extends Application {
 
             dialog.setCancelable(true);*/
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 350);
             toast.show();
         }
     }
