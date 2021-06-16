@@ -12,10 +12,10 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MyNetworkReceiver;
+import com.brainwellnessspa.roomDataBase.AudioDatabase;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MyNetworkReceiver;
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
@@ -37,8 +37,8 @@ import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.BWSApplication.showToast;
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetDeviceVolume;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class DownloadMedia implements OnDownloadListener {
     public static int downloadError = 2, downloadIdOne;

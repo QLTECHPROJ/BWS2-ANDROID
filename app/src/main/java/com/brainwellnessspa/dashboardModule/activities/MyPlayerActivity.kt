@@ -27,13 +27,13 @@ import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniP
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.R
-import com.brainwellnessspa.RoomDataBase.AudioDatabase
+import com.brainwellnessspa.roomDataBase.AudioDatabase
 
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Services.GlobalInitExoPlayer.*
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.services.GlobalInitExoPlayer.*
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding

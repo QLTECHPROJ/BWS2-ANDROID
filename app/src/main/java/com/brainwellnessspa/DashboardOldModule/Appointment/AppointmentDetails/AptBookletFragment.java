@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAptBookletBinding;
 import com.segment.analytics.Properties;
 

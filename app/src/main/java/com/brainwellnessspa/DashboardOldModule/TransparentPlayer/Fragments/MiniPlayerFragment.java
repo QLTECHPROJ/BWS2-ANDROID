@@ -40,10 +40,10 @@ import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
+import com.brainwellnessspa.utility.APIClient;
+import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentMiniExoCustomBinding;
 import com.brainwellnessspa.databinding.FragmentMiniPlayerBinding;
 import com.bumptech.glide.Glide;
@@ -82,12 +82,12 @@ import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivi
 import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.miniPlayer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.GetSourceName;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.PlayerINIT;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.PlayerINIT;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.getMediaBitmap;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
 
 public class MiniPlayerFragment extends Fragment {
     public static int isDisclaimer = 0;

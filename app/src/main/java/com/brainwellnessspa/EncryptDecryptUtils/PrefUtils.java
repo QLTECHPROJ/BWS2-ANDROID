@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import static com.brainwellnessspa.Utility.CONSTANTS.SECRET_KEY;
+import static com.brainwellnessspa.utility.CONSTANTS.SECRET_KEY;
 
 public class PrefUtils {
     public static final PrefUtils prefUtils = new PrefUtils();

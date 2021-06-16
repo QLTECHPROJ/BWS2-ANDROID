@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.models.ChangePinModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityChangePinBinding
 import com.segment.analytics.Properties
 import retrofit2.Call

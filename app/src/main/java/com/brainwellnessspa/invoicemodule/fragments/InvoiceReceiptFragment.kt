@@ -13,8 +13,8 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity
 import com.brainwellnessspa.invoicemodule.models.InvoiceDetailModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.APIClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentInvoiceReceiptBinding
 import com.segment.analytics.Properties
 import retrofit2.Call

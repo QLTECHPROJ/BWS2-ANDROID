@@ -28,11 +28,11 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.R
-import com.brainwellnessspa.RoomDataBase.*
-import com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease
-import com.brainwellnessspa.Services.GlobalInitExoPlayer.player
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.roomDataBase.*
+import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
+import com.brainwellnessspa.services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.AddAudioActivity
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity

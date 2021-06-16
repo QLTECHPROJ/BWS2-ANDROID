@@ -18,8 +18,8 @@ import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_W
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.referralModule.models.CheckReferCodeModel
-import com.brainwellnessspa.Utility.APIClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel

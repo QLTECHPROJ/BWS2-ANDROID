@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.activities.WalkScreenActivity
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.segment.analytics.Properties
 

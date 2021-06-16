@@ -25,9 +25,9 @@ import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.R;
 
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -45,9 +45,9 @@ import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class DownloadsActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static boolean ComeFrom_Playlist = false;

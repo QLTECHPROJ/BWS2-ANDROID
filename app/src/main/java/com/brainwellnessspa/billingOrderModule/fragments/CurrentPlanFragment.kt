@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity
 import com.brainwellnessspa.databinding.FragmentCurrentPlanBinding

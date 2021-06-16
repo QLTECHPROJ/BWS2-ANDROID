@@ -35,10 +35,10 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardOldModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Utility.APINewClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
+import com.brainwellnessspa.utility.APINewClient;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity;
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
@@ -63,8 +63,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;

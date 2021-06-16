@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityFaqBinding
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.google.gson.Gson

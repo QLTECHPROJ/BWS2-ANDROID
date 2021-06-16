@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.dashboardModule.models.AverageSleepTimeModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySleepTimeBinding
 import com.brainwellnessspa.databinding.SleepTimeRawBinding
 import com.segment.analytics.Properties

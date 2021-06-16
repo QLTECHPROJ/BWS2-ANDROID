@@ -19,8 +19,8 @@ import com.brainwellnessspa.manageModule.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.models.VersionModel
 import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.google.gson.Gson

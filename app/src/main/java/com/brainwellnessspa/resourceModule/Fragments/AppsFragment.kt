@@ -18,8 +18,8 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.AppsListLayoutBinding
 import com.brainwellnessspa.databinding.FragmentAppsBinding
 import com.bumptech.glide.Glide

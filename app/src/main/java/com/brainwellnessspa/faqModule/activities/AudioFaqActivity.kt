@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAudioFaqBinding
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding
 import com.google.gson.Gson

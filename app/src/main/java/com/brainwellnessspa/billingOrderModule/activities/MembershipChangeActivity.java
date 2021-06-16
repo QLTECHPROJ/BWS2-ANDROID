@@ -26,9 +26,9 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.utility.APIClient;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityMembershipChangeBinding;
 import com.brainwellnessspa.databinding.MembershipPlanBinding;
 
@@ -38,9 +38,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class MembershipChangeActivity extends AppCompatActivity {
     ActivityMembershipChangeBinding binding;

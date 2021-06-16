@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.utility.CONSTANTS;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;

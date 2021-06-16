@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -31,9 +31,9 @@ import com.brainwellnessspa.DashboardOldModule.Appointment.AppointmentDetails.Ap
 import com.brainwellnessspa.DashboardOldModule.Appointment.AppointmentDetails.AptDetailsFragment;
 import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.utility.APIClient;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentAppointmentDetailsBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

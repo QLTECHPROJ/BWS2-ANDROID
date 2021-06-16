@@ -26,9 +26,9 @@ import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.R;
 
-import com.brainwellnessspa.Utility.APINewClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.utility.APINewClient;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding;
 import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding;
 import com.bumptech.glide.Glide;

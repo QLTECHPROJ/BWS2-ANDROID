@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding
 import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.Appointment

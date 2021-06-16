@@ -26,9 +26,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityResourceBinding
 import com.brainwellnessspa.databinding.FilterListLayoutBinding
 import com.brainwellnessspa.resourceModule.Fragments.*

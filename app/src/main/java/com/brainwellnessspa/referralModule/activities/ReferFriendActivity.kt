@@ -20,8 +20,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityReferFriendBinding
 import com.brainwellnessspa.webView.TncActivity
 import com.segment.analytics.Properties

@@ -39,10 +39,10 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.roomDataBase.AudioDatabase;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.bumptech.glide.Glide;
@@ -71,8 +71,8 @@ import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragment
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
 
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";

@@ -318,7 +318,7 @@
                  android:windowSoftInputMode="adjustPan" />
         -->
         <activity
-            android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
+            android:name=".membershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -330,12 +330,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.OrderSummaryActivity"
+            android:name=".membershipModule.Activities.OrderSummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.MembershipActivity"
+            android:name=".membershipModule.Activities.MembershipActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -371,7 +371,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.ThankYouMpActivity"
+            android:name=".membershipModule.Activities.ThankYouMpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -412,7 +412,7 @@
         </provider>
 
         <receiver
-            android:name=".Utility.MyNetworkReceiver"
+            android:name=".utility.MyNetworkReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
@@ -425,7 +425,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".Utility.SmsReceiver"
+            android:name=".utility.SmsReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
@@ -473,7 +473,7 @@
         </receiver>
 
         <service
-            android:name=".Utility.MyFirebaseMessagingService"
+            android:name=".utility.MyFirebaseMessagingService"
             android:exported="false"
             tools:ignore="ExportedService">
             <intent-filter>
@@ -481,13 +481,13 @@
             </intent-filter>
         </service>
         <service
-            android:name=".Services.GlobalInitExoPlayer"
+            android:name=".services.GlobalInitExoPlayer"
             android:process=":process2">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
-        <service android:name=".Services.OnClearFromRecentService" />
+        <service android:name=".services.OnClearFromRecentService" />
     </application>
 
 </manifest>

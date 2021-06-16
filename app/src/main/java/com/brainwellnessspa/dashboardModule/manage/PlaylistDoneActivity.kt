@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityPlaylistDoneBinding
 import com.segment.analytics.Properties
 

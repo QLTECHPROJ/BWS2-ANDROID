@@ -1,12 +1,11 @@
 package com.brainwellnessspa.EncryptDecryptUtils;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.utility.CONSTANTS;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.brainwellnessspa.Utility.CONSTANTS.TEMP_FILE_NAME;
+import static com.brainwellnessspa.utility.CONSTANTS.TEMP_FILE_NAME;
 
 public class FileUtils {
     public static void saveFile(byte[] encodedBytes, String path) {

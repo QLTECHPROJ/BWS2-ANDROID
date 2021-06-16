@@ -29,8 +29,8 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModuleTwo.models.CountryListModel
 import com.brainwellnessspa.userModuleTwo.models.NewSignUpModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding

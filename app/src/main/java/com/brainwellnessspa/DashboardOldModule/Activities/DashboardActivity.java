@@ -26,9 +26,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MyBatteryReceiver;
-import com.brainwellnessspa.Utility.MyNetworkReceiver;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MyBatteryReceiver;
+import com.brainwellnessspa.utility.MyNetworkReceiver;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 import com.segment.analytics.Properties;
 
@@ -37,9 +37,9 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToDashboard;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.callResumePlayer;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class DashboardActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator /*implements AudioManager.OnAudioFocusChangeListener */ {
     public static int miniPlayer = 0;

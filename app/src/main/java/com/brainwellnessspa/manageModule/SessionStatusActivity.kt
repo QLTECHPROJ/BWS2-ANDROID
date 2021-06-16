@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.MySpannable
+import com.brainwellnessspa.utility.MySpannable
 import com.brainwellnessspa.databinding.ActivitySessionStatusBinding
 
 class SessionStatusActivity : AppCompatActivity() {

@@ -41,8 +41,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.referralModule.models.AllContactListModel;
 import com.brainwellnessspa.referralModule.models.ContactlistModel;
 import com.brainwellnessspa.referralModule.models.FavContactlistModel;
-import com.brainwellnessspa.Utility.APIClient;
-import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.utility.APIClient;
+import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityContactBookBinding;
 import com.brainwellnessspa.databinding.ContactListLayoutBinding;
 import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
@@ -55,8 +55,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class ContactBookActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 90;

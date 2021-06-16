@@ -71,16 +71,16 @@ import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
-import com.brainwellnessspa.Services.GlobalInitExoPlayer;
-import com.brainwellnessspa.Services.PlayerJobService;
-import com.brainwellnessspa.Utility.APINewClient;
-import com.brainwellnessspa.Utility.AppSignatureHashHelper;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.CryptLib;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.roomDataBase.AudioDatabase;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
+import com.brainwellnessspa.services.PlayerJobService;
+import com.brainwellnessspa.utility.APINewClient;
+import com.brainwellnessspa.utility.AppSignatureHashHelper;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.CryptLib;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
@@ -137,9 +137,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.getSpace;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.hundredVolume;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.getSpace;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.hundredVolume;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
 
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {

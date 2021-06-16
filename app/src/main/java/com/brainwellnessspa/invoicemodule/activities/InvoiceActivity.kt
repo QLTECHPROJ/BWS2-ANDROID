@@ -18,11 +18,10 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.APIClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding
-import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity
 import com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment
 import com.brainwellnessspa.invoicemodule.fragments.MembershipInvoiceFragment
 import com.brainwellnessspa.invoicemodule.models.InvoiceListModel

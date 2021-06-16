@@ -21,10 +21,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.MembershipModule.Adapters.SubscriptionAdapter
+import com.brainwellnessspa.membershipModule.Adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityManageBinding
 import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding

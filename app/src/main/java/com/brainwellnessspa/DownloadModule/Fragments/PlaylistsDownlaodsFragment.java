@@ -35,12 +35,12 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.RoomDataBase.AudioDatabase;
+import com.brainwellnessspa.roomDataBase.AudioDatabase;
 
-import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
-import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.utility.CONSTANTS;
+import com.brainwellnessspa.utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.bumptech.glide.Glide;

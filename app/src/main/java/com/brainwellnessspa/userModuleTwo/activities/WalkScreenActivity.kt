@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dassAssSlider.activities.DassAssSliderActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 

@@ -16,8 +16,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.Services.GlobalInitExoPlayer
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding

@@ -32,8 +32,8 @@ import com.brainwellnessspa.userModuleTwo.models.AddedUserListModel
 import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
 import com.brainwellnessspa.userModuleTwo.models.SegmentUserList
 import com.brainwellnessspa.userModuleTwo.models.VerifyPinModel
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.bumptech.glide.Glide

@@ -28,9 +28,9 @@ import com.brainwellnessspa.BWSApplication.DB
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 
-import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetailsUnique
-import com.brainwellnessspa.Utility.APINewClient
-import com.brainwellnessspa.Utility.CONSTANTS
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel

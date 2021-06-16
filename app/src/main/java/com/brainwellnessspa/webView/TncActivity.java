@@ -16,11 +16,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.AppUtils;
+import com.brainwellnessspa.utility.AppUtils;
 import com.brainwellnessspa.databinding.ActivityTncBinding;
 
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.Services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class TncActivity extends AppCompatActivity {
     ActivityTncBinding binding;

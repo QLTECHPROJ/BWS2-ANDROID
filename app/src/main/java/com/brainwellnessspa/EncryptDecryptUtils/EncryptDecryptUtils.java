@@ -12,10 +12,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.brainwellnessspa.Utility.CONSTANTS.CIPHER_ALGORITHM;
-import static com.brainwellnessspa.Utility.CONSTANTS.KEY_SPEC_ALGORITHM;
-import static com.brainwellnessspa.Utility.CONSTANTS.OUTPUT_KEY_LENGTH;
-import static com.brainwellnessspa.Utility.CONSTANTS.PROVIDER;
+import static com.brainwellnessspa.utility.CONSTANTS.CIPHER_ALGORITHM;
+import static com.brainwellnessspa.utility.CONSTANTS.KEY_SPEC_ALGORITHM;
+import static com.brainwellnessspa.utility.CONSTANTS.OUTPUT_KEY_LENGTH;
+import static com.brainwellnessspa.utility.CONSTANTS.PROVIDER;
 
 public class EncryptDecryptUtils {
     public static EncryptDecryptUtils instance = null;
