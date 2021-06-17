@@ -21,13 +21,10 @@ class CoUserDetailsModel {
     var responseStatus: String? = null
 
     class ResponseData {
-        @SerializedName("UserID")
-        @Expose
-        var userID: String? = null
 
-        @SerializedName("CoUserId")
+        @SerializedName("UserId")
         @Expose
-        var coUserId: String? = null
+        var userId: String? = null
 
         @SerializedName("Name")
         @Expose
@@ -45,13 +42,13 @@ class CoUserDetailsModel {
         @Expose
         var image: String? = null
 
-        @SerializedName("isProfileCompleted")
-        @Expose
-        var isProfileCompleted: String? = null
-
         @SerializedName("DOB")
         @Expose
         var dob: String? = null
+
+        @SerializedName("isProfileCompleted")
+        @Expose
+        var isProfileCompleted: String? = null
 
         @SerializedName("isAssessmentCompleted")
         @Expose
@@ -61,14 +58,6 @@ class CoUserDetailsModel {
         @Expose
         var indexScore: String? = null
 
-        @SerializedName("AvgSleepTime")
-        @Expose
-        var avgSleepTime: String? = null
-
-        @SerializedName("ScoreLevel")
-        @Expose
-        var scoreLevel: String? = null
-
         @SerializedName("planDetails")
         @Expose
         var planDetails: List<PlanDetails>? = null
@@ -76,6 +65,14 @@ class CoUserDetailsModel {
         @SerializedName("AreaOfFocus")
         @Expose
         var areaOfFocus: List<AreaOfFocus>? = null
+
+        @SerializedName("AvgSleepTime")
+        @Expose
+        var avgSleepTime: String? = null
+
+        @SerializedName("ScoreLevel")
+        @Expose
+        var scoreLevel: String? = null
 
         @SerializedName("errormsg")
         @Expose

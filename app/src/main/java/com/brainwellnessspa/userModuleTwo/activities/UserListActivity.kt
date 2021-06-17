@@ -300,10 +300,6 @@ class UserListActivity : AppCompatActivity() {
                                                 activity.getString(R.string.ResponseCodesuccess),
                                                 ignoreCase = true
                                             ) -> {
-                                                val userId: String =
-                                                    listModel.responseData!!.mainAccountID.toString()
-                                                val coUserId: String =
-                                                    listModel.responseData!!.userId.toString()
                                                 val shared1: SharedPreferences =
                                                     ctx.getSharedPreferences(
                                                         CONSTANTS.PREF_KEY_LOGOUT,
@@ -335,7 +331,7 @@ class UserListActivity : AppCompatActivity() {
                                                 logout = false
                                                 val listCall: Call<CoUserDetailsModel> =
                                                     APINewClient.getClient()
-                                                        .getCoUserDetails(userId)
+                                                        .getCoUserDetails(listModel.responseData!!.userId)
                                                 listCall.enqueue(object :
                                                     Callback<CoUserDetailsModel> {
                                                     @SuppressLint("HardwareIds")
