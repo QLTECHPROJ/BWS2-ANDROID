@@ -10,55 +10,55 @@ class RemiderDetailsModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     inner class ResponseData {
         @SerializedName("PlaylistId")
         @Expose
-        var playlistId: String? = null
+        var playlistId: String? = ""
 
         @SerializedName("PlaylistName")
         @Expose
-        var playlistName: String? = null
+        var playlistName: String? = ""
 
         @SerializedName("ReminderDay")
         @Expose
-        var reminderDay: String? = null
+        var reminderDay: String? = ""
 
         @SerializedName("ReminderTime")
         @Expose
-        var reminderTime: String? = null
+        var reminderTime: String? = ""
 
         @SerializedName("IsLock")
         @Expose
-        var isLock: String? = null
+        var isLock: String? = ""
 
         @SerializedName("IsActive")
         @Expose
-        var isActive: String? = null
+        var isActive: String? = ""
 
         @SerializedName("RDay")
         @Expose
-        var rDay: String? = null
+        var rDay: String? = ""
 
         @SerializedName("IsCheck")
         @Expose
-        var isCheck: String? = null
+        var isCheck: String? = ""
 
         @SerializedName("ReminderId")
         @Expose
-        var reminderId: String? = null
+        var reminderId: String? = ""
 
         @SerializedName("Created")
         @Expose
-        var created: String? = null
+        var created: String? = ""
     }
 }

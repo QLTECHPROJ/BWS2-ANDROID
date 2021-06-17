@@ -32,10 +32,10 @@ import retrofit2.Response
 
 class WebsiteFragment : Fragment() {
     lateinit var binding: FragmentWebsiteBinding
-    var website: String? = null
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var Category: String? = null
+    var website: String? = ""
+    var USERID: String? = ""
+    var CoUserID: String? = ""
+    var Category: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

@@ -10,59 +10,59 @@ class ResourceListModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     inner class ResponseData {
         @SerializedName("ID")
         @Expose
-        var iD: String? = null
+        var iD: String? = ""
 
         @SerializedName("title")
         @Expose
-        var title: String? = null
+        var title: String? = ""
 
         @SerializedName("type")
         @Expose
-        var type: String? = null
+        var type: String? = ""
 
         @SerializedName("master_category")
         @Expose
-        var masterCategory: String? = null
+        var masterCategory: String? = ""
 
         @SerializedName("sub_category")
         @Expose
-        var subCategory: String? = null
+        var subCategory: String? = ""
 
         @SerializedName("ResourceDesc")
         @Expose
-        var description: String? = null
+        var description: String? = ""
 
         @SerializedName("Detailimage")
         @Expose
-        var detailimage: String? = null
+        var detailimage: String? = ""
 
         @SerializedName("image")
         @Expose
-        var image: String? = null
+        var image: String? = ""
 
         @SerializedName("author")
         @Expose
-        var author: String? = null
+        var author: String? = ""
 
         @SerializedName("resource_link_1")
         @Expose
-        var resourceLink1: String? = null
+        var resourceLink1: String? = ""
 
         @SerializedName("resource_link_2")
         @Expose
-        var resourceLink2: String? = null
+        var resourceLink2: String? = ""
     }
 }

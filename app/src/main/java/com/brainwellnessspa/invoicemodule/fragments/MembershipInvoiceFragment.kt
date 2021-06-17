@@ -42,7 +42,7 @@ class MembershipInvoiceFragment : Fragment() {
     var memberShipList: ArrayList<MemberShip>? = null
     private var downloadUrl = ""
     private val downloadFileName = "Invoice"
-    private var userId: String? = null
+    private var userId: String? = ""
     private val file_name_path = "BWS"
     private var progressDialog: ProgressDialog? = null
     var downloadIdInvoice = 0

@@ -10,60 +10,60 @@ class VerifyPinModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("MainAccountID")
         @Expose
-        var mainAccountID: String? = null
+        var mainAccountID: String? = ""
 
         @SerializedName("UserId")
         @Expose
-        var userId: String? = null
+        var userId: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("Email")
         @Expose
-        var email: String? = null
+        var email: String? = ""
 
         @SerializedName("Mobile")
         @Expose
-        var mobile: String? = null
+        var mobile: String? = ""
 
         @SerializedName("Image")
         @Expose
-        var image: String? = null
+        var image: String? = ""
 
         @SerializedName("DOB")
         @Expose
-        var dob: String? = null
+        var dob: String? = ""
 
         @SerializedName("isProfileCompleted")
         @Expose
-        var isProfileCompleted: String? = null
+        var isProfileCompleted: String? = ""
 
         @SerializedName("isAssessmentCompleted")
         @Expose
-        var isAssessmentCompleted: String? = null
+        var isAssessmentCompleted: String? = ""
 
         @SerializedName("ScoreLevel")
         @Expose
-        var scoreLevel: String? = null
+        var scoreLevel: String? = ""
 
         @SerializedName("indexScore")
         @Expose
-        var indexScore: String? = null
+        var indexScore: String? = ""
 
         @SerializedName("planDetails")
         @Expose
@@ -71,11 +71,11 @@ class VerifyPinModel {
 
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = null
+        var errormsg: String? = ""
 
         @SerializedName("AvgSleepTime")
         @Expose
-        var avgSleepTime: String? = null
+        var avgSleepTime: String? = ""
 
         @SerializedName("AreaOfFocus")
         @Expose
@@ -88,11 +88,11 @@ class VerifyPinModel {
         class AreaOfFocus {
             @SerializedName("MainCat")
             @Expose
-            var mainCat: String? = null
+            var mainCat: String? = ""
 
             @SerializedName("RecommendedCat")
             @Expose
-            var recommendedCat: String? = null
+            var recommendedCat: String? = ""
         }
     }
 }

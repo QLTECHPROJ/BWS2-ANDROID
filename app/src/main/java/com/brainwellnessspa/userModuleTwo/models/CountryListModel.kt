@@ -10,32 +10,32 @@ class CountryListModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = null
+    private var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = null
+    private var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = null
+    private var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("ID")
         @Expose
-        var iD: String? = null
+        var iD: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("Code")
         @Expose
-        var code: String? = null
+        var code: String? = ""
 
         @SerializedName("ShortName")
         @Expose
-        var shortName: String? = null
+        var shortName: String? = ""
 
     }
 }

@@ -10,20 +10,20 @@ class ForgotPasswordModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("errormsg")
         @Expose
-        private var errormsg: String? = null
+        private var errormsg: String? = ""
 
         fun getErrormsg(): String? {
             return errormsg;

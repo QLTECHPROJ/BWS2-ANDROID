@@ -63,12 +63,9 @@ public class ViewAllAudioListModel {
         @SerializedName("View")
         @Expose
         public String view;
-        @SerializedName("UserID")
+        @SerializedName("UserId")
         @Expose
-        public String userID;
-        @SerializedName("CoUserId")
-        @Expose
-        public String coUserId;
+        public String userId;
         @SerializedName("Details")
         @Expose
         public ArrayList<Detail> details = null;
@@ -89,20 +86,12 @@ public class ViewAllAudioListModel {
             this.view = view;
         }
 
-        public String getUserID() {
-            return userID;
-        }
-
-        public void setUserID(String userID) {
-            this.userID = userID;
-        }
-
         public String getCoUserId() {
-            return coUserId;
+            return userId;
         }
 
-        public void setCoUserId(String coUserId) {
-            this.coUserId = coUserId;
+        public void setCoUserId(String userId) {
+            this.userId = userId;
         }
 
         public ArrayList<Detail> getDetails() {
@@ -138,8 +127,7 @@ public class ViewAllAudioListModel {
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeString(homeAudioID);
             parcel.writeString(view);
-            parcel.writeString(userID);
-            parcel.writeString(coUserId);
+            parcel.writeString(userId);
         }
 
         public static class Detail  implements Parcelable {

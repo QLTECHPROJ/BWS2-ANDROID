@@ -10,15 +10,15 @@ class SignInModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = null
+    private var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = null
+    private var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = null
+    private var responseStatus: String? = ""
 
     fun getResponseData(): ResponseData? {
         return responseData
@@ -54,18 +54,18 @@ class SignInModel {
     class ResponseData {
         @SerializedName("ID")
         @Expose
-        var iD: String? = null
+        var iD: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("Email")
         @Expose
-        var email: String? = null
+        var email: String? = ""
 
         @SerializedName("MobileNo")
         @Expose
-        var mobileNo: String? = null
+        var mobileNo: String? = ""
     }
 }

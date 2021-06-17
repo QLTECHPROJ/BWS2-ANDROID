@@ -36,12 +36,12 @@ import java.util.*
 
 class OrderSummaryActivity: AppCompatActivity(), PurchasesUpdatedListener ,PurchaseHistoryResponseListener,ConsumeResponseListener ,AcknowledgePurchaseResponseListener {
     var binding: ActivityOrderSummaryBinding? = null
-    var TrialPeriod: String? = null
+    var TrialPeriod: String? = ""
     var comeFrom: String? = ""
-    var UserId: String? = null/* renewPlanFlag, renewPlanId, */
+    var UserId: String? = ""/* renewPlanFlag, renewPlanId, */
     /* renewPlanFlag, renewPlanId, */
-    var CoUserID: String? = null
-    var ComesTrue: String? = null
+    var CoUserID: String? = ""
+    var ComesTrue: String? = ""
     var Promocode: String? = ""
     var OldPromocode: String? = ""
     var listModelList: ArrayList<PlanlistInappModel.ResponseData.Plan>? = null

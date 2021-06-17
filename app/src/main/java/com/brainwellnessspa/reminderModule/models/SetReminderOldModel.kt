@@ -10,19 +10,19 @@ class SetReminderOldModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = null
+        var errormsg: String? = ""
     }
 }

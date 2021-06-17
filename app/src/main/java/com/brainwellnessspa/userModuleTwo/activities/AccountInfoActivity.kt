@@ -13,8 +13,8 @@ import com.segment.analytics.Properties
 
 class AccountInfoActivity : AppCompatActivity() {
     lateinit var binding: ActivityAccountInfoBinding
-    var userId: String? = null
-    var coUserId: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_account_info)

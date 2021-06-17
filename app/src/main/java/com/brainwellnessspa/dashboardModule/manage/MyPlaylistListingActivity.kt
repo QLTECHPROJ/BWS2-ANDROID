@@ -92,7 +92,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     lateinit var searchEditText: EditText
     var touchHelper: ItemTouchHelper? = null
     var listMOdelGloble: PlaylistDetailsModel = PlaylistDetailsModel()
-    var SLEEPTIME: String? = null
+    var SLEEPTIME: String? = ""
     var gson = Gson()
     var selectedCategoriesName = arrayListOf<String>()
 

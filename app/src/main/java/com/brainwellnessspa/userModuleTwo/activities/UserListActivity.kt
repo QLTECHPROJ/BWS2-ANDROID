@@ -49,9 +49,9 @@ import java.util.*
 class UserListActivity : AppCompatActivity() {
     lateinit var binding: ActivityUserListBinding
     lateinit var dialog: Dialog
-    var userId: String? = null
-    var coUserId: String? = null
-    var coEmail: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var coEmail: String? = ""
     lateinit var adapter: UserListAdapter
     private lateinit var editTexts: Array<EditText>
     var tvSendOTPool: Boolean = true

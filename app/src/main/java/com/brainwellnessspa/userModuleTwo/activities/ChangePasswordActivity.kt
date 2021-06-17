@@ -28,8 +28,8 @@ import java.util.regex.Pattern
 
 class ChangePasswordActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePasswordBinding
-    var userID: String? = null
-    private var coUserID: String? = null
+    var userID: String? = ""
+    private var coUserID: String? = ""
     lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {

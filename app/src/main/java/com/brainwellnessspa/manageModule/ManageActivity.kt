@@ -50,8 +50,8 @@ class ManageActivity : AppCompatActivity() {
     lateinit var planListAdapter: PlanListAdapter
     lateinit var activity: Activity
     lateinit var i: Intent
-    var userId: String? = null
-    var coUserId: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
     var listModelGlobal: PlanlistInappModel? = null
     var value: Int = 2
     var step = 1

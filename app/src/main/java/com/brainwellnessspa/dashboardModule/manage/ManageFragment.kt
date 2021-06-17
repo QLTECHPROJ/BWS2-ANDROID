@@ -65,7 +65,7 @@ class ManageFragment : Fragment() {
     var CoUserID: String? = ""
     var USERID: String? = ""
     var MyDownloads: String? = ""
-    var SLEEPTIME: String? = null
+    var SLEEPTIME: String? = ""
 
     var downloadAudioDetailsList = arrayListOf<String>()
     var homelistModel: HomeDataModel = HomeDataModel()
@@ -999,8 +999,7 @@ class ManageFragment : Fragment() {
             listModel.homeAudioID = "6"
             listModel.details = details
             listModel.view = "My Downloads"
-            listModel.coUserId = CoUserID
-            listModel.userID = USERID
+            listModel.userId = CoUserID
             responseData.add(listModel)
             callObserverMethod(responseData, act, DB)
 //            showToast(getString(R.string.no_server_found), act)

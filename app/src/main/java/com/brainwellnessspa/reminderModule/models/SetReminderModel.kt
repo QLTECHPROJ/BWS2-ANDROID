@@ -10,15 +10,15 @@ class SetReminderModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = null
+    private var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = null
+    private var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = null
+    private var responseStatus: String? = ""
 
     fun getResponseData(): ResponseData? {
         return responseData
@@ -55,6 +55,6 @@ class SetReminderModel {
     class ResponseData {
         @SerializedName("IsLock")
         @Expose
-        var isLock: String? = null
+        var isLock: String? = ""
     }
 }

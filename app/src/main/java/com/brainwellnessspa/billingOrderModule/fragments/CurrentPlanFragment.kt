@@ -16,8 +16,8 @@ import com.brainwellnessspa.databinding.FragmentCurrentPlanBinding
 
 class CurrentPlanFragment : Fragment() {
     lateinit var binding: FragmentCurrentPlanBinding
-    var userId: String? = null
-    var coUserId: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

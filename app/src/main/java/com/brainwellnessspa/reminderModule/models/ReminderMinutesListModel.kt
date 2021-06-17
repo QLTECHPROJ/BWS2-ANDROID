@@ -1,7 +1,7 @@
 package com.brainwellnessspa.reminderModule.models
 
 class ReminderMinutesListModel(minutes: String?) {
-    var minutes: String? = null
+    var minutes: String? = ""
     init {
         this.minutes = minutes!!
     }

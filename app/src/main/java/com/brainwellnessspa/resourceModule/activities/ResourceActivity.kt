@@ -48,10 +48,10 @@ import java.util.*
 
 class ResourceActivity : AppCompatActivity() {
     lateinit var binding: ActivityResourceBinding
-    var userId: String? = null
+    var userId: String? = ""
     var category: String? = ""
     var tabFlag = "1"
-    var coUserId: String? = null
+    var coUserId: String? = ""
     lateinit var activity: Activity
     var currentTab = 0
     private var dialogBox: Dialog? = null

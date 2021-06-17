@@ -10,27 +10,27 @@ class ReminderStatusModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("Day")
         @Expose
-        var day: String? = null
+        var day: String? = ""
 
         @SerializedName("Time")
         @Expose
-        var time: String? = null
+        var time: String? = ""
 
         @SerializedName("IsCheck")
         @Expose
-        var isCheck: String? = null
+        var isCheck: String? = ""
     }
 }

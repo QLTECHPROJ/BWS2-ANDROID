@@ -42,7 +42,7 @@ class InvoiceActivity : AppCompatActivity() {
     lateinit var binding: ActivityInvoiceBinding
     lateinit var appointmentList: ArrayList<Appointment>
     lateinit var memberShipList: ArrayList<MemberShip>
-    var UserID: String? = null
+    var UserID: String? = ""
     var ComeFrom: String? = ""
     var context: Context? = null
     var activity: Activity? = null

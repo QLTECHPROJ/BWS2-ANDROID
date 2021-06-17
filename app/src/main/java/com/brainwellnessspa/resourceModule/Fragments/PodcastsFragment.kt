@@ -33,10 +33,10 @@ import retrofit2.Response
 
 class PodcastsFragment : Fragment() {
     lateinit var binding: FragmentPodcastsBinding
-    var podcasts: String? = null
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var Category: String? = null
+    var podcasts: String? = ""
+    var USERID: String? = ""
+    var CoUserID: String? = ""
+    var Category: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

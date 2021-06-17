@@ -33,10 +33,10 @@ import retrofit2.Response
 
 class AppsFragment : Fragment() {
     lateinit var binding: FragmentAppsBinding
-    var apps: String? = null
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var Category: String? = null
+    var apps: String? = ""
+    var USERID: String? = ""
+    var CoUserID: String? = ""
+    var Category: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

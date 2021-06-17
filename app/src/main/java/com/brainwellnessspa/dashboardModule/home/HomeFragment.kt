@@ -75,15 +75,15 @@ class HomeFragment : Fragment() {
     lateinit var ctx: Context
     lateinit var act: Activity
     var adapter: UserListAdapter? = null
-    var coUserId: String? = null
-    var userId: String? = null
-    var userName: String? = null
-    var userImage: String? = null
-    var scoreLevel: String? = null
+    var coUserId: String? = ""
+    var userId: String? = ""
+    var userName: String? = ""
+    var userImage: String? = ""
+    var scoreLevel: String? = ""
     var Download = ""
     var Liked = ""
     var MyDownloads: String? = ""
-    var sleepTime: String? = null
+    var sleepTime: String? = ""
     var selectedCategoriesName = arrayListOf<String>()
     var downloadAudioDetailsList = arrayListOf<String>()
     lateinit var editTexts: Array<EditText>

@@ -32,7 +32,7 @@ class ReferFriendActivity : AppCompatActivity() {
     lateinit var activity: Activity
     private var UserPromocode: String? = ""
     private var ReferLink: String? = ""
-    var UserID: String? = null
+    var UserID: String? = ""
     var p: Properties? = null
     private var numStarted = 0
     var stackStatus = 0

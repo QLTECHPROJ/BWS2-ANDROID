@@ -10,35 +10,35 @@ class AddUserModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
-        @SerializedName("ID")
+        @SerializedName("MainAccountID")
         @Expose
-        var iD: String? = null
+        var mainAccountID: String? = ""
 
-        @SerializedName("CoUserId")
+        @SerializedName("UserId")
         @Expose
-        var coUserId: String? = null
+        var userId: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("Email")
         @Expose
-        var email: String? = null
+        var email: String? = ""
 
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = null
+        var errormsg: String? = ""
     }
 }

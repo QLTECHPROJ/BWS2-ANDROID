@@ -36,51 +36,51 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
     class ResponseData : Parcelable {
         @SerializedName("ID")
         @Expose
-        var iD: String? = null
+        var iD: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("IsPlay")
         @Expose
-        var isPlay: String? = null
+        var isPlay: String? = ""
 
         @SerializedName("AudioFile")
         @Expose
-        var audioFile: String? = null
+        var audioFile: String? = ""
 
         @SerializedName("ImageFile")
         @Expose
-        var imageFile: String? = null
+        var imageFile: String? = ""
 
         @SerializedName("AudioDuration")
         @Expose
-        var audioDuration: String? = null
+        var audioDuration: String? = ""
 
         @SerializedName("AudioDirection")
         @Expose
-        var audioDirection: String? = null
+        var audioDirection: String? = ""
 
         @SerializedName("Audiomastercat")
         @Expose
-        var audiomastercat: String? = null
+        var audiomastercat: String? = ""
 
         @SerializedName("AudioSubCategory")
         @Expose
-        var audioSubCategory: String? = null
+        var audioSubCategory: String? = ""
 
         @SerializedName("Like")
         @Expose
-        var like: String? = null
+        var like: String? = ""
 
         @SerializedName("Download")
         @Expose
-        var download: String? = null
+        var download: String? = ""
 
         @SerializedName("Bitrate")
         @Expose
-        var bitrate: String? = null
+        var bitrate: String? = ""
 
         constructor() {}
         constructor(`in`: Parcel) {

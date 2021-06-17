@@ -10,24 +10,24 @@ class RecommendedCategoryModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("ID")
         @Expose
-        var id: String? = null
+        var id: String? = ""
 
         @SerializedName("View")
         @Expose
-        var view: String? = null
+        var view: String? = ""
 
         @SerializedName("Details")
         @Expose
@@ -36,7 +36,7 @@ class RecommendedCategoryModel {
         class Detail {
             @SerializedName("ProblemName")
             @Expose
-            var problemName: String? = null
+            var problemName: String? = ""
         }
     }
 }

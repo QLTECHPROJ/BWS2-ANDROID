@@ -38,12 +38,12 @@ class EditProfileActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var activity: Activity
     lateinit var profileUpdate: String
-    var userId: String? = null
-    var coUserId: String? = null
-    var UserName: String? = null
-    var UserCalendar: String? = null
-    var UserMobileNumber: String? = null
-    var UserEmail: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var UserName: String? = ""
+    var UserCalendar: String? = ""
+    var UserMobileNumber: String? = ""
+    var UserEmail: String? = ""
     private var mYear: Int = 0
     private var mMonth: Int = 0
     private var mDay: Int = 0

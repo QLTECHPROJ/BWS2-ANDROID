@@ -10,63 +10,63 @@ class AddToPlaylistModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     inner class ResponseData {
         @SerializedName("PlaylistID")
         @Expose
-        var playlistID: String? = null
+        var playlistID: String? = ""
 
         @SerializedName("ID")
         @Expose
-        var iD: String? = null
+        var iD: String? = ""
 
         @SerializedName("AudioFile")
         @Expose
-        var audioFile: String? = null
+        var audioFile: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("ImageFile")
         @Expose
-        var imageFile: String? = null
+        var imageFile: String? = ""
 
         @SerializedName("SortId")
         @Expose
-        var sortId: String? = null
+        var sortId: String? = ""
 
         @SerializedName("Audiomastercat")
         @Expose
-        var audiomastercat: String? = null
+        var audiomastercat: String? = ""
 
         @SerializedName("AudioSubCategory")
         @Expose
-        var audioSubCategory: String? = null
+        var audioSubCategory: String? = ""
 
         @SerializedName("AudioDuration")
         @Expose
-        var audioDuration: String? = null
+        var audioDuration: String? = ""
 
         @SerializedName("AudioDirection")
         @Expose
-        var audioDirection: String? = null
+        var audioDirection: String? = ""
 
         @SerializedName("Like")
         @Expose
-        var like: String? = null
+        var like: String? = ""
 
         @SerializedName("Download")
         @Expose
-        var download: String? = null
+        var download: String? = ""
     }
 }

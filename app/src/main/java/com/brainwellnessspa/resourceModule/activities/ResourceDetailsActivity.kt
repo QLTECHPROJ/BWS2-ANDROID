@@ -28,18 +28,18 @@ import com.segment.analytics.Properties
 class ResourceDetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityResourceDetailsBinding
     lateinit var act: Activity
-    var id: String? = null
-    var title: String? = null
-    var author: String? = null
-    var linkOne: String? = null
-    var linkTwo: String? = null
-    var image: String? = null
-    var description: String? = null
-    var resourceType: String? = null
-    var userID: String? = null
-    private var coUserID: String? = null
-    var mastercat: String? = null
-    var subcat: String? = null
+    var id: String? = ""
+    var title: String? = ""
+    var author: String? = ""
+    var linkOne: String? = ""
+    var linkTwo: String? = ""
+    var image: String? = ""
+    var description: String? = ""
+    var resourceType: String? = ""
+    var userID: String? = ""
+    private var coUserID: String? = ""
+    var mastercat: String? = ""
+    var subcat: String? = ""
     var ctx: Context? = null
     lateinit var p: Properties
     private lateinit var p1: Properties

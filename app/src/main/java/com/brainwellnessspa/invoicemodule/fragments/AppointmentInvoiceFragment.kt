@@ -22,7 +22,7 @@ import java.util.*
 class AppointmentInvoiceFragment : Fragment() {
     lateinit var binding: FragmentInvoiceBinding
     var appointmentList: ArrayList<Appointment>? = null
-    var userId: String? = null
+    var userId: String? = ""
     var dialog: Dialog? = null
 
     @SuppressLint("SetTextI18n")

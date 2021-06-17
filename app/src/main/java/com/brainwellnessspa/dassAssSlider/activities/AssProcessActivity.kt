@@ -16,10 +16,10 @@ import com.segment.analytics.Properties
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
-    var coUserId: String? = null
-    var userId: String? = null
+    var coUserId: String? = ""
+    var userId: String? = ""
     var indexScore: Int = 0
-    var scoreLevel: String? = null
+    var scoreLevel: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

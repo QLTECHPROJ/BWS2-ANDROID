@@ -10,79 +10,79 @@ class InvoiceDetailModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     inner class ResponseData {
         @SerializedName("InvoiceNumber")
         @Expose
-        var invoiceNumber: String? = null
+        var invoiceNumber: String? = ""
 
         @SerializedName("Name")
         @Expose
-        var name: String? = null
+        var name: String? = ""
 
         @SerializedName("Qty")
         @Expose
-        var qty: String? = null
+        var qty: String? = ""
 
         @SerializedName("Session")
         @Expose
-        var session: String? = null
+        var session: String? = ""
 
         @SerializedName("TotalAmount")
         @Expose
-        var totalAmount: String? = null
+        var totalAmount: String? = ""
 
         @SerializedName("TaxAmount")
         @Expose
-        var taxAmount: String? = null
+        var taxAmount: String? = ""
 
         @SerializedName("NetAmount")
         @Expose
-        var netAmount: String? = null
+        var netAmount: String? = ""
 
         @SerializedName("DiscountedAmount")
         @Expose
-        var discountedAmount: String? = null
+        var discountedAmount: String? = ""
 
         @SerializedName("InvoiceTo")
         @Expose
-        var invoiceTo: String? = null
+        var invoiceTo: String? = ""
 
         @SerializedName("InvoiceDate")
         @Expose
-        var invoiceDate: String? = null
+        var invoiceDate: String? = ""
 
         @SerializedName("Email")
         @Expose
-        var email: String? = null
+        var email: String? = ""
 
         @SerializedName("CardBrand")
         @Expose
-        var cardBrand: String? = null
+        var cardBrand: String? = ""
 
         @SerializedName("CardDigit")
         @Expose
-        var cardDigit: String? = null
+        var cardDigit: String? = ""
 
         @SerializedName("GSTAmount")
         @Expose
-        var gstAmount: String? = null
+        var gstAmount: String? = ""
 
         @SerializedName("Amount")
         @Expose
-        var amount: String? = null
+        var amount: String? = ""
 
         @SerializedName("InvoiceFrom")
         @Expose
-        var invoiceFrom: String? = null
+        var invoiceFrom: String? = ""
     }
 }

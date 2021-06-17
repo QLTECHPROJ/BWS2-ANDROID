@@ -10,24 +10,24 @@ class SaveRecommendedCatModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
-        @SerializedName("CoUserId")
+        @SerializedName("UserId")
         @Expose
-        var coUserId: String? = null
+        var coUserId: String? = ""
 
         @SerializedName("AvgSleepTime")
         @Expose
-        var avgSleepTime: String? = null
+        var avgSleepTime: String? = ""
 
         @SerializedName("CategoryData")
         @Expose
@@ -36,11 +36,11 @@ class SaveRecommendedCatModel {
         class CategoryData {
             @SerializedName("MainCat")
             @Expose
-            var mainCat: String? = null
+            var mainCat: String? = ""
 
             @SerializedName("RecommendedCat")
             @Expose
-            var recommendedCat: String? = null
+            var recommendedCat: String? = ""
         }
     }
 }

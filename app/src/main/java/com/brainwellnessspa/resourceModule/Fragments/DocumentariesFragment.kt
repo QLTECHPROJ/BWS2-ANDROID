@@ -33,10 +33,10 @@ import retrofit2.Response
 
 class DocumentariesFragment : Fragment() {
     lateinit var binding: FragmentDocumentariesBinding
-    var documentaries: String? = null
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var Category: String? = null
+    var documentaries: String? = ""
+    var USERID: String? = ""
+    var CoUserID: String? = ""
+    var Category: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

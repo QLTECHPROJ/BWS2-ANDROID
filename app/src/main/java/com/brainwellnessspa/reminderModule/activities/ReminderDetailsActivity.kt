@@ -51,8 +51,8 @@ import java.util.*
 
 class ReminderDetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityReminderDetailsBinding
-    var USERID: String? = null
-    var CoUSERID: String? = null
+    var USERID: String? = ""
+    var CoUSERID: String? = ""
     var ReminderFirstLogin: String? = "0"
     var ctx: Context? = null
     lateinit var activity: Activity

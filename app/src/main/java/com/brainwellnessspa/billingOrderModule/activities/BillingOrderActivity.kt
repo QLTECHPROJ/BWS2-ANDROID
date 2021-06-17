@@ -29,8 +29,8 @@ import com.segment.analytics.Properties
 class BillingOrderActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingOrderBinding
     var payment = 0
-    var userId: String? = null
-    var coUserId: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
     private var numStarted = 0
     var stackStatus = 0
     var activity: Activity? = null

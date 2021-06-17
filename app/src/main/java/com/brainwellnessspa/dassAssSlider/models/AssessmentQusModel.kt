@@ -10,25 +10,25 @@ class AssessmentQusModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
 
         @SerializedName("Toptitle")
         @Expose
-        var toptitle: String? = null
+        var toptitle: String? = ""
 
         @SerializedName("Subtitle")
         @Expose
-        var subtitle: String? = null
+        var subtitle: String? = ""
 
         @SerializedName("Content")
         @Expose
@@ -42,12 +42,12 @@ class AssessmentQusModel {
 
             @SerializedName("condition")
             @Expose
-            var condition: String? = null
+            var condition: String? = ""
         }
         class Questions {
             @SerializedName("Question")
             @Expose
-            var question: String? = null
+            var question: String? = ""
 
             @SerializedName("Type")
             @Expose
@@ -55,11 +55,11 @@ class AssessmentQusModel {
 
             @SerializedName("Answer")
             @Expose
-            var answer: String? = null
+            var answer: String? = ""
 
             @SerializedName("Loop")
             @Expose
-            var loop: String? = null
+            var loop: String? = ""
 
         }
     }

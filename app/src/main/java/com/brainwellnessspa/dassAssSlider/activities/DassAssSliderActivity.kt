@@ -220,7 +220,17 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 binding.lpIndicator.progress = myPos
                                 Log.e("My Pos...",myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." +assQus.size.toString())
                             }
-                            if (myPos < listModel.responseData!!.questions!!.size) {
+                            if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                                binding.btnNext.visibility = View.GONE
+                                binding.btnContinue.visibility = View.VISIBLE
+                                firstListAdapter = OptionsFirstListAdapter(
+                                        listModel1.responseData!!.questions!!.subList(
+                                                myPos,
+                                                myPos + 1
+                                        ), myPos, myPos + 1, ctx, binding, activity
+                                )
+                                binding.rvFirstList.adapter = firstListAdapter
+                            }else if (myPos < listModel.responseData!!.questions!!.size) {
 //                                if(myPos ==)
                                 firstListAdapter = OptionsFirstListAdapter(
                                     listModel.responseData!!.questions!!.subList(

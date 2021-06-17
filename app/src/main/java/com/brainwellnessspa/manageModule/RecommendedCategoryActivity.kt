@@ -43,13 +43,13 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
     lateinit var catListadapter: SelectedCategory
     var ctx: Context? = null
-    var userId: String? = null
-    var backClick: String? = null
+    var userId: String? = ""
+    var backClick: String? = ""
     lateinit var gsonBuilder: GsonBuilder
     lateinit var section: java.util.ArrayList<String>
-    var sleepTime: String? = null
-    var coUserId: String? = null
-    var coEmail: String? = null
+    var sleepTime: String? = ""
+    var coUserId: String? = ""
+    var coEmail: String? = ""
     private lateinit var adapter1: AllCategory
     lateinit var activity: Activity
     var selectedCategoriesTitle = arrayListOf<String>()

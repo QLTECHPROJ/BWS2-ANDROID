@@ -23,10 +23,10 @@ import retrofit2.Response
 
 class InvoiceReceiptFragment : DialogFragment() {
     lateinit var binding: FragmentInvoiceReceiptBinding
-    var userID: String? = null
-    var invoiceID: String? = null
-    var flag: String? = null
-    var invoiceAmount: String? = null
+    var userID: String? = ""
+    var invoiceID: String? = ""
+    var flag: String? = ""
+    var invoiceAmount: String? = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

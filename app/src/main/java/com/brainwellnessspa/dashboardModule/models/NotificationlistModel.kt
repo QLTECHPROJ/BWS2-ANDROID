@@ -10,36 +10,36 @@ class NotificationlistModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("ID")
         @Expose
-        var id: String? = null
+        var id: String? = ""
 
         @SerializedName("Image")
         @Expose
-        var image: String? = null
+        var image: String? = ""
 
         @SerializedName("Msg")
         @Expose
-        var msg: String? = null
+        var msg: String? = ""
 
         @SerializedName("Desc")
         @Expose
-        var desc: String? = null
+        var desc: String? = ""
 
         @SerializedName("DurationTime")
         @Expose
-        var durationTime: String? = null
+        var durationTime: String? = ""
     }
 
 }

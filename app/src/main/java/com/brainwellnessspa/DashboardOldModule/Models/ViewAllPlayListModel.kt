@@ -10,34 +10,30 @@ class ViewAllPlayListModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
 
 
         @SerializedName("GetLibraryID")
         @Expose
-        var getLibraryID: String? = null
+        var getLibraryID: String? = ""
 
         @SerializedName("View")
         @Expose
-        var view: String? = null
+        var view: String? = ""
 
-        @SerializedName("UserID")
+        @SerializedName("UserId")
         @Expose
-        var userID: String? = null
-
-        @SerializedName("CoUserId")
-        @Expose
-        var coUserId: String? = null
+        var userId: String? = ""
 
         @SerializedName("Details")
         @Expose
@@ -46,47 +42,47 @@ class ViewAllPlayListModel {
         class Detail {
             @SerializedName("PlaylistID")
             @Expose
-            var playlistID: String? = null
+            var playlistID: String? = ""
 
             @SerializedName("PlaylistName")
             @Expose
-            var playlistName: String? = null
+            var playlistName: String? = ""
 
             @SerializedName("PlaylistDesc")
             @Expose
-            var playlistDesc: String? = null
+            var playlistDesc: String? = ""
 
             @SerializedName("PlaylistMastercat")
             @Expose
-            var playlistMastercat: String? = null
+            var playlistMastercat: String? = ""
 
             @SerializedName("PlaylistSubcat")
             @Expose
-            var playlistSubcat: String? = null
+            var playlistSubcat: String? = ""
 
             @SerializedName("PlaylistImage")
             @Expose
-            var playlistImage: String? = null
+            var playlistImage: String? = ""
 
             @SerializedName("Created")
             @Expose
-            var created: String? = null
+            var created: String? = ""
 
             @SerializedName("TotalAudio")
             @Expose
-            var totalAudio: String? = null
+            var totalAudio: String? = ""
 
             @SerializedName("TotalDuration")
             @Expose
-            var totalDuration: String? = null
+            var totalDuration: String? = ""
 
             @SerializedName("Totalhour")
             @Expose
-            var totalhour: String? = null
+            var totalhour: String? = ""
 
             @SerializedName("Totalminute")
             @Expose
-            var totalminute: String? = null
+            var totalminute: String? = ""
         }
     }
 }

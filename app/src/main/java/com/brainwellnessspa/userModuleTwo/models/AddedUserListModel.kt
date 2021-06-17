@@ -10,20 +10,20 @@ class AddedUserListModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("Maxuseradd")
         @Expose
-        var maxuseradd: String? = null
+        var maxuseradd: String? = ""
 
         @SerializedName("UserList")
         @Expose
@@ -31,40 +31,40 @@ class AddedUserListModel {
 
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = null
+        var errormsg: String? = ""
 
         class CoUser {
             @SerializedName("MainAccountID")
             @Expose
-            var mainAccountID: String? = null
+            var mainAccountID: String? = ""
 
             @SerializedName("UserId")
             @Expose
-            var userID: String? = null
+            var userID: String? = ""
 
             @SerializedName("CoUserId")
             @Expose
-            var coUserId: String? = null
+            var coUserId: String? = ""
 
             @SerializedName("Name")
             @Expose
-            var name: String? = null
+            var name: String? = ""
 
             @SerializedName("Email")
             @Expose
-            var email: String? = null
+            var email: String? = ""
 
             @SerializedName("Mobile")
             @Expose
-            var mobile: String? = null
+            var mobile: String? = ""
 
             @SerializedName("DOB")
             @Expose
-            var dob: String? = null
+            var dob: String? = ""
 
             @SerializedName("Image")
             @Expose
-            var image: String? = null
+            var image: String? = ""
         }
 
         fun getResponseMessage(): String? {

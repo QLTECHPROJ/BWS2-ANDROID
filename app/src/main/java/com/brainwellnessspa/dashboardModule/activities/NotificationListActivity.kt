@@ -33,9 +33,9 @@ class NotificationListActivity : AppCompatActivity() {
     lateinit var binding: ActivityNotificationListBinding
     lateinit var adapter: NotiListAdapter
     lateinit var activity: Activity
-    var userId: String? = null
-    var coUserId: String? = null
-    var userName: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var userName: String? = ""
     lateinit var ctx: Context
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {

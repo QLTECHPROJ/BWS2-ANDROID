@@ -36,7 +36,7 @@ import retrofit2.Response
 class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
     lateinit var binding: ActivityCancelMembershipBinding
     lateinit var ctx: Context
-    var userID: String? = null
+    var userID: String? = ""
     var cancelId = ""
     lateinit var activity: Activity
     var audioPause = false

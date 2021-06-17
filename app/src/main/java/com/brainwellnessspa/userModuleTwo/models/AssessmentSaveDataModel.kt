@@ -10,15 +10,15 @@ class AssessmentSaveDataModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = null
+    private var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = null
+    private var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = null
+    private var responseStatus: String? = ""
 
     fun getResponseData(): ResponseData? {
         return responseData
@@ -54,13 +54,13 @@ class AssessmentSaveDataModel {
     class ResponseData {
         @SerializedName("indexScore")
         @Expose
-        var indexScore: String? = null
+        var indexScore: String? = ""
         @SerializedName("ScoreLevel")
         @Expose
-        var scoreLevel: String? = null
+        var scoreLevel: String? = ""
 
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = null
+        var errormsg: String? = ""
     }
 }

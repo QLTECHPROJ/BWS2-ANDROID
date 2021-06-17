@@ -10,15 +10,15 @@ class PlanlistModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("Plan")
@@ -53,51 +53,51 @@ class PlanlistModel {
 
             @SerializedName("UserName")
             @Expose
-            var userName: String? = null
+            var userName: String? = ""
 
             @SerializedName("VideoLink")
             @Expose
-            var videoLink: String? = null
+            var videoLink: String? = ""
 
             @SerializedName("VideoDesc")
             @Expose
-            var videoDesc: String? = null
+            var videoDesc: String? = ""
         }
 
         class Faq {
             @SerializedName("ID")
             @Expose
-            var id: String? = null
+            var id: String? = ""
 
             @SerializedName("Title")
             @Expose
-            var title: String? = null
+            var title: String? = ""
 
             @SerializedName("Desc")
             @Expose
-            var desc: String? = null
+            var desc: String? = ""
 
             @SerializedName("VideoURL")
             @Expose
-            var videoURL: String? = null
+            var videoURL: String? = ""
 
             @SerializedName("Category")
             @Expose
-            var category: String? = null
+            var category: String? = ""
         }
 
         class AudioFile {
             @SerializedName("ID")
             @Expose
-            var id: String? = null
+            var id: String? = ""
 
             @SerializedName("Name")
             @Expose
-            var name: String? = null
+            var name: String? = ""
 
             @SerializedName("ImageFile")
             @Expose
-            var imageFile: String? = null
+            var imageFile: String? = ""
         }
     }
 }

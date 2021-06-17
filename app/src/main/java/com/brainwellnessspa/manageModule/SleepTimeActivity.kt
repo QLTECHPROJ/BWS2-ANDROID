@@ -26,7 +26,7 @@ class SleepTimeActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySleepTimeBinding
     lateinit var adapter: SleepTimeAdapter
     lateinit var ctx: Context
-    var SleepTime: String? = null
+    var SleepTime: String? = ""
     lateinit var activity: Activity
     var CoUserID: String? = ""
     var USERID: String? = ""

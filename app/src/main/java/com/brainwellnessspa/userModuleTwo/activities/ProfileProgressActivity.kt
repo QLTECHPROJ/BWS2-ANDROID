@@ -41,9 +41,9 @@ class ProfileProgressActivity : AppCompatActivity() {
     var age: String = ""
     var prevDrugUse: String = ""
     var medication: String = ""
-    var userId: String? = null
-    var coUserId: String? = null
-    var emailUser: String? = null
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var emailUser: String? = ""
     var doubleBackToExitPressedOnce = false
     lateinit var activity: Activity
     private lateinit var exitDialog: Dialog

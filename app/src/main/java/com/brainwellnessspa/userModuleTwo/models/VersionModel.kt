@@ -11,27 +11,27 @@ class VersionModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("IsForce")
         @Expose
-        var isForce: String? = null
+        var isForce: String? = ""
 
         @SerializedName("displayRegister")
         @Expose
-        var displayRegister: String? = null
+        var displayRegister: String? = ""
 
         @SerializedName("segmentKey")
         @Expose
-        var segmentKey: String? = null
+        var segmentKey: String? = ""
     }
 }

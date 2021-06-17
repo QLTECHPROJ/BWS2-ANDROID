@@ -22,8 +22,8 @@ import retrofit2.Response
 
 class ChangePinActivity : AppCompatActivity() {
     lateinit var binding: ActivityChangePinBinding
-    var userID: String? = null
-    private var coUserID: String? = null
+    var userID: String? = ""
+    private var coUserID: String? = ""
     lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {

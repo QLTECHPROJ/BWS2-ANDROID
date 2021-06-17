@@ -36,9 +36,9 @@ class AudioFaqActivity : AppCompatActivity() {
     lateinit var ctx: Context
     lateinit var adapter: AudioFaqAdapter
     private var faqListModel: ArrayList<FaqListModel.ResponseData>? = null
-    var flag: String? = null
-    var userID: String? = null
-    var coUserId: String? = null
+    var flag: String? = ""
+    var userID: String? = ""
+    var coUserId: String? = ""
     lateinit var section: ArrayList<String>
     var gsonBuilder: GsonBuilder? = null
     var gson: Gson? = null

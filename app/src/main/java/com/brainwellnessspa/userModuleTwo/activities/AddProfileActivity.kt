@@ -27,12 +27,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AddProfileActivity : AppCompatActivity() {
-    var userID: String? = null
-    var coUserID: String? = null
-    var coEMAIL: String? = null
-    var coName: String? = null
-    var coNumber: String? = null
-    var addProfile: String? = null
+    var userID: String? = ""
+    var coUserID: String? = ""
+    var coEMAIL: String? = ""
+    var coName: String? = ""
+    var coNumber: String? = ""
+    var addProfile: String? = ""
     private lateinit var binding: ActivityAddProfileBinding
     lateinit var activity: Activity
 
@@ -253,8 +253,8 @@ class AddProfileActivity : AppCompatActivity() {
                                 ) {
                                     showToast(listModel.responseMessage, activity)
                                     val p = Properties()
-                                    p.putValue("userId", userID)
-                                    p.putValue("coUserId", listModel.responseData!!.coUserId)
+                                    p.putValue("userId", listModel.responseData!!.mainAccountID)
+                                    p.putValue("coUserId", listModel.responseData!!.userId)
                                     p.putValue("name", listModel.responseData!!.name)
                                     p.putValue("mobileNo", binding.etMobileNumber.text.toString())
                                     p.putValue("email", listModel.responseData!!.email)

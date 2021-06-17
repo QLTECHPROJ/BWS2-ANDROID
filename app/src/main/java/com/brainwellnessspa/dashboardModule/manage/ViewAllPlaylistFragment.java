@@ -106,47 +106,47 @@ public class ViewAllPlaylistFragment extends Fragment {
         .observe(
             requireActivity(),
             audioList -> {
-              binding.tvTitle.setText("My Downloads");
-              ScreenView = "My Downloads";
-              ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
-              for (int i = 0; i < audioList.size(); i++) {
-                ViewAllPlayListModel.ResponseData.Detail detail =
-                    new ViewAllPlayListModel.ResponseData.Detail();
-                detail.setTotalAudio(audioList.get(i).getTotalAudio());
-                detail.setTotalhour(audioList.get(i).getTotalhour());
-                detail.setTotalminute(audioList.get(i).getTotalminute());
-                detail.setPlaylistID(audioList.get(i).getPlaylistID());
-                detail.setPlaylistDesc(audioList.get(i).getPlaylistDesc());
-                detail.setPlaylistMastercat(audioList.get(i).getPlaylistMastercat());
-                detail.setPlaylistSubcat(audioList.get(i).getPlaylistSubcat());
-                detail.setPlaylistName(audioList.get(i).getPlaylistName());
-                detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
-                //                detail.setPlaylistImageDetails("");
-                detail.setCreated(audioList.get(i).getCreated());
-                listModelList.add(detail);
-              }
-              Properties p = new Properties();
-              ArrayList<SegmentPlaylist> section = new ArrayList<>();
-              for (int i = 0; i < audioList.size(); i++) {
-                SegmentPlaylist e = new SegmentPlaylist();
-                e.setPlaylistId(audioList.get(i).getPlaylistID());
-                e.setPlaylistName(audioList.get(i).getPlaylistName());
-                e.setPlaylistType(audioList.get(i).getCreated());
-                e.setPlaylistDuration(
-                    audioList.get(i).getTotalhour()
-                        + "h "
-                        + audioList.get(i).getTotalminute()
-                        + "m");
-                e.setAudioCount(audioList.get(i).getTotalAudio());
-                section.add(e);
-              }
-              p.putValue("userId", coUserId);
-              Gson gson = new Gson();
-              p.putValue("playlists", gson.toJson(section));
-              p.putValue("section", ScreenView);
-              BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
-              PlaylistAdapter adapter = new PlaylistAdapter(listModelList);
-              binding.rvMainAudio.setAdapter(adapter);
+                binding.tvTitle.setText("My Downloads");
+                ScreenView = "My Downloads";
+                ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
+                for (int i = 0; i < audioList.size(); i++) {
+                    ViewAllPlayListModel.ResponseData.Detail detail =
+                            new ViewAllPlayListModel.ResponseData.Detail();
+                    detail.setTotalAudio(audioList.get(i).getTotalAudio());
+                    detail.setTotalhour(audioList.get(i).getTotalhour());
+                    detail.setTotalminute(audioList.get(i).getTotalminute());
+                    detail.setPlaylistID(audioList.get(i).getPlaylistID());
+                    detail.setPlaylistDesc(audioList.get(i).getPlaylistDesc());
+                    detail.setPlaylistMastercat(audioList.get(i).getPlaylistMastercat());
+                    detail.setPlaylistSubcat(audioList.get(i).getPlaylistSubcat());
+                    detail.setPlaylistName(audioList.get(i).getPlaylistName());
+                    detail.setPlaylistImage(audioList.get(i).getPlaylistImage());
+                    //                detail.setPlaylistImageDetails("");
+                    detail.setCreated(audioList.get(i).getCreated());
+                    listModelList.add(detail);
+                }
+                Properties p = new Properties();
+                ArrayList<SegmentPlaylist> section = new ArrayList<>();
+                for (int i = 0; i < audioList.size(); i++) {
+                    SegmentPlaylist e = new SegmentPlaylist();
+                    e.setPlaylistId(audioList.get(i).getPlaylistID());
+                    e.setPlaylistName(audioList.get(i).getPlaylistName());
+                    e.setPlaylistType(audioList.get(i).getCreated());
+                    e.setPlaylistDuration(
+                            audioList.get(i).getTotalhour()
+                                    + "h "
+                                    + audioList.get(i).getTotalminute()
+                                    + "m");
+                    e.setAudioCount(audioList.get(i).getTotalAudio());
+                    section.add(e);
+                }
+                p.putValue("userId", coUserId);
+                Gson gson = new Gson();
+                p.putValue("playlists", gson.toJson(section));
+                p.putValue("section", ScreenView);
+                BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen);
+                PlaylistAdapter adapter = new PlaylistAdapter(listModelList);
+                binding.rvMainAudio.setAdapter(adapter);
             });
   }
 

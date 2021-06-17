@@ -10,28 +10,28 @@ class CreateNewPlaylistModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("PlaylistID")
         @Expose
-        var playlistID: String? = null
+        var playlistID: String? = ""
 
         @SerializedName("PlaylistName")
         @Expose
-        var playlistName: String? = null
+        var playlistName: String? = ""
 
         @SerializedName("Iscreate")
         @Expose
-        var iscreate: String? = null
+        var iscreate: String? = ""
 
     }
 }

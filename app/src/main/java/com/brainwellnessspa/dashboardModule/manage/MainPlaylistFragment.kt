@@ -209,8 +209,7 @@ class MainPlaylistFragment : Fragment() {
             val listModel = MainPlaylistLibraryModel.ResponseData()
             listModel.getLibraryID = "2"
             listModel.details = details
-            listModel.userID = USERID
-            listModel.coUserId = CoUserID
+            listModel.userId = CoUserID
             listModel.view = "My Downloads"
             responseData.add(listModel)
             BWSApplication.showToast(getString(R.string.no_server_found), activity)

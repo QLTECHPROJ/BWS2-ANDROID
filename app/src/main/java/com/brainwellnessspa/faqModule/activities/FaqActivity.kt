@@ -29,8 +29,8 @@ class FaqActivity : AppCompatActivity() {
     var faqListModel: FaqListModel? = null
     private var modelList: ArrayList<FaqListModel.ResponseData>? = null
     lateinit var activity: Activity
-    var userID: String? = null
-    var coUserId: String? = null
+    var userID: String? = ""
+    var coUserId: String? = ""
     var section: ArrayList<String>? = null
     var gsonBuilder: GsonBuilder? = null
     var p: Properties? = null
