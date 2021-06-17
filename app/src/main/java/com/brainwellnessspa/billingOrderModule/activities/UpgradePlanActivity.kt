@@ -32,12 +32,12 @@ class UpgradePlanActivity : AppCompatActivity() {
 //        binding.rvPlanList.adapter = planListAdapter
     }
 
-   /* class PlanListAdapter(
-        var listModelList: List<PlanlistInappModel.ResponseData.Plan>,
-        var ctx: Context,
-        var i: Intent
-    ) :
-        RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()*//*, Filterable *//* {
+    /* class PlanListAdapter(
+         var listModelList: List<PlanlistInappModel.ResponseData.Plan>,
+         var ctx: Context,
+         var i: Intent
+     ) :
+         RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()*//*, Filterable *//* {
         private var rowIndex: Int = -1
         private var pos: Int = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

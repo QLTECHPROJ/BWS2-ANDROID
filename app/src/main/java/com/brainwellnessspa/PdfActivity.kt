@@ -1,186 +1,167 @@
-package com.brainwellnessspa;
+package com.brainwellnessspa
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.*
+import android.graphics.pdf.PdfDocument
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+class PdfActivity : AppCompatActivity() {
+    private lateinit var btnCreatePdf: Button
+    var tvTitle: TextView? = null
+    var tvSubTitle: TextView? = null
+    private var tvLocation: TextView? = null
+    private var tvCity: TextView? = null
+    private var fileNamePath = ""
+    private var PERMISSION_ALL = 1
+    private var PERMISSIONS = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission_group.STORAGE
+    )
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-public class PdfActivity extends AppCompatActivity {
-    Button btnCreatePdf;
-    TextView tv_title;
-    TextView tv_sub_title;
-    TextView tv_location;
-    TextView tv_city;
-
-    String file_name_path = "";
-    int PERMISSION_ALL = 1;
-    String[] PERMISSIONS = {
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission_group.STORAGE,
-    };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pdf);
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
-        if (!hasPermissions(PdfActivity.this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(PdfActivity.this, PERMISSIONS, PERMISSION_ALL);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_pdf)
+        val builder = VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        if (!hasPermissions(this@PdfActivity, *PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this@PdfActivity, PERMISSIONS, PERMISSION_ALL)
         }
-
-        File file = new File(this.getExternalFilesDir(null).getAbsolutePath(), "pdfsdcard_location");
+        val file = File(getExternalFilesDir(null)!!.absolutePath, "pdfsdcard_location")
         if (!file.exists()) {
-            file.mkdir();
+            file.mkdir()
         }
 
         //this.getExternalFilesDir(null)?.getAbsolutePath()
-
-        btnCreatePdf = findViewById(R.id.btnCreatePdf);
-        tv_title = findViewById(R.id.tv_title);
-        tv_sub_title = findViewById(R.id.tv_sub_title);
-        tv_location = findViewById(R.id.tv_location);
-        tv_city = findViewById(R.id.tv_city);
-
-
-        btnCreatePdf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createpdf();
-            }
-        });
-
+        btnCreatePdf = findViewById(R.id.btnCreatePdf)
+        tvTitle = findViewById(R.id.tv_title)
+        tvSubTitle = findViewById(R.id.tv_sub_title)
+        tvLocation = findViewById(R.id.tv_location)
+        tvCity = findViewById(R.id.tv_city)
+        btnCreatePdf.setOnClickListener { createpdf() }
     }
 
-
-    public void createpdf() {
-        Rect bounds = new Rect();
-        int pageWidth = 300;
-        int pageheight = 470;
-        int pathHeight = 2;
-
-        final String fileName = "mypdf";
-        file_name_path = "/pdfsdcard_location/" + fileName + ".pdf";
-        PdfDocument myPdfDocument = new PdfDocument();
-        Paint paint = new Paint();
-        Paint paint2 = new Paint();
-        Path path = new Path();
-        PdfDocument.PageInfo myPageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageheight, 1).create();
-        PdfDocument.Page documentPage = myPdfDocument.startPage(myPageInfo);
-        Canvas canvas = documentPage.getCanvas();
-        int y = 25; // x = 10,
+    private fun createpdf() {
+        val bounds = Rect()
+        val pageWidth = 300
+        val pageheight = 470
+        val pathHeight = 2
+        val fileName = "mypdf"
+        fileNamePath = "/pdfsdcard_location/$fileName.pdf"
+        val myPdfDocument = PdfDocument()
+        val paint = Paint()
+        val paint2 = Paint()
+        val path = Path()
+        val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageheight, 1).create()
+        val documentPage = myPdfDocument.startPage(myPageInfo)
+        val canvas = documentPage.canvas
+        var y = 25 // x = 10,
         //int x = (canvas.getWidth() / 2);
-        int x = 10;
-
-        paint.getTextBounds(tv_title.getText().toString(), 0, tv_title.getText().toString().length(), bounds);
-        x = (canvas.getWidth() / 2) - (bounds.width() / 2);
-        canvas.drawText(tv_title.getText().toString(), x, y, paint);
-
-        paint.getTextBounds(tv_sub_title.getText().toString(), 0, tv_sub_title.getText().toString().length(), bounds);
-        x = (canvas.getWidth() / 2) - (bounds.width() / 2);
-        y += paint.descent() - paint.ascent();
-        canvas.drawText(tv_sub_title.getText().toString(), x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
-
-        //horizontal line
-        path.lineTo(pageWidth, pathHeight);
-        paint2.setColor(Color.GRAY);
-        paint2.setStyle(Paint.Style.STROKE);
-        path.moveTo(x, y);
-
-        canvas.drawLine(0, y, pageWidth, y, paint2);
-
-        //blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        x = 10;
-        canvas.drawText(tv_location.getText().toString(), x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        x = 10;
-        canvas.drawText(tv_city.getText().toString(), x, y, paint);
-
-        //blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
+        var x = 10
+        paint.getTextBounds(
+            tvTitle!!.text.toString(),
+            0,
+            tvTitle!!.text.toString().length,
+            bounds
+        )
+        x = canvas.width / 2 - bounds.width() / 2
+        canvas.drawText(tvTitle!!.text.toString(), x.toFloat(), y.toFloat(), paint)
+        paint.getTextBounds(
+            tvSubTitle!!.text.toString(),
+            0,
+            tvSubTitle!!.text.toString().length,
+            bounds
+        )
+        x = canvas.width / 2 - bounds.width() / 2
+        y += (paint.descent() - paint.ascent()).toInt()
+        canvas.drawText(tvSubTitle!!.text.toString(), x.toFloat(), y.toFloat(), paint)
+        y += (paint.descent() - paint.ascent()).toInt()
+        canvas.drawText("", x.toFloat(), y.toFloat(), paint)
 
         //horizontal line
-        path.lineTo(pageWidth, pathHeight);
-        paint2.setColor(Color.GRAY);
-        paint2.setStyle(Paint.Style.STROKE);
-        path.moveTo(x, y);
-        canvas.drawLine(0, y, pageWidth, y, paint2);
+        path.lineTo(pageWidth.toFloat(), pathHeight.toFloat())
+        paint2.color = Color.GRAY
+        paint2.style = Paint.Style.STROKE
+        path.moveTo(x.toFloat(), y.toFloat())
+        canvas.drawLine(0f, y.toFloat(), pageWidth.toFloat(), y.toFloat(), paint2)
 
         //blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
+        y += (paint.descent() - paint.ascent()).toInt()
+        canvas.drawText("", x.toFloat(), y.toFloat(), paint)
+        y += (paint.descent() - paint.ascent()).toInt()
+        x = 10
+        canvas.drawText(tvLocation!!.text.toString(), x.toFloat(), y.toFloat(), paint)
+        y += (paint.descent() - paint.ascent()).toInt()
+        x = 10
+        canvas.drawText(tvCity!!.text.toString(), x.toFloat(), y.toFloat(), paint)
 
-        Resources res = getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.square_app_icon);
-        Bitmap b = (Bitmap.createScaledBitmap(bitmap, 100, 50, false));
-        canvas.drawBitmap(b, x, y, paint);
-        y += 25;
-        canvas.drawText(getString(R.string.app_name), 120, y, paint);
+        //blank space
+        y += (paint.descent() - paint.ascent()).toInt()
+        canvas.drawText("", x.toFloat(), y.toFloat(), paint)
 
+        //horizontal line
+        path.lineTo(pageWidth.toFloat(), pathHeight.toFloat())
+        paint2.color = Color.GRAY
+        paint2.style = Paint.Style.STROKE
+        path.moveTo(x.toFloat(), y.toFloat())
+        canvas.drawLine(0f, y.toFloat(), pageWidth.toFloat(), y.toFloat(), paint2)
 
-        myPdfDocument.finishPage(documentPage);
-        File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
+        //blank space
+        y += (paint.descent() - paint.ascent()).toInt()
+        canvas.drawText("", x.toFloat(), y.toFloat(), paint)
+        val res = resources
+        val bitmap = BitmapFactory.decodeResource(res, R.drawable.square_app_icon)
+        val b = Bitmap.createScaledBitmap(bitmap, 100, 50, false)
+        canvas.drawBitmap(b, x.toFloat(), y.toFloat(), paint)
+        y += 25
+        canvas.drawText(getString(R.string.app_name), 120f, y.toFloat(), paint)
+        myPdfDocument.finishPage(documentPage)
+        val file = File(getExternalFilesDir(null)!!.absolutePath + fileNamePath)
         try {
-            myPdfDocument.writeTo(new FileOutputStream(file));
-        } catch (IOException e) {
-            e.printStackTrace();
+            myPdfDocument.writeTo(FileOutputStream(file))
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
-
-        myPdfDocument.close();
-        viewPdfFile();
+        myPdfDocument.close()
+        viewPdfFile()
     }
 
-    public void viewPdfFile() {
-        File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
+    fun viewPdfFile() {
+        val file = File(getExternalFilesDir(null)!!.absolutePath + fileNamePath)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf")
+        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+        startActivity(intent)
     }
 
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
+    companion object {
+        fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
+                for (permission in permissions) {
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            permission!!
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        return false
+                    }
                 }
             }
+            return true
         }
-        return true;
     }
 }

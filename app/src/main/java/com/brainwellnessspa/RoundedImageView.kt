@@ -1,84 +1,66 @@
-package com.brainwellnessspa;
+package com.brainwellnessspa
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
+import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
+import kotlin.math.min
 
-public class RoundedImageView extends androidx.appcompat.widget.AppCompatImageView {
+class RoundedImageView : AppCompatImageView {
+    constructor(context: Context?) : super(context!!)
+    constructor(context: Context?, attrs: AttributeSet?) : super(
+        context!!, attrs
+    )
 
-    public RoundedImageView(Context context) {
-        super(context);
-    }
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+        context!!, attrs, defStyle
+    )
 
-    public RoundedImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public RoundedImageView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-
-        Drawable drawable = getDrawable();
-
-        if (drawable == null) {
-            return;
+    override fun onDraw(canvas: Canvas) {
+        val drawable = drawable ?: return
+        if (width == 0 || height == 0) {
+            return
         }
-
-        if (getWidth() == 0 || getHeight() == 0) {
-            return;
-        }
-        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
-        Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
-
-        int w = getWidth(), h = getHeight();
-
-        Bitmap roundBitmap = getRoundBitmap(bitmap, w);
-        canvas.drawBitmap(roundBitmap, 0, 0, null);
-
+        val b = (drawable as BitmapDrawable).bitmap
+        val bitmap = b.copy(Bitmap.Config.ARGB_8888, true)
+        val w = width
+        val h = height
+        val roundBitmap = getRoundBitmap(bitmap, w)
+        canvas.drawBitmap(roundBitmap, 0f, 0f, null)
     }
 
-    public static Bitmap getRoundBitmap(Bitmap bmp, int radius) {
-        Bitmap sBmp;
-
-        if (bmp.getWidth() != radius || bmp.getHeight() != radius) {
-            float smallest = Math.min(bmp.getWidth(), bmp.getHeight());
-            float factor = smallest / radius;
-            sBmp = Bitmap.createScaledBitmap(bmp, (int)(bmp.getWidth() / factor), (int)(bmp.getHeight() / factor), false);
-        } else {
-            sBmp = bmp;
+    companion object {
+        fun getRoundBitmap(bmp: Bitmap, radius: Int): Bitmap {
+            val sBmp: Bitmap = if (bmp.width != radius || bmp.height != radius) {
+                val smallest = min(bmp.width, bmp.height).toFloat()
+                val factor = smallest / radius
+                Bitmap.createScaledBitmap(
+                    bmp,
+                    (bmp.width / factor).toInt(),
+                    (bmp.height / factor).toInt(),
+                    false
+                )
+            } else {
+                bmp
+            }
+            val output = Bitmap.createBitmap(
+                radius, radius,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(output)
+            val color = "#BAB399"
+            val paint = Paint()
+            val rect = Rect(0, 0, radius, radius)
+            paint.isAntiAlias = true
+            paint.isFilterBitmap = true
+            paint.isDither = true
+            canvas.drawARGB(0, 0, 0, 0)
+            paint.color = Color.parseColor(color)
+            canvas.drawCircle(radius / 2 + 0.7f, radius / 2 + 0.7f, radius / 2 + 0.1f, paint)
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(sBmp, rect, rect, paint)
+            return output
         }
-
-        Bitmap output = Bitmap.createBitmap(radius, radius,
-                Bitmap.Config.ARGB_8888);
-
-
-        Canvas canvas = new Canvas(output);
-
-        final String color = "#BAB399";
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, radius, radius);
-
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(Color.parseColor(color));
-        canvas.drawCircle(radius / 2 + 0.7f, radius / 2 + 0.7f, radius / 2 + 0.1f, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(sBmp, rect, rect, paint);
-
-        return output;
     }
-
 }

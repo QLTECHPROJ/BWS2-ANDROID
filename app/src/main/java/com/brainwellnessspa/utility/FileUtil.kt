@@ -1,80 +1,84 @@
-package com.brainwellnessspa.utility;
+package com.brainwellnessspa.utility
 
-import android.annotation.SuppressLint;
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.annotation.SuppressLint
+import android.content.ContentUris
+import android.content.Context
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 
-public class FileUtil {
+object FileUtil {
+    @JvmStatic
     @SuppressLint("NewApi")
-    public static String getPath(Uri uri, Context context) {
-        final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;
-        String selection = null;
-        String[] selectionArgs = null;
+    fun getPath(uri: Uri, context: Context): String? {
+        var uri = uri
+        val needToCheckUri = Build.VERSION.SDK_INT >= 19
+        var selection: String? = null
+        var selectionArgs: Array<String>? = null
         if (needToCheckUri && DocumentsContract.isDocumentUri(context, uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                if (id.startsWith("raw:")) {
-                    return id.replaceFirst("raw:", "");
+            when {
+                isExternalStorageDocument(uri) -> {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":").toTypedArray()
+                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
                 }
-                uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                switch (type) {
-                    case "image":
-                        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                        break;
-                    case "video":
-                        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                        break;
-                    case "audio":
-                        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                        break;
+                isDownloadsDocument(uri) -> {
+                    val id = DocumentsContract.getDocumentId(uri)
+                    if (id.startsWith("raw:")) {
+                        return id.replaceFirst("raw:".toRegex(), "")
+                    }
+                    uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
+                    )
                 }
-                selection = "_id=?";
-                selectionArgs = new String[]{
+                isMediaDocument(uri) -> {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":").toTypedArray()
+                    val type = split[0]
+                    when (type) {
+                        "image" -> uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        "video" -> uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                        "audio" -> uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
+                    selection = "_id=?"
+                    selectionArgs = arrayOf(
                         split[1]
-                };
-            }
-        }
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {
-                    MediaStore.Images.Media.DATA
-            };
-            try (Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    return cursor.getString(columnIndex);
+                    )
                 }
-            } catch (Exception e) {
             }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
         }
-        return null;
+        if ("content".equals(uri.scheme, ignoreCase = true)) {
+            val projection = arrayOf(
+                MediaStore.Images.Media.DATA
+            )
+            try {
+                context.contentResolver.query(uri, projection, selection, selectionArgs, null)
+                    .use { cursor ->
+                        if (cursor != null && cursor.moveToFirst()) {
+                            val columnIndex =
+                                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                            return cursor.getString(columnIndex)
+                        }
+                    }
+            } catch (e: Exception) {
+            }
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            return uri.path
+        }
+        return null
     }
 
-    private static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    private fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
     }
 
-    private static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    private fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
     }
 
-    private static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    private fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
     }
 }

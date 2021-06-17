@@ -1,131 +1,141 @@
-package com.brainwellnessspa.utility;import android.util.Base64;
+package com.brainwellnessspa.utility
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import android.util.Base64
+import java.io.UnsupportedEncodingException
+import java.nio.charset.StandardCharsets
+import java.security.*
+import javax.crypto.BadPaddingException
+import javax.crypto.Cipher
+import javax.crypto.IllegalBlockSizeException
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-public class CryptLib {
-
-    private enum EncryptMode {
+class CryptLib {
+    private enum class EncryptMode {
         ENCRYPT, DECRYPT
     }
 
-    private Cipher _cx;
-    private byte[] _key, _iv;
+    private val _cx: Cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    private val _key: ByteArray = ByteArray(32)
+    private val _iv: ByteArray = ByteArray(16)
 
-    public CryptLib() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        _cx = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        _key = new byte[32]; //256 bit key space
-        _iv = new byte[16]; //128 bit IV
-    }
-
-    private byte[] encryptDecrypt(String inputText, String encryptionKey,
-                                  EncryptMode mode, String initVector) throws UnsupportedEncodingException,
-            InvalidKeyException, InvalidAlgorithmParameterException,
-            IllegalBlockSizeException, BadPaddingException {
-
-        int len = encryptionKey.getBytes(StandardCharsets.UTF_8).length; // length of the key	provided
-
-        if (encryptionKey.getBytes(StandardCharsets.UTF_8).length > _key.length)
-            len = _key.length;
-
-        int ivlength = initVector.getBytes(StandardCharsets.UTF_8).length;
-
-        if(initVector.getBytes(StandardCharsets.UTF_8).length > _iv.length)
-            ivlength = _iv.length;
-
-        System.arraycopy(encryptionKey.getBytes(StandardCharsets.UTF_8), 0, _key, 0, len);
-        System.arraycopy(initVector.getBytes(StandardCharsets.UTF_8), 0, _iv, 0, ivlength);
-
-
-        SecretKeySpec keySpec = new SecretKeySpec(_key, "AES"); // Create a new SecretKeySpec for the specified key data and algorithm name.
-
-        IvParameterSpec ivSpec = new IvParameterSpec(_iv); // Create a new IvParameterSpec instance with the bytes from the specified buffer iv used as initialization vector.
+    @Throws(
+        UnsupportedEncodingException::class,
+        InvalidKeyException::class,
+        InvalidAlgorithmParameterException::class,
+        IllegalBlockSizeException::class,
+        BadPaddingException::class
+    )
+    private fun encryptDecrypt(
+        inputText: String,
+        encryptionKey: String,
+        mode: EncryptMode,
+        initVector: String
+    ): ByteArray {
+        var len =
+            encryptionKey.toByteArray(StandardCharsets.UTF_8).size // length of the key	provided
+        if (encryptionKey.toByteArray(StandardCharsets.UTF_8).size > _key.size) len = _key.size
+        var ivlength = initVector.toByteArray(StandardCharsets.UTF_8).size
+        if (initVector.toByteArray(StandardCharsets.UTF_8).size > _iv.size) ivlength = _iv.size
+        System.arraycopy(encryptionKey.toByteArray(StandardCharsets.UTF_8), 0, _key, 0, len)
+        System.arraycopy(initVector.toByteArray(StandardCharsets.UTF_8), 0, _iv, 0, ivlength)
+        val keySpec = SecretKeySpec(
+            _key,
+            "AES"
+        ) // Create a new SecretKeySpec for the specified key data and algorithm name.
+        val ivSpec =
+            IvParameterSpec(_iv) // Create a new IvParameterSpec instance with the bytes from the specified buffer iv used as initialization vector.
 
         // encryption
-        if (mode.equals(EncryptMode.ENCRYPT)) {
+        return if (mode == EncryptMode.ENCRYPT) {
             // Potentially insecure random numbers on Android 4.3 and older. Read for more info.
             // https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html
-            _cx.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);// Initialize this cipher instance
-            return _cx.doFinal(inputText.getBytes(StandardCharsets.UTF_8)); // Finish multi-part transformation (encryption)
+            _cx.init(
+                Cipher.ENCRYPT_MODE,
+                keySpec,
+                ivSpec
+            ) // Initialize this cipher instance
+            _cx.doFinal(inputText.toByteArray(StandardCharsets.UTF_8)) // Finish multi-part transformation (encryption)
         } else {
-            _cx.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);// Initialize this cipher instance
-
-            byte[] decodedValue = Base64.decode(inputText.getBytes(), Base64.NO_WRAP);
-            return _cx.doFinal(decodedValue); // Finish multi-part transformation (decryption)
+            _cx.init(
+                Cipher.DECRYPT_MODE,
+                keySpec,
+                ivSpec
+            ) // Initialize this cipher instance
+            val decodedValue =
+                Base64.decode(inputText.toByteArray(), Base64.NO_WRAP)
+            _cx.doFinal(decodedValue) // Finish multi-part transformation (decryption)
         }
     }
 
-    private static String SHA256 (String text, int length) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    @Throws(Exception::class)
+    fun encryptPlainText(plainText: String, key: String, iv: String): String {
+        val bytes = encryptDecrypt(plainText, SHA256(key, 32), EncryptMode.ENCRYPT, iv)
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+    }
 
-        String resultString;
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
+    @Throws(Exception::class)
+    fun decryptCipherText(cipherText: String, key: String, iv: String): String {
+        val bytes = encryptDecrypt(cipherText, SHA256(key, 32), EncryptMode.DECRYPT, iv)
+        return String(bytes)
+    }
 
-        md.update(text.getBytes(StandardCharsets.UTF_8));
-        byte[] digest = md.digest();
+    @Throws(Exception::class)
+    fun encryptPlainTextWithRandomIV(plainText: String, key: String): String {
+        val bytes = encryptDecrypt(
+            generateRandomIV16() + plainText,
+            SHA256(key, 32),
+            EncryptMode.ENCRYPT,
+            generateRandomIV16()
+        )
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+    }
 
-        StringBuilder result = new StringBuilder();
-        for (byte b : digest) {
-            result.append(String.format("%02x", b)); //convert to hex
+    @Throws(Exception::class)
+    fun decryptCipherTextWithRandomIV(cipherText: String, key: String): String {
+        val bytes =
+            encryptDecrypt(cipherText, SHA256(key, 32), EncryptMode.DECRYPT, generateRandomIV16())
+        val out = String(bytes)
+        return out.substring(16)
+    }
+
+    fun generateRandomIV16(): String {
+        val ranGen = SecureRandom()
+        val aesKey = ByteArray(16)
+        ranGen.nextBytes(aesKey)
+        val result = StringBuilder()
+        for (b in aesKey) {
+            result.append(String.format("%02x", b)) //convert to hex
         }
-
-        if(length > result.toString().length()) {
-            resultString = result.toString();
+        return if (16 > result.toString().length) {
+            result.toString()
         } else {
-            resultString = result.toString().substring(0, length);
-        }
-
-        return resultString;
-
-    }
-
-
-    public String encryptPlainText(String plainText, String key, String iv) throws Exception {
-        byte[] bytes = encryptDecrypt(plainText, CryptLib.SHA256(key, 32), EncryptMode.ENCRYPT, iv);
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
-    }
-
-    public String decryptCipherText(String cipherText, String key, String iv) throws Exception {
-        byte[] bytes = encryptDecrypt(cipherText, CryptLib.SHA256(key, 32), EncryptMode.DECRYPT, iv);
-        return new String(bytes);
-    }
-
-
-    public String encryptPlainTextWithRandomIV(String plainText, String key) throws Exception {
-        byte[] bytes = encryptDecrypt(generateRandomIV16() + plainText, CryptLib.SHA256(key, 32), EncryptMode.ENCRYPT, generateRandomIV16());
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
-    }
-
-    public String decryptCipherTextWithRandomIV(String cipherText, String key) throws Exception {
-        byte[] bytes = encryptDecrypt(cipherText, CryptLib.SHA256(key, 32), EncryptMode.DECRYPT, generateRandomIV16());
-        String out = new String(bytes);
-        return out.substring(16);
-    }
-
-    public String generateRandomIV16() {
-        SecureRandom ranGen = new SecureRandom();
-        byte[] aesKey = new byte[16];
-        ranGen.nextBytes(aesKey);
-        StringBuilder result = new StringBuilder();
-        for (byte b : aesKey) {
-            result.append(String.format("%02x", b)); //convert to hex
-        }
-        if (16 > result.toString().length()) {
-            return result.toString();
-        } else {
-            return result.toString().substring(0, 16);
+            result.toString().substring(0, 16)
         }
     }
 
+    companion object {
+        @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
+        private fun SHA256(text: String, length: Int): String {
+            val resultString: String
+            val md = MessageDigest.getInstance("SHA-256")
+            md.update(text.toByteArray(StandardCharsets.UTF_8))
+            val digest = md.digest()
+            val result = StringBuilder()
+            for (b in digest) {
+                result.append(String.format("%02x", b)) //convert to hex
+            }
+            resultString = if (length > result.toString().length) {
+                result.toString()
+            } else {
+                result.toString().substring(0, length)
+            }
+            return resultString
+        }
+    }
+
+    init {
+        //256 bit key space
+        //128 bit IV
+    }
 }

@@ -1,23 +1,9 @@
-package com.brainwellnessspa.utility;
+package com.brainwellnessspa.utility
 
-public class CONSTANTS {
-    public static final String UTF_8 = "UTF-8";
+object CONSTANTS {
+    const val UTF_8 = "UTF-8"
 
-    public interface ACTION {
-        public static String MAIN_ACTION = "com.brainwellnessspa.action.main";
-        public static String INIT_ACTION = "com.brainwellnessspa.action.init";
-        public static String PREV_ACTION = "com.brainwellnessspa.action.prev";
-        public static String PLAY_ACTION = "com.brainwellnessspa.action.play";
-        public static String NEXT_ACTION = "com.brainwellnessspa.action.next";
-        public static String STARTFOREGROUND_ACTION = "com.brainwellnessspa.action.startforeground";
-        public static String STOPFOREGROUND_ACTION = "com.brainwellnessspa.action.stopforeground";
-    }
-
-    public interface NOTIFICATION_ID {
-        public static int FOREGROUND_SERVICE = 101;
-    }
-
-   /* public static Bitmap getDefaultAlbumArt(Context context) {
+    /* public static Bitmap getDefaultAlbumArt(Context context) {
         Bitmap bm = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         try {
@@ -28,188 +14,186 @@ public class CONSTANTS {
         }
         return bm;
     }*/
-
-    public static final String SERVICE_ACCOUNT_EMAIL = "service-861076939494@gcp-sa-pubsub.iam.gserviceaccount.com";
-    public static final String track = "track";
-    public static final String screen = "screen";
-    public static final String FLAG_ZERO = "0";
-    public static final String FLAG_ONE = "1";
-    public static final String FLAG_TWO = "2";
-    public static final String FLAG_THREE = "3";
-    public static final String FLAG_FOUR = "4";
-    public static final String FLAG_FIVE = "5";
-    public static final String FLAG_SIX = "6";
-    public static final String FLAG_SEVEN = "7";
-    public static final String FLAG_EIGHT = "8";
-    public static final String FLAG_NINE = "9";
-    public static final String FLAG_TEN = "10";
-    public static final String FLAG_ELEVEN = "11";
-    public static final String FLAG_TWELVE = "12";
-    public static final String FLAG_THIRTEEN = "13";
-    public static final String FLAG_FORTEEN = "14";
-    public static final String FLAG_FIFTEEN = "15";
-
-    public static final String YEAR_TO_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String TWENTY_FOUR_HOUR_FORMAT_WITH_SECOND = "HH:mm:ss";
-    public static final String TWELVE_HOUR_FORMAT_WITH_AM_PM = "hh:mm a";
-    public static final String MONTH_DATE_YEAR_FORMAT = "MMM dd, yyyy";
-    public static final String SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String TWENTY_FOUR_HH_MM_FORMAT = "HH:mm";
-
-    public static String ScreenView = "ScreenView";
-    public static String ASSPROCESS = "ASSPROCESS";
-    public static String IndexScore = "IndexScore";
-    public static String ScoreLevel = "ScoreLevel";
-    public static String PopUp = "PopUp";
-    public static String ScreenVisible = "ScreenVisible";
-    public static String Tnc = "Tnc";
-    public static String Web = "Web";
-    public static String Check = "Check";
-    public static String Name = "Name";
-    public static String Promocode = "Promocode";
-    public static String Like = "Like";
-    public static String Download = "Download";
-    public static String position = "position";
-    public static String AudioList = "AudioList";
-    public static String Code = "Code";
-    public static String Codes = "Codes";
-    public static String MobileNo = "MobileNo";
-    public static String ID = "ID";
-    public static String PlaylistID = "PlaylistID";
-    public static String PlaylistName = "PlaylistName";
-    public static String PlaylistImage = "PlaylistImage";
-    public static String title = "title";
-    public static String author = "author";
-    public static String linkOne = "linkOne";
-    public static String linkTwo = "linkTwo";
-    public static String image = "image";
-    public static String description = "description";
-    public static String mastercat = "mastercat";
-    public static String subcat = "subcat";
-    public static String AudioFile = "AudioFile";
-    public static String ImageFile = "ImageFile";
-    public static String AudioDirection = "AudioDirection";
-    public static String Audiomastercat = "Audiomastercat";
-    public static String AudioSubCategory = "AudioSubCategory";
+    const val SERVICE_ACCOUNT_EMAIL = "service-861076939494@gcp-sa-pubsub.iam.gserviceaccount.com"
+    const val track = "track"
+    const val screen = "screen"
+    const val FLAG_ZERO = "0"
+    const val FLAG_ONE = "1"
+    const val FLAG_TWO = "2"
+    const val FLAG_THREE = "3"
+    const val FLAG_FOUR = "4"
+    const val FLAG_FIVE = "5"
+    const val FLAG_SIX = "6"
+    const val FLAG_SEVEN = "7"
+    const val FLAG_EIGHT = "8"
+    const val FLAG_NINE = "9"
+    const val FLAG_TEN = "10"
+    const val FLAG_ELEVEN = "11"
+    const val FLAG_TWELVE = "12"
+    const val FLAG_THIRTEEN = "13"
+    const val FLAG_FORTEEN = "14"
+    const val FLAG_FIFTEEN = "15"
+    const val YEAR_TO_DATE_FORMAT = "yyyy-MM-dd"
+    const val TWENTY_FOUR_HOUR_FORMAT_WITH_SECOND = "HH:mm:ss"
+    const val TWELVE_HOUR_FORMAT_WITH_AM_PM = "hh:mm a"
+    const val MONTH_DATE_YEAR_FORMAT = "MMM dd, yyyy"
+    const val SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    const val TWENTY_FOUR_HH_MM_FORMAT = "HH:mm"
+    var ScreenView = "ScreenView"
+    var ASSPROCESS = "ASSPROCESS"
+    var IndexScore = "IndexScore"
+    var ScoreLevel = "ScoreLevel"
+    var PopUp = "PopUp"
+    var ScreenVisible = "ScreenVisible"
+    var Tnc = "Tnc"
+    @JvmField
+    var Web = "Web"
+    var Check = "Check"
+    @JvmField
+    var Name = "Name"
+    @JvmField
+    var Promocode = "Promocode"
+    var Like = "Like"
+    var Download = "Download"
+    var position = "position"
+    var AudioList = "AudioList"
+    var Code = "Code"
+    var Codes = "Codes"
+    var MobileNo = "MobileNo"
+    var ID = "ID"
+    @JvmField
+    var PlaylistID = "PlaylistID"
+    var PlaylistName = "PlaylistName"
+    var PlaylistImage = "PlaylistImage"
+    var title = "title"
+    var author = "author"
+    var linkOne = "linkOne"
+    var linkTwo = "linkTwo"
+    var image = "image"
+    var description = "description"
+    var mastercat = "mastercat"
+    var subcat = "subcat"
+    var AudioFile = "AudioFile"
+    var ImageFile = "ImageFile"
+    var AudioDirection = "AudioDirection"
+    var Audiomastercat = "Audiomastercat"
+    var AudioSubCategory = "AudioSubCategory"
 
     //multipart tag for file upload
-    public static final String MULTIPART_FORMAT = "multipart/form-data";
+    const val MULTIPART_FORMAT = "multipart/form-data"
+    const val PREFE_ACCESS_SIGNIN_COUSER = "CoUser"
+    const val PREFE_ACCESS_mainAccountID = "mainAccountID"
+    const val PREFE_ACCESS_countryCode = "countryCode"
+    const val PREFE_ACCESS_NAME = "Name"
+    const val PREFE_ACCESS_IMAGE = "Image"
+    const val PREFE_ACCESS_USEREMAIL = "UserEmail"
+    const val PREFE_ACCESS_DeviceType = "DeviceType"
+    const val PREFE_ACCESS_DeviceID = "DeviceID"
+    const val PREFE_ACCESS_SLEEPTIME = "Sleeptime"
+    const val PREFE_ACCESS_INDEXSCORE = "indexScore"
+    const val PREFE_ACCESS_ISPROFILECOMPLETED = "isProfileCompleted"
+    const val PREFE_ACCESS_ISAssCOMPLETED = "isAssessmentCompleted"
+    const val PREFE_ACCESS_SCORELEVEL = "scoreLevel"
+    const val PREFE_ACCESS_EMAIL = "Email"
+    const val PREFE_ACCESS_MOBILE = "mobile"
+    const val PREFE_ACCESS_UserId = "UserId"
+    const val PREF_KEY_LOGIN = "Login"
+    const val PREF_KEY_Splash = "Splash"
+    const val PREF_KEY_SplashKey = "SplashKey"
+    const val PREF_KEY_PLAYER = "Player"
+    const val PREF_KEY_MainAudioList = "MainAudioList"
+    const val PREF_KEY_PlayerAudioList = "PlayerAudioList"
+    const val PREF_KEY_AudioPlayerFlag = "AudioPlayerFlag"
+    const val PREF_KEY_PlayerPlaylistId = "PayerPlaylistId"
+    const val PREF_KEY_PlayerPlaylistName = "PayerPlaylistName"
+    const val PREF_KEY_PlayerPosition = "PlayerPosition"
+    const val PREF_KEY_PlayFrom = "PlayFrom"
+    const val PREF_KEY_UserID = "UserID"
+    const val PREF_KEY_Referral = "Referral"
+    const val PREF_KEY_UserPromocode = "UserPromocode"
+    const val PREF_KEY_ReferLink = "ReferLink"
+    const val PREF_KEY_IsDisclimer = "IsDisclimer"
+    const val PREF_KEY_Disclimer = "Disclimer"
+    const val PREF_KEY_LOGOUT = "Logout"
+    const val PREF_KEY_LOGOUT_UserID = "UserID"
+    const val PREF_KEY_LOGOUT_CoUserID = "CoUserID"
+    const val PREF_KEY_ExpDate = "ExpDate"
+    const val PREF_KEY_IsRepeat = "IsRepeat"
+    const val PREF_KEY_Status = "Status"
+    const val PREF_KEY_IsShuffle = "IsShuffle"
+    const val PREF_KEY_MobileNo = "MobileNo"
+    const val PREF_KEY_Identify = "Identify"
+    const val PREF_KEY_IdentifyAgain = "AgainIdentify"
+    const val PREF_KEY_Email = "Email"
+    const val PREF_KEY_DeviceID = "DeviceID"
+    const val PREF_KEY_UnLockAudiList = "UnLockAudiList"
+    const val PREF_KEY_Cat_Name = "Cat_Name"
+    const val PREF_KEY_PlaylistId = "PlaylistId"
+    const val PREF_KEY_DownloadPlaylist = "PlaylistId"
+    const val PREF_KEY_DownloadName = "Name"
+    const val PREF_KEY_DownloadUrl = "Url"
+    const val PREF_KEY_DownloadPlaylistId = "downloadPlaylistId"
 
-    public static final String PREFE_ACCESS_SIGNIN = "SignIn";
-    public static final String PREFE_ACCESS_SIGNIN_COUSER = "CoUser";
-    public static final String PREFE_ACCESS_SLEEPTIME_CAT = "Sleeptime cat";
-    public static final String PREFE_ACCESS_SIGNIN_COUSER_TEMP = "CoUserTemp";
-    public static final String PREFE_ACCESS_mainAccountID = "mainAccountID";
-    public static final String PREFE_ACCESS_countryCode = "countryCode";
-    public static final String PREFE_ACCESS_NAME = "Name";
-    public static final String PREFE_ACCESS_IMAGE = "Image";
-    public static final String PREFE_ACCESS_USEREMAIL = "UserEmail";
-    public static final String PREFE_ACCESS_DeviceType = "DeviceType";
-    public static final String PREFE_ACCESS_DeviceID = "DeviceID";
-    public static final String PREFE_ACCESS_SLEEPTIME = "Sleeptime";
-    public static final String PREFE_ACCESS_INDEXSCORE = "indexScore";
-    public static final String PREFE_ACCESS_ISPROFILECOMPLETED = "isProfileCompleted";
-    public static final String PREFE_ACCESS_ISAssCOMPLETED = "isAssessmentCompleted";
-    public static final String PREFE_ACCESS_SCORELEVEL = "scoreLevel";
-    public static final String PREFE_ACCESS_EMAIL = "Email";
-    public static final String PREFE_ACCESS_MOBILE = "mobile";
-    public static final String PREFE_ACCESS_UserId = "UserId";
-    public static final String PREF_KEY_LOGIN = "Login";
-    public static final String PREF_KEY_Splash = "Splash";
-    public static final String PREF_KEY_SplashKey = "SplashKey";
-    public static final String PREF_KEY_PLAYER = "Player";
-    public static final String PREF_KEY_MainAudioList = "MainAudioList";
-    public static final String PREF_KEY_PlayerAudioList = "PlayerAudioList";
-    public static final String PREF_KEY_AudioPlayerFlag = "AudioPlayerFlag";
-    public static final String PREF_KEY_PlayerPlaylistId = "PayerPlaylistId";
-    public static final String PREF_KEY_PlayerPlaylistName = "PayerPlaylistName";
-    public static final String PREF_KEY_PlayerPosition = "PlayerPosition";
-    public static final String PREF_KEY_PlayFrom = "PlayFrom";
-    public static final String PREF_KEY_UserID = "UserID";
-    public static final String PREF_KEY_countryCode = "countryCode";
-    public static final String PREF_KEY_Referral = "Referral";
-    public static final String PREF_KEY_UserPromocode = "UserPromocode";
-    public static final String PREF_KEY_ReferLink = "ReferLink";
-    public static final String PREF_KEY_IsDisclimer = "IsDisclimer";
-    public static final String PREF_KEY_Disclimer = "Disclimer";
-    public static final String PREF_KEY_LOGOUT = "Logout";
-    public static final String PREF_KEY_LOGOUT_UserID = "UserID";
-    public static final String PREF_KEY_LOGOUT_CoUserID = "CoUserID";
-    public static final String PREF_KEY_LOGOUT_MobileNO = "MobileNO";
-    public static final String PREF_KEY_ExpDate = "ExpDate";
-    public static final String PREF_KEY_IsRepeat = "IsRepeat";
-    public static final String PREF_KEY_Status = "Status";
-    public static final String PREF_KEY_IsShuffle = "IsShuffle";
-    public static final String PREF_KEY_MobileNo = "MobileNo";
-    public static final String PREF_KEY_Identify = "Identify";
-    public static final String PREF_KEY_IdentifyAgain = "AgainIdentify";
-    public static final String PREF_KEY_Email = "Email";
-    public static final String PREF_KEY_DeviceType = "DeviceType";
-    public static final String PREF_KEY_DeviceID = "DeviceID";
-    public static final String PREF_KEY_IsLock = "IsLock";
-    public static final String PREF_KEY_UnLockAudiList = "UnLockAudiList";
-    public static final String PREF_KEY_Cat_Name = "Cat_Name";
-    public static final String PREF_KEY_PlaylistId = "PlaylistId";
-    public static final String PREF_KEY_DownloadPlaylist = "PlaylistId";
-    public static final String PREF_KEY_DownloadName = "Name";
-    public static final String PREF_KEY_DownloadUrl = "Url";
-    public static final String PREF_KEY_DownloadPlaylistId = "downloadPlaylistId";
-    public static final String PREF_KEY_Logout_DownloadPlaylist = "PlaylistId";
-    public static final String PREF_KEY_Logout_DownloadName = "Name";
-    public static final String PREF_KEY_Logout_DownloadUrl = "Url";
-    public static final String PREF_KEY_Logout_DownloadPlaylistId = "downloadPlaylistId";
     //    public static final String PREF_KEY_removedDownloadPlaylist = "removedPlaylistId";
-//    public static final String PREF_KEY_removedDownloadName = "removedName";
-//    public static final String PREF_KEY_removedDownloadPlaylistId = "removedDownloadPlaylistId";
-    public static final String PREF_KEY_CardID = "CardID";
-    public static final String PREF_KEY_Name = "Name";
-    public static final String PREF_KEY_PlayerFirstLogin = "PlayerFirstLogin";
-    public static final String PREF_KEY_AudioFirstLogin = "AudioFirstLogin";
-    public static final String PREF_KEY_AccountFirstLogin = "AccountFirstLogin";
-    public static final String PREF_KEY_ReminderFirstLogin = "ReminderFirstLogin";
-    public static final String PREF_KEY_SearchFirstLogin = "SearchFirstLogin";
-    public static final String PREF_KEY_PlaylistFirstLogin = "PlaylistFirstLogin";
-//    public static final String PREF_KEY_FirstLogin = "FirstLogin";
-//    public static final String PREF_KEY_FirstLogin = "FirstLogin";
-    public static final String PREF_KEY_Image = "Image";
-    public static final String PREF_KEY_Plan = "Plan";
+    //    public static final String PREF_KEY_removedDownloadName = "removedName";
+    //    public static final String PREF_KEY_removedDownloadPlaylistId = "removedDownloadPlaylistId";
+    const val PREF_KEY_CardID = "CardID"
+    const val PREF_KEY_Name = "Name"
+    const val PREF_KEY_PlayerFirstLogin = "PlayerFirstLogin"
+    const val PREF_KEY_AudioFirstLogin = "AudioFirstLogin"
+    const val PREF_KEY_AccountFirstLogin = "AccountFirstLogin"
+    const val PREF_KEY_ReminderFirstLogin = "ReminderFirstLogin"
+    const val PREF_KEY_SearchFirstLogin = "SearchFirstLogin"
+    const val PREF_KEY_PlaylistFirstLogin = "PlaylistFirstLogin"
 
-    public static final String PREF_KEY_SEGMENT_PLAYLIST = "SegmentPlaylist";
-    public static final String PREF_KEY_PlaylistID = "PlaylistID";
-    public static final String PREF_KEY_PlaylistName = "PlaylistName";
-    public static final String PREF_KEY_PlaylistDescription = "PlaylistDescription";
-    public static final String PREF_KEY_PlaylistType = "PlaylistType";
-    public static final String PREF_KEY_Totalhour = "Totalhour";
-    public static final String PREF_KEY_Totalminute = "Totalminute";
-    public static final String PREF_KEY_TotalAudio = "TotalAudio";
-    public static final String PREF_KEY_ScreenView = "ScreenView";
-    public static final String PREF_KEY_Purchase = "Purchase";
-    public static final String PREF_KEY_PurchaseID = "PurchaseID";
-    public static final String PREF_KEY_PurchaseToken = "PurchaseToken";
-
-    public static final String Token = "Token";
-    public static final String InAppPurchase = "InAppPurchase";
-    public static final String RecommendedCatMain = "RecommendedCatMain";
-    public static final String selectedCategoriesTitle = "selectedCategoriesTitle";
-    public static final String selectedCategoriesName = "selectedCategoriesName";
-    public static final String AssMain = "AssMain";
-    public static final String AssQus = "AssQus";
-    public static final String AssAns = "AssAns";
-    public static final String AssSort = "AssSort";
+    const val PREF_KEY_Plan = "Plan"
+    const val PREF_KEY_SEGMENT_PLAYLIST = "SegmentPlaylist"
+    const val PREF_KEY_PlaylistID = "PlaylistID"
+    const val PREF_KEY_PlaylistName = "PlaylistName"
+    const val PREF_KEY_PlaylistDescription = "PlaylistDescription"
+    const val PREF_KEY_PlaylistType = "PlaylistType"
+    const val PREF_KEY_Totalhour = "Totalhour"
+    const val PREF_KEY_Totalminute = "Totalminute"
+    const val PREF_KEY_TotalAudio = "TotalAudio"
+    const val PREF_KEY_ScreenView = "ScreenView"
+    const val PREF_KEY_Purchase = "Purchase"
+    const val PREF_KEY_PurchaseID = "PurchaseID"
+    const val PREF_KEY_PurchaseToken = "PurchaseToken"
+    const val Token = "Token"
+    const val InAppPurchase = "InAppPurchase"
+    const val RecommendedCatMain = "RecommendedCatMain"
+    const val selectedCategoriesTitle = "selectedCategoriesTitle"
+    const val selectedCategoriesName = "selectedCategoriesName"
+    const val AssMain = "AssMain"
+    const val AssQus = "AssQus"
+    const val AssAns = "AssAns"
+    const val AssSort = "AssSort"
 
     // Files
-    public static final String DOWNLOAD_AUDIO_URL = "http://www.noiseaddicts.com/samples_1w72b820/272.mp3";
-    public static final String FILE_NAME = "audio.mp3";
-    public static final String TEMP_FILE_NAME = "temp";
-    public static final String FILE_EXT = ".mp3";
-    public static final String DIR_NAME = "Audio";
-    public static final int OUTPUT_KEY_LENGTH = 256;
+    const val DOWNLOAD_AUDIO_URL = "http://www.noiseaddicts.com/samples_1w72b820/272.mp3"
+    const val FILE_NAME = "audio.mp3"
+    const val TEMP_FILE_NAME = "temp"
+    const val FILE_EXT = ".mp3"
+    const val DIR_NAME = "Audio"
+    const val OUTPUT_KEY_LENGTH = 256
 
     // Algorithm
-    public static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
-    public static final String KEY_SPEC_ALGORITHM = "AES";
-    public static final String PROVIDER = "BC";
+    const val CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding"
+    const val KEY_SPEC_ALGORITHM = "AES"
+    const val PROVIDER = "BC"
+    const val SECRET_KEY = "SECRET_KEY"
+    const val REGISTRATION_COMPLETE = "registrationComplete"
 
-    public static final String SECRET_KEY = "SECRET_KEY";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    interface ACTION {
+        companion object {
+            const val MAIN_ACTION = "com.brainwellnessspa.action.main"
+            const val INIT_ACTION = "com.brainwellnessspa.action.init"
+            const val PREV_ACTION = "com.brainwellnessspa.action.prev"
+            const val PLAY_ACTION = "com.brainwellnessspa.action.play"
+            const val NEXT_ACTION = "com.brainwellnessspa.action.next"
+            const val STARTFOREGROUND_ACTION = "com.brainwellnessspa.action.startforeground"
+            const val STOPFOREGROUND_ACTION = "com.brainwellnessspa.action.stopforeground"
+        }
+    }
+
 }

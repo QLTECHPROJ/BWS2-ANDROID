@@ -140,6 +140,7 @@ class CreateAccountActivity : AppCompatActivity() {
         override fun afterTextChanged(s: Editable) {}
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_account)

@@ -1,81 +1,77 @@
-package com.brainwellnessspa.utility;
+package com.brainwellnessspa.utility
 
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class RequestPermissionHandler {
-    private Activity mActivity;
-    private RequestPermissionListener mRequestPermissionListener;
-    private int mRequestCode;
-
-    public void requestPermission(Activity activity, @NonNull String[] permissions, int requestCode,
-                                  RequestPermissionListener listener) {
-        mActivity = activity;
-        mRequestCode = requestCode;
-        mRequestPermissionListener = listener;
-
+class RequestPermissionHandler {
+    private var mActivity: Activity? = null
+    private var mRequestPermissionListener: RequestPermissionListener? = null
+    private var mRequestCode = 0
+    fun requestPermission(
+        activity: Activity?, permissions: Array<String>, requestCode: Int,
+        listener: RequestPermissionListener?
+    ) {
+        mActivity = activity
+        mRequestCode = requestCode
+        mRequestPermissionListener = listener
         if (!needRequestRuntimePermissions()) {
-            mRequestPermissionListener.onSuccess();
-            return;
+            mRequestPermissionListener!!.onSuccess()
+            return
         }
-        requestUnGrantedPermissions(permissions, requestCode);
+        requestUnGrantedPermissions(permissions, requestCode)
     }
 
-    private boolean needRequestRuntimePermissions() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    private fun needRequestRuntimePermissions(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }
 
-    private void requestUnGrantedPermissions(String[] permissions, int requestCode) {
-        String[] unGrantedPermissions = findUnGrantedPermissions(permissions);
-        if (unGrantedPermissions.length == 0) {
-            mRequestPermissionListener.onSuccess();
-            return;
+    private fun requestUnGrantedPermissions(permissions: Array<String>, requestCode: Int) {
+        val unGrantedPermissions = findUnGrantedPermissions(permissions)
+        if (unGrantedPermissions.isEmpty()) {
+            mRequestPermissionListener!!.onSuccess()
+            return
         }
-        ActivityCompat.requestPermissions(mActivity, unGrantedPermissions, requestCode);
+        ActivityCompat.requestPermissions(mActivity!!, unGrantedPermissions, requestCode)
     }
 
-    private boolean isPermissionGranted(String permission) {
-        return ActivityCompat.checkSelfPermission(mActivity, permission)
-                == PackageManager.PERMISSION_GRANTED;
+    private fun isPermissionGranted(permission: String): Boolean {
+        return (ActivityCompat.checkSelfPermission(mActivity!!, permission)
+                == PackageManager.PERMISSION_GRANTED)
     }
 
-    private String[] findUnGrantedPermissions(String[] permissions) {
-        List<String> unGrantedPermissionList = new ArrayList<>();
-        for (String permission : permissions) {
+    private fun findUnGrantedPermissions(permissions: Array<String>): Array<String> {
+        val unGrantedPermissionList: MutableList<String> = ArrayList()
+        for (permission in permissions) {
             if (!isPermissionGranted(permission)) {
-                unGrantedPermissionList.add(permission);
+                unGrantedPermissionList.add(permission)
             }
         }
-        return unGrantedPermissionList.toArray(new String[0]);
+        return unGrantedPermissionList.toTypedArray()
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    fun onRequestPermissionsResult(
+        requestCode: Int, grantResults: IntArray
+    ) {
         if (requestCode == mRequestCode) {
-            if (grantResults.length > 0) {
-                for (int grantResult : grantResults) {
+            if (grantResults.isNotEmpty()) {
+                for (grantResult in grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                        mRequestPermissionListener.onFailed();
-                        return;
+                        mRequestPermissionListener!!.onFailed()
+                        return
                     }
                 }
-                mRequestPermissionListener.onSuccess();
+                mRequestPermissionListener!!.onSuccess()
             } else {
-                mRequestPermissionListener.onFailed();
+                mRequestPermissionListener!!.onFailed()
             }
         }
     }
 
-    public interface RequestPermissionListener {
-        void onSuccess();
-
-        void onFailed();
+    interface RequestPermissionListener {
+        fun onSuccess()
+        fun onFailed()
     }
 }

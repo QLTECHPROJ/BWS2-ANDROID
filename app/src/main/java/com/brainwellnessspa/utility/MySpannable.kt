@@ -1,25 +1,21 @@
-package com.brainwellnessspa.utility;
+package com.brainwellnessspa.utility
 
-import android.graphics.Color;
-import android.text.TextPaint;
-import android.text.style.ClickableSpan;
-import android.view.View;
+import android.graphics.Color
+import android.text.TextPaint
+import android.text.style.ClickableSpan
+import android.view.View
 
-public class MySpannable extends ClickableSpan {
-    private boolean isUnderline = false;
-
-    public MySpannable(boolean isUnderline) {
-        this.isUnderline = isUnderline;
+open class MySpannable(isUnderline: Boolean) : ClickableSpan() {
+    private var isUnderline = false
+    override fun updateDrawState(ds: TextPaint) {
+        ds.isUnderlineText = isUnderline
+        ds.isFakeBoldText = true
+        ds.color = Color.parseColor("#F15d36")
     }
 
-    @Override
-    public void updateDrawState(TextPaint ds) {
-        ds.setUnderlineText(isUnderline);
-        ds.setFakeBoldText(true);
-        ds.setColor(Color.parseColor("#F15d36"));
-    }
+    override fun onClick(widget: View) {}
 
-    @Override
-    public void onClick(View widget) {
+    init {
+        this.isUnderline = isUnderline
     }
 }

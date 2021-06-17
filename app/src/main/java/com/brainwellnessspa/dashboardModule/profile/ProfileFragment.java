@@ -39,6 +39,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity;
 import com.brainwellnessspa.reminderModule.activities.ReminderDetailsActivity;
 import com.brainwellnessspa.utility.APIClientProfile;
 import com.brainwellnessspa.utility.APINewClient;
@@ -278,7 +279,7 @@ public class ProfileFragment extends Fragment {
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     if (BWSApplication.isNetworkConnected(getActivity())) {
-                        Intent i = new Intent(getActivity(), ManageActivity.class);
+                        Intent i = new Intent(getActivity(), UpgradePlanActivity.class);
                         startActivity(i);
                         requireActivity().overridePendingTransition(0, 0);
                     } else {

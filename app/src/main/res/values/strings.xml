@@ -289,7 +289,7 @@
     <string name="step_three">Step 3</string>
     <string name="Unlock_the_app">Unlock the app</string>
     <string name="Your_Assessment_Result">Your Assessment Result</string>
-    <string name="ass_quotes">We\'re done with the first part.\n\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nAt vero eos et accusam et justo duo dolores \net ea</string>
+    <string name="ass_quotes">We\'re done with the first part.\n\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nNow all you have to do is fill out an assessment for that will help us ascertain your current mental &amp; emotional state. Baseed on your answers we will recommend the audios, best suited to manage your mental &amp; emotional growth.</string>
     <string name="noti_title">Your Notifications</string>
     <string name="title_activity_bottom_navigation">MainActivity</string>
     <string name="title_home">Home</string>
@@ -404,4 +404,6 @@
     <string name="current_login_password">Current login Password</string>
     <string name="change_password">Change Password</string>
     <string name="go_to_playlist">Go to playlist</string>
+    <string name="now_you_can_add_additional_accounts_get_your_loved_ones_started_on_their_journey_towards_mental_emotional_transformation_upgrade_your_subscription_plan_right_now"><![CDATA[Now you can add additional accounts get your loved ones started on their journey towards mental & emotional transformation. Upgrade your subscription plan right now!!]]></string>
+    <string name="get_the_most_out_of_the_brain_wellness_app">Get the most out of the Brain Wellness App</string>
 </resources>
