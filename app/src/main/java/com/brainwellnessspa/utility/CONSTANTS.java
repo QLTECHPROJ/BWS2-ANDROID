@@ -100,6 +100,7 @@ public class CONSTANTS {
     public static final String PREFE_ACCESS_SLEEPTIME_CAT = "Sleeptime cat";
     public static final String PREFE_ACCESS_SIGNIN_COUSER_TEMP = "CoUserTemp";
     public static final String PREFE_ACCESS_mainAccountID = "mainAccountID";
+    public static final String PREFE_ACCESS_countryCode = "countryCode";
     public static final String PREFE_ACCESS_NAME = "Name";
     public static final String PREFE_ACCESS_IMAGE = "Image";
     public static final String PREFE_ACCESS_USEREMAIL = "UserEmail";
@@ -125,6 +126,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_PlayerPosition = "PlayerPosition";
     public static final String PREF_KEY_PlayFrom = "PlayFrom";
     public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_countryCode = "countryCode";
     public static final String PREF_KEY_Referral = "Referral";
     public static final String PREF_KEY_UserPromocode = "UserPromocode";
     public static final String PREF_KEY_ReferLink = "ReferLink";

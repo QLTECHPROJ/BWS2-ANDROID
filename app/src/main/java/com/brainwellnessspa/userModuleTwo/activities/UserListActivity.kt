@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
@@ -50,9 +49,9 @@ import java.util.*
 class UserListActivity : AppCompatActivity() {
     lateinit var binding: ActivityUserListBinding
     lateinit var dialog: Dialog
-    var USERID: String? = null
-    var CoUserID: String? = null
-    var CoEMAIL: String? = null
+    var userId: String? = null
+    var coUserId: String? = null
+    var coEmail: String? = null
     lateinit var adapter: UserListAdapter
     private lateinit var editTexts: Array<EditText>
     var tvSendOTPool: Boolean = true
@@ -65,9 +64,9 @@ class UserListActivity : AppCompatActivity() {
         activity = this@UserListActivity
         ctx = this@UserListActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        CoEMAIL = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         /* binding.llBack.setOnClickListener {
              finish()
          }*/
@@ -104,14 +103,14 @@ class UserListActivity : AppCompatActivity() {
         private var activity: Activity,
         private var ctx: Context,
         var binding: ActivityUserListBinding,
-        var USERID: String,
-        var CoUserID: String,
-        var CoEMAIL: String
+        var userId: String,
+        var coUserId: String,
+        var coEmail: String
     ) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var userList = UserListActivity()
         private var selectedItem = -1
         private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? =
-            listModel.coUserList
+            listModel.userList
         lateinit var txtError: TextView
 
         inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) :
@@ -127,6 +126,7 @@ class UserListActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
@@ -138,9 +138,9 @@ class UserListActivity : AppCompatActivity() {
                 } else {
                     coUsersModel!![position].name.toString()
                 }
-                val Letter = name.substring(0, 1)
+                val letter = name.substring(0, 1)
                 holder.bindingAdapter.rlLetter.visibility = View.VISIBLE
-                holder.bindingAdapter.tvLetter.text = Letter
+                holder.bindingAdapter.tvLetter.text = letter
             } else {
                 holder.bindingAdapter.ivProfileImage.visibility = View.VISIBLE
                 holder.bindingAdapter.rlLetter.visibility = View.GONE
@@ -168,9 +168,9 @@ class UserListActivity : AppCompatActivity() {
                         R.color.app_theme_color
                     )
                 )
-                USERID = coUsersModel!![position].userID.toString()
-                CoUserID = coUsersModel!![position].coUserId.toString()
-                CoEMAIL = coUsersModel!![position].email.toString()
+                userId = coUsersModel!![position].userID.toString()
+                coUserId = coUsersModel!![position].coUserId.toString()
+                coEmail = coUsersModel!![position].email.toString()
 
             }
 
@@ -269,15 +269,15 @@ class UserListActivity : AppCompatActivity() {
                     } else {
                         txtError.visibility = View.GONE
                         txtError.text = ""
-                        if (BWSApplication.isNetworkConnected(activity)) {
-                            BWSApplication.showProgressBar(
+                        if (isNetworkConnected(activity)) {
+                            showProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
                                 activity
                             )
                             val listCall: Call<VerifyPinModel> =
                                 APINewClient.getClient().getVerifyPin(
-                                    CoUserID,
+                                    userId,
                                     edtOTP1.text.toString() + "" +
                                             edtOTP2.text.toString() + "" +
                                             edtOTP3.text.toString() + "" +
@@ -295,309 +295,383 @@ class UserListActivity : AppCompatActivity() {
                                             activity
                                         )
                                         val listModel: VerifyPinModel = response.body()!!
-                                        if (listModel.responseCode.equals(
+                                        when {
+                                            listModel.responseCode.equals(
                                                 activity.getString(R.string.ResponseCodesuccess),
                                                 ignoreCase = true
-                                            )
-                                        ) {
-                                            val UserID: String =
-                                                listModel.responseData!!.mainAccountID.toString()
-                                            val CoUserId: String =
-                                                listModel.responseData!!.userId.toString()
-                                            val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
-                                            val Logout_UserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
-                                            val Logout_CoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
+                                            ) -> {
+                                                val userId: String =
+                                                    listModel.responseData!!.mainAccountID.toString()
+                                                val coUserId: String =
+                                                    listModel.responseData!!.userId.toString()
+                                                val shared1: SharedPreferences =
+                                                    ctx.getSharedPreferences(
+                                                        CONSTANTS.PREF_KEY_LOGOUT,
+                                                        MODE_PRIVATE
+                                                    )
+                                                val Logout_UserID = shared1.getString(
+                                                    CONSTANTS.PREF_KEY_LOGOUT_UserID,
+                                                    ""
+                                                )
+                                                val Logout_CoUserId = shared1.getString(
+                                                    CONSTANTS.PREF_KEY_LOGOUT_CoUserID,
+                                                    ""
+                                                )
 
-                                         /*   if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
-                                                    && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
-                                                callObserve1(ctx)
-                                            } else {
-                                                callObserve2(ctx)
-                                            }*/
-                                            Log.e("New UserId MobileNo", listModel.responseData!!.mainAccountID + "....." + listModel.responseData!!.userId)
-                                            Log.e("Old UserId MobileNo", "$Logout_UserID.....$Logout_CoUserId")
-                                            BWSApplication.logout = false
-                                              val listCall: Call<CoUserDetailsModel> =
-                                                APINewClient.getClient()
-                                                    .getCoUserDetails(CoUserId)
-                                            listCall.enqueue(object : Callback<CoUserDetailsModel> {
-                                                @SuppressLint("HardwareIds")
-                                                override fun onResponse(
-                                                    call: Call<CoUserDetailsModel>,
-                                                    response: Response<CoUserDetailsModel>
-                                                ) {
-                                                    try {
-                                                        val coUserDetailsModel: CoUserDetailsModel =
-                                                            response.body()!!
-                                                        val responseData: CoUserDetailsModel.ResponseData? =
-                                                            coUserDetailsModel.responseData
-                                                        if (responseData != null) {
-                                                            if (responseData.isProfileCompleted.equals(
-                                                                            "0",
-                                                                            ignoreCase = true
+                                                /*   if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
+                                                                                           && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
+                                                                                       callObserve1(ctx)
+                                                                                   } else {
+                                                                                       callObserve2(ctx)
+                                                                                   }*/
+                                                Log.e(
+                                                    "New UserId MobileNo",
+                                                    listModel.responseData!!.mainAccountID + "....." + listModel.responseData!!.userId
+                                                )
+                                                Log.e(
+                                                    "Old UserId MobileNo",
+                                                    "$Logout_UserID.....$Logout_CoUserId"
+                                                )
+                                                logout = false
+                                                val listCall: Call<CoUserDetailsModel> =
+                                                    APINewClient.getClient()
+                                                        .getCoUserDetails(userId)
+                                                listCall.enqueue(object :
+                                                    Callback<CoUserDetailsModel> {
+                                                    @SuppressLint("HardwareIds")
+                                                    override fun onResponse(
+                                                        call: Call<CoUserDetailsModel>,
+                                                        response: Response<CoUserDetailsModel>
+                                                    ) {
+                                                        try {
+                                                            val coUserDetailsModel: CoUserDetailsModel =
+                                                                response.body()!!
+                                                            val responseData: CoUserDetailsModel.ResponseData? =
+                                                                coUserDetailsModel.responseData
+                                                            if (responseData != null) {
+                                                                if (responseData.isProfileCompleted.equals(
+                                                                        "0",
+                                                                        ignoreCase = true
                                                                     )
-                                                            ) {
-                                                                val intent = Intent(
+                                                                ) {
+                                                                    val intent = Intent(
                                                                         activity,
                                                                         WalkScreenActivity::class.java
-                                                                )
-                                                                intent.putExtra(CONSTANTS.ScreenView, "1")
-                                                                activity.startActivity(intent)
-                                                                activity.finish()
-                                                            } else if (responseData.isAssessmentCompleted.equals(
-                                                                            "0",
-                                                                            ignoreCase = true
                                                                     )
-                                                            ) {
-                                                                val intent = Intent(
-                                                                    activity,
-                                                                    AssProcessActivity::class.java
-                                                                )
-                                                                intent.putExtra(
-                                                                    CONSTANTS.ASSPROCESS,
-                                                                    "0"
-                                                                )
-                                                                activity.startActivity(intent)
-                                                                activity.finish()
-                                                            } else if (responseData.avgSleepTime.equals(
-                                                                            "", ignoreCase = true
+                                                                    intent.putExtra(
+                                                                        CONSTANTS.ScreenView,
+                                                                        "1"
                                                                     )
-                                                            ) {
-                                                                val intent = Intent(
+                                                                    activity.startActivity(intent)
+                                                                    activity.finish()
+                                                                } else if (responseData.isAssessmentCompleted.equals(
+                                                                        "0",
+                                                                        ignoreCase = true
+                                                                    )
+                                                                ) {
+                                                                    val intent = Intent(
+                                                                        activity,
+                                                                        AssProcessActivity::class.java
+                                                                    )
+                                                                    intent.putExtra(
+                                                                        CONSTANTS.ASSPROCESS,
+                                                                        "0"
+                                                                    )
+                                                                    activity.startActivity(intent)
+                                                                    activity.finish()
+                                                                } else if (responseData.avgSleepTime.equals(
+                                                                        "", ignoreCase = true
+                                                                    )
+                                                                ) {
+                                                                    val intent = Intent(
                                                                         activity,
                                                                         SleepTimeActivity::class.java
-                                                                )
-                                                                activity.startActivity(intent)
-                                                                activity.finish()
-                                                            } else if (responseData.isProfileCompleted.equals(
-                                                                            "1",
-                                                                            ignoreCase = true
+                                                                    )
+                                                                    activity.startActivity(intent)
+                                                                    activity.finish()
+                                                                } else if (responseData.isProfileCompleted.equals(
+                                                                        "1",
+                                                                        ignoreCase = true
                                                                     ) &&
                                                                     responseData.isAssessmentCompleted.equals(
-                                                                            "1",
-                                                                            ignoreCase = true
+                                                                        "1",
+                                                                        ignoreCase = true
                                                                     )
-                                                            ) {
-                                                                val intent = Intent(
+                                                                ) {
+                                                                    val intent = Intent(
                                                                         activity,
                                                                         BottomNavigationActivity::class.java
-                                                                )
-                                                                intent.putExtra("IsFirst","1")
-                                                                activity.startActivity(intent)
-                                                                activity.finish()
-                                                            }
-                                                            val shared =
-                                                                    activity.getSharedPreferences(
-                                                                            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                                                            MODE_PRIVATE
                                                                     )
-                                                            val editor = shared.edit()
-                                                            editor.putString(
+                                                                    intent.putExtra("IsFirst", "1")
+                                                                    activity.startActivity(intent)
+                                                                    activity.finish()
+                                                                }
+                                                                val shared =
+                                                                    activity.getSharedPreferences(
+                                                                        CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
+                                                                        MODE_PRIVATE
+                                                                    )
+                                                                val editor = shared.edit()
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_mainAccountID,
                                                                     listModel.responseData!!.mainAccountID
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_UserId,
                                                                     listModel.responseData!!.userId
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_EMAIL,
                                                                     listModel.responseData!!.email
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_NAME,
                                                                     listModel.responseData!!.name
-                                                            )
-                                                            editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_MOBILE,
-                                                                listModel.responseData!!.mobile
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
+                                                                    CONSTANTS.PREFE_ACCESS_MOBILE,
+                                                                    listModel.responseData!!.mobile
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                                                     responseData.avgSleepTime
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_INDEXSCORE,
                                                                     responseData.indexScore
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SCORELEVEL,
                                                                     responseData.scoreLevel
-                                                            )
-                                                            editor.putString(
+                                                                )
+                                                                editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_IMAGE,
                                                                     responseData.image
-                                                            )
-                                                            editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                                                coUserDetailsModel.responseData!!.isProfileCompleted
-                                                            )
-                                                            editor.putString(
-                                                                CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                                                coUserDetailsModel.responseData!!.isAssessmentCompleted
-                                                            )
-                                                            editor.apply()
-                                                            val sharded =
+                                                                )
+                                                                editor.putString(
+                                                                    CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
+                                                                    coUserDetailsModel.responseData!!.isProfileCompleted
+                                                                )
+                                                                editor.putString(
+                                                                    CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
+                                                                    coUserDetailsModel.responseData!!.isAssessmentCompleted
+                                                                )
+                                                                editor.apply()
+                                                                val sharded =
                                                                     activity.getSharedPreferences(
-                                                                            CONSTANTS.RecommendedCatMain,
-                                                                            Context.MODE_PRIVATE
+                                                                        CONSTANTS.RecommendedCatMain,
+                                                                        Context.MODE_PRIVATE
                                                                     )
-                                                            val edited = sharded.edit()
-                                                            edited.putString(
+                                                                val edited = sharded.edit()
+                                                                edited.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                                                     responseData.avgSleepTime
-                                                            )
-                                                            val selectedCategoriesTitle = arrayListOf<String>()
-                                                            val selectedCategoriesName = arrayListOf<String>()
-                                                            val gson = Gson()
-                                                            for (i in listModel.responseData!!.areaOfFocus!!) {
-                                                                selectedCategoriesTitle.add(i.mainCat!!)
-                                                                selectedCategoriesName.add(i.recommendedCat!!)
-                                                            }
-                                                            edited.putString(
-                                                                    CONSTANTS.selectedCategoriesTitle,
-                                                                    gson.toJson(selectedCategoriesTitle)
-                                                            ) //Friend
-                                                            edited.putString(
-                                                                    CONSTANTS.selectedCategoriesName,
-                                                                    gson.toJson(selectedCategoriesName)
-                                                            ) //Friend
-                                                            edited.apply()
-
-                                                            val activity = SplashActivity()
-                                                            activity.setAnalytics(
-                                                                activity.getString(
-                                                                    R.string.segment_key_real
                                                                 )
-                                                            )
+                                                                val selectedCategoriesTitle =
+                                                                    arrayListOf<String>()
+                                                                val selectedCategoriesName =
+                                                                    arrayListOf<String>()
+                                                                val gson = Gson()
+                                                                for (i in listModel.responseData!!.areaOfFocus!!) {
+                                                                    selectedCategoriesTitle.add(i.mainCat!!)
+                                                                    selectedCategoriesName.add(i.recommendedCat!!)
+                                                                }
+                                                                edited.putString(
+                                                                    CONSTANTS.selectedCategoriesTitle,
+                                                                    gson.toJson(
+                                                                        selectedCategoriesTitle
+                                                                    )
+                                                                ) //Friend
+                                                                edited.putString(
+                                                                    CONSTANTS.selectedCategoriesName,
+                                                                    gson.toJson(
+                                                                        selectedCategoriesName
+                                                                    )
+                                                                ) //Friend
+                                                                edited.apply()
 
-                                                            analytics.identify(
-                                                                Traits()
-                                                                    .putEmail(listModel.responseData!!.email)
-                                                                    .putName(listModel.responseData!!.name)
-                                                                    .putPhone(listModel.responseData!!.mobile)
-                                                                    .putValue(
-                                                                        "coUserId",
-                                                                        listModel.responseData!!.userId
+                                                                val activity = SplashActivity()
+                                                                activity.setAnalytics(
+                                                                    activity.getString(
+                                                                        R.string.segment_key_real
                                                                     )
-                                                                    .putValue(
-                                                                        "userId",
-                                                                        listModel.responseData!!.mainAccountID
-                                                                    )
-                                                                    .putValue(
-                                                                        "deviceId",
-                                                                        Settings.Secure.getString(
-                                                                            activity.contentResolver,
-                                                                            Settings.Secure.ANDROID_ID
+                                                                )
+
+                                                                analytics.identify(
+                                                                    Traits()
+                                                                        .putEmail(listModel.responseData!!.email)
+                                                                        .putName(listModel.responseData!!.name)
+                                                                        .putPhone(listModel.responseData!!.mobile)
+                                                                        .putValue(
+                                                                            "coUserId",
+                                                                            listModel.responseData!!.userId
                                                                         )
+                                                                        .putValue(
+                                                                            "userId",
+                                                                            listModel.responseData!!.mainAccountID
+                                                                        )
+                                                                        .putValue(
+                                                                            "deviceId",
+                                                                            Settings.Secure.getString(
+                                                                                activity.contentResolver,
+                                                                                Settings.Secure.ANDROID_ID
+                                                                            )
+                                                                        )
+                                                                        .putValue(
+                                                                            "deviceType",
+                                                                            "Android"
+                                                                        )
+                                                                        .putValue(
+                                                                            "name",
+                                                                            listModel.responseData!!.name
+                                                                        )
+                                                                        .putValue("countryCode", "")
+                                                                        .putValue("countryName", "")
+                                                                        .putValue(
+                                                                            "phone",
+                                                                            listModel.responseData!!.mobile
+                                                                        )
+                                                                        .putValue(
+                                                                            "email",
+                                                                            listModel.responseData!!.email
+                                                                        )
+                                                                        .putValue(
+                                                                            "DOB",
+                                                                            listModel.responseData!!.dob
+                                                                        )
+                                                                        .putValue(
+                                                                            "profileImage",
+                                                                            listModel.responseData!!.image
+                                                                        )
+                                                                        .putValue("plan", "")
+                                                                        .putValue("planStatus", "")
+                                                                        .putValue("planStartDt", "")
+                                                                        .putValue(
+                                                                            "planExpiryDt",
+                                                                            ""
+                                                                        )
+                                                                        .putValue("clinikoId", "")
+                                                                        .putValue(
+                                                                            "isProfileCompleted",
+                                                                            listModel.responseData!!.isProfileCompleted
+                                                                        )
+                                                                        .putValue(
+                                                                            "isAssessmentCompleted",
+                                                                            listModel.responseData!!.isAssessmentCompleted
+                                                                        )
+                                                                        .putValue(
+                                                                            "indexScore",
+                                                                            listModel.responseData!!.indexScore
+                                                                        )
+                                                                        .putValue(
+                                                                            "scoreLevel",
+                                                                            listModel.responseData!!.scoreLevel
+                                                                        )
+                                                                        .putValue(
+                                                                            "areaOfFocus",
+                                                                            listModel.responseData!!.areaOfFocus
+                                                                        )
+                                                                        .putValue(
+                                                                            "avgSleepTime",
+                                                                            listModel.responseData!!.avgSleepTime
+                                                                        )
+                                                                )
+                                                                val p1 = Properties()
+                                                                p1.putValue(
+                                                                    "CoUserID",
+                                                                    listModel.responseData!!.userId
+                                                                )
+                                                                p1.putValue(
+                                                                    "userID",
+                                                                    listModel.responseData!!.mainAccountID
+                                                                )
+                                                                p1.putValue(
+                                                                    "deviceId",
+                                                                    Settings.Secure.getString(
+                                                                        activity.contentResolver,
+                                                                        Settings.Secure.ANDROID_ID
                                                                     )
-                                                                    .putValue(
-                                                                        "deviceType",
-                                                                        "Android"
-                                                                    )
-                                                                    .putValue(
-                                                                        "name",
-                                                                        listModel.responseData!!.name
-                                                                    )
-                                                                    .putValue("countryCode", "")
-                                                                    .putValue("countryName", "")
-                                                                    .putValue(
-                                                                        "phone",
-                                                                        listModel.responseData!!.mobile
-                                                                    )
-                                                                    .putValue(
-                                                                        "email",
-                                                                        listModel.responseData!!.email
-                                                                    )
-                                                                    .putValue(
-                                                                        "DOB",
-                                                                        listModel.responseData!!.dob
-                                                                    )
-                                                                    .putValue(
-                                                                        "profileImage",
-                                                                        listModel.responseData!!.image
-                                                                    )
-                                                                    .putValue("plan", "")
-                                                                    .putValue("planStatus", "")
-                                                                    .putValue("planStartDt", "")
-                                                                    .putValue("planExpiryDt", "")
-                                                                    .putValue("clinikoId", "")
-                                                                    .putValue(
-                                                                        "isProfileCompleted",
-                                                                        listModel.responseData!!.isProfileCompleted
-                                                                    )
-                                                                    .putValue(
-                                                                        "isAssessmentCompleted",
-                                                                        listModel.responseData!!.isAssessmentCompleted
-                                                                    )
-                                                                    .putValue(
-                                                                        "indexScore",
-                                                                        listModel.responseData!!.indexScore
-                                                                    )
-                                                                    .putValue("scoreLevel", listModel.responseData!!.scoreLevel)
-                                                                    .putValue(
-                                                                        "areaOfFocus",
-                                                                        listModel.responseData!!.areaOfFocus
-                                                                    )
-                                                                    .putValue(
-                                                                        "avgSleepTime",
-                                                                        listModel.responseData!!.avgSleepTime
-                                                                    )
-                                                            )
-                                                            val p1 = Properties()
-                                                            p1.putValue("CoUserID", listModel.responseData!!.userId)
-                                                            p1.putValue("userID", listModel.responseData!!.mainAccountID)
-                                                            p1.putValue("deviceId", Settings.Secure.getString(
-                                                                activity.contentResolver,
-                                                                Settings.Secure.ANDROID_ID
-                                                            ))
-                                                            p1.putValue("deviceType", "Android")
-                                                            p1.putValue("name", listModel.responseData!!.name)
-                                                            p1.putValue("countryCode", "")
-                                                            p1.putValue("countryName", "")
-                                                            p1.putValue("phone", listModel.responseData!!.mobile)
-                                                            p1.putValue("email", listModel.responseData!!.email)
-                                                            p1.putValue("plan", "")
-                                                            p1.putValue("planStatus", "")
-                                                            p1.putValue("planStartDt", "")
-                                                            p1.putValue("planExpiryDt", "")
-                                                            p1.putValue("clinikoId", "")
-                                                            p1.putValue("isProfileCompleted", listModel.responseData!!.isProfileCompleted)
-                                                            p1.putValue("isAssessmentCompleted", listModel.responseData!!.isAssessmentCompleted)
-                                                            p1.putValue("indexScore", listModel.responseData!!.indexScore)
-                                                            p1.putValue("scoreLevel", listModel.responseData!!.scoreLevel)
-                                                            p1.putValue("areaOfFocus",  listModel.responseData!!.areaOfFocus)
-                                                            p1.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
-                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                                )
+                                                                p1.putValue("deviceType", "Android")
+                                                                p1.putValue(
+                                                                    "name",
+                                                                    listModel.responseData!!.name
+                                                                )
+                                                                p1.putValue("countryCode", "")
+                                                                p1.putValue("countryName", "")
+                                                                p1.putValue(
+                                                                    "phone",
+                                                                    listModel.responseData!!.mobile
+                                                                )
+                                                                p1.putValue(
+                                                                    "email",
+                                                                    listModel.responseData!!.email
+                                                                )
+                                                                p1.putValue("plan", "")
+                                                                p1.putValue("planStatus", "")
+                                                                p1.putValue("planStartDt", "")
+                                                                p1.putValue("planExpiryDt", "")
+                                                                p1.putValue("clinikoId", "")
+                                                                p1.putValue(
+                                                                    "isProfileCompleted",
+                                                                    listModel.responseData!!.isProfileCompleted
+                                                                )
+                                                                p1.putValue(
+                                                                    "isAssessmentCompleted",
+                                                                    listModel.responseData!!.isAssessmentCompleted
+                                                                )
+                                                                p1.putValue(
+                                                                    "indexScore",
+                                                                    listModel.responseData!!.indexScore
+                                                                )
+                                                                p1.putValue(
+                                                                    "scoreLevel",
+                                                                    listModel.responseData!!.scoreLevel
+                                                                )
+                                                                p1.putValue(
+                                                                    "areaOfFocus",
+                                                                    listModel.responseData!!.areaOfFocus
+                                                                )
+                                                                p1.putValue(
+                                                                    "avgSleepTime",
+                                                                    listModel.responseData!!.avgSleepTime
+                                                                )
+                                                                addToSegment(
+                                                                    "CoUser Login",
+                                                                    p1,
+                                                                    CONSTANTS.track
+                                                                )
+                                                            }
+                                                        } catch (e: Exception) {
+                                                            e.printStackTrace()
                                                         }
-                                                    } catch (e: Exception) {
-                                                        e.printStackTrace()
                                                     }
-                                                }
 
-                                                override fun onFailure(
-                                                    call: Call<CoUserDetailsModel>,
-                                                    t: Throwable
-                                                ) {
-                                                }
-                                            })
+                                                    override fun onFailure(
+                                                        call: Call<CoUserDetailsModel>,
+                                                        t: Throwable
+                                                    ) {
+                                                    }
+                                                })
 
-                                            userList.dialog.dismiss()
-//                                            showToast(
-//                                                listModel.responseMessage,
-//                                                activity
-//                                            )
-                                        } else if (listModel.responseCode.equals(
+                                                userList.dialog.dismiss()
+                                                //                                            showToast(
+                                                //                                                listModel.responseMessage,
+                                                //                                                activity
+                                                //                                            )
+                                            }
+                                            listModel.responseCode.equals(
                                                 activity.getString(
                                                     R.string.ResponseCodefail
                                                 ), ignoreCase = true
-                                            )
-                                        ) {
-                                            txtError.visibility = View.VISIBLE
-                                            txtError.text = listModel.responseMessage
-                                        } else {
-                                            txtError.visibility = View.VISIBLE
-                                            txtError.text = listModel.responseMessage
+                                            ) -> {
+                                                txtError.visibility = View.VISIBLE
+                                                txtError.text = listModel.responseMessage
+                                            }
+                                            else -> {
+                                                txtError.visibility = View.VISIBLE
+                                                txtError.text = listModel.responseMessage
+                                            }
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -642,7 +716,7 @@ class UserListActivity : AppCompatActivity() {
 
     class PinTextWatcher internal constructor(
         val activity: Activity, private val currentIndex: Int,
-        var editTexts: Array<EditText>, val btnDone: Button,
+        private var editTexts: Array<EditText>, val btnDone: Button,
         val edtOTP1: EditText, val edtOTP2: EditText,
         val edtOTP3: EditText, val edtOTP4: EditText,
         private var tvSendOTPbool: Boolean
@@ -653,11 +727,11 @@ class UserListActivity : AppCompatActivity() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             newTypedString = s.subSequence(start, start + count).toString().trim { it <= ' ' }
-            val OTP1: String = edtOTP1.text.toString().trim()
-            val OTP2: String = edtOTP2.text.toString().trim()
-            val OTP3: String = edtOTP3.text.toString().trim()
-            val OTP4: String = edtOTP4.text.toString().trim()
-            if (OTP1.isNotEmpty() && OTP2.isNotEmpty() && OTP3.isNotEmpty() && OTP4.isNotEmpty()) {
+            val otp1: String = edtOTP1.text.toString().trim()
+            val otp2: String = edtOTP2.text.toString().trim()
+            val otp3: String = edtOTP3.text.toString().trim()
+            val otp4: String = edtOTP4.text.toString().trim()
+            if (otp1.isNotEmpty() && otp2.isNotEmpty() && otp3.isNotEmpty() && otp4.isNotEmpty()) {
                 btnDone.isEnabled = true
                 btnDone.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
@@ -710,7 +784,7 @@ class UserListActivity : AppCompatActivity() {
             }
 
         private fun hideKeyboard() {
-            if (activity.getCurrentFocus() != null) {
+            if (activity.currentFocus != null) {
                 val inputMethodManager =
                     activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(
@@ -727,7 +801,7 @@ class UserListActivity : AppCompatActivity() {
 
     class PinOnKeyListener internal constructor(
         private val currentIndex: Int,
-        var editTexts: Array<EditText>
+        private var editTexts: Array<EditText>
     ) : View.OnKeyListener {
         override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
@@ -740,9 +814,10 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun prepareUserData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AddedUserListModel> = APINewClient.getClient().getUserList(USERID)
+        if (isNetworkConnected(this)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall: Call<AddedUserListModel> =
+                APINewClient.getClient().getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
                 override fun onResponse(
                     call: Call<AddedUserListModel>,
@@ -764,33 +839,33 @@ class UserListActivity : AppCompatActivity() {
                             adapter = UserListAdapter(
                                 listModel.responseData!!,
                                 activity,
-                                    ctx,
+                                ctx,
                                 binding,
-                                USERID.toString(),
-                                CoUserID.toString(),
-                                CoEMAIL.toString()
+                                userId.toString(),
+                                coUserId.toString(),
+                                coEmail.toString()
                             )
                             binding.rvUserList.adapter = adapter
 
-                            if (listModel.responseData!!.coUserList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
+                            if (listModel.responseData!!.userList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
                                 binding.llAddNewUser.visibility = View.GONE
                             } else {
                                 binding.llAddNewUser.visibility = View.VISIBLE
                             }
                             val section = ArrayList<SegmentUserList>()
-                            for (i in listModel.responseData!!.coUserList!!.indices) {
+                            for (i in listModel.responseData!!.userList!!.indices) {
                                 val e = SegmentUserList()
-                                e.coUserId = listModel.responseData!!.coUserList!![i].coUserId
-                                e.name = listModel.responseData!!.coUserList!![i].name
-                                e.mobile = listModel.responseData!!.coUserList!![i].mobile
-                                e.email = listModel.responseData!!.coUserList!![i].email
-                                e.image = listModel.responseData!!.coUserList!![i].image
-                                e.dob = listModel.responseData!!.coUserList!![i].dob
+                                e.coUserId = listModel.responseData!!.userList!![i].coUserId
+                                e.name = listModel.responseData!!.userList!![i].name
+                                e.mobile = listModel.responseData!!.userList!![i].mobile
+                                e.email = listModel.responseData!!.userList!![i].email
+                                e.image = listModel.responseData!!.userList!![i].image
+                                e.dob = listModel.responseData!!.userList!![i].dob
                                 section.add(e)
                             }
                             val p = Properties()
                             val gson = Gson()
-                            p.putValue("userID", USERID)
+                            p.putValue("userID", userId)
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                             p.putValue("coUserList", gson.toJson(section))
                             addToSegment("Couser List Viewed", p, CONSTANTS.screen)

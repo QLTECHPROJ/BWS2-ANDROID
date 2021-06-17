@@ -291,7 +291,7 @@ class AddProfileActivity : AppCompatActivity() {
                     activity
                 )
                 val listCall: Call<SucessModel> =
-                    APINewClient.getClient().getForgotPin(coUserID, coEMAIL)
+                    APINewClient.getClient().getForgotPin(userID, coEMAIL)
                 listCall.enqueue(object : Callback<SucessModel> {
                     override fun onResponse(
                         call: Call<SucessModel>,

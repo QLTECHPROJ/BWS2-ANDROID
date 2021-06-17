@@ -936,7 +936,7 @@ public class ProfileFragment extends Fragment {
                             try {
                                 analytics.flush();
                                 analytics.reset();
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             Intent i = new Intent(getActivity(), GetStartedActivity.class);

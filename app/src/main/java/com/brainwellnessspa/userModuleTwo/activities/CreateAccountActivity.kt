@@ -67,27 +67,52 @@ class CreateAccountActivity : AppCompatActivity() {
             when {
                 ckName.equals("", ignoreCase = true) -> {
                     binding.btnCreateAc.isEnabled = false
-                    binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnCreateAc.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.white
+                        )
+                    )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
                 ckNumber.equals("", ignoreCase = true) -> {
                     binding.btnCreateAc.isEnabled = false
-                    binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnCreateAc.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.white
+                        )
+                    )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
                 ckEmail.equals("", ignoreCase = true) -> {
                     binding.btnCreateAc.isEnabled = false
-                    binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnCreateAc.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.white
+                        )
+                    )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
                 ckPass.equals("", ignoreCase = true) -> {
                     binding.btnCreateAc.isEnabled = false
-                    binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnCreateAc.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.white
+                        )
+                    )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
                 else -> {
                     binding.btnCreateAc.isEnabled = true
-                    binding.btnCreateAc.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    binding.btnCreateAc.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.white
+                        )
+                    )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 }
             }
@@ -189,7 +214,8 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE
                 binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text = "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
+                binding.txtPassowrdError.text =
+                    "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
             } else {
                 SignUpUser()
             }
@@ -368,15 +394,15 @@ class CreateAccountActivity : AppCompatActivity() {
             fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcm_id)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                    this,
-                    OnCompleteListener { task: Task<InstallationTokenResult> ->
-                        val newToken = task.result!!.token
-                        Log.e("newToken", newToken)
-                        val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                        editor.putString(CONSTANTS.Token, newToken) //Friend
-                        editor.apply()
-                        editor.commit()
-                    })
+                    this
+                ) { task: Task<InstallationTokenResult> ->
+                    val newToken = task.result!!.token
+                    Log.e("newToken", newToken)
+                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                    editor.apply()
+                    editor.commit()
+                }
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
                 fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
@@ -408,6 +434,7 @@ class CreateAccountActivity : AppCompatActivity() {
                         )
                         val listModel: NewSignUpModel = response.body()!!
                         if (listModel.getResponseCode().equals("200")) {
+
                             val i = Intent(ctx, SignInActivity::class.java)
                             startActivity(i)
                             finish()
@@ -423,14 +450,6 @@ class CreateAccountActivity : AppCompatActivity() {
                             )
                             p.putValue("email", listModel.getResponseData()!!.email)
                             BWSApplication.addToSegment("User Sign up", p, CONSTANTS.track)
-                            /*  val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                              val editor = shared.edit()
-                              editor.putString(CONSTANTS.PREFE_ACCESS_UserID, listModel.getResponseData()?.id)
-                              editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.getResponseData()?.name)
-                              editor.putString(CONSTANTS.PREFE_ACCESS_USEREMAIL, listModel.getResponseData()?.email)
-                              editor.putString(CONSTANTS.PREFE_ACCESS_DeviceType, CONSTANTS.FLAG_ONE)
-                              editor.putString(CONSTANTS.PREFE_ACCESS_DeviceID, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
-                              editor.commit()*/
                         }
                         BWSApplication.showToast(listModel.getResponseMessage(), activity)
 
@@ -509,7 +528,9 @@ class CreateAccountActivity : AppCompatActivity() {
                         val filteredList: MutableList<CountryListModel.ResponseData> =
                             ArrayList<CountryListModel.ResponseData>()
                         for (row in modelList) {
-                            if (row.name!!.toLowerCase(Locale.getDefault()).contains(charString.toLowerCase(Locale.getDefault()))) {
+                            if (row.name!!.toLowerCase(Locale.getDefault())
+                                    .contains(charString.toLowerCase(Locale.getDefault()))
+                            ) {
                                 filteredList.add(row)
                             }
                         }

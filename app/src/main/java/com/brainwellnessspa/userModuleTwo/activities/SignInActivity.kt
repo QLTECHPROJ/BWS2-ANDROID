@@ -152,46 +152,47 @@ class SignInActivity : AppCompatActivity() {
 
     @SuppressLint("HardwareIds")
     fun prepareData() {
-        val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-        fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-        if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                this
-            ) { task: Task<InstallationTokenResult> ->
-                val newToken = task.result!!.token
-                Log.e("newToken", newToken)
-                val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) //Friend
-                editor.apply()
-                editor.commit()
+        if (BWSApplication.isNetworkConnected(this)) {
+            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
+            if (TextUtils.isEmpty(fcmId)) {
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
+                    this
+                ) { task: Task<InstallationTokenResult> ->
+                    val newToken = task.result!!.token
+                    Log.e("newToken", newToken)
+                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                    editor.apply()
+                    editor.commit()
+                }
+                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+                fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
-            val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
-        }
-        if (binding.etEmail.text.toString() == "") {
-            binding.txtEmailError.visibility = View.VISIBLE
-            binding.txtEmailError.text = "Please provide a email address"
-            binding.txtPassowrdError.visibility = View.GONE
-        } else if (binding.etEmail.text.toString() != ""
-            && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
-        ) {
-            binding.txtEmailError.visibility = View.VISIBLE
-            binding.txtEmailError.text = "Please  provide a valid email address"
-            binding.txtPassowrdError.visibility = View.GONE
-        } else if (binding.etPassword.text.toString() == "") {
-            binding.txtEmailError.visibility = View.GONE
-            binding.txtPassowrdError.visibility = View.VISIBLE
-            binding.txtPassowrdError.text = "Please provide a password"
-        } else if (binding.etPassword.text.toString().length < 8
-            || !isValidPassword(binding.etPassword.text.toString())
-        ) {
-            binding.txtEmailError.visibility = View.GONE
-            binding.txtPassowrdError.visibility = View.VISIBLE
-            binding.txtPassowrdError.text = "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
-        } else {
-            binding.txtEmailError.visibility = View.GONE
-            binding.txtPassowrdError.visibility = View.GONE
-            if (BWSApplication.isNetworkConnected(this)) {
+            if (binding.etEmail.text.toString() == "") {
+                binding.txtEmailError.visibility = View.VISIBLE
+                binding.txtEmailError.text = "Please provide a email address"
+                binding.txtPassowrdError.visibility = View.GONE
+            } else if (binding.etEmail.text.toString() != ""
+                && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
+            ) {
+                binding.txtEmailError.visibility = View.VISIBLE
+                binding.txtEmailError.text = "Please  provide a valid email address"
+                binding.txtPassowrdError.visibility = View.GONE
+            } else if (binding.etPassword.text.toString() == "") {
+                binding.txtEmailError.visibility = View.GONE
+                binding.txtPassowrdError.visibility = View.VISIBLE
+                binding.txtPassowrdError.text = "Please provide a password"
+            } else if (binding.etPassword.text.toString().length < 8
+                || !isValidPassword(binding.etPassword.text.toString())
+            ) {
+                binding.txtEmailError.visibility = View.GONE
+                binding.txtPassowrdError.visibility = View.VISIBLE
+                binding.txtPassowrdError.text =
+                    "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
+            } else {
+                binding.txtEmailError.visibility = View.GONE
+                binding.txtPassowrdError.visibility = View.GONE
                 BWSApplication.showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
@@ -251,6 +252,10 @@ class SignInActivity : AppCompatActivity() {
                                         Settings.Secure.ANDROID_ID
                                     )
                                 )
+                                editor.putString(
+                                    CONSTANTS.PREFE_ACCESS_countryCode,
+                                    listModel.getResponseData()?.email
+                                )
                                 editor.apply()
                                 val i = Intent(this@SignInActivity, UserListActivity::class.java)
                                 startActivity(i)
@@ -280,9 +285,12 @@ class SignInActivity : AppCompatActivity() {
                         )
                     }
                 })
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+
             }
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), this)
         }
     }
 }
+
+

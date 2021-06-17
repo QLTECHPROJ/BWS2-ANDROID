@@ -25,16 +25,20 @@ class AddedUserListModel {
         @Expose
         var maxuseradd: String? = null
 
-        @SerializedName("CoUserList")
+        @SerializedName("UserList")
         @Expose
-        var coUserList: List<CoUser>? = null
+        var userList: List<CoUser>? = null
 
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = null
 
         class CoUser {
-            @SerializedName("UserID")
+            @SerializedName("MainAccountID")
+            @Expose
+            var mainAccountID: String? = null
+
+            @SerializedName("UserId")
             @Expose
             var userID: String? = null
 
@@ -71,12 +75,5 @@ class AddedUserListModel {
             this.maxuseradd = maxuseradd
         }
 
-        fun getCoUser(): List<CoUser>? {
-            return coUserList
-        }
-
-        fun setCoUser(coUserList: List<CoUser>?) {
-            this.coUserList = coUserList
-        }
     }
 }

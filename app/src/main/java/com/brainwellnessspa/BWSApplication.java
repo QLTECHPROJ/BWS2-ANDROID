@@ -2070,7 +2070,7 @@ public class BWSApplication extends Application {
             View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
             TextView tvMessage = view.findViewById(R.id.tvMessage);
             tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 160);
             toast.setView(view);
             toast.show();
         } else {
@@ -2095,7 +2095,7 @@ public class BWSApplication extends Application {
 
             dialog.setCancelable(true);*/
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 350);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 160);
             toast.show();
         }
     }

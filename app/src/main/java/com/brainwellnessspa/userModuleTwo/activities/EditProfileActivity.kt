@@ -17,13 +17,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.R
 import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityEditProfileBinding
 import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
 import com.brainwellnessspa.userModuleTwo.models.EditProfileModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityEditProfileBinding
 import com.segment.analytics.Properties
 import com.segment.analytics.Traits
 import retrofit2.Call

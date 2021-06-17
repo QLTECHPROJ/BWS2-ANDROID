@@ -26,15 +26,23 @@ class GetStartedActivity : AppCompatActivity() {
         val p = Properties()
         BWSApplication.addToSegment("Launch Screen Viewed", p, CONSTANTS.screen)
         binding.btnGetStarted.setOnClickListener {
-            val i = Intent(ctx, CreateAccountActivity::class.java)
-            startActivity(i)
-            finish()
+            if (BWSApplication.isNetworkConnected(this)) {
+                val i = Intent(ctx, CreateAccountActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            }
         }
 
         binding.btnAlreadyAc.setOnClickListener {
-            val i = Intent(ctx, SignInActivity::class.java)
-            startActivity(i)
-            finish()
+            if (BWSApplication.isNetworkConnected(this)) {
+                val i = Intent(ctx, SignInActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            }
         }
     }
 
