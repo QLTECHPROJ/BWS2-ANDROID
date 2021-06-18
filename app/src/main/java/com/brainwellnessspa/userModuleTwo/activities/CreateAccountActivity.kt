@@ -136,7 +136,6 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.ivInVisible.isEnabled = true
             }
         }
-
         override fun afterTextChanged(s: Editable) {}
     }
 

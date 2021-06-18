@@ -174,11 +174,11 @@ class SplashActivity : AppCompatActivity() {
                     try {
                         val coUserDetailsModel: CoUserDetailsModel = response.body()!!
                         isProfileCompleted =
-                                coUserDetailsModel.responseData!!.isProfileCompleted.toString()
+                                coUserDetailsModel.ResponseData!!.isProfileCompleted.toString()
                         isAssessmentCompleted =
-                                coUserDetailsModel.responseData!!.isAssessmentCompleted.toString()
-                        indexScore = coUserDetailsModel.responseData!!.indexScore.toString()
-                        avgSleepTime = coUserDetailsModel.responseData!!.avgSleepTime.toString()
+                                coUserDetailsModel.ResponseData.isAssessmentCompleted.toString()
+                        indexScore = coUserDetailsModel.ResponseData.indexScore.toString()
+                        avgSleepTime = coUserDetailsModel.ResponseData.AvgSleepTime.toString()
                         val shared = getSharedPreferences(
                                 CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
                                 Context.MODE_PRIVATE
@@ -186,19 +186,19 @@ class SplashActivity : AppCompatActivity() {
                         val editor = shared.edit()
                         editor.putString(
                                 CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                coUserDetailsModel.responseData!!.indexScore
+                                coUserDetailsModel.ResponseData.indexScore
                         )
                         editor.putString(
                                 CONSTANTS.PREFE_ACCESS_MOBILE,
-                                coUserDetailsModel.responseData!!.mobile
+                                coUserDetailsModel.ResponseData.Mobile
                         )
                         editor.putString(
                                 CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                coUserDetailsModel.responseData!!.isProfileCompleted
+                                coUserDetailsModel.ResponseData.isProfileCompleted
                         )
                         editor.putString(
                                 CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                coUserDetailsModel.responseData!!.isAssessmentCompleted
+                                coUserDetailsModel.ResponseData.isAssessmentCompleted
                         )
                         editor.apply()
                         val shred =
@@ -206,14 +206,14 @@ class SplashActivity : AppCompatActivity() {
                         val edited = shred.edit()
                         edited.putString(
                                 CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                coUserDetailsModel.responseData!!.avgSleepTime
+                                coUserDetailsModel.ResponseData.AvgSleepTime
                         )
                         val selectedCategoriesTitle = arrayListOf<String>()
                         val selectedCategoriesName = arrayListOf<String>()
                         val gson = Gson()
-                        for (i in coUserDetailsModel.responseData!!.areaOfFocus!!) {
-                            selectedCategoriesTitle.add(i.mainCat!!)
-                            selectedCategoriesName.add(i.recommendedCat!!)
+                        for (i in coUserDetailsModel.ResponseData.AreaOfFocus!!) {
+                            selectedCategoriesTitle.add(i.MainCat!!)
+                            selectedCategoriesName.add(i.RecommendedCat!!)
                         }
                         edited.putString(
                                 CONSTANTS.selectedCategoriesTitle,

@@ -1,95 +1,32 @@
 package com.brainwellnessspa.userModuleTwo.models
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+data class CoUserDetailsModel(
+    val ResponseCode: String?,
+    val ResponseData: ResponseData?,
+    val ResponseMessage: String?,
+    val ResponseStatus: String?
+)
 
-class CoUserDetailsModel {
-    @SerializedName("ResponseData")
-    @Expose
-    var responseData: ResponseData? = null
+data class ResponseData(
+    val AreaOfFocus: List<AreaOfFocus>?,
+    val AvgSleepTime: String?,
+    val DOB: String?,
+    val Email: String?,
+    val Image: String?,
+    val MainAccountID: String?,
+    val Mobile: String?,
+    val Name: String?,
+    val ScoreLevel: String?,
+    val UserId: String?,
+    val errormsg: String?,
+    val indexScore: String?,
+    val isAssessmentCompleted: String?,
+    val isProfileCompleted: String?,
+    val planDetails: List<Any>?
+)
 
-    @SerializedName("ResponseCode")
-    @Expose
-    var responseCode: String? = ""
-
-    @SerializedName("ResponseMessage")
-    @Expose
-    var responseMessage: String? = ""
-
-    @SerializedName("ResponseStatus")
-    @Expose
-    var responseStatus: String? = ""
-
-    class ResponseData {
-
-        @SerializedName("UserId")
-        @Expose
-        var userId: String? = ""
-
-        @SerializedName("Name")
-        @Expose
-        var name: String? = ""
-
-        @SerializedName("Email")
-        @Expose
-        var email: String? = ""
-
-        @SerializedName("Mobile")
-        @Expose
-        var mobile: String? = ""
-
-        @SerializedName("Image")
-        @Expose
-        var image: String? = ""
-
-        @SerializedName("DOB")
-        @Expose
-        var dob: String? = ""
-
-        @SerializedName("isProfileCompleted")
-        @Expose
-        var isProfileCompleted: String? = ""
-
-        @SerializedName("isAssessmentCompleted")
-        @Expose
-        var isAssessmentCompleted: String? = ""
-
-        @SerializedName("indexScore")
-        @Expose
-        var indexScore: String? = ""
-
-        @SerializedName("planDetails")
-        @Expose
-        var planDetails: List<PlanDetails>? = null
-
-        @SerializedName("AreaOfFocus")
-        @Expose
-        var areaOfFocus: List<AreaOfFocus>? = null
-
-        @SerializedName("AvgSleepTime")
-        @Expose
-        var avgSleepTime: String? = ""
-
-        @SerializedName("ScoreLevel")
-        @Expose
-        var scoreLevel: String? = ""
-
-        @SerializedName("errormsg")
-        @Expose
-        var errormsg: String? = ""
-
-        class PlanDetails {
-
-        }
-
-        class AreaOfFocus {
-            @SerializedName("MainCat")
-            @Expose
-            var mainCat: String? = ""
-
-            @SerializedName("RecommendedCat")
-            @Expose
-            var recommendedCat: String? = ""
-        }
-    }
-}
+data class AreaOfFocus(
+    val CatId: String?,
+    val MainCat: String?,
+    val RecommendedCat: String?
+)
