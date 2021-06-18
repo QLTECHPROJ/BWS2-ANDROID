@@ -1,191 +1,190 @@
-package com.brainwellnessspa.billingOrderModule.activities;
+package com.brainwellnessspa.billingOrderModule.activities
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
+import com.brainwellnessspa.databinding.ActivityMembershipChangeBinding
+import com.brainwellnessspa.databinding.MembershipPlanBinding
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.CONSTANTS
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.utility.APIClient;
-import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.databinding.ActivityMembershipChangeBinding;
-import com.brainwellnessspa.databinding.MembershipPlanBinding;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
-
-public class MembershipChangeActivity extends AppCompatActivity {
-    ActivityMembershipChangeBinding binding;
-    Context ctx;
-    String UserID, ComeFrom;
-    Activity activity;
-    public static String renewPlanFlag, renewPlanId;
-    MembershipPlanAdapter membershipPlanAdapter;
-    private int numStarted = 0;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-    boolean notificationStatus = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change);
-        ctx = MembershipChangeActivity.this;
-        activity = MembershipChangeActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
-        binding.llBack.setOnClickListener(view -> {
-            callback();
-        });
-
-        notificationStatus = false;
-
-        if (getIntent() != null) {
-            ComeFrom = getIntent().getStringExtra("ComeFrom");
+class MembershipChangeActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMembershipChangeBinding
+    lateinit var ctx: Context
+    var userId: String? = null
+    var comeFrom: String? = null
+    lateinit var activity: Activity
+    var membershipPlanAdapter: MembershipPlanAdapter? = null
+    private var numStarted = 0
+    var stackStatus = 0
+    var myBackPress = false
+    var notificationStatus = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change)
+        ctx = this@MembershipChangeActivity
+        activity = this@MembershipChangeActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        binding.llBack.setOnClickListener { callback() }
+        notificationStatus = false
+        if (intent != null) {
+            comeFrom = intent.getStringExtra("ComeFrom")
         }
-
-        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvPlanList.setLayoutManager(mLayoutManager1);
-        binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
-
+        val mLayoutManager1: RecyclerView.LayoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvPlanList.layoutManager = mLayoutManager1
+        binding.rvPlanList.itemAnimator = DefaultItemAnimator()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
     }
 
-    @Override
-    protected void onResume() {
-        prepareMembershipData();
-        super.onResume();
+    override fun onResume() {
+        prepareMembershipData()
+        super.onResume()
     }
 
-    @Override
-    public void onBackPressed() {
-        callback();
+    override fun onBackPressed() {
+        callback()
     }
 
-    private void callback() {
-        myBackPress = true;
-        if (ComeFrom.equalsIgnoreCase("Plan")) {
-            finish();
-        } else if (ComeFrom.equalsIgnoreCase("")) {
-            Intent i = new Intent(ctx, BillingOrderActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-            Intent i = new Intent(ctx, BillingOrderActivity.class);
-            startActivity(i);
-            finish();
+    private fun callback() {
+        myBackPress = true
+        when {
+            comeFrom.equals("Plan", ignoreCase = true) -> {
+                finish()
+            }
+            comeFrom.equals("", ignoreCase = true) -> {
+                val i = Intent(ctx, BillingOrderActivity::class.java)
+                startActivity(i)
+                finish()
+            }
+            else -> {
+                val i = Intent(ctx, BillingOrderActivity::class.java)
+                startActivity(i)
+                finish()
+            }
         }
-
     }
 
-    private void prepareMembershipData() {
+    private fun prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<PlanListBillingModel> listCall = APIClient.getClient().getPlanListBilling(UserID);
-            listCall.enqueue(new Callback<PlanListBillingModel>() {
-                @Override
-                public void onResponse(Call<PlanListBillingModel> call, Response<PlanListBillingModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APIClient.getClient().getPlanListBilling(userId)
+            listCall.enqueue(object : Callback<PlanListBillingModel?> {
+                override fun onResponse(
+                    call: Call<PlanListBillingModel?>,
+                    response: Response<PlanListBillingModel?>
+                ) {
                     try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            PlanListBillingModel membershipPlanListModel = response.body();
-                            if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
-                                binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-                                MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                                        5, 3, 1f, 0);
-                                binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                                binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                                binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                                binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
-                                membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                        , ctx, binding.btnFreeJoin);
-                                binding.rvPlanList.setAdapter(membershipPlanAdapter);
+                        if (response.isSuccessful) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            val membershipPlanListModel = response.body()
+                            if (membershipPlanListModel!!.responseCode.equals(
+                                    getString(R.string.ResponseCodesuccess),
+                                    ignoreCase = true
+                                )
+                            ) {
+                                binding.tvTitle.text = membershipPlanListModel.responseData.title
+                                binding.tvDesc.text = membershipPlanListModel.responseData.desc
+                                val measureRatio =
+                                    BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
+                                binding.ivRestaurantImage.layoutParams.height =
+                                    (measureRatio.height * measureRatio.ratio).toInt()
+                                binding.ivRestaurantImage.layoutParams.width =
+                                    (measureRatio.widthImg * measureRatio.ratio).toInt()
+                                binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+                                binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner)
+                                membershipPlanAdapter = MembershipPlanAdapter(
+                                    membershipPlanListModel.responseData.plan,
+                                    ctx,
+                                    binding.btnFreeJoin
+                                )
+                                binding.rvPlanList.adapter = membershipPlanAdapter
                             }
                         }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<PlanListBillingModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<PlanListBillingModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 
-    public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder> {
-        private ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList;
-        Context ctx;
-        private int row_index = -1, pos = 0;
-        Button btnFreeJoin;
-        Intent i;
-
-        public MembershipPlanAdapter(ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList, Context ctx, Button btnFreeJoin) {
-            this.listModelList = listModelList;
-            this.ctx = ctx;
-            this.btnFreeJoin = btnFreeJoin;
+    inner class MembershipPlanAdapter(
+        private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>,
+        var ctx: Context,
+        var btnFreeJoin: Button
+    ) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
+        private var rowIndex = -1
+        private var pos = 0
+        var i: Intent? = null
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: MembershipPlanBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false
+            )
+            return MyViewHolder(v)
         }
 
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            MembershipPlanBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.membership_plan, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            PlanListBillingModel.ResponseData.Plan listModel = listModelList.get(position);
-//        holder.binding.tvTitle.setText(listModel.getTitle());
-            holder.binding.tvPlanFeatures01.setText(listModel.getPlanFeatures().get(0).getFeature());
-            holder.binding.tvPlanFeatures02.setText(listModel.getPlanFeatures().get(1).getFeature());
-            holder.binding.tvPlanFeatures03.setText(listModel.getPlanFeatures().get(2).getFeature());
-            holder.binding.tvPlanFeatures04.setText(listModel.getPlanFeatures().get(3).getFeature());
-            holder.binding.tvPlanAmount.setText("$" + listModel.getPlanAmount());
-            holder.binding.tvSubName.setText(listModel.getSubName());
-            holder.binding.tvPlanInterval.setText(listModel.getPlanInterval());
-
-            if (listModel.getRecommendedFlag().equalsIgnoreCase("1")) {
-                holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-          /*  if (pos == 0) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val listModel = listModelList[position]
+            //        holder.binding.tvTitle.setText(listModel.getTitle());
+            holder.binding.tvPlanFeatures01.text = listModel.planFeatures[0].feature
+            holder.binding.tvPlanFeatures02.text = listModel.planFeatures[1].feature
+            holder.binding.tvPlanFeatures03.text = listModel.planFeatures[2].feature
+            holder.binding.tvPlanFeatures04.text = listModel.planFeatures[3].feature
+            holder.binding.tvPlanAmount.text = "$" + listModel.planAmount
+            holder.binding.tvSubName.text = listModel.subName
+            holder.binding.tvPlanInterval.text = listModel.planInterval
+            if (listModel.recommendedFlag.equals("1", ignoreCase = true)) {
+                holder.binding.tvRecommended.visibility = View.VISIBLE
+                /*  if (pos == 0) {
                 holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
                 holder.binding.llFeatures.setVisibility(View.VISIBLE);
                 holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
@@ -194,135 +193,146 @@ public class MembershipChangeActivity extends AppCompatActivity {
                 holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
             }*/
             } else {
-                holder.binding.tvRecommended.setVisibility(View.GONE);
+                holder.binding.tvRecommended.visibility = View.GONE
             }
-            holder.binding.llPlanMain.setOnClickListener(view -> {
-                row_index = position;
-                pos++;
-
-                notifyDataSetChanged();
-            });
-
-            if (row_index == position) {
-                ChangeFunction(holder, listModel, position);
+            holder.binding.llPlanMain.setOnClickListener {
+                rowIndex = position
+                pos++
+                notifyDataSetChanged()
+            }
+            if (rowIndex == position) {
+                changeFunction(holder, listModel)
             } else {
-                if (listModel.getRecommendedFlag().equalsIgnoreCase("1") && pos == 0) {
-                    holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-                    ChangeFunction(holder, listModel, position);
+                if (listModel.recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
+                    holder.binding.tvRecommended.visibility = View.VISIBLE
+                    changeFunction(holder, listModel)
                 } else {
-                    holder.binding.llPlanSub.setBackground(ctx.getResources().getDrawable(R.drawable.rounded_light_gray));
-                    holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.black));
-                    holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.black));
-                    holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.black));
-                    holder.binding.llFeatures.setVisibility(View.GONE);
+                    holder.binding.llPlanSub.background =
+                        ContextCompat.getDrawable(activity, R.drawable.rounded_light_gray)
+                    holder.binding.tvPlanAmount.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.black
+                        )
+                    )
+                    holder.binding.tvSubName.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.black
+                        )
+                    )
+                    holder.binding.tvPlanInterval.setTextColor(
+                        ContextCompat.getColor(
+                            activity,
+                            R.color.black
+                        )
+                    )
+                    holder.binding.llFeatures.visibility = View.GONE
                 }
             }
-            btnFreeJoin.setOnClickListener(view -> {
-
-                myBackPress = true;
-                ctx.startActivity(i);
-                finish();
-            });
+            btnFreeJoin.setOnClickListener {
+                myBackPress = true
+                ctx.startActivity(i)
+                finish()
+            }
         }
 
-        private void ChangeFunction(MyViewHolder holder, PlanListBillingModel.ResponseData.Plan listModel, int position) {
-            holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor);
-            holder.binding.llFeatures.setVisibility(View.VISIBLE);
-            holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
-            holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
-            holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
-            holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
-            renewPlanFlag = listModel.getPlanFlag();
-            renewPlanId = listModel.getPlanID();
-            notificationStatus = true;
-      /*      i = new Intent(ctx, OrderSummaryActivity.class);
+        private fun changeFunction(
+            holder: MyViewHolder,
+            listModel: PlanListBillingModel.ResponseData.Plan
+        ) {
+            holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor)
+            holder.binding.llFeatures.visibility = View.VISIBLE
+            holder.binding.tvPlanAmount.setTextColor(
+                ContextCompat.getColor(
+                    activity,
+                    R.color.white
+                )
+            )
+            holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.white))
+            holder.binding.tvPlanInterval.setTextColor(
+                ContextCompat.getColor(
+                    activity,
+                    R.color.white
+                )
+            )
+            holder.binding.llFeatures.setBackgroundColor(
+                ContextCompat.getColor(
+                    activity,
+                    R.color.white
+                )
+            )
+            renewPlanFlag = listModel.planFlag
+            renewPlanId = listModel.planID
+            notificationStatus = true
+            /*      i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
-            i.putExtra("ComesTrue", ComeFrom);
+            i.putExtra("ComesTrue", comeFrom);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
             i.putExtra("Promocode", "");*/
         }
 
-        @Override
-        public int getItemCount() {
-            return listModelList.size();
+        override fun getItemCount(): Int {
+            return listModelList.size
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            MembershipPlanBinding binding;
-
-            public MyViewHolder(MembershipPlanBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
+        inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(
+            binding.root
+        )
     }
 
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
+    internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
-                stackStatus = 1;
-                Log.e("APPLICATION", "APP IN FOREGROUND");
+                stackStatus = 1
+                Log.e("APPLICATION", "APP IN FOREGROUND")
                 //app went to foreground
             }
-            numStarted++;
+            numStarted++
         }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {
+            numStarted--
             if (numStarted == 0) {
                 if (!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
+                    Log.e("APPLICATION", "Back press false")
+                    stackStatus = 2
                 } else {
-                    notificationStatus = false;
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
+                    notificationStatus = false
+                    myBackPress = true
+                    stackStatus = 1
+                    Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND");
+                Log.e("APPLICATION", "App is in BACKGROUND")
                 // app went to background
             }
         }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 if (!notificationStatus) {
-                    if (player != null) {
-                        Log.e("Destroy", "Activity Destoryed");
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(notificationId);
-                        relesePlayer(getApplicationContext());
+                    if (GlobalInitExoPlayer.player != null) {
+                        Log.e("Destroy", "Activity Destroyed")
+                        val notificationManager =
+                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                        notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                        GlobalInitExoPlayer.relesePlayer(applicationContext)
                     }
                 }
             } else {
-                Log.e("Destroy", "Activity go in main activity");
+                Log.e("Destroy", "Activity go in main activity")
             }
         }
+    }
+
+    companion object {
+        var renewPlanFlag: String? = null
+        var renewPlanId: String? = null
     }
 }
