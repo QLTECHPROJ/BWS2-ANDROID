@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardOldModule.Models.SegmentPlaylist
-import com.brainwellnessspa.dashboardOldModule.Models.ViewAllPlayListModel
-import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity
+import com.brainwellnessspa.dashboardOldModule.models.SegmentPlaylist
+import com.brainwellnessspa.dashboardOldModule.models.ViewAllPlayListModel
+import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding

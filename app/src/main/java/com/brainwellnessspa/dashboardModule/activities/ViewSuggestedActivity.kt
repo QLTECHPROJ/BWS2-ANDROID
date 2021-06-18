@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity
-import com.brainwellnessspa.dashboardOldModule.Models.SegmentAudio
-import com.brainwellnessspa.dashboardOldModule.Models.SubPlayListModel
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
+import com.brainwellnessspa.dashboardOldModule.models.SegmentAudio
+import com.brainwellnessspa.dashboardOldModule.models.SubPlayListModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio

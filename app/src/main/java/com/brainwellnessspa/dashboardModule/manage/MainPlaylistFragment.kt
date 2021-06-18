@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.DB
-import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique

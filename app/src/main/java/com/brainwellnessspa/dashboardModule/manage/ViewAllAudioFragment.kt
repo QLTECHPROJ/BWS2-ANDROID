@@ -11,9 +11,9 @@ import com.brainwellnessspa.BWSApplication
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
-import com.brainwellnessspa.dashboardOldModule.Models.ViewAllAudioListModel
+import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel
 import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.dashboardOldModule.Models.SegmentAudio
+import com.brainwellnessspa.dashboardOldModule.models.SegmentAudio
 import com.google.gson.Gson
 import androidx.recyclerview.widget.RecyclerView
 import android.annotation.SuppressLint
@@ -28,9 +28,9 @@ import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import androidx.lifecycle.LifecycleOwner
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity

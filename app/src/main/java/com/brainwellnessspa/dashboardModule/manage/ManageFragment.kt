@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
-import com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease

@@ -24,14 +24,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityResourceBinding
 import com.brainwellnessspa.databinding.FilterListLayoutBinding
-import com.brainwellnessspa.resourceModule.Fragments.*
+import com.brainwellnessspa.resourceModule.fragments.*
 import com.brainwellnessspa.resourceModule.models.ResourceFilterModel
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.resourceModule.models.SegmentResource

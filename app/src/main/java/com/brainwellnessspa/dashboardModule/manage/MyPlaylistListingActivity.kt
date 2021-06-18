@@ -23,10 +23,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
-import com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.Models.ViewAllAudioListModel
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
-import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
+import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.R

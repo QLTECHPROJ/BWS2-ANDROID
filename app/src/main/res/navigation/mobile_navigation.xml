@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_appointment"
-        android:name="com.brainwellnessspa.dashboardOldModule.Appointment.AppointmentFragment"
+        android:name="com.brainwellnessspa.dashboardOldModule.appointment.AppointmentFragment"
         android:label="@string/title_appointment"
         tools:layout="@layout/fragment_appointment" />
 
