@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context="com.brainwellnessspa.DashboardOldModule.Appointment.AppointmentDetails.AptDetailsFragment">
+        tools:context="com.brainwellnessspa.dashboardOldModule.Appointment.AppointmentDetails.AptDetailsFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

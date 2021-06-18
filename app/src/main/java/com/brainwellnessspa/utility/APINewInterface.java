@@ -1,8 +1,8 @@
 package com.brainwellnessspa.utility;
 
-import com.brainwellnessspa.DashboardOldModule.Models.AudioInterruptionModel;
-import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.DashboardOldModule.Models.ViewAllPlayListModel;
+import com.brainwellnessspa.dashboardOldModule.Models.AudioInterruptionModel;
+import com.brainwellnessspa.dashboardOldModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.dashboardOldModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.AverageSleepTimeModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
@@ -21,7 +21,7 @@ import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.models.HomeDataModel;
-import com.brainwellnessspa.dassAssSlider.models.AssessmentQusModel;
+import com.brainwellnessspa.assessmentProcess.models.AssessmentQusModel;
 import com.brainwellnessspa.faqModule.models.FaqListModel;
 import com.brainwellnessspa.reminderModule.models.DeleteRemiderModel;
 import com.brainwellnessspa.reminderModule.models.ReminderListModel;

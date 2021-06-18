@@ -25,7 +25,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
+import com.brainwellnessspa.assessmentProcess.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
 import com.brainwellnessspa.userModuleTwo.models.ProfileSaveDataModel
 import com.segment.analytics.Properties

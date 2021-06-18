@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context="com.brainwellnessspa.DashboardOldModule.Search.SearchFragment">
+        tools:context="com.brainwellnessspa.dashboardOldModule.Search.SearchFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

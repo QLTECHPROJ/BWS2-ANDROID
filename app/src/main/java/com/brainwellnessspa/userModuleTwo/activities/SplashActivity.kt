@@ -21,7 +21,7 @@ import com.brainwellnessspa.userModuleTwo.models.VersionModel
 import com.brainwellnessspa.userModuleTwo.models.CoUserDetailsModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
+import com.brainwellnessspa.assessmentProcess.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.google.gson.Gson
 import com.segment.analytics.Analytics

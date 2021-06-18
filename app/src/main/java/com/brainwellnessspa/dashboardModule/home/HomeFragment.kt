@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
-import com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity.audioClick
+import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -40,7 +40,7 @@ import com.brainwellnessspa.dashboardModule.activities.NotificationListActivity
 import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dassAssSlider.activities.AssProcessActivity
+import com.brainwellnessspa.assessmentProcess.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.manageModule.SleepTimeActivity
 import com.brainwellnessspa.userModuleTwo.activities.AddProfileActivity

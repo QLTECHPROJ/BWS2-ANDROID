@@ -33,13 +33,13 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Models.AppointmentDetailModel;
-import com.brainwellnessspa.DashboardOldModule.Models.AudioInterruptionModel;
-import com.brainwellnessspa.DashboardOldModule.Models.MainAudioModel;
+import com.brainwellnessspa.dashboardOldModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.dashboardOldModule.Models.AudioInterruptionModel;
+import com.brainwellnessspa.dashboardOldModule.Models.MainAudioModel;
 import com.brainwellnessspa.dashboardModule.models.SearchBothModel;
 import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
-import com.brainwellnessspa.DashboardOldModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardOldModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
@@ -95,7 +95,7 @@ import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
-import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 

@@ -28,8 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardOldModule.Models.SubPlayListModel;
+import com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.utility.APINewClient;
@@ -64,8 +64,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
-import static com.brainwellnessspa.DashboardOldModule.Activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.DashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.dashboardOldModule.Activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.dashboardOldModule.TransparentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;

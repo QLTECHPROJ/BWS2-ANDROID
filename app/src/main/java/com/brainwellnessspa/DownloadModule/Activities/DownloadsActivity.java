@@ -19,8 +19,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardOldModule.Models.SegmentAudio;
-import com.brainwellnessspa.DashboardOldModule.Models.SegmentPlaylist;
+import com.brainwellnessspa.dashboardOldModule.Models.SegmentAudio;
+import com.brainwellnessspa.dashboardOldModule.Models.SegmentPlaylist;
 import com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.R;
