@@ -51,8 +51,7 @@ import com.brainwellnessspa.dashboardModule.models.AddProfileModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.databinding.FragmentProfileBinding;
 import com.brainwellnessspa.faqModule.activities.FaqActivity;
-import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity;
-import com.brainwellnessspa.manageModule.ManageActivity;
+import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity;
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity;
 import com.brainwellnessspa.userModuleTwo.activities.AccountInfoActivity;
 import com.brainwellnessspa.userModuleTwo.activities.GetStartedActivity;
@@ -84,7 +83,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static com.brainwellnessspa.BWSApplication.analytics;
 import static com.brainwellnessspa.BWSApplication.deleteCache;
 import static com.brainwellnessspa.BWSApplication.logout;
-import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToRecepit;
+import static com.brainwellnessspa.invoiceModule.activities.InvoiceActivity.invoiceToRecepit;
 
 public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;

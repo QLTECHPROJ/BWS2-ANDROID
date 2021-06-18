@@ -36,7 +36,7 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.deleteCache;
-import static com.brainwellnessspa.invoicemodule.activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.invoiceModule.activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;

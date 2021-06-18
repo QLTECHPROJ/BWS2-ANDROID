@@ -1,4 +1,4 @@
-package com.brainwellnessspa.invoicemodule.models
+package com.brainwellnessspa.invoiceModule.models
 
 class SegmentMembership {
     var invoiceId: String? = ""

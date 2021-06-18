@@ -1,4 +1,4 @@
-package com.brainwellnessspa.invoicemodule.fragments
+package com.brainwellnessspa.invoiceModule.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -16,7 +16,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.Appointment
+import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.Appointment
 import java.util.*
 
 class AppointmentInvoiceFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.invoicemodule.fragments
+package com.brainwellnessspa.invoiceModule.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -29,7 +29,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentInvoiceBinding
 import com.brainwellnessspa.databinding.InvoiceListLayoutBinding
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.MemberShip
+import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.MemberShip
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader

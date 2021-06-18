@@ -1,4 +1,4 @@
-package com.brainwellnessspa.invoicemodule.activities
+package com.brainwellnessspa.invoiceModule.activities
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
@@ -22,12 +22,12 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding
-import com.brainwellnessspa.invoicemodule.fragments.AppointmentInvoiceFragment
-import com.brainwellnessspa.invoicemodule.fragments.MembershipInvoiceFragment
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.Appointment
-import com.brainwellnessspa.invoicemodule.models.InvoiceListModel.MemberShip
-import com.brainwellnessspa.invoicemodule.models.SegmentMembership
+import com.brainwellnessspa.invoiceModule.fragments.AppointmentInvoiceFragment
+import com.brainwellnessspa.invoiceModule.fragments.MembershipInvoiceFragment
+import com.brainwellnessspa.invoiceModule.models.InvoiceListModel
+import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.Appointment
+import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.MemberShip
+import com.brainwellnessspa.invoiceModule.models.SegmentMembership
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener

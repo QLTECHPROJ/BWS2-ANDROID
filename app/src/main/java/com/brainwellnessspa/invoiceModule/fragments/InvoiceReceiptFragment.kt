@@ -1,4 +1,4 @@
-package com.brainwellnessspa.invoicemodule.fragments
+package com.brainwellnessspa.invoiceModule.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.invoicemodule.activities.InvoiceActivity
-import com.brainwellnessspa.invoicemodule.models.InvoiceDetailModel
+import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity
+import com.brainwellnessspa.invoiceModule.models.InvoiceDetailModel
 import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
