@@ -406,4 +406,7 @@
     <string name="go_to_playlist">Go to playlist</string>
     <string name="now_you_can_add_additional_accounts_get_your_loved_ones_started_on_their_journey_towards_mental_emotional_transformation_upgrade_your_subscription_plan_right_now"><![CDATA[Now you can add additional accounts get your loved ones started on their journey towards mental & emotional transformation. Upgrade your subscription plan right now!!]]></string>
     <string name="get_the_most_out_of_the_brain_wellness_app">Get the most out of the Brain Wellness App</string>
+    <string name="valid_mobile_number">Please provide a valid mobile number</string>
+    <string name="pls_provide_a_name">Please provide a Name</string>
+    <string name="check_dob">Please confirm whether you are above 18 years of age</string>
 </resources>

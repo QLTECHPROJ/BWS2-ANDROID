@@ -1,5 +1,6 @@
 package com.brainwellnessspa.userModuleTwo.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -35,14 +36,12 @@ import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
     lateinit var binding: ActivityEditProfileBinding
-    lateinit var ctx: Context
-    lateinit var activity: Activity
     lateinit var profileUpdate: String
     var userId: String? = ""
     var coUserId: String? = ""
-    var UserName: String? = ""
-    var UserCalendar: String? = ""
-    var UserMobileNumber: String? = ""
+    var userName: String? = ""
+    var userCalendar: String? = ""
+    var userMobileNumber: String? = ""
     var UserEmail: String? = ""
     private var mYear: Int = 0
     private var mMonth: Int = 0
@@ -52,10 +51,6 @@ class EditProfileActivity : AppCompatActivity() {
     var ageMonth: Int = 0
     var ageDate: Int = 0
 
-    //    UserName = viewModel.responseData!!.name
-//    UserCalendar = viewModel.responseData!!.dob
-//    UserMobileNumber = viewModel.responseData!!.mobile
-//    UserEmail = viewModel.responseData!!.email
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -63,34 +58,40 @@ class EditProfileActivity : AppCompatActivity() {
             val ckCalendar: String = binding.etCalendar.text.toString().trim()
             val ckNumber: String = binding.etMobileNumber.text.toString().trim()
             val ckEmail: String = binding.etEmail.text.toString().trim()
-            if (ckName.equals(UserName, ignoreCase = true) &&
-                ckCalendar.equals(UserCalendar, ignoreCase = true) &&
-                ckNumber.equals(UserMobileNumber, ignoreCase = true) &&
-                ckEmail.equals(UserEmail, ignoreCase = true)
-            ) {
-                binding.btnSave.isEnabled = false
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ckName.equals("", ignoreCase = true)) {
-                binding.btnSave.isEnabled = false
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ckCalendar.equals("", ignoreCase = true)) {
-                binding.btnSave.isEnabled = false
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ckNumber.equals("", ignoreCase = true)) {
-                binding.btnSave.isEnabled = false
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (ckEmail.equals("", ignoreCase = true)) {
-                binding.btnSave.isEnabled = false
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else {
-                binding.btnSave.isEnabled = true
-                binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            when {
+                ckName.equals(userName, ignoreCase = true) &&
+                        ckCalendar.equals(userCalendar, ignoreCase = true) &&
+                        ckNumber.equals(userMobileNumber, ignoreCase = true) &&
+                        ckEmail.equals(UserEmail, ignoreCase = true) -> {
+                    binding.btnSave.isEnabled = false
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                ckName.equals("", ignoreCase = true) -> {
+                    binding.btnSave.isEnabled = false
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                ckCalendar.equals("", ignoreCase = true) -> {
+                    binding.btnSave.isEnabled = false
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                ckNumber.equals("", ignoreCase = true) -> {
+                    binding.btnSave.isEnabled = false
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                ckEmail.equals("", ignoreCase = true) -> {
+                    binding.btnSave.isEnabled = false
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                }
+                else -> {
+                    binding.btnSave.isEnabled = true
+                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                }
             }
 
             if (ckNumber.equals("", ignoreCase = true)) {
@@ -123,13 +124,12 @@ class EditProfileActivity : AppCompatActivity() {
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        ctx = this@EditProfileActivity
-        activity = this@EditProfileActivity
 
 
         val p = Properties()
         p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Edit Profile Screen View", p, CONSTANTS.screen)
+
         binding.ivCheckNumber.visibility = View.VISIBLE
         binding.ivCheckEmail.visibility = View.VISIBLE
         binding.etUser.addTextChangedListener(userTextWatcher)
@@ -141,7 +141,8 @@ class EditProfileActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         }
-        profileViewData(ctx)
+
+        profileViewData(applicationContext)
         binding.etCalendar.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 setDate()
@@ -157,13 +158,14 @@ class EditProfileActivity : AppCompatActivity() {
             .matches()
     }
 
+    @SuppressLint("SetTextI18n")
     fun profileUpdate() {
         try {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (BWSApplication.isNetworkConnected(applicationContext)) {
                 BWSApplication.showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
-                    activity
+                    applicationContext as Activity?
                 )
                 var dob = ""
                 if (binding.etCalendar.text.toString().isNotEmpty()) {
@@ -180,7 +182,7 @@ class EditProfileActivity : AppCompatActivity() {
                 }
 
                 if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                    binding.txtNameError.text = "Please provide a Name"
+                    binding.txtNameError.text = getString(R.string.pls_provide_a_name)
                     binding.txtNameError.visibility = View.VISIBLE
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.GONE
@@ -203,7 +205,7 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.txtNameError.visibility = View.GONE
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.VISIBLE
-                    binding.txtNumberError.text = "Please provide a valid mobile number"
+                    binding.txtNumberError.text = getString(R.string.valid_mobile_number)
                     binding.txtEmailError.visibility = View.GONE
                 } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
                     binding.txtNameError.visibility = View.GONE
@@ -240,13 +242,13 @@ class EditProfileActivity : AppCompatActivity() {
                                 BWSApplication.hideProgressBar(
                                     binding.progressBar,
                                     binding.progressBarHolder,
-                                    activity
+                                    applicationContext as Activity?
                                 )
                                 BWSApplication.showToast(
                                     viewModel.responseMessage,
-                                    activity
+                                    applicationContext as Activity?
                                 )
-                                profileViewData(ctx)
+                                profileViewData(applicationContext)
                                 val shared =
                                     getSharedPreferences(
                                         CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
@@ -286,11 +288,11 @@ class EditProfileActivity : AppCompatActivity() {
                                 BWSApplication.hideProgressBar(
                                     binding.progressBar,
                                     binding.progressBarHolder,
-                                    activity
+                                    applicationContext as Activity?
                                 )
                                 BWSApplication.showToast(
                                     viewModel.responseMessage,
-                                    activity
+                                    applicationContext as Activity?
                                 )
                             }
                         }
@@ -299,7 +301,7 @@ class EditProfileActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
-                                activity
+                                applicationContext as Activity?
                             )
                         }
                     })
@@ -312,7 +314,9 @@ class EditProfileActivity : AppCompatActivity() {
 
     fun profileViewData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder,
+                applicationContext as Activity?
+            )
             val listCall = APINewClient.getClient().getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<CoUserDetailsModel> {
                 override fun onResponse(
@@ -321,7 +325,7 @@ class EditProfileActivity : AppCompatActivity() {
                 ) {
                     try {
                         val viewModel = response.body()
-                        if (viewModel!!.responseCode.equals(
+                        if (viewModel?.ResponseCode.equals(
                                 getString(R.string.ResponseCodesuccess),
                                 ignoreCase = true
                             )
@@ -329,31 +333,31 @@ class EditProfileActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
-                                activity
+                                applicationContext as Activity?
                             )
-                            if (viewModel.responseData!!.name.equals("", ignoreCase = true) ||
-                                viewModel.responseData!!.name.equals(
+                            if (viewModel?.ResponseData?.Name.equals("", ignoreCase = true) ||
+                                viewModel?.ResponseData?.Name.equals(
                                     " ",
                                     ignoreCase = true
-                                ) || viewModel.responseData!!.name == null
+                                ) || viewModel?.ResponseData?.Name == null
                             ) {
                                 binding.etUser.setText(R.string.Guest)
                             } else {
-                                binding.etUser.setText(viewModel.responseData!!.name)
+                                binding.etUser.setText(viewModel.ResponseData.Name)
                             }
-                            UserName = viewModel.responseData!!.name
-                            UserCalendar = viewModel.responseData!!.dob
-                            UserMobileNumber = viewModel.responseData!!.mobile
-                            UserEmail = viewModel.responseData!!.email
-                            binding.etMobileNumber.setText(viewModel.responseData!!.mobile)
-                            binding.etEmail.setText(viewModel.responseData!!.email)
-                            binding.etCalendar.setText(viewModel.responseData!!.dob)
+                            userName = viewModel?.ResponseData!!.Name
+                            userCalendar = viewModel.ResponseData.DOB
+                            userMobileNumber = viewModel.ResponseData.Mobile
+                            UserEmail = viewModel.ResponseData.Email
+                            binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
+                            binding.etEmail.setText(viewModel.ResponseData.Email)
+                            binding.etCalendar.setText(viewModel.ResponseData.DOB)
 
                         } else {
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
-                                activity
+                                applicationContext as Activity?
                             )
                         }
                     } catch (e: Exception) {
@@ -365,13 +369,14 @@ class EditProfileActivity : AppCompatActivity() {
                     BWSApplication.hideProgressBar(
                         binding.progressBar,
                         binding.progressBarHolder,
-                        activity
+                        applicationContext as Activity?
                     )
                 }
             })
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(api = Build.VERSION_CODES.N)
     fun setDate() {
         val c = Calendar.getInstance()
@@ -395,7 +400,7 @@ class EditProfileActivity : AppCompatActivity() {
                 if (birthYear < 18) {
                     binding.txtDobError.visibility = View.VISIBLE
                     binding.txtDobError.text =
-                        "Please confirm whether you are above 18 years of age"
+                        getString(R.string.check_dob)
                     binding.btnSave.isEnabled = false
                     binding.btnSave.isClickable = false
                 } else {

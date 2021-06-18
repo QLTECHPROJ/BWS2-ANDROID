@@ -342,10 +342,8 @@ class UserListActivity : AppCompatActivity() {
                                                         try {
                                                             val coUserDetailsModel: CoUserDetailsModel =
                                                                 response.body()!!
-                                                            val responseData: CoUserDetailsModel.ResponseData? =
-                                                                coUserDetailsModel.responseData
-                                                            if (responseData != null) {
-                                                                if (responseData.isProfileCompleted.equals(
+                                                            if (coUserDetailsModel.ResponseData != null) {
+                                                                if (coUserDetailsModel.ResponseData.isProfileCompleted.equals(
                                                                         "0",
                                                                         ignoreCase = true
                                                                     )
@@ -360,7 +358,7 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                                     activity.startActivity(intent)
                                                                     activity.finish()
-                                                                } else if (responseData.isAssessmentCompleted.equals(
+                                                                } else if (coUserDetailsModel.ResponseData.isAssessmentCompleted.equals(
                                                                         "0",
                                                                         ignoreCase = true
                                                                     )
@@ -375,7 +373,7 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                                     activity.startActivity(intent)
                                                                     activity.finish()
-                                                                } else if (responseData.avgSleepTime.equals(
+                                                                } else if (coUserDetailsModel.ResponseData.AvgSleepTime.equals(
                                                                         "", ignoreCase = true
                                                                     )
                                                                 ) {
@@ -385,11 +383,11 @@ class UserListActivity : AppCompatActivity() {
                                                                     )
                                                                     activity.startActivity(intent)
                                                                     activity.finish()
-                                                                } else if (responseData.isProfileCompleted.equals(
+                                                                } else if (coUserDetailsModel.ResponseData.isProfileCompleted.equals(
                                                                         "1",
                                                                         ignoreCase = true
                                                                     ) &&
-                                                                    responseData.isAssessmentCompleted.equals(
+                                                                    coUserDetailsModel.ResponseData.isAssessmentCompleted.equals(
                                                                         "1",
                                                                         ignoreCase = true
                                                                     )
@@ -430,27 +428,27 @@ class UserListActivity : AppCompatActivity() {
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                    responseData.avgSleepTime
+                                                                    coUserDetailsModel.ResponseData.AvgSleepTime
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                                                    responseData.indexScore
+                                                                    coUserDetailsModel.ResponseData.indexScore
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SCORELEVEL,
-                                                                    responseData.scoreLevel
+                                                                    coUserDetailsModel.ResponseData.ScoreLevel
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_IMAGE,
-                                                                    responseData.image
+                                                                    coUserDetailsModel.ResponseData.Image
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                                                    coUserDetailsModel.responseData!!.isProfileCompleted
+                                                                    coUserDetailsModel.ResponseData.isProfileCompleted
                                                                 )
                                                                 editor.putString(
                                                                     CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                                                    coUserDetailsModel.responseData!!.isAssessmentCompleted
+                                                                    coUserDetailsModel.ResponseData.isAssessmentCompleted
                                                                 )
                                                                 editor.apply()
                                                                 val sharded =
@@ -461,7 +459,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 val edited = sharded.edit()
                                                                 edited.putString(
                                                                     CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                    responseData.avgSleepTime
+                                                                    coUserDetailsModel.ResponseData.AvgSleepTime
                                                                 )
                                                                 val selectedCategoriesTitle =
                                                                     arrayListOf<String>()
