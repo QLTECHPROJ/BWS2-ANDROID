@@ -41,6 +41,8 @@ class SplashActivity : AppCompatActivity() {
     var isAssessmentCompleted: String? = ""
     var indexScore: String? = ""
     var avgSleepTime: String? = ""
+
+    /* TODO function for app started  */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
@@ -55,6 +57,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        /* TODO conditions for check user exist or not */
         if (userId.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
@@ -78,6 +81,7 @@ class SplashActivity : AppCompatActivity() {
         super.onResume()
     }
 
+    /* TODO function for battery permission result  */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -95,6 +99,7 @@ class SplashActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    /* TODO function for check app version  */
     private fun checkAppVersion() {
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
         if (BWSApplication.isNetworkConnected(this)) {
@@ -165,6 +170,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    /* TODO function for check user details  */
     private fun checkUserDetails() {
         if (BWSApplication.isNetworkConnected(this)) {
             val listCall: Call<CoUserDetailsModel> =
@@ -243,6 +249,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    /* TODO function for battery permission  */
     @SuppressLint("BatteryLife")
     private fun askBattyPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -305,6 +312,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    /* TODO function for segment analytics  */
     fun setAnalytics(segmentKey: String) {
         try {
 //     TODO : Live segment key
@@ -325,5 +333,4 @@ class SplashActivity : AppCompatActivity() {
 //            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
         }
     }
-
 }

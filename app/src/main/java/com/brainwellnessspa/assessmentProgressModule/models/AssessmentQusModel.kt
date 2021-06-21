@@ -3,6 +3,7 @@ package com.brainwellnessspa.assessmentProgressModule.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+/* TODO Assessment Que API Keystores */
 class AssessmentQusModel {
     @SerializedName("ResponseData")
     @Expose

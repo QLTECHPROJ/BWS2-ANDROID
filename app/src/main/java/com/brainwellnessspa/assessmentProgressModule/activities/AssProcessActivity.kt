@@ -21,6 +21,7 @@ class AssProcessActivity : AppCompatActivity() {
     var indexScore: Int = 0
     var scoreLevel: String? = ""
 
+/* TODO This is to Assessment started activity and ended activity */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
@@ -51,6 +52,7 @@ class AssProcessActivity : AppCompatActivity() {
             p.putValue("scoreLevel", scoreLevel)
             BWSApplication.addToSegment("Index Score Screen Viewed", p, CONSTANTS.screen)
 
+            /* TODO this condition is indexscore result */
             when {
                 indexScore == 0 -> {
                     binding.ivFirst.visibility = View.VISIBLE

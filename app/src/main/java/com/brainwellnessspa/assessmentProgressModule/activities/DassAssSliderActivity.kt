@@ -54,6 +54,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     lateinit var editor: SharedPreferences.Editor
     private val dataListModel = ArrayList<OptionsDataListModel>()
 
+    /* TODO this activity is assessment form activity */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)

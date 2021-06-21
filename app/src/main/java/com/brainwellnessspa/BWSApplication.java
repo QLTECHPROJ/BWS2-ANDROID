@@ -141,6 +141,7 @@ import static com.brainwellnessspa.services.GlobalInitExoPlayer.getSpace;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.hundredVolume;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
 
+/* TODO BWS App Common function */
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
