@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardOldModule.models.SegmentPlaylist
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllPlayListModel
+import com.brainwellnessspa.dashboardModule.models.SegmentPlaylist
+import com.brainwellnessspa.dashboardModule.models.ViewAllPlayListModel
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
@@ -110,7 +110,8 @@ class ViewAllPlaylistFragment : Fragment() {
                     val p = Properties()
                     val section = ArrayList<SegmentPlaylist>()
                     for (i in audioList.indices) {
-                        val e = SegmentPlaylist()
+                        val e =
+                            SegmentPlaylist()
                         e.playlistId = audioList[i].playlistID
                         e.playlistName = audioList[i].playlistName
                         e.playlistType = audioList[i].created
@@ -259,7 +260,8 @@ class ViewAllPlaylistFragment : Fragment() {
                                         val p = Properties()
                                         val section = ArrayList<SegmentPlaylist>()
                                         for (i in listModel.responseData!!.details!!.indices) {
-                                            val e = SegmentPlaylist()
+                                            val e =
+                                                SegmentPlaylist()
                                             e.playlistId =
                                                 listModel.responseData!!.details!![i].playlistID
                                             e.playlistName =

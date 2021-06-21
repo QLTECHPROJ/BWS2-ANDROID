@@ -1,8 +1,8 @@
 package com.brainwellnessspa.utility;
 
-import com.brainwellnessspa.dashboardOldModule.models.AudioInterruptionModel;
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel;
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllPlayListModel;
+import com.brainwellnessspa.dashboardModule.models.AudioInterruptionModel;
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
+import com.brainwellnessspa.dashboardModule.models.ViewAllPlayListModel;
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.AverageSleepTimeModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;

@@ -1,120 +1,121 @@
-package com.brainwellnessspa.dashboardModule.activities;
+package com.brainwellnessspa.dashboardModule.activities
 
-import android.app.NotificationManager;
-import android.app.UiModeManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
+import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.app.UiModeManager
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.PowerManager
+import android.provider.Settings
+import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.utility.MyBatteryReceiver
+import com.brainwellnessspa.utility.MyNetworkReceiver
+import ir.drax.netwatch.NetWatch
+import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
 
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.utility.MyBatteryReceiver;
-import com.brainwellnessspa.utility.MyNetworkReceiver;
-import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.databinding.DataBindingUtil;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import ir.drax.netwatch.NetWatch;
-import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
-
-import static com.brainwellnessspa.BWSApplication.deleteCache;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
-
-public class BottomNavigationActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
-    public static int miniPlayer = 0;
-    public static boolean audioClick = false, tutorial = false;
-    ActivityBottomNavigationBinding binding;
-    boolean doubleBackToExitPressedOnce = false;
-    boolean backpressed = false;
-    String IsFirst = "", userId = "", coUserId = "", userName = "", Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", PlaylistType = "", New = "";
-    UiModeManager uiModeManager;
-    MyNetworkReceiver myNetworkReceiver;
-    MyBatteryReceiver myBatteryReceiver;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation);
+class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator {
+    lateinit var binding: ActivityBottomNavigationBinding
+    var doubleBackToExitPressedOnce = false
+    var backpressed = false
+    var isFirst: String? = ""
+    var userId: String? = ""
+    var coUserId: String? = ""
+    var userName: String? = ""
+    var goplaylist = ""
+    var playlistID = ""
+    var playlistName = ""
+    var playlistImage = ""
+    var playlistType = ""
+    var new = ""
+    private var uiModeManager: UiModeManager? = null
+    private var myNetworkReceiver: MyNetworkReceiver? = null
+    private var myBatteryReceiver: MyBatteryReceiver? = null
+    @SuppressLint("BatteryLife")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_Home, R.id.navigation_Manage, R.id.navigation_Wellness, R.id.navigation_Elevate, R.id.navigation_Profile)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        val appBarConfiguration = AppBarConfiguration.Builder(
+            R.id.navigation_Home,
+            R.id.navigation_Manage,
+            R.id.navigation_Wellness,
+            R.id.navigation_Elevate,
+            R.id.navigation_Profile
+        )
+            .build()
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        NavigationUI.setupWithNavController(binding.navView, navController)
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            Log.e("Nite Mode :", String.valueOf(AppCompatDelegate.getDefaultNightMode()));
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
-        SharedPreferences shared1 =
-                getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
-
-        if (getIntent().getExtras() != null) {
-            IsFirst = getIntent().getStringExtra("IsFirst");
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        if (intent.extras != null) {
+            isFirst = intent.getStringExtra("IsFirst")
         }
-
-        if (IsFirst.equalsIgnoreCase("1")) {
-            BWSApplication.showToast("Welcome " + userName + "!!", BottomNavigationActivity.this);
+        if (isFirst.equals("1", ignoreCase = true)) {
+            BWSApplication.showToast("Welcome $userName!!", this@BottomNavigationActivity)
         } else {
 //            nothing
         }
-        uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
-        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO
-                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES
-                || uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_CUSTOM) {
-            uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
-
-            Log.e("Nite Mode :", String.valueOf(uiModeManager.getNightMode()));
+        uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
+        if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
+            uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
+            Log.e("Nite Mode :", uiModeManager!!.nightMode.toString())
         }
-        registerReceiver(myBatteryReceiver = new MyBatteryReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        registerReceiver(myNetworkReceiver = new MyNetworkReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
+        registerReceiver(
+            MyBatteryReceiver().also { myBatteryReceiver = it },
+            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        )
+        registerReceiver(
+            MyNetworkReceiver().also { myNetworkReceiver = it },
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+            val packageName = packageName
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
             if (!isIgnoringBatteryOptimizations) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivityForResult(intent, 15695);
+                val intent = Intent()
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivityForResult(intent, 15695)
             }
         }
-
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.FULL_WAKE_LOCK,
+            "com.brainwellnessspa::MyWakelockTag"
+        )
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
-                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                boolean isIgnoringBatteryOptimizations = false;
-                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+                val pm = getSystemService(POWER_SERVICE) as PowerManager
+                var isIgnoringBatteryOptimizations = false
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
                 if (isIgnoringBatteryOptimizations) {
                     // Ignoring battery optimization
                 } else {
@@ -122,65 +123,63 @@ public class BottomNavigationActivity extends AppCompatActivity implements Netwo
                 }
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
-    @Override
-    protected void onResume() {
+    override fun onResume() {
         NetWatch.builder(this)
-                .setCallBack(new NetworkChangeReceiver_navigator() {
-                    @Override
-                    public void onConnected(int source) {
-                        // do some thing
-                        callResumePlayer(BottomNavigationActivity.this);
-                    }
+            .setCallBack(object : NetworkChangeReceiver_navigator {
+                override fun onConnected(source: Int) {
+                    // do some thing
+                    GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
+                }
 
-                    @Override
-                    public View onDisconnected() {
-                        // do some other stuff
-                        return null;//To display a dialog simply return a custom view or just null to ignore it
-                    }
-                })
-                .setNotificationCancelable(false)
-                .build();
-        super.onResume();
+                override fun onDisconnected(): View? {
+                    // do some other stuff
+                    return null //To display a dialog simply return a custom view or just null to ignore it
+                }
+            })
+            .setNotificationCancelable(false)
+            .build()
+        super.onResume()
     }
 
-    @Override
-    protected void onDestroy() {
-        NetWatch.unregister(this);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        relesePlayer(BottomNavigationActivity.this);
-//        unregisterReceiver(myNetworkReceiver);
-        deleteCache(BottomNavigationActivity.this);
-        super.onDestroy();
+    override fun onDestroy() {
+        NetWatch.unregister(this)
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+        GlobalInitExoPlayer.relesePlayer(this@BottomNavigationActivity)
+        //        unregisterReceiver(myNetworkReceiver);
+        BWSApplication.deleteCache(this@BottomNavigationActivity)
+        super.onDestroy()
     }
 
-    @Override
-    public void onConnected(int source) {
-        callResumePlayer(BottomNavigationActivity.this);
+    override fun onConnected(source: Int) {
+        GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
     }
 
-    @Override
-    public View onDisconnected() {
-        return null;
+    override fun onDisconnected(): View? {
+        return null
     }
 
-    @Override
-    public void onBackPressed() {
-        if (binding.navView.getSelectedItemId() == R.id.navigation_Home) {
-            binding.navView.setSelectedItemId(R.id.navigation_Home);
+    override fun onBackPressed() {
+        if (binding.navView.selectedItemId == R.id.navigation_Home) {
+            binding.navView.selectedItemId = R.id.navigation_Home
             if (doubleBackToExitPressedOnce) {
-                finish();
-                return;
+                finish()
+                return
             }
-            this.doubleBackToExitPressedOnce = true;
-            BWSApplication.showToast("Press again to exit", BottomNavigationActivity.this);
-
-            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+            doubleBackToExitPressedOnce = true
+            BWSApplication.showToast("Press again to exit", this@BottomNavigationActivity)
+            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         } else {
-            super.onBackPressed();
+            super.onBackPressed()
         }
+    }
+
+    companion object {
+        var miniPlayer = 0
+        var audioClick = false
+        var tutorial = false
     }
 }

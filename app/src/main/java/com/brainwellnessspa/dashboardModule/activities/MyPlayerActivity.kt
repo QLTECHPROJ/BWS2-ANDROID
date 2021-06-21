@@ -20,8 +20,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.models.AudioInterruptionModel
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel
+import com.brainwellnessspa.dashboardModule.models.AudioInterruptionModel
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel

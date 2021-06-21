@@ -34,11 +34,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel;
-import com.brainwellnessspa.dashboardOldModule.models.AudioInterruptionModel;
-import com.brainwellnessspa.dashboardOldModule.models.MainAudioModel;
+import com.brainwellnessspa.dashboardModule.models.AudioInterruptionModel;
+import com.brainwellnessspa.dashboardModule.models.MainAudioModel;
 import com.brainwellnessspa.dashboardModule.models.SearchBothModel;
 import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel;
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;

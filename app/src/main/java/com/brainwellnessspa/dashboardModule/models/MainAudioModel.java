@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardOldModule.models;
+package com.brainwellnessspa.dashboardModule.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -124,7 +124,7 @@ public class MainAudioModel implements Parcelable {
 
         public ResponseData() {
 
-        } protected ResponseData(Parcel in) {
+        } public ResponseData(Parcel in) {
             homeID = in.readString();
             view = in.readString();
             type = in.readString();
@@ -260,7 +260,7 @@ public class MainAudioModel implements Parcelable {
             public Detail() {
             }
 
-            protected Detail(Parcel in) {
+            public Detail(Parcel in) {
                 iD = in.readString();
                 name = in.readString();
                 categoryName = in.readString();

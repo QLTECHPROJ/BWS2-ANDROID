@@ -11,9 +11,9 @@ import com.brainwellnessspa.BWSApplication
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
 import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.dashboardOldModule.models.SegmentAudio
+import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.google.gson.Gson
 import androidx.recyclerview.widget.RecyclerView
 import android.annotation.SuppressLint
@@ -175,7 +175,8 @@ class ViewAllAudioFragment : Fragment() {
                                 }
                                 val section = ArrayList<SegmentAudio>()
                                 for (i in listModel!!.responseData.getDetails().indices) {
-                                    val e = SegmentAudio()
+                                    val e =
+                                        SegmentAudio()
                                     e.audioId = listModel.responseData.getDetails()[i].id
                                     e.audioName = listModel.responseData.getDetails()[i].getName()
                                     e.masterCategory =

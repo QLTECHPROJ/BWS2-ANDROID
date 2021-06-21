@@ -63,8 +63,8 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.brainwellnessspa.dashboardOldModule.adapters.DirectionAdapter;
-import com.brainwellnessspa.dashboardOldModule.models.ViewAllAudioListModel;
+import com.brainwellnessspa.dashboardModule.adapters.DirectionAdapter;
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;

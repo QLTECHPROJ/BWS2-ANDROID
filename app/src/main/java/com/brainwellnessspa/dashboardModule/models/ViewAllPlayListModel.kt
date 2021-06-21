@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardOldModule.models
+package com.brainwellnessspa.dashboardModule.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -21,8 +21,6 @@ class ViewAllPlayListModel {
     var responseStatus: String? = ""
 
     class ResponseData {
-
-
         @SerializedName("GetLibraryID")
         @Expose
         var getLibraryID: String? = ""

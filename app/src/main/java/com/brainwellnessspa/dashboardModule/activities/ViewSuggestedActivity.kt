@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
-import com.brainwellnessspa.dashboardOldModule.models.SegmentAudio
-import com.brainwellnessspa.dashboardOldModule.models.SubPlayListModel
+import com.brainwellnessspa.dashboardModule.models.SegmentAudio
+import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.R
@@ -178,7 +178,8 @@ class ViewSuggestedActivity : AppCompatActivity() {
         if (name.equals("Suggested Audios", ignoreCase = true)) {
             val section = ArrayList<SegmentAudio>()
             for (i in listModel!!.indices) {
-                val e = SegmentAudio()
+                val e =
+                    SegmentAudio()
                 e.audioId = listModel!![i].iD
                 e.audioName = listModel!![i].name
                 e.masterCategory = listModel!![i].audiomastercat

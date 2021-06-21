@@ -1,60 +1,50 @@
-package com.brainwellnessspa.utility;
+package com.brainwellnessspa.utility
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
 
-import androidx.annotation.Nullable;
-
-public class MyService extends Service {
-    private MyThread mythread;
-    public boolean isRunning = false;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
+class MyService : Service() {
+    private var mythread: MyThread? = null
+    var isRunning = false
+    val delay: Long = 3000
+    override fun onCreate() {
+        super.onCreate()
         ////Log.d("", "onCreate");
-        mythread = new MyThread();
+        mythread = MyThread()
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (!isRunning) {
-            mythread.start();
-            isRunning = true;
+            mythread!!.start()
+            isRunning = true
         }
-        return START_STICKY;
+        return START_STICKY
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    override fun onDestroy() {
+        super.onDestroy()
         if (!isRunning) {
-            mythread.interrupt();
-            mythread.stop();
+            mythread!!.interrupt()
+            mythread!!.stop()
         }
     }
 
-    class MyThread extends Thread {
-        static final long DELAY = 3000;
-        @Override
-        public void run() {
+    internal inner class MyThread : Thread() {
+        override fun run() {
             while (isRunning) {
                 try {
 //                    YupITApplication.getToken();
-                    Thread.sleep(DELAY);
-                } catch (InterruptedException e) {
-                    isRunning = false;
-                    e.printStackTrace();
+                    sleep(delay)
+                } catch (e: InterruptedException) {
+                    isRunning = false
+                    e.printStackTrace()
                 }
             }
         }
     }
 }
-

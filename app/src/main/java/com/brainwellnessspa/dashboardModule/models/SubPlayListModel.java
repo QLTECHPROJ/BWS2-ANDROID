@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardOldModule.models;
+package com.brainwellnessspa.dashboardModule.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

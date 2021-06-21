@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardOldModule.models;
+package com.brainwellnessspa.dashboardModule.models;
 
 public class SegmentAudio {
     String audioId,audioName,masterCategory,subCategory,audioDuration;

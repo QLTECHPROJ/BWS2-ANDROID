@@ -1,4 +1,3 @@
-package com.brainwellnessspa.dashboardOldModule.models;
+package com.brainwellnessspa.dashboardModule.models
 
-public class AudioInterruptionModel {
-}
+class AudioInterruptionModel 

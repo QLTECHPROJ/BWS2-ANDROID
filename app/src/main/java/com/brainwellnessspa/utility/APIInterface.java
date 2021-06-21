@@ -3,28 +3,17 @@ package com.brainwellnessspa.utility;
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressSaveModel;
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressViewModel;
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel;
-import com.brainwellnessspa.billingOrderModule.models.CardModel;
-import com.brainwellnessspa.billingOrderModule.models.CurrentPlanVieViewModel;
 import com.brainwellnessspa.billingOrderModule.models.PayNowDetailsModel;
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel;
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel;
-import com.brainwellnessspa.dashboardOldModule.models.AudioInterruptionModel;
-import com.brainwellnessspa.dashboardOldModule.models.AudioLikeModel;
-import com.brainwellnessspa.dashboardOldModule.models.CreatePlaylistModel;
+import com.brainwellnessspa.dashboardModule.models.AudioInterruptionModel;
 import com.brainwellnessspa.dashboardOldModule.models.DirectionModel;
-import com.brainwellnessspa.dashboardOldModule.models.LogoutModel;
-import com.brainwellnessspa.dashboardOldModule.models.MainAudioModel;
-import com.brainwellnessspa.dashboardOldModule.models.MainPlayListModel;
+import com.brainwellnessspa.dashboardModule.models.MainAudioModel;
 import com.brainwellnessspa.dashboardOldModule.models.NextSessionViewModel;
-import com.brainwellnessspa.dashboardOldModule.models.PlaylistLikeModel;
 import com.brainwellnessspa.dashboardOldModule.models.PreviousAppointmentsModel;
-import com.brainwellnessspa.dashboardOldModule.models.ReminderStatusPlaylistModel;
-import com.brainwellnessspa.dashboardOldModule.models.RenamePlaylistModel;
 import com.brainwellnessspa.dashboardOldModule.models.SessionListModel;
-import com.brainwellnessspa.dashboardOldModule.models.SubPlayListModel;
+import com.brainwellnessspa.dashboardModule.models.SubPlayListModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
-import com.brainwellnessspa.dashboardOldModule.models.SuggestionAudiosModel;
-import com.brainwellnessspa.dashboardOldModule.models.UnlockAudioList;
 import com.brainwellnessspa.faqModule.models.FaqListModel;
 import com.brainwellnessspa.invoiceModule.models.InvoiceDetailModel;
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel;
@@ -54,14 +43,7 @@ public interface APIInterface {
             @Field("DeviceType") String deviceType,
             @Field("DeviceID") String deviceID,
             @Field("ReferCode") String referCode);
-
-    /* TODO AccountFragment */
-    @POST("logout")
-    @FormUrlEncoded
-    Call<LogoutModel> getLogout(@Field("UserID") String otp,
-                                @Field("Token") String token,
-                                @Field("Type") String type);
-
+    
     /* TODO AudioFaqActivity */
     @GET("faqlistmembership")
     Call<FaqListModel> getFaqListings();
@@ -75,32 +57,12 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<MainAudioModel> getMainAudioLists(@Field("UserID") String userID);
 
-    /* TODO AudioFragment */
-    @POST("unlockaudiolist")
-    @FormUrlEncoded
-    Call<UnlockAudioList> getUnLockAudioList(@Field("UserID") String userID,
-                                             @Field("Token") String token,
-                                             @Field("DeviceType") String deviceType,
-                                             @Field("DeviceID") String deviceID,
-                                             @Field("VersionCode") String versionCode);
-
-
-    /* TODO PlaylistFragment */
-    @POST("getlibrary")
-    @FormUrlEncoded
-    Call<MainPlayListModel> getMainPlayLists(@Field("UserID") String userID);
 
     /* TODO MyPlaylistsFragment */
     @POST("playlistdetails")
     @FormUrlEncoded
     Call<SubPlayListModel> getSubPlayLists(@Field("UserID") String userID,
                                            @Field("PlaylistId") String playlistId);
-
-    /* TODO MyPlaylistsFragment */
-    @POST("addaudiosearch")
-    @FormUrlEncoded
-    Call<SuggestionAudiosModel> getAddSearchAudio(@Field("AudioName") String audioName,
-                                                  @Field("PlaylistId") String playlistId);
 
     /* TODO BillingAddressFragment */
     @POST("billingaddress")
@@ -129,11 +91,6 @@ public interface APIInterface {
                                                         @Field("Suburb") String suburb,
                                                         @Field("State") String state,
                                                         @Field("Postcode") String postcode);
-
-    /* TODO CurrentPlanFragment */
-    @POST("billingorder")
-    @FormUrlEncoded
-    Call<CurrentPlanVieViewModel> getCurrentPlanView(@Field("UserID") String userID);
 
     /* TODO CancelMembershipActivity */
     @POST("cancelplan")
@@ -197,38 +154,7 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<PlanListBillingModel> getPlanListBilling(@Field("UserID") String userID);
 
-
-    /* TODO AddQueueActivity */
-    @POST("audiolike")
-    @FormUrlEncoded
-    Call<AudioLikeModel> getAudioLike(@Field("AudioId") String audioId,
-                                      @Field("UserID") String userID);
-
-    /* TODO MyPlaylistActivity */
-    @POST("playlistlike")
-    @FormUrlEncoded
-    Call<PlaylistLikeModel> getPlaylistLike(@Field("PlaylistId") String audioId,
-                                            @Field("UserID") String userID);
-
-    /* TODO PlaylistFragment & AddPlaylistActivity*/
-    @POST("createplaylist")
-    @FormUrlEncoded
-    Call<CreatePlaylistModel> getCreatePlaylist(@Field("UserID") String userID,
-                                                @Field("PlaylistName") String playlistName);
-
-    /* TODO MyPlaylistActivity */
-    @POST("renameplaylist")
-    @FormUrlEncoded
-    Call<RenamePlaylistModel> getRenamePlaylist(@Field("UserID") String userID,
-                                                @Field("PlaylistId") String playlistId,
-                                                @Field("PlaylistNewName") String playlistNewName);
-
-    /* TODO MyPlaylistActivity */
-    @POST("removeaudiofromplaylist")
-    @FormUrlEncoded
-    Call<SucessModel> getRemoveAudioFromPlaylist(@Field("UserID") String userID,
-                                                 @Field("AudioId") String audioId,
-                                                 @Field("PlaylistId") String playlistId);
+    
 
     /* TODO MyPlaylistsFragment */
     @POST("deleteplaylist")
@@ -236,13 +162,6 @@ public interface APIInterface {
     Call<SucessModel> getDeletePlaylist(@Field("UserID") String userID,
                                         @Field("PlaylistId") String playlistId);
 
-
-    /* TODO set Shorted Audio from created Playlist */
-    @POST("sortingplaylistaudio")
-    @FormUrlEncoded
-    Call<CardModel> setShortedAudio(@Field("UserID") String userID,
-                                    @Field("PlaylistId") String playListId,
-                                    @Field("PlaylistAudioId") String audioId);
 
     /* TODO InvoiceActivity */
     @POST("invoicelist")
@@ -257,13 +176,6 @@ public interface APIInterface {
                                                       @Field("InvoiceId") String invoiceId,
                                                       @Field("Flag") String flag);
 
-    /* TODO ReminderActivity */
-    @POST("reminderstatus")
-    @FormUrlEncoded
-    Call<ReminderStatusPlaylistModel> getReminderStatusPlaylist(@Field("UserID") String userID,
-                                                                @Field("PlaylistId") String playlistId,
-                                                                @Field("ReminderStatus") String reminderStatus);
- 
     /* TODO MiniPlayerFragment & AudioPlayerActivity */
     @POST("audiointerruption")
     @FormUrlEncoded

@@ -1,241 +1,258 @@
-package com.brainwellnessspa.dashboardModule.activities;
+package com.brainwellnessspa.dashboardModule.activities
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Dialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.Dialog
+import android.app.NotificationManager
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.*
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity
+import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
+import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
+import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel
+import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding
+import com.brainwellnessspa.databinding.AddPlayListLayoutBinding
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class AddPlaylistActivity : AppCompatActivity() {
+    lateinit var binding: ActivityAddPlaylistBinding
+    var userName: String? = null
+    var coUserId: String? = null
+    var userId: String? = null
+    var audioId: String? = ""
+    var fromPlaylistID: String? = ""
+    var playlistName: String? = ""
+    var screenView: String? = ""
+    var playlistImage: String? = ""
+    var playlistType: String? = ""
+    lateinit var ctx: Context
+    lateinit var activity: Activity
+    var p: Properties? = null
+    var stackStatus = 0
+    var myBackPress = false
+    private var numStarted = 0
 
-import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.dashboardOldModule.models.SubPlayListModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.R;
-import com.brainwellnessspa.services.GlobalInitExoPlayer;
-import com.brainwellnessspa.utility.APINewClient;
-import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity;
-import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel;
-import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel;
-import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel;
-import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding;
-import com.brainwellnessspa.databinding.AddPlayListLayoutBinding;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.segment.analytics.Properties;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
-
-public class AddPlaylistActivity extends AppCompatActivity {
-    public static boolean addToPlayList = false;
-    public static String MyPlaylistId = "";
-    ActivityAddPlaylistBinding binding;
-    String UserName, CoUSERID, USERID, AudioId = "", FromPlaylistID = "", PlaylistName = "", ScreenView = "", PlaylistImage = "", PlaylistType = "";
-    Context ctx;
-    Activity activity;
-    Properties p;
-    int stackStatus = 0;
-    boolean myBackPress = false;
-    private int numStarted = 0;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist);
-        ctx = AddPlaylistActivity.this;
-        activity = AddPlaylistActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
-        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        UserName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
-
-        if (getIntent().getExtras() != null) {
-            AudioId = getIntent().getStringExtra("AudioId");
-            FromPlaylistID = getIntent().getStringExtra("PlaylistID");
-            PlaylistName = getIntent().getStringExtra("PlaylistName");
-            PlaylistImage = getIntent().getStringExtra("PlaylistImage");
-            PlaylistType = getIntent().getStringExtra("PlaylistType");
-            ScreenView = getIntent().getStringExtra("ScreenView");
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist)
+        ctx = this@AddPlaylistActivity
+        activity = this@AddPlaylistActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        if (intent.extras != null) {
+            audioId = intent.getStringExtra("AudioId")
+            fromPlaylistID = intent.getStringExtra("PlaylistID")
+            playlistName = intent.getStringExtra("PlaylistName")
+            playlistImage = intent.getStringExtra("PlaylistImage")
+            playlistType = intent.getStringExtra("PlaylistType")
+            screenView = intent.getStringExtra("ScreenView")
         }
-
-        binding.llBack.setOnClickListener(view -> {
-            finish();
-     /*       comefrom_search = 0;
-            myBackPress = true;
-            if (comeAddPlaylist == 1) {
-                Intent i = new Intent(ctx, MyPlaylistActivity.class);
-                i.putExtra("PlaylistID", FromPlaylistID);
-                i.putExtra("PlaylistName", PlaylistName);
-                i.putExtra("PlaylistIDImage", PlaylistImage);
-                i.putExtra("ScreenView", ScreenView);
-                i.putExtra("PlaylistType", PlaylistType);
-                i.putExtra("Liked", "0");
-                startActivity(i);
-                finish();
-            } else {
-                finish();
-            }*/
-        });
+        binding.llBack.setOnClickListener { finish() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(new AppLifecycleCallback());
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
-        RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-        binding.rvPlayLists.setLayoutManager(played);
-        binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
-        binding.llError.setVisibility(View.GONE);
-        binding.tvFound.setText("No result found");
-
-        binding.btnAddPlatLists.setOnClickListener(view -> {
-            myBackPress = true;
-            final Dialog dialog = new Dialog(ctx);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.create_palylist);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-            final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
-
-            dialog.setOnKeyListener((v, keyCode, event) -> {
+        val played: RecyclerView.LayoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvPlayLists.layoutManager = played
+        binding.rvPlayLists.itemAnimator = DefaultItemAnimator()
+        binding.llError.visibility = View.GONE
+        binding.tvFound.text = "No result found"
+        binding.btnAddPlatLists.setOnClickListener {
+            myBackPress = true
+            val dialog = Dialog(ctx)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.create_palylist)
+            dialog.window!!.setBackgroundDrawable(
+                ColorDrawable(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.blue_transparent
+                    )
+                )
+            )
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
+            val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
+            val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    return true;
+                    dialog.dismiss()
+                    return@setOnKeyListener true
                 }
-                return false;
-            });
-
-            TextWatcher popupTextWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                false
+            }
+            val popupTextWatcher: TextWatcher = object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    String number = edtCreate.getText().toString().trim();
-                    if (!number.isEmpty()) {
-                        btnSendCode.setEnabled(true);
-                        btnSendCode.setTextColor(getResources().getColor(R.color.light_black));
-                        btnSendCode.setBackgroundResource(R.drawable.white_round_cornor);
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    val number = edtCreate.text.toString().trim { it <= ' ' }
+                    if (number.isNotEmpty()) {
+                        btnSendCode.isEnabled = true
+                        btnSendCode.setTextColor(
+                            ContextCompat.getColor(
+                                activity,
+                                R.color.light_black
+                            )
+                        )
+                        btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
                     } else {
-                        btnSendCode.setEnabled(false);
-                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                        btnSendCode.isEnabled = false
+                        btnSendCode.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
                     }
                 }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            };
-
-            edtCreate.addTextChangedListener(popupTextWatcher);
-            btnSendCode.setOnClickListener(view1 -> {
-                if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                    BWSApplication.showToast("Please provide the playlist's name", activity);
+                override fun afterTextChanged(s: Editable) {}
+            }
+            edtCreate.addTextChangedListener(popupTextWatcher)
+            btnSendCode.setOnClickListener {
+                if (edtCreate.text.toString().equals("", ignoreCase = true)) {
+                    BWSApplication.showToast("Please provide the playlist's name", activity)
                 } else {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<CreateNewPlaylistModel> listCall = APINewClient.getClient().getCreatePlaylist(CoUSERID, edtCreate.getText().toString());
-                        listCall.enqueue(new Callback<CreateNewPlaylistModel>() {
-                            @Override
-                            public void onResponse(Call<CreateNewPlaylistModel> call, Response<CreateNewPlaylistModel> response) {
+                        val listCall = APINewClient.getClient()
+                            .getCreatePlaylist(coUserId, edtCreate.text.toString())
+                        listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
+                            override fun onResponse(
+                                call: Call<CreateNewPlaylistModel?>,
+                                response: Response<CreateNewPlaylistModel?>
+                            ) {
                                 try {
-                                    if (response.isSuccessful()) {
-                                        CreateNewPlaylistModel listsModel = response.body();
-                                        if (listsModel.getResponseData().getIscreate().equalsIgnoreCase("1")) {
-                                            dialog.dismiss();
-                                            prepareData(ctx);
-                                            String PlaylistID = listsModel.getResponseData().getPlaylistID();
-                                            String Created = listsModel.getResponseData().getIscreate();
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
-                                            if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
-                                                if (isDisclaimer == 1) {
-                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
+                                    if (response.isSuccessful) {
+                                        val listsModel = response.body()
+                                        if (listsModel!!.responseData!!.iscreate.equals(
+                                                "1",
+                                                ignoreCase = true
+                                            )
+                                        ) {
+                                            dialog.dismiss()
+                                            prepareData(ctx)
+                                            val playlistID = listsModel.responseData!!.playlistID
+                                            val shared = getSharedPreferences(
+                                                CONSTANTS.PREF_KEY_PLAYER,
+                                                MODE_PRIVATE
+                                            )
+                                            val audioFlag = shared.getString(
+                                                CONSTANTS.PREF_KEY_AudioPlayerFlag,
+                                                "0"
+                                            )
+                                            val pID = shared.getString(
+                                                CONSTANTS.PREF_KEY_PlayerPlaylistId,
+                                                "0"
+                                            )
+                                            if (audioFlag.equals(
+                                                    "playlist",
+                                                    ignoreCase = true
+                                                ) && pID.equals(playlistID, ignoreCase = true)
+                                            ) {
+                                                if (MiniPlayerFragment.isDisclaimer == 1) {
+                                                    BWSApplication.showToast(
+                                                        "The audio shall add after playing the disclaimer",
+                                                        activity
+                                                    )
                                                 } else {
-                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getPlaylistName(), dialog, "0", Created, "1");
+                                                    callAddPlaylistFromPlaylist(
+                                                        playlistID,
+                                                        listsModel.responseData!!.playlistName,
+                                                        "1"
+                                                    )
                                                 }
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getPlaylistName(), dialog, "0", Created, "1");
+                                                callAddPlaylistFromPlaylist(
+                                                    playlistID,
+                                                    listsModel.responseData!!.playlistName,
+                                                    "1"
+                                                )
                                             }
-//                                            Properties p = new Properties();
+                                            //                                            Properties p = new Properties();
 //                                            p.putValue("userId", UserID);
 //                                            p.putValue("playlistId", PlaylistID);
 //                                            p.putValue("playlistName", listsModel.getResponseData().getName());
 //                                            p.putValue("source", "Add To Playlist Screen");
 //                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
                                         } else {
-                                            BWSApplication.showToast(listsModel.getResponseMessage(), activity);
+                                            BWSApplication.showToast(
+                                                listsModel.responseMessage,
+                                                activity
+                                            )
                                         }
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
                                 }
                             }
 
-                            @Override
-                            public void onFailure(Call<CreateNewPlaylistModel> call, Throwable t) {
+                            override fun onFailure(
+                                call: Call<CreateNewPlaylistModel?>,
+                                t: Throwable
+                            ) {
                             }
-                        });
+                        })
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), activity);
+                        BWSApplication.showToast(getString(R.string.no_server_found), activity)
                     }
                 }
-            });
-            tvCancel.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-            dialog.setCancelable(false);
-        });
+            }
+            tvCancel.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(false)
+        }
     }
 
-    @Override
-    public void onBackPressed() {
-     /*   comefrom_search = 0;
+    override fun onBackPressed() {
+        /*   comefrom_search = 0;
         myBackPress = true;
         if (comeAddPlaylist == 1) {
             Intent i = new Intent(ctx, MyPlaylistActivity.class);
-            i.putExtra("PlaylistID", FromPlaylistID);
-            i.putExtra("PlaylistName", PlaylistName);
+            i.putExtra("PlaylistID", fromPlaylistID);
+            i.putExtra("PlaylistName", playlistName);
             i.putExtra("PlaylistIDImage", PlaylistImage);
             i.putExtra("ScreenView", ScreenView);
             i.putExtra("PlaylistType", PlaylistType);
@@ -245,31 +262,40 @@ public class AddPlaylistActivity extends AppCompatActivity {
         } else {
             finish();
         }*/
-        finish();
+        finish()
     }
 
-    @Override
-    protected void onResume() {
-        prepareData(AddPlaylistActivity.this);
-        super.onResume();
+    override fun onResume() {
+        prepareData(this@AddPlaylistActivity)
+        super.onResume()
     }
 
-    private void prepareData(Context ctx) {
+    private fun prepareData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<CreatePlaylistingModel> listCall = APINewClient.getClient().getPlaylisting(CoUSERID);
-            listCall.enqueue(new Callback<CreatePlaylistingModel>() {
-                @Override
-                public void onResponse(Call<CreatePlaylistingModel> call, Response<CreatePlaylistingModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APINewClient.getClient().getPlaylisting(coUserId)
+            listCall.enqueue(object : Callback<CreatePlaylistingModel?> {
+                override fun onResponse(
+                    call: Call<CreatePlaylistingModel?>,
+                    response: Response<CreatePlaylistingModel?>
+                ) {
                     try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            CreatePlaylistingModel model = response.body();
-                            if (model.getResponseData().size() == 0) {
-                                binding.llError.setVisibility(View.GONE);
-                                binding.rvPlayLists.setVisibility(View.GONE);
+                        if (response.isSuccessful) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            val model = response.body()
+                            if (model!!.responseData!!.isEmpty()) {
+                                binding.llError.visibility = View.GONE
+                                binding.rvPlayLists.visibility = View.GONE
                             } else {
-                                binding.rvPlayLists.setVisibility(View.VISIBLE);
+                                binding.rvPlayLists.visibility = View.VISIBLE
 
 //                            p = new Properties();
 //                            p.putValue("userId", UserID);
@@ -287,107 +313,159 @@ public class AddPlaylistActivity extends AppCompatActivity {
 //                            Gson gson = new Gson();
 //                            p.putValue("playlists", gson.toJson(section));
 //                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
-                                AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
-                                binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                                val addPlaylistAdapter = AddPlaylistAdapter(
+                                    model.responseData, ctx
+                                )
+                                binding.rvPlayLists.adapter = addPlaylistAdapter
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<CreatePlaylistingModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<CreatePlaylistingModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 
-    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d, String Created, String New) {
-
-        myBackPress = true;
+    private fun callAddPlaylistFromPlaylist(
+        PlaylistID: String?,
+        name: String?,
+        New: String
+    ) {
+        myBackPress = true
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AddToPlaylistModel> listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(CoUSERID, AudioId, PlaylistID, FromPlaylistID);
-            listCall.enqueue(new Callback<AddToPlaylistModel>() {
-                @Override
-                public void onResponse(Call<AddToPlaylistModel> call, Response<AddToPlaylistModel> response) {
+            BWSApplication.showProgressBar(
+                binding.progressBar,
+                binding.progressBarHolder,
+                activity
+            )
+            val listCall = APINewClient.getClient()
+                .getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
+            listCall.enqueue(object : Callback<AddToPlaylistModel?> {
+                override fun onResponse(
+                    call: Call<AddToPlaylistModel?>,
+                    response: Response<AddToPlaylistModel?>
+                ) {
                     try {
-                        AddToPlaylistModel listModels = response.body();
-                        if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                            int pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
-                            if (AudioFlag.equalsIgnoreCase("playList") && pID.equalsIgnoreCase(PlaylistID)) {
-                                    Gson gsonx = new Gson();
-                                    String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gsonx));
-                                    Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                                    }.getType();
-                                    ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
-                                    mainPlayModelListold = gsonx.fromJson(json, type);
-                                    String id = mainPlayModelListold.get(pos).getID();
-                                    int size = mainPlayModelListold.size();
-                                    ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
-                                    for (int i = 0; i < listModels.getResponseData().size(); i++) {
-                                        MainPlayModel mainPlayModel = new MainPlayModel();
-                                        mainPlayModel.setID(listModels.getResponseData().get(i).getID());
-                                        mainPlayModel.setName(listModels.getResponseData().get(i).getName());
-                                        mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
-                                        mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
-                                        mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
-                                        mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
-                                        mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
-                                        mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                        mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
-                                        mainPlayModelList.add(mainPlayModel);
-                                    }
-                                    for (int i = 0; i < listModels.getResponseData().size(); i++) {
-                                        SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
-                                        mainPlayModel.setID(listModels.getResponseData().get(i).getID());
-                                        mainPlayModel.setName(listModels.getResponseData().get(i).getName());
-                                        mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
-                                        mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
-                                        mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
-                                        mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
-                                        mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
-                                        mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                        mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
-                                        playlistSongs.add(mainPlayModel);
-                                    }
-                                    for (int i = 0; i < mainPlayModelList.size(); i++) {
-                                        if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
-                                            pos = i;
-                                            break;
-                                        }
-                                    }
-                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedd.edit();
-                                    Gson gson = new Gson();
-                                    String jsonx = gson.toJson(mainPlayModelList);
-                                    String json1 = gson.toJson(playlistSongs);
-                                    editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx);
-                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created");
-                                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
-                                    editor.commit();
-
-                                    if (!mainPlayModelList.get(pos).getAudioFile().equals("")) {
-                                        List<String> downloadAudioDetailsList = new ArrayList<>();
-                                        GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
-                                        ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx);
+                        val listModels = response.body()
+                        if (listModels!!.responseCode.equals(
+                                getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true
+                            )
+                        ) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
+                            val shared =
+                                getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val audioFlag =
+                                shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                            var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                            val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                            if (audioFlag.equals("playList", ignoreCase = true) && pID.equals(
+                                    PlaylistID,
+                                    ignoreCase = true
+                                )
+                            ) {
+                                val gsonx = Gson()
+                                val json = shared.getString(
+                                    CONSTANTS.PREF_KEY_PlayerAudioList,
+                                    gsonx.toString()
+                                )
+                                val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
+                                val mainPlayModelListold: ArrayList<MainPlayModel> =
+                                    gsonx.fromJson(json, type)
+                                val id = mainPlayModelListold[pos].id
+                                val size = mainPlayModelListold.size
+                                val mainPlayModelList = ArrayList<MainPlayModel>()
+                                val playlistSongs =
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
+                                for (i in listModels.responseData!!.indices) {
+                                    val mainPlayModel = MainPlayModel()
+                                    mainPlayModel.id = listModels.responseData!![i].iD
+                                    mainPlayModel.name = listModels.responseData!![i].name
+                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile
+                                    mainPlayModel.playlistID =
+                                        listModels.responseData!![i].playlistID
+                                    mainPlayModel.audioDirection =
+                                        listModels.responseData!![i].audioDirection
+                                    mainPlayModel.audiomastercat =
+                                        listModels.responseData!![i].audiomastercat
+                                    mainPlayModel.audioSubCategory =
+                                        listModels.responseData!![i].audioSubCategory
+                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile
+                                    mainPlayModel.audioDuration =
+                                        listModels.responseData!![i].audioDuration
+                                    mainPlayModelList.add(mainPlayModel)
+                                }
+                                for (i in listModels.responseData!!.indices) {
+                                    val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
+                                    mainPlayModel.id = listModels.responseData!![i].iD
+                                    mainPlayModel.name = listModels.responseData!![i].name
+                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile
+                                    mainPlayModel.playlistID =
+                                        listModels.responseData!![i].playlistID
+                                    mainPlayModel.audioDirection =
+                                        listModels.responseData!![i].audioDirection
+                                    mainPlayModel.audiomastercat =
+                                        listModels.responseData!![i].audiomastercat
+                                    mainPlayModel.audioSubCategory =
+                                        listModels.responseData!![i].audioSubCategory
+                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile
+                                    mainPlayModel.audioDuration =
+                                        listModels.responseData!![i].audioDuration
+                                    playlistSongs.add(mainPlayModel)
+                                }
+                                for (i in mainPlayModelList.indices) {
+                                    if (mainPlayModelList[i].id.equals(id, ignoreCase = true)) {
+                                        pos = i
+                                        break
                                     }
                                 }
-                          /*  if (comeAddPlaylist == 1) {
+                                val sharedd = ctx.getSharedPreferences(
+                                    CONSTANTS.PREF_KEY_PLAYER,
+                                    MODE_PRIVATE
+                                )
+                                val editor = sharedd.edit()
+                                val gson = Gson()
+                                val jsonx = gson.toJson(mainPlayModelList)
+                                val json1 = gson.toJson(playlistSongs)
+                                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json1)
+                                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos)
+                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID)
+                                editor.putString(
+                                    CONSTANTS.PREF_KEY_PlayerPlaylistName,
+                                    playlistName
+                                )
+                                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created")
+                                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
+                                editor.apply()
+                                if (mainPlayModelList[pos].audioFile != "") {
+                                    val downloadAudioDetailsList: List<String> = ArrayList()
+                                    val ge = GlobalInitExoPlayer()
+                                    ge.AddAudioToPlayer(
+                                        size,
+                                        mainPlayModelList,
+                                        downloadAudioDetailsList,
+                                        ctx
+                                    )
+                                }
+                            }
+                            /*  if (comeAddPlaylist == 1) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.go_to_playlist);
@@ -422,186 +500,197 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 }
 
                             }*/
-                            final Dialog dialog = new Dialog(ctx);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.go_to_playlist);
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                            dialog.setOnKeyListener((v, keyCode, event) -> {
+                            val dialog = Dialog(ctx)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.go_to_playlist)
+                            dialog.window!!.setBackgroundDrawable(
+                                ColorDrawable(
+                                    ContextCompat.getColor(
+                                        activity,
+                                        R.color.blue_transparent
+                                    )
+                                )
+                            )
+                            dialog.window!!
+                                .setLayout(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                            val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
+                            val rlCreate = dialog.findViewById<RelativeLayout>(R.id.rlCreate)
+                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    dialog.dismiss();
-                                    return true;
+                                    dialog.dismiss()
+                                    return@setOnKeyListener true
                                 }
-                                return false;
-                            });
-
-                            rlCreate.setOnClickListener(view2 -> {
+                                false
+                            }
+                            rlCreate.setOnClickListener {
 //                                addToPlayList = true;
 //                                MyPlaylistId = PlaylistID;
-                                Intent intent = new Intent(ctx, MyPlaylistListingActivity.class);
-                                intent.putExtra("New", New);
-                                intent.putExtra("PlaylistID", PlaylistID);
-                                intent.putExtra("PlaylistName", name);
-                                intent.putExtra("MyDownloads", "0");
-                                startActivity(intent);
-                                finish();
-                                overridePendingTransition(0, 0);
-                                dialog.dismiss();
-                            });
-
-                            tvCancel.setOnClickListener(v -> {
-                                dialog.dismiss();
-                                finish();
-                            });
-                            dialog.show();
-                            dialog.setCancelable(false);
-                        } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            BWSApplication.showToast(listModels.getResponseMessage(), activity);
+                                val intent = Intent(ctx, MyPlaylistListingActivity::class.java)
+                                intent.putExtra("New", New)
+                                intent.putExtra("PlaylistID", PlaylistID)
+                                intent.putExtra("PlaylistName", name)
+                                intent.putExtra("MyDownloads", "0")
+                                startActivity(intent)
+                                finish()
+                                overridePendingTransition(0, 0)
+                                dialog.dismiss()
+                            }
+                            tvCancel.setOnClickListener {
+                                dialog.dismiss()
+                                finish()
+                            }
+                            dialog.show()
+                            dialog.setCancelable(false)
+                        } else if (listModels.responseCode.equals(
+                                getString(R.string.ResponseCodefail),
+                                ignoreCase = true
+                            )
+                        ) {
+                            BWSApplication.hideProgressBar(
+                                binding.progressBar,
+                                binding.progressBarHolder,
+                                activity
+                            )
+                            BWSApplication.showToast(listModels.responseMessage, activity)
                         }
-                    } catch (Exception e) {
-
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        e.printStackTrace();
+                    } catch (e: Exception) {
+                        BWSApplication.hideProgressBar(
+                            binding.progressBar,
+                            binding.progressBarHolder,
+                            activity
+                        )
+                        e.printStackTrace()
                     }
                 }
 
-                @Override
-                public void onFailure(Call<AddToPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                override fun onFailure(call: Call<AddToPlaylistModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(
+                        binding.progressBar,
+                        binding.progressBarHolder,
+                        activity
+                    )
                 }
-            });
+            })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
 
-    private class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder> {
-        Context ctx;
-        private List<CreatePlaylistingModel.ResponseData> listModel;
-
-        public AddPlaylistAdapter(List<CreatePlaylistingModel.ResponseData> listModel, Context ctx) {
-            this.listModel = listModel;
-            this.ctx = ctx;
+    private inner class AddPlaylistAdapter(
+        private val listModel: List<CreatePlaylistingModel.ResponseData>?,
+        var ctx: Context
+    ) : RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: AddPlayListLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.add_play_list_layout,
+                parent,
+                false
+            )
+            return MyViewHolder(v)
         }
 
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            AddPlayListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.add_play_list_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvTitle.setText(listModel.get(position).getName());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.16f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
-            holder.binding.llMainLayout.setOnClickListener(view -> {
-                String PlaylistID = listModel.get(position).getId();
-                String Created = listModel.get(position).getCreated();
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
-                if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistID)) {
-                    if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall add after playing the disclaimer", activity);
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.binding.tvTitle.text = listModel!![position].name
+            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.16f, 0f)
+            holder.binding.ivRestaurantImage.layoutParams.height =
+                (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width =
+                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+            Glide.with(ctx).load(listModel[position].image).thumbnail(0.05f)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+                .into(holder.binding.ivRestaurantImage)
+            holder.binding.llMainLayout.setOnClickListener {
+                val playlistID = listModel[position].id
+                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
+                if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(
+                        playlistID,
+                        ignoreCase = true
+                    )
+                ) {
+                    if (MiniPlayerFragment.isDisclaimer == 1) {
+                        BWSApplication.showToast(
+                            "The audio shall add after playing the disclaimer",
+                            activity
+                        )
                     } else {
-                        final Dialog dialogx = new Dialog(ctx);
-                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created, "0");
+                        callAddPlaylistFromPlaylist(
+                            playlistID,
+                            listModel[position].name,
+                            "0"
+                        )
                     }
                 } else {
-                    final Dialog dialogx = new Dialog(ctx);
-                    callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1", Created, "0");
+                    callAddPlaylistFromPlaylist(
+                        playlistID,
+                        listModel[position].name,
+                        "0"
+                    )
                 }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return listModel.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            AddPlayListLayoutBinding binding;
-
-            public MyViewHolder(AddPlayListLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
             }
         }
-    }
 
-    class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+        override fun getItemCount(): Int {
+            return listModel!!.size
         }
 
-        @Override
-        public void onActivityStarted(Activity activity) {
+        inner class MyViewHolder(var binding: AddPlayListLayoutBinding) : RecyclerView.ViewHolder(
+            binding.root
+        )
+    }
+
+    internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
-                stackStatus = 1;
-                Log.e("APPLICATION", "APP IN FOREGROUND");
+                stackStatus = 1
+                Log.e("APPLICATION", "APP IN FOREGROUND")
                 //app went to foreground
             }
-            numStarted++;
+            numStarted++
         }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {
+            numStarted--
             if (numStarted == 0) {
                 if (!myBackPress) {
-                    Log.e("APPLICATION", "Back press false");
-                    stackStatus = 2;
+                    Log.e("APPLICATION", "Back press false")
+                    stackStatus = 2
                 } else {
-                    myBackPress = true;
-                    stackStatus = 1;
-                    Log.e("APPLICATION", "back press true ");
+                    myBackPress = true
+                    stackStatus = 1
+                    Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND");
+                Log.e("APPLICATION", "App is in BACKGROUND")
                 // app went to background
             }
         }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
-                Log.e("Destroy", "Activity Destoryed");
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                Log.e("Destroy", "Activity Destoryed")
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
-                Log.e("Destroy", "Activity go in main activity");
+                Log.e("Destroy", "Activity go in main activity")
             }
         }
     }
 
+    companion object {
+        var addToPlayList = false
+        var MyPlaylistId = ""
+    }
 }
