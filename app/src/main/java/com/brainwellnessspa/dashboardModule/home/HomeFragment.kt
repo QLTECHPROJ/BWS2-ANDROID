@@ -41,7 +41,7 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.*
-import com.brainwellnessspa.manageModule.SleepTimeActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.activities.AddProfileActivity
 import com.brainwellnessspa.userModule.signup.WalkScreenActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
@@ -56,7 +56,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
-import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
+import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson

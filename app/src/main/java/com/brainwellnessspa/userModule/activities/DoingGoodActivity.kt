@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityDoingGoodBinding
-import com.brainwellnessspa.manageModule.SleepTimeActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 
 class DoingGoodActivity : AppCompatActivity() {
     lateinit var binding: ActivityDoingGoodBinding

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.manageModule
+package com.brainwellnessspa.membershipModule.activities
 
 import android.app.Activity
 import android.content.Context
@@ -37,7 +37,7 @@ class SleepTimeActivity : AppCompatActivity() {
         activity = this@SleepTimeActivity
         val shared = ctx.getSharedPreferences(
             CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-            AppCompatActivity.MODE_PRIVATE
+            Context.MODE_PRIVATE
         )
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")

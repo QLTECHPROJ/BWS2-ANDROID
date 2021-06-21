@@ -88,14 +88,14 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".manageModule.ViewAllManageAudio" />
+        <activity android:name=".membershipModule.activities.ViewAllManageAudio" />
         <activity
-            android:name=".manageModule.SessionExpActivity"
+            android:name=".membershipModule.activities.SessionExpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.SessionStatusActivity"
+            android:name=".membershipModule.activities.SessionStatusActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -110,7 +110,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.ManageDashboardActivity"
+            android:name=".membershipModule.activities.EnhanceDashboardActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -130,7 +130,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.SleepTimeActivity"
+            android:name=".membershipModule.activities.SleepTimeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -155,17 +155,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.ManageDoneActivity"
+            android:name=".membershipModule.activities.EnhanceDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.SummaryActivity"
+            android:name=".membershipModule.activities.SummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.ManageActivity"
+            android:name=".membershipModule.activities.EnhanceActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -317,25 +317,9 @@
                  android:screenOrientation="portrait"
                  android:windowSoftInputMode="adjustPan" />
         -->
-        <activity
-            android:name=".membershipModule.activities.CheckoutPaymentActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoTitle"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".manageModule.OrderSummaryActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".membershipModule.activities.OrderSummaryActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".membershipModule.activities.MembershipActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -383,7 +367,7 @@
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".manageModule.RecommendedCategoryActivity"
+            android:name=".membershipModule.activities.RecommendedCategoryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

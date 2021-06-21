@@ -15,7 +15,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.manageModule.SleepTimeActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.userModule.models.CoUserDetailsModel

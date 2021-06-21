@@ -44,7 +44,7 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.*
-import com.brainwellnessspa.manageModule.RecommendedCategoryActivity
+import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy

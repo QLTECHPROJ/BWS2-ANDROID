@@ -1,4 +1,4 @@
-package com.brainwellnessspa.manageModule
+package com.brainwellnessspa.membershipModule.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -26,10 +26,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
-import com.brainwellnessspa.databinding.ActivityManageBinding
-import com.brainwellnessspa.databinding.MembershipFaqLayoutBinding
-import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
-import com.brainwellnessspa.databinding.VideoSeriesBoxLayoutBinding
+import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.webView.TncActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -43,8 +40,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ManageActivity : AppCompatActivity() {
-    lateinit var binding: ActivityManageBinding
+class EnhanceActivity : AppCompatActivity() {
+    lateinit var binding: ActivityEnhanceBinding
     lateinit var adapter: MembershipFaqAdapter
     lateinit var subscriptionAdapter: SubscriptionAdapter
     lateinit var planListAdapter: PlanListAdapter
@@ -63,13 +60,13 @@ class ManageActivity : AppCompatActivity() {
     lateinit var ctx: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_manage)
-        activity = this@ManageActivity
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_enhance)
+        activity = this@EnhanceActivity
         val shared1: SharedPreferences =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        ctx = this@ManageActivity
+        ctx = this@EnhanceActivity
 
         val p = Properties()
         BWSApplication.addToSegment("Manage Plan Screen Viewed", p, CONSTANTS.screen)
@@ -224,9 +221,11 @@ class ManageActivity : AppCompatActivity() {
 
                             binding.rvList.layoutManager =
                                 LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                            subscriptionAdapter = SubscriptionAdapter(
-                                listModel.responseData!!.audioFiles, ctx
-                            )
+                            subscriptionAdapter = listModel.responseData!!.audioFiles?.let {
+                                SubscriptionAdapter(
+                                    it, ctx
+                                )
+                            }!!
                             binding.rvList.adapter = subscriptionAdapter
 
                             binding.rvVideoList.layoutManager =
@@ -237,7 +236,7 @@ class ManageActivity : AppCompatActivity() {
                             binding.rvVideoList.adapter = videoListAdapter
 
                             binding.rvFaqList.layoutManager =
-                                LinearLayoutManager(this@ManageActivity)
+                                LinearLayoutManager(this@EnhanceActivity)
                             adapter = MembershipFaqAdapter(
                                 listModel.responseData!!.fAQs!!,
                                 ctx,
@@ -365,7 +364,7 @@ class ManageActivity : AppCompatActivity() {
         }
 
         private fun changeFunction(
-            holder: PlanListAdapter.MyViewHolder,
+            holder: MyViewHolder,
             listModelList: List<PlanlistInappModel.ResponseData.Plan>,
             position: Int
         ) {

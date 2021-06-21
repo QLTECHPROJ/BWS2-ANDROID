@@ -1,4 +1,4 @@
-package com.brainwellnessspa.manageModule
+package com.brainwellnessspa.membershipModule.activities
 
 import android.os.Bundle
 import android.text.Html
