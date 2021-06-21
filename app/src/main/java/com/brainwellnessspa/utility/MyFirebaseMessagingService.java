@@ -21,7 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity;
-import com.brainwellnessspa.dashboardModule.manage.MyPlaylistListingActivity;
+import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;

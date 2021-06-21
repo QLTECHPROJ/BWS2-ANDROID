@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.activities
+package com.brainwellnessspa.dashboardModule.home
 
 import android.annotation.SuppressLint
 import android.app.Activity

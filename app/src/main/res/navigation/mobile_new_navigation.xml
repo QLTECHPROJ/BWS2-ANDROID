@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_Manage"
-        android:name="com.brainwellnessspa.dashboardModule.manage.ManageFragment"
+        android:name="com.brainwellnessspa.dashboardModule.enhance.ManageFragment"
         android:label="@string/title_enhance"
         tools:layout="@layout/fragment_manage" />
 

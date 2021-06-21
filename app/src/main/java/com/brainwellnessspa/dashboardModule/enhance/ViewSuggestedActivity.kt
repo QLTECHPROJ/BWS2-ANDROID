@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.activities
+package com.brainwellnessspa.dashboardModule.enhance
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
@@ -24,6 +24,7 @@ import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SearchPlaylistModel

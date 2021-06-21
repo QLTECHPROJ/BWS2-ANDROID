@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.manage
+package com.brainwellnessspa.dashboardModule.enhance
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,7 +19,6 @@ import com.brainwellnessspa.dashboardModule.models.SegmentPlaylist
 import com.brainwellnessspa.dashboardModule.models.ViewAllPlayListModel
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity
 import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding
 import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique

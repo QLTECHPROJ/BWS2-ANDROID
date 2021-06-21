@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.activities
+package com.brainwellnessspa.dashboardModule.enhance
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity

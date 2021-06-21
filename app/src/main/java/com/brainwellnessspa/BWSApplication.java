@@ -81,7 +81,7 @@ import com.brainwellnessspa.utility.AppSignatureHashHelper;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.CryptLib;
 import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
+import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;

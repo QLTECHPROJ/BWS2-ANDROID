@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardModule.manage
+package com.brainwellnessspa.dashboardModule.enhance
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

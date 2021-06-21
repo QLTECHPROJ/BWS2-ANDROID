@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity;
-import com.brainwellnessspa.dashboardModule.activities.AddPlaylistActivity;
+import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel;
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment;
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
