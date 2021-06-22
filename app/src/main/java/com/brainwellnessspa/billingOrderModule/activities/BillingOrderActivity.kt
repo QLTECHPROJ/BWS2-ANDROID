@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
 import com.segment.analytics.Properties
 
+/* This is the old BWA billing order activity */
 class BillingOrderActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingOrderBinding
     var payment = 0
@@ -33,30 +34,44 @@ class BillingOrderActivity : AppCompatActivity() {
     var coUserId: String? = ""
     private var numStarted = 0
     var stackStatus = 0
-    var activity: Activity? = null
+    lateinit var activity: Activity
+
+    /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order)
+        /* This is the get string userId & coUserId */
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         activity = this@BillingOrderActivity
+
+        /* This is the screen back button click */
         binding.llBack.setOnClickListener {
             myBackPressbill = true
             AudioDownloadsFragment.comefromDownload = "0"
             finish()
         }
+
+        /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
             startActivity(i)
         }
+
+        /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, CancelMembershipActivity::class.java)
             startActivity(i)
         }
+
+        /* This condition is check about application in background or foreground */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
+
+        /* This is segment tag */
         val p = Properties()
         p.putValue("userId", userId)
         p.putValue("plan", "")
@@ -65,6 +80,8 @@ class BillingOrderActivity : AppCompatActivity() {
         p.putValue("planExpiryDt", "")
         p.putValue("planAmount", "")
         BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen)
+
+        /* This is the tab layout showing code */
         binding.viewPager.offscreenPageLimit = 2
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"))
         //        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
@@ -79,6 +96,7 @@ class BillingOrderActivity : AppCompatActivity() {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this)
         }
+
         if (intent.hasExtra("payment")) {
             payment = intent.getIntExtra("payment", 0)
         }
@@ -97,12 +115,14 @@ class BillingOrderActivity : AppCompatActivity() {
         })
     }
 
+    /* This is the device back button click */
     override fun onBackPressed() {
         myBackPressbill = true
         AudioDownloadsFragment.comefromDownload = "0"
         finish()
     }
 
+    /* This class is the handling tab layout */
     inner class TabAdapter(fm: FragmentManager?, var myContext: Context, var totalTabs: Int) :
         FragmentStatePagerAdapter(
             fm!!
@@ -131,6 +151,7 @@ class BillingOrderActivity : AppCompatActivity() {
         }
     }
 
+    /* This class is check about application in background or foreground */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
         override fun onActivityStarted(activity: Activity) {
@@ -161,6 +182,7 @@ class BillingOrderActivity : AppCompatActivity() {
         }
 
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
@@ -174,6 +196,7 @@ class BillingOrderActivity : AppCompatActivity() {
         }
     }
 
+    /* This is object declaration */
     companion object {
         @JvmField
         var myBackPressbill = false

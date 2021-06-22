@@ -409,4 +409,15 @@
     <string name="valid_mobile_number">Please provide a valid mobile number</string>
     <string name="pls_provide_a_name">Please provide a Name</string>
     <string name="check_dob">Please confirm whether you are above 18 years of age</string>
+    <string name="get_sms_code">Get sms code</string>
+    <string name="new_sign_up">Sign Up</string>
+    <string name="you_will_received_a_verification_mail_make_sure_click_on_the_link_to_verify">You will received a verification mail, make sure click on the link to verify</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="new_login_in">Log In</string>
+    <string name="login_text">Already have account?</string>
+    <string name="new_sign_in">Sign In</string>
+    <string name="please_provide_a_email_address">Please provide a email address</string>
+    <string name="create_account">Create Account</string>
+    <string name="sms_code_quotes">\"We sent an SMS with a 4-digit code to \"</string>
 </resources>
+

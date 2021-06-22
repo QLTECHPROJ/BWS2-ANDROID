@@ -1,4 +1,4 @@
-package com.brainwellnessspa.userModule.signup
+package com.brainwellnessspa.userModule.signupLogin
 
 import android.app.Activity
 import android.content.Context
@@ -10,7 +10,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityGetStartedBinding
-import com.brainwellnessspa.userModule.activities.SignInActivity
 import com.segment.analytics.Properties
 
 class GetStartedActivity : AppCompatActivity() {
@@ -28,7 +27,7 @@ class GetStartedActivity : AppCompatActivity() {
         BWSApplication.addToSegment("Launch Screen Viewed", p, CONSTANTS.screen)
         binding.btnGetStarted.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
-                val i = Intent(ctx, CreateAccountActivity::class.java)
+                val i = Intent(ctx, SignUpActivity::class.java)
                 startActivity(i)
                 finish()
             } else {

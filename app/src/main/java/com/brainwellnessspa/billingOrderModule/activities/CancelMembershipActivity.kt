@@ -33,6 +33,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/* This is the old BWA cancel membership activity */
 class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
     lateinit var binding: ActivityCancelMembershipBinding
     lateinit var ctx: Context
@@ -44,14 +45,20 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     var stackStatus = 0
     var myBackPress = false
 
+    /* This is the first lunched function */
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership)
         ctx = this@CancelMembershipActivity
         activity = this@CancelMembershipActivity
+
+        /* This is the get string userID */
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+
+        /* This is the screen back button click */
         binding.llBack.setOnClickListener {
             myBackPress = true
             if (audioPause) {
@@ -59,9 +66,13 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             }
             finish()
         }
+
+        /* This condition is check about application in background or foreground */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
+
+        /*This is to youtube video playing */
         binding.youtubeView.initialize(API_KEY, this)
         val p = Properties()
         p.putValue("userId", userID)
@@ -71,6 +82,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         p.putValue("planExpiryDt", "")
         p.putValue("planAmount", "")
         BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen)
+
+        /*This condition is to audio playing or not  */
         if (GlobalInitExoPlayer.player != null) {
             if (GlobalInitExoPlayer.player.playWhenReady) {
                 GlobalInitExoPlayer.player.playWhenReady = false
@@ -78,6 +91,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             }
         }
 
+        /*This click event is option one select  */
         binding.cbOne.setOnClickListener {
             binding.cbOne.isChecked = true
             binding.cbTwo.isChecked = false
@@ -88,6 +102,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             binding.edtCancelBox.setText("")
         }
 
+        /*This click event is option two select  */
         binding.cbTwo.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = true
@@ -98,6 +113,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             binding.edtCancelBox.setText("")
         }
 
+        /*This click event is option three select  */
         binding.cbThree.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = false
@@ -108,6 +124,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             binding.edtCancelBox.setText("")
         }
 
+        /*This click event is option four select  */
         binding.cbFour.setOnClickListener {
             binding.cbOne.isChecked = false
             binding.cbTwo.isChecked = false
@@ -117,6 +134,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             binding.edtCancelBox.visibility = View.VISIBLE
         }
 
+        /*This click event is called when going to cancel subscription  */
         binding.btnCancelSubscrible.setOnClickListener {
             myBackPress = true
             if (GlobalInitExoPlayer.player != null) {
@@ -130,6 +148,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             ) {
                 BWSApplication.showToast("Cancellation reason is required", activity)
             } else {
+                /*This dialog is cancel membership  */
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.cancel_membership)
@@ -160,6 +179,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     }
                     false
                 }
+
+                /* This click event is called when cancelling subscription */
                 btn.setOnTouchListener { view1: View, event: MotionEvent ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -228,6 +249,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     }
                     true
                 }
+
+                /* This click event is called when not cancelling subscription */
                 tvGoBack.setOnClickListener {
                     dialog.dismiss()
                     if (GlobalInitExoPlayer.player != null) {
@@ -243,6 +266,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
     }
 
+    /* This is the device back click event */
     override fun onBackPressed() {
         myBackPress = true
         if (audioPause) {
@@ -251,6 +275,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         finish()
     }
 
+    /* This fuction is youtube video sucessfully playing */
     override fun onInitializationSuccess(
         provider: YouTubePlayer.Provider,
         youTubePlayer: YouTubePlayer,
@@ -262,6 +287,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
     }
 
+    /* This fuction is youtube video can't play and generating error  */
     override fun onInitializationFailure(
         provider: YouTubePlayer.Provider,
         errorReason: YouTubeInitializationResult
@@ -276,15 +302,18 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
     }
 
+    /* This is the initialize youtube player view */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RECOVERY_DIALOG_REQUEST) {
             youTubePlayerProvider.initialize(API_KEY, this)
         }
     }
 
+    /* This is the get youtube player view */
     private val youTubePlayerProvider: YouTubePlayer.Provider
         get() = binding.youtubeView
 
+    /* This class is check about application in background or foreground */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
         override fun onActivityStarted(activity: Activity) {
@@ -327,6 +356,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
     }
 
+    /* This is object declaration */
     companion object {
         const val API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ"
         const val VIDEO_ID = "y1rfRW6WX08"

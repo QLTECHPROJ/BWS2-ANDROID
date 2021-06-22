@@ -1,4 +1,4 @@
-package com.brainwellnessspa.userModule.signup
+package com.brainwellnessspa.userModule.signupLogin
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -34,7 +34,6 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
-import com.brainwellnessspa.userModule.activities.SignInActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
@@ -46,14 +45,14 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class CreateAccountActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateAccountBinding
     private lateinit var dialog: Dialog
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
     lateinit var ctx: Context
     lateinit var activity: Activity
-    var fcm_id: String = ""
+    var fcmId: String = ""
     var countryFullName: String = ""
     lateinit var searchEditText: EditText
 
@@ -143,12 +142,10 @@ class CreateAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_account)
-        ctx = this@CreateAccountActivity
-        activity = this@CreateAccountActivity
+        ctx = this@SignUpActivity
+        activity = this@SignUpActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.llBack.setOnClickListener {
-            val i = Intent(activity, GetStartedActivity::class.java)
-            startActivity(i)
             finish()
         }
         binding.etUser.addTextChangedListener(userTextWatcher)
@@ -167,6 +164,12 @@ class CreateAccountActivity : AppCompatActivity() {
             )
             binding.ivInVisible.isClickable = false
             binding.ivInVisible.isEnabled = false
+        }
+
+        binding.tvSignIn.setOnClickListener {
+            val i = Intent(activity, SignInActivity::class.java)
+            startActivity(i)
+            finish()
         }
 
         binding.btnCreateAc.setOnClickListener {
@@ -217,7 +220,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 binding.txtPassowrdError.text =
                     "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
             } else {
-                SignUpUser()
+                signUpUser()
             }
         }
         binding.ivVisible.visibility = View.VISIBLE
@@ -347,8 +350,6 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val i = Intent(activity, GetStartedActivity::class.java)
-        startActivity(i)
         finish()
     }
 
@@ -388,11 +389,11 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     @SuppressLint("HardwareIds")
-    fun SignUpUser() {
+    fun signUpUser() {
         if (BWSApplication.isNetworkConnected(this)) {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-            if (TextUtils.isEmpty(fcm_id)) {
+            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
+            if (TextUtils.isEmpty(fcmId)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
                     this
                 ) { task: Task<InstallationTokenResult> ->
@@ -404,7 +405,7 @@ class CreateAccountActivity : AppCompatActivity() {
                     editor.commit()
                 }
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-                fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")!!
+                fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
@@ -419,7 +420,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 CONSTANTS.FLAG_ONE,
                 binding.etPassword.text.toString(),
                 Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
-                fcm_id
+                fcmId
             )
             listCall.enqueue(object : Callback<NewSignUpModel> {
                 override fun onResponse(
@@ -468,19 +469,15 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     class CountrySelectAdapter(
-        dialog: Dialog,
-        searchFilter: String,
+        private var dialog: Dialog,
+        private var searchFilter: String,
         private var binding: ActivityCreateAccountBinding,
         private val modelList: List<CountryListModel.ResponseData>,
-        rvCountryList: RecyclerView,
-        tvFound: TextView
+        private var rvCountryList: RecyclerView,
+        private var tvFound: TextView
     ) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
-        private var rvCountryList: RecyclerView
-        private var tvFound: TextView
-        private var searchFilter: String
-        private var dialog: Dialog
-        var catList = CreateAccountActivity()
+        var catList = SignUpActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -492,10 +489,6 @@ class CreateAccountActivity : AppCompatActivity() {
         }
 
         init {
-            this.rvCountryList = rvCountryList
-            this.tvFound = tvFound
-            this.searchFilter = searchFilter
-            this.dialog = dialog
             listFilterData = modelList
         }
 

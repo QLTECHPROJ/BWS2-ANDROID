@@ -1,4 +1,4 @@
-package com.brainwellnessspa.userModule.signup
+package com.brainwellnessspa.userModule.signupLogin
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,7 +10,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
-import com.brainwellnessspa.userModule.activities.DoingGoodActivity
+import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 
 class WalkScreenActivity : AppCompatActivity() {

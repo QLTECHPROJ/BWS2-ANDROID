@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.min
-
+/* This class file is the create custom rounded imageview */
 class RoundedImageView : AppCompatImageView {
     constructor(context: Context?) : super(context!!)
     constructor(context: Context?, attrs: AttributeSet?) : super(

@@ -40,7 +40,7 @@ import com.brainwellnessspa.BuildConfig;
 import com.brainwellnessspa.downloadModule.activities.DownloadsActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity;
-import com.brainwellnessspa.reminderModule.activities.ReminderDetailsActivity;
+import com.brainwellnessspa.reminderModule.activities.ReminderListsActivity;
 import com.brainwellnessspa.utility.APIClientProfile;
 import com.brainwellnessspa.utility.APINewClient;
 import com.brainwellnessspa.utility.CONSTANTS;
@@ -54,7 +54,7 @@ import com.brainwellnessspa.faqModule.activities.FaqActivity;
 import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity;
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity;
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity;
-import com.brainwellnessspa.userModule.signup.GetStartedActivity;
+import com.brainwellnessspa.userModule.signupLogin.GetStartedActivity;
 import com.brainwellnessspa.userModule.models.CoUserDetailsModel;
 import com.brainwellnessspa.userModule.models.RemoveProfileModel;
 import com.bumptech.glide.Glide;
@@ -263,7 +263,7 @@ public class ProfileFragment extends Fragment {
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     if (BWSApplication.isNetworkConnected(getActivity())) {
-                        Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
+                        Intent i = new Intent(getActivity(), ReminderListsActivity.class);
                         startActivity(i);
                         requireActivity().overridePendingTransition(0, 0);
                     } else {

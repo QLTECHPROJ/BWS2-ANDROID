@@ -49,7 +49,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ReminderDetailsActivity : AppCompatActivity() {
+/* This is the reminder set listing activity */
+
+class ReminderListsActivity : AppCompatActivity() {
     lateinit var binding: ActivityReminderDetailsBinding
     var USERID: String? = ""
     var CoUSERID: String? = ""
@@ -78,8 +80,8 @@ class ReminderDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details)
-        ctx = this@ReminderDetailsActivity
-        activity = this@ReminderDetailsActivity
+        ctx = this@ReminderListsActivity
+        activity = this@ReminderListsActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")

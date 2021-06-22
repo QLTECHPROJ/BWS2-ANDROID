@@ -24,8 +24,9 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
-import com.brainwellnessspa.userModule.signup.WalkScreenActivity
-import com.brainwellnessspa.userModule.signup.GetStartedActivity
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
+import com.brainwellnessspa.userModule.signupLogin.GetStartedActivity
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
 import retrofit2.Call
@@ -58,26 +59,26 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {
         /* TODO conditions for check user exist or not */
-        if (userId.equals("", ignoreCase = true)) {
+//        if (userId.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, GetStartedActivity::class.java)
+                val intent = Intent(this@SplashActivity, SignInActivity::class.java)
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
-        } else if (!userId.equals("", ignoreCase = true) && coUserId.equals(
-                        "",
-                        ignoreCase = true
-                )
-        ) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, UserListActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, (2 * 800).toLong())
-
-        } else {
-            checkUserDetails()
-        }
+//        } else if (!userId.equals("", ignoreCase = true) && coUserId.equals(
+//                        "",
+//                        ignoreCase = true
+//                )
+//        ) {
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                val intent = Intent(this@SplashActivity, UserListActivity::class.java)
+//                startActivity(intent)
+//                finish()
+//            }, (2 * 800).toLong())
+//
+//        } else {
+//            checkUserDetails()
+//        }
         super.onResume()
     }
 

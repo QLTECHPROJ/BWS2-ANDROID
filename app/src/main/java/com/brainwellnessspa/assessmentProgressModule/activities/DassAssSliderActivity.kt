@@ -34,6 +34,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/* This activity is assessment form activity */
 class DassAssSliderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDassAssSliderBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
@@ -54,10 +55,14 @@ class DassAssSliderActivity : AppCompatActivity() {
     lateinit var editor: SharedPreferences.Editor
     private val dataListModel = ArrayList<OptionsDataListModel>()
 
-    /* TODO this activity is assessment form activity */
+    /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
+
+        /* This is the get string USERID, CoUserID & EMAIL */
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -67,11 +72,13 @@ class DassAssSliderActivity : AppCompatActivity() {
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
+        /* This is segment tag */
         val p = Properties()
         p.putValue("userId", USERID)
         p.putValue("coUserId", CoUserID)
         BWSApplication.addToSegment("Assessment Screen Viewed", p, CONSTANTS.screen)
 
+        /* This is the next button click */
         binding.btnNext.setOnClickListener {
             getAssSaveData()
             if (myPos < listModel1.responseData!!.questions!!.size - 1) {
@@ -109,9 +116,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                 binding.btnPrev.visibility = View.GONE
             }
         }
+
+        /* This is the previous button click */
         binding.btnPrev.setOnClickListener {
             callBack()
         }
+
+        /* This is the continue button click when form is complete */
         binding.btnContinue.setOnClickListener {
             binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
             sendAssessmentData()
@@ -120,10 +131,12 @@ class DassAssSliderActivity : AppCompatActivity() {
         prepareData()
     }
 
+    /* This is the device back click event */
     override fun onBackPressed() {
         callBack()
     }
 
+    /* This is the back click event function */
     private fun callBack() {
         if (myPos > 1) {
             myPos -= 2
@@ -165,6 +178,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
+    /* This function is save assessment result */
     private fun getAssSaveData() {
         val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
@@ -178,6 +192,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
+    /* This function is get assessment questions */
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -265,7 +280,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
     }
 
-
+    /* This is the first options box input layout */
     class OptionsFirstListAdapter(
         private val listModel: List<AssessmentQusModel.ResponseData.Questions>?,
         val myPos: Int,
@@ -279,6 +294,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) :
             RecyclerView.ViewHolder(bindingAdapter.root)
 
+        /* This is the first options box input layout create */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: FormFillSubBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -289,6 +305,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
+        /* This is the first options box set input layout */
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             if (myPos == 0) {
                 binding.btnPrev.visibility = View.GONE
@@ -326,6 +343,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
+    /* This is the second options box input layout */
     class OptionsSecondListAdapter(
         val listModel: AssessmentQusModel.ResponseData.Questions,
         val pos: Int,
@@ -376,6 +394,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                             }
                         }
                     }
+
                     Log.e("Qus", dass.assQus.toString())
                     Log.e("Ans", dass.assAns.toString())
                     Log.e("Sort Pos", dass.assSort.toString())
@@ -393,6 +412,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             }
         }
 
+        /* This is the second options box input layout create */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: FormFillLayoutBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -403,6 +423,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
+        /* This is the second options set box input layout */
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             setData()
             if (dass.assQus.contains(listModel.question)) {
@@ -422,6 +443,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             holder.bindingAdapter.cbChecked.text = position.toString()
         }
 
+        /* This function is set que, ans & arranging assessment data */
         private fun setData() {
             val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.AssQus, dass.gson.toString())
@@ -436,6 +458,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             visibleGoneNext()
         }
 
+        /* This function is visible & gone next button */
         private fun visibleGoneNext() {
             if (dass.assQus.size >= mmypos2) {
                 binding.btnNext.isClickable = true
@@ -467,6 +490,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
     }
 
+    /* This function is send assessment data */
     private fun sendAssessmentData() {
         val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
@@ -478,6 +502,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             assAns = gson.fromJson(json3, type1)
             assSort = gson.fromJson(json4, type1)
         }
+
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient()

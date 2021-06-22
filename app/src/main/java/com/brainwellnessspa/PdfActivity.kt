@@ -19,6 +19,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+/* This class file is the create custom pdf view */
+
 class PdfActivity : AppCompatActivity() {
     private lateinit var btnCreatePdf: Button
     var tvTitle: TextView? = null
@@ -26,8 +28,8 @@ class PdfActivity : AppCompatActivity() {
     private var tvLocation: TextView? = null
     private var tvCity: TextView? = null
     private var fileNamePath = ""
-    private var PERMISSION_ALL = 1
-    private var PERMISSIONS = arrayOf(
+    private var permissionAll = 1
+    private var permisions = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission_group.STORAGE
@@ -38,8 +40,8 @@ class PdfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pdf)
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
-        if (!hasPermissions(this@PdfActivity, *PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this@PdfActivity, PERMISSIONS, PERMISSION_ALL)
+        if (!hasPermissions(this@PdfActivity, *permisions)) {
+            ActivityCompat.requestPermissions(this@PdfActivity, permisions, permissionAll)
         }
         val file = File(getExternalFilesDir(null)!!.absolutePath, "pdfsdcard_location")
         if (!file.exists()) {
@@ -70,8 +72,8 @@ class PdfActivity : AppCompatActivity() {
         val documentPage = myPdfDocument.startPage(myPageInfo)
         val canvas = documentPage.canvas
         var y = 25 // x = 10,
-        //int x = (canvas.getWidth() / 2);
         var x = 10
+        //int x = (canvas.getWidth() / 2);
         paint.getTextBounds(
             tvTitle!!.text.toString(),
             0,
@@ -124,7 +126,7 @@ class PdfActivity : AppCompatActivity() {
         y += (paint.descent() - paint.ascent()).toInt()
         canvas.drawText("", x.toFloat(), y.toFloat(), paint)
         val res = resources
-        val bitmap = BitmapFactory.decodeResource(res, R.drawable.square_app_icon)
+        val bitmap = BitmapFactory.decodeResource(res, R.drawable.app_new_icon)
         val b = Bitmap.createScaledBitmap(bitmap, 100, 50, false)
         canvas.drawBitmap(b, x.toFloat(), y.toFloat(), paint)
         y += 25
@@ -140,7 +142,7 @@ class PdfActivity : AppCompatActivity() {
         viewPdfFile()
     }
 
-    fun viewPdfFile() {
+    private fun viewPdfFile() {
         val file = File(getExternalFilesDir(null)!!.absolutePath + fileNamePath)
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(Uri.fromFile(file), "application/pdf")

@@ -9,21 +9,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityUpgradePlanBinding
 
+/* This is the upgrade plan activity */
 class UpgradePlanActivity : AppCompatActivity() {
     lateinit var binding: ActivityUpgradePlanBinding
     lateinit var ctx: Context
     lateinit var act: Activity
 
+    /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade_plan)
         ctx = this@UpgradePlanActivity
         act = this@UpgradePlanActivity
 
+        /* This is screen back click */
         binding.llBack.setOnClickListener {
             finish()
         }
 
+        /* This is the listing view layout */
         binding.rvPlanList.layoutManager = LinearLayoutManager(act)
 
 //        planListAdapter = PlanListAdapter(

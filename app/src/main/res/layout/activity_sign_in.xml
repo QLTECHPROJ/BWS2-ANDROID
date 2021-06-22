@@ -7,142 +7,93 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".userModule.activities.SignInActivity">
+        tools:context=".userModule.signupLogin.SignUpActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                tools:ignore="UselessParent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_left_icon_two"
-                    app:tint="@color/black"
-                    android:contentDescription="@string/todo" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/llLogin"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/rlLayout"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_18sdp"
-            android:visibility="visible">
-
-            <TextView
+                android:id="@+id/llFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="top"
-                android:text="@string/welcome_back_quotes"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_26sdp"
-                tools:ignore="SpUsage" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:paddingTop="@dimen/_12sdp"
-                android:text="@string/signin_quotes"
-                android:textColor="@color/light_black"
-                android:textSize="@dimen/_12sdp"
-                tools:ignore="SpUsage" />
-
-            <LinearLayout
-                android:id="@+id/llEmail"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_64sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:background="@drawable/textview_background_two"
-                android:orientation="vertical">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/flEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:focusableInTouchMode="true"
-                    android:textColorHint="@color/light_gray"
-                    app:errorEnabled="true"
-                    app:errorTextAppearance="@style/ErrorText"
-                    app:hintTextColor="@color/black">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_31sdp"
-                        android:background="@null"
-                        android:backgroundTint="@color/black"
-                        android:cursorVisible="true"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:hint="@string/Email_address"
-                        android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:textColorHint="@color/dim_light_gray"
-                        android:textCursorDrawable="@null"
-                        android:textSize="@dimen/_13sdp"
-                        tools:targetApi="lollipop"
-                        tools:ignore="SpUsage" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtEmailError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="start"
-                android:textColor="@color/red"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone"
-                tools:ignore="SpUsage" />
-
-            <LinearLayout
-                android:id="@+id/llPassword"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_64sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:background="@drawable/textview_background_two"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:ignore="UselessParent">
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/llBack"
+                        android:layout_width="42dp"
+                        android:layout_height="@dimen/_56sdp"
+                        android:gravity="center"
+                        tools:ignore="UselessParent">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_arrow_left_icon_two"
+                            app:tint="@color/black" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_260sdp"
+                        android:paddingTop="@dimen/_40sdp"
+                        android:paddingBottom="@dimen/_40sdp"
+                        android:paddingHorizontal="@dimen/_40sdp"
+                        android:src="@drawable/ic_signin_bg"
+                        android:contentDescription="@string/todo" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:text="@string/new_sign_in"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_24sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:paddingTop="@dimen/_13sdp"
+                    android:text="@string/signin_quotes"
+                    android:textColor="@color/light_black"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <LinearLayout
+                    android:id="@+id/llName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_64sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:background="@drawable/textview_background_two"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/flPassword"
+                        android:id="@+id/flUser"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginEnd="@dimen/_48sdp"
                         android:focusableInTouchMode="true"
                         android:textColorHint="@color/light_gray"
                         app:errorEnabled="true"
@@ -150,97 +101,458 @@
                         app:hintTextColor="@color/black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPassword"
+                            android:id="@+id/etUser"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_31sdp"
                             android:background="@null"
                             android:backgroundTint="@color/black"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/Password"
-                            android:textColor="@color/black"
+                            android:hint="@string/Name"
                             android:imeOptions="actionNext"
+                            android:maxLength="16"
                             android:maxLines="1"
                             android:singleLine="true"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/dim_light_gray"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_13sdp"
-                            tools:targetApi="lollipop"
-                            tools:ignore="SpUsage" />
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/ivVisible"
-                        android:layout_width="@dimen/_25sdp"
-                        android:layout_height="@dimen/_25sdp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
-                        android:layout_toStartOf="@id/flPassword"
-                        android:src="@drawable/ic_visibility_icon"
-                        app:tint="@color/black"
-                        android:contentDescription="@string/todo" />
+                <TextView
+                    android:id="@+id/txtNameError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
 
-                    <ImageView
-                        android:id="@+id/ivInVisible"
-                        android:layout_width="@dimen/_25sdp"
-                        android:layout_height="@dimen/_25sdp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
-                        android:layout_toStartOf="@id/flPassword"
-                        android:src="@drawable/ic_visible_pswd_icon"
-                        android:visibility="gone"
-                        android:contentDescription="@string/todo" />
+                <LinearLayout
+                    android:id="@+id/llNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_64sdp"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:background="@drawable/textview_background_two"
+                    android:orientation="horizontal">
 
-                </RelativeLayout>
+                    <LinearLayout
+                        android:id="@+id/llCountryCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvCountryShortName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:paddingStart="@dimen/_13sdp"
+                            android:text="@string/au"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="RtlSymmetry,SpUsage" />
+
+                        <TextView
+                            android:id="@+id/tvCountry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:paddingStart="@dimen/_13sdp"
+                            android:text="@string/_61"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="RtlSymmetry,SpUsage" />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="@dimen/_16sdp"
+                        android:layout_marginStart="@dimen/_13sdp"
+                        android:background="@color/dim_light_gray" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/flNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:focusableInTouchMode="true"
+                        android:textColorHint="@color/light_gray"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/ErrorText"
+                        app:hintTextColor="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_31sdp"
+                            android:background="@null"
+                            android:backgroundTint="@color/black"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/Mobile_number"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="13"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/dim_light_gray"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtNumberError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
+
+                <LinearLayout
+                    android:id="@+id/llEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_64sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:background="@drawable/textview_background_two"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/flEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center_vertical"
+                        android:textColorHint="@color/light_gray"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/ErrorText"
+                        app:hintTextColor="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_31sdp"
+                            android:background="@null"
+                            android:backgroundTint="@color/black"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/Email_address"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/dim_light_gray"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtEmailError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
+
+                <LinearLayout
+                    android:id="@+id/llPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_64sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:background="@drawable/textview_background_two"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="UselessParent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/flPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginEnd="@dimen/_48sdp"
+                            android:focusableInTouchMode="true"
+                            android:textColorHint="@color/light_gray"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText"
+                            app:hintTextColor="@color/black">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_31sdp"
+                                android:background="@null"
+                                android:backgroundTint="@color/black"
+                                android:cursorVisible="true"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:hint="@string/Create_a_strong_password"
+                                android:imeOptions="actionDone"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/dim_light_gray"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_13sdp"
+                                tools:ignore="SpUsage"
+                                tools:targetApi="lollipop" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageView
+                            android:id="@+id/ivVisible"
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/_16sdp"
+                            android:layout_toStartOf="@id/flPassword"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_visibility_icon"
+                            android:visibility="visible"
+                            app:tint="@color/black" />
+
+                        <ImageView
+                            android:id="@+id/ivInVisible"
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/_16sdp"
+                            android:layout_toStartOf="@id/flPassword"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_visible_pswd_icon"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtPassowrdError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtPassowrdError"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="start"
-                android:textColor="@color/red"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone"
-                tools:ignore="SpUsage" />
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_20sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
 
-            <TextView
-                android:id="@+id/tvForgotPswd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:paddingTop="@dimen/_18sdp"
-                android:text="@string/Forgot_paswd"
-                android:textColor="@color/app_theme_color"
-                android:textSize="@dimen/_12sdp"
-                tools:ignore="SpUsage" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:ignore="UselessParent">
 
-            <Button
-                android:id="@+id/btnLoginAc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_33sdp"
-                android:background="@drawable/gray_round_cornor"
-                android:enabled="false"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingHorizontal="@dimen/_55sdp"
-                android:paddingVertical="@dimen/_4sdp"
-                android:text="@string/Log_in"
-                android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/btnSignIn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/_30sdp"
+                        android:background="@drawable/light_green_rounded_filled"
+                        android:enabled="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:paddingHorizontal="@dimen/_55sdp"
+                        android:paddingVertical="@dimen/_4sdp"
+                        android:text="@string/get_sms_code"
+                        android:textColor="@color/white" />
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/btnSignIn"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="top|center"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:paddingTop="@dimen/_12sdp"
+                            android:text="@string/login_text"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <TextView
+                            android:id="@+id/tvSignUp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_8sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="top|center"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:paddingTop="@dimen/_12sdp"
+                            android:text="@string/new_sign_up"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/llLogin"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/_18sdp">
+
+                        <TextView
+                            android:id="@+id/tvPrivacyPolicy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/_26sdp"
+                            android:text="@string/privacy_policy_t_n_c"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvtncs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_2sdp"
+                                android:text="@string/t_n_cs"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+
+                            <TextView
+                                android:id="@+id/tvPrivacyPolicys"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_2sdp"
+                                android:text="@string/privacy_policys"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+
+                            <TextView
+                                android:id="@+id/tvAnd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_3sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_2sdp"
+                                android:text="@string/and"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+
+                            <TextView
+                                android:id="@+id/tvDisclaimers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_3sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_2sdp"
+                                android:text="@string/disclaimers"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/tvInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:paddingTop="@dimen/_20sdp"
+                            android:text="@string/info_bwa_two"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -34,6 +34,8 @@ import retrofit2.Response
 import java.util.*
 
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
+
+/* This is the old BWA renew plan activity */
 class MembershipChangeActivity : AppCompatActivity() {
     lateinit var binding: ActivityMembershipChangeBinding
     lateinit var ctx: Context
@@ -45,15 +47,22 @@ class MembershipChangeActivity : AppCompatActivity() {
     var stackStatus = 0
     var myBackPress = false
     var notificationStatus = false
+
+    /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change)
         ctx = this@MembershipChangeActivity
         activity = this@MembershipChangeActivity
+
+        /* This is the get string userId */
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         binding.llBack.setOnClickListener { callback() }
         notificationStatus = false
+
+        /* This condition is get string access */
         if (intent != null) {
             comeFrom = intent.getStringExtra("ComeFrom")
         }
@@ -61,20 +70,25 @@ class MembershipChangeActivity : AppCompatActivity() {
             LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvPlanList.layoutManager = mLayoutManager1
         binding.rvPlanList.itemAnimator = DefaultItemAnimator()
+
+        /* This condition is check about application in background or foreground */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
     }
 
+    /* This function is called when acitvity is in background to open */
     override fun onResume() {
         prepareMembershipData()
         super.onResume()
     }
 
+    /* This is the device back click event */
     override fun onBackPressed() {
         callback()
     }
 
+    /* This function is the device back click event */
     private fun callback() {
         myBackPress = true
         when {
@@ -94,6 +108,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
     }
 
+    /* This function is preparing to membership data */
     private fun prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(
@@ -156,6 +171,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
     }
 
+    /* This class is preparing to membership plan data */
     inner class MembershipPlanAdapter(
         private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>,
         var ctx: Context,
@@ -237,6 +253,7 @@ class MembershipChangeActivity : AppCompatActivity() {
             }
         }
 
+        /* This function is which plan selection */
         private fun changeFunction(
             holder: MyViewHolder,
             listModel: PlanListBillingModel.ResponseData.Plan
@@ -283,6 +300,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         )
     }
 
+    /* This class is check about application in background or foreground */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
         override fun onActivityStarted(activity: Activity) {
@@ -331,6 +349,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
     }
 
+    /* This is object declaration */
     companion object {
         var renewPlanFlag: String? = null
         var renewPlanId: String? = null

@@ -8,11 +8,12 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModule.signup.WalkScreenActivity
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.segment.analytics.Properties
 
+/* This is to Assessment started activity and ended activity */
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
@@ -21,19 +22,24 @@ class AssProcessActivity : AppCompatActivity() {
     var indexScore: Int = 0
     var scoreLevel: String? = ""
 
-/* TODO This is to Assessment started activity and ended activity */
+    /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
+
+        /* This is the get string userid & couserid */
         val shared1 =
             getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
+        /* This condition is get string access */
         if (intent.extras != null) {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
         }
 
+        /* This condition is string access */
         if (assProcess.equals("0", ignoreCase = true)) {
             binding.rlDoAss.visibility = View.VISIBLE
             binding.rlDoneAss.visibility = View.GONE
@@ -45,6 +51,7 @@ class AssProcessActivity : AppCompatActivity() {
             binding.tvIndexScore.text = indexScore.toString()
             binding.tvTag.text = scoreLevel.toString()
 
+            /* This is segment tag */
             val p = Properties()
             p.putValue("userId", userId)
             p.putValue("coUserId", coUserId)
@@ -52,7 +59,7 @@ class AssProcessActivity : AppCompatActivity() {
             p.putValue("scoreLevel", scoreLevel)
             BWSApplication.addToSegment("Index Score Screen Viewed", p, CONSTANTS.screen)
 
-            /* TODO this condition is indexscore result */
+            /* This condition is indexscore result */
             when {
                 indexScore == 0 -> {
                     binding.ivFirst.visibility = View.VISIBLE
@@ -381,6 +388,7 @@ class AssProcessActivity : AppCompatActivity() {
 
         }
 
+        /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
             val intent = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
             intent.putExtra(CONSTANTS.ScreenView, "2")
@@ -388,6 +396,7 @@ class AssProcessActivity : AppCompatActivity() {
             finish()
         }
 
+        /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
             val i = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
             i.putExtra(CONSTANTS.ScreenView, "3")
@@ -396,6 +405,7 @@ class AssProcessActivity : AppCompatActivity() {
         }
     }
 
+    /* This is the device back click event */
     override fun onBackPressed() {
         finish()
     }
