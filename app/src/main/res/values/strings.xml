@@ -418,6 +418,6 @@
     <string name="new_sign_in">Sign In</string>
     <string name="please_provide_a_email_address">Please provide a email address</string>
     <string name="create_account">Create Account</string>
-    <string name="sms_code_quotes">\"We sent an SMS with a 4-digit code to \"</string>
+    <string name="sms_code_quotes">We sent an SMS with a 4-digit code to</string>
 </resources>
 

@@ -53,7 +53,7 @@
                     android:id="@+id/ivLogo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_60sdp"
+                    android:layout_marginVertical="@dimen/_80sdp"
                     android:src="@drawable/email_verify"
                     android:contentDescription="@string/todo" />
 
@@ -88,7 +88,7 @@
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="@string/you_will_received_a_verification_mail_make_sure_click_on_the_link_to_verify"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"
+                    android:textSize="@dimen/_14sdp"
                     app:layout_constraintTop_toBottomOf="@id/tvTitle"
                     tools:ignore="SpUsage" />
 
@@ -100,9 +100,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="@dimen/_31sdp"
+            android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_40sdp"
-            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_31sdp"
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
