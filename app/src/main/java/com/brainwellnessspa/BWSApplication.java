@@ -171,6 +171,7 @@ public class BWSApplication extends Application {
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
 
+    public static String key = "";
     static TextView tvTime;
     public static AudioDatabase DB;
     public static int comeReminder = 0, isPlayPlaylist = 0;

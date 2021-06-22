@@ -31,6 +31,8 @@ import ir.drax.netwatch.NetWatch
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
 
 class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator {
+
+    /* main dashboard bottom activity for all menu */
     lateinit var binding: ActivityBottomNavigationBinding
     var doubleBackToExitPressedOnce = false
     var backpressed = false
@@ -67,6 +69,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
+        /* get user id and main account id*/
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -84,14 +87,18 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
             Log.e("Nite Mode :", uiModeManager!!.nightMode.toString())
         }
+        /* register receiver for batttery state change */
         registerReceiver(
             MyBatteryReceiver().also { myBatteryReceiver = it },
             IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         )
+        /* register receiver for*/
         registerReceiver(
             MyNetworkReceiver().also { myNetworkReceiver = it },
             IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
+
+        /* This condition use for battery optimization permission*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val packageName = packageName
             val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -110,6 +117,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         )
     }
 
+    /* on Activity Result method use for battery optimization permission allow or deny*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -127,6 +135,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     }
 
     override fun onResume() {
+        /* Net Watcher for resume player when data connection again fetch after gone*/
         NetWatch.builder(this)
             .setCallBack(object : NetworkChangeReceiver_navigator {
                 override fun onConnected(source: Int) {
@@ -162,6 +171,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         return null
     }
 
+    /*  This function is use for  back press event handle */
     override fun onBackPressed() {
         if (binding.navView.selectedItemId == R.id.navigation_Home) {
             binding.navView.selectedItemId = R.id.navigation_Home

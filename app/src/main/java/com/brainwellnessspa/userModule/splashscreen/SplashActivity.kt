@@ -13,20 +13,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.BWSApplication.key
 import com.brainwellnessspa.BuildConfig
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModule.models.VersionModel
-import com.brainwellnessspa.userModule.models.CoUserDetailsModel
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
-import com.brainwellnessspa.userModule.activities.UserListActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
-import com.brainwellnessspa.userModule.signupLogin.GetStartedActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.models.CoUserDetailsModel
+import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.AppSignatureHashHelper
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
 import retrofit2.Call
@@ -47,6 +47,17 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
+
+        val appSignatureHashHelper = AppSignatureHashHelper(this)
+        key = appSignatureHashHelper.appSignatures[0]
+        val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE)
+        val editor = sharedx.edit()
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0))
+        editor.commit()
+        if (key.equals("", ignoreCase = true)) {
+            key = BWSApplication.getKey(this)
+        }
+
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -306,7 +317,7 @@ class SplashActivity : AppCompatActivity() {
         ) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this@SplashActivity, BottomNavigationActivity::class.java)
-                intent.putExtra("IsFirst","0")
+                intent.putExtra("IsFirst", "0")
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())
