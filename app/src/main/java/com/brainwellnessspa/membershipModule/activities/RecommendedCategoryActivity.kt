@@ -728,6 +728,27 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 CONSTANTS.PREFE_ACCESS_SLEEPTIME,
                                 listModel.responseData!!.avgSleepTime
                             )
+                            val selectedCategoriesTitle =
+                                arrayListOf<String>()
+                            val selectedCategoriesName =
+                                arrayListOf<String>()
+                            val gsons = Gson()
+                            for (i in listModel.responseData!!.categoryData!!) {
+                                selectedCategoriesTitle.add(i.mainCat!!)
+                                selectedCategoriesName.add(i.recommendedCat!!)
+                            }
+                            editor.putString(
+                                CONSTANTS.selectedCategoriesTitle,
+                                gsons.toJson(
+                                    selectedCategoriesTitle
+                                )
+                            ) //Friend
+                            editor.putString(
+                                CONSTANTS.selectedCategoriesName,
+                                gsons.toJson(
+                                    selectedCategoriesName
+                                )
+                            ) //Friend
                             editor.apply()
 
                             val i = Intent(activity, PreparePlaylistActivity::class.java)

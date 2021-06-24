@@ -37,6 +37,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -298,7 +299,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             val p = Properties()
                             p.putValue("userId", "")
                             p.putValue("name", "")
-                            p.putValue("mobileNo", listModel.ResponseData.MobileNo)
+                            p.putValue("mobileNo", listModel.ResponseData.Mobile)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", "")
                             p.putValue(
@@ -332,7 +333,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             )
                             editor.putString(
                                 CONSTANTS.PREFE_ACCESS_MOBILE,
-                                listModel.ResponseData.MobileNo
+                                listModel.ResponseData.Mobile
                             )
                             editor.putString(
                                 CONSTANTS.PREFE_ACCESS_SLEEPTIME,
@@ -359,6 +360,39 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 listModel.ResponseData.isAssessmentCompleted
                             )
                             editor.apply()
+
+                            val sharded =
+                                activity.getSharedPreferences(
+                                    CONSTANTS.RecommendedCatMain,
+                                    Context.MODE_PRIVATE
+                                )
+                            val edited = sharded.edit()
+                            edited.putString(
+                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
+                                listModel.ResponseData.AvgSleepTime
+                            )
+                            val selectedCategoriesTitle =
+                                arrayListOf<String>()
+                            val selectedCategoriesName =
+                                arrayListOf<String>()
+                            val gson = Gson()
+                            for (i in listModel.ResponseData.AreaOfFocus) {
+                                selectedCategoriesTitle.add(i.MainCat)
+                                selectedCategoriesName.add(i.RecommendedCat)
+                            }
+                            edited.putString(
+                                CONSTANTS.selectedCategoriesTitle,
+                                gson.toJson(
+                                    selectedCategoriesTitle
+                                )
+                            ) //Friend
+                            edited.putString(
+                                CONSTANTS.selectedCategoriesName,
+                                gson.toJson(
+                                    selectedCategoriesName
+                                )
+                            ) //Friend
+                            edited.apply()
                         }
                         BWSApplication.showToast(listModel.ResponseMessage, activity)
 

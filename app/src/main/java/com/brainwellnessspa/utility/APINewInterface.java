@@ -37,15 +37,12 @@ import com.brainwellnessspa.userModule.models.RemoveProfileModel;
 import com.brainwellnessspa.userModule.models.AddUserModel;
 import com.brainwellnessspa.userModule.models.AddedUserListModel;
 import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel;
-import com.brainwellnessspa.userModule.models.ChangePasswordModel;
 import com.brainwellnessspa.userModule.models.ChangePinModel;
 import com.brainwellnessspa.userModule.models.CoUserDetailsModel;
 import com.brainwellnessspa.userModule.models.CountryListModel;
 import com.brainwellnessspa.userModule.models.EditProfileModel;
 import com.brainwellnessspa.userModule.models.ForgotPasswordModel;
-import com.brainwellnessspa.userModule.models.NewSignUpModel;
 import com.brainwellnessspa.userModule.models.ProfileSaveDataModel;
-import com.brainwellnessspa.userModule.models.SignInModel;
 import com.brainwellnessspa.userModule.models.VerifyPinModel;
 
 import retrofit2.Call;
@@ -63,13 +60,6 @@ public interface APINewInterface {
     Call<VersionModel> getAppVersions(@Field("Version") String version,
                                       @Field("AppType") String appType);
 
-    @POST("login")
-    @FormUrlEncoded
-    Call<SignInModel> getSignIn(@Field("Email") String email,
-                                @Field("Password") String password,
-                                @Field("DeviceType") String deviceType,
-                                @Field("DeviceID") String deviceID,
-                                @Field("Token") String token);
 
     @POST("loginsignup")
     @FormUrlEncoded
@@ -90,17 +80,6 @@ public interface APINewInterface {
                                         @Field("Name") String Name,
                                         @Field("Email") String Email,
                                         @Field("Token") String Token);
-
-    @POST("signup")
-    @FormUrlEncoded
-    Call<NewSignUpModel> getSignUp(@Field("Name") String name,
-                                   @Field("Email") String email,
-                                   @Field("CountryCode") String countryCode,
-                                   @Field("MobileNo") String mobileNo,
-                                   @Field("DeviceType") String deviceType,
-                                   @Field("Password") String password,
-                                   @Field("DeviceID") String deviceID,
-                                   @Field("Token") String token);
 
     @POST("forgotpass")
     @FormUrlEncoded
@@ -273,7 +252,7 @@ public interface APINewInterface {
 
     @POST("changepassword")
     @FormUrlEncoded
-    Call<ChangePasswordModel> getChangePassword(@Field("MainAccountID") String MainAccountID ,
+    Call<ChangePinModel> getChangePassword(@Field("MainAccountID") String MainAccountID ,
                                                 @Field("UserId") String UserId,
                                                 @Field("OldPassword") String OldPassword,
                                                 @Field("NewPassword") String NewPassword);

@@ -10,7 +10,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -28,15 +27,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.getKey
 import com.brainwellnessspa.R
-import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySignInBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
-import com.brainwellnessspa.userModule.activities.ForgotPswdActivity
-import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.CountryListModel
-import com.brainwellnessspa.userModule.models.SignInModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations

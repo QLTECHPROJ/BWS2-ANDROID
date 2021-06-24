@@ -15,10 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModule.models.ChangePasswordModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityChangePasswordBinding
+import com.brainwellnessspa.userModule.models.ChangePinModel
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -296,16 +296,16 @@ class ChangePasswordActivity : AppCompatActivity() {
                     binding.progressBarHolder,
                     this@ChangePasswordActivity
                 )
-                val listCall: Call<ChangePasswordModel> =
+                val listCall: Call<ChangePinModel> =
                     APINewClient.getClient().getChangePassword(
                         userID, coUserID,
                         binding.etCurrentPswd.text.toString(),
                         binding.etConfirmPswd.text.toString()
                     )
-                listCall.enqueue(object : Callback<ChangePasswordModel> {
+                listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(
-                        call: Call<ChangePasswordModel>,
-                        response: Response<ChangePasswordModel>
+                        call: Call<ChangePinModel>,
+                        response: Response<ChangePinModel>
                     ) {
                         try {
                             binding.txtCurrentPswdError.visibility = View.GONE
@@ -316,7 +316,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                                 binding.progressBarHolder,
                                 this@ChangePasswordActivity
                             )
-                            val listModel: ChangePasswordModel = response.body()!!
+                            val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(
                                     getString(R.string.ResponseCodesuccess),
                                     ignoreCase = true
@@ -337,7 +337,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<ChangePasswordModel>, t: Throwable) {
+                    override fun onFailure(call: Call<ChangePinModel>, t: Throwable) {
                         BWSApplication.hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,

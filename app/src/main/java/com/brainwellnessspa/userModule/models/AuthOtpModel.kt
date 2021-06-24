@@ -8,15 +8,14 @@ data class AuthOtpModel(
 )
 
 data class AuthOtpResponseData(
-    val AreaOfFocus: List<Any>,
+    val AreaOfFocus: List<AuthOtpAreaOfFocus>,
     val AvgSleepTime: String,
     val CountryCode: String,
     val DOB: String,
     val Email: String,
     val Image: String,
     val MainAccountID: String,
-    val MobileNo: String,
-    val EmailSend: String,
+    val Mobile: String,
     val Name: String,
     val ScoreLevel: String,
     val UserId: String,
@@ -25,4 +24,10 @@ data class AuthOtpResponseData(
     val isAssessmentCompleted: String,
     val isProfileCompleted: String,
     val planDetails: List<Any>
+)
+
+data class AuthOtpAreaOfFocus(
+    val CatId: String,
+    val MainCat: String,
+    val RecommendedCat: String
 )
