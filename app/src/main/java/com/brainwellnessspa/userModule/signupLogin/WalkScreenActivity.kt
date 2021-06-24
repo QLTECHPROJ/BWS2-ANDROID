@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
@@ -42,8 +43,8 @@ class WalkScreenActivity : AppCompatActivity() {
         binding.rlStepThree.visibility = View.GONE
 
         if (screenView.equals("1", ignoreCase = true)) {
-            binding.rlWelcome.visibility = View.VISIBLE
-            binding.rlStepOne.visibility = View.GONE
+            binding.rlWelcome.visibility = View.GONE
+            binding.rlStepOne.visibility = View.VISIBLE
             binding.rlStepTwo.visibility = View.GONE
             binding.rlStepThree.visibility = View.GONE
         } else if (screenView.equals("2", ignoreCase = true)) {
@@ -66,13 +67,13 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.rlStepOne.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
+            val intent = Intent(this@WalkScreenActivity, DassAssSliderActivity::class.java)
             startActivity(intent)
             finish()
         }
 
         binding.rlStepTwo.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, DassAssSliderActivity::class.java)
+            val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
             startActivity(intent)
             finish()
         }

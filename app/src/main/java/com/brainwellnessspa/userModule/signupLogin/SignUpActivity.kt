@@ -10,7 +10,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -27,16 +26,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
+import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
 import com.brainwellnessspa.userModule.models.CountryListModel
-import com.brainwellnessspa.userModule.models.NewSignUpModel
+import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
-import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
-import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
-import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,9 +46,13 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var dialog: Dialog
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
+    var mobileNo: String? = null
+    var countryCode: String? = null
+    var name: String? = null
+    var email: String? = null
+    var countryShortName: String? = null
     lateinit var ctx: Context
     lateinit var activity: Activity
-    var fcmId: String = ""
     var countryFullName: String = ""
     lateinit var searchEditText: EditText
 
@@ -94,16 +94,16 @@ class SignUpActivity : AppCompatActivity() {
                     )
                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
-                ckPass.equals("", ignoreCase = true) -> {
-                    binding.btnCreateAc.isEnabled = false
-                    binding.btnCreateAc.setTextColor(
-                        ContextCompat.getColor(
-                            activity,
-                            R.color.white
-                        )
-                    )
-                    binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
-                }
+                /* ckPass.equals("", ignoreCase = true) -> {
+                     binding.btnCreateAc.isEnabled = false
+                     binding.btnCreateAc.setTextColor(
+                         ContextCompat.getColor(
+                             activity,
+                             R.color.white
+                         )
+                     )
+                     binding.btnCreateAc.setBackgroundResource(R.drawable.gray_round_cornor)
+                 }*/
                 else -> {
                     binding.btnCreateAc.isEnabled = true
                     binding.btnCreateAc.setTextColor(
@@ -135,6 +135,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.ivInVisible.isEnabled = true
             }
         }
+
         override fun afterTextChanged(s: Editable) {}
     }
 
@@ -145,13 +146,41 @@ class SignUpActivity : AppCompatActivity() {
         ctx = this@SignUpActivity
         activity = this@SignUpActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+
+        if (intent != null) {
+            mobileNo = intent.getStringExtra("mobileNo")
+            countryCode = intent.getStringExtra("countryCode")
+            name = intent.getStringExtra("name")
+            email = intent.getStringExtra("email")
+            countryShortName = intent.getStringExtra("countryShortName")
+        }
+
         binding.llBack.setOnClickListener {
+            val i = Intent(activity, SignUpActivity::class.java)
+            i.putExtra("mobileNo", "")
+            i.putExtra("countryCode", "")
+            i.putExtra("name", "")
+            i.putExtra("email", "")
+            i.putExtra("countryShortName", "")
+            startActivity(i)
             finish()
         }
+
         binding.etUser.addTextChangedListener(userTextWatcher)
         binding.etNumber.addTextChangedListener(userTextWatcher)
         binding.etEmail.addTextChangedListener(userTextWatcher)
-        binding.etPassword.addTextChangedListener(userTextWatcher)
+
+        if (!mobileNo.equals("", ignoreCase = true)) {
+            binding.etUser.setText(name)
+            binding.etNumber.setText(mobileNo)
+            binding.etEmail.setText(email)
+            binding.tvCountry.text = "+$countryCode"
+            binding.tvCountryShortName.text = "$countryShortName"
+        }else {
+            binding.tvCountry.text = "+61"
+            binding.tvCountryShortName.text = "AU"
+        }
+
         val p = Properties()
         BWSApplication.addToSegment("Sign up Screen Viewed", p, CONSTANTS.screen)
 
@@ -168,6 +197,11 @@ class SignUpActivity : AppCompatActivity() {
 
         binding.tvSignIn.setOnClickListener {
             val i = Intent(activity, SignInActivity::class.java)
+            i.putExtra("mobileNo", "")
+            i.putExtra("countryCode", "")
+            i.putExtra("name", "")
+            i.putExtra("email", "")
+            i.putExtra("countryShortName", "")
             startActivity(i)
             finish()
         }
@@ -205,20 +239,6 @@ class SignUpActivity : AppCompatActivity() {
                 binding.txtEmailError.visibility = View.VISIBLE
                 binding.txtEmailError.text = "Please provide a valid email address"
                 binding.txtPassowrdError.visibility = View.GONE
-            } else if (binding.etPassword.text.toString().equals("", ignoreCase = true)) {
-                binding.txtNameError.visibility = View.GONE
-                binding.txtNumberError.visibility = View.GONE
-                binding.txtEmailError.visibility = View.GONE
-                binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text = "Please provide a password"
-            } else if (binding.etPassword.text.toString().length < 8 || !isValidPassword(binding.etPassword.text.toString())
-            ) {
-                binding.txtNameError.visibility = View.GONE
-                binding.txtNumberError.visibility = View.GONE
-                binding.txtEmailError.visibility = View.GONE
-                binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text =
-                    "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
             } else {
                 signUpUser()
             }
@@ -327,8 +347,7 @@ class SignUpActivity : AppCompatActivity() {
                 rvCountryList,
                 tvFound,
                 progressBar,
-                progressBarHolder,
-                searchFilter
+                progressBarHolder
             )
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
@@ -350,12 +369,19 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        val i = Intent(activity, SignInActivity::class.java)
+        i.putExtra("mobileNo", "")
+        i.putExtra("countryCode", "")
+        i.putExtra("name", "")
+        i.putExtra("email", "")
+        i.putExtra("countryShortName", "")
+        startActivity(i)
         finish()
     }
 
     fun prepareData(
         dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
-        progressBarHolder: FrameLayout, searchFilter: String
+        progressBarHolder: FrameLayout
     ) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
@@ -370,8 +396,7 @@ class SignUpActivity : AppCompatActivity() {
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(ctx)
                         adapter = CountrySelectAdapter(
-                            dialog, searchFilter, binding, listModel.responseData!!, rvCountryList,
-                            tvFound
+                            dialog, binding, listModel.responseData!!, rvCountryList, tvFound
                         )
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
@@ -391,41 +416,27 @@ class SignUpActivity : AppCompatActivity() {
     @SuppressLint("HardwareIds")
     fun signUpUser() {
         if (BWSApplication.isNetworkConnected(this)) {
-            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-            if (TextUtils.isEmpty(fcmId)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                    this
-                ) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result!!.token
-                    Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
-                    editor.apply()
-                    editor.commit()
-                }
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
-                fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
+            val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
+            var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
+            if (key.equals("", ignoreCase = true)) {
+                key = BWSApplication.getKey(applicationContext)
             }
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             Log.e("countryCode", countryCode)
             Log.e("countryFullName", countryFullName)
-            val listCall: Call<NewSignUpModel> = APINewClient.getClient().getSignUp(
-                binding.etUser.text.toString(),
-                binding.etEmail.text.toString(),
-                countryCode,
+            val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(
                 binding.etNumber.text.toString(),
+                countryCode,
                 CONSTANTS.FLAG_ONE,
-                binding.etPassword.text.toString(),
-                Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
-                fcmId
+                CONSTANTS.FLAG_ONE,
+                key
             )
-            listCall.enqueue(object : Callback<NewSignUpModel> {
+            listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(
-                    call: Call<NewSignUpModel>,
-                    response: Response<NewSignUpModel>
+                    call: Call<UserAccessModel>,
+                    response: Response<UserAccessModel>
                 ) {
                     try {
                         BWSApplication.hideProgressBar(
@@ -433,33 +444,37 @@ class SignUpActivity : AppCompatActivity() {
                             binding.progressBarHolder,
                             activity
                         )
-                        val listModel: NewSignUpModel = response.body()!!
-                        if (listModel.getResponseCode().equals("200")) {
-
-                            val i = Intent(ctx, SignInActivity::class.java)
+                        val listModel: UserAccessModel = response.body()!!
+                        if (listModel.ResponseCode == "200") {
+                            val i = Intent(ctx, AuthOtpActivity::class.java)
+                            i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
+                            i.putExtra(CONSTANTS.countryCode, countryCode)
+                            i.putExtra(CONSTANTS.signupFlag, CONSTANTS.FLAG_ONE)
+                            i.putExtra(CONSTANTS.name, binding.etUser.text.toString())
+                            i.putExtra(CONSTANTS.email, binding.etEmail.text.toString())
+                            i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
                             startActivity(i)
-                            finish()
                             val p = Properties()
-                            p.putValue("userId", listModel.getResponseData()!!.id)
-                            p.putValue("name", listModel.getResponseData()!!.name)
-                            p.putValue("mobileNo", listModel.getResponseData()!!.mobileNo)
+                            p.putValue("userId", "")
+                            p.putValue("name", "")
+                            p.putValue("mobileNo", listModel.ResponseData.MobileNo)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", countryFullName)
                             p.putValue(
                                 "countryShortName",
                                 binding.tvCountryShortName.text.toString()
                             )
-                            p.putValue("email", listModel.getResponseData()!!.email)
+                            p.putValue("email", "")
                             BWSApplication.addToSegment("User Sign up", p, CONSTANTS.track)
                         }
-                        BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                        BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
 
-                override fun onFailure(call: Call<NewSignUpModel>, t: Throwable) {
+                override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, null, activity)
                 }
             })
@@ -470,7 +485,6 @@ class SignUpActivity : AppCompatActivity() {
 
     class CountrySelectAdapter(
         private var dialog: Dialog,
-        private var searchFilter: String,
         private var binding: ActivityCreateAccountBinding,
         private val modelList: List<CountryListModel.ResponseData>,
         private var rvCountryList: RecyclerView,

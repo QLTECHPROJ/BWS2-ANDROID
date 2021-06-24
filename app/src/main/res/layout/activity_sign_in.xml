@@ -31,6 +31,7 @@
                         android:layout_width="42dp"
                         android:layout_height="@dimen/_56sdp"
                         android:gravity="center"
+                        android:visibility="gone"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -210,7 +211,7 @@
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
                             android:hint="@string/Mobile_number"
-                            android:imeOptions="actionNext"
+                            android:imeOptions="actionDone"
                             android:inputType="number"
                             android:maxLength="13"
                             android:maxLines="1"
@@ -411,8 +412,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginHorizontal="@dimen/_30sdp"
-                        android:background="@drawable/light_green_rounded_filled"
-                        android:enabled="true"
+                        android:background="@drawable/gray_round_cornor"
+                        android:enabled="false"
                         android:fontFamily="@font/montserrat_medium"
                         android:paddingHorizontal="@dimen/_55sdp"
                         android:paddingVertical="@dimen/_4sdp"

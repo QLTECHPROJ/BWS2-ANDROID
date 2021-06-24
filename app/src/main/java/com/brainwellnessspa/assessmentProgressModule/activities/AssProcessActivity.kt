@@ -391,7 +391,7 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
             val intent = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
-            intent.putExtra(CONSTANTS.ScreenView, "2")
+            intent.putExtra(CONSTANTS.ScreenView, "1")
             startActivity(intent)
             finish()
         }
@@ -399,7 +399,7 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
             val i = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
-            i.putExtra(CONSTANTS.ScreenView, "3")
+            i.putExtra(CONSTANTS.ScreenView, "2")
             startActivity(i)
             finish()
         }

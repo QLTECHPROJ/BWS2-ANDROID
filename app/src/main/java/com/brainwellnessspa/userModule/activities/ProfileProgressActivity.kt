@@ -27,6 +27,7 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.ProfileSaveDataModel
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -607,8 +608,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                                 CONSTANTS.track
                             )
                             val i =
-                                Intent(this@ProfileProgressActivity, AssProcessActivity::class.java)
-                            i.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
                             startActivity(i)
                             finish()
                         } else {

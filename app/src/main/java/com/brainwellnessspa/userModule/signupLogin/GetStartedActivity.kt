@@ -28,6 +28,11 @@ class GetStartedActivity : AppCompatActivity() {
         binding.btnGetStarted.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
                 val i = Intent(ctx, SignUpActivity::class.java)
+                i.putExtra("mobileNo", "")
+                i.putExtra("countryCode", "")
+                i.putExtra("name", "")
+                i.putExtra("email", "")
+                i.putExtra("countryShortName", "")
                 startActivity(i)
                 finish()
             } else {
@@ -38,6 +43,11 @@ class GetStartedActivity : AppCompatActivity() {
         binding.btnAlreadyAc.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
                 val i = Intent(ctx, SignInActivity::class.java)
+                i.putExtra("mobileNo", "")
+                i.putExtra("countryCode", "")
+                i.putExtra("name", "")
+                i.putExtra("email", "")
+                i.putExtra("countryShortName", "")
                 startActivity(i)
                 finish()
             } else {

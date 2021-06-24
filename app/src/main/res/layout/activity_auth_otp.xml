@@ -48,7 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_marginTop="@dimen/_60sdp"
+                android:layout_marginTop="@dimen/_100sdp"
                 android:layout_weight="1.2"
                 android:orientation="vertical">
 
@@ -210,8 +210,8 @@
                     android:id="@+id/btnSendCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/light_green_rounded_filled"
-                    android:enabled="true"
+                    android:background="@drawable/gray_round_cornor"
+                    android:enabled="false"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingHorizontal="@dimen/_96sdp"
                     android:paddingVertical="@dimen/_4sdp"

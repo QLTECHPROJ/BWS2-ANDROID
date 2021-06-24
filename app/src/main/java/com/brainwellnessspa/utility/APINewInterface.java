@@ -30,6 +30,8 @@ import com.brainwellnessspa.reminderModule.models.SelectPlaylistModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
 import com.brainwellnessspa.resourceModule.models.ResourceFilterModel;
 import com.brainwellnessspa.resourceModule.models.ResourceListModel;
+import com.brainwellnessspa.userModule.models.AuthOtpModel;
+import com.brainwellnessspa.userModule.models.UserAccessModel;
 import com.brainwellnessspa.userModule.models.VersionModel;
 import com.brainwellnessspa.userModule.models.RemoveProfileModel;
 import com.brainwellnessspa.userModule.models.AddUserModel;
@@ -68,6 +70,26 @@ public interface APINewInterface {
                                 @Field("DeviceType") String deviceType,
                                 @Field("DeviceID") String deviceID,
                                 @Field("Token") String token);
+
+    @POST("loginsignup")
+    @FormUrlEncoded
+    Call<UserAccessModel> getUserAccess(@Field("MobileNo") String MobileNo,
+                                        @Field("CountryCode") String CountryCode,
+                                        @Field("DeviceType") String DeviceType,
+                                        @Field("SignupFlag") String SignupFlag,
+                                        @Field("key") String key);
+
+ @POST("authotp")
+    @FormUrlEncoded
+    Call<AuthOtpModel> getAuthOtpAccess(@Field("OTP") String OTP,
+                                        @Field("DeviceType") String DeviceType,
+                                        @Field("DeviceID") String DeviceID,
+                                        @Field("CountryCode") String CountryCode,
+                                        @Field("MobileNo") String MobileNo,
+                                        @Field("SignupFlag") String SignupFlag,
+                                        @Field("Name") String Name,
+                                        @Field("Email") String Email,
+                                        @Field("Token") String Token);
 
     @POST("signup")
     @FormUrlEncoded

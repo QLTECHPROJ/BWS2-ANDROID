@@ -84,6 +84,7 @@ object CONSTANTS {
     const val PREFE_ACCESS_SIGNIN_COUSER = "CoUser"
     const val PREFE_ACCESS_mainAccountID = "mainAccountID"
     const val PREFE_ACCESS_countryCode = "countryCode"
+    const val PREFE_ACCESS_EmailSend = "EmailSend"
     const val PREFE_ACCESS_NAME = "Name"
     const val PREFE_ACCESS_IMAGE = "Image"
     const val PREFE_ACCESS_USEREMAIL = "UserEmail"
@@ -168,6 +169,13 @@ object CONSTANTS {
     const val AssQus = "AssQus"
     const val AssAns = "AssAns"
     const val AssSort = "AssSort"
+
+    const val name = "Name"
+    const val email = "Email"
+    const val countryCode = "CountryCode"
+    const val countryShortName = "CountryShortName"
+    const val signupFlag = "SignupFlag"
+    const val mobileNumber = "MobileNo"
 
     // Files
     const val DOWNLOAD_AUDIO_URL = "http://www.noiseaddicts.com/samples_1w72b820/272.mp3"

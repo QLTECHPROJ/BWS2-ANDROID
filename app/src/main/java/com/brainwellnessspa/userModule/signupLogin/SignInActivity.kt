@@ -3,6 +3,7 @@ package com.brainwellnessspa.userModule.signupLogin
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -25,6 +26,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.getKey
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -35,6 +37,7 @@ import com.brainwellnessspa.userModule.activities.ForgotPswdActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.CountryListModel
 import com.brainwellnessspa.userModule.models.SignInModel
+import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
@@ -54,6 +57,11 @@ class SignInActivity : AppCompatActivity() {
     lateinit var activity: Activity
     private lateinit var dialog: Dialog
     lateinit var searchEditText: EditText
+    var mobileNo: String? = null
+    var countryCode: String? = null
+    var name: String? = null
+    var email: String? = null
+    var countryShortName: String? = null
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -61,12 +69,9 @@ class SignInActivity : AppCompatActivity() {
             val number: String = binding.etNumber.text.toString().trim()
             when {
                 number.equals("", ignoreCase = true) -> {
-                    binding.btnSignIn.isEnabled = true
+                    binding.btnSignIn.isEnabled = false
                     binding.btnSignIn.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                    binding.btnSignIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
-//                    binding.btnSignIn.isEnabled = false
-//                    binding.btnSignIn.setTextColor(ContextCompat.getColor(activity, R.color.white))
-//                    binding.btnSignIn.setBackgroundResource(R.drawable.gray_round_cornor)
+                    binding.btnSignIn.setBackgroundResource(R.drawable.gray_round_cornor)
                 }
 
                 else -> {
@@ -86,16 +91,40 @@ class SignInActivity : AppCompatActivity() {
         activity = this@SignInActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
-        binding.llBack.setOnClickListener {
-            finish()
+        if (intent != null) {
+            mobileNo = intent.getStringExtra("mobileNo")
+            countryCode = intent.getStringExtra("countryCode")
+            name = intent.getStringExtra("name")
+            email = intent.getStringExtra("email")
+            countryShortName = intent.getStringExtra("countryShortName")
         }
+
+
+        binding.etNumber.addTextChangedListener(userTextWatcher)
+
+        if (!mobileNo.equals("", ignoreCase = true)) {
+            binding.etNumber.setText(mobileNo)
+            binding.tvCountry.text = "+$countryCode"
+            binding.tvCountryShortName.text = "$countryShortName"
+        }else {
+            binding.tvCountry.text = "+61"
+            binding.tvCountryShortName.text = "AU"
+        }
+
+        binding.llBack.setOnClickListener {
+            finishAffinity()
+        }
+
         val p = Properties()
         BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen)
-        binding.etEmail.addTextChangedListener(userTextWatcher)
-        binding.etPassword.addTextChangedListener(userTextWatcher)
 
         binding.tvSignUp.setOnClickListener {
             val i = Intent(activity, SignUpActivity::class.java)
+            i.putExtra("mobileNo", "")
+            i.putExtra("countryCode", "")
+            i.putExtra("name", "")
+            i.putExtra("email", "")
+            i.putExtra("countryShortName", "")
             startActivity(i)
             finish()
         }
@@ -116,6 +145,7 @@ class SignInActivity : AppCompatActivity() {
                 }
                 false
             }
+
             val p = Properties()
             BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen)
 
@@ -131,6 +161,7 @@ class SignInActivity : AppCompatActivity() {
                 searchEditText.setText("")
                 searchView.setQuery("", false)
             }
+
             searchEditText.hint = "Search for country"
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -197,10 +228,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         binding.btnSignIn.setOnClickListener {
-            val i = Intent(activity, AuthOtpActivity::class.java)
-            startActivity(i)
-            finish()
-//            prepareData()
+            prepareData()
         }
     }
 
@@ -248,12 +276,13 @@ class SignInActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        finishAffinity()
     }
 
-    @SuppressLint("HardwareIds")
+    @SuppressLint("HardwareIds", "SetTextI18n")
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
+            val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
@@ -270,107 +299,69 @@ class SignInActivity : AppCompatActivity() {
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
-            if (binding.etEmail.text.toString() == "") {
-                binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = getString(R.string.please_provide_a_email_address)
-                binding.txtPassowrdError.visibility = View.GONE
-            } else if (binding.etEmail.text.toString() != ""
-                && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
+            if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
+                binding.txtNumberError.visibility = View.VISIBLE
+                binding.txtNumberError.text = "Please provide a mobile number"
+            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 ||
+                binding.etNumber.text.toString().length > 10
             ) {
-                binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = getString(R.string.please_provide_a_email_address)
-                binding.txtPassowrdError.visibility = View.GONE
-            } else if (binding.etPassword.text.toString() == "") {
-                binding.txtEmailError.visibility = View.GONE
-                binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text = "Please provide a password"
-            } else if (binding.etPassword.text.toString().length < 8
-                || !isValidPassword(binding.etPassword.text.toString())
-            ) {
-                binding.txtEmailError.visibility = View.GONE
-                binding.txtPassowrdError.visibility = View.VISIBLE
-                binding.txtPassowrdError.text =
-                    "Password should contain at least one uppercase, one lowercase, one special symbol and minimum 8 character long"
+                binding.txtNumberError.visibility = View.VISIBLE
+                binding.txtNumberError.text = getString(R.string.valid_mobile_number)
             } else {
-                binding.txtEmailError.visibility = View.GONE
-                binding.txtPassowrdError.visibility = View.GONE
+                val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
+                var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
+                if (key.equals("", ignoreCase = true)) {
+                    key = getKey(applicationContext)
+                }
+
+                binding.txtNumberError.visibility = View.GONE
                 BWSApplication.showProgressBar(
                     binding.progressBar,
                     binding.progressBarHolder,
                     this@SignInActivity
                 )
-                val listCall: Call<SignInModel> = APINewClient.getClient().getSignIn(
-                    binding.etEmail.text.toString(),
-                    binding.etPassword.text.toString(),
+                val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(
+                    binding.etNumber.text.toString(),
+                    countryCode,
                     CONSTANTS.FLAG_ONE,
-                    Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
-                    fcmId
+                    CONSTANTS.FLAG_ZERO, key
                 )
-                listCall.enqueue(object : Callback<SignInModel> {
+                listCall.enqueue(object : Callback<UserAccessModel> {
                     override fun onResponse(
-                        call: Call<SignInModel>,
-                        response: Response<SignInModel>
+                        call: Call<UserAccessModel>,
+                        response: Response<UserAccessModel>
                     ) {
                         try {
-                            binding.txtEmailError.visibility = View.GONE
-                            binding.txtPassowrdError.visibility = View.GONE
+                            binding.txtNumberError.visibility = View.GONE
                             BWSApplication.hideProgressBar(
                                 binding.progressBar,
                                 binding.progressBarHolder,
                                 this@SignInActivity
                             )
-                            val listModel: SignInModel = response.body()!!
-                            if (listModel.getResponseCode().equals(
+                            val listModel: UserAccessModel = response.body()!!
+                            if (listModel.ResponseCode.equals(
                                     getString(R.string.ResponseCodesuccess),
                                     ignoreCase = true
                                 )
                             ) {
-                                val shared = getSharedPreferences(
-                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                    MODE_PRIVATE
-                                )
-                                val editor = shared.edit()
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_mainAccountID,
-                                    listModel.getResponseData()?.iD
-                                )
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_NAME,
-                                    listModel.getResponseData()?.name
-                                )
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_USEREMAIL,
-                                    listModel.getResponseData()?.email
-                                )
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_DeviceType,
-                                    CONSTANTS.FLAG_ONE
-                                )
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_DeviceID,
-                                    Settings.Secure.getString(
-                                        contentResolver,
-                                        Settings.Secure.ANDROID_ID
-                                    )
-                                )
-                                editor.putString(
-                                    CONSTANTS.PREFE_ACCESS_countryCode,
-                                    listModel.getResponseData()?.email
-                                )
-                                editor.apply()
                                 val i = Intent(this@SignInActivity, AuthOtpActivity::class.java)
+                                i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
+                                i.putExtra(CONSTANTS.countryCode, countryCode)
+                                i.putExtra(CONSTANTS.signupFlag, CONSTANTS.FLAG_ZERO)
+                                i.putExtra(CONSTANTS.name, "")
+                                i.putExtra(CONSTANTS.email, "")
+                                i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
                                 startActivity(i)
-                                finish()
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                                 val p = Properties()
-                                p.putValue("userId", listModel.getResponseData()!!.iD)
-                                p.putValue("name", listModel.getResponseData()!!.name)
-                                p.putValue("mobileNo", listModel.getResponseData()!!.mobileNo)
-                                p.putValue("email", listModel.getResponseData()!!.email)
+                                p.putValue("userId", "")
+                                p.putValue("name", "")
+                                p.putValue("mobileNo", binding.etNumber.text.toString())
+                                p.putValue("email", "")
                                 BWSApplication.addToSegment("User Login", p, CONSTANTS.track)
                             } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                BWSApplication.showToast(listModel.ResponseMessage, activity)
                             }
 
                         } catch (e: Exception) {
@@ -378,7 +369,7 @@ class SignInActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<SignInModel>, t: Throwable) {
+                    override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                         BWSApplication.hideProgressBar(
                             binding.progressBar,
                             binding.progressBarHolder,
