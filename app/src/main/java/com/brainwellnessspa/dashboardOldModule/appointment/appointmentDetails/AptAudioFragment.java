@@ -652,7 +652,7 @@ public class AptAudioFragment extends Fragment {
             if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 arrayList.add(downloadAudioDetails);
                 MainPlayModel mainPlayModel1 = new MainPlayModel();
-                mainPlayModel1.setID(downloadAudioDetails.getID());
+                mainPlayModel1.setId(downloadAudioDetails.getID());
                 mainPlayModel1.setName(downloadAudioDetails.getName());
                 mainPlayModel1.setAudioFile(downloadAudioDetails.getAudioFile());
                 mainPlayModel1.setAudioDirection(downloadAudioDetails.getAudioDirection());

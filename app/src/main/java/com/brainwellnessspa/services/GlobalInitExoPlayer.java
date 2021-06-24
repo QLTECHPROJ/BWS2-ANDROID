@@ -406,7 +406,7 @@ Appointment Audios dddd*/
         Properties p = new Properties();
         p.putValue("userId", UserID);
         p.putValue("coUserId", CoUserID);
-        p.putValue("audioId", mainPlayModelList.get(position).getID());
+        p.putValue("audioId", mainPlayModelList.get(position).getId());
         p.putValue("audioName", mainPlayModelList.get(position).getName());
         p.putValue("audioDescription", "");
         p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -460,7 +460,7 @@ Appointment Audios dddd*/
                 }
 
 //                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                PlayerAudioId = mainPlayModelList1x.get(player.getCurrentWindowIndex()).getID();
+                PlayerAudioId = mainPlayModelList1x.get(player.getCurrentWindowIndex()).getId();
             }
 
             @Override
@@ -481,7 +481,7 @@ Appointment Audios dddd*/
                 String intruptMethod = "";
                 Properties p = new Properties();
                 p.putValue("userId", UserID);
-                p.putValue("audioId", mainPlayModelList.get(position).getID());
+                p.putValue("audioId", mainPlayModelList.get(position).getId());
                 p.putValue("audioName", mainPlayModelList.get(position).getName());
                 p.putValue("audioDescription", "");
                 p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -546,7 +546,7 @@ Appointment Audios dddd*/
                 }
                 try {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<AudioInterruptionModel> listCall = APINewClient.getClient().getAudioInterruption(CoUserID, mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(), "", mainPlayModelList.get(position).getAudioDirection(), mainPlayModelList.get(position).getAudiomastercat(), mainPlayModelList.get(position).getAudioSubCategory(), mainPlayModelList.get(position).getAudioDuration(), "", AudioType, "Main", String.valueOf(hundredVolume), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, String.valueOf(batLevel), BatteryStatus, String.valueOf(downSpeed), String.valueOf(upSpeed), "Android");
+                        Call<AudioInterruptionModel> listCall = APINewClient.getClient().getAudioInterruption(CoUserID, mainPlayModelList.get(position).getId(), mainPlayModelList.get(position).getName(), "", mainPlayModelList.get(position).getAudioDirection(), mainPlayModelList.get(position).getAudiomastercat(), mainPlayModelList.get(position).getAudioSubCategory(), mainPlayModelList.get(position).getAudioDuration(), "", AudioType, "Main", String.valueOf(hundredVolume), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, String.valueOf(batLevel), BatteryStatus, String.valueOf(downSpeed), String.valueOf(upSpeed), "Android");
                         listCall.enqueue(new Callback<AudioInterruptionModel>() {
                             @Override
                             public void onResponse(Call<AudioInterruptionModel> call, Response<AudioInterruptionModel> response) {
@@ -595,8 +595,8 @@ Appointment Audios dddd*/
                             }.getType();
                             mainPlayModelList1x = gson.fromJson(json, type);
                         }
-                        if (mainPlayModelList1x.get(player.getCurrentWindowIndex()).getID().
-                                equalsIgnoreCase(mainPlayModelList1x.get(mainPlayModelList1x.size() - 1).getID())) {
+                        if (mainPlayModelList1x.get(player.getCurrentWindowIndex()).getId().
+                                equalsIgnoreCase(mainPlayModelList1x.get(mainPlayModelList1x.size() - 1).getId())) {
 
                             player.setPlayWhenReady(false);
                             localIntent.putExtra("MyData", "pause");
@@ -881,7 +881,7 @@ Appointment Audios dddd*/
                     builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(ps).getName());
                 }
                 builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(ps).getImageFile());
-                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getID());
+                builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getId());
                 try {
                     builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, myBitmap);
                 } catch (OutOfMemoryError e) {
@@ -1144,7 +1144,7 @@ Appointment Audios dddd*/
                     if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setId(arrayList.get(i).getID());
                             mainPlayModel.setName(arrayList.get(i).getName());
                             mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                             mainPlayModel.setPlaylistID("");
@@ -1190,7 +1190,7 @@ Appointment Audios dddd*/
                     if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setId(arrayList.get(i).getID());
                             mainPlayModel.setName(arrayList.get(i).getName());
                             mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                             mainPlayModel.setPlaylistID("");
@@ -1235,7 +1235,7 @@ Appointment Audios dddd*/
                     if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setId(arrayList.get(i).getID());
                             mainPlayModel.setName(arrayList.get(i).getName());
                             mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                             mainPlayModel.setPlaylistID("");
@@ -1283,7 +1283,7 @@ Appointment Audios dddd*/
                     if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setId(arrayList.get(i).getID());
                             mainPlayModel.setName(arrayList.get(i).getName());
                             mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                             mainPlayModel.setPlaylistID("");
@@ -1331,7 +1331,7 @@ Appointment Audios dddd*/
                     if (arrayList2.size() != 0) {
                         for (int i = 0; i < arrayList2.size(); i++) {
                             MainPlayModel mainPlayModel = new MainPlayModel();
-                            mainPlayModel.setID(arrayList.get(i).getID());
+                            mainPlayModel.setId(arrayList.get(i).getID());
                             mainPlayModel.setName(arrayList.get(i).getName());
                             mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                             mainPlayModel.setPlaylistID("");
@@ -1494,7 +1494,7 @@ Appointment Audios dddd*/
                         builder.putString(MediaMetadata.METADATA_KEY_TITLE, mainPlayModelList1.get(ps).getName());
                     }
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, mainPlayModelList1.get(ps).getImageFile());
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getID());
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mainPlayModelList1.get(ps).getId());
 
                     if (duration > 0) {
                         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);

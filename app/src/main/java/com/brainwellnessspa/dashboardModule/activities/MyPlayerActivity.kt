@@ -1206,9 +1206,9 @@ class MyPlayerActivity : AppCompatActivity() {
                                     p.putValue("audioService", appStatus(ctx))
                                     p.putValue("sound", hundredVolume.toString())
                                     addToSegment("Playlist Completed", p, CONSTANTS.track)
-                                    Log.e("Last audio End", mainPlayModelList[position].name)
+                                    Log.e("Last audio End", mainPlayModelList[position].name.toString())
                                 } else {
-                                    Log.e("Curr audio End", mainPlayModelList[position].name)
+                                    Log.e("Curr audio End", mainPlayModelList[position].name.toString())
                                 }
                                 /*new Handler().postDelayed(() -> {
                             playerNotificationManager.setPlayer(null);
@@ -1594,8 +1594,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 audioFile1 = gson1.fromJson(json1, type)
                 playlistDownloadId = gson1.fromJson(json2, type)
             }
-            audioFile1.add(mainPlayModelList[position].audioFile)
-            fileNameList.add(mainPlayModelList[position].name)
+            audioFile1.add(mainPlayModelList[position].audioFile.toString())
+            fileNameList.add(mainPlayModelList[position].name.toString())
             playlistDownloadId.add("")
             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
             val editor = shared.edit()

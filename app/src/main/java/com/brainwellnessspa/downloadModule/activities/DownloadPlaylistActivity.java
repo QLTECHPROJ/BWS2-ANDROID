@@ -266,7 +266,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 }.getType();
                 mainPlayModelList = gson.fromJson(json, type);
             }
-            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getId();
         }
         NetWatch.builder(this).setCallBack(new NetworkChangeReceiver_navigator() {
             @Override

@@ -116,7 +116,7 @@ public class MiniPlayerFragment extends Fragment {
     int counterinit = 0;
     Properties p;
     Handler handler1;
-    private BroadcastReceiver listener1 = new BroadcastReceiver() {
+    private final BroadcastReceiver listener1 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MakeArray2();
@@ -132,7 +132,7 @@ public class MiniPlayerFragment extends Fragment {
         }
     };
     private long mLastClickTime = 0;
-    private BroadcastReceiver listener = new BroadcastReceiver() {
+    private final BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -297,7 +297,7 @@ public class MiniPlayerFragment extends Fragment {
                         String intruptMethod = "";
                         p = new Properties();
                         p.putValue("userId", UserID);
-                        p.putValue("audioId", mainPlayModelList.get(position).getID());
+                        p.putValue("audioId", mainPlayModelList.get(position).getId());
                         p.putValue("audioName", mainPlayModelList.get(position).getName());
                         p.putValue("audioDescription", "");
                         p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -361,7 +361,7 @@ public class MiniPlayerFragment extends Fragment {
                         }
                         if (BWSApplication.isNetworkConnected(ctx)) {
                             Call<AudioInterruptionModel> listCall = APIClient.getClient().getAudioInterruption(UserID,
-                                    mainPlayModelList.get(position).getID(), mainPlayModelList.get(position).getName(),
+                                    mainPlayModelList.get(position).getId(), mainPlayModelList.get(position).getName(),
                                     "", mainPlayModelList.get(position).getAudioDirection()
                                     , mainPlayModelList.get(position).getAudiomastercat(),
                                     mainPlayModelList.get(position).getAudioSubCategory(),
@@ -406,7 +406,7 @@ public class MiniPlayerFragment extends Fragment {
                         globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList);
 
 //                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                        myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getID();
+                        myAudioId = mainPlayModelList.get(player.getCurrentWindowIndex()).getId();
                         SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedz.edit();
                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
@@ -430,7 +430,7 @@ public class MiniPlayerFragment extends Fragment {
                         if (SegmentTagPlayer == 0) {
                             p = new Properties();
                             p.putValue("userId", UserID);
-                            p.putValue("audioId", mainPlayModelList.get(position).getID());
+                            p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
                             p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -487,7 +487,7 @@ public class MiniPlayerFragment extends Fragment {
                         if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
                             p.putValue("userId", UserID);
-                            p.putValue("audioId", mainPlayModelList.get(position).getID());
+                            p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
                             p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -528,7 +528,7 @@ public class MiniPlayerFragment extends Fragment {
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
                             p = new Properties();
                             p.putValue("userId", UserID);
-                            p.putValue("audioId", mainPlayModelList.get(position).getID());
+                            p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
                             p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -551,7 +551,7 @@ public class MiniPlayerFragment extends Fragment {
                             try {
                                 p = new Properties();
                                 p.putValue("userId", UserID);
-                                p.putValue("audioId", mainPlayModelList.get(position).getID());
+                                p.putValue("audioId", mainPlayModelList.get(position).getId());
                                 p.putValue("audioName", mainPlayModelList.get(position).getName());
                                 p.putValue("audioDescription", "");
                                 p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -570,8 +570,8 @@ public class MiniPlayerFragment extends Fragment {
                                 p.putValue("bitRate", "");
                                 p.putValue("sound", String.valueOf(hundredVolume));
                                 BWSApplication.addToSegment("Audio Completed", p, CONSTANTS.track);
-                                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getID().
-                                        equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())) {
+                                if (mainPlayModelList.get(player.getCurrentWindowIndex()).getId().
+                                        equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getId())) {
                                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                                     exoBinding.llPause.setVisibility(View.GONE);
                                     exoBinding.progressBar.setVisibility(View.GONE);
@@ -580,7 +580,7 @@ public class MiniPlayerFragment extends Fragment {
                                     localBroadcastManager.sendBroadcast(localIntent);
                                     p = new Properties();
                                     p.putValue("userId", UserID);
-                                    p.putValue("audioId", mainPlayModelList.get(position).getID());
+                                    p.putValue("audioId", mainPlayModelList.get(position).getId());
                                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                                     p.putValue("audioDescription", "");
                                     p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -722,7 +722,7 @@ public class MiniPlayerFragment extends Fragment {
         if (SegmentTagPlayer == 0) {
             p = new Properties();
             p.putValue("userId", UserID);
-            p.putValue("audioId", mainPlayModelList.get(position).getID());
+            p.putValue("audioId", mainPlayModelList.get(position).getId());
             p.putValue("audioName", mainPlayModelList.get(position).getName());
             p.putValue("audioDescription", "");
             p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -756,7 +756,7 @@ public class MiniPlayerFragment extends Fragment {
                     localBroadcastManager.sendBroadcast(localIntent);
                     p = new Properties();
                     p.putValue("userId", UserID);
-                    p.putValue("audioId", mainPlayModelList.get(position).getID());
+                    p.putValue("audioId", mainPlayModelList.get(position).getId());
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDescription", "");
                     p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -1068,7 +1068,7 @@ public class MiniPlayerFragment extends Fragment {
         }
         try {
             url = mainPlayModelList.get(ps).getAudioFile();
-            id = mainPlayModelList.get(ps).getID();
+            id = mainPlayModelList.get(ps).getId();
         } catch (Exception e) {
             Log.e("mini", e.getMessage());
         }
@@ -1104,7 +1104,7 @@ public class MiniPlayerFragment extends Fragment {
                     pss = position;
                 }
                 if (!mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-                    if (mainPlayModelList.get(pss).getID().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getID())
+                    if (mainPlayModelList.get(pss).getId().equalsIgnoreCase(mainPlayModelList.get(mainPlayModelList.size() - 1).getId())
                             && (player.getDuration() - player.getCurrentPosition() <= 20)) {
 //                    playerNotificationManager.setPlayer(player);
                         player.seekTo(position, 0);
@@ -1112,7 +1112,7 @@ public class MiniPlayerFragment extends Fragment {
                     player.setPlayWhenReady(true);
                     p = new Properties();
                     p.putValue("userId", UserID);
-                    p.putValue("audioId", mainPlayModelList.get(position).getID());
+                    p.putValue("audioId", mainPlayModelList.get(position).getId());
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDescription", "");
                     p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
@@ -1245,7 +1245,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1269,7 +1269,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1295,7 +1295,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1321,7 +1321,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1347,7 +1347,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1373,7 +1373,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1399,7 +1399,7 @@ public class MiniPlayerFragment extends Fragment {
 
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
@@ -1425,7 +1425,7 @@ public class MiniPlayerFragment extends Fragment {
 
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1450,7 +1450,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
@@ -1500,7 +1500,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1526,7 +1526,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1552,7 +1552,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1579,7 +1579,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1606,7 +1606,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1633,7 +1633,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < listSize; i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1659,7 +1659,7 @@ public class MiniPlayerFragment extends Fragment {
 
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
@@ -1685,7 +1685,7 @@ public class MiniPlayerFragment extends Fragment {
 
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1710,7 +1710,7 @@ public class MiniPlayerFragment extends Fragment {
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
@@ -1768,7 +1768,7 @@ public class MiniPlayerFragment extends Fragment {
 
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1796,7 +1796,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1824,7 +1824,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1854,7 +1854,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < arrayList.size(); i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1884,7 +1884,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < arrayList.size(); i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1914,7 +1914,7 @@ public class MiniPlayerFragment extends Fragment {
             for (int i = 0; i < arrayList.size(); i++) {
 
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1942,7 +1942,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
@@ -1970,7 +1970,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
@@ -1999,7 +1999,7 @@ public class MiniPlayerFragment extends Fragment {
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setId(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());

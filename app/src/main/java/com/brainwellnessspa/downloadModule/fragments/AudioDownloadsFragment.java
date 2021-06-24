@@ -236,7 +236,7 @@ public class AudioDownloadsFragment extends Fragment {
                 }.getType();
                 mainPlayModelList = gson.fromJson(json, type);
             }
-            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
+            PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getId();
         }
         callObserverMethod();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));

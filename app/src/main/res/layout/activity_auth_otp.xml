@@ -190,6 +190,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="SpUsage" />

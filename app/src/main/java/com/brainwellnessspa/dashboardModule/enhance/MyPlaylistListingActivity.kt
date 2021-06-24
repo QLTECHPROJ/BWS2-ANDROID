@@ -712,7 +712,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
-            val into = Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.llMainLayout.setOnClickListener {
                 try {
                     MyPlaylistListingActivity().callMainPlayer(holder.absoluteAdapterPosition, "Created", listModel, ctx, activity, listModel[0].playlistID!!, PlaylistName!!, created, "0")
@@ -1253,7 +1252,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
                         editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
                         editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
-                        editor.commit()
+                        editor.apply()
                         if (fileNameList[0].equals(DownloadMedia.filename, ignoreCase = true) && playlistDownloadId[0].equals(PlaylistID, ignoreCase = true)) {
                             PRDownloader.cancel(DownloadMedia.downloadIdOne)
                             DownloadMedia.filename = ""
@@ -1865,7 +1864,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (arrayList2[PlayerPosition].audioFile != "") {
                     val downloadAudioDetailsList1: MutableList<String> = ArrayList()
                     val ge = GlobalInitExoPlayer()
-                    downloadAudioDetailsList1.add(mainPlayModel1.name)
+                    downloadAudioDetailsList1.add(mainPlayModel1.name.toString())
                     ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList1, ctx)
                 }
             } //            handler2.postDelayed(UpdateSongTime2, 3000);

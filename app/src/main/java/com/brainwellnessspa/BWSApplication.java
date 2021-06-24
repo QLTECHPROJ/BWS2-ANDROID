@@ -509,7 +509,7 @@ public class BWSApplication extends Application {
                                                 int listSize = arrayList.size();
                                                 for (int i = 0; i < listSize; i++) {
                                                     MainPlayModel mainPlayModel = new MainPlayModel();
-                                                    mainPlayModel.setID(arrayList.get(i).getId());
+                                                    mainPlayModel.setId(arrayList.get(i).getId());
                                                     mainPlayModel.setName(arrayList.get(i).getName());
                                                     mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                                                     mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
@@ -1634,7 +1634,7 @@ public class BWSApplication extends Application {
             downloadAudioDetails.setImageFile(mDataViewAll.get(i).getImageFile());
             downloadAudioDetails.setAudioDuration(mDataViewAll.get(i).getAudioDuration());
         } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
-            downloadAudioDetails.setID(mDataPlayer.get(i).getID());
+            downloadAudioDetails.setID(mDataPlayer.get(i).getId());
             downloadAudioDetails.setName(mDataPlayer.get(i).getName());
             downloadAudioDetails.setAudioFile(mDataPlayer.get(i).getAudioFile());
             downloadAudioDetails.setPlaylistId(mDataPlayer.get(i).getPlaylistID());
@@ -1681,7 +1681,7 @@ public class BWSApplication extends Application {
         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
             arrayList.add(downloadAudioDetails);
             MainPlayModel mainPlayModel1 = new MainPlayModel();
-            mainPlayModel1.setID(downloadAudioDetails.getID());
+            mainPlayModel1.setId(downloadAudioDetails.getID());
             mainPlayModel1.setName(downloadAudioDetails.getName());
             mainPlayModel1.setAudioFile(downloadAudioDetails.getAudioFile());
             mainPlayModel1.setAudioDirection(downloadAudioDetails.getAudioDirection());
