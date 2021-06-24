@@ -29,9 +29,9 @@ object FileUtil {
                     if (id.startsWith("raw:")) {
                         return id.replaceFirst("raw:".toRegex(), "")
                     }
-                    uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
-                    )
+                    uri =
+                        ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
+                            java.lang.Long.valueOf(id))
                 }
                 isMediaDocument(uri) -> {
                     val docId = DocumentsContract.getDocumentId(uri)
@@ -43,16 +43,12 @@ object FileUtil {
                         "audio" -> uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                     }
                     selection = "_id=?"
-                    selectionArgs = arrayOf(
-                        split[1]
-                    )
+                    selectionArgs = arrayOf(split[1])
                 }
             }
         }
         if ("content".equals(uri.scheme, ignoreCase = true)) {
-            val projection = arrayOf(
-                MediaStore.Images.Media.DATA
-            )
+            val projection = arrayOf(MediaStore.Images.Media.DATA)
             try {
                 context.contentResolver.query(uri, projection, selection, selectionArgs, null)
                     .use { cursor ->

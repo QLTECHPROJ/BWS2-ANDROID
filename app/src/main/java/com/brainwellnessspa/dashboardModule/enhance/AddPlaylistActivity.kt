@@ -66,8 +66,7 @@ class AddPlaylistActivity : AppCompatActivity() {
     var myBackPress = false
     private var numStarted = 0
 
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist)
         ctx = this@AddPlaylistActivity
@@ -156,8 +155,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                                 }
                                             } else {
                                                 callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
-                                            }
-                                            //                                            Properties p = new Properties();
+                                            } //                                            Properties p = new Properties();
                                             //                                            p.putValue("userId", UserID);
                                             //                                            p.putValue("playlistId", PlaylistID);
                                             //                                            p.putValue("playlistName", listsModel.getResponseData().getName());
@@ -186,8 +184,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        /*   comefrom_search = 0;
+    override fun onBackPressed() {/*   comefrom_search = 0;
         myBackPress = true;
         if (comeAddPlaylist == 1) {
             Intent i = new Intent(ctx, MyPlaylistActivity.class);
@@ -270,8 +267,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                     try {
                         val listModels = response.body()
                         if (listModels!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity) //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
                             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                             val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -335,8 +331,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                     val ge = GlobalInitExoPlayer()
                                     ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx)
                                 }
-                            }
-                            /*  if (comeAddPlaylist == 1) {
+                            }/*  if (comeAddPlaylist == 1) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.go_to_playlist);
@@ -385,8 +380,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 }
                                 false
                             }
-                            rlCreate.setOnClickListener {
-                                //                                addToPlayList = true;
+                            rlCreate.setOnClickListener { //                                addToPlayList = true;
                                 //                                MyPlaylistId = PlaylistID;
                                 val intent = Intent(ctx, MyPlaylistListingActivity::class.java)
                                 intent.putExtra("New", New)
@@ -465,8 +459,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -484,8 +477,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 

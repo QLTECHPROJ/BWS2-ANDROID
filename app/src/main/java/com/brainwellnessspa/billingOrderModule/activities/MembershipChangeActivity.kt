@@ -50,8 +50,7 @@ class MembershipChangeActivity : AppCompatActivity() {
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /* This is the layout showing */
+        super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change)
         ctx = this@MembershipChangeActivity
         activity = this@MembershipChangeActivity
@@ -66,8 +65,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         if (intent != null) {
             comeFrom = intent.getStringExtra("ComeFrom")
         }
-        val mLayoutManager1: RecyclerView.LayoutManager =
-            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        val mLayoutManager1: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvPlanList.layoutManager = mLayoutManager1
         binding.rvPlanList.itemAnimator = DefaultItemAnimator()
 
@@ -111,45 +109,23 @@ class MembershipChangeActivity : AppCompatActivity() {
     /* This function is preparing to membership data */
     private fun prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(
-                binding.progressBar,
-                binding.progressBarHolder,
-                activity
-            )
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APIClient.getClient().getPlanListBilling(userId)
             listCall.enqueue(object : Callback<PlanListBillingModel?> {
-                override fun onResponse(
-                    call: Call<PlanListBillingModel?>,
-                    response: Response<PlanListBillingModel?>
-                ) {
+                override fun onResponse(call: Call<PlanListBillingModel?>, response: Response<PlanListBillingModel?>) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val membershipPlanListModel = response.body()
-                            if (membershipPlanListModel!!.responseCode.equals(
-                                    getString(R.string.ResponseCodesuccess),
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (membershipPlanListModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 binding.tvTitle.text = membershipPlanListModel.responseData.title
                                 binding.tvDesc.text = membershipPlanListModel.responseData.desc
-                                val measureRatio =
-                                    BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
-                                binding.ivRestaurantImage.layoutParams.height =
-                                    (measureRatio.height * measureRatio.ratio).toInt()
-                                binding.ivRestaurantImage.layoutParams.width =
-                                    (measureRatio.widthImg * measureRatio.ratio).toInt()
+                                val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
+                                binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+                                binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                                 binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner)
-                                membershipPlanAdapter = MembershipPlanAdapter(
-                                    membershipPlanListModel.responseData.plan,
-                                    ctx,
-                                    binding.btnFreeJoin
-                                )
+                                membershipPlanAdapter = MembershipPlanAdapter(membershipPlanListModel.responseData.plan, ctx, binding.btnFreeJoin)
                                 binding.rvPlanList.adapter = membershipPlanAdapter
                             }
                         }
@@ -159,11 +135,7 @@ class MembershipChangeActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<PlanListBillingModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -172,25 +144,18 @@ class MembershipChangeActivity : AppCompatActivity() {
     }
 
     /* This class is preparing to membership plan data */
-    inner class MembershipPlanAdapter(
-        private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>,
-        var ctx: Context,
-        var btnFreeJoin: Button
-    ) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
+    inner class MembershipPlanAdapter(private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>, var ctx: Context, var btnFreeJoin: Button) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
         private var rowIndex = -1
         private var pos = 0
         var i: Intent? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: MembershipPlanBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false
-            )
+            val v: MembershipPlanBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false)
             return MyViewHolder(v)
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val listModel = listModelList[position]
-            //        holder.binding.tvTitle.setText(listModel.getTitle());
+            val listModel = listModelList[position] //        holder.binding.tvTitle.setText(listModel.getTitle());
             holder.binding.tvPlanFeatures01.text = listModel.planFeatures[0].feature
             holder.binding.tvPlanFeatures02.text = listModel.planFeatures[1].feature
             holder.binding.tvPlanFeatures03.text = listModel.planFeatures[2].feature
@@ -199,8 +164,7 @@ class MembershipChangeActivity : AppCompatActivity() {
             holder.binding.tvSubName.text = listModel.subName
             holder.binding.tvPlanInterval.text = listModel.planInterval
             if (listModel.recommendedFlag.equals("1", ignoreCase = true)) {
-                holder.binding.tvRecommended.visibility = View.VISIBLE
-                /*  if (pos == 0) {
+                holder.binding.tvRecommended.visibility = View.VISIBLE/*  if (pos == 0) {
                 holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
                 holder.binding.llFeatures.setVisibility(View.VISIBLE);
                 holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
@@ -223,26 +187,10 @@ class MembershipChangeActivity : AppCompatActivity() {
                     holder.binding.tvRecommended.visibility = View.VISIBLE
                     changeFunction(holder, listModel)
                 } else {
-                    holder.binding.llPlanSub.background =
-                        ContextCompat.getDrawable(activity, R.drawable.rounded_light_gray)
-                    holder.binding.tvPlanAmount.setTextColor(
-                        ContextCompat.getColor(
-                            activity,
-                            R.color.black
-                        )
-                    )
-                    holder.binding.tvSubName.setTextColor(
-                        ContextCompat.getColor(
-                            activity,
-                            R.color.black
-                        )
-                    )
-                    holder.binding.tvPlanInterval.setTextColor(
-                        ContextCompat.getColor(
-                            activity,
-                            R.color.black
-                        )
-                    )
+                    holder.binding.llPlanSub.background = ContextCompat.getDrawable(activity, R.drawable.rounded_light_gray)
+                    holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                    holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                    holder.binding.tvPlanInterval.setTextColor(ContextCompat.getColor(activity, R.color.black))
                     holder.binding.llFeatures.visibility = View.GONE
                 }
             }
@@ -254,35 +202,16 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
 
         /* This function is which plan selection */
-        private fun changeFunction(
-            holder: MyViewHolder,
-            listModel: PlanListBillingModel.ResponseData.Plan
-        ) {
+        private fun changeFunction(holder: MyViewHolder, listModel: PlanListBillingModel.ResponseData.Plan) {
             holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor)
             holder.binding.llFeatures.visibility = View.VISIBLE
-            holder.binding.tvPlanAmount.setTextColor(
-                ContextCompat.getColor(
-                    activity,
-                    R.color.white
-                )
-            )
+            holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.white))
             holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.white))
-            holder.binding.tvPlanInterval.setTextColor(
-                ContextCompat.getColor(
-                    activity,
-                    R.color.white
-                )
-            )
-            holder.binding.llFeatures.setBackgroundColor(
-                ContextCompat.getColor(
-                    activity,
-                    R.color.white
-                )
-            )
+            holder.binding.tvPlanInterval.setTextColor(ContextCompat.getColor(activity, R.color.white))
+            holder.binding.llFeatures.setBackgroundColor(ContextCompat.getColor(activity, R.color.white))
             renewPlanFlag = listModel.planFlag
             renewPlanId = listModel.planID
-            notificationStatus = true
-            /*      i = new Intent(ctx, OrderSummaryActivity.class);
+            notificationStatus = true/*      i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
             i.putExtra("ComesTrue", comeFrom);
             i.putParcelableArrayListExtra("PlanData", listModelList);
@@ -295,9 +224,7 @@ class MembershipChangeActivity : AppCompatActivity() {
             return listModelList.size
         }
 
-        inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(
-            binding.root
-        )
+        inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     /* This class is check about application in background or foreground */
@@ -306,8 +233,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -326,8 +252,7 @@ class MembershipChangeActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -337,8 +262,7 @@ class MembershipChangeActivity : AppCompatActivity() {
                 if (!notificationStatus) {
                     if (GlobalInitExoPlayer.player != null) {
                         Log.e("Destroy", "Activity Destroyed")
-                        val notificationManager =
-                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                         notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                         GlobalInitExoPlayer.relesePlayer(applicationContext)
                     }

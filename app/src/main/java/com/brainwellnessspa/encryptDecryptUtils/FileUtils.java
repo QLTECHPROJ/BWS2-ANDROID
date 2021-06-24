@@ -26,10 +26,6 @@ public class FileUtils {
             bos.write(encodedBytes);
             bos.flush();
             bos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +59,7 @@ public class FileUtils {
     @NonNull
     public static File createTempFile(Context context, byte[] decrypted) throws IOException {
         File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
-//        tempFile.deleteOnExit();
+        //        tempFile.deleteOnExit();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(decrypted);
         fos.close();
@@ -101,14 +97,16 @@ public class FileUtils {
     public static final void deleteDownloadedFile(Context context, String FILE_NAME) {
         File file = new File(getFilePath(context, FILE_NAME + CONSTANTS.FILE_EXT));
         if (null != file && file.exists()) {
-            if (file.delete()) Log.i("FileUtils", "File Deleted.");
+            if (file.delete())
+                Log.i("FileUtils", "File Deleted.");
         }
     }
 
     public static final void deleteDownloadedFile1(Context context, String FILE_NAME) {
         File file = new File(getFilePath(context, FILE_NAME));
         if (null != file && file.exists()) {
-            if (file.delete()) Log.i("FileUtils", "File Deleted.");
+            if (file.delete())
+                Log.i("FileUtils", "File Deleted.");
         }
     }
 }

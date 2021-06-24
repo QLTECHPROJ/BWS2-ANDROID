@@ -24,17 +24,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityResourceBinding
 import com.brainwellnessspa.databinding.FilterListLayoutBinding
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.resourceModule.fragments.*
 import com.brainwellnessspa.resourceModule.models.ResourceFilterModel
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.resourceModule.models.SegmentResource
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
@@ -72,8 +72,7 @@ class ResourceActivity : AppCompatActivity() {
     var stackStatus = 0
     var myBackPress = false
 
-    @SuppressLint("InflateParams")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("InflateParams") override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource)
         activity = this@ResourceActivity
@@ -134,20 +133,12 @@ class ResourceActivity : AppCompatActivity() {
                         p4!!.putValue("resourceType", "Documentaries")
                     }
                 }
-                val listCalls =
-                    APINewClient.getClient().getResourceList(coUserId, tabFlag, category)
+                val listCalls = APINewClient.getClient().getResourceList(coUserId, tabFlag, category)
                 listCalls.enqueue(object : Callback<ResourceListModel?> {
-                    override fun onResponse(
-                        call: Call<ResourceListModel?>,
-                        response: Response<ResourceListModel?>
-                    ) {
+                    override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                         try {
                             val listModel = response.body()!!
-                            if (listModel.responseCode.equals(
-                                    getString(R.string.ResponseCodesuccess),
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 resourceListModel = listModel
                                 val allResourceType = ArrayList<String>()
                                 val gson = Gson()
@@ -164,16 +155,11 @@ class ResourceActivity : AppCompatActivity() {
                                     e.resourceId = resourceListModel!!.responseData!![i].iD
                                     e.resourceName = resourceListModel!!.responseData!![i].title
                                     e.author = resourceListModel!!.responseData!![i].author
-                                    e.masterCategory =
-                                        resourceListModel!!.responseData!![i].masterCategory
+                                    e.masterCategory = resourceListModel!!.responseData!![i].masterCategory
                                     section1.add(e)
                                 }
                                 p!!.putValue("resources", gsons.toJson(section1))
-                                BWSApplication.addToSegment(
-                                    "Resources Screen Viewed",
-                                    p,
-                                    CONSTANTS.screen
-                                )
+                                BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen)
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -248,9 +234,7 @@ class ResourceActivity : AppCompatActivity() {
 
     private fun setAdapter() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            val adapter = TabAdapter(
-                supportFragmentManager, binding.tabLayout.tabCount
-            )
+            val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
             binding.viewPager.currentItem = currentTab
@@ -259,32 +243,15 @@ class ResourceActivity : AppCompatActivity() {
         }
     }
 
-    fun prepareData(
-        rvFilterList: RecyclerView?,
-        dialogBox: Dialog?,
-        tvAll: TextView?,
-        ivFilter: ImageView?
-    ) {
+    fun prepareData(rvFilterList: RecyclerView?, dialogBox: Dialog?, tvAll: TextView?, ivFilter: ImageView?) {
         try {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 val listCall = APINewClient.getClient().getResourceCatList(coUserId)
                 listCall.enqueue(object : Callback<ResourceFilterModel?> {
-                    override fun onResponse(
-                        call: Call<ResourceFilterModel?>,
-                        response: Response<ResourceFilterModel?>
-                    ) {
+                    override fun onResponse(call: Call<ResourceFilterModel?>, response: Response<ResourceFilterModel?>) {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            val adapter = ResourceFilterAdapter(
-                                listModel.responseData,
-                                dialogBox,
-                                tvAll,
-                                ivFilter
-                            )
+                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            val adapter = ResourceFilterAdapter(listModel.responseData, dialogBox, tvAll, ivFilter)
                             rvFilterList!!.adapter = adapter
                             for (i in listModel.responseData!!.indices) {
                                 section!!.add(listModel.responseData!![i].categoryName)
@@ -301,16 +268,9 @@ class ResourceActivity : AppCompatActivity() {
         }
     }
 
-    inner class ResourceFilterAdapter(
-        private val listModel: List<ResourceFilterModel.ResponseData>?,
-        private var dialogBox: Dialog?,
-        private val tvAll: TextView?,
-        var ivFilter: ImageView?
-    ) : RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder>() {
+    inner class ResourceFilterAdapter(private val listModel: List<ResourceFilterModel.ResponseData>?, private var dialogBox: Dialog?, private val tvAll: TextView?, var ivFilter: ImageView?) : RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: FilterListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context), R.layout.filter_list_layout, parent, false
-            )
+            val v: FilterListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.filter_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
@@ -318,12 +278,7 @@ class ResourceActivity : AppCompatActivity() {
             ivFilter!!.visibility = View.INVISIBLE
             holder.binding.tvTitle.text = listModel!![position].categoryName
             holder.binding.llMainLayout.setOnClickListener {
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        activity,
-                        R.color.app_theme_color
-                    )
-                )
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
                 holder.binding.ivFiltered.visibility = View.VISIBLE
                 category = listModel[position].categoryName
                 setAdapter()
@@ -333,23 +288,11 @@ class ResourceActivity : AppCompatActivity() {
             }
             if (listModel[position].categoryName.equals(category, ignoreCase = true)) {
                 ivFilter!!.visibility = View.INVISIBLE
-                tvAll!!.setTextColor(
-                    ContextCompat.getColor(
-                        activity, R.color.black
-                    )
-                )
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        activity, R.color.app_theme_color
-                    )
-                )
+                tvAll!!.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
                 holder.binding.ivFiltered.visibility = View.VISIBLE
             } else if (category.equals("", ignoreCase = true)) {
-                tvAll!!.setTextColor(
-                    ContextCompat.getColor(
-                        activity, R.color.app_theme_color
-                    )
-                )
+                tvAll!!.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
                 ivFilter!!.visibility = View.VISIBLE
             }
         }
@@ -358,9 +301,7 @@ class ResourceActivity : AppCompatActivity() {
             return listModel!!.size
         }
 
-        inner class MyViewHolder(var binding: FilterListLayoutBinding) : RecyclerView.ViewHolder(
-            binding.root
-        )
+        inner class MyViewHolder(var binding: FilterListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     class TabAdapter(fm: FragmentManager, var totalTabs: Int) : FragmentPagerAdapter(fm) {
@@ -421,8 +362,7 @@ class ResourceActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -440,8 +380,7 @@ class ResourceActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -449,8 +388,7 @@ class ResourceActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

@@ -13,28 +13,23 @@ class ItemMoveCallback(private val mAdapter: ItemTouchHelperContract) : ItemTouc
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {}
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
+    override fun getMovementFlags(recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
         return makeMovementFlags(dragFlags, 0)
     }
 
-    override fun onMove(
-        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
+    override fun onMove(recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder): Boolean {
         mAdapter.onRowMoved(viewHolder.absoluteAdapterPosition, target.absoluteAdapterPosition)
         return true
     }
 
-    override fun canDropOver(
-        recyclerView: RecyclerView,
+    override fun canDropOver(recyclerView: RecyclerView,
         current: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
+        target: RecyclerView.ViewHolder): Boolean {
         return super.canDropOver(recyclerView, current, target)
     }
 

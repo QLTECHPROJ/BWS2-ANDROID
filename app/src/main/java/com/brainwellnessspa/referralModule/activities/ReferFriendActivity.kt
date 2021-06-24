@@ -20,9 +20,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityReferFriendBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityReferFriendBinding
 import com.brainwellnessspa.webView.TncActivity
 import com.segment.analytics.Properties
 
@@ -57,10 +57,8 @@ class ReferFriendActivity : AppCompatActivity() {
         binding.tvInviteTitle.text = getString(R.string.refer_invite_title)
         binding.tvInviteRules.text = getString(R.string.refer_invite_rules_click)
         val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 40f)
-        binding.ivReferImage.layoutParams.height =
-            (measureRatio.height * measureRatio.ratio).toInt()
-        binding.ivReferImage.layoutParams.width =
-            (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.ivReferImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+        binding.ivReferImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivReferImage.scaleType = ImageView.ScaleType.FIT_XY
         binding.ivReferImage.setImageResource(R.drawable.refer_friend_banner)
         binding.tvCodeCopy.text = UserPromocode
@@ -79,24 +77,8 @@ class ReferFriendActivity : AppCompatActivity() {
         binding.btnReferred.setOnClickListener {
             myBackPress = true
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(
-                        this@ReferFriendActivity,
-                        Manifest.permission.READ_CONTACTS
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(
-                        this@ReferFriendActivity,
-                        Manifest.permission.WRITE_CONTACTS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this@ReferFriendActivity,
-                        arrayOf(
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS
-                        ),
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS
-                    )
-                    /*  Intent intent = new Intent();
+                if (ContextCompat.checkSelfPermission(this@ReferFriendActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this@ReferFriendActivity, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this@ReferFriendActivity, arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS), MY_PERMISSIONS_REQUEST_READ_CONTACTS)/*  Intent intent = new Intent();
                     String manufacturer = Build.MANUFACTURER;
                     if ("xiaomi".equalsIgnoreCase(manufacturer)) {
                         intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
@@ -111,8 +93,7 @@ class ReferFriendActivity : AppCompatActivity() {
                         startActivity(intent);
                     }*/
                 } else {
-                    myBackPress = true
-                    // Permission has already been granted
+                    myBackPress = true // Permission has already been granted
                     /* AlertDialog.Builder buildermain = new AlertDialog.Builder(ReferFriendActivity.this);
                 buildermain.setMessage(getString(R.string.opps_msg)+" Please Try After Some Time");
                 buildermain.setCancelable(true);
@@ -125,8 +106,7 @@ class ReferFriendActivity : AppCompatActivity() {
                 AlertDialog alert11 = buildermain.create();
                 alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
                 alert11.show();
-                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.darkorange));*/
-                    /*   Fragment sessionsFragment = new ContactBookFragment();
+                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.darkorange));*//*   Fragment sessionsFragment = new ContactBookFragment();
                     FragmentManager fragmentManager1 = getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.flfriend, sessionsFragment).commit();*/
@@ -165,23 +145,19 @@ class ReferFriendActivity : AppCompatActivity() {
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 shareIntent.type = "text/plain"
-                shareIntent.putExtra(
-                    Intent.EXTRA_TEXT, """
+                shareIntent.putExtra(Intent.EXTRA_TEXT, """
      Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial
      $ReferLink
-     """.trimIndent()
-                )
+     """.trimIndent())
                 startActivity(Intent.createChooser(shareIntent, "Share via"))
                 p = Properties()
                 p!!.putValue("userId", UserID)
                 p!!.putValue("referLink", ReferLink)
                 p!!.putValue("userReferCode", UserPromocode)
-                p!!.putValue(
-                    "shareText", """
+                p!!.putValue("shareText", """
      Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial
      $ReferLink
-     """.trimIndent()
-                )
+     """.trimIndent())
                 BWSApplication.addToSegment("Share Clicked", p, CONSTANTS.track)
             }
         }
@@ -192,15 +168,10 @@ class ReferFriendActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                /*Fragment sessionsFragment = new ContactBookFragment();
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {/*Fragment sessionsFragment = new ContactBookFragment();
                     FragmentManager fragmentManager1 = getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.flfriend, sessionsFragment).commit();*/
@@ -209,14 +180,10 @@ class ReferFriendActivity : AppCompatActivity() {
                 startActivity(i)
             } else {
                 myBackPress = true
-                val buildermain = AlertDialog.Builder(
-                    ctx!!
-                )
+                val buildermain = AlertDialog.Builder(ctx!!)
                 buildermain.setMessage("Please Allow Contact Permission")
                 buildermain.setCancelable(true)
-                buildermain.setPositiveButton(
-                    getString(R.string.ok)
-                ) { dialogs: DialogInterface, _: Int ->
+                buildermain.setPositiveButton(getString(R.string.ok)) { dialogs: DialogInterface, _: Int ->
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", packageName, null)
                     intent.data = uri
@@ -226,8 +193,7 @@ class ReferFriendActivity : AppCompatActivity() {
                 val alert11 = buildermain.create()
                 alert11.window!!.setBackgroundDrawableResource(R.drawable.dialog_bg)
                 alert11.show()
-                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-                    .setTextColor(ContextCompat.getColor(activity, R.color.blue))
+                alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(activity, R.color.blue))
             }
         }
     }
@@ -237,8 +203,7 @@ class ReferFriendActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -256,8 +221,7 @@ class ReferFriendActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -265,8 +229,7 @@ class ReferFriendActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

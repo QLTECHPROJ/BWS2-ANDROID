@@ -26,18 +26,17 @@ class AppointmentInvoiceFragment : Fragment() {
     var dialog: Dialog? = null
 
     @SuppressLint("SetTextI18n")
-    override fun onCreateView(
-        inflater: LayoutInflater,
+    override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false)
         val view = binding.getRoot()
         val shared1 =
             requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         if (arguments != null) {
-            appointmentList = requireArguments().getParcelableArrayList("appointmentInvoiceFragment")
+            appointmentList =
+                requireArguments().getParcelableArrayList("appointmentInvoiceFragment")
         }
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
         binding.rvAIList.layoutManager = mLayoutManager
@@ -74,12 +73,11 @@ class AppointmentInvoiceFragment : Fragment() {
     inner class AppointmentInvoiceAdapter(private val listModelList: List<Appointment>?) :
         RecyclerView.Adapter<AppointmentInvoiceAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: InvoiceListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.invoice_list_layout,
-                parent,
-                false
-            )
+            val v: InvoiceListLayoutBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+                    R.layout.invoice_list_layout,
+                    parent,
+                    false)
             return MyViewHolder(v)
         }
 
@@ -89,8 +87,7 @@ class AppointmentInvoiceFragment : Fragment() {
             holder.binding.tvTitle.text = listModelList[position].name
             holder.binding.tvDate.text = listModelList[position].date
             holder.binding.tvDoller.text = "$" + listModelList[position].netAmount
-            holder.binding.llViewReceipt.setOnClickListener { view: View? ->
-                /* dialog = new Dialog(getActivity());
+            holder.binding.llViewReceipt.setOnClickListener { view: View? ->/* dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.invoice_receipt);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -133,8 +130,7 @@ class AppointmentInvoiceFragment : Fragment() {
 
                 if (BWSApplication.isNetworkConnected(getActivity())) {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
-                    Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); */
-                /*Flag = 0 Stagging Flag = 1 Live*/ /*
+                    Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); *//*Flag = 0 Stagging Flag = 1 Live*/ /*
                     listCall.enqueue(new Callback<InvoiceDetailModel>() {
                         @Override
                         public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
@@ -225,9 +221,8 @@ class AppointmentInvoiceFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: InvoiceListLayoutBinding) : RecyclerView.ViewHolder(
-            binding.root
-        )
+        inner class MyViewHolder(var binding: InvoiceListLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root)
     }
 
     companion object {

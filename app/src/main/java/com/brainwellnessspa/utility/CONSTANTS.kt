@@ -46,13 +46,13 @@ object CONSTANTS {
     var PopUp = "PopUp"
     var ScreenVisible = "ScreenVisible"
     var Tnc = "Tnc"
-    @JvmField
-    var Web = "Web"
+
+    @JvmField var Web = "Web"
     var Check = "Check"
-    @JvmField
-    var Name = "Name"
-    @JvmField
-    var Promocode = "Promocode"
+
+    @JvmField var Name = "Name"
+
+    @JvmField var Promocode = "Promocode"
     var Like = "Like"
     var Download = "Download"
     var position = "position"
@@ -61,8 +61,8 @@ object CONSTANTS {
     var Codes = "Codes"
     var MobileNo = "MobileNo"
     var ID = "ID"
-    @JvmField
-    var PlaylistID = "PlaylistID"
+
+    @JvmField var PlaylistID = "PlaylistID"
     var PlaylistName = "PlaylistName"
     var PlaylistImage = "PlaylistImage"
     var title = "title"

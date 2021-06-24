@@ -25,17 +25,11 @@ public class APINewClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.readTimeout(120, TimeUnit.SECONDS)
-                .writeTimeout(120, TimeUnit.SECONDS)
-                .connectTimeout(120, TimeUnit.SECONDS);
+        httpClient.readTimeout(120, TimeUnit.SECONDS).writeTimeout(120, TimeUnit.SECONDS).connectTimeout(120, TimeUnit.SECONDS);
 
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
-            Request request = original.newBuilder()
-                    .header("Oauth", securityKey())
-                    .header("Yaccess", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))
-                    .method(original.method(), original.body())
-                    .build();
+            Request request = original.newBuilder().header("Oauth", securityKey()).header("Yaccess", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID)).method(original.method(), original.body()).build();
             return chain.proceed(request);
         });
 
@@ -44,12 +38,7 @@ public class APINewClient {
                 .create();*/
 
         OkHttpClient client = httpClient.addInterceptor(interceptor).build();
-        retrofit = new Retrofit.Builder()
-                .baseUrl(New_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .client(client)
-                .build();
+        retrofit = new Retrofit.Builder().baseUrl(New_BASE_URL).addConverterFactory(GsonConverterFactory.create()).addConverterFactory(ScalarsConverterFactory.create()).client(client).build();
 
         AndroidNetworking.initialize(getContext(), client);
         APINewInterface service = retrofit.create(APINewInterface.class);

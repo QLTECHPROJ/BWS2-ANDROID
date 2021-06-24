@@ -3,10 +3,6 @@ package com.brainwellnessspa.billingOrderModule.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,13 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.R;
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressSaveModel;
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressViewModel;
-import com.brainwellnessspa.R;
+import com.brainwellnessspa.databinding.FragmentBillingAddressBinding;
 import com.brainwellnessspa.utility.APIClient;
 import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.databinding.FragmentBillingAddressBinding;
 import com.segment.analytics.Properties;
 
 import retrofit2.Call;
@@ -34,8 +33,7 @@ public class BillingAddressFragment extends Fragment {
     String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserAddressLine2, UserCity, UserState, UserPostCode;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_billing_address, container, false);
         View view = binding.getRoot();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -68,8 +66,7 @@ public class BillingAddressFragment extends Fragment {
                     binding.tlName.setError("Name is required");
                 } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
                     binding.tlEmail.setError("Email address is required");
-                } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
-                        && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
+                } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("") && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
                     binding.tlEmail.setError("Please enter a valid email address");
                 } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
                     binding.tlMobileNumber.setError("please enter mobile number");
@@ -85,17 +82,12 @@ public class BillingAddressFragment extends Fragment {
                     binding.tlPostCode.setError("Postcode is required");
                 } else {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
-                            binding.etName.getText().toString(), binding.etEmail.getText().toString(),
-                            binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(),
-                            binding.etAddressLine2.getText().toString(), binding.etCity.getText().toString(),
-                            binding.etState.getText().toString(),
-                            binding.etPostCode.getText().toString());
+                    Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID, binding.etName.getText().toString(), binding.etEmail.getText().toString(), binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(), binding.etAddressLine2.getText().toString(), binding.etCity.getText().toString(), binding.etState.getText().toString(), binding.etPostCode.getText().toString());
                     listCall.enqueue(new Callback<BillingAddressSaveModel>() {
                         @Override
                         public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
                             BillingAddressSaveModel listModel = response.body();
-                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 try {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                     BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
@@ -140,9 +132,7 @@ public class BillingAddressFragment extends Fragment {
                     BillingAddressViewModel listModel = response.body();
                     if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
-                                listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                listModel.getResponseData().getName() == null) {
+                        if (listModel.getResponseData().getName().equalsIgnoreCase("") || listModel.getResponseData().getName().equalsIgnoreCase(" ") || listModel.getResponseData().getName() == null) {
                             binding.etName.setText("");
                         } else {
                             binding.etName.setText(listModel.getResponseData().getName());
@@ -209,15 +199,7 @@ public class BillingAddressFragment extends Fragment {
             String State = binding.etState.getText().toString();
             String PostCode = binding.etPostCode.getText().toString();
 
-            if (Name.equalsIgnoreCase(UserName)
-                    && Email.equalsIgnoreCase(UserEmail)
-                    && MobileNumber.equalsIgnoreCase(UserMobileNumber)
-                    && Country.equalsIgnoreCase(UserCountry)
-                    && AddressLine1.equalsIgnoreCase(UserAddressLine1)
-                    && AddressLine2.equalsIgnoreCase(UserAddressLine2)
-                    && City.equalsIgnoreCase(UserCity)
-                    && State.equalsIgnoreCase(UserState)
-                    && PostCode.equalsIgnoreCase(UserPostCode)) {
+            if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber) && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1) && AddressLine2.equalsIgnoreCase(UserAddressLine2) && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState) && PostCode.equalsIgnoreCase(UserPostCode)) {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
@@ -257,11 +239,7 @@ public class BillingAddressFragment extends Fragment {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled);
-            } else if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber)
-                    && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1)
-                    && AddressLine2.equalsIgnoreCase("") && UserAddressLine2.equalsIgnoreCase("")
-                    && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState)
-                    && PostCode.equalsIgnoreCase(UserPostCode)) {
+            } else if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber) && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1) && AddressLine2.equalsIgnoreCase("") && UserAddressLine2.equalsIgnoreCase("") && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState) && PostCode.equalsIgnoreCase(UserPostCode)) {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);

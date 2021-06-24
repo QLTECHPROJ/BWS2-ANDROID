@@ -46,22 +46,16 @@ class MembershipInvoiceFragment : Fragment() {
     private val file_name_path = "BWS"
     private var progressDialog: ProgressDialog? = null
     var downloadIdInvoice = 0
-    private var PERMISSIONS_ABOVE_Q = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission_group.STORAGE
-    )
-    private var PERMISSIONS_BELOW_Q = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    )
+    private var PERMISSIONS_ABOVE_Q =
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE)
+    private var PERMISSIONS_BELOW_Q = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE)
     var dialog: Dialog? = null
 
     @SuppressLint("SetTextI18n")
-    override fun onCreateView(
-        inflater: LayoutInflater,
+    override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false)
         val view = binding.root
         val shared1 =
@@ -105,12 +99,11 @@ class MembershipInvoiceFragment : Fragment() {
     inner class MembershipInvoiceAdapter(private val listModelList: List<MemberShip>?) :
         RecyclerView.Adapter<MembershipInvoiceAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: InvoiceListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.invoice_list_layout,
-                parent,
-                false
-            )
+            val v: InvoiceListLayoutBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+                    R.layout.invoice_list_layout,
+                    parent,
+                    false)
             return MyViewHolder(v)
         }
 
@@ -122,8 +115,7 @@ class MembershipInvoiceFragment : Fragment() {
             holder.binding.tvTitle.text = listModelList[position].name
             holder.binding.tvDate.text = listModelList[position].date
             holder.binding.tvDoller.text = "$" + listModelList[position].amount
-            holder.binding.llViewReceipt.setOnClickListener {
-                /*dialog = new Dialog(getActivity());
+            holder.binding.llViewReceipt.setOnClickListener {/*dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.invoice_receipt);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -166,8 +158,7 @@ class MembershipInvoiceFragment : Fragment() {
 
                 if (BWSApplication.isNetworkConnected(getActivity())) {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
-                    Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); */
-                /*Flag = 0 Stagging Flag = 1 Live*/ /*
+                    Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); *//*Flag = 0 Stagging Flag = 1 Live*/ /*
                     listCall.enqueue(new Callback<InvoiceDetailModel>() {
                         @Override
                         public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
@@ -287,62 +278,44 @@ class MembershipInvoiceFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: InvoiceListLayoutBinding) : RecyclerView.ViewHolder(
-            binding.root
-        )
+        inner class MyViewHolder(var binding: InvoiceListLayoutBinding) :
+            RecyclerView.ViewHolder(binding.root)
     }
 
     fun requestPermissionDownlaod() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    PERMISSIONS_BELOW_Q[0]
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ActivityCompat.checkSelfPermission(requireActivity(),
+                    PERMISSIONS_BELOW_Q[0]) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS_BELOW_Q, 1)
             } else {
                 DownloadFile()
             }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    PERMISSIONS_ABOVE_Q[0]
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                if (ActivityCompat.checkSelfPermission(
-                        requireActivity(),
-                        PERMISSIONS_ABOVE_Q[0]
-                    ) == PackageManager.PERMISSION_DENIED
-                ) {
-                    val buildermain = AlertDialog.Builder(
-                        requireActivity()
-                    )
-                    buildermain.setMessage(
-                        """To download invoice allow ${requireActivity().getString(R.string.app_name)} access to your device's files. 
-Tap Setting > permission, and turn "Files and media" on."""
-                    )
+            if (ActivityCompat.checkSelfPermission(requireActivity(),
+                    PERMISSIONS_ABOVE_Q[0]) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(requireActivity(),
+                        PERMISSIONS_ABOVE_Q[0]) == PackageManager.PERMISSION_DENIED) {
+                    val buildermain = AlertDialog.Builder(requireActivity())
+                    buildermain.setMessage("""To download invoice allow ${
+                        requireActivity().getString(R.string.app_name)
+                    } access to your device's files. 
+Tap Setting > permission, and turn "Files and media" on.""")
                     buildermain.setCancelable(true)
-                    buildermain.setPositiveButton(
-                        getString(R.string.Settings)
-                    ) { dialogs: DialogInterface, _: Int ->
+                    buildermain.setPositiveButton(getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         val uri = Uri.fromParts("package", requireActivity().packageName, null)
                         intent.data = uri
                         startActivity(intent)
                         dialogs.dismiss()
                     }
-                    buildermain.setNegativeButton(
-                        getString(R.string.not_now)
-                    ) { dialogs: DialogInterface, _: Int -> dialogs.dismiss() }
+                    buildermain.setNegativeButton(getString(R.string.not_now)) { dialogs: DialogInterface, _: Int -> dialogs.dismiss() }
                     val alert11 = buildermain.create()
                     alert11.window!!.setBackgroundDrawableResource(R.drawable.dialog_bg)
                     alert11.show()
-                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(
-                        ContextCompat.getColor(requireActivity(), R.color.blue)
-                    )
-                    alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(
-                        ContextCompat.getColor(requireActivity(), R.color.blue)
-                    )
+                    alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                        .setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
+                    alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
+                        .setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
                 } else {
                     ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS_ABOVE_Q, 2)
                 }
@@ -354,11 +327,9 @@ Tap Setting > permission, and turn "Files and media" on."""
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
+    override fun onRequestPermissionsResult(requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+        grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1 -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -381,17 +352,11 @@ Tap Setting > permission, and turn "Files and media" on."""
     }
 
     private fun callpermissionAlert() {
-        val buildermain = AlertDialog.Builder(
-            requireActivity()
-        )
-        buildermain.setMessage(
-            """To download invoice allow ${requireActivity().getString(R.string.app_name)} access to your device's files. 
-Tap Setting > permission, and turn "Files and media" on."""
-        )
+        val buildermain = AlertDialog.Builder(requireActivity())
+        buildermain.setMessage("""To download invoice allow ${requireActivity().getString(R.string.app_name)} access to your device's files. 
+Tap Setting > permission, and turn "Files and media" on.""")
         buildermain.setCancelable(true)
-        buildermain.setPositiveButton(
-            getString(R.string.ok)
-        ) { dialogs: DialogInterface, _: Int ->
+        buildermain.setPositiveButton(getString(R.string.ok)) { dialogs: DialogInterface, _: Int ->
             requestPermissionDownlaod()
             dialogs.dismiss()
         }
@@ -424,12 +389,9 @@ Tap Setting > permission, and turn "Files and media" on."""
         progressDialog!!.setCancelable(false)
         progressDialog!!.show()
         PRDownloader.initialize(activity)
-        downloadIdInvoice = PRDownloader.download(
-            downloadUrl,
+        downloadIdInvoice = PRDownloader.download(downloadUrl,
             pdfFile.absolutePath,
-            downloadFileName + System.currentTimeMillis() + ".pdf"
-        )
-            .build()
+            downloadFileName + System.currentTimeMillis() + ".pdf").build()
             .start(object : OnDownloadListener {
                 override fun onDownloadComplete() {
                     progressDialog!!.dismiss()
@@ -443,14 +405,13 @@ Tap Setting > permission, and turn "Files and media" on."""
                     alert11.window!!.setBackgroundDrawableResource(R.drawable.dialog_bg)
                     alert11.show()
                     alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-                        .setTextColor(ContextCompat.getColor(requireActivity(), R.color.dark_blue_gray))
+                        .setTextColor(ContextCompat.getColor(requireActivity(),
+                            R.color.dark_blue_gray))
                 }
 
                 override fun onError(error: Error) {
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        { progressDialog!!.dismiss() },
-                        1000
-                    )
+                    Handler(Looper.getMainLooper()).postDelayed({ progressDialog!!.dismiss() },
+                        1000)
                     Log.e(TAG, "Download Failed")
                 }
             })

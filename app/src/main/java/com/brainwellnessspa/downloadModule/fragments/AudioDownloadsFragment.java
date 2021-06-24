@@ -34,17 +34,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
+import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
-import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -60,9 +60,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-
-import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick;
@@ -100,10 +99,10 @@ public class AudioDownloadsFragment extends Fragment {
                 if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                     if (player != null) {
                         if (data.equalsIgnoreCase("play")) {
-//                    BWSApplication.showToast("Play", getActivity());
+                            //                    BWSApplication.showToast("Play", getActivity());
                             adapter.notifyDataSetChanged();
                         } else {
-//                    BWSApplication.showToast("pause", getActivity());
+                            //                    BWSApplication.showToast("pause", getActivity());
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -141,10 +140,10 @@ public class AudioDownloadsFragment extends Fragment {
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
-//        handler1 = new Handler();
+        //        handler1 = new Handler();
         DB = getAudioDataBase(getActivity());
 
-//        audioList = GetAllMedia(getActivity());
+        //        audioList = GetAllMedia(getActivity());
         callObserverMethod();
         binding.tvFound.setText("Your downloaded audios will appear here");
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -205,7 +204,7 @@ public class AudioDownloadsFragment extends Fragment {
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 audiofilelist = gson.fromJson(jsonx, type);
                 if (fileNameList.size() != 0) {
-//                        handler1.postDelayed(UpdateSongTime1, 30000);
+                    //                        handler1.postDelayed(UpdateSongTime1, 30000);
                 } else {
                     audiofilelist = new ArrayList<>();
                     fileNameList = new ArrayList<>();
@@ -241,16 +240,15 @@ public class AudioDownloadsFragment extends Fragment {
         }
         callObserverMethod();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
-//        audioList = GetAllMedia(getActivity());
+        //        audioList = GetAllMedia(getActivity());
 
         super.onResume();
     }
 
-
     @Override
     public void onPause() {
         if (isThreadStart) {
-//            handler1.removeCallbacks(UpdateSongTime1);
+            //            handler1.removeCallbacks(UpdateSongTime1);
         }
         super.onPause();
     }
@@ -297,8 +295,7 @@ public class AudioDownloadsFragment extends Fragment {
         long myProgress = 0;
         private List<DownloadAudioDetails> listModelList;
         private long currentDuration = 0;
-//    private Runnable UpdateSongTime3;
-
+        //    private Runnable UpdateSongTime3;
 
         public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
             this.listModelList = listModelList;
@@ -321,7 +318,7 @@ public class AudioDownloadsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull AudioDownlaodsAdapter.MyViewHolder holder, int position) {
-//        handler3 = new Handler();
+            //        handler3 = new Handler();
         /*    UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
@@ -373,14 +370,14 @@ public class AudioDownloadsFragment extends Fragment {
                             } else {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                             }
-//                            handler1.postDelayed(UpdateSongTime1, 30000);
+                            //                            handler1.postDelayed(UpdateSongTime1, 30000);
                             break;
                         } else {
                             holder.binding.pbProgress.setProgress(0);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
 
                             break;
-//                            handler1.postDelayed(UpdateSongTime1, 30000);
+                            //                            handler1.postDelayed(UpdateSongTime1, 30000);
                         }
                     } else if (i == fileNameList.size() - 1) {
                         holder.binding.pbProgress.setVisibility(View.GONE);
@@ -405,13 +402,13 @@ public class AudioDownloadsFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             comefromDownload = "1";
-//            if (IsLock.equalsIgnoreCase("1")) {
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (IsLock.equalsIgnoreCase("2")) {
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            //            if (IsLock.equalsIgnoreCase("1")) {
+            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            //            } else if (IsLock.equalsIgnoreCase("2")) {
+            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
-//            }
+            //            }
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
@@ -424,7 +421,8 @@ public class AudioDownloadsFragment extends Fragment {
                         } else {
                             holder.binding.equalizerview.resume(true);
                         }
-                    } else holder.binding.equalizerview.stop(true);
+                    } else
+                        holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -441,15 +439,15 @@ public class AudioDownloadsFragment extends Fragment {
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 comefromDownload = "1";
-//                if (IsLock.equalsIgnoreCase("1")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                    i.putExtra("ComeFrom", "Plan");
-//                    ctx.startActivity(i);
-//                } else if (IsLock.equalsIgnoreCase("2")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                //                if (IsLock.equalsIgnoreCase("1")) {
+                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                //                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                //                    i.putExtra("ComeFrom", "Plan");
+                //                    ctx.startActivity(i);
+                //                } else if (IsLock.equalsIgnoreCase("2")) {
+                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                //                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 comefromDownload = "1";
                 holder.binding.ivLock.setVisibility(View.GONE);
                 int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
@@ -527,8 +525,8 @@ public class AudioDownloadsFragment extends Fragment {
                 p.putValue("audioId", listModelList.get(position).getID());
                 p.putValue("audioName", listModelList.get(position).getName());
                 BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
-//                }
-//            handler3.postDelayed(UpdateSongTime3, 500);
+                //                }
+                //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
             });
 
@@ -604,14 +602,14 @@ public class AudioDownloadsFragment extends Fragment {
                                 pos = position;
                                 callTransFrag(pos, listModelList2, true);
                             } else {
-//                                pos = 0;
+                                //                                pos = 0;
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                             }
                         } else {
                             callAddTransFrag();
                         }
                         if (listModelList2.size() == 0) {
-//                                callTransFrag(pos, listModelList2, true);
+                            //                                callTransFrag(pos, listModelList2, true);
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                     } else {
@@ -619,7 +617,7 @@ public class AudioDownloadsFragment extends Fragment {
                             pos = position;
                             callTransFrag(pos, listModelList2, true);
                         } else {
-//                                pos = 0;
+                            //                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                     }
@@ -741,7 +739,7 @@ public class AudioDownloadsFragment extends Fragment {
             });
 
             Btn.setOnClickListener(v -> {
-//                handler1.removeCallbacks(UpdateSongTime1);
+                //                handler1.removeCallbacks(UpdateSongTime1);
              /*   DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
@@ -756,9 +754,9 @@ public class AudioDownloadsFragment extends Fragment {
                             for (int i = 0; i < fileNameList.size(); i++) {
                                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                                     if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
-//                                if (downloadProgress <= 100) {
+                                        //                                if (downloadProgress <= 100) {
                                         PRDownloader.cancel(downloadIdOne);
-//                                }
+                                        //                                }
                                     } else {
                                         fileNameList.remove(i);
                                         playlistDownloadId.remove(i);
@@ -813,12 +811,12 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         }
                         if (pos == position && position < listModelList.size() - 1) {
-//                                            pos = pos + 1;
+                            //                                            pos = pos + 1;
                             if (isDisclaimer == 1) {
-//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                             } else {
                                 if (player != null) {
-//                                player.seekTo(pos);
+                                    //                                player.seekTo(pos);
                                     callSaveToPref(pos, listModelList);
                                 } else {
                                     callTransFrag(pos, listModelList, false);
@@ -827,10 +825,10 @@ public class AudioDownloadsFragment extends Fragment {
                         } else if (pos == position && position == listModelList.size() - 1) {
                             pos = 0;
                             if (isDisclaimer == 1) {
-//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                             } else {
                                 if (player != null) {
-//                                player.seekTo(pos);
+                                    //                                player.seekTo(pos);
                                     callSaveToPref(pos, listModelList);
                                 } else {
                                     callTransFrag(pos, listModelList, false);
@@ -838,7 +836,7 @@ public class AudioDownloadsFragment extends Fragment {
                             }
                         } else if (pos < position && pos < listModelList.size() - 1) {
                             if (player != null) {
-//                                player.seekTo(pos);
+                                //                                player.seekTo(pos);
                                 callSaveToPref(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList, false);
@@ -846,7 +844,7 @@ public class AudioDownloadsFragment extends Fragment {
                         } else if (pos > position && pos == listModelList.size()) {
                             pos = pos - 1;
                             if (player != null) {
-//                                player.seekTo(pos);
+                                //                                player.seekTo(pos);
                                 callSaveToPref(pos, listModelList);
                             } else {
                                 callTransFrag(pos, listModelList, false);

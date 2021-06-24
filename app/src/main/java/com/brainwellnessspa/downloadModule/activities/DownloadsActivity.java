@@ -19,16 +19,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.R;
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio;
 import com.brainwellnessspa.dashboardModule.models.SegmentPlaylist;
+import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.downloadModule.fragments.PlaylistsDownlaodsFragment;
-import com.brainwellnessspa.R;
-
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.segment.analytics.Properties;
@@ -38,7 +37,6 @@ import java.util.List;
 
 import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
-
 
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.IsLock;
@@ -102,10 +100,10 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 @Override
                 public void onResponse(Call<DownloadlistModel> call, Response<DownloadlistModel> response) {
                     if (response.isSuccessful()) {*/
-//                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+        //                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 
-//                        audioList = listModel.getResponseData().getAudio();
-//                        playlistList = listModel.getResponseData().getPlaylist();
+        //                        audioList = listModel.getResponseData().getAudio();
+        //                        playlistList = listModel.getResponseData().getPlaylist();
         binding.viewPager.setOffscreenPageLimit(2);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
@@ -181,23 +179,23 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
     }
 
     private void callMembershipMediaPlayer() {
-//        try {
-//            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
-//            globalInitExoPlayer.UpdateMiniPlayer(ctx);
-//            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-//            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-//            if (!AudioFlag.equalsIgnoreCase("0")) {
-//                Fragment fragment = new MiniPlayerFragment();
-//                FragmentManager fragmentManager1 = getSupportFragmentManager();
-//                fragmentManager1.beginTransaction()
-//                        .add(R.id.flContainer, fragment)
-//                        .commit();
-//                comefromDownload = "1";
-//
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
+        //            globalInitExoPlayer.UpdateMiniPlayer(ctx);
+        //            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        //            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+        //            if (!AudioFlag.equalsIgnoreCase("0")) {
+        //                Fragment fragment = new MiniPlayerFragment();
+        //                FragmentManager fragmentManager1 = getSupportFragmentManager();
+        //                fragmentManager1.beginTransaction()
+        //                        .add(R.id.flContainer, fragment)
+        //                        .commit();
+        //                comefromDownload = "1";
+        //
+        //            }
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        }
       /*  try {
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
@@ -284,7 +282,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             @Override
             public View onDisconnected() {
                 // do some other stuff
-
 
                 return null;//To display a dialog simply return a custom view or just null to ignore it
             }
@@ -389,7 +386,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                     AudioDownloadsFragment audioDownloadsFragment = new AudioDownloadsFragment();
                     bundle.putString("UserID", UserID);
                     bundle.putString("IsLock", IsLock);
-//                    bundle.putParcelableArrayList("audioDownloadsFragment", audioList);
+                    //                    bundle.putParcelableArrayList("audioDownloadsFragment", audioList);
                     audioDownloadsFragment.setArguments(bundle);
                     return audioDownloadsFragment;
                 case 1:
@@ -397,7 +394,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                     PlaylistsDownlaodsFragment playlistsDownlaodsFragment = new PlaylistsDownlaodsFragment();
                     bundle.putString("UserID", UserID);
                     bundle.putString("IsLock", IsLock);
-//                    bundle.putParcelableArrayList("playlistsDownlaodsFragment", playlistList);
+                    //                    bundle.putParcelableArrayList("playlistsDownlaodsFragment", playlistList);
                     playlistsDownlaodsFragment.setArguments(bundle);
                     return playlistsDownlaodsFragment;
                 default:

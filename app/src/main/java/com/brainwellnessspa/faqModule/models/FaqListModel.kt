@@ -6,22 +6,22 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class FaqListModel protected constructor(`in`: Parcel) : Parcelable {
+open class FaqListModel protected constructor(`in`: Parcel) : Parcelable {
     @SerializedName("ResponseData")
     @Expose
     var responseData: ArrayList<ResponseData>? = null
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String?
+    var responseCode: String? = `in`.readString()
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String?
+    var responseMessage: String? = `in`.readString()
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String?
+    var responseStatus: String? = `in`.readString()
     override fun describeContents(): Int {
         return 0
     }
@@ -35,23 +35,23 @@ class FaqListModel protected constructor(`in`: Parcel) : Parcelable {
     class ResponseData protected constructor(`in`: Parcel) : Parcelable {
         @SerializedName("ID")
         @Expose
-        var iD: String?
+        var iD: String? = `in`.readString()
 
         @SerializedName("Title")
         @Expose
-        var title: String?
+        var title: String? = `in`.readString()
 
         @SerializedName("Desc")
         @Expose
-        var desc: String?
+        var desc: String? = `in`.readString()
 
         @SerializedName("VideoURL")
         @Expose
-        var videoURL: String?
+        var videoURL: String? = `in`.readString()
 
         @SerializedName("Category")
         @Expose
-        var category: String?
+        var category: String? = `in`.readString()
         override fun describeContents(): Int {
             return 0
         }
@@ -65,41 +65,32 @@ class FaqListModel protected constructor(`in`: Parcel) : Parcelable {
         }
 
         companion object {
-            @JvmField val CREATOR: Parcelable.Creator<ResponseData?> = object : Parcelable.Creator<ResponseData?> {
-                override fun createFromParcel(`in`: Parcel): ResponseData? {
-                    return ResponseData(`in`)
-                }
+            @JvmField
+            val CREATOR: Parcelable.Creator<ResponseData?> =
+                object : Parcelable.Creator<ResponseData?> {
+                    override fun createFromParcel(`in`: Parcel): ResponseData? {
+                        return ResponseData(`in`)
+                    }
 
-                override fun newArray(size: Int): Array<ResponseData?> {
-                    return arrayOfNulls(size)
+                    override fun newArray(size: Int): Array<ResponseData?> {
+                        return arrayOfNulls(size)
+                    }
                 }
-            }
         }
 
-        init {
-            iD = `in`.readString()
-            title = `in`.readString()
-            desc = `in`.readString()
-            videoURL = `in`.readString()
-            this.category = `in`.readString()
-        }
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<FaqListModel?> = object : Parcelable.Creator<FaqListModel?> {
-            override fun createFromParcel(`in`: Parcel): FaqListModel? {
-                return FaqListModel(`in`)
-            }
+        @JvmField
+        val CREATOR: Parcelable.Creator<FaqListModel?> =
+            object : Parcelable.Creator<FaqListModel?> {
+                override fun createFromParcel(`in`: Parcel): FaqListModel? {
+                    return FaqListModel(`in`)
+                }
 
-            override fun newArray(size: Int): Array<FaqListModel?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<FaqListModel?> {
+                    return arrayOfNulls(size)
+                }
             }
-        }
-    }
-
-    init {
-        responseCode = `in`.readString()
-        responseMessage = `in`.readString()
-        responseStatus = `in`.readString()
     }
 }

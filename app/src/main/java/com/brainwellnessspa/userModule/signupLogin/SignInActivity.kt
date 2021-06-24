@@ -27,12 +27,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.getKey
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivitySignInBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
 import com.brainwellnessspa.userModule.models.CountryListModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
@@ -101,7 +101,7 @@ class SignInActivity : AppCompatActivity() {
             binding.etNumber.setText(mobileNo)
             binding.tvCountry.text = "+$countryCode"
             binding.tvCountryShortName.text = "$countryShortName"
-        }else {
+        } else {
             binding.tvCountry.text = "+61"
             binding.tvCountryShortName.text = "AU"
         }
@@ -176,14 +176,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             })
 
-            prepareCountryData(
-                dialog,
-                rvCountryList,
-                tvFound,
-                progressBar,
-                progressBarHolder,
-                searchFilter
-            )
+            prepareCountryData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchFilter)
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
@@ -199,10 +192,7 @@ class SignInActivity : AppCompatActivity() {
         if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivVisible.isClickable = false
             binding.ivVisible.isEnabled = false
-            binding.ivVisible.setColorFilter(
-                ContextCompat.getColor(activity, R.color.light_gray),
-                PorterDuff.Mode.SRC_IN
-            )
+            binding.ivVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
             binding.ivInVisible.isClickable = false
             binding.ivInVisible.isEnabled = false
         }
@@ -227,26 +217,17 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun prepareCountryData(
-        dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar,
-        progressBarHolder: FrameLayout, searchFilter: String
-    ) {
+    fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchFilter: String) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
-                override fun onResponse(
-                    call: Call<CountryListModel>,
-                    response: Response<CountryListModel>
-                ) {
+                override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(activity)
-                        adapter = CountrySelectAdapter(
-                            dialog, searchFilter, binding, listModel.responseData!!, rvCountryList,
-                            tvFound
-                        )
+                        adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData!!, rvCountryList, tvFound)
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -274,16 +255,13 @@ class SignInActivity : AppCompatActivity() {
         finishAffinity()
     }
 
-    @SuppressLint("HardwareIds", "SetTextI18n")
-    fun prepareData() {
+    @SuppressLint("HardwareIds", "SetTextI18n") fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                    this
-                ) { task: Task<InstallationTokenResult> ->
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
                     val newToken = task.result!!.token
                     Log.e("newToken", newToken)
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
@@ -297,9 +275,7 @@ class SignInActivity : AppCompatActivity() {
             if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = "Please provide a mobile number"
-            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 ||
-                binding.etNumber.text.toString().length > 10
-            ) {
+            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 || binding.etNumber.text.toString().length > 10) {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = getString(R.string.valid_mobile_number)
             } else {
@@ -310,35 +286,15 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 binding.txtNumberError.visibility = View.GONE
-                BWSApplication.showProgressBar(
-                    binding.progressBar,
-                    binding.progressBarHolder,
-                    this@SignInActivity
-                )
-                val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(
-                    binding.etNumber.text.toString(),
-                    countryCode,
-                    CONSTANTS.FLAG_ONE,
-                    CONSTANTS.FLAG_ZERO, key
-                )
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key)
                 listCall.enqueue(object : Callback<UserAccessModel> {
-                    override fun onResponse(
-                        call: Call<UserAccessModel>,
-                        response: Response<UserAccessModel>
-                    ) {
+                    override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                         try {
                             binding.txtNumberError.visibility = View.GONE
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                this@SignInActivity
-                            )
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
                             val listModel: UserAccessModel = response.body()!!
-                            if (listModel.ResponseCode.equals(
-                                    getString(R.string.ResponseCodesuccess),
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 val i = Intent(this@SignInActivity, AuthOtpActivity::class.java)
                                 i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
                                 i.putExtra(CONSTANTS.countryCode, countryCode)
@@ -365,11 +321,7 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            this@SignInActivity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
                     }
                 })
 
@@ -379,23 +331,11 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    class CountrySelectAdapter(
-        private var dialog: Dialog,
-        private var searchFilter: String,
-        private var binding: ActivitySignInBinding,
-        private val modelList: List<CountryListModel.ResponseData>,
-        private var rvCountryList: RecyclerView,
-        private var tvFound: TextView
-    ) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
+    class CountrySelectAdapter(private var dialog: Dialog, private var searchFilter: String, private var binding: ActivitySignInBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
         var catList = SignUpActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.country_popup_layout,
-                parent,
-                false
-            )
+            val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.country_popup_layout, parent, false)
             return MyViewHolder(v)
         }
 
@@ -403,8 +343,7 @@ class SignInActivity : AppCompatActivity() {
             listFilterData = modelList
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val mData: CountryListModel.ResponseData = listFilterData[position]
             holder.bindingAdapter.tvCountryName.text = mData.name
             holder.bindingAdapter.tvCountryCode.text = "+" + mData.code
@@ -429,12 +368,9 @@ class SignInActivity : AppCompatActivity() {
                     listFilterData = if (charString.isEmpty()) {
                         modelList
                     } else {
-                        val filteredList: MutableList<CountryListModel.ResponseData> =
-                            ArrayList<CountryListModel.ResponseData>()
+                        val filteredList: MutableList<CountryListModel.ResponseData> = ArrayList<CountryListModel.ResponseData>()
                         for (row in modelList) {
-                            if (row.name!!.toLowerCase(Locale.getDefault())
-                                    .contains(charString.toLowerCase(Locale.getDefault()))
-                            ) {
+                            if (row.name!!.toLowerCase(Locale.getDefault()).contains(charString.toLowerCase(Locale.getDefault()))) {
                                 filteredList.add(row)
                             }
                         }
@@ -444,11 +380,7 @@ class SignInActivity : AppCompatActivity() {
                     return filterResults
                 }
 
-                @SuppressLint("SetTextI18n")
-                override fun publishResults(
-                    charSequence: CharSequence,
-                    filterResults: FilterResults
-                ) {
+                @SuppressLint("SetTextI18n") override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.isEmpty()) {
                         tvFound.visibility = View.VISIBLE
                         tvFound.text = "Sorry we are not available in this country yet"
@@ -463,8 +395,7 @@ class SignInActivity : AppCompatActivity() {
             }
         }
 
-        inner class MyViewHolder(var bindingAdapter: CountryPopupLayoutBinding) :
-            RecyclerView.ViewHolder(bindingAdapter.root)
+        inner class MyViewHolder(var bindingAdapter: CountryPopupLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
     }
 
 }

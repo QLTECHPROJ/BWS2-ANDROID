@@ -13,11 +13,11 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityAddProfileBinding
 import com.brainwellnessspa.userModule.models.AddUserModel
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -36,54 +36,31 @@ class AddProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddProfileBinding
     lateinit var activity: Activity
 
-
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val user: String = binding.etUser.text.toString().trim()
             val mobileNumber: String = binding.etMobileNumber.text.toString().trim()
             val email: String = binding.etEmail.text.toString().trim()
-            if (user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true)
-                && email.equals("", ignoreCase = true)
-            ) {
+            if (user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
                 binding.ivCheckNumber.visibility = View.GONE
                 binding.ivCheckEmail.visibility = View.GONE
-            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals(
-                    "",
-                    ignoreCase = true
-                )
-                && email.equals("", ignoreCase = true)
-            ) {
+            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!user.equals("", ignoreCase = true) && mobileNumber.equals(
-                    "",
-                    ignoreCase = true
-                )
-                && !email.equals("", ignoreCase = true)
-            ) {
+            } else if (!user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (user.equals("", ignoreCase = true) && !mobileNumber.equals(
-                    "",
-                    ignoreCase = true
-                )
-                && !email.equals("", ignoreCase = true)
-            ) {
+            } else if (user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.isEnabled = false
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals(
-                    "",
-                    ignoreCase = true
-                )
-                && !email.equals("", ignoreCase = true)
-            ) {
+            } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
                 binding.btnSendPin.isEnabled = true
                 binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSendPin.setBackgroundResource(R.drawable.light_green_rounded_filled)
@@ -91,10 +68,7 @@ class AddProfileActivity : AppCompatActivity() {
 
             if (mobileNumber.equals("", ignoreCase = true)) {
                 binding.ivCheckNumber.visibility = View.GONE
-            } else if (binding.etMobileNumber.text.toString().length == 1
-                || binding.etMobileNumber.text.toString().length < 8
-                || binding.etMobileNumber.text.toString().length > 10
-            ) {
+            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 || binding.etMobileNumber.text.toString().length > 10) {
                 binding.ivCheckNumber.visibility = View.GONE
             } else {
                 binding.ivCheckNumber.visibility = View.VISIBLE
@@ -179,17 +153,13 @@ class AddProfileActivity : AppCompatActivity() {
         binding.civProfile.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.rlLetter.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.rlLetter.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-        binding.rlImageUpload.layoutParams.height =
-            (measureRatio.height * measureRatio.ratio).toInt()
-        binding.rlImageUpload.layoutParams.width =
-            (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.rlImageUpload.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+        binding.rlImageUpload.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.civLetter.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.civLetter.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.civLetter.scaleType = ImageView.ScaleType.FIT_XY
         binding.civProfile.scaleType = ImageView.ScaleType.FIT_XY
-        Glide.with(applicationContext).load(R.drawable.ic_default_profile_img)
-            .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
-            .into(binding.civLetter)
+        Glide.with(applicationContext).load(R.drawable.ic_default_profile_img).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civLetter)
         binding.etUser.addTextChangedListener(userTextWatcher)
         binding.etMobileNumber.addTextChangedListener(userTextWatcher)
         binding.etEmail.addTextChangedListener(userTextWatcher)
@@ -205,9 +175,7 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = "Please provide a mobile number"
                 binding.txtEmailError.visibility = View.GONE
-            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 ||
-                binding.etMobileNumber.text.toString().length > 10
-            ) {
+            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 || binding.etMobileNumber.text.toString().length > 10) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = "Please provide a valid mobile number"
@@ -224,33 +192,15 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.txtEmailError.text = "Please provide a valid email address"
             } else {
                 if (isNetworkConnected(this)) {
-                    showProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
-                    val listCall: Call<AddUserModel> = APINewClient.getClient().getAddUser(
-                        userID, binding.etUser.text.toString(),
-                        binding.etEmail.text.toString(), binding.etMobileNumber.text.toString()
-                    )
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    val listCall: Call<AddUserModel> = APINewClient.getClient().getAddUser(userID, binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.etMobileNumber.text.toString())
                     listCall.enqueue(object : Callback<AddUserModel> {
-                        override fun onResponse(
-                            call: Call<AddUserModel>,
-                            response: Response<AddUserModel>
-                        ) {
+                        override fun onResponse(call: Call<AddUserModel>, response: Response<AddUserModel>) {
                             try {
                                 binding.flEmail.error = ""
-                                hideProgressBar(
-                                    binding.progressBar,
-                                    binding.progressBarHolder,
-                                    activity
-                                )
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listModel: AddUserModel = response.body()!!
-                                if (listModel.responseCode.equals(
-                                        getString(R.string.ResponseCodesuccess),
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     showToast(listModel.responseMessage, activity)
                                     val p = Properties()
                                     p.putValue("userId", listModel.responseData!!.mainAccountID)
@@ -270,11 +220,7 @@ class AddProfileActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<AddUserModel>, t: Throwable) {
-                            hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         }
                     })
                 } else {
@@ -285,52 +231,27 @@ class AddProfileActivity : AppCompatActivity() {
 
         binding.btnSendNewPin.setOnClickListener {
             if (isNetworkConnected(activity)) {
-                showProgressBar(
-                    binding.progressBar,
-                    binding.progressBarHolder,
-                    activity
-                )
-                val listCall: Call<SucessModel> =
-                    APINewClient.getClient().getForgotPin(userID, coEMAIL)
+                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                val listCall: Call<SucessModel> = APINewClient.getClient().getForgotPin(userID, coEMAIL)
                 listCall.enqueue(object : Callback<SucessModel> {
-                    override fun onResponse(
-                        call: Call<SucessModel>,
-                        response: Response<SucessModel>
-                    ) {
-                        hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                    override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SucessModel = response.body()!!
                         when {
-                            listModel.responseCode.equals(
-                                activity.getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            ) -> {
+                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                 val i = Intent(activity, UserListActivity::class.java)
                                 startActivity(i)
                                 finish()
-                                showToast(
-                                    listModel.responseMessage,
-                                    activity
-                                )
+                                showToast(listModel.responseMessage, activity)
                                 val p = Properties()
                                 p.putValue("userId", userID)
                                 p.putValue("coUserId", coUserID)
                                 p.putValue("name", coName)
                                 p.putValue("mobileNo", coNumber)
                                 p.putValue("email", coEMAIL)
-                                addToSegment(
-                                    "Send New Pin Clicked",
-                                    p,
-                                    CONSTANTS.track
-                                )
+                                addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
                             }
-                            listModel.responseCode.equals(
-                                activity.getString(R.string.ResponseCodefail),
-                                ignoreCase = true
-                            ) -> {
+                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
                                 showToast(listModel.responseMessage, activity)
                             }
                             else -> {
@@ -340,11 +261,7 @@ class AddProfileActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<SucessModel>, t: Throwable) {
-                        hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
             } else {
@@ -354,8 +271,7 @@ class AddProfileActivity : AppCompatActivity() {
     }
 
     fun String.isEmailValid(): Boolean {
-        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
-            .matches()
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
     override fun onBackPressed() {

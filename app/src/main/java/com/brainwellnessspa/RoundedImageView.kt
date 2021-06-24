@@ -6,16 +6,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.min
+
 /* This class file is the create custom rounded imageview */
 class RoundedImageView : AppCompatImageView {
     constructor(context: Context?) : super(context!!)
-    constructor(context: Context?, attrs: AttributeSet?) : super(
-        context!!, attrs
-    )
+    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
-        context!!, attrs, defStyle
-    )
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context!!, attrs, defStyle)
 
     override fun onDraw(canvas: Canvas) {
         val drawable = drawable ?: return
@@ -35,19 +32,11 @@ class RoundedImageView : AppCompatImageView {
             val sBmp: Bitmap = if (bmp.width != radius || bmp.height != radius) {
                 val smallest = min(bmp.width, bmp.height).toFloat()
                 val factor = smallest / radius
-                Bitmap.createScaledBitmap(
-                    bmp,
-                    (bmp.width / factor).toInt(),
-                    (bmp.height / factor).toInt(),
-                    false
-                )
+                Bitmap.createScaledBitmap(bmp, (bmp.width / factor).toInt(), (bmp.height / factor).toInt(), false)
             } else {
                 bmp
             }
-            val output = Bitmap.createBitmap(
-                radius, radius,
-                Bitmap.Config.ARGB_8888
-            )
+            val output = Bitmap.createBitmap(radius, radius, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(output)
             val color = "#BAB399"
             val paint = Paint()

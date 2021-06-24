@@ -22,9 +22,11 @@ public class EncryptDecryptUtils {
     private static PrefUtils prefUtils;
 
     public static EncryptDecryptUtils getInstance(Context context) {
-        if (null == instance) instance = new EncryptDecryptUtils();
+        if (null == instance)
+            instance = new EncryptDecryptUtils();
 
-        if (null == prefUtils) prefUtils = PrefUtils.getInstance(context);
+        if (null == prefUtils)
+            prefUtils = PrefUtils.getInstance(context);
 
         return instance;
     }
@@ -41,7 +43,7 @@ public class EncryptDecryptUtils {
         byte[] decrypted = null;
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, yourKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-//        decrypted = cipher.doFinal(Arrays.toString(fileData).getBytes("utf-8"));
+        //        decrypted = cipher.doFinal(Arrays.toString(fileData).getBytes("utf-8"));
         return cipher.doFinal(fileData);
     }
 

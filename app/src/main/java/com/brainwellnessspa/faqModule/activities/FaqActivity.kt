@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityFaqBinding
+import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityFaqBinding
-import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.segment.analytics.Properties
@@ -140,22 +140,11 @@ class FaqActivity : AppCompatActivity() {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().faqLists
             listCall.enqueue(object : Callback<FaqListModel?> {
-                override fun onResponse(
-                    call: Call<FaqListModel?>,
-                    response: Response<FaqListModel?>
-                ) {
+                override fun onResponse(call: Call<FaqListModel?>, response: Response<FaqListModel?>) {
                     try {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             faqListModel = listModel
                         }
                     } catch (e: Exception) {
@@ -164,11 +153,7 @@ class FaqActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<FaqListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -186,8 +171,7 @@ class FaqActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -205,8 +189,7 @@ class FaqActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -214,8 +197,7 @@ class FaqActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Restored")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

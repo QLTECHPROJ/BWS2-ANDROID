@@ -19,12 +19,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.R
+import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
+import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -46,10 +46,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     var myBackPress = false
 
     /* This is the first lunched function */
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /* This is the layout showing */
+    @SuppressLint("ClickableViewAccessibility") override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership)
         ctx = this@CancelMembershipActivity
         activity = this@CancelMembershipActivity
@@ -143,27 +141,14 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     audioPause = true
                 }
             }
-            if (cancelId.equals("4", ignoreCase = true) &&
-                binding.edtCancelBox.text.toString().equals("", ignoreCase = true)
-            ) {
+            if (cancelId.equals("4", ignoreCase = true) && binding.edtCancelBox.text.toString().equals("", ignoreCase = true)) {
                 BWSApplication.showToast("Cancellation reason is required", activity)
-            } else {
-                /*This dialog is cancel membership  */
+            } else {/*This dialog is cancel membership  */
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.cancel_membership)
-                dialog.window!!.setBackgroundDrawable(
-                    ColorDrawable(
-                        ContextCompat.getColor(
-                            ctx,
-                            R.color.dark_blue_gray
-                        )
-                    )
-                )
-                dialog.window!!.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
                 val btn = dialog.findViewById<Button>(R.id.Btn)
                 dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
@@ -190,28 +175,21 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         }
                         MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
-                                val listCall = APIClient.getClient().getCancelPlan(
-                                    userID,
-                                    cancelId,
-                                    binding.edtCancelBox.text.toString()
-                                )
+                                val listCall = APIClient.getClient().getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
                                 listCall.enqueue(object : Callback<CancelPlanModel?> {
-                                    override fun onResponse(
-                                        call: Call<CancelPlanModel?>,
-                                        response: Response<CancelPlanModel?>
-                                    ) {
+                                    override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
                                         try {
                                             val model = response.body()
-                                            BWSApplication.showToast(
-                                                model!!.responseMessage,
-                                                activity
-                                            )
+                                            BWSApplication.showToast(model!!.responseMessage, activity)
                                             dialog.dismiss()
-                                            /*Properties p = new Properties();
-                                            p.putValue("userId", userID);
-                                            p.putValue("cancelId", cancelId);
-                                            p.putValue("cancelReason", CancelReason);
-                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);*/if (GlobalInitExoPlayer.player != null) {
+
+//                                            Properties p = new Properties();
+//                                            p.putValue("userId", userID);
+//                                            p.putValue("cancelId", cancelId);
+//                                            p.putValue("cancelReason", CancelReason);
+//                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+
+                                            if (GlobalInitExoPlayer.player != null) {
                                                 if (GlobalInitExoPlayer.player.playWhenReady) {
                                                     GlobalInitExoPlayer.player.playWhenReady = false
                                                     audioPause = true
@@ -223,17 +201,11 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                         }
                                     }
 
-                                    override fun onFailure(
-                                        call: Call<CancelPlanModel?>,
-                                        t: Throwable
-                                    ) {
+                                    override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
                                     }
                                 })
                             } else {
-                                BWSApplication.showToast(
-                                    getString(R.string.no_server_found),
-                                    activity
-                                )
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
                             }
                             run {
                                 val views = view1 as Button
@@ -276,11 +248,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     }
 
     /* This fuction is youtube video sucessfully playing */
-    override fun onInitializationSuccess(
-        provider: YouTubePlayer.Provider,
-        youTubePlayer: YouTubePlayer,
-        wasRestored: Boolean
-    ) {
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, wasRestored: Boolean) {
         if (!wasRestored) {
             youTubePlayer.loadVideo(VIDEO_ID)
             youTubePlayer.setShowFullscreenButton(true)
@@ -288,16 +256,11 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     }
 
     /* This fuction is youtube video can't play and generating error  */
-    override fun onInitializationFailure(
-        provider: YouTubePlayer.Provider,
-        errorReason: YouTubeInitializationResult
-    ) {
+    override fun onInitializationFailure(provider: YouTubePlayer.Provider, errorReason: YouTubeInitializationResult) {
         if (errorReason.isUserRecoverableError) {
             errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
         } else {
-            val errorMessage = String.format(
-                getString(R.string.error_player), errorReason.toString()
-            )
+            val errorMessage = String.format(getString(R.string.error_player), errorReason.toString())
             BWSApplication.showToast(errorMessage, activity)
         }
     }
@@ -346,8 +309,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Restored")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

@@ -41,6 +41,7 @@ import com.brainwellnessspa.downloadModule.activities.DownloadsActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity;
 import com.brainwellnessspa.reminderModule.activities.ReminderListsActivity;
+import com.brainwellnessspa.userModule.models.AuthOtpModel;
 import com.brainwellnessspa.utility.APIClientProfile;
 import com.brainwellnessspa.utility.APINewClient;
 import com.brainwellnessspa.utility.CONSTANTS;
@@ -55,7 +56,6 @@ import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity;
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity;
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity;
 import com.brainwellnessspa.userModule.signupLogin.GetStartedActivity;
-import com.brainwellnessspa.userModule.models.CoUserDetailsModel;
 import com.brainwellnessspa.userModule.models.RemoveProfileModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -493,16 +493,24 @@ public class ProfileFragment extends Fragment {
 
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
-            Call<CoUserDetailsModel> listCall = APINewClient.getClient().getCoUserDetails(CoUserID);
-            listCall.enqueue(new Callback<CoUserDetailsModel>() {
-                @Override
-                public void onResponse(@NotNull Call<CoUserDetailsModel> call, @NotNull Response<CoUserDetailsModel> response) {
-                    try {
-                        CoUserDetailsModel viewModel = response.body();
-                        if (viewModel != null) {
-                            if (viewModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity());
+            BWSApplication.showProgressBar(
+                    binding.progressBar, binding.progressBarHolder, requireActivity());
+            Call<AuthOtpModel> listCall =
+                    APINewClient.getClient().getCoUserDetails(CoUserID);
+            listCall.enqueue(
+                    new Callback<AuthOtpModel>() {
+                        @Override
+                        public void onResponse(
+                                @NotNull Call<AuthOtpModel> call,
+                                @NotNull Response<AuthOtpModel> response) {
+                            try {
+                                AuthOtpModel viewModel = response.body();
+                                if (viewModel != null) {
+                                    if (viewModel
+                                            .getResponseCode()
+                                            .equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        BWSApplication.hideProgressBar(
+                                                binding.progressBar, binding.progressBarHolder, requireActivity());
 
                                 if (viewModel.getResponseData().getName().equalsIgnoreCase("") || viewModel.getResponseData().getName().equalsIgnoreCase(" ") || viewModel.getResponseData().getName() == null) {
                                     binding.tvName.setText(R.string.Guest);
@@ -537,11 +545,12 @@ public class ProfileFragment extends Fragment {
                     }
                 }
 
-                @Override
-                public void onFailure(@NotNull Call<CoUserDetailsModel> call, @NotNull Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                }
-            });
+                        @Override
+                        public void onFailure(@NotNull Call<AuthOtpModel> call, @NotNull Throwable t) {
+                            BWSApplication.hideProgressBar(
+                                    binding.progressBar, binding.progressBarHolder, getActivity());
+                        }
+                    });
         }
     }
 

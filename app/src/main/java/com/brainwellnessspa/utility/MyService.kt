@@ -9,8 +9,7 @@ class MyService : Service() {
     var isRunning = false
     val delay: Long = 3000
     override fun onCreate() {
-        super.onCreate()
-        ////Log.d("", "onCreate");
+        super.onCreate() ////Log.d("", "onCreate");
         mythread = MyThread()
     }
 
@@ -37,8 +36,7 @@ class MyService : Service() {
     internal inner class MyThread : Thread() {
         override fun run() {
             while (isRunning) {
-                try {
-//                    YupITApplication.getToken();
+                try { //                    YupITApplication.getToken();
                     sleep(delay)
                 } catch (e: InterruptedException) {
                     isRunning = false

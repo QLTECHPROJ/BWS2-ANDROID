@@ -23,14 +23,6 @@ class ForgotPasswordModel {
     class ResponseData {
         @SerializedName("errormsg")
         @Expose
-        private var errormsg: String? = ""
-
-        fun getErrormsg(): String? {
-            return errormsg;
-        }
-
-        fun setErrormsg(errormsg: String?) {
-            this.errormsg = errormsg;
-        }
+        var errormsg: String? = ""
     }
 }

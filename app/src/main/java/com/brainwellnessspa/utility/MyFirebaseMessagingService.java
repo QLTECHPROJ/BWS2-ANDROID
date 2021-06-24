@@ -58,8 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Random random = new Random();
         int m = random.nextInt(9999 - 1000) + 1000;
-        if (remoteMessage == null)
-            return;
+        if (remoteMessage == null) return;
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification rendom number: " + m);
             title = remoteMessage.getNotification().getTitle();
@@ -94,11 +93,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         p.putValue("campaign", campaign);*/
 
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        String   UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        String UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         p.putValue("userId", UserID);
         p.putValue("playlistId", id);
         p.putName(title);
-        p.putValue("message",message);
+        p.putValue("message", message);
         BWSApplication.addToSegment("Push Notification Received", p, CONSTANTS.track);
     }
 
@@ -150,28 +149,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {*/
-                    resultIntent = new Intent(this, MyPlaylistListingActivity.class);
-                    resultIntent.putExtra("New", "0");
-                    resultIntent.putExtra("Goplaylist", "1");
-                    resultIntent.putExtra("PlaylistID", id);
-                    resultIntent.putExtra("PlaylistName", title);
-                    resultIntent.putExtra("notification", "0");
-                    resultIntent.putExtra("message", message);
-                    resultIntent.putExtra("PlaylistImage", "");
-                    taskStackBuilder.addParentStack(MyPlaylistListingActivity.class);
-                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                    resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
+                resultIntent = new Intent(this, MyPlaylistListingActivity.class);
+                resultIntent.putExtra("New", "0");
+                resultIntent.putExtra("Goplaylist", "1");
+                resultIntent.putExtra("PlaylistID", id);
+                resultIntent.putExtra("PlaylistName", title);
+                resultIntent.putExtra("notification", "0");
+                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("PlaylistImage", "");
+                taskStackBuilder.addParentStack(MyPlaylistListingActivity.class);
+                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
+                resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
 //                }
             } else {
                 resultIntent = new Intent(this, BottomNavigationActivity.class);
-                resultIntent.putExtra("IsFirst","0");
+                resultIntent.putExtra("IsFirst", "0");
                 taskStackBuilder.addParentStack(BottomNavigationActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
-            Uri defaultSoundUri = Uri.parse("android.resource://"
-                    + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
+            Uri defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.ringtone);
 //            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             long[] v = {500, 1000};

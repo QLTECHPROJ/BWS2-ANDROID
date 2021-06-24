@@ -25,17 +25,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.DB
-import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-
-import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding
 import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -101,8 +100,7 @@ class MainPlaylistFragment : Fragment() {
         return view
     }
 
-    private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) {
-        //        try {
+    private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) { //        try {
         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
         i.putExtra("New", s)
         i.putExtra("PlaylistID", id)
@@ -113,8 +111,7 @@ class MainPlaylistFragment : Fragment() {
         i.putExtra("ScreenView", ScreenView)
         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
         ctx.startActivity(i)
-        act.overridePendingTransition(0, 0)
-        //        } catch (e: Exception) {
+        act.overridePendingTransition(0, 0) //        } catch (e: Exception) {
         //            e.printStackTrace()
         //        }
     }
@@ -130,8 +127,7 @@ class MainPlaylistFragment : Fragment() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel = response.body()
                             binding.rlCreatePlaylist.visibility = View.VISIBLE
-                            listModelGloble = listModel!!.responseData
-                            //                            adapter = new MainPlayListAdapter();
+                            listModelGloble = listModel!!.responseData //                            adapter = new MainPlayListAdapter();
                             //                            binding.rvMainPlayList.setAdapter(adapter);
 
                             //                            adapter = new MainPlayListAdapter();
@@ -176,38 +172,37 @@ class MainPlaylistFragment : Fragment() {
 
     private fun GetPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
         DB.taskDao().getAllPlaylist1(CoUserID).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
-            val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
-            if (audioList.isNotEmpty()) {
-                for (i in audioList.indices) {
-                    val detail = MainPlaylistLibraryModel.ResponseData.Detail()
-                    detail.totalAudio = audioList[i].totalAudio
-                    detail.totalhour = audioList[i].totalhour
-                    detail.totalminute = audioList[i].totalminute
-                    detail.playlistID = audioList[i].playlistID
-                    detail.playlistDesc = audioList[i].playlistDesc
-                    detail.playlistMastercat = audioList[i].playlistMastercat
-                    detail.playlistSubcat = audioList[i].playlistSubcat
-                    detail.playlistName = audioList[i].playlistName
-                    detail.playlistImage = audioList[i].playlistImage
-                    //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
-                    detail.playlistID = audioList[i].playlistID
-                    detail.created = audioList[i].created
-                    details.add(detail)
-                }
-                for (i in responseData.indices) {
-                    if (responseData[i].view.equals("My Downloads", ignoreCase = true)) {
-                        responseData[i].details = details
+                val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
+                if (audioList.isNotEmpty()) {
+                    for (i in audioList.indices) {
+                        val detail = MainPlaylistLibraryModel.ResponseData.Detail()
+                        detail.totalAudio = audioList[i].totalAudio
+                        detail.totalhour = audioList[i].totalhour
+                        detail.totalminute = audioList[i].totalminute
+                        detail.playlistID = audioList[i].playlistID
+                        detail.playlistDesc = audioList[i].playlistDesc
+                        detail.playlistMastercat = audioList[i].playlistMastercat
+                        detail.playlistSubcat = audioList[i].playlistSubcat
+                        detail.playlistName = audioList[i].playlistName
+                        detail.playlistImage = audioList[i].playlistImage //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
+                        detail.playlistID = audioList[i].playlistID
+                        detail.created = audioList[i].created
+                        details.add(detail)
                     }
-                }
-                adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
-                binding.rvMainPlayList.adapter = adapter
-            } else {
-                if (BWSApplication.isNetworkConnected(activity)) {
+                    for (i in responseData.indices) {
+                        if (responseData[i].view.equals("My Downloads", ignoreCase = true)) {
+                            responseData[i].details = details
+                        }
+                    }
                     adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
                     binding.rvMainPlayList.adapter = adapter
+                } else {
+                    if (BWSApplication.isNetworkConnected(activity)) {
+                        adapter = MainPlayListAdapter(ctx, binding, act, responseData, CoUserID, playlistAdapter)
+                        binding.rvMainPlayList.adapter = adapter
+                    }
                 }
-            }
-        })
+            })
     }
 
     private fun callBack() {
@@ -295,8 +290,7 @@ class MainPlaylistFragment : Fragment() {
                                     if (response.isSuccessful) {
                                         val listModel = response.body()
                                         if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                            BWSApplication.showToast(listModel.responseMessage, act)
-                                            //                                            dialog.dismiss()
+                                            BWSApplication.showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
                                         } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
                                             MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
                                             dialog.dismiss()
@@ -362,8 +356,7 @@ class MainPlaylistFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()

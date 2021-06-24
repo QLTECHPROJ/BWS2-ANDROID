@@ -19,24 +19,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
+import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardModule.models.AudioInterruptionModel
-import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
+import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
-import com.brainwellnessspa.R
 import com.brainwellnessspa.roomDataBase.AudioDatabase
-
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.*
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
-import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
@@ -629,7 +626,6 @@ class MyPlayerActivity : AppCompatActivity() {
 
     /* remove disclaimer array index form array*/
     private fun removeArray() {
-
 
         //        if(!BWSApplication.isNetworkConnected(ctx)){
         callNewPlayerRelease()

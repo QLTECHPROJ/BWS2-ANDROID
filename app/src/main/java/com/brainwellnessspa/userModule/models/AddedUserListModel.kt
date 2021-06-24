@@ -67,13 +67,5 @@ class AddedUserListModel {
             var image: String? = ""
         }
 
-        fun getResponseMessage(): String? {
-            return maxuseradd
-        }
-
-        fun setResponseMessage(maxuseradd: String?) {
-            this.maxuseradd = maxuseradd
-        }
-
     }
 }

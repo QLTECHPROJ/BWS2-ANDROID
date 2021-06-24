@@ -6,12 +6,7 @@ class FavContactlistModel : Comparable<ContactlistModel?> {
     var contactNumber: String? = ""
     var isChecked = false
     override fun toString(): String {
-        return "FavContactlistModel{" +
-                "ContactImage='" + contactImage + '\'' +
-                ", ContactName='" + contactName + '\'' +
-                ", ContactNumber='" + contactNumber + '\'' +
-                ", checked=" + isChecked +
-                '}'
+        return "FavContactlistModel{" + "ContactImage='" + contactImage + '\'' + ", ContactName='" + contactName + '\'' + ", ContactNumber='" + contactNumber + '\'' + ", checked=" + isChecked + '}'
     }
 
     override fun compareTo(other: ContactlistModel?): Int {

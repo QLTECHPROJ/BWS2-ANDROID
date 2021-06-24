@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.AppsListLayoutBinding
+import com.brainwellnessspa.databinding.FragmentAppsBinding
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.AppsListLayoutBinding
-import com.brainwellnessspa.databinding.FragmentAppsBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -38,10 +38,7 @@ class AppsFragment : Fragment() {
     var CoUserID: String? = ""
     var Category: String? = ""
     private var mLastClickTime: Long = 0
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apps, container, false)
         val view = binding.root
         val bundle = this.arguments
@@ -49,8 +46,7 @@ class AppsFragment : Fragment() {
             apps = bundle.getString("apps")
             Category = bundle.getString("Category")
         }
-        val shared1: SharedPreferences =
-            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val manager = GridLayoutManager(activity, 2)
@@ -66,25 +62,13 @@ class AppsFragment : Fragment() {
 
     fun prepareData() {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall =
-            APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_FIVE, Category)
+        val listCall = APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_FIVE, Category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
-            override fun onResponse(
-                call: Call<ResourceListModel?>,
-                response: Response<ResourceListModel?>
-            ) {
+            override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {
                     val listModel = response.body()
-                    if (listModel!!.responseCode.equals(
-                            getString(R.string.ResponseCodesuccess),
-                            ignoreCase = true
-                        )
-                    ) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                    if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val adapter = AppsAdapter(listModel.responseData, activity, apps)
                         binding.rvAppsList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
@@ -94,16 +78,8 @@ class AppsFragment : Fragment() {
                             binding.llError.visibility = View.VISIBLE
                             binding.rvAppsList.visibility = View.GONE
                         }
-                    } else if (listModel.responseCode.equals(
-                            getString(R.string.ResponseCodefail),
-                            ignoreCase = true
-                        )
-                    ) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -111,42 +87,24 @@ class AppsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ResourceListModel?>, t: Throwable) {
-                BWSApplication.hideProgressBar(
-                    binding.progressBar,
-                    binding.progressBarHolder,
-                    activity
-                )
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             }
         })
     }
 
-    inner class AppsAdapter(
-        var listModelList: List<ResourceListModel.ResponseData>?,
-        var ctx: Context?,
-        var apps: String?
-    ) : RecyclerView.Adapter<AppsAdapter.MyViewHolder>() {
+    inner class AppsAdapter(var listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, var apps: String?) : RecyclerView.Adapter<AppsAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: AppsListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.apps_list_layout,
-                parent,
-                false
-            )
+            val v: AppsListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.apps_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModelList!![position].title
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.42f, 0f)
-            holder.binding.ivRestaurantImage.layoutParams.height =
-                (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.ivRestaurantImage.layoutParams.width =
-                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx!!).load(listModelList!![position].image).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                .into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx!!).load(listModelList!![position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.rlMainLayout.setOnClickListener(View.OnClickListener {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@OnClickListener
@@ -171,7 +129,6 @@ class AppsFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: AppsListLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: AppsListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

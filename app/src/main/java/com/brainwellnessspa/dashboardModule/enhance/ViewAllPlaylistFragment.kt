@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SegmentPlaylist
 import com.brainwellnessspa.dashboardModule.models.ViewAllPlayListModel
-import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
-import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding
 import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding
+import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -76,8 +76,7 @@ class ViewAllPlaylistFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun getAllMedia() {
+    @SuppressLint("SetTextI18n") private fun getAllMedia() {
         BWSApplication.DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
             binding.tvTitle.text = "My Downloads"
             screenView = "My Downloads"
@@ -267,8 +266,7 @@ class ViewAllPlaylistFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(activity, 0f, 1f, 1f, 0.44f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()

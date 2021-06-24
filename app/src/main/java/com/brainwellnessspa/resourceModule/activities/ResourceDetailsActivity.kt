@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityResourceDetailsBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityResourceDetailsBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -132,9 +132,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
             binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(this).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH)
-                    .skipMemoryCache(false).into(binding.ivRestaurantImage)
+            Glide.with(this).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH).skipMemoryCache(false).into(binding.ivRestaurantImage)
             binding.btnComplete.setOnClickListener {
                 if (linkOne.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
@@ -209,8 +207,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -228,8 +225,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 

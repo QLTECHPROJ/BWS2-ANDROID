@@ -50,8 +50,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     private var myNetworkReceiver: MyNetworkReceiver? = null
     private var myBatteryReceiver: MyBatteryReceiver? = null
 
-    @SuppressLint("BatteryLife")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("BatteryLife") override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation)
         // Passing each menu ID as a set of Ids because each

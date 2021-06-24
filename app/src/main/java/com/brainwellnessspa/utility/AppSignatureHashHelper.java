@@ -37,8 +37,7 @@ public class AppSignatureHashHelper extends ContextWrapper {
             // Get all package details
             String packageName = getPackageName();
             PackageManager packageManager = getPackageManager();
-            Signature[] signatures = packageManager.getPackageInfo(packageName,
-                    PackageManager.GET_SIGNATURES).signatures;
+            Signature[] signatures = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures;
 
             for (Signature signature : signatures) {
                 String hash = hash(packageName, signature.toCharsString());

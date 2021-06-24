@@ -3,35 +3,9 @@ package com.brainwellnessspa.userModule.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class VersionModel {
+data class VersionModel(val ResponseCode: String,
+    val ResponseData: VersionResponseData,
+    val ResponseMessage: String,
+    val ResponseStatus: String)
 
-    @SerializedName("ResponseData")
-    @Expose
-    var responseData: ResponseData? = null
-
-    @SerializedName("ResponseCode")
-    @Expose
-    var responseCode: String? = ""
-
-    @SerializedName("ResponseMessage")
-    @Expose
-    var responseMessage: String? = ""
-
-    @SerializedName("ResponseStatus")
-    @Expose
-    var responseStatus: String? = ""
-
-    class ResponseData {
-        @SerializedName("IsForce")
-        @Expose
-        var isForce: String? = ""
-
-        @SerializedName("displayRegister")
-        @Expose
-        var displayRegister: String? = ""
-
-        @SerializedName("segmentKey")
-        @Expose
-        var segmentKey: String? = ""
-    }
-}
+data class VersionResponseData(val IsForce: String, val segmentKey: String)

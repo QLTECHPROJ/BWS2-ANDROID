@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.DocumentariesListLayoutBinding
+import com.brainwellnessspa.databinding.FragmentDocumentariesBinding
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.DocumentariesListLayoutBinding
-import com.brainwellnessspa.databinding.FragmentDocumentariesBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -38,20 +38,15 @@ class DocumentariesFragment : Fragment() {
     var CoUserID: String? = ""
     var Category: String? = ""
     private var mLastClickTime: Long = 0
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_documentaries, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_documentaries, container, false)
         val view = binding.root
         val bundle = this.arguments
         if (bundle != null) {
             documentaries = bundle.getString("documentaries")
             Category = bundle.getString("Category")
         }
-        val shared1: SharedPreferences =
-            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
@@ -67,27 +62,14 @@ class DocumentariesFragment : Fragment() {
 
     fun prepareData() {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall =
-            APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_TWO, Category)
+        val listCall = APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_TWO, Category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
-            override fun onResponse(
-                call: Call<ResourceListModel?>,
-                response: Response<ResourceListModel?>
-            ) {
+            override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {
                     val listModel = response.body()
-                    if (listModel!!.responseCode.equals(
-                            getString(R.string.ResponseCodesuccess),
-                            ignoreCase = true
-                        )
-                    ) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
-                        val adapter =
-                            DocumentariesAdapter(listModel.responseData, activity, documentaries)
+                    if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val adapter = DocumentariesAdapter(listModel.responseData, activity, documentaries)
                         binding.rvDocumentariesList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
                             binding.llError.visibility = View.GONE
@@ -96,16 +78,8 @@ class DocumentariesFragment : Fragment() {
                             binding.llError.visibility = View.VISIBLE
                             binding.rvDocumentariesList.visibility = View.GONE
                         }
-                    } else if (listModel.responseCode.equals(
-                            getString(R.string.ResponseCodefail),
-                            ignoreCase = true
-                        )
-                    ) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -113,27 +87,14 @@ class DocumentariesFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ResourceListModel?>, t: Throwable) {
-                BWSApplication.hideProgressBar(
-                    binding.progressBar,
-                    binding.progressBarHolder,
-                    activity
-                )
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             }
         })
     }
 
-    inner class DocumentariesAdapter(
-        private val listModelList: List<ResourceListModel.ResponseData>?,
-        var ctx: Context?,
-        private var documentaries: String?
-    ) : RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder>() {
+    inner class DocumentariesAdapter(private val listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, private var documentaries: String?) : RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: DocumentariesListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.documentaries_list_layout,
-                parent,
-                false
-            )
+            val v: DocumentariesListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.documentaries_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
@@ -141,15 +102,10 @@ class DocumentariesFragment : Fragment() {
             holder.binding.tvTitle.text = listModelList!![position].title
             holder.binding.tvCreator.text = listModelList[position].author
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 25f, 11f, 0.80f, 0f)
-            holder.binding.ivRestaurantImage.layoutParams.height =
-                (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.ivRestaurantImage.layoutParams.width =
-                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(30))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                .into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(30))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.rlMainLayout.setOnClickListener {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@setOnClickListener
@@ -175,7 +131,6 @@ class DocumentariesFragment : Fragment() {
             return listModelList!!.size
         }
 
-        inner class MyViewHolder(var binding: DocumentariesListLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: DocumentariesListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

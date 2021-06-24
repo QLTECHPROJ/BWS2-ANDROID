@@ -15,19 +15,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
-import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.APIClient
-import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.invoiceModule.fragments.AppointmentInvoiceFragment
 import com.brainwellnessspa.invoiceModule.fragments.MembershipInvoiceFragment
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.Appointment
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.MemberShip
 import com.brainwellnessspa.invoiceModule.models.SegmentMembership
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
@@ -104,52 +104,26 @@ class InvoiceActivity : AppCompatActivity() {
 
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(
-                binding.progressBar,
-                binding.progressBarHolder,
-                activity
-            )
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1")
             listCall.enqueue(object : Callback<InvoiceListModel?> {
-                override fun onResponse(
-                    call: Call<InvoiceListModel?>,
-                    response: Response<InvoiceListModel?>
-                ) {
+                override fun onResponse(call: Call<InvoiceListModel?>, response: Response<InvoiceListModel?>) {
                     try {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             appointmentList = ArrayList()
                             memberShipList = ArrayList()
                             appointmentList = listModel.responseData.appointment
                             memberShipList = listModel.responseData.memberShip
                             binding.viewPager.offscreenPageLimit = 2
-                            binding.tabLayout.addTab(
-                                binding.tabLayout.newTab().setText("Manage")
-                            )
-                            binding.tabLayout.addTab(
-                                binding.tabLayout.newTab().setText("Wellness")
-                            )
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Manage"))
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Wellness"))
                             binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-                            val adapter = TabAdapter(
-                                supportFragmentManager, binding.tabLayout.tabCount
-                            )
+                            val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
                             binding.viewPager.adapter = adapter
-                            binding.viewPager.addOnPageChangeListener(
-                                TabLayoutOnPageChangeListener(
-                                    binding.tabLayout
-                                )
-                            )
-                            binding.tabLayout.addOnTabSelectedListener(object :
-                                OnTabSelectedListener {
+                            binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
+                            binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                                 override fun onTabSelected(tab: TabLayout.Tab) {
                                     binding!!.viewPager.currentItem = tab.position
                                     p = Properties()
@@ -173,11 +147,7 @@ class InvoiceActivity : AppCompatActivity() {
                                     } else if (tab.position == 1) {
                                         p!!.putValue("invoiceType", "Appointment")
                                     }
-                                    BWSApplication.addToSegment(
-                                        "Invoice Screen Viewed",
-                                        p,
-                                        CONSTANTS.screen
-                                    )
+                                    BWSApplication.addToSegment("Invoice Screen Viewed", p, CONSTANTS.screen)
                                 }
 
                                 override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -190,11 +160,7 @@ class InvoiceActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<InvoiceListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding!!.progressBar,
-                        binding!!.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
                 }
             })
         } else {
@@ -206,9 +172,7 @@ class InvoiceActivity : AppCompatActivity() {
         callBack()
     }
 
-    inner class TabAdapter(fm: FragmentManager?, var totalTabs: Int) : FragmentStatePagerAdapter(
-        fm!!
-    ) {
+    inner class TabAdapter(fm: FragmentManager?, var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
@@ -239,8 +203,7 @@ class InvoiceActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -258,8 +221,7 @@ class InvoiceActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -267,8 +229,7 @@ class InvoiceActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
@@ -278,9 +239,8 @@ class InvoiceActivity : AppCompatActivity() {
     }
 
     companion object {
-        @JvmField
-        var invoiceToDashboard = 0
-        @JvmField
-        var invoiceToRecepit = 0
+        @JvmField var invoiceToDashboard = 0
+
+        @JvmField var invoiceToRecepit = 0
     }
 }

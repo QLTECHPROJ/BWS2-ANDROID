@@ -15,8 +15,7 @@ import retrofit.converter.GsonConverter
 import java.util.concurrent.TimeUnit
 
 object APIClientProfile {
-    @JvmStatic
-    var apiService: APIInterfaceProfile? = null
+    @JvmStatic var apiService: APIInterfaceProfile? = null
         get() = if (field == null) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -24,16 +23,8 @@ object APIClientProfile {
             okHttpClient.setConnectTimeout(0, TimeUnit.HOURS)
             okHttpClient.setWriteTimeout(0, TimeUnit.HOURS)
             okHttpClient.setReadTimeout(0, TimeUnit.HOURS)
-            val restAdapter: RestAdapter = RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(New_BASE_URL)
-                .setRequestInterceptor(MyRetrofitInterceptor())
-                .setClient(OkClient(okHttpClient))
-                .setConverter(GsonConverter(Gson()))
-                .build()
-            field = restAdapter.create(
-                APIInterfaceProfile::class.java
-            )
+            val restAdapter: RestAdapter = RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint(New_BASE_URL).setRequestInterceptor(MyRetrofitInterceptor()).setClient(OkClient(okHttpClient)).setConverter(GsonConverter(Gson())).build()
+            field = restAdapter.create(APIInterfaceProfile::class.java)
             field
         } else {
             field
@@ -41,22 +32,14 @@ object APIClientProfile {
         private set
 
     private class MyRetrofitInterceptor : RequestInterceptor {
-        @SuppressLint("HardwareIds")
-        override fun intercept(request: RequestFacade) {
-//            request.addHeader("platform", "Android");
-//            request.addHeader("osversion", Build.VERSION.RELEASE);
-//            request.addHeader("device", Build.MODEL);
-//            request.addHeader("appVersion", YupITApplication.getVersionCode());
-//            request.addHeader("tokenkey", "");
+        @SuppressLint("HardwareIds") override fun intercept(request: RequestFacade) { //            request.addHeader("platform", "Android");
+            //            request.addHeader("osversion", Build.VERSION.RELEASE);
+            //            request.addHeader("device", Build.MODEL);
+            //            request.addHeader("appVersion", YupITApplication.getVersionCode());
+            //            request.addHeader("tokenkey", "");
             request.addHeader("Oauth", BWSApplication.securityKey())
             request.addHeader("Newtoken", "1")
-            request.addHeader(
-                "Yaccess",
-                Settings.Secure.getString(
-                    BWSApplication.getContext().contentResolver,
-                    Settings.Secure.ANDROID_ID
-                )
-            )
+            request.addHeader("Yaccess", Settings.Secure.getString(BWSApplication.getContext().contentResolver, Settings.Secure.ANDROID_ID))
         }
     }
 }

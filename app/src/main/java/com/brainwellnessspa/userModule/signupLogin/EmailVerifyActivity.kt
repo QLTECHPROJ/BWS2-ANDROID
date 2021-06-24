@@ -1,9 +1,8 @@
 package com.brainwellnessspa.userModule.signupLogin
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
@@ -39,49 +38,22 @@ class EmailVerifyActivity : AppCompatActivity() {
         }
 
         binding.btnContinue.setOnClickListener {
-            if (isAssessmentCompleted.equals(
-                    "0",
-                    ignoreCase = true
-                )
-            ) {
-                val intent = Intent(
-                    applicationContext,
-                    AssProcessActivity::class.java
-                )
-                intent.putExtra(
-                    CONSTANTS.ASSPROCESS,
-                    "0"
-                )
+            if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                 startActivity(intent)
                 finish()
-            } else if (isProfileCompleted.equals(
-                    "0",
-                    ignoreCase = true
-                )
-            ) {
+            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, WalkScreenActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenView, "2")
                 startActivity(intent)
                 finish()
-            } else if (avgSleepTime.equals(
-                    "",
-                    ignoreCase = true
-                )
-            ) {
+            } else if (avgSleepTime.equals("", ignoreCase = true)) {
                 val intent = Intent(applicationContext, SleepTimeActivity::class.java)
                 startActivity(intent)
                 finish()
-            } else if (isProfileCompleted.equals(
-                    "1",
-                    ignoreCase = true
-                ) &&
-                isAssessmentCompleted.equals(
-                    "1",
-                    ignoreCase = true
-                )
-            ) {
-                val intent =
-                    Intent(applicationContext, BottomNavigationActivity::class.java)
+            } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
                 intent.putExtra("IsFirst", "0")
                 startActivity(intent)
                 finish()

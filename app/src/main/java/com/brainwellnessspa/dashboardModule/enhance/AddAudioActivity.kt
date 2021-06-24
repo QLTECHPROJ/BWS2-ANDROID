@@ -206,8 +206,7 @@ class AddAudioActivity : AppCompatActivity() {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getSearchBoth(coUserId, search)
             listCall.enqueue(object : Callback<SearchBothModel?> {
-                @SuppressLint("SetTextI18n")
-                override fun onResponse(call: Call<SearchBothModel?>, response: Response<SearchBothModel?>) {
+                @SuppressLint("SetTextI18n") override fun onResponse(call: Call<SearchBothModel?>, response: Response<SearchBothModel?>) {
                     try {
                         val listModel = response.body()
                         if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
@@ -969,8 +968,7 @@ class AddAudioActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = PlaylistModel[position].name
             holder.binding.pbProgress.visibility = View.GONE
             holder.binding.equalizerview.visibility = View.GONE

@@ -3,20 +3,20 @@ package com.brainwellnessspa.membershipModule.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardModule.models.AverageSleepTimeModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.models.AverageSleepTimeModel
 import com.brainwellnessspa.databinding.ActivitySleepTimeBinding
 import com.brainwellnessspa.databinding.SleepTimeRawBinding
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,10 +35,7 @@ class SleepTimeActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
         ctx = this@SleepTimeActivity
         activity = this@SleepTimeActivity
-        val shared = ctx.getSharedPreferences(
-            CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-            Context.MODE_PRIVATE
-        )
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent.extras != null) {
@@ -96,7 +93,7 @@ class SleepTimeActivity : AppCompatActivity() {
                 editor.commit()
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                 i.putExtra("SleepTime", listModel.get(position).name)
-                i.putExtra("BackClick","0")
+                i.putExtra("BackClick", "0")
                 ctx.startActivity(i)
                 activity.finish()
             }

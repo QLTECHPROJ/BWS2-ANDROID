@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityAudioFaqBinding
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding
+import com.brainwellnessspa.faqModule.models.FaqListModel
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.segment.analytics.Properties
@@ -80,8 +80,7 @@ class AudioFaqActivity : AppCompatActivity() {
                 binding.tvTitle.setText(R.string.Playlist)
             }
         }
-        val searchList: RecyclerView.LayoutManager =
-            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        val searchList: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvFaqList.layoutManager = searchList
         binding.rvFaqList.itemAnimator = DefaultItemAnimator()
         if (faqListModel!!.size == 0) {
@@ -100,24 +99,13 @@ class AudioFaqActivity : AppCompatActivity() {
         finish()
     }
 
-    inner class AudioFaqAdapter(
-        private val modelList: List<FaqListModel.ResponseData>?,
-        var ctx: Context,
-        var rvFaqList: RecyclerView,
-        var tvFound: TextView
-    ) : RecyclerView.Adapter<AudioFaqAdapter.MyViewHolder>() {
+    inner class AudioFaqAdapter(private val modelList: List<FaqListModel.ResponseData>?, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<AudioFaqAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: AudioFaqLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.audio_faq_layout,
-                parent,
-                false
-            )
+            val v: AudioFaqLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.audio_faq_layout, parent, false)
             return MyViewHolder(v)
         }
 
-        @SuppressLint("ResourceType")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("ResourceType") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             p = Properties()
             p.putValue("coUserId", coUserId)
             when {
@@ -142,12 +130,7 @@ class AudioFaqActivity : AppCompatActivity() {
             holder.binding.tvDesc.text = modelList[position].desc
             holder.binding.ivClickRight.setOnClickListener {
                 myBackPress = true
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        ctx,
-                        R.color.white
-                    )
-                )
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.white))
                 holder.binding.tvDesc.isFocusable = true
                 holder.binding.tvDesc.requestFocus()
                 holder.binding.tvDesc.visibility = View.VISIBLE
@@ -161,12 +144,7 @@ class AudioFaqActivity : AppCompatActivity() {
                 myBackPress = true
                 holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT)
                 holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked)
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        ctx,
-                        R.color.light_black
-                    )
-                )
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.light_black))
                 holder.binding.tvDesc.visibility = View.GONE
                 holder.binding.ivClickRight.visibility = View.VISIBLE
                 holder.binding.ivClickDown.visibility = View.GONE
@@ -185,8 +163,7 @@ class AudioFaqActivity : AppCompatActivity() {
             return modelList!!.size
         }
 
-        inner class MyViewHolder(var binding: AudioFaqLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: AudioFaqLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
@@ -194,8 +171,7 @@ class AudioFaqActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -213,8 +189,7 @@ class AudioFaqActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -222,8 +197,7 @@ class AudioFaqActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Restored")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

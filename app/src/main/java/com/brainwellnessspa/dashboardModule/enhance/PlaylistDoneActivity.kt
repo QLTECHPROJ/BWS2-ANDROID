@@ -2,14 +2,14 @@ package com.brainwellnessspa.dashboardModule.enhance
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityPlaylistDoneBinding
+import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 
 class PlaylistDoneActivity : AppCompatActivity() {
@@ -18,8 +18,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
     var coUserId: String? = ""
     var userId: String? = ""
 
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_done)
 
@@ -46,7 +45,6 @@ class PlaylistDoneActivity : AppCompatActivity() {
             } else if (backClick.equals("1", true)) {
                 finish()
             }
-
         }
     }
 }

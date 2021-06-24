@@ -14,13 +14,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding
+import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
@@ -38,10 +38,8 @@ class BillingOrderActivity : AppCompatActivity() {
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /* This is the layout showing */
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order)
-        /* This is the get string userId & coUserId */
+        super.onCreate(savedInstanceState)/* This is the layout showing */
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order)/* This is the get string userId & coUserId */
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -83,14 +81,11 @@ class BillingOrderActivity : AppCompatActivity() {
 
         /* This is the tab layout showing code */
         binding.viewPager.offscreenPageLimit = 2
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"))
-        //        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan")) //        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
         if (BWSApplication.isNetworkConnected(this)) {
-            val adapter = TabAdapter(
-                supportFragmentManager, this, binding.tabLayout.tabCount
-            )
+            val adapter = TabAdapter(supportFragmentManager, this, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
         } else {
@@ -123,10 +118,7 @@ class BillingOrderActivity : AppCompatActivity() {
     }
 
     /* This class is the handling tab layout */
-    inner class TabAdapter(fm: FragmentManager?, var myContext: Context, var totalTabs: Int) :
-        FragmentStatePagerAdapter(
-            fm!!
-        ) {
+    inner class TabAdapter(fm: FragmentManager?, var myContext: Context, var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             val bundle: Bundle
             return when (position) {
@@ -157,8 +149,7 @@ class BillingOrderActivity : AppCompatActivity() {
         override fun onActivityStarted(activity: Activity) {
             if (numStarted == 0) {
                 stackStatus = 1
-                Log.e("APPLICATION", "APP IN FOREGROUND")
-                //app went to foreground
+                Log.e("APPLICATION", "APP IN FOREGROUND") //app went to foreground
             }
             numStarted++
         }
@@ -176,8 +167,7 @@ class BillingOrderActivity : AppCompatActivity() {
                     stackStatus = 1
                     Log.e("APPLICATION", "back press true ")
                 }
-                Log.e("APPLICATION", "App is in BACKGROUND")
-                // app went to background
+                Log.e("APPLICATION", "App is in BACKGROUND") // app went to background
             }
         }
 
@@ -186,8 +176,7 @@ class BillingOrderActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
@@ -198,7 +187,6 @@ class BillingOrderActivity : AppCompatActivity() {
 
     /* This is object declaration */
     companion object {
-        @JvmField
-        var myBackPressbill = false
+        @JvmField var myBackPressbill = false
     }
 }

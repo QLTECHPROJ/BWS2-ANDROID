@@ -30,7 +30,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.addToSegment;
 import static com.brainwellnessspa.BWSApplication.appStatus;
@@ -73,7 +72,7 @@ public class DownloadMedia implements OnDownloadListener {
     }
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID) {
-//            showToast("Downloading file...",act);
+        //            showToast("Downloading file...",act);
 
         Log.e("Downloading file..", String.valueOf(downloadProgress));
         DB = getAudioDataBase(ctx);
@@ -83,7 +82,7 @@ public class DownloadMedia implements OnDownloadListener {
         UserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         CoUserID = sharedx.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         lBM = LocalBroadcastManager.getInstance(ctx);
-// Setting timeout globally for the download network requests:
+        // Setting timeout globally for the download network requests:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder().setDatabaseEnabled(true).build();
         PRDownloader.initialize(ctx, config);
         isDownloading = true;
@@ -178,21 +177,21 @@ public class DownloadMedia implements OnDownloadListener {
 
     public byte[] decrypt(String FILE_NAME) {
         byte[] decryptedBytes = null;
-//        showToast("Retrieve file...", context);
+        //        showToast("Retrieve file...", context);
         try {
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(ctx, FILE_NAME));
             decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(ctx).getSecretKey(), fileData);
-//            showToast("File Retrieve Done", context);
+            //            showToast("File Retrieve Done", context);
             return decryptedBytes;
         } catch (Exception e) {
-//            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+            //            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
             try {
                 byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(ctx, FILE_NAME));
                 decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(ctx).getSecretKey(), fileData);
-//            showToast("File Retrieve Done", context);
+                //            showToast("File Retrieve Done", context);
                 return decryptedBytes;
             } catch (Exception ez) {
-//            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
+                //            showToast("File Decryption failed.\nException: " + e.getMessage(), context);
                 Log.e("erssssssssssss", ez.getMessage());
             }
             Log.e("erssssssssssss", e.getMessage());
@@ -282,7 +281,7 @@ public class DownloadMedia implements OnDownloadListener {
                 updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress, "Start");
                 encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
-//                showToast("Download Complete...", (Activity) ctx);
+                //                showToast("Download Complete...", (Activity) ctx);
                 Log.e("Downloading file..", String.valueOf(downloadProgress));
                 downloadProgress = 0;
                 filename = "";
@@ -326,7 +325,7 @@ public class DownloadMedia implements OnDownloadListener {
                     fileNameList = new ArrayList<>();
                     audioFile = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
-//                    Log.e("not downlodedData", TextUtils.join(",", notDownloadedData));
+                    //                    Log.e("not downlodedData", TextUtils.join(",", notDownloadedData));
                     for (int i = 0; i < notDownloadedData.size(); i++) {
                         audioFile.add(notDownloadedData.get(i).getAudioFile());
                         fileNameList.add(notDownloadedData.get(i).getName());

@@ -38,14 +38,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.databinding.ActivityContactBookBinding;
+import com.brainwellnessspa.databinding.ContactListLayoutBinding;
+import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
 import com.brainwellnessspa.referralModule.models.AllContactListModel;
 import com.brainwellnessspa.referralModule.models.ContactlistModel;
 import com.brainwellnessspa.referralModule.models.FavContactlistModel;
 import com.brainwellnessspa.utility.APIClient;
 import com.brainwellnessspa.utility.CONSTANTS;
-import com.brainwellnessspa.databinding.ActivityContactBookBinding;
-import com.brainwellnessspa.databinding.ContactListLayoutBinding;
-import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding;
 import com.segment.analytics.Properties;
 
 import java.util.ArrayList;
@@ -159,24 +159,14 @@ public class ContactBookActivity extends AppCompatActivity {
 
     private void withoutSearch() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(ctx,
-                    Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(ctx,
-                    Manifest.permission.WRITE_CONTACTS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.WRITE_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             } else {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER/*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/};
-                    Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            projection, null, null,
-                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-                    Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, "starred=?",
-                            new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+                    Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+                    Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, "starred=?", new String[]{"1"}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
                     String lastPhoneName = " ";
                     if (phones != null) {
                         if (phones.getCount() > 0) {
@@ -238,15 +228,13 @@ public class ContactBookActivity extends AppCompatActivity {
                     AlertDialog.Builder buildermain = new AlertDialog.Builder(ctx);
                     buildermain.setMessage("Please Allow Contact Permission");
                     buildermain.setCancelable(true);
-                    buildermain.setPositiveButton(
-                            getString(R.string.ok),
-                            (dialogmain, id1) -> {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                                dialogmain.dismiss();
-                            });
+                    buildermain.setPositiveButton(getString(R.string.ok), (dialogmain, id1) -> {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                        dialogmain.dismiss();
+                    });
                     AlertDialog alert11 = buildermain.create();
                     alert11.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
                     alert11.show();
@@ -272,10 +260,7 @@ public class ContactBookActivity extends AppCompatActivity {
                             Uri uri = Uri.parse("smsto:" + ContactNumber);
                             Intent smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
                             // smsIntent.setData(uri);
-                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself " +
-                                    "in the comfort of your home while you sleep and gain access to over 75 audio programs helping you " +
-                                    "to live inspired and improve your mental wellbeing. I would like to invite you to try it. " +
-                                    "Sign up using the link and get 30 days free trial\n" + ReferLink);
+                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself " + "in the comfort of your home while you sleep and gain access to over 75 audio programs helping you " + "to live inspired and improve your mental wellbeing. I would like to invite you to try it. " + "Sign up using the link and get 30 days free trial\n" + ReferLink);
                             startActivity(smsIntent);
                             finish();
                             p = new Properties();
@@ -313,8 +298,7 @@ public class ContactBookActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.contact_list_layout, parent, false);
+            ContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.contact_list_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -397,8 +381,7 @@ public class ContactBookActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            FavouriteContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.favourite_contact_list_layout, parent, false);
+            FavouriteContactListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.favourite_contact_list_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -429,7 +412,6 @@ public class ContactBookActivity extends AppCompatActivity {
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

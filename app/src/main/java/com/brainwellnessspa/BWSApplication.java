@@ -64,10 +64,17 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.brainwellnessspa.dashboardModule.adapters.DirectionAdapter;
+import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
+import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
+import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
+import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
+import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
@@ -76,19 +83,12 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.services.PlayerJobService;
+import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
 import com.brainwellnessspa.utility.AppSignatureHashHelper;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.CryptLib;
 import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
-import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
-import com.brainwellnessspa.dashboardModule.models.SucessModel;
-import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
-import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
-import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -202,13 +202,11 @@ public class BWSApplication extends Application {
     }
 
     public static List<String> GetAllMediaDownload(Context ctx) {
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
-        DB.taskDao()
-                .geAllDataBYDownloadedForAll("Complete").observe((LifecycleOwner) ctx, audioList -> {
+        DB.taskDao().geAllDataBYDownloadedForAll("Complete").observe((LifecycleOwner) ctx, audioList -> {
             downloadAudioDetailsList = audioList;
             DB.taskDao().geAllDataBYDownloadedForAll("Complete").removeObserver(audioListx -> {
             });
@@ -217,27 +215,22 @@ public class BWSApplication extends Application {
     }
 
     private static void CallObserverMethodGetAllMedia(Context ctx) {
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
-        DB.taskDao()
-                .geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
+        DB.taskDao().geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
             playlistDownloadAudioDetailsList = audioList;
 
         });
     }
 
-    private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID,
-                                          LinearLayout llDownload, ImageView ivDownloads, int songSize) {
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+    private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
-        DB.taskDao()
-                .getPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+        DB.taskDao().getPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
 
             if (audioList.size() != 0) {
                 ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
@@ -258,12 +251,8 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID, String comeFrom,
-                                        List<DownloadAudioDetails> mDataDownload,
-                                        List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
-                                        List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                        List<MainPlayModel> mDataPlayer, int position) {
-//            TODO Mansi  Hint This code is Audio Detail Dialog
+    public static void callAudioDetails(String audioId, Context ctx, Activity act, String CoUserID, String comeFrom, List<DownloadAudioDetails> mDataDownload, List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll, List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist, List<MainPlayModel> mDataPlayer, int position) {
+        //            TODO Mansi  Hint This code is Audio Detail Dialog
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.open_detail_page_layout);
@@ -301,7 +290,6 @@ public class BWSApplication extends Application {
         llBack.setOnClickListener(v -> dialog.dismiss());
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         String PlayFrom = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
-
 
         if (isNetworkConnected(ctx)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -344,9 +332,7 @@ public class BWSApplication extends Application {
                         }
                         GetMedia(AudioFile, ctx, audioFileName, ivDownloads, tvDownloads, llDownload);
                         try {
-                            Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
-                                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                            Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -384,11 +370,11 @@ public class BWSApplication extends Application {
                             tvDire.setVisibility(View.VISIBLE);
                         }
 
-//                            if (listModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
-//                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-//                            } else if (!listModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
-//                                ivLike.setImageResource(R.drawable.ic_like_white_icon);
-//                            }
+                        //                            if (listModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
+                        //                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                        //                            } else if (!listModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+                        //                                ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                        //                            }
 
                         tvReadMore.setOnClickListener(v12 -> {
                             final Dialog dialog1 = new Dialog(ctx);
@@ -579,15 +565,15 @@ public class BWSApplication extends Application {
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist");
                                                 editor.apply();
-//                                                if(mainPlayModelList.size()==1){
-//                                                    miniPlayer = 1;
-//                                                    audioClick = true;
-//                                                    callNewPlayerRelease();
-//                                                }else {
+                                                //                                                if(mainPlayModelList.size()==1){
+                                                //                                                    miniPlayer = 1;
+                                                //                                                    audioClick = true;
+                                                //                                                    callNewPlayerRelease();
+                                                //                                                }else {
                                                 if (player != null) {
                                                     player.removeMediaItem(oldpos);
                                                 }
-//                                                }
+                                                //                                                }
                                                 dialog.dismiss();
                                                 localIntent = new Intent("Reminder");
                                                 localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
@@ -613,7 +599,7 @@ public class BWSApplication extends Application {
 
         llAddPlaylist.setOnClickListener(view11 -> {
 
-//                comeAddPlaylist = 2;
+            //                comeAddPlaylist = 2;
             Intent i = new Intent(ctx, AddPlaylistActivity.class);
             i.putExtra("AudioId", audioId);
             i.putExtra("ScreenView", "Audio Details Screen");
@@ -629,9 +615,7 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
-    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID,
-                                           String PlaylistId, String PlaylistName,
-                                           FragmentManager fragmentManager1) {
+    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID, String PlaylistId, String PlaylistName, FragmentManager fragmentManager1) {
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.open_playlist_detail_layout);
@@ -736,40 +720,35 @@ public class BWSApplication extends Application {
                                 tvDesc.setText(model.getResponseData().getPlaylistMastercat());
                             }
 
-//                                Properties p = new Properties();
-//                                p.putValue("userId", UserID);
-//                                p.putValue("playlistId", model.getResponseData().getPlaylistID());
-//                                p.putValue("playlistName", model.getResponseData().getPlaylistName());
-//                                p.putValue("playlistDescription", PlaylistDesc);
-//                                if (PlaylistType.equalsIgnoreCase("1")) {
-//                                    p.putValue("playlistType", "Created");
-//                                } else if (PlaylistType.equalsIgnoreCase("0")) {
-//                                    p.putValue("playlistType", "Default");
-//                                }
-//                                if (model.getResponseData().getTotalhour().equalsIgnoreCase("")) {
-//                                    p.putValue("playlistDuration", "0h " + model.getResponseData().getTotalminute() + "m");
-//                                } else if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-//                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h 0m");
-//                                } else {
-//                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
-//                                }
-//
-//                                p.putValue("audioCount", model.getResponseData().getTotalAudio());
-//                                p.putValue("source", ScreenView);
-//                                addToSegment("Playlist Details Viewed", p, CONSTANTS.screen);
+                            //                                Properties p = new Properties();
+                            //                                p.putValue("userId", UserID);
+                            //                                p.putValue("playlistId", model.getResponseData().getPlaylistID());
+                            //                                p.putValue("playlistName", model.getResponseData().getPlaylistName());
+                            //                                p.putValue("playlistDescription", PlaylistDesc);
+                            //                                if (PlaylistType.equalsIgnoreCase("1")) {
+                            //                                    p.putValue("playlistType", "Created");
+                            //                                } else if (PlaylistType.equalsIgnoreCase("0")) {
+                            //                                    p.putValue("playlistType", "Default");
+                            //                                }
+                            //                                if (model.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                            //                                    p.putValue("playlistDuration", "0h " + model.getResponseData().getTotalminute() + "m");
+                            //                                } else if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                            //                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h 0m");
+                            //                                } else {
+                            //                                    p.putValue("playlistDuration", model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                            //                                }
+                            //
+                            //                                p.putValue("audioCount", model.getResponseData().getTotalAudio());
+                            //                                p.putValue("source", ScreenView);
+                            //                                addToSegment("Playlist Details Viewed", p, CONSTANTS.screen);
 
-                            if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
-                                    model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
-                                            model.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                            && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                            if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") || model.getResponseData().getTotalAudio().equalsIgnoreCase("0") && model.getResponseData().getTotalhour().equalsIgnoreCase("") && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
                                 tvTime.setText("0 Audio | 0h 0m");
                             } else {
                                 if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
-                                            + model.getResponseData().getTotalhour() + "h 0m");
+                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | " + model.getResponseData().getTotalhour() + "h 0m");
                                 } else {
-                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
-                                            + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                                    tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | " + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
                                 }
                             }
 
@@ -790,27 +769,22 @@ public class BWSApplication extends Application {
                                 llFind.setVisibility(View.VISIBLE);
                             }
 
-                            MeasureRatio measureRatio = measureRatio(ctx, 20,
-                                    1, 1, 0.54f, 20);
+                            MeasureRatio measureRatio = measureRatio(ctx, 20, 1, 1, 0.54f, 20);
                             ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                             ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                             ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                             if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
-                                Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f)
-                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                                Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                             } else {
-                                Glide.with(ctx).load(R.drawable.ic_playlist_bg).thumbnail(0.05f)
-                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                                Glide.with(ctx).load(R.drawable.ic_playlist_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
                             }
 
-//                            getDownloadData();
+                            //                            getDownloadData();
                             int SongListSize = model.getResponseData().getPlaylistSongs().size();
-//                            getMediaByPer(PlaylistID,SongListSize);
-//                            SongListSize = model.getResponseData().getPlaylistSongs().size();
+                            //                            getMediaByPer(PlaylistID,SongListSize);
+                            //                            SongListSize = model.getResponseData().getPlaylistSongs().size();
                             llAddPlaylist.setVisibility(View.VISIBLE);
-//                            getDownloadData();
+                            //                            getDownloadData();
 
                             if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {
                                 tvTitleDec.setVisibility(View.GONE);
@@ -851,44 +825,44 @@ public class BWSApplication extends Application {
                                 dialog1.setCancelable(false);
                             });
 
-//                                if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
-//                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-//                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-//                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
-//                                    binding.llDownload.setClickable(false);
-//                                    binding.llDownload.setEnabled(false);
-//                                } else if (!model.getResponseData().getDownload().equalsIgnoreCase("")) {
-//                                    binding.llDownload.setClickable(true);
-//                                    binding.llDownload.setEnabled(true);
-//                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-//                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
-//                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-//                                }
-//                               binding.llDownload.setOnClickListener(view -> {
-//                                if (isNetworkConnected(ctx)) {
-//                                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//                                    Call<DownloadPlaylistModel> listCall13 = null;
-//                                    listCall13 = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
-//                                    listCall13.enqueue(new Callback<DownloadPlaylistModel>() {
-//                                        @Override
-//                                        public void onResponse(Call<DownloadPlaylistModel> call13, Response<DownloadPlaylistModel> response13) {
-//                                            if (response13.isSuccessful()) {
-//                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//                                                DownloadPlaylistModel model1 = response13.body();
-//                                                showToast(model1.getResponseMessage(), ctx);
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onFailure(Call<DownloadPlaylistModel> call13, Throwable t) {
-//                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-//                                        }
-//                                    });
-//
-//                                } else {
-//                                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
+                            //                                if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
+                            //                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            //                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                            //                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
+                            //                                    binding.llDownload.setClickable(false);
+                            //                                    binding.llDownload.setEnabled(false);
+                            //                                } else if (!model.getResponseData().getDownload().equalsIgnoreCase("")) {
+                            //                                    binding.llDownload.setClickable(true);
+                            //                                    binding.llDownload.setEnabled(true);
+                            //                                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+                            //                                    binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
+                            //                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            //                                }
+                            //                               binding.llDownload.setOnClickListener(view -> {
+                            //                                if (isNetworkConnected(ctx)) {
+                            //                                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            //                                    Call<DownloadPlaylistModel> listCall13 = null;
+                            //                                    listCall13 = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                            //                                    listCall13.enqueue(new Callback<DownloadPlaylistModel>() {
+                            //                                        @Override
+                            //                                        public void onResponse(Call<DownloadPlaylistModel> call13, Response<DownloadPlaylistModel> response13) {
+                            //                                            if (response13.isSuccessful()) {
+                            //                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            //                                                DownloadPlaylistModel model1 = response13.body();
+                            //                                                showToast(model1.getResponseMessage(), ctx);
+                            //                                            }
+                            //                                        }
+                            //
+                            //                                        @Override
+                            //                                        public void onFailure(Call<DownloadPlaylistModel> call13, Throwable t) {
+                            //                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            //                                        }
+                            //                                    });
+                            //
+                            //                                } else {
+                            //                                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                            //                                }
+                            //                            });
 
                             if (model.getResponseData().getPlaylistSubcat().equalsIgnoreCase("")) {
                                 rvDirlist.setVisibility(View.GONE);
@@ -899,8 +873,7 @@ public class BWSApplication extends Application {
                                 DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
                                 RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
                                 rvDirlist.setLayoutManager(recentlyPlayed);
-                                rvDirlist.setItemAnimator(new
-                                        DefaultItemAnimator());
+                                rvDirlist.setItemAnimator(new DefaultItemAnimator());
                                 rvDirlist.setAdapter(directionAdapter);
                             }
 
@@ -924,13 +897,13 @@ public class BWSApplication extends Application {
                                     dialoged.setOnKeyListener((v44, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialoged.dismiss();
-//                            Fragment playlistFragment = new PlaylistFragment();
-//                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-//                            fragmentManager1.beginTransaction()
-//                                    .add(R.id.flContainer, playlistFragment)
-//                                    .commit();
-//                            Bundle bundle = new Bundle();
-//                            playlistFragment.setArguments(bundle);
+                                            //                            Fragment playlistFragment = new PlaylistFragment();
+                                            //                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                                            //                            fragmentManager1.beginTransaction()
+                                            //                                    .add(R.id.flContainer, playlistFragment)
+                                            //                                    .commit();
+                                            //                            Bundle bundle = new Bundle();
+                                            //                            playlistFragment.setArguments(bundle);
                                             return true;
                                         }
                                         return false;
@@ -944,18 +917,18 @@ public class BWSApplication extends Application {
                                                 @Override
                                                 public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
                                                     try {
-//                                            MyPlaylistIds = "";
-//                                            deleteFrg = 1;
+                                                        //                                            MyPlaylistIds = "";
+                                                        //                                            deleteFrg = 1;
                                                         SucessModel listModel = response12.body();
                                                         if (listModel != null) {
                                                             showToast(listModel.getResponseMessage(), act);
                                                         }
                                                         hideProgressBar(progressBar, progressBarHolder, act);
                                                         dialoged.dismiss();
-//                                                            Fragment audioFragment = new MainPlaylistFragment();
-//                                                            fragmentManager1.beginTransaction()
-//                                                                    .replace(R.id.flContainer, audioFragment)
-//                                                                    .commit();
+                                                        //                                                            Fragment audioFragment = new MainPlaylistFragment();
+                                                        //                                                            fragmentManager1.beginTransaction()
+                                                        //                                                                    .replace(R.id.flContainer, audioFragment)
+                                                        //                                                                    .commit();
                                                         act.finish();
                                                         dialog.dismiss();
 
@@ -1040,7 +1013,6 @@ public class BWSApplication extends Application {
                                     }
                                 };
 
-
                                 edtCreate.addTextChangedListener(popupTextWatcher);
 
                                 btnSendCode.setOnClickListener(view1 -> {
@@ -1063,27 +1035,27 @@ public class BWSApplication extends Application {
                                                             localBroadcastManager.sendBroadcast(localIntent);
                                                             dialogs.dismiss();
                                                         }
-//                                        Properties p = new Properties();
-//                                        p.putValue("userId", UserID);
-//                                        p.putValue("playlistId", PlaylistID);
-//                                        p.putValue("playlistName", PlaylistName);
-//                                        p.putValue("playlistDescription", PlaylistDesc);
-//                                        if (PlaylistType.equalsIgnoreCase("1")) {
-//                                            p.putValue("playlistType", "Created");
-//                                        } else if (PlaylistType.equalsIgnoreCase("0")) {
-//                                            p.putValue("playlistType", "Default");
-//                                        }
-//                                        if (Totalhour.equalsIgnoreCase("")) {
-//                                            p.putValue("playlistDuration", "0h " + Totalminute + "m");
-//                                        } else if (Totalminute.equalsIgnoreCase("")) {
-//                                            p.putValue("playlistDuration", Totalhour + "h 0m");
-//                                        } else {
-//                                            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
-//                                        }
-//                                        p.putValue("audioCount", TotalAudio);
-//                                        p.putValue("source", ScreenView);
-//                                        addToSegment("Playlist Rename Clicked", p, CONSTANTS.track);
-//                                        ctx.finish();
+                                                        //                                        Properties p = new Properties();
+                                                        //                                        p.putValue("userId", UserID);
+                                                        //                                        p.putValue("playlistId", PlaylistID);
+                                                        //                                        p.putValue("playlistName", PlaylistName);
+                                                        //                                        p.putValue("playlistDescription", PlaylistDesc);
+                                                        //                                        if (PlaylistType.equalsIgnoreCase("1")) {
+                                                        //                                            p.putValue("playlistType", "Created");
+                                                        //                                        } else if (PlaylistType.equalsIgnoreCase("0")) {
+                                                        //                                            p.putValue("playlistType", "Default");
+                                                        //                                        }
+                                                        //                                        if (Totalhour.equalsIgnoreCase("")) {
+                                                        //                                            p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                                                        //                                        } else if (Totalminute.equalsIgnoreCase("")) {
+                                                        //                                            p.putValue("playlistDuration", Totalhour + "h 0m");
+                                                        //                                        } else {
+                                                        //                                            p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                                                        //                                        }
+                                                        //                                        p.putValue("audioCount", TotalAudio);
+                                                        //                                        p.putValue("source", ScreenView);
+                                                        //                                        addToSegment("Playlist Rename Clicked", p, CONSTANTS.track);
+                                                        //                                        ctx.finish();
                                                     }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
@@ -1128,7 +1100,7 @@ public class BWSApplication extends Application {
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
 
-//       TODO Mansi  Hint This code is Create playlist Dialog
+        //       TODO Mansi  Hint This code is Create playlist Dialog
        /* final Dialog dialog1 = new Dialog(ctx);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setContentView(R.layout.create_palylist);
@@ -1212,9 +1184,7 @@ public class BWSApplication extends Application {
         dialog1.setCancelable(false);*/
     }
 
-    private static void callDownloadPlayList(Activity act, List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongsList, Context ctx,
-                                             LinearLayout llDownload, ImageView ivDownloads, DownloadPlaylistDetails downloadPlaylistDetails,
-                                             String CoUserId, String PlaylistID) {
+    private static void callDownloadPlayList(Activity act, List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongsList, Context ctx, LinearLayout llDownload, ImageView ivDownloads, DownloadPlaylistDetails downloadPlaylistDetails, String CoUserId, String PlaylistID) {
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
         List<String> downloadPlaylistId = new ArrayList<>();
@@ -1233,7 +1203,8 @@ public class BWSApplication extends Application {
                             if (playlistSongs2.size() == 0) {
                                 break;
                             }
-                        } else break;
+                        } else
+                            break;
                     }
                 }
             }
@@ -1282,15 +1253,14 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
-        showToast("Downloading the playlist right now",act);
+        showToast("Downloading the playlist right now", act);
         savePlaylist(ctx, downloadPlaylistDetails);
         saveAllMedia(playlistSongsList, PlaylistID, CoUserId, ctx, downloadPlaylistDetails);
     }
 
     private static void savePlaylist(Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
         DB = getAudioDataBase(ctx);
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadPlaylistDetails.setUserId(CoUserID);
@@ -1302,16 +1272,11 @@ public class BWSApplication extends Application {
     }
 
     public static AudioDatabase getAudioDataBase(Context ctx) {
-        DB = Room.databaseBuilder(ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_2_3)
-                .build();
+        DB = Room.databaseBuilder(ctx, AudioDatabase.class, "Audio_database").addMigrations(MIGRATION_2_3).build();
         return DB;
     }
 
-    private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs,
-                                     String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
+    private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs, String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
         DB = getAudioDataBase(ctx);
         downloadPlaylistDetails.setUserId(CoUserId);
         Properties p = new Properties();
@@ -1375,15 +1340,12 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void GetMedia(String AudioFile, Context ctx, String audioFileName,
-                                ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
+    public static void GetMedia(String AudioFile, Context ctx, String audioFileName, ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
         DB = getAudioDataBase(ctx);
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        DB.taskDao()
-                .getaudioByPlaylist1(AudioFile, "", CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+        DB.taskDao().getaudioByPlaylist1(AudioFile, "", CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile1 = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
@@ -1408,8 +1370,7 @@ public class BWSApplication extends Application {
                 boolean entryNot = false;
                 if (fileNameList.size() != 0) {
                     for (int i = 0; i < fileNameList.size(); i++) {
-                        if (fileNameList.get(i).equalsIgnoreCase(audioFileName)
-                                && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        if (fileNameList.get(i).equalsIgnoreCase(audioFileName) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                             entryNot = true;
                             break;
                         }
@@ -1505,7 +1466,7 @@ public class BWSApplication extends Application {
 
             Legend l = barChart.getLegend();
             l.setEnabled(true);
-//            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+            //            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
         }
     }
@@ -1523,12 +1484,7 @@ public class BWSApplication extends Application {
         }
     }
 
-    private static void callDownload(String comeFrom,
-                                     List<DownloadAudioDetails> mDataDownload,
-                                     List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
-                                     List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                     List<MainPlayModel> mDataPlayer, int position, Context ctx,
-                                     ImageView ivDownloads, Activity act, LinearLayout llDownload) {
+    private static void callDownload(String comeFrom, List<DownloadAudioDetails> mDataDownload, List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll, List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist, List<MainPlayModel> mDataPlayer, int position, Context ctx, ImageView ivDownloads, Activity act, LinearLayout llDownload) {
         List<String> fileNameList = new ArrayList<>();
         List<String> audioFile1;
         List<String> playlistDownloadId = new ArrayList<>();
@@ -1575,7 +1531,7 @@ public class BWSApplication extends Application {
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                showToast("Downloading the audio right now",act);
+                showToast("Downloading the audio right now", act);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -1599,8 +1555,7 @@ public class BWSApplication extends Application {
                 }
                 boolean entryNot = false;
                 for (int f = 0; f < fileNameList.size(); f++) {
-                    if (fileNameList.get(f).equalsIgnoreCase(Name)
-                            && playlistDownloadId.get(f).equalsIgnoreCase("")) {
+                    if (fileNameList.get(f).equalsIgnoreCase(Name) && playlistDownloadId.get(f).equalsIgnoreCase("")) {
                         entryNot = true;
                         break;
                     }
@@ -1621,7 +1576,7 @@ public class BWSApplication extends Application {
                         editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                         editor.commit();
                     }
-//        fileNast = url1;
+                    //        fileNast = url1;
                     if (!isDownloading) {
                         isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext(), act);
@@ -1632,7 +1587,7 @@ public class BWSApplication extends Application {
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                    showToast("Your audio has been downloaded",act);
+                    showToast("Your audio has been downloaded", act);
                 }
             }
         } catch (Exception e) {
@@ -1640,15 +1595,10 @@ public class BWSApplication extends Application {
         }
     }
 
-    private static void SaveMedia(int i, int progress, String comeFrom,
-                                  List<DownloadAudioDetails> mDataDownload,
-                                  List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll,
-                                  List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist,
-                                  List<MainPlayModel> mDataPlayer, Context ctx) {
+    private static void SaveMedia(int i, int progress, String comeFrom, List<DownloadAudioDetails> mDataDownload, List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll, List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist, List<MainPlayModel> mDataPlayer, Context ctx) {
         DB = getAudioDataBase(ctx);
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadAudioDetails.setUserId(CoUserID);
@@ -1758,21 +1708,13 @@ public class BWSApplication extends Application {
                 downloadAudioDetailsList.add(downloadAudioDetails.getName());
                 ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, ctx);
             }
-//                callAddTransFrag();
+            //                callAddTransFrag();
         }
     }
 
-    public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName,
-                                      FragmentActivity fragmentActivity, String Time, String RDay) {
+    public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay) {
 
-        ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{
-                new ReminderSelectionModel("Sunday"),
-                new ReminderSelectionModel("Monday"),
-                new ReminderSelectionModel("Tuesday"),
-                new ReminderSelectionModel("Wednesday"),
-                new ReminderSelectionModel("Thursday"),
-                new ReminderSelectionModel("Friday"),
-                new ReminderSelectionModel("Saturday"),};
+        ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{new ReminderSelectionModel("Sunday"), new ReminderSelectionModel("Monday"), new ReminderSelectionModel("Tuesday"), new ReminderSelectionModel("Wednesday"), new ReminderSelectionModel("Thursday"), new ReminderSelectionModel("Friday"), new ReminderSelectionModel("Saturday"),};
         localIntent = new Intent("Reminder");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         final Dialog dialog = new Dialog(ctx);
@@ -1792,9 +1734,9 @@ public class BWSApplication extends Application {
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
-//        calendar = Calendar.getInstance();
-//        Chour = calendar.get(Calendar.HOUR_OF_DAY);
-//        Cminute = calendar.get(Calendar.MINUTE);
+        //        calendar = Calendar.getInstance();
+        //        Chour = calendar.get(Calendar.HOUR_OF_DAY);
+        //        Cminute = calendar.get(Calendar.MINUTE);
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
@@ -1804,7 +1746,7 @@ public class BWSApplication extends Application {
             Date currdate = new Date();
             try {
                 currdate = simpleDateFormat1.parse(gmtTime);
-//                Log.e("currant currdate !!!!", String.valueOf(currdate));
+                //                Log.e("currant currdate !!!!", String.valueOf(currdate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -1817,7 +1759,7 @@ public class BWSApplication extends Application {
         String[] time = currantTime.split(":");
         String min[] = time[1].split(" ");
         Chour = Integer.parseInt(time[0]);
-//            mHour = c.get(Calendar.HOUR_OF_DAY);
+        //            mHour = c.get(Calendar.HOUR_OF_DAY);
         Cminute = Integer.parseInt(min[0]);
         String displayAmPm = min[1];
         if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
@@ -1844,9 +1786,7 @@ public class BWSApplication extends Application {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll,
-                btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder
-                , progressBar, llSelectTime, RDay, Time);
+        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll, btnNext, CoUSERID, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -1966,9 +1906,9 @@ public class BWSApplication extends Application {
         float widthImg = ((width - outerMargin) * proportion) - innerMargin;
         float height = widthImg * aspectY / aspectX;
         //Log.e("width.........", "" + context.getClass().getSimpleName()+","+width);
-//        //Log.e("widthImg.........", "" + context.getClass().getSimpleName()+","+widthImg);
-//        //Log.e("height...........", "" + context.getClass().getSimpleName()+","+height);
-//        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
+        //        //Log.e("widthImg.........", "" + context.getClass().getSimpleName()+","+widthImg);
+        //        //Log.e("height...........", "" + context.getClass().getSimpleName()+","+height);
+        //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
 
@@ -2097,7 +2037,7 @@ public class BWSApplication extends Application {
 
             dialog.setCancelable(true);*/
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 160);
+            //            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 160);
             toast.show();
         }
     }
@@ -2154,9 +2094,9 @@ public class BWSApplication extends Application {
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             boolean flag = false;
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//For 3G check
+            //For 3G check
             boolean is3g = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-//For WiFi Check
+            //For WiFi Check
             boolean isWifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
             flag = !(!is3g && !isWifi);
             return flag;
@@ -2182,7 +2122,7 @@ public class BWSApplication extends Application {
         String dateAsString = outputFmt.format(calendar.getTime());
         //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //2019-11-21 06:45:32
-//        String currentDateandTime = sdf.format(new Date());
+        //        String currentDateandTime = sdf.format(new Date());
         String finalKey = "";
         HashMap<String, String> hash_map = new HashMap<String, String>();
         hash_map.put("AES", AES);
@@ -2199,7 +2139,7 @@ public class BWSApplication extends Application {
 
         try {
             finalKey = ProgramForAES(key);
-//            System.out.println(finalKey);
+            //            System.out.println(finalKey);
         } catch (Exception e) {
         }
         return finalKey;
@@ -2211,9 +2151,9 @@ public class BWSApplication extends Application {
             String key = "5785abf057d4eea9e59151f75a6fadb724768053df2acdfabb68f2b946b972c6";
             CryptLib cryptLib = new CryptLib();
             cipher = cryptLib.encryptPlainTextWithRandomIV(baseString, key);
-//            println("cipherText" + cipher);
+            //            println("cipherText" + cipher);
             String decryptedString = cryptLib.decryptCipherTextWithRandomIV(cipher, key);
-//            println("decryptedString" + decryptedString);
+            //            println("decryptedString" + decryptedString);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2257,11 +2197,7 @@ public class BWSApplication extends Application {
         LinearLayout llSelectTime;
         private final ReminderSelectionModel[] selectionModels;
 
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx,
-                                            TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID,
-                                            String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity,
-                                            CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder,
-                                            ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time) {
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -2285,8 +2221,7 @@ public class BWSApplication extends Application {
         @NotNull
         @Override
         public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_selectionlist_layout, parent, false);
+            ReminderSelectionlistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.reminder_selectionlist_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -2347,8 +2282,7 @@ public class BWSApplication extends Application {
                     Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
                     if (isNetworkConnected(ctx)) {
                         showProgressBar(progressBar, progressBarHolder, act);
-                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(CoUSERID, PlaylistID,
-                                TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
+                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(CoUSERID, PlaylistID, TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<SetReminderOldModel>() {
                             @Override
                             public void onResponse(@NotNull Call<SetReminderOldModel> call, @NotNull Response<SetReminderOldModel> response) {
@@ -2402,8 +2336,7 @@ public class BWSApplication extends Application {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            TimePickerDialog timepickerdialog1 = new TimePickerDialog(getActivity(),
-                    AlertDialog.THEME_HOLO_LIGHT, this, Chour, Cminute, false);
+            TimePickerDialog timepickerdialog1 = new TimePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, this, Chour, Cminute, false);
             timepickerdialog1.setTitle("Select Time");
             return timepickerdialog1;
         }
@@ -2445,8 +2378,7 @@ public class BWSApplication extends Application {
         Dialog dialogOld;
         private final ReminderMinutesListModel[] minutesListModels;
 
-        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx
-                , String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
+        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx, String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
             this.minutesListModels = minutesListModels;
             this.act = act;
             this.ctx = ctx;
@@ -2459,8 +2391,7 @@ public class BWSApplication extends Application {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.reminder_timelist_layout, parent, false);
+            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.reminder_timelist_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -2509,13 +2440,11 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void callObserve2(Context ctx,Activity act) {
-        SharedPreferences shared1 =
-                ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+    public static void callObserve2(Context ctx, Activity act) {
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        DB.taskDao()
-                .geAllData12(CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+        DB.taskDao().geAllData12(CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();

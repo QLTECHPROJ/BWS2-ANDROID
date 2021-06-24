@@ -21,12 +21,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.membershipModule.adapters.SubscriptionAdapter
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.membershipModule.adapters.SubscriptionAdapter
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -62,8 +62,7 @@ class EnhanceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_enhance)
         activity = this@EnhanceActivity
-        val shared1: SharedPreferences =
-            getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@EnhanceActivity
@@ -129,11 +128,8 @@ class EnhanceActivity : AppCompatActivity() {
                             listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
-                    planListAdapter = PlanListAdapter(
-                        listModelList, ctx, i
-                    )
-                    binding.rvPlanList.adapter = planListAdapter
-//                    planListAdapter.filter.filter(value.toString())
+                    planListAdapter = PlanListAdapter(listModelList, ctx, i)
+                    binding.rvPlanList.adapter = planListAdapter //                    planListAdapter.filter.filter(value.toString())
                 } else {
                     binding.simpleSeekbar.progress = 1
                     value = min + 1 * step
@@ -145,9 +141,7 @@ class EnhanceActivity : AppCompatActivity() {
                             listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
-                    planListAdapter = PlanListAdapter(
-                        listModelList, ctx, i
-                    )
+                    planListAdapter = PlanListAdapter(listModelList, ctx, i)
                     binding.rvPlanList.adapter = planListAdapter
                 }
             }
@@ -162,89 +156,51 @@ class EnhanceActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<PlanlistInappModel> =
-                APINewClient.getClient().getPlanlistInapp(coUserId)
+            val listCall: Call<PlanlistInappModel> = APINewClient.getClient().getPlanlistInapp(coUserId)
             listCall.enqueue(object : Callback<PlanlistInappModel> {
-                override fun onResponse(
-                    call: Call<PlanlistInappModel>,
-                    response: Response<PlanlistInappModel>
-                ) {
+                override fun onResponse(call: Call<PlanlistInappModel>, response: Response<PlanlistInappModel>) {
                     try {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: PlanlistInappModel = response.body()!!
                         listModelGlobal = response.body()!!
-                        if (listModel.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.nestedScroll.isSmoothScrollingEnabled = true
                             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
-                            binding.ivRestaurantImage.layoutParams.height =
-                                (measureRatio.height * measureRatio.ratio).toInt()
-                            binding.ivRestaurantImage.layoutParams.width =
-                                (measureRatio.widthImg * measureRatio.ratio).toInt()
+                            binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+                            binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                             binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-                            Glide.with(ctx).load(listModel.responseData!!.image).thumbnail(0.05f)
-                                .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
-                                .priority(Priority.HIGH)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                                .into(binding.ivRestaurantImage)
+                            Glide.with(ctx).load(listModel.responseData!!.image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage)
                             listModelList.clear()
                             for (i1 in listModelGlobal!!.responseData!!.plan!!.indices) {
-                                if (listModelGlobal!!.responseData!!.plan!![i1].profileCount!! == value.toString()
-                                ) {
+                                if (listModelGlobal!!.responseData!!.plan!![i1].profileCount!! == value.toString()) {
                                     listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                                 }
                             }
 
-                            planListAdapter = PlanListAdapter(
-                                listModelList, ctx, i
-                            )
+                            planListAdapter = PlanListAdapter(listModelList, ctx, i)
                             binding.rvPlanList.adapter = planListAdapter
                             binding.tvTitle.text = listModel.responseData!!.title
                             binding.tvDesc.text = listModel.responseData!!.desc
-                            binding.tvPlanFeatures01.text =
-                                listModel.responseData!!.planFeatures!![0].feature
-                            binding.tvPlanFeatures02.text =
-                                listModel.responseData!!.planFeatures!![1].feature
-                            binding.tvPlanFeatures03.text =
-                                listModel.responseData!!.planFeatures!![2].feature
-                            binding.tvPlanFeatures04.text =
-                                listModel.responseData!!.planFeatures!![3].feature
+                            binding.tvPlanFeatures01.text = listModel.responseData!!.planFeatures!![0].feature
+                            binding.tvPlanFeatures02.text = listModel.responseData!!.planFeatures!![1].feature
+                            binding.tvPlanFeatures03.text = listModel.responseData!!.planFeatures!![2].feature
+                            binding.tvPlanFeatures04.text = listModel.responseData!!.planFeatures!![3].feature
 
                             binding.tvFreeTrial.text = listModel.responseData!!.plan!![0].freeTrial
 
-                            binding.rvList.layoutManager =
-                                LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                            binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                             subscriptionAdapter = listModel.responseData!!.audioFiles?.let {
-                                SubscriptionAdapter(
-                                    it, ctx
-                                )
+                                SubscriptionAdapter(it, ctx)
                             }!!
                             binding.rvList.adapter = subscriptionAdapter
 
-                            binding.rvVideoList.layoutManager =
-                                LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                            val videoListAdapter = VideoSeriesListAdapter(
-                                listModel.responseData!!.testminialVideo!!, ctx
-                            )
+                            binding.rvVideoList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                            val videoListAdapter = VideoSeriesListAdapter(listModel.responseData!!.testminialVideo!!, ctx)
                             binding.rvVideoList.adapter = videoListAdapter
 
-                            binding.rvFaqList.layoutManager =
-                                LinearLayoutManager(this@EnhanceActivity)
-                            adapter = MembershipFaqAdapter(
-                                listModel.responseData!!.fAQs!!,
-                                ctx,
-                                binding.rvFaqList,
-                                binding.tvFound
-                            )
-                            binding.rvFaqList.adapter = adapter
-//                            planListAdapter.filter.filter(value.toString())
+                            binding.rvFaqList.layoutManager = LinearLayoutManager(this@EnhanceActivity)
+                            adapter = MembershipFaqAdapter(listModel.responseData!!.fAQs!!, ctx, binding.rvFaqList, binding.tvFound)
+                            binding.rvFaqList.adapter = adapter //                            planListAdapter.filter.filter(value.toString())
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -252,11 +208,7 @@ class EnhanceActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<PlanlistInappModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -264,21 +216,13 @@ class EnhanceActivity : AppCompatActivity() {
         }
     }
 
-
-    class VideoSeriesListAdapter(
-        private val model: List<PlanlistInappModel.ResponseData.TestminialVideo>,
-        var ctx: Context
-    ) :
-        RecyclerView.Adapter<VideoSeriesListAdapter.MyViewHolder>() {
+    class VideoSeriesListAdapter(private val model: List<PlanlistInappModel.ResponseData.TestminialVideo>, var ctx: Context) : RecyclerView.Adapter<VideoSeriesListAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false
-            )
+            val v: VideoSeriesBoxLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.video_series_box_layout, parent, false)
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetJavaScriptEnabled")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetJavaScriptEnabled") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bind.tvHeadingTwo.text = model[position].videoDesc
             holder.bind.tvName.text = model[position].userName
             val videoUrl = model[position].videoLink!!.split("=").toTypedArray()
@@ -294,25 +238,14 @@ class EnhanceActivity : AppCompatActivity() {
             return model.size
         }
 
-        inner class MyViewHolder(var bind: VideoSeriesBoxLayoutBinding) :
-            RecyclerView.ViewHolder(bind.root)
+        inner class MyViewHolder(var bind: VideoSeriesBoxLayoutBinding) : RecyclerView.ViewHolder(bind.root)
     }
 
-    class PlanListAdapter(
-        var listModelList: List<PlanlistInappModel.ResponseData.Plan>,
-        var ctx: Context,
-        var i: Intent
-    ) :
-        RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
+    class PlanListAdapter(var listModelList: List<PlanlistInappModel.ResponseData.Plan>, var ctx: Context, var i: Intent) : RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
         private var rowIndex: Int = -1
         private var pos: Int = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.plan_list_filtered_layout,
-                parent,
-                false
-            )
+            val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.plan_list_filtered_layout, parent, false)
             return MyViewHolder(v)
         }
 
@@ -320,8 +253,7 @@ class EnhanceActivity : AppCompatActivity() {
         "PlanCurrency":"Aus","PlanInterval":"Weekly","PlanImage":"",
         "PlanTenure":"1 Week","PlanNextRenewal":"17 May, 2021",
         "FreeTrial":"TRY 14 DAYS FOR FREE","SubName":"Week \/ Per 3 User","RecommendedFlag":"0","PlanFlag":"1"}*/
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
             holder.binding.tvContent.text = listModelList[position].subName
@@ -340,36 +272,21 @@ class EnhanceActivity : AppCompatActivity() {
             if (rowIndex == position) {
                 changeFunction(holder, listModelList, position)
             } else {
-                if (listModelList[position].recommendedFlag.equals(
-                        "1",
-                        ignoreCase = true
-                    ) && pos == 0
-                ) {
+                if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
                     holder.binding.rlMostPopular.visibility = View.VISIBLE
                     changeFunction(holder, listModelList, position)
                 } else {
-                    holder.binding.llPlanMain.background =
-                        ContextCompat.getDrawable(ctx, R.drawable.light_gray_round_cornors)
+                    holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_gray_round_cornors)
                     holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-                    holder.binding.tvContent.setTextColor(
-                        ContextCompat.getColor(
-                            ctx,
-                            R.color.black
-                        )
-                    )
+                    holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
                     holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
                 }
             }
 
         }
 
-        private fun changeFunction(
-            holder: MyViewHolder,
-            listModelList: List<PlanlistInappModel.ResponseData.Plan>,
-            position: Int
-        ) {
-            holder.binding.llPlanMain.background =
-                ContextCompat.getDrawable(ctx, R.drawable.light_sky_round_cornors)
+        private fun changeFunction(holder: MyViewHolder, listModelList: List<PlanlistInappModel.ResponseData.Plan>, position: Int) {
+            holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_sky_round_cornors)
             holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
@@ -426,38 +343,21 @@ class EnhanceActivity : AppCompatActivity() {
                  }
              }*/
 
-        inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
-    class MembershipFaqAdapter(
-        private val modelList: List<PlanlistInappModel.ResponseData.Faq>,
-        var ctx: Context,
-        var rvFaqList: RecyclerView,
-        var tvFound: TextView
-    ) : RecyclerView.Adapter<MembershipFaqAdapter.MyViewHolder>() {
+    class MembershipFaqAdapter(private val modelList: List<PlanlistInappModel.ResponseData.Faq>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<MembershipFaqAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: MembershipFaqLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.membership_faq_layout,
-                parent,
-                false
-            )
+            val v: MembershipFaqLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_faq_layout, parent, false)
             return MyViewHolder(v)
         }
 
-        @SuppressLint("ResourceType")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("ResourceType") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc
 
             holder.binding.ivClickRight.setOnClickListener {
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        ctx,
-                        R.color.white
-                    )
-                )
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.white))
                 holder.binding.tvDesc.isFocusable = true
                 holder.binding.tvDesc.requestFocus()
                 holder.binding.tvDesc.visibility = View.VISIBLE
@@ -471,12 +371,7 @@ class EnhanceActivity : AppCompatActivity() {
             holder.binding.ivClickDown.setOnClickListener {
                 holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT)
                 holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked)
-                holder.binding.tvTitle.setTextColor(
-                    ContextCompat.getColor(
-                        ctx,
-                        R.color.light_black
-                    )
-                )
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.light_black))
                 holder.binding.tvDesc.visibility = View.GONE
                 holder.binding.ivClickRight.visibility = View.VISIBLE
                 holder.binding.ivClickDown.visibility = View.GONE
@@ -496,8 +391,7 @@ class EnhanceActivity : AppCompatActivity() {
             return modelList.size
         }
 
-        inner class MyViewHolder(var binding: MembershipFaqLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: MembershipFaqLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     override fun onBackPressed() {

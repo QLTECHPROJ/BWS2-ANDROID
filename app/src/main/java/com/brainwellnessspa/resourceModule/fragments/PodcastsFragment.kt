@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.FragmentPodcastsBinding
+import com.brainwellnessspa.databinding.PodcastsListLayoutBinding
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.FragmentPodcastsBinding
-import com.brainwellnessspa.databinding.PodcastsListLayoutBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -38,8 +38,7 @@ class PodcastsFragment : Fragment() {
     var CoUserID: String? = ""
     var Category: String? = ""
     private var mLastClickTime: Long = 0
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcasts, container, false)
         val view = binding.root
         val bundle = this.arguments
@@ -47,8 +46,7 @@ class PodcastsFragment : Fragment() {
             podcasts = bundle.getString("podcasts")
             Category = bundle.getString("Category")
         }
-        val shared1: SharedPreferences =
-            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
@@ -80,7 +78,7 @@ class PodcastsFragment : Fragment() {
                             binding.llError.visibility = View.VISIBLE
                             binding.rvPodcastsList.visibility = View.GONE
                         }
-                    }else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)){
+                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
@@ -103,9 +101,7 @@ class PodcastsFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModelList!![position].title
             holder.binding.tvCreator.text = listModelList[position].author
-            Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx!!).load(listModelList[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.binding.rlMainLayout.elevation = 10f
             }

@@ -1,15 +1,15 @@
 package com.brainwellnessspa.dashboardModule.enhance
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityPreparePlaylistBinding
+import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 
 class PreparePlaylistActivity : AppCompatActivity() {

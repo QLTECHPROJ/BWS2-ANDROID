@@ -23,20 +23,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModule.models.AddedUserListModel
-import com.brainwellnessspa.userModule.models.CoUserDetailsModel
-import com.brainwellnessspa.userModule.models.SegmentUserList
-import com.brainwellnessspa.userModule.models.VerifyPinModel
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.models.AddedUserListModel
+import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -68,8 +67,7 @@ class UserListActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        /* binding.llBack.setOnClickListener {
+        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")/* binding.llBack.setOnClickListener {
              finish()
          }*/
 
@@ -95,41 +93,24 @@ class UserListActivity : AppCompatActivity() {
         super.onResume()
     }
 
-
     override fun onBackPressed() {
         finishAffinity()
     }
 
-    class UserListAdapter(
-        listModel: AddedUserListModel.ResponseData,
-        private var activity: Activity,
-        private var ctx: Context,
-        var binding: ActivityUserListBinding,
-        var userId: String,
-        var coUserId: String,
-        var coEmail: String
-    ) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    class UserListAdapter(listModel: AddedUserListModel.ResponseData, private var activity: Activity, private var ctx: Context, var binding: ActivityUserListBinding, var userId: String, var coUserId: String, var coEmail: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var userList = UserListActivity()
         private var selectedItem = -1
-        private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? =
-            listModel.userList
+        private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.userList
         lateinit var txtError: TextView
 
-        inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) :
-            RecyclerView.ViewHolder(bindingAdapter.root)
+        inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: ScreenUserListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.screen_user_list_layout,
-                parent,
-                false
-            )
+            val v: ScreenUserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.screen_user_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
 
@@ -146,9 +127,7 @@ class UserListActivity : AppCompatActivity() {
             } else {
                 holder.bindingAdapter.ivProfileImage.visibility = View.VISIBLE
                 holder.bindingAdapter.rlLetter.visibility = View.GONE
-                Glide.with(activity).load(coUsersModel!![position].image)
-                    .thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126)))
-                    .into(holder.bindingAdapter.ivProfileImage)
+                Glide.with(activity).load(coUsersModel!![position].image).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(holder.bindingAdapter.ivProfileImage)
             }
             holder.bindingAdapter.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
             holder.bindingAdapter.ivCheck.visibility = View.INVISIBLE
@@ -164,12 +143,7 @@ class UserListActivity : AppCompatActivity() {
                 binding.btnLogIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 binding.btnLogIn.isEnabled = true
                 binding.tvForgotPin.isEnabled = true
-                binding.tvForgotPin.setTextColor(
-                    ContextCompat.getColor(
-                        activity,
-                        R.color.app_theme_color
-                    )
-                )
+                binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
                 userId = coUsersModel!![position].userID.toString()
                 coUserId = coUsersModel!![position].coUserId.toString()
                 coEmail = coUsersModel!![position].email.toString()
@@ -181,10 +155,7 @@ class UserListActivity : AppCompatActivity() {
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
                 userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                userList.dialog.window!!.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
+                userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
                 val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
@@ -195,58 +166,10 @@ class UserListActivity : AppCompatActivity() {
                 val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
                 tvTitle.text = "Unlock the app"
                 userList.editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                edtOTP1.addTextChangedListener(
-                    PinTextWatcher(
-                        activity,
-                        0,
-                        userList.editTexts,
-                        btnDone,
-                        edtOTP1,
-                        edtOTP2,
-                        edtOTP3,
-                        edtOTP4,
-                        userList.tvSendOTPool
-                    )
-                )
-                edtOTP2.addTextChangedListener(
-                    PinTextWatcher(
-                        activity,
-                        1,
-                        userList.editTexts,
-                        btnDone,
-                        edtOTP1,
-                        edtOTP2,
-                        edtOTP3,
-                        edtOTP4,
-                        userList.tvSendOTPool
-                    )
-                )
-                edtOTP3.addTextChangedListener(
-                    PinTextWatcher(
-                        activity,
-                        2,
-                        userList.editTexts,
-                        btnDone,
-                        edtOTP1,
-                        edtOTP2,
-                        edtOTP3,
-                        edtOTP4,
-                        userList.tvSendOTPool
-                    )
-                )
-                edtOTP4.addTextChangedListener(
-                    PinTextWatcher(
-                        activity,
-                        3,
-                        userList.editTexts,
-                        btnDone,
-                        edtOTP1,
-                        edtOTP2,
-                        edtOTP3,
-                        edtOTP4,
-                        userList.tvSendOTPool
-                    )
-                )
+                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
                 edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
                 edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
                 edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
@@ -261,412 +184,135 @@ class UserListActivity : AppCompatActivity() {
                     false
                 }
                 btnDone.setOnClickListener {
-                    if (edtOTP1.text.toString().equals("", ignoreCase = true)
-                        && edtOTP2.text.toString().equals("", ignoreCase = true)
-                        && edtOTP3.text.toString().equals("", ignoreCase = true)
-                        && edtOTP4.text.toString().equals("", ignoreCase = true)
-                    ) {
+                    if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
                         txtError.visibility = View.VISIBLE
                         txtError.text = "Please enter OTP"
                     } else {
                         txtError.visibility = View.GONE
                         txtError.text = ""
                         if (isNetworkConnected(activity)) {
-                            showProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
-                            val listCall: Call<VerifyPinModel> =
-                                APINewClient.getClient().getVerifyPin(
-                                    userId,
-                                    edtOTP1.text.toString() + "" +
-                                            edtOTP2.text.toString() + "" +
-                                            edtOTP3.text.toString() + "" +
-                                            edtOTP4.text.toString()
-                                )
-                            listCall.enqueue(object : Callback<VerifyPinModel> {
-                                override fun onResponse(
-                                    call: Call<VerifyPinModel>,
-                                    response: Response<VerifyPinModel>
-                                ) {
+                            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                            listCall.enqueue(object : Callback<AuthOtpModel> {
+                                override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                     try {
-                                        hideProgressBar(
-                                            binding.progressBar,
-                                            binding.progressBarHolder,
-                                            activity
-                                        )
-                                        val listModel: VerifyPinModel = response.body()!!
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                        val listModel: AuthOtpModel = response.body()!!
                                         when {
-                                            listModel.responseCode.equals(
-                                                activity.getString(R.string.ResponseCodesuccess),
-                                                ignoreCase = true
-                                            ) -> {
-                                                val shared1: SharedPreferences =
-                                                    ctx.getSharedPreferences(
-                                                        CONSTANTS.PREF_KEY_LOGOUT,
-                                                        MODE_PRIVATE
-                                                    )
-                                                val Logout_UserID = shared1.getString(
-                                                    CONSTANTS.PREF_KEY_LOGOUT_UserID,
-                                                    ""
-                                                )
-                                                val Logout_CoUserId = shared1.getString(
-                                                    CONSTANTS.PREF_KEY_LOGOUT_CoUserID,
-                                                    ""
-                                                )
+                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
+                                                val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
+                                                val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
 
-                                                /*   if (!listModel.responseData!!.userID.equals(Logout_UserID, ignoreCase = true)
+                                                /*   if (!listModel.responseData!!.userID.equals(logoutUserID, ignoreCase = true)
                                                                                            && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
                                                                                        callObserve1(ctx)
                                                                                    } else {
                                                                                        callObserve2(ctx)
                                                                                    }*/
-                                                Log.e(
-                                                    "New UserId MobileNo",
-                                                    listModel.responseData!!.mainAccountID + "....." + listModel.responseData!!.userId
-                                                )
-                                                Log.e(
-                                                    "Old UserId MobileNo",
-                                                    "$Logout_UserID.....$Logout_CoUserId"
-                                                )
+                                                Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
+                                                Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
                                                 logout = false
-                                                val listCall: Call<CoUserDetailsModel> =
-                                                    APINewClient.getClient()
-                                                        .getCoUserDetails(listModel.responseData!!.userId)
-                                                listCall.enqueue(object :
-                                                    Callback<CoUserDetailsModel> {
-                                                    @SuppressLint("HardwareIds")
-                                                    override fun onResponse(
-                                                        call: Call<CoUserDetailsModel>,
-                                                        response: Response<CoUserDetailsModel>
-                                                    ) {
+                                                val listCall: Call<AuthOtpModel> = APINewClient.getClient().getCoUserDetails(listModel.ResponseData.UserId)
+                                                listCall.enqueue(object : Callback<AuthOtpModel> {
+                                                    @SuppressLint("HardwareIds") override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                                         try {
-                                                            val coUserDetailsModel: CoUserDetailsModel =
-                                                                response.body()!!
-                                                            if (coUserDetailsModel.ResponseData != null) {
-                                                                if (coUserDetailsModel.ResponseData.isProfileCompleted.equals(
-                                                                        "0",
-                                                                        ignoreCase = true
-                                                                    )
-                                                                ) {
-                                                                    val intent = Intent(
-                                                                        activity,
-                                                                        WalkScreenActivity::class.java
-                                                                    )
-                                                                    intent.putExtra(
-                                                                        CONSTANTS.ScreenView,
-                                                                        "1"
-                                                                    )
-                                                                    activity.startActivity(intent)
-                                                                    activity.finish()
-                                                                } else if (coUserDetailsModel.ResponseData.isAssessmentCompleted.equals(
-                                                                        "0",
-                                                                        ignoreCase = true
-                                                                    )
-                                                                ) {
-                                                                    val intent = Intent(
-                                                                        activity,
-                                                                        AssProcessActivity::class.java
-                                                                    )
-                                                                    intent.putExtra(
-                                                                        CONSTANTS.ASSPROCESS,
-                                                                        "0"
-                                                                    )
-                                                                    activity.startActivity(intent)
-                                                                    activity.finish()
-                                                                } else if (coUserDetailsModel.ResponseData.AvgSleepTime.equals(
-                                                                        "", ignoreCase = true
-                                                                    )
-                                                                ) {
-                                                                    val intent = Intent(
-                                                                        activity,
-                                                                        SleepTimeActivity::class.java
-                                                                    )
-                                                                    activity.startActivity(intent)
-                                                                    activity.finish()
-                                                                } else if (coUserDetailsModel.ResponseData.isProfileCompleted.equals(
-                                                                        "1",
-                                                                        ignoreCase = true
-                                                                    ) &&
-                                                                    coUserDetailsModel.ResponseData.isAssessmentCompleted.equals(
-                                                                        "1",
-                                                                        ignoreCase = true
-                                                                    )
-                                                                ) {
-                                                                    val intent = Intent(
-                                                                        activity,
-                                                                        BottomNavigationActivity::class.java
-                                                                    )
-                                                                    intent.putExtra("IsFirst", "1")
-                                                                    activity.startActivity(intent)
-                                                                    activity.finish()
-                                                                }
-                                                                val shared =
-                                                                    activity.getSharedPreferences(
-                                                                        CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                                                        MODE_PRIVATE
-                                                                    )
-                                                                val editor = shared.edit()
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_mainAccountID,
-                                                                    listModel.responseData!!.mainAccountID
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_UserId,
-                                                                    listModel.responseData!!.userId
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_EMAIL,
-                                                                    listModel.responseData!!.email
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_NAME,
-                                                                    listModel.responseData!!.name
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_MOBILE,
-                                                                    listModel.responseData!!.mobile
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                    coUserDetailsModel.ResponseData.AvgSleepTime
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                                                    coUserDetailsModel.ResponseData.indexScore
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_SCORELEVEL,
-                                                                    coUserDetailsModel.ResponseData.ScoreLevel
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_IMAGE,
-                                                                    coUserDetailsModel.ResponseData.Image
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                                                    coUserDetailsModel.ResponseData.isProfileCompleted
-                                                                )
-                                                                editor.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                                                    coUserDetailsModel.ResponseData.isAssessmentCompleted
-                                                                )
-                                                                editor.apply()
-                                                                val sharded =
-                                                                    activity.getSharedPreferences(
-                                                                        CONSTANTS.RecommendedCatMain,
-                                                                        Context.MODE_PRIVATE
-                                                                    )
-                                                                val edited = sharded.edit()
-                                                                edited.putString(
-                                                                    CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                                                    coUserDetailsModel.ResponseData.AvgSleepTime
-                                                                )
-                                                                val selectedCategoriesTitle =
-                                                                    arrayListOf<String>()
-                                                                val selectedCategoriesName =
-                                                                    arrayListOf<String>()
-                                                                val gson = Gson()
-                                                                for (i in listModel.responseData!!.areaOfFocus!!) {
-                                                                    selectedCategoriesTitle.add(i.mainCat!!)
-                                                                    selectedCategoriesName.add(i.recommendedCat!!)
-                                                                }
-                                                                edited.putString(
-                                                                    CONSTANTS.selectedCategoriesTitle,
-                                                                    gson.toJson(
-                                                                        selectedCategoriesTitle
-                                                                    )
-                                                                ) //Friend
-                                                                edited.putString(
-                                                                    CONSTANTS.selectedCategoriesName,
-                                                                    gson.toJson(
-                                                                        selectedCategoriesName
-                                                                    )
-                                                                ) //Friend
-                                                                edited.apply()
-
-                                                                val activity = SplashActivity()
-                                                                activity.setAnalytics(
-                                                                    activity.getString(
-                                                                        R.string.segment_key_real
-                                                                    )
-                                                                )
-
-                                                                analytics.identify(
-                                                                    Traits()
-                                                                        .putEmail(listModel.responseData!!.email)
-                                                                        .putName(listModel.responseData!!.name)
-                                                                        .putPhone(listModel.responseData!!.mobile)
-                                                                        .putValue(
-                                                                            "coUserId",
-                                                                            listModel.responseData!!.userId
-                                                                        )
-                                                                        .putValue(
-                                                                            "userId",
-                                                                            listModel.responseData!!.mainAccountID
-                                                                        )
-                                                                        .putValue(
-                                                                            "deviceId",
-                                                                            Settings.Secure.getString(
-                                                                                activity.contentResolver,
-                                                                                Settings.Secure.ANDROID_ID
-                                                                            )
-                                                                        )
-                                                                        .putValue(
-                                                                            "deviceType",
-                                                                            "Android"
-                                                                        )
-                                                                        .putValue(
-                                                                            "name",
-                                                                            listModel.responseData!!.name
-                                                                        )
-                                                                        .putValue("countryCode", "")
-                                                                        .putValue("countryName", "")
-                                                                        .putValue(
-                                                                            "phone",
-                                                                            listModel.responseData!!.mobile
-                                                                        )
-                                                                        .putValue(
-                                                                            "email",
-                                                                            listModel.responseData!!.email
-                                                                        )
-                                                                        .putValue(
-                                                                            "DOB",
-                                                                            listModel.responseData!!.dob
-                                                                        )
-                                                                        .putValue(
-                                                                            "profileImage",
-                                                                            listModel.responseData!!.image
-                                                                        )
-                                                                        .putValue("plan", "")
-                                                                        .putValue("planStatus", "")
-                                                                        .putValue("planStartDt", "")
-                                                                        .putValue(
-                                                                            "planExpiryDt",
-                                                                            ""
-                                                                        )
-                                                                        .putValue("clinikoId", "")
-                                                                        .putValue(
-                                                                            "isProfileCompleted",
-                                                                            listModel.responseData!!.isProfileCompleted
-                                                                        )
-                                                                        .putValue(
-                                                                            "isAssessmentCompleted",
-                                                                            listModel.responseData!!.isAssessmentCompleted
-                                                                        )
-                                                                        .putValue(
-                                                                            "indexScore",
-                                                                            listModel.responseData!!.indexScore
-                                                                        )
-                                                                        .putValue(
-                                                                            "scoreLevel",
-                                                                            listModel.responseData!!.scoreLevel
-                                                                        )
-                                                                        .putValue(
-                                                                            "areaOfFocus",
-                                                                            listModel.responseData!!.areaOfFocus
-                                                                        )
-                                                                        .putValue(
-                                                                            "avgSleepTime",
-                                                                            listModel.responseData!!.avgSleepTime
-                                                                        )
-                                                                )
-                                                                val p1 = Properties()
-                                                                p1.putValue(
-                                                                    "CoUserID",
-                                                                    listModel.responseData!!.userId
-                                                                )
-                                                                p1.putValue(
-                                                                    "userID",
-                                                                    listModel.responseData!!.mainAccountID
-                                                                )
-                                                                p1.putValue(
-                                                                    "deviceId",
-                                                                    Settings.Secure.getString(
-                                                                        activity.contentResolver,
-                                                                        Settings.Secure.ANDROID_ID
-                                                                    )
-                                                                )
-                                                                p1.putValue("deviceType", "Android")
-                                                                p1.putValue(
-                                                                    "name",
-                                                                    listModel.responseData!!.name
-                                                                )
-                                                                p1.putValue("countryCode", "")
-                                                                p1.putValue("countryName", "")
-                                                                p1.putValue(
-                                                                    "phone",
-                                                                    listModel.responseData!!.mobile
-                                                                )
-                                                                p1.putValue(
-                                                                    "email",
-                                                                    listModel.responseData!!.email
-                                                                )
-                                                                p1.putValue("plan", "")
-                                                                p1.putValue("planStatus", "")
-                                                                p1.putValue("planStartDt", "")
-                                                                p1.putValue("planExpiryDt", "")
-                                                                p1.putValue("clinikoId", "")
-                                                                p1.putValue(
-                                                                    "isProfileCompleted",
-                                                                    listModel.responseData!!.isProfileCompleted
-                                                                )
-                                                                p1.putValue(
-                                                                    "isAssessmentCompleted",
-                                                                    listModel.responseData!!.isAssessmentCompleted
-                                                                )
-                                                                p1.putValue(
-                                                                    "indexScore",
-                                                                    listModel.responseData!!.indexScore
-                                                                )
-                                                                p1.putValue(
-                                                                    "scoreLevel",
-                                                                    listModel.responseData!!.scoreLevel
-                                                                )
-                                                                p1.putValue(
-                                                                    "areaOfFocus",
-                                                                    listModel.responseData!!.areaOfFocus
-                                                                )
-                                                                p1.putValue(
-                                                                    "avgSleepTime",
-                                                                    listModel.responseData!!.avgSleepTime
-                                                                )
-                                                                addToSegment(
-                                                                    "CoUser Login",
-                                                                    p1,
-                                                                    CONSTANTS.track
-                                                                )
+                                                            val authOtpModel: AuthOtpModel = response.body()!!
+                                                            if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, WalkScreenActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ScreenView, "1")
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            } else if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                                                val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
+                                                            } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                intent.putExtra("IsFirst", "1")
+                                                                activity.startActivity(intent)
+                                                                activity.finish()
                                                             }
+                                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                            val editor = shared.edit()
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                                                            editor.apply()
+                                                            val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                            val edited = sharded.edit()
+                                                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                            val selectedCategoriesTitle = arrayListOf<String>()
+                                                            val selectedCategoriesName = arrayListOf<String>()
+                                                            val gson = Gson()
+                                                            for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                                                                selectedCategoriesTitle.add(i.MainCat)
+                                                                selectedCategoriesName.add(i.RecommendedCat)
+                                                            }
+                                                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                            edited.apply()
+
+                                                            val activity = SplashActivity()
+                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real))
+
+                                                            analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
+                                                            val p1 = Properties()
+                                                            p1.putValue("CoUserID", listModel.ResponseData.UserId)
+                                                            p1.putValue("userID", listModel.ResponseData.MainAccountID)
+                                                            p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                            p1.putValue("deviceType", "Android")
+                                                            p1.putValue("name", listModel.ResponseData.Name)
+                                                            p1.putValue("countryCode", "")
+                                                            p1.putValue("countryName", "")
+                                                            p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                            p1.putValue("email", listModel.ResponseData.Email)
+                                                            p1.putValue("plan", "")
+                                                            p1.putValue("planStatus", "")
+                                                            p1.putValue("planStartDt", "")
+                                                            p1.putValue("planExpiryDt", "")
+                                                            p1.putValue("clinikoId", "")
+                                                            p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                            p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                            p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                            p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                            p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                            p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         } catch (e: Exception) {
                                                             e.printStackTrace()
                                                         }
                                                     }
 
-                                                    override fun onFailure(
-                                                        call: Call<CoUserDetailsModel>,
-                                                        t: Throwable
-                                                    ) {
+                                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
                                                     }
                                                 })
 
-                                                userList.dialog.dismiss()
-                                                //                                            showToast(
+                                                userList.dialog.dismiss() //                                            showToast(
                                                 //                                                listModel.responseMessage,
                                                 //                                                activity
                                                 //                                            )
                                             }
-                                            listModel.responseCode.equals(
-                                                activity.getString(
-                                                    R.string.ResponseCodefail
-                                                ), ignoreCase = true
-                                            ) -> {
+                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
                                                 txtError.visibility = View.VISIBLE
-                                                txtError.text = listModel.responseMessage
+                                                txtError.text = listModel.ResponseMessage
                                             }
                                             else -> {
                                                 txtError.visibility = View.VISIBLE
-                                                txtError.text = listModel.responseMessage
+                                                txtError.text = listModel.ResponseMessage
                                             }
                                         }
                                     } catch (e: Exception) {
@@ -674,19 +320,12 @@ class UserListActivity : AppCompatActivity() {
                                     }
                                 }
 
-                                override fun onFailure(call: Call<VerifyPinModel>, t: Throwable) {
-                                    hideProgressBar(
-                                        binding.progressBar,
-                                        binding.progressBarHolder,
-                                        activity
-                                    )
+                                override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 }
                             })
                         } else {
-                            showToast(
-                                activity.getString(R.string.no_server_found),
-                                activity
-                            )
+                            showToast(activity.getString(R.string.no_server_found), activity)
                         }
                     }
                 }
@@ -710,13 +349,7 @@ class UserListActivity : AppCompatActivity() {
         }
     }
 
-    class PinTextWatcher internal constructor(
-        val activity: Activity, private val currentIndex: Int,
-        private var editTexts: Array<EditText>, val btnDone: Button,
-        val edtOTP1: EditText, val edtOTP2: EditText,
-        val edtOTP3: EditText, val edtOTP4: EditText,
-        private var tvSendOTPbool: Boolean
-    ) : TextWatcher {
+    class PinTextWatcher internal constructor(val activity: Activity, private val currentIndex: Int, private var editTexts: Array<EditText>, val btnDone: Button, val edtOTP1: EditText, val edtOTP2: EditText, val edtOTP3: EditText, val edtOTP4: EditText, private var tvSendOTPbool: Boolean) : TextWatcher {
         private var isFirst = false
         private var isLast = false
         private var newTypedString = ""
@@ -742,8 +375,7 @@ class UserListActivity : AppCompatActivity() {
             var text = newTypedString
             Log.e("OTP VERIFICATION", "" + text)
 
-            /* Detect paste event and set first char */if (text.length > 1) text =
-                text[0].toString() // TODO: We can fill out other EditTexts
+            /* Detect paste event and set first char */if (text.length > 1) text = text[0].toString() // TODO: We can fill out other EditTexts
             editTexts[currentIndex].removeTextChangedListener(this)
             editTexts[currentIndex].setText(text)
             editTexts[currentIndex].setSelection(text.length)
@@ -773,37 +405,26 @@ class UserListActivity : AppCompatActivity() {
 
         private val isAllEditTextsFilled: Boolean
             get() {
-                for (editText in editTexts) if (editText.text.toString()
-                        .trim { it <= ' ' }.isEmpty()
-                ) return false
+                for (editText in editTexts) if (editText.text.toString().trim { it <= ' ' }.isEmpty()) return false
                 return true
             }
 
         private fun hideKeyboard() {
             if (activity.currentFocus != null) {
-                val inputMethodManager =
-                    activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(
-                    activity.currentFocus!!.windowToken, 0
-                )
+                val inputMethodManager = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
             }
         }
 
         init {
-            if (currentIndex == 0) isFirst =
-                true else if (currentIndex == editTexts.size - 1) isLast = true
+            if (currentIndex == 0) isFirst = true else if (currentIndex == editTexts.size - 1) isLast = true
         }
     }
 
-    class PinOnKeyListener internal constructor(
-        private val currentIndex: Int,
-        private var editTexts: Array<EditText>
-    ) : View.OnKeyListener {
+    class PinOnKeyListener internal constructor(private val currentIndex: Int, private var editTexts: Array<EditText>) : View.OnKeyListener {
         override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
-                if (editTexts[currentIndex].text.toString()
-                        .isEmpty() && currentIndex != 0
-                ) editTexts[currentIndex - 1].requestFocus()
+                if (editTexts[currentIndex].text.toString().isEmpty() && currentIndex != 0) editTexts[currentIndex - 1].requestFocus()
             }
             return false
         }
@@ -812,35 +433,15 @@ class UserListActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AddedUserListModel> =
-                APINewClient.getClient().getUserList(userId)
+            val listCall: Call<AddedUserListModel> = APINewClient.getClient().getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
-                override fun onResponse(
-                    call: Call<AddedUserListModel>,
-                    response: Response<AddedUserListModel>
-                ) {
+                override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
                     try {
-                        hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AddedUserListModel = response.body()!!
-                        if (listModel.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvUserList.layoutManager = LinearLayoutManager(activity)
-                            adapter = UserListAdapter(
-                                listModel.responseData!!,
-                                activity,
-                                ctx,
-                                binding,
-                                userId.toString(),
-                                coUserId.toString(),
-                                coEmail.toString()
-                            )
+                            adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString())
                             binding.rvUserList.adapter = adapter
 
                             if (listModel.responseData!!.userList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
@@ -865,9 +466,9 @@ class UserListActivity : AppCompatActivity() {
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                             p.putValue("coUserList", gson.toJson(section))
                             addToSegment("Couser List Viewed", p, CONSTANTS.screen)
-                        } else {
-//                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
-                        }
+                        } //                        else {
+                        //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)
+                        //                        }
 
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -875,11 +476,7 @@ class UserListActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AddedUserListModel>, t: Throwable) {
-                    hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {

@@ -1,8 +1,8 @@
 package com.brainwellnessspa.assessmentProgressModule.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityDoingGoodBinding
@@ -15,8 +15,7 @@ class DoingGoodActivity : AppCompatActivity() {
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /* This is the doing good layout showing */
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_doing_good)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_doing_good) /* This is the doing good layout showing */
 
         /* This click event is going to other process */
         binding.btnContinue.setOnClickListener {

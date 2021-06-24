@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,14 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityForgotPswdBinding
 import com.brainwellnessspa.userModule.models.ForgotPasswordModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityForgotPswdBinding
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,47 +71,26 @@ class ForgotPswdActivity : AppCompatActivity() {
         if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
             binding.txtEmailError.visibility = View.VISIBLE
             binding.txtEmailError.text = "Please provide a email address"
-        } else if (!binding.etEmail.text.toString().equals("")
-            && !BWSApplication.isEmailValid(binding.etEmail.text.toString())
-        ) {
+        } else if (!binding.etEmail.text.toString().equals("") && !BWSApplication.isEmailValid(binding.etEmail.text.toString())) {
             binding.txtEmailError.visibility = View.VISIBLE
             binding.txtEmailError.text = "Please provide a valid email address"
         } else {
             binding.txtEmailError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(
-                    binding.progressBar,
-                    binding.progressBarHolder,
-                    this@ForgotPswdActivity
-                )
-                val listCall: Call<ForgotPasswordModel> =
-                    APINewClient.getClient().getForgotPassword(binding.etEmail.text.toString())
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
+                val listCall: Call<ForgotPasswordModel> = APINewClient.getClient().getForgotPassword(binding.etEmail.text.toString())
                 listCall.enqueue(object : Callback<ForgotPasswordModel> {
-                    override fun onResponse(
-                        call: Call<ForgotPasswordModel>,
-                        response: Response<ForgotPasswordModel>
-                    ) {
+                    override fun onResponse(call: Call<ForgotPasswordModel>, response: Response<ForgotPasswordModel>) {
                         try {
                             binding.flEmail.error = ""
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                this@ForgotPswdActivity
-                            )
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
                             val listModel: ForgotPasswordModel = response.body()!!
-                            if (listModel.responseCode.equals(
-                                    getString(R.string.ResponseCodesuccess),
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 dialog = Dialog(this@ForgotPswdActivity)
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                 dialog.setContentView(R.layout.alert_popup_layout)
                                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                dialog.window!!.setLayout(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
+                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
                                 val tvGoBack: TextView = dialog.findViewById(R.id.tvGoBack)
                                 val tvSubTitle: TextView = dialog.findViewById(R.id.tvSubTitle)
@@ -128,11 +107,7 @@ class ForgotPswdActivity : AppCompatActivity() {
                                 }
                                 val p = Properties()
                                 p.putValue("email", binding.etEmail.text.toString())
-                                BWSApplication.addToSegment(
-                                    "Forgot Password Clicked",
-                                    p,
-                                    CONSTANTS.track
-                                )
+                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
                                 dialog.show()
                                 dialog.setCancelable(false)
 
@@ -146,11 +121,7 @@ class ForgotPswdActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<ForgotPasswordModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            this@ForgotPswdActivity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
                     }
                 })
             } else {

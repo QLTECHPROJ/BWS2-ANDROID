@@ -14,9 +14,9 @@ class EnhanceDoneActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_enhance_done)
         val measureRatio = BWSApplication.measureRatio(this@EnhanceDoneActivity, 0f, 5f, 6f, 0.4f, 0f)
-        binding.ivLogo.getLayoutParams().height = (measureRatio.height * measureRatio.ratio).toInt()
-        binding.ivLogo.getLayoutParams().width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-        binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY)
+        binding.ivLogo.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+        binding.ivLogo.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.ivLogo.scaleType = ImageView.ScaleType.FIT_XY
         binding.ivLogo.setImageResource(R.drawable.ic_thank_you_bg_two)
     }
 }

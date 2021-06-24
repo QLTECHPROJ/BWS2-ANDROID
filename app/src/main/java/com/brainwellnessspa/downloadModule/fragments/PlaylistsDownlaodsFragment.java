@@ -32,17 +32,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.R;
+import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
+import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.R;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
-
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
-import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -56,7 +55,6 @@ import com.segment.analytics.Properties;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
@@ -72,7 +70,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     String UserID, CoUserID;
     PlaylistsDownloadsAdapter adapter;
     //    Runnable UpdateSongTime1;
-//    Handler handler1;
+    //    Handler handler1;
     boolean isMyDownloading = false;
     Properties p;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
@@ -124,7 +122,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     @Override
     public void onPause() {
         if (isMyDownloading) {
-//            handler1.removeCallbacks(UpdateSongTime1);
+            //            handler1.removeCallbacks(UpdateSongTime1);
         }
         super.onPause();
     }
@@ -142,15 +140,15 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 if (fileNameList.size() != 0) {
-//                    handler1.postDelayed(UpdateSongTime1, 30000);
+                    //                    handler1.postDelayed(UpdateSongTime1, 30000);
                 } else {
-//                    handler1.removeCallbacks(UpdateSongTime1);
+                    //                    handler1.removeCallbacks(UpdateSongTime1);
                     fileNameList = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
                     isMyDownloading = false;
                 }
             } else {
-//                handler1.removeCallbacks(UpdateSongTime1);
+                //                handler1.removeCallbacks(UpdateSongTime1);
                 fileNameList = new ArrayList<>();
                 playlistDownloadId = new ArrayList<>();
                 isMyDownloading = false;
@@ -308,31 +306,31 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-//            if (IsLock.equalsIgnoreCase("1")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (IsLock.equalsIgnoreCase("2")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                holder.binding.ivLock.setVisibility(View.GONE);
-//            }
+            //            if (IsLock.equalsIgnoreCase("1")) {
+            //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            //            } else if (IsLock.equalsIgnoreCase("2")) {
+            //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            //                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+            //                holder.binding.ivLock.setVisibility(View.GONE);
+            //            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 try {
-//                    if (IsLock.equalsIgnoreCase("1")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                        i.putExtra("ComeFrom", "Plan");
-//                        ctx.startActivity(i);
-//                    } else if (IsLock.equalsIgnoreCase("2")) {
-//                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                    } else if (IsLock.equalsIgnoreCase("0")
-//                            || IsLock.equalsIgnoreCase("")) {
+                    //                    if (IsLock.equalsIgnoreCase("1")) {
+                    //                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    //                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    //                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    //                        i.putExtra("ComeFrom", "Plan");
+                    //                        ctx.startActivity(i);
+                    //                    } else if (IsLock.equalsIgnoreCase("2")) {
+                    //                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    //                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    //                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
+                    //                    } else if (IsLock.equalsIgnoreCase("0")
+                    //                            || IsLock.equalsIgnoreCase("")) {
                     DB.taskDao().getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(), CoUserID).removeObserver(audioList -> {
                     });
                     comefromDownload = "1";
@@ -357,7 +355,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     p.putValue("playlistName", listModelList.get(position).getPlaylistName());
                     p.putValue("playlistType", "");
                     BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
-//                    }
+                    //                    }
                 } catch (java.lang.IllegalStateException exception) {
                     // Attempt to catch rare mysterious Canvas stack underflow events that have been reported in
                     // ACRA, but simply should not be happening because Canvas save()/restore() calls are definitely
@@ -405,7 +403,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
                     Btn.setOnClickListener(v -> {
                         if (isMyDownloading) {
-//                            handler1.removeCallbacks(UpdateSongTime1);
+                            //                            handler1.removeCallbacks(UpdateSongTime1);
                         }
                         DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
                         });
@@ -436,7 +434,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         notifyItemRemoved(position);
                         dialog.dismiss();
                     });
-
 
                     tvGoBack.setOnClickListener(v -> dialog.dismiss());
                     dialog.show();
@@ -489,11 +486,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                     }
                 }
             } catch (Exception e) {
-//                getDownloadDataForDelete(playlistID);
+                //                getDownloadDataForDelete(playlistID);
                 e.printStackTrace();
                 Log.e("Download Playlist ", "Download Playlist remove issue:- " + e.getMessage());
             }
-
 
         }
 
@@ -506,12 +502,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         pbProgress.setVisibility(View.VISIBLE);
                         pbProgress.setProgress(downloadProgress1);
                         isMyDownloading = true;
-//                    getMediaByPer(playlistID,totalAudio,pbProgress);
-//                        handler1.postDelayed(UpdateSongTime1, 30000);
+                        //                    getMediaByPer(playlistID,totalAudio,pbProgress);
+                        //                        handler1.postDelayed(UpdateSongTime1, 30000);
                     } else {
                         getDownloadData();
                         pbProgress.setVisibility(View.GONE);
-//                        handler1.removeCallbacks(UpdateSongTime1);
+                        //                        handler1.removeCallbacks(UpdateSongTime1);
                         isMyDownloading = false;
                         notifyDataSetChanged();
                         DB.taskDao().getCountDownloadProgress1("Complete", playlistID, CoUserID).removeObserver(audioListx -> {
@@ -540,7 +536,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             remainAudio = new ArrayList<>();
         }
     }*/
-
 
         public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
             DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe(getActivity(), audioList1 -> {

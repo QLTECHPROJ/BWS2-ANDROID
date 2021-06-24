@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReferralModule.Model.ContactlistModel;

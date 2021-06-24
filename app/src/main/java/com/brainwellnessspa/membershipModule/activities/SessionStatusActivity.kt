@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.MySpannable
 import com.brainwellnessspa.databinding.ActivitySessionStatusBinding
+import com.brainwellnessspa.utility.MySpannable
 
 class SessionStatusActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionStatusBinding
@@ -26,7 +26,6 @@ class SessionStatusActivity : AppCompatActivity() {
                 makeTextViewResizable(binding.tvCESubTitle, 3, "...More", true)
             }
         })
-
     }
 
     fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean) {
@@ -52,9 +51,7 @@ class SessionStatusActivity : AppCompatActivity() {
                 }
                 tv.text = Html.fromHtml(text)
                 tv.movementMethod = LinkMovementMethod.getInstance()
-                tv.setText(
-                        addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, lineEndIndex, expandText,
-                                viewMore), TextView.BufferType.SPANNABLE)
+                tv.setText(addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, lineEndIndex, expandText, viewMore), TextView.BufferType.SPANNABLE)
             }
         })
     }

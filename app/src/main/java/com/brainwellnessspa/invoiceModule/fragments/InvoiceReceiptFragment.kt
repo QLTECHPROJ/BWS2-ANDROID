@@ -27,11 +27,9 @@ class InvoiceReceiptFragment : DialogFragment() {
     var invoiceID: String? = ""
     var flag: String? = ""
     var invoiceAmount: String? = ""
-    override fun onCreateView(
-        inflater: LayoutInflater,
+    override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        savedInstanceState: Bundle?): View {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_invoice_receipt, container, false)
         InvoiceActivity.invoiceToRecepit = 1
@@ -71,35 +69,21 @@ class InvoiceReceiptFragment : DialogFragment() {
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(
-                binding.progressBar,
-                binding.progressBarHolder,
-                activity
-            )
-            val listCall = APIClient.getClient().getInvoiceDetailPlaylist(
-                userID,
-                invoiceID,
-                "1"
-            ) /*Flag = 0 Staging Flag = 1 Live*/
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APIClient.getClient()
+                .getInvoiceDetailPlaylist(userID, invoiceID, "1") /*Flag = 0 Staging Flag = 1 Live*/
             listCall.enqueue(object : Callback<InvoiceDetailModel> {
                 @SuppressLint("SetTextI18n")
-                override fun onResponse(
-                    call: Call<InvoiceDetailModel>,
-                    response: Response<InvoiceDetailModel>
-                ) {
+                override fun onResponse(call: Call<InvoiceDetailModel>,
+                    response: Response<InvoiceDetailModel>) {
                     try {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
+                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess),
+                                ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar,
                                 binding.progressBarHolder,
-                                activity
-                            )
-                            if (listModel.responseData != null){
+                                activity)
+                            if (listModel.responseData != null) {
                                 invoiceAmount = "$" + listModel.responseData!!.totalAmount
                                 binding.tvFromTitle.text = "From"
                                 binding.tvDateTitle.text = "Order Date:"
@@ -123,19 +107,20 @@ class InvoiceReceiptFragment : DialogFragment() {
                                     p.putValue("plan", "")
                                     p.putValue("planStartDt", "")
                                     p.putValue("planExpiryDt", "")
-                                    BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track)
+                                    BWSApplication.addToSegment("Invoice Clicked",
+                                        p,
+                                        CONSTANTS.track)
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
                                 if (flag.equals("1", ignoreCase = true)) {
                                     binding.tvSession.visibility = View.GONE
-                                    if (listModel.responseData!!.amount.equals(
-                                            "0.00",
-                                            ignoreCase = true
-                                        ) ||
-                                        listModel.responseData!!.amount.equals("0", ignoreCase = true) ||
-                                        listModel.responseData!!.amount.equals("", ignoreCase = true)
-                                    ) {
+                                    if (listModel.responseData!!.amount.equals("0.00",
+                                            ignoreCase = true) || listModel.responseData!!.amount.equals(
+                                            "0",
+                                            ignoreCase = true) || listModel.responseData!!.amount.equals(
+                                            "",
+                                            ignoreCase = true)) {
                                         binding.tvText.visibility = View.GONE
                                         binding.views.visibility = View.GONE
                                         binding.tvPaymentDetails.visibility = View.GONE
@@ -159,10 +144,12 @@ ${listModel.responseData!!.email}"""
                                 binding.tvOrderTotal.text = "$" + listModel.responseData!!.amount
                                 binding.tvTitle.text = listModel.responseData!!.name
                                 binding.tvQty.text = "Qty: " + listModel.responseData!!.qty
-                                binding.tvSession.text = "Session: " + listModel.responseData!!.session
+                                binding.tvSession.text =
+                                    "Session: " + listModel.responseData!!.session
                                 binding.tvItems.text = "$" + listModel.responseData!!.amount
                                 binding.tvFromAddress.text = listModel.responseData!!.invoiceFrom
-                                if (listModel.responseData!!.invoiceTo.equals("", ignoreCase = true)) {
+                                if (listModel.responseData!!.invoiceTo.equals("",
+                                        ignoreCase = true)) {
                                     binding.llBilledTo.visibility = View.GONE
                                 } else {
                                     binding.llBilledTo.visibility = View.VISIBLE
@@ -170,11 +157,8 @@ ${listModel.responseData!!.email}"""
                                     binding.tvBilledTo.text = listModel.responseData!!.invoiceTo
                                 }
                                 binding.tvGst.text = "$" + listModel.responseData!!.gstAmount
-                                if (listModel.responseData!!.totalAmount.equals(
-                                        "0.00",
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                if (listModel.responseData!!.totalAmount.equals("0.00",
+                                        ignoreCase = true)) {
                                     binding.views.visibility = View.GONE
                                     binding.tvOrderTotalAmount.text =
                                         "$" + listModel.responseData!!.totalAmount
@@ -191,11 +175,9 @@ ${listModel.responseData!!.email}"""
                 }
 
                 override fun onFailure(call: Call<InvoiceDetailModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
+                    BWSApplication.hideProgressBar(binding.progressBar,
                         binding.progressBarHolder,
-                        activity
-                    )
+                        activity)
                 }
             })
         } else {

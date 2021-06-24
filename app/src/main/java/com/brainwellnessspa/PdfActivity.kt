@@ -29,11 +29,7 @@ class PdfActivity : AppCompatActivity() {
     private var tvCity: TextView? = null
     private var fileNamePath = ""
     private var permissionAll = 1
-    private var permisions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission_group.STORAGE
-    )
+    private var permisions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,22 +68,11 @@ class PdfActivity : AppCompatActivity() {
         val documentPage = myPdfDocument.startPage(myPageInfo)
         val canvas = documentPage.canvas
         var y = 25 // x = 10,
-        var x = 10
-        //int x = (canvas.getWidth() / 2);
-        paint.getTextBounds(
-            tvTitle!!.text.toString(),
-            0,
-            tvTitle!!.text.toString().length,
-            bounds
-        )
+        var x = 10 //int x = (canvas.getWidth() / 2);
+        paint.getTextBounds(tvTitle!!.text.toString(), 0, tvTitle!!.text.toString().length, bounds)
         x = canvas.width / 2 - bounds.width() / 2
         canvas.drawText(tvTitle!!.text.toString(), x.toFloat(), y.toFloat(), paint)
-        paint.getTextBounds(
-            tvSubTitle!!.text.toString(),
-            0,
-            tvSubTitle!!.text.toString().length,
-            bounds
-        )
+        paint.getTextBounds(tvSubTitle!!.text.toString(), 0, tvSubTitle!!.text.toString().length, bounds)
         x = canvas.width / 2 - bounds.width() / 2
         y += (paint.descent() - paint.ascent()).toInt()
         canvas.drawText(tvSubTitle!!.text.toString(), x.toFloat(), y.toFloat(), paint)
@@ -154,11 +139,7 @@ class PdfActivity : AppCompatActivity() {
         fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
                 for (permission in permissions) {
-                    if (ActivityCompat.checkSelfPermission(
-                            context,
-                            permission!!
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
+                    if (ActivityCompat.checkSelfPermission(context, permission!!) != PackageManager.PERMISSION_GRANTED) {
                         return false
                     }
                 }

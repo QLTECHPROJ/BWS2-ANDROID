@@ -11,14 +11,15 @@ public class PrefUtils {
     public static SharedPreferences myPrefs = null;
 
     public static PrefUtils getInstance(Context context) {
-        if (null == myPrefs) myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (null == myPrefs)
+            myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefUtils;
     }
 
     public void saveSecretKey(String value) {
         SharedPreferences.Editor editor = myPrefs.edit();
         editor.putString(SECRET_KEY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public String getSecretKey() {

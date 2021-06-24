@@ -13,12 +13,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.dashboardModule.models.NotificationlistModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.dashboardModule.models.NotificationlistModel
 import com.brainwellnessspa.databinding.ActivityNotificationListBinding
 import com.brainwellnessspa.databinding.NotificationListLayoutBinding
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -38,8 +38,7 @@ class NotificationListActivity : AppCompatActivity() {
     var userName: String? = ""
     lateinit var ctx: Context
 
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
         activity = this@NotificationListActivity

@@ -2,15 +2,15 @@ package com.brainwellnessspa.assessmentProgressModule.activities
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.segment.analytics.Properties
 
 /* This is to Assessment started activity and ended activity */
@@ -24,13 +24,11 @@ class AssProcessActivity : AppCompatActivity() {
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /* This is the layout showing */
+        super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
 
         /* This is the get string userid & couserid */
-        val shared1 =
-            getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
@@ -385,7 +383,6 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivSeventeen.visibility = View.INVISIBLE
                 }
             }
-
         }
 
         /* This is the do the asessement click */

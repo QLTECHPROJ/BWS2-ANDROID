@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
@@ -29,7 +27,6 @@ import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
-import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.SmsReceiver
@@ -97,42 +94,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to +$countryCode $mobileNo"
 
         editTexts = arrayOf(binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4)
-        binding.edtOTP1.addTextChangedListener(
-            PinTextWatcher(
-                activity,
-                binding,
-                editTexts,
-                0,
-                tvSendOTPbool
-            )
-        )
-        binding.edtOTP2.addTextChangedListener(
-            PinTextWatcher(
-                activity,
-                binding,
-                editTexts,
-                1,
-                tvSendOTPbool
-            )
-        )
-        binding.edtOTP3.addTextChangedListener(
-            PinTextWatcher(
-                activity,
-                binding,
-                editTexts,
-                2,
-                tvSendOTPbool
-            )
-        )
-        binding.edtOTP4.addTextChangedListener(
-            PinTextWatcher(
-                activity,
-                binding,
-                editTexts,
-                3,
-                tvSendOTPbool
-            )
-        )
+        binding.edtOTP1.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 0, tvSendOTPbool))
+        binding.edtOTP2.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 1, tvSendOTPbool))
+        binding.edtOTP3.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 2, tvSendOTPbool))
+        binding.edtOTP4.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 3, tvSendOTPbool))
         binding.edtOTP1.setOnKeyListener(PinOnKeyListener(0))
         binding.edtOTP2.setOnKeyListener(PinOnKeyListener(1))
         binding.edtOTP3.setOnKeyListener(PinOnKeyListener(2))
@@ -140,11 +105,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         startSMSListener()
 
         binding.btnSendCode.setOnClickListener {
-            if (binding.edtOTP1.text.toString().equals("", ignoreCase = true)
-                && binding.edtOTP2.text.toString().equals("", ignoreCase = true)
-                && binding.edtOTP3.text.toString().equals("", ignoreCase = true)
-                && binding.edtOTP4.text.toString().equals("", ignoreCase = true)
-            ) {
+            if (binding.edtOTP1.text.toString().equals("", ignoreCase = true) && binding.edtOTP2.text.toString().equals("", ignoreCase = true) && binding.edtOTP3.text.toString().equals("", ignoreCase = true) && binding.edtOTP4.text.toString().equals("", ignoreCase = true)) {
                 binding.txtError.visibility = View.VISIBLE
                 binding.txtError.text = "Please enter OTP"
             } else {
@@ -193,15 +154,12 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         }
     }
 
-    @SuppressLint("HardwareIds")
-    fun authotpUserAcess() {
+    @SuppressLint("HardwareIds") fun authotpUserAcess() {
         if (BWSApplication.isNetworkConnected(this)) {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(
-                    this
-                ) { task: Task<InstallationTokenResult> ->
+                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
                     val newToken = task.result!!.token
                     Log.e("newToken", newToken)
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
@@ -215,31 +173,11 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
-            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getAuthOtpAccess(
-                binding.edtOTP1.text.toString() + "" +
-                        binding.edtOTP2.text.toString() + "" +
-                        binding.edtOTP3.text.toString() + "" +
-                        binding.edtOTP4.text.toString(),
-                CONSTANTS.FLAG_ONE,
-                Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
-                countryCode,
-                mobileNo,
-                signupFlag,
-                name,
-                email,
-                fcmId
-            )
+            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
-                override fun onResponse(
-                    call: Call<AuthOtpModel>,
-                    response: Response<AuthOtpModel>
-                ) {
+                override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AuthOtpModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
                             if (signupFlag.equals("1", ignoreCase = true)) {
@@ -247,49 +185,22 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 startActivity(i)
                                 finish()
                             } else {
-                                if (listModel.ResponseData.isAssessmentCompleted.equals(
-                                        "0",
-                                        ignoreCase = true
-                                    )
-                                ) {
-                                    val intent = Intent(
-                                        activity,
-                                        AssProcessActivity::class.java
-                                    )
-                                    intent.putExtra(
-                                        CONSTANTS.ASSPROCESS,
-                                        "0"
-                                    )
+                                if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     startActivity(intent)
                                     finish()
-                                } else if (listModel.ResponseData.isProfileCompleted.equals(
-                                        "0",
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                     val intent = Intent(activity, WalkScreenActivity::class.java)
                                     intent.putExtra(CONSTANTS.ScreenView, "2")
                                     startActivity(intent)
                                     finish()
-                                } else if (listModel.ResponseData.AvgSleepTime.equals(
-                                        "",
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
                                     val intent = Intent(activity, SleepTimeActivity::class.java)
                                     startActivity(intent)
                                     finish()
-                                } else if (listModel.ResponseData.isProfileCompleted.equals(
-                                        "1",
-                                        ignoreCase = true
-                                    ) &&
-                                    listModel.ResponseData.isAssessmentCompleted.equals(
-                                        "1",
-                                        ignoreCase = true
-                                    )
-                                ) {
-                                    val intent =
-                                        Intent(activity, BottomNavigationActivity::class.java)
+                                } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
                                     finish()
@@ -302,96 +213,37 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             p.putValue("mobileNo", listModel.ResponseData.Mobile)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", "")
-                            p.putValue(
-                                "countryShortName",
-                                ""
-                            )
+                            p.putValue("countryShortName", "")
                             p.putValue("email", "")
                             BWSApplication.addToSegment("", p, CONSTANTS.track)
 
-                            val shared =
-                                activity.getSharedPreferences(
-                                    CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER,
-                                    MODE_PRIVATE
-                                )
+                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                             val editor = shared.edit()
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_mainAccountID,
-                                listModel.ResponseData.MainAccountID
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_UserId,
-                                listModel.ResponseData.UserId
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_EMAIL,
-                                listModel.ResponseData.Email
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_NAME,
-                                listModel.ResponseData.Name
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_MOBILE,
-                                listModel.ResponseData.Mobile
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                listModel.ResponseData.AvgSleepTime
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_INDEXSCORE,
-                                listModel.ResponseData.indexScore
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_SCORELEVEL,
-                                listModel.ResponseData.ScoreLevel
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_IMAGE,
-                                listModel.ResponseData.Image
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED,
-                                listModel.ResponseData.isProfileCompleted
-                            )
-                            editor.putString(
-                                CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,
-                                listModel.ResponseData.isAssessmentCompleted
-                            )
+                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
                             editor.apply()
 
-                            val sharded =
-                                activity.getSharedPreferences(
-                                    CONSTANTS.RecommendedCatMain,
-                                    Context.MODE_PRIVATE
-                                )
+                            val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             val edited = sharded.edit()
-                            edited.putString(
-                                CONSTANTS.PREFE_ACCESS_SLEEPTIME,
-                                listModel.ResponseData.AvgSleepTime
-                            )
-                            val selectedCategoriesTitle =
-                                arrayListOf<String>()
-                            val selectedCategoriesName =
-                                arrayListOf<String>()
+                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                            val selectedCategoriesTitle = arrayListOf<String>()
+                            val selectedCategoriesName = arrayListOf<String>()
                             val gson = Gson()
                             for (i in listModel.ResponseData.AreaOfFocus) {
                                 selectedCategoriesTitle.add(i.MainCat)
                                 selectedCategoriesName.add(i.RecommendedCat)
                             }
-                            edited.putString(
-                                CONSTANTS.selectedCategoriesTitle,
-                                gson.toJson(
-                                    selectedCategoriesTitle
-                                )
-                            ) //Friend
-                            edited.putString(
-                                CONSTANTS.selectedCategoriesName,
-                                gson.toJson(
-                                    selectedCategoriesName
-                                )
-                            ) //Friend
+                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
                             edited.apply()
                         }
                         BWSApplication.showToast(listModel.ResponseMessage, activity)
@@ -429,13 +281,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         }
     }
 
-    class PinTextWatcher internal constructor(
-        val activity: Activity,
-        val binding: ActivityAuthOtpBinding,
-        private var editTexts: Array<EditText>,
-        private val currentIndex: Int,
-        private var tvSendOTPbool: Boolean
-    ) : TextWatcher {
+    class PinTextWatcher internal constructor(val activity: Activity, val binding: ActivityAuthOtpBinding, private var editTexts: Array<EditText>, private val currentIndex: Int, private var tvSendOTPbool: Boolean) : TextWatcher {
         private var isFirst = false
         private var isLast = false
         private var newTypedString = ""
@@ -461,8 +307,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             var text = newTypedString
             Log.e("OTP VERIFICATION", "" + text)
 
-            /* Detect paste event and set first char */if (text.length > 1) text =
-                text[0].toString() // TODO: We can fill out other EditTexts
+            /* Detect paste event and set first char */if (text.length > 1) text = text[0].toString() // TODO: We can fill out other EditTexts
             editTexts[currentIndex].removeTextChangedListener(this)
             editTexts[currentIndex].setText(text)
             editTexts[currentIndex].setSelection(text.length)
@@ -492,34 +337,27 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
         private val isAllEditTextsFilled: Boolean
             get() {
-                for (editText in editTexts) if (editText.text.toString()
-                        .trim { it <= ' ' }.isEmpty()
-                ) return false
+                for (editText in editTexts) if (editText.text.toString().trim { it <= ' ' }.isEmpty()) return false
                 return true
             }
 
         private fun hideKeyboard() {
             if (activity.currentFocus != null) {
-                val inputMethodManager: InputMethodManager =
-                    activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager: InputMethodManager = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
             }
         }
 
         init {
-            if (currentIndex == 0) isFirst =
-                true else if (currentIndex == editTexts.size - 1) isLast = true
+            if (currentIndex == 0) isFirst = true else if (currentIndex == editTexts.size - 1) isLast = true
         }
     }
 
-    class PinOnKeyListener internal constructor(private val currentIndex: Int) :
-        View.OnKeyListener {
+    class PinOnKeyListener internal constructor(private val currentIndex: Int) : View.OnKeyListener {
         val act = AuthOtpActivity()
         override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action === KeyEvent.ACTION_DOWN) {
-                if (act.editTexts[currentIndex].text.toString()
-                        .isEmpty() && currentIndex != 0
-                ) act.editTexts[currentIndex - 1].requestFocus()
+                if (act.editTexts[currentIndex].text.toString().isEmpty() && currentIndex != 0) act.editTexts[currentIndex - 1].requestFocus()
             }
             return false
         }
@@ -578,7 +416,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             smsReceiver = null
         }
     }
-
 
     override fun onOTPTimeOut() {
 //        showToast("OTP Time out");

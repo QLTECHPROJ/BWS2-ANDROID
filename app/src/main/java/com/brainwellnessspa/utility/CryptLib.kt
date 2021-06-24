@@ -19,19 +19,15 @@ class CryptLib {
     private val _key: ByteArray = ByteArray(32)
     private val _iv: ByteArray = ByteArray(16)
 
-    @Throws(
-        UnsupportedEncodingException::class,
+    @Throws(UnsupportedEncodingException::class,
         InvalidKeyException::class,
         InvalidAlgorithmParameterException::class,
         IllegalBlockSizeException::class,
-        BadPaddingException::class
-    )
-    private fun encryptDecrypt(
-        inputText: String,
+        BadPaddingException::class)
+    private fun encryptDecrypt(inputText: String,
         encryptionKey: String,
         mode: EncryptMode,
-        initVector: String
-    ): ByteArray {
+        initVector: String): ByteArray {
         var len =
             encryptionKey.toByteArray(StandardCharsets.UTF_8).size // length of the key	provided
         if (encryptionKey.toByteArray(StandardCharsets.UTF_8).size > _key.size) len = _key.size
@@ -39,31 +35,19 @@ class CryptLib {
         if (initVector.toByteArray(StandardCharsets.UTF_8).size > _iv.size) ivlength = _iv.size
         System.arraycopy(encryptionKey.toByteArray(StandardCharsets.UTF_8), 0, _key, 0, len)
         System.arraycopy(initVector.toByteArray(StandardCharsets.UTF_8), 0, _iv, 0, ivlength)
-        val keySpec = SecretKeySpec(
-            _key,
-            "AES"
-        ) // Create a new SecretKeySpec for the specified key data and algorithm name.
+        val keySpec = SecretKeySpec(_key,
+            "AES") // Create a new SecretKeySpec for the specified key data and algorithm name.
         val ivSpec =
             IvParameterSpec(_iv) // Create a new IvParameterSpec instance with the bytes from the specified buffer iv used as initialization vector.
 
         // encryption
-        return if (mode == EncryptMode.ENCRYPT) {
-            // Potentially insecure random numbers on Android 4.3 and older. Read for more info.
+        return if (mode == EncryptMode.ENCRYPT) { // Potentially insecure random numbers on Android 4.3 and older. Read for more info.
             // https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html
-            _cx.init(
-                Cipher.ENCRYPT_MODE,
-                keySpec,
-                ivSpec
-            ) // Initialize this cipher instance
+            _cx.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec) // Initialize this cipher instance
             _cx.doFinal(inputText.toByteArray(StandardCharsets.UTF_8)) // Finish multi-part transformation (encryption)
         } else {
-            _cx.init(
-                Cipher.DECRYPT_MODE,
-                keySpec,
-                ivSpec
-            ) // Initialize this cipher instance
-            val decodedValue =
-                Base64.decode(inputText.toByteArray(), Base64.NO_WRAP)
+            _cx.init(Cipher.DECRYPT_MODE, keySpec, ivSpec) // Initialize this cipher instance
+            val decodedValue = Base64.decode(inputText.toByteArray(), Base64.NO_WRAP)
             _cx.doFinal(decodedValue) // Finish multi-part transformation (decryption)
         }
     }
@@ -82,12 +66,10 @@ class CryptLib {
 
     @Throws(Exception::class)
     fun encryptPlainTextWithRandomIV(plainText: String, key: String): String {
-        val bytes = encryptDecrypt(
-            generateRandomIV16() + plainText,
+        val bytes = encryptDecrypt(generateRandomIV16() + plainText,
             SHA256(key, 32),
             EncryptMode.ENCRYPT,
-            generateRandomIV16()
-        )
+            generateRandomIV16())
         return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 
@@ -134,8 +116,7 @@ class CryptLib {
         }
     }
 
-    init {
-        //256 bit key space
+    init { //256 bit key space
         //128 bit IV
     }
 }

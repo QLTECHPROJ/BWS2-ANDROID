@@ -37,18 +37,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
+import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.MeasureRatio;
-import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
-import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -66,13 +66,13 @@ import java.util.List;
 import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
+import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
+import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
 import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick;
 import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
 import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
@@ -247,7 +247,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     @Override
     public void onPause() {
-//        handler3.removeCallbacks(UpdateSongTime3);
+        //        handler3.removeCallbacks(UpdateSongTime3);
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
         super.onPause();
     }
@@ -279,7 +279,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             public View onDisconnected() {
                 // do some other stuff
 
-
                 return null;//To display a dialog simply return a custom view or just null to ignore it
             }
         }).setNotificationCancelable(false).build();
@@ -298,13 +297,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             if (player != null) {
                 if (player.getPlayWhenReady()) {
                     isPlayPlaylist = 1;
-//                    handler3.postDelayed(UpdateSongTime3, 500);
+                    //                    handler3.postDelayed(UpdateSongTime3, 500);
 
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                 } else {
                     isPlayPlaylist = 2;
-//                    handler3.postDelayed(UpdateSongTime3, 500);
+                    //                    handler3.postDelayed(UpdateSongTime3, 500);
 
                     binding.llPause.setVisibility(View.GONE);
                     binding.llPlay.setVisibility(View.VISIBLE);
@@ -418,7 +417,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         });
         binding.tvTag.setVisibility(View.VISIBLE);
         binding.tvTag.setText("Audios in Playlist");
-//        binding.tvPlaylist.setText("Playlist");
+        //        binding.tvPlaylist.setText("Playlist");
     }
 
     private void getDownloadData() {
@@ -467,7 +466,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 }
             }
         } catch (Exception e) {
-//            getDownloadData();
+            //            getDownloadData();
             e.printStackTrace();
             Log.e("Download Playlist ", "Download Playlist remove issue" + e.getMessage());
         }
@@ -676,7 +675,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         } else {
                             holder.binding.equalizerview.resume(true);
                         }
-                    } else holder.binding.equalizerview.stop(true);
+                    } else
+                        holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -685,12 +685,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-//                    handler3.postDelayed(UpdateSongTime3,500);
+                //                    handler3.postDelayed(UpdateSongTime3,500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                    handler3.removeCallbacks(UpdateSongTime3);
+                //                    handler3.removeCallbacks(UpdateSongTime3);
             }
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
@@ -732,7 +732,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                 if (player != null) {
                                     if (!player.getPlayWhenReady()) {
                                         player.setPlayWhenReady(true);
-                                    } else player.setPlayWhenReady(true);
+                                    } else
+                                        player.setPlayWhenReady(true);
                                     callAddTranFrag();
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                                 } else
@@ -793,7 +794,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                 }
-//                handler3.postDelayed(UpdateSongTime3,500);
+                //                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
 
@@ -807,7 +808,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                             if (player != null) {
                                 if (!player.getPlayWhenReady()) {
                                     player.setPlayWhenReady(true);
-                                } else player.setPlayWhenReady(true);
+                                } else
+                                    player.setPlayWhenReady(true);
                                 callAddTranFrag();
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                             } else
@@ -868,7 +870,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 isPlayPlaylist = 1;
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-//                handler3.postDelayed(UpdateSongTime3,500);
+                //                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
 
@@ -910,7 +912,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
                             player.setPlayWhenReady(true);
-                        } else player.setPlayWhenReady(true);
+                        } else
+                            player.setPlayWhenReady(true);
                         callAddTranFrag();
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                     } else
@@ -932,7 +935,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                             }
                         } else {
-//                                pos = 0;
+                            //                                pos = 0;
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity);
                         }
                     } else {
@@ -1026,7 +1029,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (listFilterData.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
                         binding.rvPlayLists.setVisibility(View.GONE);
-//                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
+                        //                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
                         binding.tvFound.setText("No result found");
                         Log.e("search", SearchFlag);
                         binding.tvTag.setVisibility(View.GONE);
@@ -1052,7 +1055,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     class AppLifecycleCallback implements Application.ActivityLifecycleCallbacks {
-
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

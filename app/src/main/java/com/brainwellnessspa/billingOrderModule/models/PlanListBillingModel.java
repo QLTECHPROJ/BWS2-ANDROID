@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanListBillingModel  implements Parcelable{
+public class PlanListBillingModel implements Parcelable {
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -87,8 +87,7 @@ public class PlanListBillingModel  implements Parcelable{
         parcel.writeString(responseStatus);
     }
 
-    public static class ResponseData implements Parcelable{
-
+    public static class ResponseData implements Parcelable {
         @SerializedName("Image")
         @Expose
         private String image;

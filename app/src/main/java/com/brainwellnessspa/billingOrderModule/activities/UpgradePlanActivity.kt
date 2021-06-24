@@ -17,8 +17,7 @@ class UpgradePlanActivity : AppCompatActivity() {
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /* This is the layout showing */
+        super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade_plan)
         ctx = this@UpgradePlanActivity
         act = this@UpgradePlanActivity
@@ -31,10 +30,10 @@ class UpgradePlanActivity : AppCompatActivity() {
         /* This is the listing view layout */
         binding.rvPlanList.layoutManager = LinearLayoutManager(act)
 
-//        planListAdapter = PlanListAdapter(
-//            listModelList, ctx, i
-//        )
-//        binding.rvPlanList.adapter = planListAdapter
+        //        planListAdapter = PlanListAdapter(
+        //            listModelList, ctx, i
+        //        )
+        //        binding.rvPlanList.adapter = planListAdapter
     }
 
     /* class PlanListAdapter(

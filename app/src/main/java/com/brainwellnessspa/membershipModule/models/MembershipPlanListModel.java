@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MembershipPlanListModel implements Parcelable {
-
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;

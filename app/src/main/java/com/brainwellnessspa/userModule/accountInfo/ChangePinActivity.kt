@@ -11,10 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.databinding.ActivityChangePinBinding
 import com.brainwellnessspa.userModule.models.ChangePinModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.databinding.ActivityChangePinBinding
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,8 +32,7 @@ class ChangePinActivity : AppCompatActivity() {
             val currentPIN: String = binding.etCurrentPIN.text.toString().trim()
             val newPIN: String = binding.etNewPIN.text.toString().trim()
             val confirmPIN: String = binding.etConfirmPIN.text.toString().trim()
-            if (currentPIN.equals("", ignoreCase = true) &&
-                newPIN.equals("", ignoreCase = true) && confirmPIN.equals("", ignoreCase = true)) {
+            if (currentPIN.equals("", ignoreCase = true) && newPIN.equals("", ignoreCase = true) && confirmPIN.equals("", ignoreCase = true)) {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -126,8 +125,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtConfirmPINError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
-                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(coUserID, binding.etCurrentPIN.text.toString(),
-                        binding.etConfirmPIN.text.toString())
+                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(coUserID, binding.etCurrentPIN.text.toString(), binding.etConfirmPIN.text.toString())
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {
                         try {

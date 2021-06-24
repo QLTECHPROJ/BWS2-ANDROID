@@ -1,49 +1,48 @@
 package com.brainwellnessspa.dashboardModule.enhance
 
-import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
-import android.app.Activity
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.brainwellnessspa.utility.CONSTANTS
-import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.R
-import com.brainwellnessspa.BWSApplication
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.DefaultItemAnimator
-import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
-import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
-import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.dashboardModule.models.SegmentAudio
-import com.google.gson.Gson
-import androidx.recyclerview.widget.RecyclerView
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
-import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
+import com.brainwellnessspa.dashboardModule.models.SegmentAudio
+import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding
 import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
+import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
+import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
-import java.util.ArrayList
+import java.util.*
 
 class ViewAllAudioFragment : Fragment() {
     lateinit var binding: FragmentViewAllAudioBinding
@@ -208,8 +207,7 @@ class ViewAllAudioFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(getActivity(), 0f, 1f, 1f, 0.46f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()

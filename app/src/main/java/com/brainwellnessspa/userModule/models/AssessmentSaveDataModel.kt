@@ -51,10 +51,12 @@ class AssessmentSaveDataModel {
     fun setResponseStatus(responseStatus: String?) {
         this.responseStatus = responseStatus
     }
+
     class ResponseData {
         @SerializedName("indexScore")
         @Expose
         var indexScore: String? = ""
+
         @SerializedName("ScoreLevel")
         @Expose
         var scoreLevel: String? = ""

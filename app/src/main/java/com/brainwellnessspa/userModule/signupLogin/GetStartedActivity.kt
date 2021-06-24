@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.ActivityGetStartedBinding
+import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 
 class GetStartedActivity : AppCompatActivity() {
