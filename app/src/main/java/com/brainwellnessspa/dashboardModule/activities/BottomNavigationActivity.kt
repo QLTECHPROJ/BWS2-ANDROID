@@ -49,20 +49,14 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     private var uiModeManager: UiModeManager? = null
     private var myNetworkReceiver: MyNetworkReceiver? = null
     private var myBatteryReceiver: MyBatteryReceiver? = null
+
     @SuppressLint("BatteryLife")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration.Builder(
-            R.id.navigation_Home,
-            R.id.navigation_Manage,
-            R.id.navigation_Wellness,
-            R.id.navigation_Elevate,
-            R.id.navigation_Profile
-        )
-            .build()
+        val appBarConfiguration = AppBarConfiguration.Builder(R.id.navigation_Home, R.id.navigation_Manage, R.id.navigation_Wellness, R.id.navigation_Elevate, R.id.navigation_Profile).build()
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupWithNavController(binding.navView, navController)
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -80,7 +74,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         if (isFirst.equals("1", ignoreCase = true)) {
             BWSApplication.showToast("Welcome $userName!!", this@BottomNavigationActivity)
         } else {
-//            nothing
+            //            nothing
         }
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
         if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
@@ -88,15 +82,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             Log.e("Nite Mode :", uiModeManager!!.nightMode.toString())
         }
         /* register receiver for batttery state change */
-        registerReceiver(
-            MyBatteryReceiver().also { myBatteryReceiver = it },
-            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        )
+        registerReceiver(MyBatteryReceiver().also { myBatteryReceiver = it }, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         /* register receiver for*/
-        registerReceiver(
-            MyNetworkReceiver().also { myNetworkReceiver = it },
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+        registerReceiver(MyNetworkReceiver().also { myNetworkReceiver = it }, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         /* This condition use for battery optimization permission*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -111,10 +99,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             }
         }
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        val wakeLock = powerManager.newWakeLock(
-            PowerManager.FULL_WAKE_LOCK,
-            "com.brainwellnessspa::MyWakelockTag"
-        )
+        val wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "com.brainwellnessspa::MyWakelockTag")
     }
 
     /* on Activity Result method use for battery optimization permission allow or deny*/
@@ -136,20 +121,17 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     override fun onResume() {
         /* Net Watcher for resume player when data connection again fetch after gone*/
-        NetWatch.builder(this)
-            .setCallBack(object : NetworkChangeReceiver_navigator {
-                override fun onConnected(source: Int) {
-                    // do some thing
-                    GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
-                }
+        NetWatch.builder(this).setCallBack(object : NetworkChangeReceiver_navigator {
+            override fun onConnected(source: Int) {
+                // do some thing
+                GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
+            }
 
-                override fun onDisconnected(): View? {
-                    // do some other stuff
-                    return null //To display a dialog simply return a custom view or just null to ignore it
-                }
-            })
-            .setNotificationCancelable(false)
-            .build()
+            override fun onDisconnected(): View? {
+                // do some other stuff
+                return null //To display a dialog simply return a custom view or just null to ignore it
+            }
+        }).setNotificationCancelable(false).build()
         super.onResume()
     }
 

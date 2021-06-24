@@ -30,10 +30,7 @@ object PowerSaverHelper {
         return if (pm.isPowerSaveMode) PowerSaveState.ON else PowerSaveState.OFF
     }
 
-    fun getIfAppIsWhiteListedFromBatteryOptimizations(
-        context: Context,
-        packageName: String
-    ): WhiteListedInBatteryOptimizations {
+    fun getIfAppIsWhiteListedFromBatteryOptimizations(context: Context, packageName: String): WhiteListedInBatteryOptimizations {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return WhiteListedInBatteryOptimizations.IRRELEVANT_OLD_ANDROID_API
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return WhiteListedInBatteryOptimizations.UNKNOWN_TOO_OLD_ANDROID_API_FOR_CHECKING
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -42,31 +39,14 @@ object PowerSaverHelper {
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-    fun prepareIntentForWhiteListingOfBatteryOptimization(
-        context: Context,
-        packageName: String,
-        alsoWhenWhiteListed: Boolean
-    ): Intent? {
+    fun prepareIntentForWhiteListingOfBatteryOptimization(context: Context, packageName: String, alsoWhenWhiteListed: Boolean): Intent? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            ) == PackageManager.PERMISSION_DENIED
-        ) return null
-        val appIsWhiteListedFromPowerSave =
-            getIfAppIsWhiteListedFromBatteryOptimizations(context, packageName)
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) == PackageManager.PERMISSION_DENIED) return null
+        val appIsWhiteListedFromPowerSave = getIfAppIsWhiteListedFromBatteryOptimizations(context, packageName)
         var intent: Intent? = null
         when (appIsWhiteListedFromPowerSave) {
-            WhiteListedInBatteryOptimizations.WHITE_LISTED -> if (alsoWhenWhiteListed) intent =
-                Intent(
-                    Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
-                )
-            WhiteListedInBatteryOptimizations.NOT_WHITE_LISTED -> intent =
-                Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).setData(
-                    Uri.parse(
-                        "package:$packageName"
-                    )
-                )
+            WhiteListedInBatteryOptimizations.WHITE_LISTED -> if (alsoWhenWhiteListed) intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            WhiteListedInBatteryOptimizations.NOT_WHITE_LISTED -> intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).setData(Uri.parse("package:$packageName"))
             WhiteListedInBatteryOptimizations.ERROR_GETTING_STATE, WhiteListedInBatteryOptimizations.UNKNOWN_TOO_OLD_ANDROID_API_FOR_CHECKING, WhiteListedInBatteryOptimizations.IRRELEVANT_OLD_ANDROID_API -> {
             }
             else -> {

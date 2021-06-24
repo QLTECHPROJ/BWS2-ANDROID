@@ -69,7 +69,7 @@ import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
-    String UserID,CoUserID;
+    String UserID, CoUserID;
     PlaylistsDownloadsAdapter adapter;
     //    Runnable UpdateSongTime1;
 //    Handler handler1;
@@ -161,8 +161,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     }
 
     private void GetAllMedia(FragmentActivity activity) {
-        DB.taskDao()
-                .getAllPlaylist1(CoUserID).observe(getActivity(), audioList -> {
+        DB.taskDao().getAllPlaylist1(CoUserID).observe(getActivity(), audioList -> {
 
             if (audioList != null) {
                 if (audioList.size() != 0) {
@@ -212,8 +211,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             binding.llError.setVisibility(View.GONE);
             adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), binding.llError, binding.tvFound, binding.rvDownloadsList);
             binding.rvDownloadsList.setAdapter(adapter);
-            LocalBroadcastManager.getInstance(getActivity())
-                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         }
     }
 
@@ -238,8 +236,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.audio_downloads_layout, parent, false);
+            AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.audio_downloads_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -287,26 +284,20 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
 
             try {
-                if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
-                        listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
-                                listModelList.get(position).getTotalhour().equalsIgnoreCase("")
-                                && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") || listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") && listModelList.get(position).getTotalhour().equalsIgnoreCase("") && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
                     holder.binding.tvTime.setText("0 Audio | 0h 0m");
                 } else {
                     if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audio | "
-                                + listModelList.get(position).getTotalhour() + "h 0m");
+                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audio | " + listModelList.get(position).getTotalhour() + "h 0m");
                     } else {
-                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
-                                " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0, 1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -315,13 +306,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
-                    .placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
+            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
 //            if (IsLock.equalsIgnoreCase("1")) {
 //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
 //                holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -347,31 +333,30 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 //                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                    } else if (IsLock.equalsIgnoreCase("0")
 //                            || IsLock.equalsIgnoreCase("")) {
-                        DB.taskDao()
-                                .getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(),CoUserID).removeObserver(audioList -> {
-                        });
-                        comefromDownload = "1";
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
-                        i.putExtra("New", "0");
-                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
-                        i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
-                        i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
-                        i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
-                        i.putExtra("PlaylistDescription", listModelList.get(position).getPlaylistDesc());
-                        i.putExtra("Created", listModelList.get(position).getCreated());
-                        i.putExtra("MyDownloads", "1");
-                        ctx.startActivity(i);
-                        Properties p = new Properties();
-                        p.putValue("userId", UserID);
-                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                        p.putValue("playlistType", "");
-                        BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
+                    DB.taskDao().getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(), CoUserID).removeObserver(audioList -> {
+                    });
+                    comefromDownload = "1";
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
+                    i.putExtra("New", "0");
+                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
+                    i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
+                    i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
+                    i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
+                    i.putExtra("PlaylistDescription", listModelList.get(position).getPlaylistDesc());
+                    i.putExtra("Created", listModelList.get(position).getCreated());
+                    i.putExtra("MyDownloads", "1");
+                    ctx.startActivity(i);
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                    p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                    p.putValue("playlistType", "");
+                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
 //                    }
                 } catch (java.lang.IllegalStateException exception) {
                     // Attempt to catch rare mysterious Canvas stack underflow events that have been reported in
@@ -422,7 +407,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         if (isMyDownloading) {
 //                            handler1.removeCallbacks(UpdateSongTime1);
                         }
-                        DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {});
+                        DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
+                        });
                         getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
                         GetPlaylistMedia(listModelList.get(position).getPlaylistID());
                         Properties p = new Properties();
@@ -460,7 +446,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void getDownloadDataForDelete(String playlistID) {
-            List<String> fileNameList = new ArrayList<>(), fileNameList1= new ArrayList<>(), audioFile= new ArrayList<>(), playlistDownloadId= new ArrayList<>();
+            List<String> fileNameList = new ArrayList<>(), fileNameList1 = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
@@ -505,14 +491,14 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             } catch (Exception e) {
 //                getDownloadDataForDelete(playlistID);
                 e.printStackTrace();
-                Log.e("Download Playlist ","Download Playlist remove issue:- "+e.getMessage());
+                Log.e("Download Playlist ", "Download Playlist remove issue:- " + e.getMessage());
             }
 
 
         }
 
         private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
-            DB.taskDao().getCountDownloadProgress1("Complete", playlistID,CoUserID).observe(this.ctx, audioList -> {
+            DB.taskDao().getCountDownloadProgress1("Complete", playlistID, CoUserID).observe(this.ctx, audioList -> {
                 if (audioList != null) {
                     if (audioList.size() < Integer.parseInt(totalAudio)) {
                         long progressPercent = audioList.size() * 100 / Integer.parseInt(totalAudio);
@@ -528,8 +514,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 //                        handler1.removeCallbacks(UpdateSongTime1);
                         isMyDownloading = false;
                         notifyDataSetChanged();
-                        DB.taskDao()
-                                .getCountDownloadProgress1("Complete", playlistID,CoUserID).removeObserver(audioListx -> {
+                        DB.taskDao().getCountDownloadProgress1("Complete", playlistID, CoUserID).removeObserver(audioListx -> {
                         });
                     }
                 }
@@ -557,8 +542,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     }*/
 
 
-        public void GetSingleMedia(String AudioFile, Context ctx,String playlistID,List<DownloadAudioDetails> audioList,int i) {
-            DB.taskDao().getLastIdByuId1(AudioFile,CoUserID).observe(getActivity(), audioList1 -> {
+        public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
+            DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe(getActivity(), audioList1 -> {
                 try {
                     if (audioList1.size() != 0) {
                         if (audioList1.size() == 1) {
@@ -578,20 +563,20 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void deleteDownloadFile(String PlaylistId) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId,CoUserID));
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
             deletePlaylist(PlaylistId);
         }
 
         private void deletePlaylist(String playlistId) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId,CoUserID));
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
             GetAllMedia(ctx);
         }
 
         public void GetPlaylistMedia(String playlistID) {
-            DB.taskDao().getAllAudioByPlaylist1(playlistID,CoUserID).observe(this.ctx, audioList -> {
+            DB.taskDao().getAllAudioByPlaylist1(playlistID, CoUserID).observe(this.ctx, audioList -> {
                 deleteDownloadFile(playlistID);
                 if (audioList.size() != 0) {
-                    GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID,audioList,0);
+                    GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, 0);
                 }
             });
         }

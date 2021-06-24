@@ -8,15 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.DirectionTagLayoutBinding
 
-class DirectionAdapter(private val listModelList: List<String>, var ctx: Context) :
-    RecyclerView.Adapter<DirectionAdapter.MyViewHolder>() {
+class DirectionAdapter(private val listModelList: List<String>, var ctx: Context) : RecyclerView.Adapter<DirectionAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val v: DirectionTagLayoutBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.direction_tag_layout,
-            parent,
-            false
-        )
+        val v: DirectionTagLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.direction_tag_layout, parent, false)
         return MyViewHolder(v)
     }
 
@@ -28,7 +22,5 @@ class DirectionAdapter(private val listModelList: List<String>, var ctx: Context
         return listModelList.size
     }
 
-    class MyViewHolder(var binding: DirectionTagLayoutBinding) : RecyclerView.ViewHolder(
-        binding.root
-    )
+    class MyViewHolder(var binding: DirectionTagLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 }

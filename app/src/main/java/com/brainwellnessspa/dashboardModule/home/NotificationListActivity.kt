@@ -37,13 +37,13 @@ class NotificationListActivity : AppCompatActivity() {
     var coUserId: String? = ""
     var userName: String? = ""
     lateinit var ctx: Context
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
         activity = this@NotificationListActivity
-        val shared1: SharedPreferences =
-            getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -62,27 +62,14 @@ class NotificationListActivity : AppCompatActivity() {
     private fun prepareNotiData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<NotificationlistModel> =
-                APINewClient.getClient().getNotificationlist(coUserId)
+            val listCall: Call<NotificationlistModel> = APINewClient.getClient().getNotificationlist(coUserId)
             listCall.enqueue(object : Callback<NotificationlistModel> {
-                override fun onResponse(
-                    call: Call<NotificationlistModel>,
-                    response: Response<NotificationlistModel>
-                ) {
+                override fun onResponse(call: Call<NotificationlistModel>, response: Response<NotificationlistModel>) {
                     try {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: NotificationlistModel = response.body()!!
-                        if (listModel.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            binding.rvNotiList.layoutManager =
-                                LinearLayoutManager(this@NotificationListActivity)
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            binding.rvNotiList.layoutManager = LinearLayoutManager(this@NotificationListActivity)
                             if (listModel.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.VISIBLE
                                 binding.rvNotiList.visibility = View.GONE
@@ -100,11 +87,7 @@ class NotificationListActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<NotificationlistModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -112,31 +95,17 @@ class NotificationListActivity : AppCompatActivity() {
         }
     }
 
-    class NotiListAdapter(
-        private val listModel: List<NotificationlistModel.ResponseData?>,
-        var activity: Activity
-    ) :
-        RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
+    class NotiListAdapter(private val listModel: List<NotificationlistModel.ResponseData?>, var activity: Activity) : RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
 
-        inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) :
-            RecyclerView.ViewHolder(bindingAdapter.root) {
-        }
+        inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {}
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: NotificationListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.notification_list_layout,
-                parent,
-                false
-            )
+            val v: NotificationListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.notification_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            Glide.with(activity).load(listModel[position]!!.image).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(18))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                .into(holder.bindingAdapter.ivImage)
+            Glide.with(activity).load(listModel[position]!!.image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(18))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivImage)
             holder.bindingAdapter.tvTitle.text = listModel[position]!!.msg
             holder.bindingAdapter.tvDesc.text = listModel[position]!!.desc
             holder.bindingAdapter.tvTime.text = listModel[position]!!.durationTime

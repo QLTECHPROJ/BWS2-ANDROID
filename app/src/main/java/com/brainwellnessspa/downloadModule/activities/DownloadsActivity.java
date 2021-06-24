@@ -111,8 +111,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount(),
-                UserID, binding.progressBarHolder, binding.progressBar);
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount(), UserID, binding.progressBarHolder, binding.progressBar);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
         if (ComeFrom_Playlist) {
@@ -275,25 +274,22 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             prepareData1();
             comeDeletePlaylist = 0;
         }
-        NetWatch.builder(this)
-                .setCallBack(new NetworkChangeReceiver_navigator() {
-                    @Override
-                    public void onConnected(int source) {
-                        // do some thing
-                        callResumePlayer(ctx);
-                    }
+        NetWatch.builder(this).setCallBack(new NetworkChangeReceiver_navigator() {
+            @Override
+            public void onConnected(int source) {
+                // do some thing
+                callResumePlayer(ctx);
+            }
 
-                    @Override
-                    public View onDisconnected() {
-                        // do some other stuff
+            @Override
+            public View onDisconnected() {
+                // do some other stuff
 
 
-                        return null;//To display a dialog simply return a custom view or just null to ignore it
-                    }
-                })
-                .setNotificationCancelable(false)
-                .build();
-        DB.taskDao().geAllDataz("",CoUserID).observe(this, audioList -> {
+                return null;//To display a dialog simply return a custom view or just null to ignore it
+            }
+        }).setNotificationCancelable(false).build();
+        DB.taskDao().geAllDataz("", CoUserID).observe(this, audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();
@@ -318,11 +314,10 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 }
             } else {
             }
-            DB.taskDao().geAllDataz("",CoUserID).removeObserver(audioListx -> {
+            DB.taskDao().geAllDataz("", CoUserID).removeObserver(audioListx -> {
             });
         });
-        DB.taskDao()
-                .getAllPlaylist1(CoUserID).observe(this, audioList -> {
+        DB.taskDao().getAllPlaylist1(CoUserID).observe(this, audioList -> {
 
             if (audioList != null) {
                 if (audioList.size() != 0) {

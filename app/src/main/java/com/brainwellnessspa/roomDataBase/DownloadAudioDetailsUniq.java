@@ -2,7 +2,7 @@ package com.brainwellnessspa.roomDataBase;
 
 import java.io.Serializable;
 
-public class DownloadAudioDetailsUniq  implements Serializable {
+public class DownloadAudioDetailsUniq implements Serializable {
     private String ID;
     private String UserId;
     private String Name;

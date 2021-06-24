@@ -46,18 +46,13 @@ class ViewAllPlaylistFragment : Fragment() {
     var audioFlag: String? = null
     var myDownloads: String? = null
     var screenView: String? = ""
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false)
-        val shared1 = requireActivity()
-            .getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false)
+        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
-        val shared =
-            requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         BWSApplication.DB = BWSApplication.getAudioDataBase(activity)
         if (arguments != null) {
@@ -83,56 +78,44 @@ class ViewAllPlaylistFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getAllMedia() {
-        BWSApplication.DB.taskDao()
-            .getAllPlaylist1(coUserId)
-            .observe(
-                requireActivity(),
-                { audioList: List<DownloadPlaylistDetailsUnique> ->
-                    binding.tvTitle.text = "My Downloads"
-                    screenView = "My Downloads"
-                    val listModelList = ArrayList<ViewAllPlayListModel.ResponseData.Detail>()
-                    for (i in audioList.indices) {
-                        val detail = ViewAllPlayListModel.ResponseData.Detail()
-                        detail.totalAudio = audioList[i].totalAudio
-                        detail.totalhour = audioList[i].totalhour
-                        detail.totalminute = audioList[i].totalminute
-                        detail.playlistID = audioList[i].playlistID
-                        detail.playlistDesc = audioList[i].playlistDesc
-                        detail.playlistMastercat = audioList[i].playlistMastercat
-                        detail.playlistSubcat = audioList[i].playlistSubcat
-                        detail.playlistName = audioList[i].playlistName
-                        detail.playlistImage = audioList[i].playlistImage
-                        //                detail.setPlaylistImageDetails("");
-                        detail.created = audioList[i].created
-                        listModelList.add(detail)
-                    }
-                    val p = Properties()
-                    val section = ArrayList<SegmentPlaylist>()
-                    for (i in audioList.indices) {
-                        val e =
-                            SegmentPlaylist()
-                        e.playlistId = audioList[i].playlistID
-                        e.playlistName = audioList[i].playlistName
-                        e.playlistType = audioList[i].created
-                        e.playlistDuration = (audioList[i].totalhour
-                                + "h "
-                                + audioList[i].totalminute
-                                + "m")
-                        e.audioCount = audioList[i].totalAudio
-                        section.add(e)
-                    }
-                    p.putValue("userId", coUserId)
-                    val gson = Gson()
-                    p.putValue("playlists", gson.toJson(section))
-                    p.putValue("section", screenView)
-                    BWSApplication.addToSegment(
-                        "View All Playlist Screen Viewed",
-                        p,
-                        CONSTANTS.screen
-                    )
-                    val adapter = PlaylistAdapter(listModelList)
-                    binding.rvMainAudio.adapter = adapter
-                })
+        BWSApplication.DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
+            binding.tvTitle.text = "My Downloads"
+            screenView = "My Downloads"
+            val listModelList = ArrayList<ViewAllPlayListModel.ResponseData.Detail>()
+            for (i in audioList.indices) {
+                val detail = ViewAllPlayListModel.ResponseData.Detail()
+                detail.totalAudio = audioList[i].totalAudio
+                detail.totalhour = audioList[i].totalhour
+                detail.totalminute = audioList[i].totalminute
+                detail.playlistID = audioList[i].playlistID
+                detail.playlistDesc = audioList[i].playlistDesc
+                detail.playlistMastercat = audioList[i].playlistMastercat
+                detail.playlistSubcat = audioList[i].playlistSubcat
+                detail.playlistName = audioList[i].playlistName
+                detail.playlistImage = audioList[i].playlistImage
+                //                detail.setPlaylistImageDetails("");
+                detail.created = audioList[i].created
+                listModelList.add(detail)
+            }
+            val p = Properties()
+            val section = ArrayList<SegmentPlaylist>()
+            for (i in audioList.indices) {
+                val e = SegmentPlaylist()
+                e.playlistId = audioList[i].playlistID
+                e.playlistName = audioList[i].playlistName
+                e.playlistType = audioList[i].created
+                e.playlistDuration = (audioList[i].totalhour + "h " + audioList[i].totalminute + "m")
+                e.audioCount = audioList[i].totalAudio
+                section.add(e)
+            }
+            p.putValue("userId", coUserId)
+            val gson = Gson()
+            p.putValue("playlists", gson.toJson(section))
+            p.putValue("section", screenView)
+            BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen)
+            val adapter = PlaylistAdapter(listModelList)
+            binding.rvMainAudio.adapter = adapter
+        })
     }
 
     private fun callBack() {
@@ -229,79 +212,46 @@ class ViewAllPlaylistFragment : Fragment() {
     }*/
         if (BWSApplication.isNetworkConnected(activity)) {
             try {
-                BWSApplication.showProgressBar(
-                    binding.progressBar, binding.progressBarHolder, activity
-                )
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall = APINewClient.getClient().getViewAllPlayLists(coUserId, getLibraryId)
-                listCall.enqueue(
-                    object : Callback<ViewAllPlayListModel?> {
-                        override fun onResponse(
-                            call: Call<ViewAllPlayListModel?>,
-                            response: Response<ViewAllPlayListModel?>
-                        ) {
-                            try {
-                                val listModel = response.body()
-                                if (listModel != null) {
-                                    if (listModel
-                                            .responseCode
-                                            .equals(
-                                                getString(R.string.ResponseCodesuccess),
-                                                ignoreCase = true
-                                            )
-                                    ) {
-                                        BWSApplication.hideProgressBar(
-                                            binding.progressBar,
-                                            binding.progressBarHolder,
-                                            activity
-                                        )
-                                        binding.tvTitle.text = listModel.responseData!!.view
-                                        screenView = listModel.responseData!!.view
-                                        val p = Properties()
-                                        val section = ArrayList<SegmentPlaylist>()
-                                        for (i in listModel.responseData!!.details!!.indices) {
-                                            val e =
-                                                SegmentPlaylist()
-                                            e.playlistId =
-                                                listModel.responseData!!.details!![i].playlistID
-                                            e.playlistName =
-                                                listModel.responseData!!.details!![i].playlistName
-                                            e.playlistType =
-                                                listModel.responseData!!.details!![i].created
-                                            e.playlistDuration =
-                                                (listModel.responseData!!.details!![i].totalhour
-                                                        + "h "
-                                                        + listModel.responseData!!.details!![i].totalminute
-                                                        + "m")
-                                            e.audioCount =
-                                                listModel.responseData!!.details!![i].totalAudio
-                                            section.add(e)
-                                        }
-                                        p.putValue("userId", coUserId)
-                                        val gson = Gson()
-                                        p.putValue("playlists", gson.toJson(section))
-                                        p.putValue("section", screenView)
-                                        BWSApplication.addToSegment(
-                                            "View All Playlist Screen Viewed", p, CONSTANTS.screen
-                                        )
-                                        val adapter = PlaylistAdapter(
-                                            listModel.responseData!!.details!!
-                                        )
-                                        binding.rvMainAudio.adapter = adapter
+                listCall.enqueue(object : Callback<ViewAllPlayListModel?> {
+                    override fun onResponse(call: Call<ViewAllPlayListModel?>, response: Response<ViewAllPlayListModel?>) {
+                        try {
+                            val listModel = response.body()
+                            if (listModel != null) {
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    binding.tvTitle.text = listModel.responseData!!.view
+                                    screenView = listModel.responseData!!.view
+                                    val p = Properties()
+                                    val section = ArrayList<SegmentPlaylist>()
+                                    for (i in listModel.responseData!!.details!!.indices) {
+                                        val e = SegmentPlaylist()
+                                        e.playlistId = listModel.responseData!!.details!![i].playlistID
+                                        e.playlistName = listModel.responseData!!.details!![i].playlistName
+                                        e.playlistType = listModel.responseData!!.details!![i].created
+                                        e.playlistDuration = (listModel.responseData!!.details!![i].totalhour + "h " + listModel.responseData!!.details!![i].totalminute + "m")
+                                        e.audioCount = listModel.responseData!!.details!![i].totalAudio
+                                        section.add(e)
                                     }
+                                    p.putValue("userId", coUserId)
+                                    val gson = Gson()
+                                    p.putValue("playlists", gson.toJson(section))
+                                    p.putValue("section", screenView)
+                                    BWSApplication.addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen)
+                                    val adapter = PlaylistAdapter(listModel.responseData!!.details!!)
+                                    binding.rvMainAudio.adapter = adapter
                                 }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
                             }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
+                    }
 
-                        override fun onFailure(
-                            call: Call<ViewAllPlayListModel?>, t: Throwable
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar, binding.progressBarHolder, activity
-                            )
-                        }
-                    })
+                    override fun onFailure(call: Call<ViewAllPlayListModel?>, t: Throwable) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    }
+                })
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -310,45 +260,26 @@ class ViewAllPlaylistFragment : Fragment() {
         }
     }
 
-    inner class PlaylistAdapter(private val listModelList: List<ViewAllPlayListModel.ResponseData.Detail>) :
-        RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
+    inner class PlaylistAdapter(private val listModelList: List<ViewAllPlayListModel.ResponseData.Detail>) : RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>() {
         var index = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PlaylistViewAllLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.playlist_view_all_layout,
-                parent,
-                false
-            )
+            val v: PlaylistViewAllLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.playlist_view_all_layout, parent, false)
             return MyViewHolder(v)
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = BWSApplication.measureRatio(activity, 0f, 1f, 1f, 0.44f, 0f)
-            holder.binding.ivRestaurantImage.layoutParams.height =
-                (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.ivRestaurantImage.layoutParams.width =
-                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            holder.binding.tvAddToPlaylist.layoutParams.height =
-                (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.tvAddToPlaylist.layoutParams.width =
-                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModelList[position].playlistName
             val measureRatio1 = BWSApplication.measureRatio(activity, 0f, 1f, 1f, 0.44f, 0f)
-            holder.binding.rlMainLayout.layoutParams.height =
-                (measureRatio1.height * measureRatio1.ratio).toInt()
-            holder.binding.rlMainLayout.layoutParams.width =
-                (measureRatio1.widthImg * measureRatio1.ratio).toInt()
-            Glide.with(requireActivity())
-                .load(listModelList[position].playlistImage)
-                .thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(42)))
-                .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .skipMemoryCache(false)
-                .into(holder.binding.ivRestaurantImage)
+            holder.binding.rlMainLayout.layoutParams.height = (measureRatio1.height * measureRatio1.ratio).toInt()
+            holder.binding.rlMainLayout.layoutParams.width = (measureRatio1.widthImg * measureRatio1.ratio).toInt()
+            Glide.with(requireActivity()).load(listModelList[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
             //            if (IsLock.equalsIgnoreCase("1")) {
             //                holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -426,10 +357,7 @@ class ViewAllPlaylistFragment : Fragment() {
             return listModelList.size
         }
 
-        inner class MyViewHolder(var binding: PlaylistViewAllLayoutBinding) :
-            RecyclerView.ViewHolder(
-                binding.root
-            )
+        inner class MyViewHolder(var binding: PlaylistViewAllLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     companion object {

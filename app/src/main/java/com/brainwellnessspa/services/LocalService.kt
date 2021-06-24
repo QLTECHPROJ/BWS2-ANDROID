@@ -20,7 +20,7 @@ class LocalService : Service() {
     inner class LocalBinder : Binder() {
         // Return this instance of LocalService so clients can call public methods
         val service: LocalService
-            get() =// Return this instance of LocalService so clients can call public methods
+            get() = // Return this instance of LocalService so clients can call public methods
                 this@LocalService
     }
 

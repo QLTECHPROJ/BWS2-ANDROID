@@ -77,7 +77,7 @@ import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
     FragmentDownloadsBinding binding;
-    String UserID,CoUserID, IsPlayDisclimer;
+    String UserID, CoUserID, IsPlayDisclimer;
     AudioDownlaodsAdapter adapter;
     boolean isThreadStart = false;
     public AudioManager audioManager;
@@ -154,7 +154,7 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
     public void callObserverMethod() {
-        DB.taskDao().geAllDataz("",CoUserID).observe(getActivity(), audioList -> {
+        DB.taskDao().geAllDataz("", CoUserID).observe(getActivity(), audioList -> {
             if (audioList != null) {
                 if (audioList.size() != 0) {
                     List<DownloadAudioDetails> audioList1 = new ArrayList<>();
@@ -185,7 +185,7 @@ public class AudioDownloadsFragment extends Fragment {
                 binding.llError.setVisibility(View.VISIBLE);
                 binding.rvDownloadsList.setVisibility(View.GONE);
             }
-            DB.taskDao().geAllDataz("",CoUserID).removeObserver(audioListx -> {
+            DB.taskDao().geAllDataz("", CoUserID).removeObserver(audioListx -> {
             });
         });
 
@@ -231,7 +231,7 @@ public class AudioDownloadsFragment extends Fragment {
         int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
         ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-        if(!AudioPlayerFlagx.equals("0")) {
+        if (!AudioPlayerFlagx.equals("0")) {
             if (!json.equalsIgnoreCase(String.valueOf(gson))) {
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
@@ -240,8 +240,7 @@ public class AudioDownloadsFragment extends Fragment {
             PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
         }
         callObserverMethod();
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
 //        audioList = GetAllMedia(getActivity());
 
         super.onResume();
@@ -262,6 +261,7 @@ public class AudioDownloadsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener1);
         super.onDestroy();
     }
+
     private void getDataList(List<DownloadAudioDetails> historyList, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
@@ -270,17 +270,15 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
-            adapter = new AudioDownlaodsAdapter(historyList, getActivity(),  progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);
+            adapter = new AudioDownlaodsAdapter(historyList, getActivity(), progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);
             binding.rvDownloadsList.setAdapter(adapter);
-            LocalBroadcastManager.getInstance(getActivity())
-                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-            LocalBroadcastManager.getInstance(getActivity())
-                    .registerReceiver(listener1, new IntentFilter("DownloadProgress"));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener1, new IntentFilter("DownloadProgress"));
         }
     }
 
     private void callAddTransFrag() {
-        Intent i =new Intent(getActivity(), MyPlayerActivity.class);
+        Intent i = new Intent(getActivity(), MyPlayerActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(0, 0);
@@ -302,8 +300,7 @@ public class AudioDownloadsFragment extends Fragment {
 //    private Runnable UpdateSongTime3;
 
 
-        public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx,
-                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
+        public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -318,8 +315,7 @@ public class AudioDownloadsFragment extends Fragment {
         @NonNull
         @Override
         public AudioDownlaodsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.audio_downloads_layout, parent, false);
+            AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.audio_downloads_layout, parent, false);
             return new AudioDownlaodsAdapter.MyViewHolder(v);
         }
 
@@ -360,7 +356,7 @@ public class AudioDownloadsFragment extends Fragment {
 */
             if (position == 0) {
                 AudioDatabase.databaseWriteExecutor.execute(() -> {
-                    downloadAudioDetailsList = DB.taskDao().    geAllDataBYDownloaded("Complete",CoUserID);
+                    downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete", CoUserID);
                 });
             }
             if (fileNameList.size() != 0) {
@@ -396,8 +392,7 @@ public class AudioDownloadsFragment extends Fragment {
             }
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0, 1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -407,20 +402,15 @@ public class AudioDownloadsFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
+            Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             comefromDownload = "1";
 //            if (IsLock.equalsIgnoreCase("1")) {
 //                holder.binding.ivLock.setVisibility(View.VISIBLE);
 //            } else if (IsLock.equalsIgnoreCase("2")) {
 //                holder.binding.ivLock.setVisibility(View.VISIBLE);
 //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
+            holder.binding.ivLock.setVisibility(View.GONE);
 //            }
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
@@ -434,8 +424,7 @@ public class AudioDownloadsFragment extends Fragment {
                         } else {
                             holder.binding.equalizerview.resume(true);
                         }
-                    } else
-                        holder.binding.equalizerview.stop(true);
+                    } else holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -461,66 +450,59 @@ public class AudioDownloadsFragment extends Fragment {
 //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    comefromDownload = "1";
-                    holder.binding.ivLock.setVisibility(View.GONE);
+                comefromDownload = "1";
+                holder.binding.ivLock.setVisibility(View.GONE);
                 int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                    IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                            } else {
-                                if (player != null) {
-                                    if (position != PlayerPosition) {
-                                        int i = player.getMediaItemCount();
-                                        if (i < listModelList.size()) {
-                                            callTransFrag(position, listModelList, true);
-                                        } else {
-                                            player.seekTo(position, 0);
-                                            player.setPlayWhenReady(true);
-                                            callTransFrag(position,listModelList,false);
-                                            callAddTransFrag();
-                                        }
-                                    }else{
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            if (player != null) {
+                                if (position != PlayerPosition) {
+                                    int i = player.getMediaItemCount();
+                                    if (i < listModelList.size()) {
+                                        callTransFrag(position, listModelList, true);
+                                    } else {
+                                        player.seekTo(position, 0);
+                                        player.setPlayWhenReady(true);
+                                        callTransFrag(position, listModelList, false);
                                         callAddTransFrag();
                                     }
                                 } else {
-                                    callTransFrag(position, listModelList, true);
+                                    callAddTransFrag();
                                 }
+                            } else {
+                                callTransFrag(position, listModelList, true);
                             }
-                        } else {
-                            List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                            listModelList2.addAll(listModelList);
-                            DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                            Gson gson = new Gson();
-                            SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                            String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-                            String  DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
-                            Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
-                            }.getType();
-                            HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
-                            mainPlayModel.setID(arrayList.getId());
-                            mainPlayModel.setName(arrayList.getName());
-                            mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                            mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                            mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                            mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                            mainPlayModel.setImageFile(arrayList.getImageFile());
-                            mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                            boolean audioc = true;
-                            if (isDisclaimer == 1) {
-                                if (player != null) {
-                                    player.setPlayWhenReady(true);
-                                    audioc = false;
-                                    listModelList2.add(position, mainPlayModel);
-                                } else {
-                                    isDisclaimer = 0;
-                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                        audioc = true;
-                                        listModelList2.add(position, mainPlayModel);
-                                    }
-                                }
+                        }
+                    } else {
+                        List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                        listModelList2.addAll(listModelList);
+                        DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                        Gson gson = new Gson();
+                        SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                        }.getType();
+                        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                        mainPlayModel.setID(arrayList.getId());
+                        mainPlayModel.setName(arrayList.getName());
+                        mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                        mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                        mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                        mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                        mainPlayModel.setImageFile(arrayList.getImageFile());
+                        mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                        boolean audioc = true;
+                        if (isDisclaimer == 1) {
+                            if (player != null) {
+                                player.setPlayWhenReady(true);
+                                audioc = false;
+                                listModelList2.add(position, mainPlayModel);
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
@@ -528,16 +510,23 @@ public class AudioDownloadsFragment extends Fragment {
                                     listModelList2.add(position, mainPlayModel);
                                 }
                             }
-                            callTransFrag(position, listModelList2, audioc);
+                        } else {
+                            isDisclaimer = 0;
+                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                audioc = true;
+                                listModelList2.add(position, mainPlayModel);
+                            }
                         }
-                    } else {
-                        getMedia(AudioPlayerFlag, position);
+                        callTransFrag(position, listModelList2, audioc);
                     }
-                    Properties p = new Properties();
-                    p.putValue("userId", UserID);
-                    p.putValue("audioId", listModelList.get(position).getID());
-                    p.putValue("audioName", listModelList.get(position).getName());
-                    BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
+                } else {
+                    getMedia(AudioPlayerFlag, position);
+                }
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioId", listModelList.get(position).getID());
+                p.putValue("audioName", listModelList.get(position).getName());
+                BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
 //                }
 //            handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
@@ -558,7 +547,7 @@ public class AudioDownloadsFragment extends Fragment {
                             arrayList.remove(0);
                         }
                         name = arrayList.get(0).getName();
-                        if (  AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
                             } else {
@@ -609,7 +598,7 @@ public class AudioDownloadsFragment extends Fragment {
                             listModelList2.add(listModelList.get(i));
                         }
                     }
-                    if(player!= null) {
+                    if (player != null) {
                         if (position != PlayerPosition) {
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                                 pos = position;
@@ -625,7 +614,7 @@ public class AudioDownloadsFragment extends Fragment {
 //                                callTransFrag(pos, listModelList2, true);
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
-                    }else{
+                    } else {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                             pos = position;
                             callTransFrag(pos, listModelList2, true);
@@ -645,17 +634,13 @@ public class AudioDownloadsFragment extends Fragment {
                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
                     pos = position;
                     Gson gson = new Gson();
-                    SharedPreferences shared12 =
-                            ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
-                    String DisclimerJson =
-                            shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                    String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
                     Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
                     }.getType();
-                    HomeScreenModel.ResponseData.DisclaimerAudio arrayList =
-                            gson.fromJson(DisclimerJson, type);
-                    DownloadAudioDetails mainPlayModel=
-                            new DownloadAudioDetails();
+                    HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                    DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                     mainPlayModel.setID(arrayList.getId());
                     mainPlayModel.setName(arrayList.getName());
                     mainPlayModel.setAudioFile(arrayList.getAudioFile());
@@ -725,7 +710,7 @@ public class AudioDownloadsFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
                 editor.apply();
-                if(audioc) {
+                if (audioc) {
                     callAddTransFrag();
                 }
             } catch (Exception e) {
@@ -821,9 +806,9 @@ public class AudioDownloadsFragment extends Fragment {
                     if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (player != null) {
                             player.removeMediaItem(position);
-                            if(player.getPlayWhenReady()){
+                            if (player.getPlayWhenReady()) {
                                 player.setPlayWhenReady(true);
-                            }else{
+                            } else {
                                 player.setPlayWhenReady(false);
                             }
                         }
@@ -898,7 +883,7 @@ public class AudioDownloadsFragment extends Fragment {
         private void deleteDownloadFile(String audioFile, String audioName, int position) {
 
             AudioDatabase.databaseWriteExecutor.execute(() -> {
-                DB.taskDao().deleteByAudioFile(audioFile, "",CoUserID);
+                DB.taskDao().deleteByAudioFile(audioFile, "", CoUserID);
             });
 
             DB.taskDao().getLastIdByuIdForAll(audioFile).observe((LifecycleOwner) ctx, audioList -> {

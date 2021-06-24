@@ -12,16 +12,8 @@ import com.brainwellnessspa.databinding.FragmentElevateBinding
 
 class ElevateFragment : Fragment() {
     lateinit var binding: FragmentElevateBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_elevate,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_elevate, container, false)
         val view = binding.root
         networkCheck()
 

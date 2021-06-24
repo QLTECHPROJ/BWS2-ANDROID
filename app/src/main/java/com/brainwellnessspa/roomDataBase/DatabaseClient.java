@@ -18,11 +18,7 @@ public class DatabaseClient {
 
         //creating the app database with Room database builder
         //MyToDos is the name of the database
-        cart = Room.databaseBuilder(Ctx,
-                AudioDatabase.class,
-                "Audio_database")
-                .addMigrations(MIGRATION_2_3)
-                .build();
+        cart = Room.databaseBuilder(Ctx, AudioDatabase.class, "Audio_database").addMigrations(MIGRATION_2_3).build();
     }
 
     public static synchronized DatabaseClient getInstance(Context Ctx) {

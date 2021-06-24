@@ -88,8 +88,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
-        val played: RecyclerView.LayoutManager =
-            LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        val played: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvPlayLists.layoutManager = played
         binding.rvPlayLists.itemAnimator = DefaultItemAnimator()
         binding.llError.visibility = View.GONE
@@ -99,18 +98,8 @@ class AddPlaylistActivity : AppCompatActivity() {
             val dialog = Dialog(ctx)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.create_palylist)
-            dialog.window!!.setBackgroundDrawable(
-                ColorDrawable(
-                    ContextCompat.getColor(
-                        activity,
-                        R.color.blue_transparent
-                    )
-                )
-            )
-            dialog.window!!.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.blue_transparent)))
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
             val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
             val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
@@ -122,24 +111,14 @@ class AddPlaylistActivity : AppCompatActivity() {
                 false
             }
             val popupTextWatcher: TextWatcher = object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     val number = edtCreate.text.toString().trim { it <= ' ' }
                     if (number.isNotEmpty()) {
                         btnSendCode.isEnabled = true
-                        btnSendCode.setTextColor(
-                            ContextCompat.getColor(
-                                activity,
-                                R.color.light_black
-                            )
-                        )
+                        btnSendCode.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                         btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
                     } else {
                         btnSendCode.isEnabled = false
@@ -156,71 +135,36 @@ class AddPlaylistActivity : AppCompatActivity() {
                     BWSApplication.showToast("Please provide the playlist's name", activity)
                 } else {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient()
-                            .getCreatePlaylist(coUserId, edtCreate.text.toString())
+                        val listCall = APINewClient.getClient().getCreatePlaylist(coUserId, edtCreate.text.toString())
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
-                            override fun onResponse(
-                                call: Call<CreateNewPlaylistModel?>,
-                                response: Response<CreateNewPlaylistModel?>
-                            ) {
+                            override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                                 try {
                                     if (response.isSuccessful) {
                                         val listsModel = response.body()
-                                        if (listsModel!!.responseData!!.iscreate.equals(
-                                                "1",
-                                                ignoreCase = true
-                                            )
-                                        ) {
+                                        if (listsModel!!.responseData!!.iscreate.equals("1", ignoreCase = true)) {
                                             dialog.dismiss()
                                             prepareData(ctx)
                                             val playlistID = listsModel.responseData!!.playlistID
-                                            val shared = getSharedPreferences(
-                                                CONSTANTS.PREF_KEY_PLAYER,
-                                                MODE_PRIVATE
-                                            )
-                                            val audioFlag = shared.getString(
-                                                CONSTANTS.PREF_KEY_AudioPlayerFlag,
-                                                "0"
-                                            )
-                                            val pID = shared.getString(
-                                                CONSTANTS.PREF_KEY_PlayerPlaylistId,
-                                                "0"
-                                            )
-                                            if (audioFlag.equals(
-                                                    "playlist",
-                                                    ignoreCase = true
-                                                ) && pID.equals(playlistID, ignoreCase = true)
-                                            ) {
+                                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                            val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                                            val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
+                                            if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
                                                 if (MiniPlayerFragment.isDisclaimer == 1) {
-                                                    BWSApplication.showToast(
-                                                        "The audio shall add after playing the disclaimer",
-                                                        activity
-                                                    )
+                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                                                 } else {
-                                                    callAddPlaylistFromPlaylist(
-                                                        playlistID,
-                                                        listsModel.responseData!!.playlistName,
-                                                        "1"
-                                                    )
+                                                    callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
                                                 }
                                             } else {
-                                                callAddPlaylistFromPlaylist(
-                                                    playlistID,
-                                                    listsModel.responseData!!.playlistName,
-                                                    "1"
-                                                )
+                                                callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
                                             }
                                             //                                            Properties p = new Properties();
-//                                            p.putValue("userId", UserID);
-//                                            p.putValue("playlistId", PlaylistID);
-//                                            p.putValue("playlistName", listsModel.getResponseData().getName());
-//                                            p.putValue("source", "Add To Playlist Screen");
-//                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
+                                            //                                            p.putValue("userId", UserID);
+                                            //                                            p.putValue("playlistId", PlaylistID);
+                                            //                                            p.putValue("playlistName", listsModel.getResponseData().getName());
+                                            //                                            p.putValue("source", "Add To Playlist Screen");
+                                            //                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
                                         } else {
-                                            BWSApplication.showToast(
-                                                listsModel.responseMessage,
-                                                activity
-                                            )
+                                            BWSApplication.showToast(listsModel.responseMessage, activity)
                                         }
                                     }
                                 } catch (e: Exception) {
@@ -228,10 +172,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 }
                             }
 
-                            override fun onFailure(
-                                call: Call<CreateNewPlaylistModel?>,
-                                t: Throwable
-                            ) {
+                            override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
                             }
                         })
                     } else {
@@ -271,24 +212,13 @@ class AddPlaylistActivity : AppCompatActivity() {
 
     private fun prepareData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(
-                binding.progressBar,
-                binding.progressBarHolder,
-                activity
-            )
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getPlaylisting(coUserId)
             listCall.enqueue(object : Callback<CreatePlaylistingModel?> {
-                override fun onResponse(
-                    call: Call<CreatePlaylistingModel?>,
-                    response: Response<CreatePlaylistingModel?>
-                ) {
+                override fun onResponse(call: Call<CreatePlaylistingModel?>, response: Response<CreatePlaylistingModel?>) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val model = response.body()
                             if (model!!.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.GONE
@@ -296,25 +226,23 @@ class AddPlaylistActivity : AppCompatActivity() {
                             } else {
                                 binding.rvPlayLists.visibility = View.VISIBLE
 
-//                            p = new Properties();
-//                            p.putValue("userId", UserID);
-//                            p.putValue("source", ScreenView);
-//                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
-//                            for (int i = 0; i < model.getResponseData().size(); i++) {
-//                                SegmentPlaylist e = new SegmentPlaylist();
-//                                e.setPlaylistId(model.getResponseData().get(i).getID());
-//                                e.setPlaylistName(model.getResponseData().get(i).getName());
-//                                e.setPlaylistType(model.getResponseData().get(i).getCreated());
-//                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " + model.getResponseData().get(i).getTotalminute() + "m");
-//                                e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
-//                                section.add(e);
-//                            }
-//                            Gson gson = new Gson();
-//                            p.putValue("playlists", gson.toJson(section));
-//                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
-                                val addPlaylistAdapter = AddPlaylistAdapter(
-                                    model.responseData, ctx
-                                )
+                                //                            p = new Properties();
+                                //                            p.putValue("userId", UserID);
+                                //                            p.putValue("source", ScreenView);
+                                //                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
+                                //                            for (int i = 0; i < model.getResponseData().size(); i++) {
+                                //                                SegmentPlaylist e = new SegmentPlaylist();
+                                //                                e.setPlaylistId(model.getResponseData().get(i).getID());
+                                //                                e.setPlaylistName(model.getResponseData().get(i).getName());
+                                //                                e.setPlaylistType(model.getResponseData().get(i).getCreated());
+                                //                                e.setPlaylistDuration(model.getResponseData().get(i).getTotalhour() + "h " + model.getResponseData().get(i).getTotalminute() + "m");
+                                //                                e.setAudioCount(model.getResponseData().get(i).getTotalAudio());
+                                //                                section.add(e);
+                                //                            }
+                                //                            Gson gson = new Gson();
+                                //                            p.putValue("playlists", gson.toJson(section));
+                                //                            BWSApplication.addToSegment("Playlist List Viewed", p, CONSTANTS.screen);
+                                val addPlaylistAdapter = AddPlaylistAdapter(model.responseData, ctx)
                                 binding.rvPlayLists.adapter = addPlaylistAdapter
                             }
                         }
@@ -324,11 +252,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<CreatePlaylistingModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -336,78 +260,42 @@ class AddPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    private fun callAddPlaylistFromPlaylist(
-        PlaylistID: String?,
-        name: String?,
-        New: String
-    ) {
+    private fun callAddPlaylistFromPlaylist(PlaylistID: String?, name: String?, New: String) {
         myBackPress = true
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(
-                binding.progressBar,
-                binding.progressBarHolder,
-                activity
-            )
-            val listCall = APINewClient.getClient()
-                .getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
-                override fun onResponse(
-                    call: Call<AddToPlaylistModel?>,
-                    response: Response<AddToPlaylistModel?>
-                ) {
+                override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
                         val listModels = response.body()
-                        if (listModels!!.responseCode.equals(
-                                getString(R.string.ResponseCodesuccess),
-                                ignoreCase = true
-                            )
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                        if (listModels!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
-                            val shared =
-                                getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                            val audioFlag =
-                                shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                            if (audioFlag.equals("playList", ignoreCase = true) && pID.equals(
-                                    PlaylistID,
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (audioFlag.equals("playList", ignoreCase = true) && pID.equals(PlaylistID, ignoreCase = true)) {
                                 val gsonx = Gson()
-                                val json = shared.getString(
-                                    CONSTANTS.PREF_KEY_PlayerAudioList,
-                                    gsonx.toString()
-                                )
+                                val json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gsonx.toString())
                                 val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
-                                val mainPlayModelListold: ArrayList<MainPlayModel> =
-                                    gsonx.fromJson(json, type)
+                                val mainPlayModelListold: ArrayList<MainPlayModel> = gsonx.fromJson(json, type)
                                 val id = mainPlayModelListold[pos].id
                                 val size = mainPlayModelListold.size
                                 val mainPlayModelList = ArrayList<MainPlayModel>()
-                                val playlistSongs =
-                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
+                                val playlistSongs = ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
                                 for (i in listModels.responseData!!.indices) {
                                     val mainPlayModel = MainPlayModel()
                                     mainPlayModel.id = listModels.responseData!![i].iD
                                     mainPlayModel.name = listModels.responseData!![i].name
                                     mainPlayModel.audioFile = listModels.responseData!![i].audioFile
-                                    mainPlayModel.playlistID =
-                                        listModels.responseData!![i].playlistID
-                                    mainPlayModel.audioDirection =
-                                        listModels.responseData!![i].audioDirection
-                                    mainPlayModel.audiomastercat =
-                                        listModels.responseData!![i].audiomastercat
-                                    mainPlayModel.audioSubCategory =
-                                        listModels.responseData!![i].audioSubCategory
+                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID
+                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
+                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
+                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
                                     mainPlayModel.imageFile = listModels.responseData!![i].imageFile
-                                    mainPlayModel.audioDuration =
-                                        listModels.responseData!![i].audioDuration
+                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
                                     mainPlayModelList.add(mainPlayModel)
                                 }
                                 for (i in listModels.responseData!!.indices) {
@@ -415,17 +303,12 @@ class AddPlaylistActivity : AppCompatActivity() {
                                     mainPlayModel.id = listModels.responseData!![i].iD
                                     mainPlayModel.name = listModels.responseData!![i].name
                                     mainPlayModel.audioFile = listModels.responseData!![i].audioFile
-                                    mainPlayModel.playlistID =
-                                        listModels.responseData!![i].playlistID
-                                    mainPlayModel.audioDirection =
-                                        listModels.responseData!![i].audioDirection
-                                    mainPlayModel.audiomastercat =
-                                        listModels.responseData!![i].audiomastercat
-                                    mainPlayModel.audioSubCategory =
-                                        listModels.responseData!![i].audioSubCategory
+                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID
+                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
+                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
+                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
                                     mainPlayModel.imageFile = listModels.responseData!![i].imageFile
-                                    mainPlayModel.audioDuration =
-                                        listModels.responseData!![i].audioDuration
+                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
                                     playlistSongs.add(mainPlayModel)
                                 }
                                 for (i in mainPlayModelList.indices) {
@@ -434,10 +317,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                         break
                                     }
                                 }
-                                val sharedd = ctx.getSharedPreferences(
-                                    CONSTANTS.PREF_KEY_PLAYER,
-                                    MODE_PRIVATE
-                                )
+                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                                 val editor = sharedd.edit()
                                 val gson = Gson()
                                 val jsonx = gson.toJson(mainPlayModelList)
@@ -446,22 +326,14 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos)
                                 editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID)
-                                editor.putString(
-                                    CONSTANTS.PREF_KEY_PlayerPlaylistName,
-                                    playlistName
-                                )
+                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
                                 editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "created")
                                 editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
                                 editor.apply()
                                 if (mainPlayModelList[pos].audioFile != "") {
                                     val downloadAudioDetailsList: List<String> = ArrayList()
                                     val ge = GlobalInitExoPlayer()
-                                    ge.AddAudioToPlayer(
-                                        size,
-                                        mainPlayModelList,
-                                        downloadAudioDetailsList,
-                                        ctx
-                                    )
+                                    ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx)
                                 }
                             }
                             /*  if (comeAddPlaylist == 1) {
@@ -502,19 +374,8 @@ class AddPlaylistActivity : AppCompatActivity() {
                             val dialog = Dialog(ctx)
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                             dialog.setContentView(R.layout.go_to_playlist)
-                            dialog.window!!.setBackgroundDrawable(
-                                ColorDrawable(
-                                    ContextCompat.getColor(
-                                        activity,
-                                        R.color.blue_transparent
-                                    )
-                                )
-                            )
-                            dialog.window!!
-                                .setLayout(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.blue_transparent)))
+                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                             val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
                             val rlCreate = dialog.findViewById<RelativeLayout>(R.id.rlCreate)
                             dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
@@ -525,8 +386,8 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 false
                             }
                             rlCreate.setOnClickListener {
-//                                addToPlayList = true;
-//                                MyPlaylistId = PlaylistID;
+                                //                                addToPlayList = true;
+                                //                                MyPlaylistId = PlaylistID;
                                 val intent = Intent(ctx, MyPlaylistListingActivity::class.java)
                                 intent.putExtra("New", New)
                                 intent.putExtra("PlaylistID", PlaylistID)
@@ -543,34 +404,18 @@ class AddPlaylistActivity : AppCompatActivity() {
                             }
                             dialog.show()
                             dialog.setCancelable(false)
-                        } else if (listModels.responseCode.equals(
-                                getString(R.string.ResponseCodefail),
-                                ignoreCase = true
-                            )
-                        ) {
-                            BWSApplication.hideProgressBar(
-                                binding.progressBar,
-                                binding.progressBarHolder,
-                                activity
-                            )
+                        } else if (listModels.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             BWSApplication.showToast(listModels.responseMessage, activity)
                         }
                     } catch (e: Exception) {
-                        BWSApplication.hideProgressBar(
-                            binding.progressBar,
-                            binding.progressBarHolder,
-                            activity
-                        )
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         e.printStackTrace()
                     }
                 }
 
                 override fun onFailure(call: Call<AddToPlaylistModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(
-                        binding.progressBar,
-                        binding.progressBarHolder,
-                        activity
-                    )
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
@@ -578,60 +423,32 @@ class AddPlaylistActivity : AppCompatActivity() {
         }
     }
 
-    private inner class AddPlaylistAdapter(
-        private val listModel: List<CreatePlaylistingModel.ResponseData>?,
-        var ctx: Context
-    ) : RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder>() {
+    private inner class AddPlaylistAdapter(private val listModel: List<CreatePlaylistingModel.ResponseData>?, var ctx: Context) : RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: AddPlayListLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.add_play_list_layout,
-                parent,
-                false
-            )
+            val v: AddPlayListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.add_play_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModel!![position].name
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.16f, 0f)
-            holder.binding.ivRestaurantImage.layoutParams.height =
-                (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binding.ivRestaurantImage.layoutParams.width =
-                (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx).load(listModel[position].image).thumbnail(0.05f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-                .into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx).load(listModel[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
                 val playlistID = listModel[position].id
                 val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
-                if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(
-                        playlistID,
-                        ignoreCase = true
-                    )
-                ) {
+                if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
                     if (MiniPlayerFragment.isDisclaimer == 1) {
-                        BWSApplication.showToast(
-                            "The audio shall add after playing the disclaimer",
-                            activity
-                        )
+                        BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                     } else {
-                        callAddPlaylistFromPlaylist(
-                            playlistID,
-                            listModel[position].name,
-                            "0"
-                        )
+                        callAddPlaylistFromPlaylist(playlistID, listModel[position].name, "0")
                     }
                 } else {
-                    callAddPlaylistFromPlaylist(
-                        playlistID,
-                        listModel[position].name,
-                        "0"
-                    )
+                    callAddPlaylistFromPlaylist(playlistID, listModel[position].name, "0")
                 }
             }
         }
@@ -640,9 +457,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             return listModel!!.size
         }
 
-        inner class MyViewHolder(var binding: AddPlayListLayoutBinding) : RecyclerView.ViewHolder(
-            binding.root
-        )
+        inner class MyViewHolder(var binding: AddPlayListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
@@ -678,8 +493,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
-                val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(GlobalInitExoPlayer.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {

@@ -90,9 +90,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String IsPlayDisclimer, PlaylistDescription = "", Created = "", CoUserID, UserID, SearchFlag = "", AudioPlayerFlag = "",
-            PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "",
-            PlaylistImageDetails = "", SLEEPTIME = "";
+    String IsPlayDisclimer, PlaylistDescription = "", Created = "", CoUserID, UserID, SearchFlag = "", AudioPlayerFlag = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "", TotalAudio = "", Totalhour = "", Totalminute = "", PlaylistImageDetails = "", SLEEPTIME = "";
     EditText searchEditText;
     List<String> downloadAudioDetailsList = new ArrayList<>();
     Context ctx;
@@ -188,29 +186,23 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         percent = 100;
         hundredVolume = (int) (currentVolume * percent) / maxVolume;
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0, 5, 4.1f, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        MeasureRatio measureRatio1 = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
+        MeasureRatio measureRatio1 = BWSApplication.measureRatio(ctx, 0, 5, 4.1f, 1f, 0);
         binding.ivTransBanner.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
         binding.ivTransBanner.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
         binding.ivTransBanner.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0,
-                5, 4.1f, 1f, 0);
+        MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0, 5, 4.1f, 1f, 0);
         binding.llPlayer.getLayoutParams().height = (int) (measureRatio2.getHeight() * measureRatio2.getRatio());
         binding.llPlayer.getLayoutParams().width = (int) (measureRatio2.getWidthImg() * measureRatio2.getRatio());
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
-                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
-                            .placeholder(R.drawable.audio_bg)
-                            .error(R.drawable.audio_bg)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f).placeholder(R.drawable.audio_bg).error(R.drawable.audio_bg).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
                     binding.ivTransBanner.setImageResource(R.drawable.rounded_light_app_theme);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -276,24 +268,21 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             }
             PlayerAudioId = mainPlayModelList.get(PlayerPositionx).getID();
         }
-        NetWatch.builder(this)
-                .setCallBack(new NetworkChangeReceiver_navigator() {
-                    @Override
-                    public void onConnected(int source) {
-                        // do some thing
-                        callResumePlayer(ctx);
-                    }
+        NetWatch.builder(this).setCallBack(new NetworkChangeReceiver_navigator() {
+            @Override
+            public void onConnected(int source) {
+                // do some thing
+                callResumePlayer(ctx);
+            }
 
-                    @Override
-                    public View onDisconnected() {
-                        // do some other stuff
+            @Override
+            public View onDisconnected() {
+                // do some other stuff
 
 
-                        return null;//To display a dialog simply return a custom view or just null to ignore it
-                    }
-                })
-                .setNotificationCancelable(false)
-                .build();
+                return null;//To display a dialog simply return a custom view or just null to ignore it
+            }
+        }).setNotificationCancelable(false).build();
         PrepareData();
         super.onResume();
     }
@@ -649,8 +638,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         @NonNull
         @Override
         public MyViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            DownloadPlaylistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.download_playlist_layout, parent, false);
+            DownloadPlaylistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.download_playlist_layout, parent, false);
             return new MyViewHolders(v);
         }
 
@@ -660,31 +648,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
             String id = mData.get(position).getID();
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0, 1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f)
-                    .placeholder(R.drawable.ic_image_bg)
-                    .error(R.drawable.ic_image_bg)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).placeholder(R.drawable.ic_image_bg).error(R.drawable.ic_image_bg).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             if (BWSApplication.isNetworkConnected(ctx)) {
-                Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
-                        .placeholder(R.drawable.ic_music_icon)
-                        .error(R.drawable.ic_music_icon)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+                Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             } else {
-                Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f)
-                        .placeholder(R.drawable.ic_music_icon)
-                        .error(R.drawable.ic_music_icon)
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+                Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
@@ -701,8 +676,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                         } else {
                             holder.binding.equalizerview.resume(true);
                         }
-                    } else
-                        holder.binding.equalizerview.stop(true);
+                    } else holder.binding.equalizerview.stop(true);
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -736,8 +710,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     binding.llPlay.setVisibility(View.VISIBLE);
                 } else if (isPlayPlaylist == 2) {
                     if (player != null) {
-                        if (PlayerAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID())
-                                && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                        if (PlayerAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID()) && (player.getDuration() - player.getCurrentPosition() <= 20)) {
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
@@ -759,8 +732,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                 if (player != null) {
                                     if (!player.getPlayWhenReady()) {
                                         player.setPlayWhenReady(true);
-                                    } else
-                                        player.setPlayWhenReady(true);
+                                    } else player.setPlayWhenReady(true);
                                     callAddTranFrag();
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                                 } else
@@ -835,8 +807,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                             if (player != null) {
                                 if (!player.getPlayWhenReady()) {
                                     player.setPlayWhenReady(true);
-                                } else
-                                    player.setPlayWhenReady(true);
+                                } else player.setPlayWhenReady(true);
                                 callAddTranFrag();
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                             } else
@@ -917,12 +888,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", activity);
                     } else {
-                        BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList",
-                                mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
+                        BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList", mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                     }
                 } else {
-                    BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList",
-                            mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
+                    BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList", mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                 }
             });
         }
@@ -941,8 +910,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     if (player != null) {
                         if (!player.getPlayWhenReady()) {
                             player.setPlayWhenReady(true);
-                        } else
-                            player.setPlayWhenReady(true);
+                        } else player.setPlayWhenReady(true);
                         callAddTranFrag();
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                     } else

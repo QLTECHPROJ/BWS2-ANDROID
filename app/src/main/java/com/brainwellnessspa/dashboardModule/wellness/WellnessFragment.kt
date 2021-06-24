@@ -12,16 +12,8 @@ import com.brainwellnessspa.databinding.FragmentWellnessBinding
 
 class WellnessFragment : Fragment() {
     lateinit var binding: FragmentWellnessBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_wellness,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wellness, container, false)
         val view = binding.root
 
         networkCheck()

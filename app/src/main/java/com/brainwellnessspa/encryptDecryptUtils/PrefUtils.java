@@ -11,8 +11,7 @@ public class PrefUtils {
     public static SharedPreferences myPrefs = null;
 
     public static PrefUtils getInstance(Context context) {
-        if (null == myPrefs)
-            myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (null == myPrefs) myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefUtils;
     }
 

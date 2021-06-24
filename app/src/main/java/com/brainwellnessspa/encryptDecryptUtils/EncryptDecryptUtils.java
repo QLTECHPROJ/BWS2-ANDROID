@@ -22,17 +22,14 @@ public class EncryptDecryptUtils {
     private static PrefUtils prefUtils;
 
     public static EncryptDecryptUtils getInstance(Context context) {
-        if (null == instance)
-            instance = new EncryptDecryptUtils();
+        if (null == instance) instance = new EncryptDecryptUtils();
 
-        if (null == prefUtils)
-            prefUtils = PrefUtils.getInstance(context);
+        if (null == prefUtils) prefUtils = PrefUtils.getInstance(context);
 
         return instance;
     }
 
-    public static byte[] encode(SecretKey yourKey, byte[] fileData)
-            throws Exception {
+    public static byte[] encode(SecretKey yourKey, byte[] fileData) throws Exception {
         byte[] data = yourKey.getEncoded();
         SecretKeySpec skeySpec = new SecretKeySpec(data, 0, data.length, KEY_SPEC_ALGORITHM);
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, PROVIDER);
@@ -40,8 +37,7 @@ public class EncryptDecryptUtils {
         return cipher.doFinal(fileData);
     }
 
-    public static byte[] decode(SecretKey yourKey, byte[] fileData)
-            throws Exception {
+    public static byte[] decode(SecretKey yourKey, byte[] fileData) throws Exception {
         byte[] decrypted = null;
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, yourKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
@@ -70,7 +66,7 @@ public class EncryptDecryptUtils {
             return secretKey;
         }
 
-        byte[] decodedKey = Base64.decode(encodedKey,Base64.NO_WRAP);
+        byte[] decodedKey = Base64.decode(encodedKey, Base64.NO_WRAP);
         SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, KEY_SPEC_ALGORITHM);
         return originalKey;
     }
