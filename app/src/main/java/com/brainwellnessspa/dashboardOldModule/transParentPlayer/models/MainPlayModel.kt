@@ -1,7 +1,7 @@
 package com.brainwellnessspa.dashboardOldModule.transParentPlayer.models
 
 class MainPlayModel {
-    var iD: String? = null
+    var id: String? = null
     var name: String? = null
     var audioFile: String? = null
     var playlistID: String? = null

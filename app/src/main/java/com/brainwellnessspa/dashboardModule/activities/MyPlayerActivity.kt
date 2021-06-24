@@ -21,10 +21,9 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.addToRecentPlayId
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.addToRecentPlayId
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
