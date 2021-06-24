@@ -55,6 +55,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     private var receiver: BroadcastReceiver? = null
     var fcmId: String = ""
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_otp)
@@ -91,7 +92,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             }
         }
 
-        binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to +$countryCode $mobileNo"
+        binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to \n+$countryCode $mobileNo"
 
         editTexts = arrayOf(binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4)
         binding.edtOTP1.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 0, tvSendOTPbool))
@@ -154,7 +155,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         }
     }
 
-    @SuppressLint("HardwareIds") fun authotpUserAcess() {
+    @SuppressLint("HardwareIds")
+    fun authotpUserAcess() {
         if (BWSApplication.isNetworkConnected(this)) {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!

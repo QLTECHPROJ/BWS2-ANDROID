@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,10 +25,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.dashboardOldModule.appointment.AppointmentDetails.AptAnswersFragment;
-import com.brainwellnessspa.dashboardOldModule.appointment.AppointmentDetails.AptAudioFragment;
-import com.brainwellnessspa.dashboardOldModule.appointment.AppointmentDetails.AptBookletFragment;
-import com.brainwellnessspa.dashboardOldModule.appointment.AppointmentDetails.AptDetailsFragment;
+import com.brainwellnessspa.dashboardOldModule.appointment.appointmentDetails.AptAnswersFragment;
+import com.brainwellnessspa.dashboardOldModule.appointment.appointmentDetails.AptAudioFragment;
+import com.brainwellnessspa.dashboardOldModule.appointment.appointmentDetails.AptBookletFragment;
+import com.brainwellnessspa.dashboardOldModule.appointment.appointmentDetails.AptDetailsFragment;
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.utility.APIClient;
@@ -45,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.dashboardOldModule.appointment.AppointmentDetails.AptAudioFragment.comeRefreshData;
+import static com.brainwellnessspa.dashboardOldModule.appointment.appointmentDetails.AptAudioFragment.comeRefreshData;
 
 public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;

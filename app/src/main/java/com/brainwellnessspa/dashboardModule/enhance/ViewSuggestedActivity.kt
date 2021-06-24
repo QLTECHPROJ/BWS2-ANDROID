@@ -22,9 +22,8 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewSuggestedBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -454,7 +453,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                                 GlobalInitExoPlayer.player.playWhenReady = true
                             }
                         } else {
-                            DashboardActivity.audioClick = true
+                            BWSApplication.audioClick = true
                         }
                         callMyPlayer()
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
@@ -542,7 +541,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search")
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio")
             editor.apply()
-            DashboardActivity.audioClick = audioc
+            BWSApplication.audioClick = audioc
             callMyPlayer()
         }
 

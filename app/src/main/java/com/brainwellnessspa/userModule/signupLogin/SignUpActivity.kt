@@ -38,8 +38,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateAccountBinding
@@ -55,6 +53,7 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var activity: Activity
     var countryFullName: String = ""
     lateinit var searchEditText: EditText
+    var p: Properties? = null
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -154,7 +153,7 @@ class SignUpActivity : AppCompatActivity() {
             binding.tvCountryShortName.text = "AU"
         }
 
-        val p = Properties()
+        p = Properties()
         BWSApplication.addToSegment("Sign up Screen Viewed", p, CONSTANTS.screen)
 
         if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
@@ -315,14 +314,6 @@ class SignUpActivity : AppCompatActivity() {
             dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
         }
-    }
-
-    private fun isValidPassword(password: String?): Boolean {
-        val pattern: Pattern
-        val passwordPattern = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(passwordPattern)
-        val matcher: Matcher = pattern.matcher(password)
-        return matcher.matches()
     }
 
     fun String.isEmailValid(): Boolean {

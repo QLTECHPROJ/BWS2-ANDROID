@@ -22,8 +22,7 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding
 import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
@@ -281,7 +280,7 @@ class ViewAllAudioFragment : Fragment() {
                                         GlobalInitExoPlayer.player.playWhenReady = true
                                     }
                                 } else {
-                                    DashboardActivity.audioClick = true
+                                    BWSApplication.audioClick = true
                                 }
                                 callMyPlayer()
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
@@ -352,7 +351,7 @@ class ViewAllAudioFragment : Fragment() {
                                     GlobalInitExoPlayer.player.playWhenReady = true
                                 }
                             } else {
-                                DashboardActivity.audioClick = true
+                                BWSApplication.audioClick = true
                             }
                             callMyPlayer()
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
@@ -419,7 +418,7 @@ class ViewAllAudioFragment : Fragment() {
                                     GlobalInitExoPlayer.player.playWhenReady = true
                                 }
                             } else {
-                                DashboardActivity.audioClick = true
+                                BWSApplication.audioClick = true
                             }
                             callMyPlayer()
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
@@ -498,8 +497,8 @@ class ViewAllAudioFragment : Fragment() {
                                 GlobalInitExoPlayer.player.playWhenReady = true
                             }
                         } else {
-                            DashboardActivity.audioClick = true
-                            DashboardActivity.miniPlayer = 1
+                            BWSApplication.audioClick = true
+                            BWSApplication.miniPlayer = 1
                         }
                         callMyPlayer()
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
@@ -639,7 +638,7 @@ class ViewAllAudioFragment : Fragment() {
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, name)
             editor.apply()
-            DashboardActivity.audioClick = audioc
+            BWSApplication.audioClick = audioc
             callMyPlayer()
         }
 

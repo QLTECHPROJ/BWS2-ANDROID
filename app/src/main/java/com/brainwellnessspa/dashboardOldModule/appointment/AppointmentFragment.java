@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.dashboardOldModule.models.NextSessionViewModel;
 import com.brainwellnessspa.dashboardOldModule.models.PreviousAppointmentsModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.utility.APIClient;

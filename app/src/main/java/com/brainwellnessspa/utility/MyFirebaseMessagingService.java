@@ -193,7 +193,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-            notificationBuilder.setSmallIcon(R.drawable.app_logo_transparent);
+            notificationBuilder.setSmallIcon(R.drawable.app_new_icon);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
             notificationBuilder.setDefaults(Notification.DEFAULT_ALL | Notification.FLAG_AUTO_CANCEL);

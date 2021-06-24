@@ -36,7 +36,7 @@ import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.BWSApplication.showToast;
-import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.PlayerStatus;
+import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.PlayerStatus;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetDeviceVolume;
 

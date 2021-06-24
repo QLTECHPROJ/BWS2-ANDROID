@@ -40,7 +40,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
@@ -71,9 +71,9 @@ import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
-import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick;
-import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.miniPlayer;
-import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.BWSApplication.audioClick;
+import static com.brainwellnessspa.BWSApplication.miniPlayer;
+import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
@@ -202,7 +202,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (!PlaylistImageDetails.equalsIgnoreCase("")) {
                 try {
-                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f).placeholder(R.drawable.audio_bg).error(R.drawable.audio_bg).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                    Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
                     binding.ivTransBanner.setImageResource(R.drawable.rounded_light_app_theme);
                 } catch (Exception e) {
                     e.printStackTrace();

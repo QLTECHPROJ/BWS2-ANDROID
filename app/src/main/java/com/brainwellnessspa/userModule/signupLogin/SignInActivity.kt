@@ -41,8 +41,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
@@ -57,6 +55,7 @@ class SignInActivity : AppCompatActivity() {
     var name: String? = null
     var email: String? = null
     var countryShortName: String? = null
+    var p: Properties? = null
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -80,6 +79,7 @@ class SignInActivity : AppCompatActivity() {
         override fun afterTextChanged(s: Editable) {}
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
@@ -110,7 +110,7 @@ class SignInActivity : AppCompatActivity() {
             finishAffinity()
         }
 
-        val p = Properties()
+        p = Properties()
         BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen)
 
         binding.tvSignUp.setOnClickListener {
@@ -141,7 +141,7 @@ class SignInActivity : AppCompatActivity() {
                 false
             }
 
-            val p = Properties()
+            p = Properties()
             BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen)
 
             searchView.onActionViewExpanded()
@@ -176,7 +176,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             })
 
-            prepareCountryData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchFilter)
+            prepareCountryData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder)
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
@@ -217,7 +217,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchFilter: String) {
+    fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
@@ -227,7 +227,7 @@ class SignInActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(activity)
-                        adapter = CountrySelectAdapter(dialog, searchFilter, binding, listModel.responseData!!, rvCountryList, tvFound)
+                        adapter = CountrySelectAdapter(dialog, binding, listModel.responseData!!, rvCountryList, tvFound)
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -243,19 +243,12 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun isValidPassword(password: String): Boolean {
-        val pattern: Pattern
-        val passwordPatterned = "^(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(passwordPatterned)
-        val matcher: Matcher = pattern.matcher(password)
-        return matcher.matches()
-    }
-
     override fun onBackPressed() {
         finishAffinity()
     }
 
-    @SuppressLint("HardwareIds", "SetTextI18n") fun prepareData() {
+    @SuppressLint("HardwareIds", "SetTextI18n")
+    fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
@@ -331,7 +324,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    class CountrySelectAdapter(private var dialog: Dialog, private var searchFilter: String, private var binding: ActivitySignInBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
+    class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivitySignInBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
         var catList = SignUpActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -343,7 +336,8 @@ class SignInActivity : AppCompatActivity() {
             listFilterData = modelList
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val mData: CountryListModel.ResponseData = listFilterData[position]
             holder.bindingAdapter.tvCountryName.text = mData.name
             holder.bindingAdapter.tvCountryCode.text = "+" + mData.code
@@ -380,7 +374,8 @@ class SignInActivity : AppCompatActivity() {
                     return filterResults
                 }
 
-                @SuppressLint("SetTextI18n") override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                @SuppressLint("SetTextI18n")
+                override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.isEmpty()) {
                         tvFound.visibility = View.VISIBLE
                         tvFound.text = "Sorry we are not available in this country yet"

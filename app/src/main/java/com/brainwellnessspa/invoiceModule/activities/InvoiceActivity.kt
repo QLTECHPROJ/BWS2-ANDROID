@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityInvoiceBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.invoiceModule.fragments.AppointmentInvoiceFragment
@@ -74,15 +74,15 @@ class InvoiceActivity : AppCompatActivity() {
         myBackPress = true
         if (invoiceToRecepit == 0) {
             invoiceToRecepit = 1
-            DashboardActivity.tutorial = false
+            BWSApplication.tutorial = false
             if (ComeFrom.equals("1", ignoreCase = true)) {
                 invoiceToDashboard = 1
-                val i = Intent(context, DashboardActivity::class.java)
+                val i = Intent(context, BottomNavigationActivity::class.java)
                 startActivity(i)
                 finish()
             } else if (ComeFrom.equals("", ignoreCase = true)) {
                 invoiceToDashboard = 1
-                val i = Intent(context, DashboardActivity::class.java)
+                val i = Intent(context, BottomNavigationActivity::class.java)
                 startActivity(i)
             } else {
                 AudioDownloadsFragment.comefromDownload = "0"
@@ -95,7 +95,7 @@ class InvoiceActivity : AppCompatActivity() {
             } else {
                 AudioDownloadsFragment.comefromDownload = "0"
                 invoiceToRecepit = 1
-                val i = Intent(context, DashboardActivity::class.java)
+                val i = Intent(context, BottomNavigationActivity::class.java)
                 startActivity(i)
                 finish()
             }

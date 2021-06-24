@@ -39,7 +39,7 @@ import com.brainwellnessspa.dashboardModule.models.MainAudioModel;
 import com.brainwellnessspa.dashboardModule.models.SearchBothModel;
 import com.brainwellnessspa.dashboardModule.models.SuggestedModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
@@ -95,7 +95,7 @@ import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
-import static com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick;
+import static com.brainwellnessspa.BWSApplication.audioClick;
 import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 
@@ -638,7 +638,7 @@ Appointment Audios dddd*/
         if (BWSApplication.isNetworkConnected(ctx)) {
             mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(pos).getAudioFile());
         } else {
-            mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
+            mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_disclaimer));
         }
         player.setMediaItem(mediaItem1);
         InitNotificationAudioPLayerD(ctx);

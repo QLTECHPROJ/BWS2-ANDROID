@@ -71,7 +71,7 @@ import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
@@ -156,13 +156,14 @@ public class BWSApplication extends Application {
             database.execSQL("ALTER TABLE 'audio_table' ADD COLUMN 'UserID' TEXT");
         }
     };
-
+    public static int miniPlayer = 0;
     public static String BatteryStatus = "", IsLock;
     public static long oldSongPos = 0;
     public static String PlayerAudioId = "";
     public static int playlistDetailRefresh = 0;
     public static boolean AudioInterrupted = false, logout = false;
     public static Analytics analytics;
+    public static boolean audioClick = false, tutorial = false;
     public static List<String> downloadAudioDetailsList = new ArrayList<>();
     public static List<DownloadAudioDetails> playlistDownloadAudioDetailsList = new ArrayList<>();
     static List<String> remiderDays = new ArrayList<>();

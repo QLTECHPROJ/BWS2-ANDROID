@@ -32,8 +32,7 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
@@ -578,7 +577,7 @@ class HomeFragment : Fragment() {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "") //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        if (MyDownloads.equals("1", ignoreCase = true)) {
+        if (myDownloads.equals("1", ignoreCase = true)) {
             if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
                 if (player != null) {
                     if (player.playWhenReady) {
@@ -633,7 +632,7 @@ class HomeFragment : Fragment() {
         val PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
-        if (MyDownloads.equals("1", true)) {
+        if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
                 if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
                     if (isDisclaimer == 1) {
@@ -878,7 +877,7 @@ class HomeFragment : Fragment() {
     private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
             DB.taskDao().getPlaylist1(PlaylistID, coUserId).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
-                    MyDownloads = if (audioList.isNotEmpty()) {
+                myDownloads = if (audioList.isNotEmpty()) {
                         "1"
                     } else {
                         "0"
@@ -1178,7 +1177,7 @@ class HomeFragment : Fragment() {
                                         }
                                     }
 
-                                    override fun onFailure(call: Call<VerifyPinModel?>, t: Throwable) {
+                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
                                         progressBar.visibility = View.GONE
                                     }
                                 })

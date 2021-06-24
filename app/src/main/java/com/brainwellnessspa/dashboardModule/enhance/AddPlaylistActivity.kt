@@ -28,8 +28,8 @@ import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel
 import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding
 import com.brainwellnessspa.databinding.AddPlayListLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer

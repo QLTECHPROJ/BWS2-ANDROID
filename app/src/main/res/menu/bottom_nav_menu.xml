@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_audio"
-        android:icon="@drawable/ic_audio_icon"
-        android:title="@string/title_audio" />
+        android:id="@+id/navigation_Home"
+        android:icon="@drawable/ic_home_icon"
+        android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_playlist"
-        android:icon="@drawable/ic_playlist_icon"
-        android:title="@string/title_playlist" />
+        android:id="@+id/navigation_Manage"
+        android:icon="@drawable/ic_manage_icon"
+        android:title="@string/title_enhance" />
 
     <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_home_search_icon"
-        android:title="@string/title_search" />
+        android:id="@+id/navigation_Wellness"
+        android:icon="@drawable/ic_wellness_icon"
+        android:title="@string/title_Empower" />
     <item
-        android:id="@+id/navigation_appointment"
-        android:icon="@drawable/ic_appointment_icon"
-        android:title="@string/title_appointment" />
+        android:id="@+id/navigation_Elevate"
+        android:icon="@drawable/ic_elevate_icon"
+        android:title="@string/title_Elevate" />
     <item
-        android:id="@+id/navigation_account"
-        android:icon="@drawable/ic_account_icon"
-        android:title="@string/title_account" />
+        android:id="@+id/navigation_Profile"
+        android:icon="@drawable/ic_profile_two_icon"
+        android:title="@string/title_Profile" />
 
 </menu>

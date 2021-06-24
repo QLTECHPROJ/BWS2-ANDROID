@@ -79,7 +79,6 @@ class ChangePasswordActivity : AppCompatActivity() {
                 binding.ivNewPswdVisible.isClickable = false
                 binding.ivNewPswdVisible.isEnabled = false
                 binding.ivNewPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
-
                 binding.ivNewPswdInVisible.isClickable = false
                 binding.ivNewPswdInVisible.isEnabled = false
             } else {
@@ -209,7 +208,8 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("SetTextI18n") private fun changePassword() {
+    @SuppressLint("SetTextI18n")
+    private fun changePassword() {
         if (binding.etCurrentPswd.text.toString() == "") {
             binding.txtCurrentPswdError.text = "Please provide the current password"
             binding.txtCurrentPswdError.visibility = View.VISIBLE

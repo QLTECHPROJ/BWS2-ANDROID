@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -13,18 +13,17 @@
             android:id="@+id/tvSecond"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rvFirstList"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="start"
-            android:text="I found it hard to wind down."
+            android:text="@string/i_found_it_hard_to_wind_down"
             android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_15sdp"
+            tools:ignore="SpUsage" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSecondList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvSecond"
             android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal"
             android:overScrollMode="never"

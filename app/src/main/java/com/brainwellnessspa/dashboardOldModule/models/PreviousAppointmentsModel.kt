@@ -1,90 +1,36 @@
-package com.brainwellnessspa.dashboardOldModule.models;
+package com.brainwellnessspa.dashboardOldModule.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
-
-public class PreviousAppointmentsModel {
+class PreviousAppointmentsModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    var responseData: List<ResponseData>? = null
+
     @SerializedName("ResponseCode")
     @Expose
-    private String responseCode;
+    var responseCode: String? = null
+
     @SerializedName("ResponseMessage")
     @Expose
-    private String responseMessage;
+    var responseMessage: String? = null
+
     @SerializedName("ResponseStatus")
     @Expose
-    private String responseStatus;
+    var responseStatus: String? = null
 
-    public List<ResponseData> getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(List<ResponseData> responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public class ResponseData {
+    inner class ResponseData {
         @SerializedName("Category")
         @Expose
-        private String category;
+        var category: String? = null
+
         @SerializedName("CatMenual")
         @Expose
-        private String catMenual;
+        var catMenual: String? = null
+
         @SerializedName("Image")
         @Expose
-        private String image;
-
-        public String getCategory() {
-            return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
-        }
-
-        public String getCatMenual() {
-            return catMenual;
-        }
-
-        public void setCatMenual(String catMenual) {
-            this.catMenual = catMenual;
-        }
-
-        public String getImage() {
-            return image;
-        }
-
-        public void setImage(String image) {
-            this.image = image;
-        }
-
+        var image: String? = null
     }
 }

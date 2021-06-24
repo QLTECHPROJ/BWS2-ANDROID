@@ -29,9 +29,8 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Fragments.MiniPlayerFragment.isDisclaimer
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.Models.MainPlayModel
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
