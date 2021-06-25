@@ -26,14 +26,15 @@ class MyNetworkReceiver : BroadcastReceiver() {
                     false //                BWSApplication.showToast(String.valueOf(status)+Status.valueOf(PRDownloader.getStatus(downloadIdOne).name()),context);
             }
         } else {
+
+            // do some thing
             GlobalInitExoPlayer.callResumePlayer(context)
             if (!DownloadMedia.isDownloading) {
                 val fileNameList: List<String>
                 val audioFile: List<String>
                 val playlistDownloadId: List<String>
                 if (BWSApplication.isNetworkConnected(context)) {
-                    val shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist,
-                        Context.MODE_PRIVATE)
+                    val shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                     val gson = Gson()
                     val json = shared.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
                     val json1 = shared.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -60,9 +61,7 @@ class MyNetworkReceiver : BroadcastReceiver() {
                             DownloadMedia.isDownloading = true
                             val downloadMedia =
                                 DownloadMedia(context.applicationContext, context as Activity)
-                            downloadMedia.encrypt1(audioFile,
-                                fileNameList,
-                                playlistDownloadId /*, playlistSongs*/)
+                            downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId /*, playlistSongs*/)
                         }
                     }
                 }

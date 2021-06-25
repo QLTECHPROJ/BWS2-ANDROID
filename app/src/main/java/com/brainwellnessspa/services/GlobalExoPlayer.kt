@@ -55,7 +55,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GlobalInitExoPlayer :Service(){
+class GlobalExoPlayer :Service(){
     var serviceConected = false
     var intent: Intent? = null
     var fileNameList: ArrayList<String> = ArrayList()
@@ -67,54 +67,46 @@ class GlobalInitExoPlayer :Service(){
     var localBroadcastManager: LocalBroadcastManager? = null
     var localIntent: Intent? = null
     var mainPlayModelList1 = ArrayList<MainPlayModel>()
-
-    companion object {
-
-        @JvmStatic
-        fun callNewPlayerRelease() {
-            if (player != null) {
-                player.stop()
-                player.release()
-                player = null
-                PlayerINIT = false
-            }
+    fun callNewPlayerRelease() {
+        if (player != null) {
+            player.stop()
+            player.release()
+            player = null
+            PlayerINIT = false
         }
+    }
 
-        @JvmStatic
-        fun callResumePlayer(ctx: Context) {
-            var mainPlayModelList = ArrayList<MainPlayModel>()
-            if (player != null) {
-                if (player.playbackState == ExoPlayer.STATE_IDLE && AudioInterrupted) {
-                    AudioInterrupted = false
-                    player.playWhenReady = true
-                    player.seekTo(player.currentWindowIndex, player.currentPosition)
-                    player.prepare()
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                    val gson = Gson()
-                    val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
-                    if (!json.equals(gson.toString(), ignoreCase = true)) {
-                        val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
-                        mainPlayModelList = gson.fromJson(json, type)
-                    }
-                    val globalInitExoPlayer = GlobalInitExoPlayer()
-                    globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                    Log.e("Exo PLayer Net:", "Player Resume after Net")
+    fun callResumePlayer(ctx: Context) {
+        var mainPlayModelList = ArrayList<MainPlayModel?>()
+        if (player != null) {
+            if (player.playbackState == ExoPlayer.STATE_IDLE && AudioInterrupted) {
+                AudioInterrupted = false
+                player.playWhenReady = true
+                player.seekTo(player.currentWindowIndex, player.currentPosition)
+                player.prepare()
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val gson = Gson()
+                val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+                if (!json.equals(gson.toString(), ignoreCase = true)) {
+                    val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
+                    mainPlayModelList = gson.fromJson(json, type)
                 }
+                val globalInitExoPlayer = GlobalInitExoPlayer()
+                globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
+                Log.e("Exo PLayer Net:", "Player Resume after Net")
             }
         }
+    }
 
-        @JvmStatic
-        fun getSpace(): Long {
-            val stat = StatFs(Environment.getExternalStorageDirectory().path)
-            var bytesAvailable: Long = 0
-            bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong / (1024 * 1024)
-            Log.e("My Space", "Available MB : $bytesAvailable")
-            return bytesAvailable
-        }
-
-        @JvmStatic
-        fun getMediaBitmap(ctx: Context, songImg: String): Bitmap? {
-            /*  class GetMedia extends AsyncTask<String, Void, Bitmap> {
+    fun getSpace(): Long {
+        val stat = StatFs(Environment.getExternalStorageDirectory().path)
+        var bytesAvailable: Long = 0
+        bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong / (1024 * 1024)
+        Log.e("My Space", "Available MB : $bytesAvailable")
+        return bytesAvailable
+    }
+    fun getMediaBitmap(ctx: Context, songImg: String): Bitmap? {
+        /*  class GetMedia extends AsyncTask<String, Void, Bitmap> {
             @Override
             protected Bitmap doInBackground(String... params) {
                 if (songImg.equalsIgnoreCase("") || !isNetworkConnected(ctx)) {
@@ -144,144 +136,139 @@ class GlobalInitExoPlayer :Service(){
                 super.onPostExecute(result);
             }
         }*/
-            AudioDatabase.databaseWriteExecutor1.execute {
-                if (songImg.equals("", ignoreCase = true) || !isNetworkConnected(ctx)) {
-                    myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
-                } else {
-                    try {
-                        val url = URL(songImg)
-                        val connection = url.openConnection() as HttpURLConnection
-                        connection.connect()
-                        val `is` = connection.inputStream
-                        myBitmap = BitmapFactory.decodeStream(`is`)
-                    } catch (e: IOException) {
-                        if (e.message.equals("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/", ignoreCase = true)) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
-                        } else {
-                            println(e)
-                        }
-                    }
-                }
-            }
-            //        GetMedia st = new GetMedia();
-            //        st.execute();
-            return myBitmap
-        }
-
-        @JvmStatic
-        fun relesePlayer(context: Context) {
-            val shared2 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-            val UserID = shared2.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-            val CoUserID = shared2.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-            val p = Properties()
-            p.putValue("userId", UserID)
-            p.putValue("Screen", "Dashboard")
-            addToSegment("Application Killed", p, CONSTANTS.track)
-            if (player != null) {
+        AudioDatabase.databaseWriteExecutor1.execute {
+            if (songImg.equals("", ignoreCase = true) || !isNetworkConnected(ctx)) {
+                myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+            } else {
                 try {
-                    mediaSession.release()
-                    mediaSessionConnector.setPlayer(null)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                    val url = URL(songImg)
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.connect()
+                    val `is` = connection.inputStream
+                    myBitmap = BitmapFactory.decodeStream(`is`)
+                } catch (e: IOException) {
+                    if (e.message.equals("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/", ignoreCase = true)) {
+                        myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+                    } else {
+                        println(e)
+                    }
                 }
-                playerNotificationManager.setPlayer(null)
-                //            player.stop();
-                player.release()
-                player = null
-                //            player = null;
-                PlayerINIT = false
             }
-
-
-            //        if (player != null) {
-            //            mediaSession.release();
-            //            mediaSessionConnector.setPlayer(null);
-            //            playerNotificationManager.setPlayer(null);
-            //            player.release();
-            //            player = null;
-            //           /* mediaSession.setActive(false);
-            //            playerNotificationManager.setPlayer(null);
-            //            player.release();
-            //            notificationManager.cancel(notificationId);
-            ////            player = null;
-            //            if (mediaSession != null) {
-            //                mediaSession.setActive(false);
-            //                mediaSession.release();
-            //            }*/
-            //            PlayerINIT = false;
-            //        }
         }
+        //        GetMedia st = new GetMedia();
+        //        st.execute();
+        return myBitmap
+    }
 
-        @JvmStatic
-        fun GetSourceName(ctx: Context): String? {
-            var myFlagType: String? = ""
+    fun relesePlayer(context: Context) {
+        val shared2 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val UserID = shared2.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        val CoUserID = shared2.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        val p = Properties()
+        p.putValue("userId", UserID)
+        p.putValue("Screen", "Dashboard")
+        addToSegment("Application Killed", p, CONSTANTS.track)
+        if (player != null) {
             try {
-                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                val AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                if (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
-                    if (MyPlaylist.equals("Recently Played", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    } else if (MyPlaylist.equals("Library", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    } else if (MyPlaylist.equals("Get Inspired", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    } else if (MyPlaylist.equals("Popular", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    } else if (MyPlaylist.equals("Top Categories", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    }
-                } else if (AudioFlag.equals("LikeAudioList", ignoreCase = true)) {
-                    myFlagType = "Liked Audios"
-                } else if (AudioFlag.equals("SubPlayList", ignoreCase = true)) {
-                    myFlagType = "Playlist"
-                } else if (AudioFlag.equals("Downloadlist", ignoreCase = true)) {
-                    myFlagType = "Downloaded Playlists"
-                } else if (AudioFlag.equals("DownloadListAudio", ignoreCase = true)) {
-                    myFlagType = "Downloaded Audios"
-                } else if (AudioFlag.equals("AppointmentDetailList", ignoreCase = true)) {
-                    myFlagType = "Appointment Audios"
-                } else if (AudioFlag.equals("SearchAudio", ignoreCase = true)) {
-                    if (MyPlaylist.equals("Recommended Search Audio", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    } else if (MyPlaylist.equals("Search Audio", ignoreCase = true)) {
-                        myFlagType = MyPlaylist
-                    }
-                }
+                mediaSession.release()
+                mediaSessionConnector.setPlayer(null)
             } catch (e: Exception) {
                 e.printStackTrace()
-                myFlagType = ""
             }
-            return myFlagType
+            playerNotificationManager.setPlayer(null)
+            //            player.stop();
+            player.release()
+            player = null
+            //            player = null;
+            PlayerINIT = false
         }
 
-        @JvmStatic
-        fun GetDeviceVolume(ctx: Context): String {
-            try {
-                if (audioManager != null) {
-                    audioManager = ctx.getSystemService(AUDIO_SERVICE) as AudioManager
-                    currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-                    maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                    percent = 100
-                    hundredVolume = (currentVolume * percent) / maxVolume
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-            return hundredVolume.toString()
-        }
 
-        @JvmStatic
-        fun GetCurrentAudioPosition(): String? {
-            if (player != null) {
-                val pos = player.currentPosition
-                PlayerCurrantAudioPostion = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos), TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)))
-            } else {
-                PlayerCurrantAudioPostion = "0"
-            }
-            return PlayerCurrantAudioPostion
-        }
+        //        if (player != null) {
+        //            mediaSession.release();
+        //            mediaSessionConnector.setPlayer(null);
+        //            playerNotificationManager.setPlayer(null);
+        //            player.release();
+        //            player = null;
+        //           /* mediaSession.setActive(false);
+        //            playerNotificationManager.setPlayer(null);
+        //            player.release();
+        //            notificationManager.cancel(notificationId);
+        ////            player = null;
+        //            if (mediaSession != null) {
+        //                mediaSession.setActive(false);
+        //                mediaSession.release();
+        //            }*/
+        //            PlayerINIT = false;
+        //        }
     }
+
+    fun GetSourceName(ctx: Context): String? {
+        var myFlagType: String? = ""
+        try {
+            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+            val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+            if (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
+                if (MyPlaylist.equals("Recently Played", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                } else if (MyPlaylist.equals("Library", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                } else if (MyPlaylist.equals("Get Inspired", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                } else if (MyPlaylist.equals("Popular", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                } else if (MyPlaylist.equals("Top Categories", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                }
+            } else if (AudioFlag.equals("LikeAudioList", ignoreCase = true)) {
+                myFlagType = "Liked Audios"
+            } else if (AudioFlag.equals("SubPlayList", ignoreCase = true)) {
+                myFlagType = "Playlist"
+            } else if (AudioFlag.equals("Downloadlist", ignoreCase = true)) {
+                myFlagType = "Downloaded Playlists"
+            } else if (AudioFlag.equals("DownloadListAudio", ignoreCase = true)) {
+                myFlagType = "Downloaded Audios"
+            } else if (AudioFlag.equals("AppointmentDetailList", ignoreCase = true)) {
+                myFlagType = "Appointment Audios"
+            } else if (AudioFlag.equals("SearchAudio", ignoreCase = true)) {
+                if (MyPlaylist.equals("Recommended Search Audio", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                } else if (MyPlaylist.equals("Search Audio", ignoreCase = true)) {
+                    myFlagType = MyPlaylist
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            myFlagType = ""
+        }
+         return myFlagType
+    }
+    fun GetDeviceVolume(ctx: Context): String? {
+        try {
+            if (audioManager != null) {
+                audioManager = ctx.getSystemService(AUDIO_SERVICE) as AudioManager
+                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                percent = 100
+                hundredVolume = (currentVolume * percent) / maxVolume
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return hundredVolume.toString()
+    }
+
+    fun GetCurrentAudioPosition(): String? {
+        if (player != null) {
+            val pos = player.currentPosition
+            PlayerCurrantAudioPostion = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(pos), TimeUnit.MILLISECONDS.toSeconds(pos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(pos)))
+        } else {
+            PlayerCurrantAudioPostion = "0"
+        }
+        return PlayerCurrantAudioPostion
+    }
+
     fun GlobleInItPlayer(ctx: Context, position: Int, downloadAudioDetailsList: List<String?>, mainPlayModelList: ArrayList<MainPlayModel>, playerType: String?) {
         //        relesePlayer();
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
@@ -353,14 +340,14 @@ class GlobalInitExoPlayer :Service(){
         } else {
             p.putValue("audioType", "Streaming")
         }
-        p.putValue("source", GetSourceName(ctx))
+        p.putValue("source", GlobalInitExoPlayer.GetSourceName(ctx))
         p.putValue("playerType", "Main")
         p.putValue("audioService", appStatus(ctx))
         p.putValue("bitRate", "")
         p.putValue("sound", hundredVolume.toString())
         addToSegment("Audio Playback Started", p, CONSTANTS.track)
         Log.e("Audio Volume", hundredVolume.toString())
-        getMediaBitmap(ctx, mainPlayModelList[position].imageFile)
+        GlobalInitExoPlayer.getMediaBitmap(ctx, mainPlayModelList[position].imageFile)
         player.prepare()
         player.setWakeMode(C.WAKE_MODE_NONE)
         player.setHandleAudioBecomingNoisy(true)
@@ -424,7 +411,7 @@ class GlobalInitExoPlayer :Service(){
                     p.putValue("audioType", "Streaming")
                     "Streaming"
                 }
-                p.putValue("source", GetSourceName(ctx))
+                p.putValue("source", GlobalInitExoPlayer.GetSourceName(ctx))
                 p.putValue("playerType", "Main")
                 p.putValue("audioService", appStatus(ctx))
                 p.putValue("bitRate", "")
@@ -471,7 +458,7 @@ class GlobalInitExoPlayer :Service(){
                 }
                 try {
                     if (isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
+                        val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GlobalInitExoPlayer.GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
                         listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                 val listModel = response.body()
@@ -538,8 +525,9 @@ class GlobalInitExoPlayer :Service(){
         }
     }
 
+
     fun GlobleInItDisclaimer(ctx: Context, mainPlayModelList: ArrayList<MainPlayModel>, pos: Int) {
-        callNewPlayerRelease()
+        GlobalInitExoPlayer.callNewPlayerRelease()
         player = SimpleExoPlayer.Builder(ctx.applicationContext).build()
         val mediaItem1: MediaItem
         mediaItem1 = if (isNetworkConnected(ctx)) {
@@ -600,6 +588,31 @@ class GlobalInitExoPlayer :Service(){
         //        playerNotificationManager.setPlayer(player);
     }
 
+    /* @NonNull
+    @Override
+    public SimpleExoPlayer createPlayer(Context ctx) {
+        return new ToroExoPlayer(toro.context, renderersFactory, trackSelector, loadControl,
+                new DefaultBandwidthMeter(), ctx.getc.drmSessionManager, Util.getLooper());
+    }
+
+    public static Looper getCurrentOrMainLooper() {
+        @Nullable Looper myLooper = Looper.myLooper();
+        return myLooper != null ? myLooper : Looper.getMainLooper();
+    }
+*/
+
+    /* @NonNull
+    @Override
+    public SimpleExoPlayer createPlayer(Context ctx) {
+        return new ToroExoPlayer(toro.context, renderersFactory, trackSelector, loadControl,
+                new DefaultBandwidthMeter(), ctx.getc.drmSessionManager, Util.getLooper());
+    }
+
+    public static Looper getCurrentOrMainLooper() {
+        @Nullable Looper myLooper = Looper.myLooper();
+        return myLooper != null ? myLooper : Looper.getMainLooper();
+    }
+*/
     fun InitNotificationAudioPLayer(ctx: Context, mainPlayModelList2: ArrayList<MainPlayModel>?) {
         var position = 0
         val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -609,7 +622,7 @@ class GlobalInitExoPlayer :Service(){
             val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
             mainPlayModelList1 = gson.fromJson(json, type)
         }
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(ctx, "10001", (R.string.playback_channel_name), 0, notificationId, object : MediaDescriptionAdapter {
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(ctx, "10001", R.string.playback_channel_name, 0, notificationId, object : MediaDescriptionAdapter {
             override fun getCurrentContentTitle(players: Player): String {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val gson = Gson()
@@ -886,6 +899,74 @@ class GlobalInitExoPlayer :Service(){
         playerNotificationManager.setPlayer(player)
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(startId, notification1!!, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForeground(startId, notification1)
+            }
+            serviceConected = true
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            Log.e("Start Command: ", e.message!!)
+        }
+        return START_STICKY
+    }
+
+    /* @Override
+    public void onDestroy() {
+        Log.e("APPLICATION", "App is in onActivityDestroyed");
+        showToast("onDestroy Called", activity);
+        relesePlayer(getApplication());
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        stopForeground(true);
+        super.onDestroy();
+    }*/
+
+    /* @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.e("Appplication log", "onTaskRemoved Called");
+//        showToast("onTaskRemoved Called", activity);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        relesePlayer(getApplicationContext());
+        stopForeground(true);
+//        stopSelf();
+//        stopForeground(true);
+//        playerNotificationManager.cancel(notificationId);
+        super.onTaskRemoved(rootIntent);
+    }*/
+
+    /* @Override
+    public void onDestroy() {
+        Log.e("APPLICATION", "App is in onActivityDestroyed");
+        showToast("onDestroy Called", activity);
+        relesePlayer(getApplication());
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        stopForeground(true);
+        super.onDestroy();
+    }*/
+    /* @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.e("Appplication log", "onTaskRemoved Called");
+//        showToast("onTaskRemoved Called", activity);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId);
+        relesePlayer(getApplicationContext());
+        stopForeground(true);
+//        stopSelf();
+//        stopForeground(true);
+//        playerNotificationManager.cancel(notificationId);
+        super.onTaskRemoved(rootIntent);
+    }*/
+    override fun onBind(intent: Intent?): IBinder? {
+        LocalBinder()
+        return null
+    }
+
     fun UpdateMiniPlayer(ctx: Context, activity: Activity): String {
         var AudioFlag = "0"
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
@@ -964,7 +1045,7 @@ class GlobalInitExoPlayer :Service(){
                     }
                     if (arrayList2.size < arrayList.size) {
                         if (player != null) {
-                            callNewPlayerRelease()
+                            GlobalInitExoPlayer.callNewPlayerRelease()
                             audioClick = true
                         } else {
                             audioClick = true
@@ -1008,7 +1089,7 @@ class GlobalInitExoPlayer :Service(){
                     }
                     if (arrayList2.size < arrayList.size) {
                         if (player != null) {
-                            callNewPlayerRelease()
+                            GlobalInitExoPlayer.callNewPlayerRelease()
                             audioClick = true
                         } else {
                             audioClick = true
@@ -1052,7 +1133,7 @@ class GlobalInitExoPlayer :Service(){
                     }
                     if (arrayList2.size < arrayList.size) {
                         if (player != null) {
-                            callNewPlayerRelease()
+                            GlobalInitExoPlayer.callNewPlayerRelease()
                             audioClick = true
                         } else {
                             audioClick = true
@@ -1096,7 +1177,7 @@ class GlobalInitExoPlayer :Service(){
                     }
                     if (arrayList2.size < arrayList.size) {
                         if (player != null) {
-                            callNewPlayerRelease()
+                            GlobalInitExoPlayer.callNewPlayerRelease()
                             audioClick = true
                         } else {
                             audioClick = true
@@ -1140,7 +1221,7 @@ class GlobalInitExoPlayer :Service(){
                     }
                     if (arrayList2.size < arrayList.size) {
                         if (player != null) {
-                            callNewPlayerRelease()
+                            GlobalInitExoPlayer.callNewPlayerRelease()
                             audioClick = true
                         } else {
                             audioClick = true
@@ -1233,7 +1314,7 @@ class GlobalInitExoPlayer :Service(){
         editorr.remove(CONSTANTS.PREF_KEY_PlayFrom)
         editorr.clear()
         editorr.apply()
-        callNewPlayerRelease()
+        GlobalInitExoPlayer.callNewPlayerRelease()
     }
 
     fun UpdateNotificationAudioPLayer(ctx: Context) {
@@ -1296,139 +1377,70 @@ class GlobalInitExoPlayer :Service(){
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(startId, notification1!!, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForeground(startId, notification1)
-            }
-            serviceConected = true
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-            Log.e("Start Command: ", e.message!!)
-        }
-        return START_STICKY
+    /*  @Override
+    public long getSupportedPrepareActions() {
+        return 0;
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        LocalBinder()
-        return null
+    @Override
+    public void onPrepare(boolean playWhenReady) {
+
     }
 
+    @Override
+    public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromSearch(String query, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromUri(Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
+        return false;
+    }*/
+
+    /*  @Override
+    public long getSupportedPrepareActions() {
+        return 0;
+    }
+
+    @Override
+    public void onPrepare(boolean playWhenReady) {
+
+    }
+
+    @Override
+    public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromSearch(String query, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public void onPrepareFromUri(Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
+
+    }
+
+    @Override
+    public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
+        return false;
+    }*/
     class LocalBinder : Binder() {
         // Return this instance of LocalService so clients can call public methods
         val service: GlobalInitExoPlayer
-            get() =  GlobalInitExoPlayer()
+            get() = // Return this instance of LocalService so clients can call public methods
+                this@GlobalInitExoPlayer
     }
 
-    /* @Override
-    public void onDestroy() {
-        Log.e("APPLICATION", "App is in onActivityDestroyed");
-        showToast("onDestroy Called", activity);
-        relesePlayer(getApplication());
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        stopForeground(true);
-        super.onDestroy();
-    }*/
-
-    /* @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        Log.e("Appplication log", "onTaskRemoved Called");
-//        showToast("onTaskRemoved Called", activity);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        relesePlayer(getApplicationContext());
-        stopForeground(true);
-//        stopSelf();
-//        stopForeground(true);
-//        playerNotificationManager.cancel(notificationId);
-        super.onTaskRemoved(rootIntent);
-    }*/
-
-    /* @Override
-    public void onDestroy() {
-        Log.e("APPLICATION", "App is in onActivityDestroyed");
-        showToast("onDestroy Called", activity);
-        relesePlayer(getApplication());
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        stopForeground(true);
-        super.onDestroy();
-    }*/
-
-    /* @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        Log.e("Appplication log", "onTaskRemoved Called");
-//        showToast("onTaskRemoved Called", activity);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(notificationId);
-        relesePlayer(getApplicationContext());
-        stopForeground(true);
-//        stopSelf();
-//        stopForeground(true);
-//        playerNotificationManager.cancel(notificationId);
-        super.onTaskRemoved(rootIntent);
-    }*/
-
-    /*  @Override
-    public long getSupportedPrepareActions() {
-        return 0;
-    }
-
-    @Override
-    public void onPrepare(boolean playWhenReady) {
-
-    }
-
-    @Override
-    public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public void onPrepareFromSearch(String query, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public void onPrepareFromUri(Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
-        return false;
-    }*/
-
-    /*  @Override
-    public long getSupportedPrepareActions() {
-        return 0;
-    }
-
-    @Override
-    public void onPrepare(boolean playWhenReady) {
-
-    }
-
-    @Override
-    public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public void onPrepareFromSearch(String query, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public void onPrepareFromUri(Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-
-    }
-
-    @Override
-    public boolean onCommand(Player player, ControlDispatcher controlDispatcher, String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
-        return false;
-    }*/
 }

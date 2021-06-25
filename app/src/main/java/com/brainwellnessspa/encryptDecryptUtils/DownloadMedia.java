@@ -15,6 +15,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.MyNetworkReceiver;
 import com.downloader.Error;
@@ -37,8 +38,6 @@ import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.logout;
 import static com.brainwellnessspa.BWSApplication.showToast;
 import static com.brainwellnessspa.BWSApplication.PlayerStatus;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetDeviceVolume;
 
 public class DownloadMedia implements OnDownloadListener {
     public static int downloadError = 2, downloadIdOne;
@@ -236,10 +235,10 @@ public class DownloadMedia implements OnDownloadListener {
                 p.putValue("audioName", fileNameList.get(0));
                 p.putValue("playerType", PlayerStatus);
                 p.putValue("audioService", appStatus(ctx));
-                p.putValue("position", GetCurrentAudioPosition());
+                p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition());
                 p.putValue("source", "Downloaded Audios");
                 p.putValue("bitRate", "");
-                p.putValue("sound", GetDeviceVolume(ctx));
+                p.putValue("sound", GlobalInitExoPlayer.GetDeviceVolume(ctx));
                 addToSegment("Audio Download Completed", p, CONSTANTS.track);
                 showToast("Your audio has been downloaded", act);
             } else if (!playlistDownloadId.get(0).equalsIgnoreCase("")) {
@@ -254,7 +253,7 @@ public class DownloadMedia implements OnDownloadListener {
                         p.putValue("playerType", PlayerStatus);
                         p.putValue("source", "Downloaded Playlists");
                         p.putValue("audioService", appStatus(ctx));
-                        p.putValue("sound", GetDeviceVolume(ctx));
+                        p.putValue("sound", GlobalInitExoPlayer.GetDeviceVolume(ctx));
                         addToSegment("Playlist Download Completed", p, CONSTANTS.track);
                     }
                     DB.taskDao().getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).removeObserver(audioListx -> {

@@ -147,7 +147,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.getSpace;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
@@ -169,6 +168,7 @@ public class BWSApplication extends Application {
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;
+    public static String addToRecentPlayId = "0";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
@@ -1979,7 +1979,7 @@ public class BWSApplication extends Application {
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {
         long mySpace;
-        mySpace = getSpace();
+        mySpace = GlobalInitExoPlayer.getSpace();
         int batLevel = 0;
         // Get the battery percentage and store it in a INT variable
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

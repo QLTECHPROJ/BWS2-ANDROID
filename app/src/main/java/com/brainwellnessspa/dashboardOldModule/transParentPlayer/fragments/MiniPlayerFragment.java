@@ -87,7 +87,7 @@ import static com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragme
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.PlayerINIT;
+import static com.brainwellnessspa.BWSApplication.PlayerINIT;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.getMediaBitmap;
 import static com.brainwellnessspa.BWSApplication.player;

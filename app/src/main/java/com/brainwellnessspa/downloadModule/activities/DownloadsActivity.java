@@ -27,6 +27,7 @@ import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment;
 import com.brainwellnessspa.downloadModule.fragments.PlaylistsDownlaodsFragment;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -43,9 +44,7 @@ import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
+import static com.brainwellnessspa.BWSApplication.notificationId;
 
 public class DownloadsActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static boolean ComeFrom_Playlist = false;
@@ -276,7 +275,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             @Override
             public void onConnected(int source) {
                 // do some thing
-                callResumePlayer(ctx);
+                GlobalInitExoPlayer.callResumePlayer(ctx);
             }
 
             @Override
@@ -347,7 +346,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
 
     @Override
     public void onConnected(int source) {
-        callResumePlayer(ctx);
+        GlobalInitExoPlayer.callResumePlayer(ctx);
     }
 
     @Override
@@ -464,7 +463,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                 Log.e("Destroy", "Activity Destoryed");
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(notificationId);
-                relesePlayer(getApplicationContext());
+                GlobalInitExoPlayer.relesePlayer(getApplicationContext());
             } else {
                 Log.e("Destroy", "Activity go in main activity");
             }

@@ -55,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
+import static com.brainwellnessspa.BWSApplication.notificationId;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class ContactBookActivity extends AppCompatActivity {
