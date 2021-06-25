@@ -470,7 +470,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     private fun checkPurchases() {
         val client = BillingClient.newBuilder(application).enablePendingPurchases().setListener { billingResult, list -> }.build()
         client.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(@NonNull billingResult: BillingResult) {
+            override fun onBillingSetupFinished(@NonNull
+            billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { //                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)

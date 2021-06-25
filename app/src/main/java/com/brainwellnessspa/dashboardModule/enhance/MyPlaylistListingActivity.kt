@@ -40,7 +40,6 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.BWSApplication.player
 import com.brainwellnessspa.utility.*
 import com.brainwellnessspa.utility.ItemMoveCallback.ItemTouchHelperContract
@@ -1005,15 +1004,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val mainPlayModelList = java.util.ArrayList<MainPlayModel>()
                     for (i in listModel.indices) {
                         val mainPlayModel = MainPlayModel()
-                        mainPlayModel.id = listModel[i].id
-                        mainPlayModel.name = listModel[i].name
-                        mainPlayModel.audioFile = listModel[i].audioFile
-                        mainPlayModel.playlistID = listModel[i].playlistID
-                        mainPlayModel.audioDirection = listModel[i].audioDirection
-                        mainPlayModel.audiomastercat = listModel[i].audiomastercat
-                        mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
-                        mainPlayModel.imageFile = listModel[i].imageFile
-                        mainPlayModel.audioDuration = listModel[i].audioDuration
+                        mainPlayModel.id = listModel[i].id.toString()
+                        mainPlayModel.name = listModel[i].name.toString()
+                        mainPlayModel.audioFile = listModel[i].audioFile.toString()
+                        mainPlayModel.playlistID = listModel[i].playlistID.toString()
+                        mainPlayModel.audioDirection = listModel[i].audioDirection.toString()
+                        mainPlayModel.audiomastercat = listModel[i].audiomastercat.toString()
+                        mainPlayModel.audioSubCategory = listModel[i].audioSubCategory.toString()
+                        mainPlayModel.imageFile = listModel[i].imageFile.toString()
+                        mainPlayModel.audioDuration = listModel[i].audioDuration.toString()
                         mainPlayModelList.add(mainPlayModel)
                     }
                     val shareddd: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -1517,7 +1516,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun callPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, playlistName: String, created: String?, audioc: Boolean, MyDownloads: String?) {
         if (audioc) {
-            callNewPlayerRelease()
+            GlobalInitExoPlayer.callNewPlayerRelease()
         }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()
@@ -1857,14 +1856,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 mainPlayModel.audioDuration = playlistSongs[position].audioDuration
                 arrayList.add(mainPlayModel)
                 val mainPlayModel1 = MainPlayModel()
-                mainPlayModel1.id = playlistSongs[position].id
-                mainPlayModel1.name = playlistSongs[position].name
-                mainPlayModel1.audioFile = playlistSongs[position].audioFile
-                mainPlayModel1.audioDirection = playlistSongs[position].audioDirection
-                mainPlayModel1.audiomastercat = playlistSongs[position].audiomastercat
-                mainPlayModel1.audioSubCategory = playlistSongs[position].audioSubCategory
-                mainPlayModel1.imageFile = playlistSongs[position].imageFile
-                mainPlayModel1.audioDuration = playlistSongs[position].audioDuration
+                mainPlayModel1.id = playlistSongs[position].id.toString()
+                mainPlayModel1.name = playlistSongs[position].name.toString()
+                mainPlayModel1.audioFile = playlistSongs[position].audioFile.toString()
+                mainPlayModel1.audioDirection = playlistSongs[position].audioDirection.toString()
+                mainPlayModel1.audiomastercat = playlistSongs[position].audiomastercat.toString()
+                mainPlayModel1.audioSubCategory = playlistSongs[position].audioSubCategory.toString()
+                mainPlayModel1.imageFile = playlistSongs[position].imageFile.toString()
+                mainPlayModel1.audioDuration = playlistSongs[position].audioDuration.toString()
                 arrayList2.add(mainPlayModel1)
                 val sharedd: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val editor = sharedd.edit()

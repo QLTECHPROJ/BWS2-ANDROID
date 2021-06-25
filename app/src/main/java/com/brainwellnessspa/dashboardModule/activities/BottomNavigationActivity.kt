@@ -24,7 +24,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.mystc
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MyBatteryReceiver
 import com.brainwellnessspa.utility.MyNetworkReceiver

@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel
 import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding
 import com.brainwellnessspa.databinding.AddPlayListLayoutBinding
@@ -148,7 +148,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                             val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                                             val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                                             if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
-                                                if (MiniPlayerFragment.isDisclaimer == 1) {
+                                                if (isDisclaimer == 1) {
                                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                                                 } else {
                                                     callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
@@ -283,15 +283,15 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 val playlistSongs = ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
                                 for (i in listModels.responseData!!.indices) {
                                     val mainPlayModel = MainPlayModel()
-                                    mainPlayModel.id = listModels.responseData!![i].iD
-                                    mainPlayModel.name = listModels.responseData!![i].name
-                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile
-                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID
-                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
-                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
-                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
-                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile
-                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
+                                    mainPlayModel.id = listModels.responseData!![i].iD.toString()
+                                    mainPlayModel.name = listModels.responseData!![i].name.toString()
+                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile.toString()
+                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID.toString()
+                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection.toString()
+                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat.toString()
+                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory.toString()
+                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile.toString()
+                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration.toString()
                                     mainPlayModelList.add(mainPlayModel)
                                 }
                                 for (i in listModels.responseData!!.indices) {
@@ -436,7 +436,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                 if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                     } else {
                         callAddPlaylistFromPlaylist(playlistID, listModel[position].name, "0")
@@ -486,7 +486,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                notificationManager.cancel(BWSApplication.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

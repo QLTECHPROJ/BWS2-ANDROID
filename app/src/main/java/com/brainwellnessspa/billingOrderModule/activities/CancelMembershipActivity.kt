@@ -60,7 +60,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         binding.llBack.setOnClickListener {
             myBackPress = true
             if (audioPause) {
-                GlobalInitExoPlayer.player.playWhenReady = true
+                BWSApplication.player.playWhenReady = true
             }
             finish()
         }
@@ -82,9 +82,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen)
 
         /*This condition is to audio playing or not  */
-        if (GlobalInitExoPlayer.player != null) {
-            if (GlobalInitExoPlayer.player.playWhenReady) {
-                GlobalInitExoPlayer.player.playWhenReady = false
+        if (BWSApplication.player != null) {
+            if (BWSApplication.player.playWhenReady) {
+                BWSApplication.player.playWhenReady = false
                 audioPause = true
             }
         }
@@ -135,9 +135,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         /*This click event is called when going to cancel subscription  */
         binding.btnCancelSubscrible.setOnClickListener {
             myBackPress = true
-            if (GlobalInitExoPlayer.player != null) {
-                if (GlobalInitExoPlayer.player.playWhenReady) {
-                    GlobalInitExoPlayer.player.playWhenReady = false
+            if (BWSApplication.player != null) {
+                if (BWSApplication.player.playWhenReady) {
+                    BWSApplication.player.playWhenReady = false
                     audioPause = true
                 }
             }
@@ -154,9 +154,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss()
-                        if (GlobalInitExoPlayer.player != null) {
-                            if (GlobalInitExoPlayer.player.playWhenReady) {
-                                GlobalInitExoPlayer.player.playWhenReady = false
+                        if (BWSApplication.player != null) {
+                            if (BWSApplication.player.playWhenReady) {
+                                BWSApplication.player.playWhenReady = false
                                 audioPause = true
                             }
                         }
@@ -189,9 +189,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
 //                                            p.putValue("cancelReason", CancelReason);
 //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
 
-                                            if (GlobalInitExoPlayer.player != null) {
-                                                if (GlobalInitExoPlayer.player.playWhenReady) {
-                                                    GlobalInitExoPlayer.player.playWhenReady = false
+                                            if (BWSApplication.player != null) {
+                                                if (BWSApplication.player.playWhenReady) {
+                                                    BWSApplication.player.playWhenReady = false
                                                     audioPause = true
                                                 }
                                             }
@@ -225,9 +225,9 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 /* This click event is called when not cancelling subscription */
                 tvGoBack.setOnClickListener {
                     dialog.dismiss()
-                    if (GlobalInitExoPlayer.player != null) {
-                        if (GlobalInitExoPlayer.player.playWhenReady) {
-                            GlobalInitExoPlayer.player.playWhenReady = false
+                    if (BWSApplication.player != null) {
+                        if (BWSApplication.player.playWhenReady) {
+                            BWSApplication.player.playWhenReady = false
                             audioPause = true
                         }
                     }
@@ -242,7 +242,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     override fun onBackPressed() {
         myBackPress = true
         if (audioPause) {
-            GlobalInitExoPlayer.player.playWhenReady = true
+            BWSApplication.player.playWhenReady = true
         }
         finish()
     }
@@ -310,7 +310,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Restored")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                notificationManager.cancel(BWSApplication.notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

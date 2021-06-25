@@ -26,23 +26,24 @@ class SleepTimeActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySleepTimeBinding
     lateinit var adapter: SleepTimeAdapter
     lateinit var ctx: Context
-    var SleepTime: String? = ""
+    var sleepTime: String? = ""
     lateinit var activity: Activity
-    var CoUserID: String? = ""
-    var USERID: String? = ""
+    var coUserId: String? = ""
+    var userId: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
         ctx = this@SleepTimeActivity
         activity = this@SleepTimeActivity
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        USERID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent.extras != null) {
-            SleepTime = intent.getStringExtra("SleepTime")
+            sleepTime = intent.getStringExtra("SleepTime")
         }
         val p = Properties()
-        p.putValue("coUserId", CoUserID)
+        p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Sleep Time Screen Viewed", p, CONSTANTS.screen)
         prepareUserData()
     }
@@ -50,7 +51,7 @@ class SleepTimeActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AverageSleepTimeModel> = APINewClient.getClient().getAverageSleepTimeLists()
+            val listCall: Call<AverageSleepTimeModel> = APINewClient.getClient().averageSleepTimeLists
             listCall.enqueue(object : Callback<AverageSleepTimeModel> {
                 override fun onResponse(call: Call<AverageSleepTimeModel>, response: Response<AverageSleepTimeModel>) {
                     try {
@@ -85,14 +86,14 @@ class SleepTimeActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvhours.text = listModel.get(position).name
+            holder.bindingAdapter.tvhours.text = listModel[position].name
             holder.bindingAdapter.llHourSlots.setOnClickListener {
                 val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                 val editor = shared.edit()
-                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.get(position).name)
-                editor.commit()
+                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel[position].name)
+                editor.apply()
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
-                i.putExtra("SleepTime", listModel.get(position).name)
+                i.putExtra("SleepTime", listModel[position].name)
                 i.putExtra("BackClick", "0")
                 ctx.startActivity(i)
                 activity.finish()

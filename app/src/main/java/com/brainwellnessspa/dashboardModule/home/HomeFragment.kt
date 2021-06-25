@@ -40,8 +40,8 @@ import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActiv
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
-import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.BWSApplication.player
+import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.AddProfileActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -892,7 +892,7 @@ class HomeFragment : Fragment() {
     /* player is Ready for play function*/
     private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, playlistName: String, audioc: Boolean) {
         if (audioc) {
-            callNewPlayerRelease()
+            GlobalInitExoPlayer.callNewPlayerRelease()
         }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()

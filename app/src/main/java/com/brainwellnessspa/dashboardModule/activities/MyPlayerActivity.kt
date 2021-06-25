@@ -21,7 +21,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
 import com.brainwellnessspa.BWSApplication.addToRecentPlayId
 import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
@@ -32,6 +31,10 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.*
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetSourceName
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callNewPlayerRelease
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.getMediaBitmap
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.exoplayer2.C
@@ -276,15 +279,15 @@ class MyPlayerActivity : AppCompatActivity() {
             listSize = arrayList.size
             for (i in 0 until listSize) {
                 mainPlayModel = MainPlayModel()
-                mainPlayModel.id = arrayList[i]!!.id
-                mainPlayModel.name = arrayList[i]!!.name
-                mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                mainPlayModel.id = arrayList[i]!!.id.toString()
+                mainPlayModel.name = arrayList[i]!!.name.toString()
+                mainPlayModel.audioFile = arrayList[i]!!.audioFile.toString()
                 mainPlayModel.playlistID = ""
-                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection.toString()
+                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat.toString()
+                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory.toString()
+                mainPlayModel.imageFile = arrayList[i]!!.imageFile.toString()
+                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                 mainPlayModelList.add(mainPlayModel)
             }
             val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -339,15 +342,15 @@ class MyPlayerActivity : AppCompatActivity() {
             listSize = arrayList.size
             for (i in 0 until listSize) {
                 mainPlayModel = MainPlayModel()
-                mainPlayModel.id = arrayList[i]!!.iD
-                mainPlayModel.name = arrayList[i]!!.name
-                mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                mainPlayModel.id = arrayList[i]!!.iD.toString()
+                mainPlayModel.name = arrayList[i]!!.name.toString()
+                mainPlayModel.audioFile = arrayList[i]!!.audioFile.toString()
                 mainPlayModel.playlistID = ""
-                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection.toString()
+                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat.toString()
+                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory.toString()
+                mainPlayModel.imageFile = arrayList[i]!!.imageFile.toString()
+                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                 mainPlayModelList.add(mainPlayModel)
             }
             val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -360,15 +363,15 @@ class MyPlayerActivity : AppCompatActivity() {
             listSize = arrayList.size
             for (i in 0 until listSize) {
                 mainPlayModel = MainPlayModel()
-                mainPlayModel.id = arrayList[i]!!.iD
-                mainPlayModel.name = arrayList[i]!!.name
-                mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                mainPlayModel.id = arrayList[i]!!.iD.toString()
+                mainPlayModel.name = arrayList[i]!!.name.toString()
+                mainPlayModel.audioFile = arrayList[i]!!.audioFile.toString()
                 mainPlayModel.playlistID = ""
-                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection.toString()
+                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat.toString()
+                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory.toString()
+                mainPlayModel.imageFile = arrayList[i]!!.imageFile.toString()
+                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                 mainPlayModelList.add(mainPlayModel)
             }
             val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -423,15 +426,15 @@ class MyPlayerActivity : AppCompatActivity() {
             listSize = arrayList.size
             for (i in 0 until listSize) {
                 mainPlayModel = MainPlayModel()
-                mainPlayModel.id = arrayList[i]!!.id
-                mainPlayModel.name = arrayList[i]!!.name
-                mainPlayModel.audioFile = arrayList[i]!!.audioFile
-                mainPlayModel.playlistID = arrayList[i]!!.playlistID
-                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                mainPlayModel.id = arrayList[i]!!.id.toString()
+                mainPlayModel.name = arrayList[i]!!.name.toString()
+                mainPlayModel.audioFile = arrayList[i]!!.audioFile.toString()
+                mainPlayModel.playlistID = arrayList[i]!!.playlistID.toString()
+                mainPlayModel.audioDirection = arrayList[i]!!.audioDirection.toString()
+                mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat.toString()
+                mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory.toString()
+                mainPlayModel.imageFile = arrayList[i]!!.imageFile.toString()
+                mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                 mainPlayModelList.add(mainPlayModel)
             }
             val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -1207,9 +1210,9 @@ class MyPlayerActivity : AppCompatActivity() {
                                     p.putValue("audioService", appStatus(ctx))
                                     p.putValue("sound", hundredVolume.toString())
                                     addToSegment("Playlist Completed", p, CONSTANTS.track)
-                                    Log.e("Last audio End", mainPlayModelList[position].name.toString())
+                                    Log.e("Last audio End", mainPlayModelList[position].name)
                                 } else {
-                                    Log.e("Curr audio End", mainPlayModelList[position].name.toString())
+                                    Log.e("Curr audio End", mainPlayModelList[position].name)
                                 }
                                 /*new Handler().postDelayed(() -> {
                             playerNotificationManager.setPlayer(null);
@@ -1595,8 +1598,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 audioFile1 = gson1.fromJson(json1, type)
                 playlistDownloadId = gson1.fromJson(json2, type)
             }
-            audioFile1.add(mainPlayModelList[position].audioFile.toString())
-            fileNameList.add(mainPlayModelList[position].name.toString())
+            audioFile1.add(mainPlayModelList[position].audioFile)
+            fileNameList.add(mainPlayModelList[position].name)
             playlistDownloadId.add("")
             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
             val editor = shared.edit()
@@ -1827,7 +1830,7 @@ disableDownload();
         try {
             DB.taskDao().geAllDataBYDownloadedForAll("Complete").observe(this, { audioList: List<String?> ->
                 downloadAudioDetailsList = audioList as ArrayList<String>
-                audioClick = true;
+                audioClick = true
                 if (!downloadClick) {
                     getPrepareShowData()
                 }

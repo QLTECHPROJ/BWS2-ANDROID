@@ -53,10 +53,10 @@ import java.util.*
 
 class ReminderListsActivity : AppCompatActivity() {
     lateinit var binding: ActivityReminderDetailsBinding
-    var USERID: String? = ""
-    var CoUSERID: String? = ""
+    var userId: String? = ""
+    var coUserId: String? = ""
     var ReminderFirstLogin: String? = "0"
-    var ctx: Context? = null
+    lateinit var ctx: Context
     lateinit var activity: Activity
     var remiderIds = ArrayList<String?>()
     var adapter: RemiderDetailsAdapter? = null
@@ -83,8 +83,8 @@ class ReminderListsActivity : AppCompatActivity() {
         ctx = this@ReminderListsActivity
         activity = this@ReminderListsActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUSERID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
         binding.rvReminderDetails.layoutManager = mLayoutManager
         binding.rvReminderDetails.itemAnimator = DefaultItemAnimator()
@@ -127,14 +127,14 @@ class ReminderListsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         myBackPress = true
-        LocalBroadcastManager.getInstance(ctx!!).unregisterReceiver(listener1)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         finish()
     }
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getReminderList(CoUSERID)
+            val listCall = APINewClient.getClient().getReminderList(coUserId)
             listCall.enqueue(object : Callback<ReminderListModel?> {
                 override fun onResponse(call: Call<ReminderListModel?>, response: Response<ReminderListModel?>) {
                     try {
@@ -146,9 +146,9 @@ class ReminderListsActivity : AppCompatActivity() {
                             binding.rvReminderDetails.adapter = adapter
                             binding.btnAddReminder.visibility = View.GONE
                             showTooltips()
-                            LocalBroadcastManager.getInstance(ctx!!).registerReceiver(listener1, IntentFilter("Reminder"))
+                            LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
                             p = Properties()
-                            p!!.putValue("coUserId", CoUSERID)
+                            p!!.putValue("coUserId", coUserId)
                             if (listModel.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.VISIBLE
                                 binding.rvReminderDetails.visibility = View.GONE
@@ -201,7 +201,7 @@ class ReminderListsActivity : AppCompatActivity() {
         binding.btnDeleteReminder.setOnClickListener {
             notificationStatus = true
             myBackPress = false
-            val dialog = Dialog(ctx!!)
+            val dialog = Dialog(ctx)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.delete_reminder)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.dark_blue_gray)))
@@ -217,7 +217,7 @@ class ReminderListsActivity : AppCompatActivity() {
             }
             tvconfirm.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID, TextUtils.join(",", remiderIds))
+                    val listCall = APINewClient.getClient().getDeleteRemider(coUserId, TextUtils.join(",", remiderIds))
                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                         override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                             try {
@@ -397,7 +397,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 if (BWSApplication.isNetworkConnected(activity)) {
                     notificationStatus = true
                     myBackPress = false
-                    BWSApplication.getReminderDay(ctx, activity, CoUSERID, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay)
+                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay)
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), activity)
                 }
@@ -414,7 +414,7 @@ class ReminderListsActivity : AppCompatActivity() {
     private fun prepareSwitchStatus(reminderStatus: String, PlaylistID: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getReminderStatus(CoUSERID, PlaylistID, reminderStatus) /*set 1 or not 0 */
+            val listCall = APINewClient.getClient().getReminderStatus(coUserId, PlaylistID, reminderStatus) /*set 1 or not 0 */
             listCall.enqueue(object : Callback<ReminderStatusModel?> {
                 override fun onResponse(call: Call<ReminderStatusModel?>, response: Response<ReminderStatusModel?>) {
                     try {
@@ -469,10 +469,10 @@ class ReminderListsActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 if (!notificationStatus) {
-                    if (GlobalInitExoPlayer.player != null) {
+                    if (BWSApplication.player != null) {
                         Log.e("Destroy", "Activity Destoryed")
                         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                        notificationManager.cancel(BWSApplication.notificationId)
                         GlobalInitExoPlayer.relesePlayer(ctx)
                     }
                 }
@@ -490,7 +490,7 @@ class ReminderListsActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n") override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.absoluteAdapterPosition
             if (direction == ItemTouchHelper.LEFT) {
-                val dialog = Dialog(ctx!!)
+                val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.reminder_layout)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.dark_blue_gray)))
@@ -510,7 +510,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 }
                 tvconfirm.setOnClickListener {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient().getDeleteRemider(CoUSERID, listReminderModel!!.responseData!![position]!!.reminderId)
+                        val listCall = APINewClient.getClient().getDeleteRemider(coUserId, listReminderModel!!.responseData!![position]!!.reminderId)
                         listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                             override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                 try {

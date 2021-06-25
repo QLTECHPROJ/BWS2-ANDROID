@@ -604,7 +604,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.apply()
 
 
-                            val i = Intent(this@PreparePlaylistActivity, PlaylistDoneActivity::class.java)
+                            val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
                             i.putExtra("BackClick", intent.getStringExtra("BackClick"))
                             startActivity(i)
                             finish()

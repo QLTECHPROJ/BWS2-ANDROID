@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
@@ -80,7 +81,7 @@ class AddAudioActivity : AppCompatActivity() {
                 val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 if (!audioFlag.equals("Downloadlist", ignoreCase = true) && !audioFlag.equals("playlist", ignoreCase = true) && !audioFlag.equals("TopCategories", ignoreCase = true)) {
-                    if (GlobalInitExoPlayer.player != null) {
+                    if (BWSApplication.player != null) {
                         if (listSize != 0) {
                             serachListAdpater!!.notifyDataSetChanged()
                         }
@@ -394,15 +395,15 @@ class AddAudioActivity : AppCompatActivity() {
                                     val size = mainPlayModelListold.size
                                     for (i in listModels.responseData!!.indices) {
                                         val mainPlayModel = MainPlayModel()
-                                        mainPlayModel.id = listModels.responseData!![i].iD
-                                        mainPlayModel.name = listModels.responseData!![i].name
-                                        mainPlayModel.audioFile = listModels.responseData!![i].audioFile
-                                        mainPlayModel.playlistID = listModels.responseData!![i].playlistID
-                                        mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
-                                        mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
-                                        mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
-                                        mainPlayModel.imageFile = listModels.responseData!![i].imageFile
-                                        mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
+                                        mainPlayModel.id = listModels.responseData!![i].iD.toString()
+                                        mainPlayModel.name = listModels.responseData!![i].name.toString()
+                                        mainPlayModel.audioFile = listModels.responseData!![i].audioFile.toString()
+                                        mainPlayModel.playlistID = listModels.responseData!![i].playlistID.toString()
+                                        mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection.toString()
+                                        mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat.toString()
+                                        mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory.toString()
+                                        mainPlayModel.imageFile = listModels.responseData!![i].imageFile.toString()
+                                        mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration.toString()
                                         mainPlayModelList.add(mainPlayModel)
                                     }
                                     for (i in listModels.responseData!!.indices) {
@@ -488,8 +489,8 @@ class AddAudioActivity : AppCompatActivity() {
                 if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
                     if (BWSApplication.PlayerAudioId.equals(modelList[position].iD, ignoreCase = true)) {
                         songId = BWSApplication.PlayerAudioId
-                        if (GlobalInitExoPlayer.player != null) {
-                            if (!GlobalInitExoPlayer.player.playWhenReady) {
+                        if (BWSApplication.player != null) {
+                            if (!BWSApplication.player.playWhenReady) {
                                 holder.binding.equalizerview.pause()
                             } else holder.binding.equalizerview.resume(true)
                         } else holder.binding.equalizerview.stop(true)
@@ -547,7 +548,7 @@ class AddAudioActivity : AppCompatActivity() {
                         startActivity(i)
                     } else {
                         if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                            if (MiniPlayerFragment.isDisclaimer == 1) {
+                            if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                             } else {
                                 callAddSearchAudio(audioID, "0", "")
@@ -601,7 +602,7 @@ class AddAudioActivity : AppCompatActivity() {
                     val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
+                        if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                         } else {
                             callAddSearchAudio("", "1", modelList[position].iD)
@@ -635,10 +636,10 @@ class AddAudioActivity : AppCompatActivity() {
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("SearchModelAudio", ignoreCase = true) && playFrom.equals("Search Audio", ignoreCase = true)) {
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
-                        if (GlobalInitExoPlayer.player != null) {
-                            if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                    if (isDisclaimer == 1) {
+                        if (BWSApplication.player != null) {
+                            if (!BWSApplication.player.playWhenReady) {
+                                BWSApplication.player.playWhenReady = true
                             }
                         } else {
                             BWSApplication.audioClick = true
@@ -668,20 +669,20 @@ class AddAudioActivity : AppCompatActivity() {
                     mainPlayModel.imageFile = arrayList.imageFile
                     mainPlayModel.audioDuration = arrayList.audioDuration
                     var audioc = false
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
-                        if (GlobalInitExoPlayer.player != null) {
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                    if (isDisclaimer == 1) {
+                        if (BWSApplication.player != null) {
+                            BWSApplication.player.playWhenReady = true
                             audioc = false
                             listModelList2.add(mainPlayModel)
                         } else {
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
                             }
                         }
                     } else {
-                        MiniPlayerFragment.isDisclaimer = 0
+                        isDisclaimer = 0
                         if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(mainPlayModel)
@@ -763,8 +764,8 @@ class AddAudioActivity : AppCompatActivity() {
             if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
                 if (BWSApplication.PlayerAudioId.equals(listModel[position]!!.iD, ignoreCase = true)) {
                     songId = BWSApplication.PlayerAudioId
-                    if (GlobalInitExoPlayer.player != null) {
-                        if (!GlobalInitExoPlayer.player.playWhenReady) {
+                    if (BWSApplication.player != null) {
+                        if (!BWSApplication.player.playWhenReady) {
                             holder.binding.equalizerview.pause()
                         } else holder.binding.equalizerview.resume(true)
                     } else holder.binding.equalizerview.stop(true)
@@ -842,7 +843,7 @@ class AddAudioActivity : AppCompatActivity() {
                     startActivity(i)
                 } else {
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
+                        if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                         } else {
                             callAddSearchAudio(listModel[position]!!.iD, "0", "")
@@ -863,10 +864,10 @@ class AddAudioActivity : AppCompatActivity() {
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("SearchAudio", ignoreCase = true) && playFrom.equals("Recommended Search", ignoreCase = true)) {
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
-                        if (GlobalInitExoPlayer.player != null) {
-                            if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                    if (isDisclaimer == 1) {
+                        if (BWSApplication.player != null) {
+                            if (!BWSApplication.player.playWhenReady) {
+                                BWSApplication.player.playWhenReady = true
                             }
                         } else {
                             BWSApplication.audioClick = true
@@ -896,20 +897,20 @@ class AddAudioActivity : AppCompatActivity() {
                     mainPlayModel.imageFile = arrayList.imageFile
                     mainPlayModel.audioDuration = arrayList.audioDuration
                     var audioc = false
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
-                        if (GlobalInitExoPlayer.player != null) {
-                            GlobalInitExoPlayer.player.playWhenReady = true
+                    if (isDisclaimer == 1) {
+                        if (BWSApplication.player != null) {
+                            BWSApplication.player.playWhenReady = true
                             audioc = false
                             listModelList2.add(mainPlayModel)
                         } else {
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
                             }
                         }
                     } else {
-                        MiniPlayerFragment.isDisclaimer = 0
+                        isDisclaimer = 0
                         if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(mainPlayModel)
@@ -1041,7 +1042,7 @@ class AddAudioActivity : AppCompatActivity() {
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                 if (audioFlag.equals("SubPlayList", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
+                    if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
                     } else {
                         callAddSearchAudio("", "1", PlaylistModel[position].iD)
@@ -1099,7 +1100,7 @@ class AddAudioActivity : AppCompatActivity() {
                 Log.e("Destroy", "Activity Destoryed")
                 if (!notificationStatus) {
                     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                    notificationManager.cancel(BWSApplication.notificationId)
                     GlobalInitExoPlayer.relesePlayer(applicationContext)
                 }
             } else {

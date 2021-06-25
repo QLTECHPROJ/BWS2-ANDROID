@@ -8,19 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:paddingTop="@dimen/_10sdp"
         tools:context=".coUserModule.CouserSetupPinActivity">
 
         <ImageView
+            android:id="@+id/ivBgImage"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_220sdp"
+            android:layout_height="@dimen/_200sdp"
             android:contentDescription="@string/todo"
-            android:padding="@dimen/_60sdp"
-            android:src="@drawable/ic_add_couser_bg" />
+            android:padding="@dimen/_30sdp"
+            android:src="@drawable/set_up_pin_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@id/ivBgImage"
+            android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:orientation="vertical">
 

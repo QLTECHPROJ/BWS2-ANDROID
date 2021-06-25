@@ -33,15 +33,8 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ControlDispatcher
-import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
@@ -61,12 +54,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GlobalInitExoPlayer :Service(){
+class GlobalInitExoPlayer : Service() {
     var serviceConected = false
     var intent: Intent? = null
     var fileNameList: ArrayList<String> = ArrayList()
-    var audioFile:ArrayList<String> = ArrayList<String>()
-    var playlistDownloadId:ArrayList<String> = ArrayList<String>()
+    var audioFile: ArrayList<String> = ArrayList<String>()
+    var playlistDownloadId: ArrayList<String> = ArrayList<String>()
     private var notDownloadedData: List<DownloadAudioDetails> = ArrayList<DownloadAudioDetails>()
     var notification1: Notification? = null
     private var playbackServiceIntent: Intent? = null
@@ -75,7 +68,6 @@ class GlobalInitExoPlayer :Service(){
     var mainPlayModelList1 = ArrayList<MainPlayModel>()
 
     companion object {
-
         @JvmStatic
         fun callNewPlayerRelease() {
             if (player != null) {
@@ -198,7 +190,6 @@ class GlobalInitExoPlayer :Service(){
                 PlayerINIT = false
             }
 
-
             //        if (player != null) {
             //            mediaSession.release();
             //            mediaSessionConnector.setPlayer(null);
@@ -294,6 +285,7 @@ class GlobalInitExoPlayer :Service(){
             return PlayerCurrantAudioPostion
         }
     }
+
     fun GlobleInItPlayer(ctx: Context, position: Int, downloadAudioDetailsList: List<String?>, mainPlayModelList: ArrayList<MainPlayModel>, playerType: String?) {
         //        relesePlayer();
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
@@ -652,7 +644,7 @@ class GlobalInitExoPlayer :Service(){
                 return PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             }
 
-            override fun getCurrentContentText(players: Player): String{
+            override fun getCurrentContentText(players: Player): String {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val gson = Gson()
                 val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())

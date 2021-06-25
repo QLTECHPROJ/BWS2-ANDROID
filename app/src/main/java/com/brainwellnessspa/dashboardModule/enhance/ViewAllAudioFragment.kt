@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding
 import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
@@ -274,10 +274,10 @@ class ViewAllAudioFragment : Fragment() {
                 if (name.equals("My Downloads", ignoreCase = true)) {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         if (audioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
-                            if (MiniPlayerFragment.isDisclaimer == 1) {
-                                if (GlobalInitExoPlayer.player != null) {
-                                    if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                        GlobalInitExoPlayer.player.playWhenReady = true
+                            if (isDisclaimer == 1) {
+                                if (BWSApplication.player != null) {
+                                    if (!BWSApplication.player.playWhenReady) {
+                                        BWSApplication.player.playWhenReady = true
                                     }
                                 } else {
                                     BWSApplication.audioClick = true
@@ -285,10 +285,10 @@ class ViewAllAudioFragment : Fragment() {
                                 callMyPlayer()
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
                             } else {
-                                if (GlobalInitExoPlayer.player != null) {
+                                if (BWSApplication.player != null) {
                                     if (position != playerPosition) {
-                                        GlobalInitExoPlayer.player.seekTo(position, 0)
-                                        GlobalInitExoPlayer.player.playWhenReady = true
+                                        BWSApplication.player.seekTo(position, 0)
+                                        BWSApplication.player.playWhenReady = true
                                         val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                         val editor = sharedxx.edit()
                                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -318,20 +318,20 @@ class ViewAllAudioFragment : Fragment() {
                             mainPlayModel.setImageFile(arrayList.imageFile)
                             mainPlayModel.setAudioDuration(arrayList.audioDuration)
                             var audioc = true
-                            if (MiniPlayerFragment.isDisclaimer == 1) {
-                                if (GlobalInitExoPlayer.player != null) {
-                                    GlobalInitExoPlayer.player.playWhenReady = true
+                            if (isDisclaimer == 1) {
+                                if (BWSApplication.player != null) {
+                                    BWSApplication.player.playWhenReady = true
                                     audioc = false
                                     listModelList2.add(mainPlayModel)
                                 } else {
-                                    MiniPlayerFragment.isDisclaimer = 0
+                                    isDisclaimer = 0
                                     if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                         audioc = true
                                         listModelList2.add(mainPlayModel)
                                     }
                                 }
                             } else {
-                                MiniPlayerFragment.isDisclaimer = 0
+                                isDisclaimer = 0
                                 if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                     audioc = true
                                     listModelList2.add(mainPlayModel)
@@ -345,10 +345,10 @@ class ViewAllAudioFragment : Fragment() {
                 } else if (name.equals(getString(R.string.top_categories), ignoreCase = true)) {
                     val catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "")
                     if (catName.equals(category, ignoreCase = true)) {
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
-                            if (GlobalInitExoPlayer.player != null) {
-                                if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                    GlobalInitExoPlayer.player.playWhenReady = true
+                        if (isDisclaimer == 1) {
+                            if (BWSApplication.player != null) {
+                                if (!BWSApplication.player.playWhenReady) {
+                                    BWSApplication.player.playWhenReady = true
                                 }
                             } else {
                                 BWSApplication.audioClick = true
@@ -356,10 +356,10 @@ class ViewAllAudioFragment : Fragment() {
                             callMyPlayer()
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
                         } else {
-                            if (GlobalInitExoPlayer.player != null) {
+                            if (BWSApplication.player != null) {
                                 if (position != playerPosition) {
-                                    GlobalInitExoPlayer.player.seekTo(position, 0)
-                                    GlobalInitExoPlayer.player.playWhenReady = true
+                                    BWSApplication.player.seekTo(position, 0)
+                                    BWSApplication.player.playWhenReady = true
                                     val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedxx.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -389,20 +389,20 @@ class ViewAllAudioFragment : Fragment() {
                         mainPlayModel.setImageFile(arrayList.imageFile)
                         mainPlayModel.setAudioDuration(arrayList.audioDuration)
                         var audioc = true
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
-                            if (GlobalInitExoPlayer.player != null) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                        if (isDisclaimer == 1) {
+                            if (BWSApplication.player != null) {
+                                BWSApplication.player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(mainPlayModel)
                             } else {
-                                MiniPlayerFragment.isDisclaimer = 0
+                                isDisclaimer = 0
                                 if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                     audioc = true
                                     listModelList2.add(mainPlayModel)
                                 }
                             }
                         } else {
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
@@ -412,10 +412,10 @@ class ViewAllAudioFragment : Fragment() {
                     }
                 } else {
                     if ((audioPlayerFlag.equals("MainAudioList", ignoreCase = true) || audioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && myPlaylist.equals(name, ignoreCase = true)) {
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
-                            if (GlobalInitExoPlayer.player != null) {
-                                if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                    GlobalInitExoPlayer.player.playWhenReady = true
+                        if (isDisclaimer == 1) {
+                            if (BWSApplication.player != null) {
+                                if (!BWSApplication.player.playWhenReady) {
+                                    BWSApplication.player.playWhenReady = true
                                 }
                             } else {
                                 BWSApplication.audioClick = true
@@ -423,10 +423,10 @@ class ViewAllAudioFragment : Fragment() {
                             callMyPlayer()
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
                         } else {
-                            if (GlobalInitExoPlayer.player != null) {
+                            if (BWSApplication.player != null) {
                                 if (position != playerPosition) {
-                                    GlobalInitExoPlayer.player.seekTo(position, 0)
-                                    GlobalInitExoPlayer.player.playWhenReady = true
+                                    BWSApplication.player.seekTo(position, 0)
+                                    BWSApplication.player.playWhenReady = true
                                     val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedxx.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -456,20 +456,20 @@ class ViewAllAudioFragment : Fragment() {
                         mainPlayModel.setImageFile(arrayList.imageFile)
                         mainPlayModel.setAudioDuration(arrayList.audioDuration)
                         var audioc = true
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
-                            if (GlobalInitExoPlayer.player != null) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                        if (isDisclaimer == 1) {
+                            if (BWSApplication.player != null) {
+                                BWSApplication.player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(mainPlayModel)
                             } else {
-                                MiniPlayerFragment.isDisclaimer = 0
+                                isDisclaimer = 0
                                 if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                     audioc = true
                                     listModelList2.add(mainPlayModel)
                                 }
                             }
                         } else {
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
@@ -491,10 +491,10 @@ class ViewAllAudioFragment : Fragment() {
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
-                    if (MiniPlayerFragment.isDisclaimer == 1) {
-                        if (GlobalInitExoPlayer.player != null) {
-                            if (!GlobalInitExoPlayer.player.playWhenReady) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                    if (isDisclaimer == 1) {
+                        if (BWSApplication.player != null) {
+                            if (!BWSApplication.player.playWhenReady) {
+                                BWSApplication.player.playWhenReady = true
                             }
                         } else {
                             BWSApplication.audioClick = true
@@ -548,20 +548,20 @@ class ViewAllAudioFragment : Fragment() {
                         mainPlayModel.setImageFile(arrayList.imageFile)
                         mainPlayModel.setAudioDuration(arrayList.audioDuration)
                         var audioc = true
-                        if (MiniPlayerFragment.isDisclaimer == 1) {
-                            if (GlobalInitExoPlayer.player != null) {
-                                GlobalInitExoPlayer.player.playWhenReady = true
+                        if (isDisclaimer == 1) {
+                            if (BWSApplication.player != null) {
+                                BWSApplication.player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(pos, mainPlayModel)
                             } else {
-                                MiniPlayerFragment.isDisclaimer = 0
+                                isDisclaimer = 0
                                 if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                     audioc = true
                                     listModelList2.add(pos, mainPlayModel)
                                 }
                             }
                         } else {
-                            MiniPlayerFragment.isDisclaimer = 0
+                            isDisclaimer = 0
                             if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(pos, mainPlayModel)

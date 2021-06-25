@@ -31,12 +31,11 @@ import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
 import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.roomDataBase.*
-import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
 import com.brainwellnessspa.BWSApplication.player
+import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -518,7 +517,7 @@ class ManageFragment : Fragment() {
 
     private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity, audioc: Boolean) {
         if (audioc) {
-            callNewPlayerRelease()
+            GlobalInitExoPlayer.callNewPlayerRelease()
         }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val editor = shared.edit()
@@ -1040,7 +1039,7 @@ class ManageFragment : Fragment() {
 
     private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, playlistName: String, audioc: Boolean) {
         if (audioc) {
-            callNewPlayerRelease()
+            GlobalInitExoPlayer.callNewPlayerRelease()
         }
         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val editor = shared.edit()

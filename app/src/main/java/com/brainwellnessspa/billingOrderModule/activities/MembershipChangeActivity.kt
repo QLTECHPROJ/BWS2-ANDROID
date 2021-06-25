@@ -260,10 +260,10 @@ class MembershipChangeActivity : AppCompatActivity() {
         override fun onActivityDestroyed(activity: Activity) {
             if (numStarted == 0 && stackStatus == 2) {
                 if (!notificationStatus) {
-                    if (GlobalInitExoPlayer.player != null) {
+                    if (BWSApplication.player != null) {
                         Log.e("Destroy", "Activity Destroyed")
                         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.cancel(GlobalInitExoPlayer.notificationId)
+                        notificationManager.cancel(BWSApplication.notificationId)
                         GlobalInitExoPlayer.relesePlayer(applicationContext)
                     }
                 }
