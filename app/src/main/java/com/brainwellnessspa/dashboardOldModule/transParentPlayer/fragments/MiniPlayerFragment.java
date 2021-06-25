@@ -74,7 +74,10 @@ import retrofit2.Response;
 
 import static android.content.Context.BATTERY_SERVICE;
 import static com.brainwellnessspa.BWSApplication.BatteryStatus;
+import static com.brainwellnessspa.BWSApplication.isDisclaimer;
 import static com.brainwellnessspa.BWSApplication.AudioInterrupted;
+import static com.brainwellnessspa.BWSApplication.PlayerStatus;
+import static com.brainwellnessspa.BWSApplication.addToRecentPlayId;
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.oldSongPos;
@@ -87,13 +90,11 @@ import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.PlayerINIT;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.getMediaBitmap;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.BWSApplication.player;
 
 public class MiniPlayerFragment extends Fragment {
-    public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "", myAudioId = "";
-    public static String PlayerStatus = "";
-    public static int SegmentTagPlayer = 0;
+    public String  myAudioId = "";
+    public int SegmentTagPlayer = 0;
     public AudioManager audioManager;
     public int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     FragmentMiniPlayerBinding binding;

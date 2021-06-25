@@ -32,7 +32,8 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.BWSApplication.audioClick
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
@@ -40,7 +41,7 @@ import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
-import com.brainwellnessspa.services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.BWSApplication.player
 import com.brainwellnessspa.userModule.activities.AddProfileActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel

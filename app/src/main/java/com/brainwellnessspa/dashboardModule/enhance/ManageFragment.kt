@@ -31,11 +31,12 @@ import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.dashboardOldModule.activities.DashboardActivity.audioClick
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
-import com.brainwellnessspa.services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.BWSApplication.player
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide

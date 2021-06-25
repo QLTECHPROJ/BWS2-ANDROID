@@ -29,7 +29,8 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer
+import com.brainwellnessspa.BWSApplication.audioClick
+import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
@@ -40,7 +41,7 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease
-import com.brainwellnessspa.services.GlobalInitExoPlayer.player
+import com.brainwellnessspa.BWSApplication.player
 import com.brainwellnessspa.utility.*
 import com.brainwellnessspa.utility.ItemMoveCallback.ItemTouchHelperContract
 import com.bumptech.glide.Glide

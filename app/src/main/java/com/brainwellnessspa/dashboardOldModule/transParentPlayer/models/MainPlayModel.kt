@@ -1,15 +1,15 @@
 package com.brainwellnessspa.dashboardOldModule.transParentPlayer.models
 
 class MainPlayModel {
-    var id: String? = null
-    var name: String? = null
-    var audioFile: String? = null
-    var playlistID: String? = null
-    var audioDirection: String? = null
-    var audiomastercat: String? = null
-    var audioSubCategory: String? = null
-    var imageFile: String? = null
-    private val like: String? = null
-    private val download: String? = null
-    var audioDuration: String? = null
+    var id: String = ""
+    var name: String = ""
+    var audioFile: String = ""
+    var playlistID: String = ""
+    var audioDirection: String = ""
+    var audiomastercat: String = ""
+    var audioSubCategory: String = ""
+    var imageFile: String = ""
+    private val like: String = ""
+    private val download: String = ""
+    var audioDuration: String = ""
 }

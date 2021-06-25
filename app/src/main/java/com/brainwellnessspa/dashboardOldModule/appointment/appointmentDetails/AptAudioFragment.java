@@ -61,14 +61,14 @@ import static com.brainwellnessspa.BWSApplication.audioClick;
 import static com.brainwellnessspa.BWSApplication.miniPlayer;
 
 
-import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.BWSApplication.isDisclaimer;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.BWSApplication.player;
 
 public class AptAudioFragment extends Fragment {
     public static int comeRefreshData = 0;

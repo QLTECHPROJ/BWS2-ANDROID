@@ -73,13 +73,13 @@ import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
 import static com.brainwellnessspa.BWSApplication.audioClick;
 import static com.brainwellnessspa.BWSApplication.miniPlayer;
-import static com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.BWSApplication.isDisclaimer;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.callResumePlayer;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.notificationId;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.player;
+import static com.brainwellnessspa.BWSApplication.notificationId;
+import static com.brainwellnessspa.BWSApplication.player;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.relesePlayer;
 
 public class DownloadPlaylistActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
