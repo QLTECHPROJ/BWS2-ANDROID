@@ -30,8 +30,8 @@ android {
         }
 
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -72,10 +72,8 @@ android {
 }
 
 dependencies {
-//    def room_version = "1.1.1"
     def room_version = "2.2.6"
     def billing_version = "4.0.0"
-// def work_version = "2.4.0"
 // TODO  Default Dependency
 
     implementation fileTree(dir: "libs", include: ["*.jar"])

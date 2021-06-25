@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/popup_background"
     android:elevation="@dimen/_110sdp"
-    android:layout_margin="@dimen/_28sdp">
+    android:layout_margin="@dimen/_28sdp"
+    tools:targetApi="lollipop">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +36,8 @@
                 android:gravity="start"
                 android:text="@string/Description"
                 android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_16sdp" />
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvDesc"
@@ -47,7 +51,8 @@
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_3sdp"
                 android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,6 +72,7 @@
                     android:background="@drawable/outer_round_cornor">
 
                     <TextView
+                        android:id="@+id/tvAction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"

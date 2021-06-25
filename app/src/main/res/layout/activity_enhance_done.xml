@@ -76,6 +76,20 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvSubTitle" />
 
+                <Button
+                    android:id="@+id/btnAddCouser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_24sdp"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:background="@drawable/light_green_rounded_unfilled"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:paddingVertical="@dimen/_2sdp"
+                    android:text="@string/add_one_user"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
+
                 <TextView
                     android:id="@+id/tvViewInvoice"
                     android:layout_width="match_parent"

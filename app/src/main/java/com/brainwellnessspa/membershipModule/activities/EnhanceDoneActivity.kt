@@ -1,11 +1,13 @@
 package com.brainwellnessspa.membershipModule.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.coUserModule.AddCouserActivity
 import com.brainwellnessspa.databinding.ActivityEnhanceDoneBinding
 
 class EnhanceDoneActivity : AppCompatActivity() {
@@ -18,5 +20,11 @@ class EnhanceDoneActivity : AppCompatActivity() {
         binding.ivLogo.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivLogo.scaleType = ImageView.ScaleType.FIT_XY
         binding.ivLogo.setImageResource(R.drawable.ic_thank_you_bg_two)
+
+        binding.btnAddCouser.setOnClickListener {
+            val i = Intent(applicationContext, AddCouserActivity::class.java)
+            startActivity(i)
+            finish()
+        }
     }
 }

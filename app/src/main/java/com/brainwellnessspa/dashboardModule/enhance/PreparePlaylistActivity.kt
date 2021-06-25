@@ -28,7 +28,7 @@ class PreparePlaylistActivity : AppCompatActivity() {
         BWSApplication.addToSegment("Preparing Playlist Screen Viewed", p, CONSTANTS.screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val i = Intent(this@PreparePlaylistActivity, PlaylistDoneActivity::class.java)
+            val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
             i.putExtra("BackClick", intent.getStringExtra("BackClick"))
             startActivity(i)
             finish()

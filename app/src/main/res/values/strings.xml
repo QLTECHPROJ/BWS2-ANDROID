@@ -324,7 +324,7 @@
     <string name="index_quotes">The index score determines the intensity of your mental health challenge and based on your score we will recommend the programs to help you.</string>
     <string name="doing_good_quotes">We are analysing the information you have provided and devising a personalised treatment plan for just for you.</string>
     <string name="good_quotes">You are Doing Good</string>
-    <string name="get_started_quotes">The Brain Wellness Spa App</string>
+    <string name="add_user_quotes">Add user</string>
     <string name="get_started_subtitle_quotes">Your one-stop solution for mental &amp; emotional health challenges</string>
     <string name="forgot_quotes">Give us your registered email ID and we\'ll send you everything that you\'ll need to change your password</string>
     <string name="Manage">Manage</string>
@@ -419,5 +419,14 @@
     <string name="please_provide_a_email_address">Please provide a email address</string>
     <string name="create_account">Create Account</string>
     <string name="i_found_it_hard_to_wind_down">I found it hard to wind down.</string>
+    <string name="add_one_user">Add One User</string>
+    <string name="with_same_mobile_number">With Same Mobile Number</string>
+    <string name="with_different_mobile_number">With Different Mobile Number</string>
+    <string name="long_lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr</string>
+    <string name="newly_login_pin">New Login PIN</string>
+    <string name="confirm_login_pin">Confirm Login PIN</string>
+    <string name="set_up_pin">Set Up PIN</string>
+    <string name="before_adding_new_user_let_s_make_your_profile_more_personal_set_up_pin">Before adding new user let\'s make your profile more personal, set up pin</string>
+    <string name="did_not_arrive">Did Not Arrive</string>
 </resources>
 

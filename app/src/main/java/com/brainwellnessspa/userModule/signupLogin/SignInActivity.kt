@@ -33,6 +33,7 @@ import com.brainwellnessspa.userModule.models.CountryListModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.webView.TncActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
@@ -122,6 +123,41 @@ class SignInActivity : AppCompatActivity() {
             i.putExtra("countryShortName", "")
             startActivity(i)
             finish()
+        }
+
+        binding.tvtncs.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "Tnc")
+            startActivity(i)
+        }
+
+        binding.tvPrivacyPolicys.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
+            startActivity(i)
+        }
+
+        binding.tvDisclaimers.setOnClickListener {
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.full_desc_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+            val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+            val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
+            tvTitle.setText(R.string.Disclaimer)
+            tvDesc.setText(R.string.Disclaimer_text)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            tvClose.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(true)
         }
 
         binding.llCountryCode.setOnClickListener {

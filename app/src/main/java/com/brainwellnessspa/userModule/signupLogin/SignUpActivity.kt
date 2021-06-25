@@ -175,6 +175,41 @@ class SignUpActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.tvtncs.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "Tnc")
+            startActivity(i)
+        }
+
+        binding.tvPrivacyPolicys.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
+            startActivity(i)
+        }
+
+        binding.tvDisclaimers.setOnClickListener {
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.full_desc_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+            val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+            val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
+            tvTitle.setText(R.string.Disclaimer)
+            tvDesc.setText(R.string.Disclaimer_text)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            tvClose.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+            dialog.setCancelable(true)
+        }
+
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNameError.text = "Please provide a Name"

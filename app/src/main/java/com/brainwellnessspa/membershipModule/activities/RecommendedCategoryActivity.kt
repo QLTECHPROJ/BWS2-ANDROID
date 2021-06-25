@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.enhance.PreparePlaylistActivity
+import com.brainwellnessspa.dashboardModule.enhance.PlaylistDoneActivity
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
@@ -603,9 +603,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
                             editor.apply()
 
-                            val i = Intent(activity, PreparePlaylistActivity::class.java)
-                            i.putExtra("BackClick", backClick)
+
+                            val i = Intent(this@PreparePlaylistActivity, PlaylistDoneActivity::class.java)
+                            i.putExtra("BackClick", intent.getStringExtra("BackClick"))
                             startActivity(i)
+                            finish()
+//                            val i = Intent(activity, PreparePlaylistActivity::class.java)
+//                            i.putExtra("BackClick", backClick)
+//                            startActivity(i)
                             section = java.util.ArrayList<String>()
                             gsonBuilder = GsonBuilder()
                             val gson: Gson = gsonBuilder.create()

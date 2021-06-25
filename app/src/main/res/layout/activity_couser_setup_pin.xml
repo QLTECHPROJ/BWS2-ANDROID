@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".coUserModule.CouserSetupPinActivity">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_220sdp"
+            android:contentDescription="@string/todo"
+            android:padding="@dimen/_60sdp"
+            android:src="@drawable/ic_add_couser_bg" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/set_up_pin"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_24sdp"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_13sdp"
+                android:text="@string/before_adding_new_user_let_s_make_your_profile_more_personal_set_up_pin"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llNewPin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_31sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flNewPin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNewPin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/newly_login_pin"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtNewPinError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llConfirmPin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_31sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flConfirmPin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etConfirmPin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/confirm_login_pin"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtConfirmPinError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:background="@drawable/light_green_rounded_filled"
+            android:fontFamily="@font/montserrat_medium"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/Done"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13sdp"
+            tools:ignore="SpUsage" />
+
+    </RelativeLayout>
+</layout>

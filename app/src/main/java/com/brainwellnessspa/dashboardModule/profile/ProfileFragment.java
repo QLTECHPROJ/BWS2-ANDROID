@@ -42,6 +42,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity;
 import com.brainwellnessspa.reminderModule.activities.ReminderListsActivity;
 import com.brainwellnessspa.userModule.models.AuthOtpModel;
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.utility.APIClientProfile;
 import com.brainwellnessspa.utility.APINewClient;
 import com.brainwellnessspa.utility.CONSTANTS;
@@ -55,7 +56,6 @@ import com.brainwellnessspa.faqModule.activities.FaqActivity;
 import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity;
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity;
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity;
-import com.brainwellnessspa.userModule.signupLogin.GetStartedActivity;
 import com.brainwellnessspa.userModule.models.RemoveProfileModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -759,7 +759,7 @@ public class ProfileFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Intent i = new Intent(getActivity(), GetStartedActivity.class);
+                    Intent i = new Intent(getActivity(), SignInActivity.class);
                     startActivity(i);
                     requireActivity().finish();
                 }
