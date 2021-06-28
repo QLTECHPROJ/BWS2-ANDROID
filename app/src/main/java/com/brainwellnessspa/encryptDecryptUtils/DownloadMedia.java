@@ -125,7 +125,7 @@ public class DownloadMedia implements OnDownloadListener {
                     edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
                     edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
                     edit1.clear();
-                    edit1.commit();
+                    edit1.apply();
                 } else {
                     fileNameList = new ArrayList<>();
                     audioFile = new ArrayList<>();
@@ -156,7 +156,7 @@ public class DownloadMedia implements OnDownloadListener {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
+                    editor.apply();
                     if (fileNameList.size() == 0) {
                         isDownloading = false;
                         filename = "";
@@ -272,7 +272,7 @@ public class DownloadMedia implements OnDownloadListener {
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-            editor.commit();
+            editor.apply();
             if (fileNameList.size() != 0) {
                 filename = fileNameList.get(0);
                 downloadProgress = 0;
@@ -339,7 +339,7 @@ public class DownloadMedia implements OnDownloadListener {
                     editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                     editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                    editor.commit();
+                    editor.apply();
                     if (fileNameList.size() != 0) {
                         isDownloading = true;
                         DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext(), act);

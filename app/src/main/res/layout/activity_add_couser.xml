@@ -83,7 +83,6 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:contentDescription="@string/todo" />
 
-
                         </LinearLayout>
 
                         <TextView

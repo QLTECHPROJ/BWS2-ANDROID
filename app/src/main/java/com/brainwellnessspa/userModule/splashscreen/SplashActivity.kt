@@ -17,6 +17,7 @@ import com.brainwellnessspa.BWSApplication.key
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.coUserModule.AddCouserActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
@@ -52,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE)
         val editor = sharedx.edit()
-        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0))
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures.get(0))
         editor.apply()
         if (key.equals("", ignoreCase = true)) {
             key = BWSApplication.getKey(this)
@@ -131,12 +132,12 @@ class SplashActivity : AppCompatActivity() {
                                     builder.setTitle("Update Brain Wellness Spa")
                                     builder.setCancelable(false)
                                     builder.setMessage("Brain Wellness Spa recommends that you update to the latest version").setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
-                                            this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
-                                            dialog.cancel()
-                                        }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
-                                            askBattyPermission()
-                                            dialog.dismiss()
-                                        }
+                                        this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                        dialog.cancel()
+                                    }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
+                                        askBattyPermission()
+                                        dialog.dismiss()
+                                    }
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce.equals("1", ignoreCase = true) -> {
@@ -144,8 +145,8 @@ class SplashActivity : AppCompatActivity() {
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
                                     builder.setMessage("To keep using Brain Wellness Spa, download the latest version").setCancelable(false).setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
-                                            this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
-                                        }
+                                        this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                    }
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce.equals("", ignoreCase = true) -> {
@@ -215,7 +216,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     /* TODO function for battery permission  */
-    @SuppressLint("BatteryLife") private fun askBattyPermission() {
+    @SuppressLint("BatteryLife")
+    private fun askBattyPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val packageName = packageName
             val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -273,7 +275,7 @@ class SplashActivity : AppCompatActivity() {
         try { //     TODO : Live segment key
             //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
             analytics = Analytics.Builder(application, segmentKey).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
-            Analytics.setSingletonInstance (analytics)
+            Analytics.setSingletonInstance(analytics)
         } catch (e: java.lang.Exception) { //            catch = true;
             //            Log.e("in Catch", "True");
             //            Properties p = new Properties();

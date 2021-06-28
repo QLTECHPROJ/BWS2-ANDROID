@@ -106,7 +106,7 @@ class InvoiceActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1")
-            listCall.enqueue(object : Callback<InvoiceListModel?> {
+            listCall!!.enqueue(object : Callback<InvoiceListModel?> {
                 override fun onResponse(call: Call<InvoiceListModel?>, response: Response<InvoiceListModel?>) {
                     try {
                         val listModel = response.body()

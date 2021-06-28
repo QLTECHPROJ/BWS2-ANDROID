@@ -72,6 +72,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".coUserModule.ThankYouActivity"></activity>
+        <activity android:name=".coUserModule.UserDetailActivity" />
         <activity
             android:name=".coUserModule.AddCouserActivity"
             android:configChanges="orientation|screenSize"

@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.text.Editable
+import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
@@ -21,12 +23,14 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.logout
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.SmsReceiver
@@ -51,7 +55,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     var signupFlag: String? = null
     var name: String? = null
     var email: String? = null
-    var countryShortName: String? = null
+    var countDownTimer: CountDownTimer? = null
+    private var countryShortName: String? = null
     private var receiver: BroadcastReceiver? = null
     var fcmId: String = ""
 
@@ -99,10 +104,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.edtOTP2.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 1, tvSendOTPbool))
         binding.edtOTP3.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 2, tvSendOTPbool))
         binding.edtOTP4.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 3, tvSendOTPbool))
-        binding.edtOTP1.setOnKeyListener(PinOnKeyListener(0))
-        binding.edtOTP2.setOnKeyListener(PinOnKeyListener(1))
-        binding.edtOTP3.setOnKeyListener(PinOnKeyListener(2))
-        binding.edtOTP4.setOnKeyListener(PinOnKeyListener(3))
+        binding.edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
+        binding.edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
+        binding.edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
+        binding.edtOTP4.setOnKeyListener(PinOnKeyListener(3, editTexts))
         startSMSListener()
 
         binding.btnSendCode.setOnClickListener {
@@ -137,6 +142,64 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 finish()
             }
         }
+
+        binding.llResendSms.setOnClickListener {
+            binding.txtError.text = ""
+            binding.txtError.visibility = View.GONE
+            tvSendOTPbool = false
+            val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
+            var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
+            if (key.equals("", ignoreCase = true)) {
+                key = BWSApplication.getKey(applicationContext)
+            }
+
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
+            listCall.enqueue(object : Callback<UserAccessModel> {
+                override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
+                    try {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel: UserAccessModel = response.body()!!
+                        if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            logout = false
+                            countDownTimer = object : CountDownTimer(30000, 1000) {
+                                override fun onTick(millisUntilFinished: Long) {
+                                    binding.llResendSms.isEnabled = false
+                                    binding.tvResendOTP.text = Html.fromHtml((millisUntilFinished / 1000).toString() + "<font color=\"#999999\">" + " Resent SMS" + "</font>")
+                                }
+
+                                override fun onFinish() {
+                                    binding.llResendSms.isEnabled = true
+                                    binding.tvResendOTP.text = getString(R.string.resent_sms)
+                                    binding.tvResendOTP.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                                    binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+                                    binding.tvResendOTP.paint.maskFilter = null
+                                }
+                            }.start()
+                            binding.edtOTP1.setText("")
+                            binding.edtOTP2.setText("")
+                            binding.edtOTP3.setText("")
+                            binding.edtOTP4.setText("")
+                            tvSendOTPbool = true
+                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            startSMSListener()
+                            binding.edtOTP1.requestFocus()
+                        } else {
+                            binding.txtError.visibility = View.VISIBLE
+                            binding.txtError.text = listModel.ResponseMessage
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        }
     }
 
     private fun startSMSListener() {
@@ -157,12 +220,14 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
     @SuppressLint("HardwareIds")
     fun authotpUserAcess() {
+        binding.txtError.visibility = View.GONE
+        binding.txtError.text = ""
         if (BWSApplication.isNetworkConnected(this)) {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result!!.token
+                    val newToken = task.result.token
                     Log.e("newToken", newToken)
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
                     editor.putString(CONSTANTS.Token, newToken) //Friend
@@ -180,6 +245,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        binding.txtError.visibility = View.GONE
+                        binding.txtError.text = ""
                         val listModel: AuthOtpModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
                             if (signupFlag.equals("1", ignoreCase = true)) {
@@ -247,9 +314,11 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
                             edited.apply()
+                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                        } else {
+                            binding.txtError.visibility = View.VISIBLE
+                            binding.txtError.text = listModel.ResponseMessage
                         }
-                        BWSApplication.showToast(listModel.ResponseMessage, activity)
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -355,11 +424,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         }
     }
 
-    class PinOnKeyListener internal constructor(private val currentIndex: Int) : View.OnKeyListener {
-        val act = AuthOtpActivity()
+    class PinOnKeyListener internal constructor(private val currentIndex: Int, private var editTexts: Array<EditText>) : View.OnKeyListener {
         override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
             if (keyCode == KeyEvent.KEYCODE_DEL && event.action === KeyEvent.ACTION_DOWN) {
-                if (act.editTexts[currentIndex].text.toString().isEmpty() && currentIndex != 0) act.editTexts[currentIndex - 1].requestFocus()
+                if (editTexts[currentIndex].text.toString().isEmpty() && currentIndex != 0) editTexts[currentIndex - 1].requestFocus()
             }
             return false
         }
@@ -426,5 +494,4 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     override fun onOTPReceivedError(error: String?) {
 //        showToast(error);
     }
-
 }

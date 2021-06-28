@@ -52,7 +52,8 @@
                 android:lineSpacingExtra="@dimen/_3sdp"
                 android:textColor="@color/dark_blue_gray"
                 android:textSize="@dimen/_12sdp"
-                tools:ignore="SpUsage" />
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
 
             <LinearLayout
                 android:layout_width="match_parent"

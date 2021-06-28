@@ -14,13 +14,11 @@ import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityAddCouserBinding
-import com.brainwellnessspa.userModule.activities.AddProfileActivity
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.userModule.signupLogin.SignUpActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 
@@ -67,7 +65,7 @@ class AddCouserActivity : AppCompatActivity() {
         }
         binding.btnSameMobileNo.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
-                val i = Intent(ctx, AddProfileActivity::class.java)
+                val i = Intent(ctx, CouserSetupPinActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
@@ -76,13 +74,32 @@ class AddCouserActivity : AppCompatActivity() {
         }
 
         binding.btnDiffMobileNo.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(this)) {
-                val i = Intent(ctx, CouserSetupPinActivity::class.java)
-                startActivity(i)
-                finish()
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.add_couser_continue_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
             }
+
+            mainLayout.setOnClickListener {
+                if (BWSApplication.isNetworkConnected(this)) {
+                    val i = Intent(ctx, CouserSetupPinActivity::class.java)
+                    startActivity(i)
+                    dialog.dismiss()
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), this)
+                }
+            }
+
+            dialog.show()
+            dialog.setCancelable(true)
         }
     }
 

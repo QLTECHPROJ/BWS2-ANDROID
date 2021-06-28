@@ -176,8 +176,7 @@ public class BWSApplication extends Application {
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
-    public static boolean serviceConected = false, PlayerINIT = false, audioRemove = false, serviceRemoved = false;
-    public static Bitmap myBitmapImage = null;
+    public static boolean serviceConected = false, PlayerINIT = false, serviceRemoved = false;
     public static MediaSessionCompat mediaSession;
     public static String Name;
     public static int isDisclaimer = 0;
@@ -193,12 +192,10 @@ public class BWSApplication extends Application {
     static BWSApplication BWSApplication;
     static String currantTime = "", am_pm, hourString, minuteSting;
     static int Chour, Cminute;
-
     public static String key = "";
     static TextView tvTime;
     public static AudioDatabase DB;
-    public static int comeReminder = 0, isPlayPlaylist = 0;
-
+    public static int isPlayPlaylist = 0;
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
 

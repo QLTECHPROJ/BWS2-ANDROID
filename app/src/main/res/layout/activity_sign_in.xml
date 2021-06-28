@@ -437,9 +437,10 @@
                             android:gravity="top|center"
                             android:paddingVertical="@dimen/_6sdp"
                             android:paddingTop="@dimen/_12sdp"
-                            android:text="@string/login_text"
+                            android:text="@string/don_t_have_account"
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:id="@+id/tvSignUp"

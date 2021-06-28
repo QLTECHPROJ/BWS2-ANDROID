@@ -248,7 +248,7 @@ public class ContactBookActivity extends AppCompatActivity {
     public void prepareContactData(String ContactName, String ContactNumber) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<AllContactListModel> listCall = APIClient.getClient().SetContactList(UserID, ContactNumber, UserPromoCode);
+            Call<AllContactListModel> listCall = APIClient.getClient().setContactList(UserID, ContactNumber, UserPromoCode);
             listCall.enqueue(new Callback<AllContactListModel>() {
                 @Override
                 public void onResponse(Call<AllContactListModel> call, Response<AllContactListModel> response) {
