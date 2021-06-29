@@ -481,7 +481,7 @@ class GlobalInitExoPlayer : Service() {
                 }
                 try {
                     if (isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient().getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
+                        val listCall = APINewClient.client.getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
                         listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                 val listModel = response.body()
@@ -953,22 +953,22 @@ class GlobalInitExoPlayer : Service() {
                     val arrayList2 = ArrayList<MainAudioModel.ResponseData.Detail>()
                     val size = arrayList.size
                     for (i in 0 until size) {
-                        if (UnlockAudioList.contains(arrayList[i].id)) {
+                        if (UnlockAudioList.contains(arrayList[i].iD)) {
                             arrayList2.add(arrayList[i])
                         }
                     }
                     if (arrayList2.size != 0) {
                         for (i in arrayList2.indices) {
                             val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].id
-                            mainPlayModel.name = arrayList[i].name
-                            mainPlayModel.audioFile = arrayList[i].audioFile
+                            mainPlayModel.id = arrayList[i].iD.toString()
+                            mainPlayModel.name = arrayList[i].name.toString()
+                            mainPlayModel.audioFile = arrayList[i].audioFile.toString()
                             mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory
-                            mainPlayModel.imageFile = arrayList[i].imageFile
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration
+                            mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
+                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
+                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
+                            mainPlayModel.imageFile = arrayList[i].imageFile.toString()
+                            mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
                             arrayList1.add(mainPlayModel)
                         }
                     }
@@ -997,22 +997,22 @@ class GlobalInitExoPlayer : Service() {
                     val arrayList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
                     val size = arrayList.size
                     for (i in 0 until size) {
-                        if (UnlockAudioList.contains(arrayList[i].id)) {
+                        if (UnlockAudioList.contains(arrayList[i].iD)) {
                             arrayList2.add(arrayList[i])
                         }
                     }
                     if (arrayList2.size != 0) {
                         for (i in arrayList2.indices) {
                             val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].id
-                            mainPlayModel.name = arrayList[i].name
-                            mainPlayModel.audioFile = arrayList[i].audioFile
+                            mainPlayModel.id = arrayList[i].iD.toString()
+                            mainPlayModel.name = arrayList[i].name.toString()
+                            mainPlayModel.audioFile = arrayList[i].audioFile.toString()
                             mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory
-                            mainPlayModel.imageFile = arrayList[i].imageFile
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration
+                            mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
+                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
+                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
+                            mainPlayModel.imageFile = arrayList[i].imageFile.toString()
+                            mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
                             arrayList1.add(mainPlayModel)
                         }
                     }
@@ -1129,22 +1129,22 @@ class GlobalInitExoPlayer : Service() {
                     val arrayList2 = ArrayList<AppointmentDetailModel.Audio>()
                     val size = arrayList.size
                     for (i in 0 until size) {
-                        if (UnlockAudioList.contains(arrayList[i].id)) {
+                        if (UnlockAudioList.contains(arrayList[i].iD)) {
                             arrayList2.add(arrayList[i])
                         }
                     }
                     if (arrayList2.size != 0) {
                         for (i in arrayList2.indices) {
                             val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].id
-                            mainPlayModel.name = arrayList[i].name
-                            mainPlayModel.audioFile = arrayList[i].audioFile
+                            mainPlayModel.id = arrayList[i].iD.toString()
+                            mainPlayModel.name = arrayList[i].name.toString()
+                            mainPlayModel.audioFile = arrayList[i].audioFile.toString()
                             mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory
-                            mainPlayModel.imageFile = arrayList[i].imageFile
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration
+                            mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
+                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
+                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
+                            mainPlayModel.imageFile = arrayList[i].imageFile.toString()
+                            mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
                             arrayList1.add(mainPlayModel)
                         }
                     }

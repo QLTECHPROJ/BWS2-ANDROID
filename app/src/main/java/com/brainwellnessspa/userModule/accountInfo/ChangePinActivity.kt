@@ -125,7 +125,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtConfirmPINError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
-                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePin(coUserID, binding.etCurrentPIN.text.toString(), binding.etConfirmPIN.text.toString())
+                val listCall: Call<ChangePinModel> = APINewClient.client.getChangePin(coUserID, binding.etCurrentPIN.text.toString(), binding.etConfirmPIN.text.toString())
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {
                         try {

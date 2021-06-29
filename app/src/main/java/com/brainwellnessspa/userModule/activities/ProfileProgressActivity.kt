@@ -464,7 +464,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     private fun sendProfileData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<ProfileSaveDataModel> = APINewClient.getClient().getProfileSaveData(coUserId, profileType, gender, genderX, age, prevDrugUse, medication)
+            val listCall: Call<ProfileSaveDataModel> = APINewClient.client.getProfileSaveData(coUserId, profileType, gender, genderX, age, prevDrugUse, medication)
             listCall.enqueue(object : Callback<ProfileSaveDataModel> {
                 override fun onResponse(call: Call<ProfileSaveDataModel>, response: Response<ProfileSaveDataModel>) {
                     try {

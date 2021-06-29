@@ -29,10 +29,10 @@ class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanL
 
     @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val listModel = listModelList[position] //        holder.binding.tvTitle.setText(listModel.getTitle());
-        holder.binding.tvPlanFeatures01.text = listModel.planFeatures[0].feature
-        holder.binding.tvPlanFeatures02.text = listModel.planFeatures[1].feature
-        holder.binding.tvPlanFeatures03.text = listModel.planFeatures[2].feature
-        holder.binding.tvPlanFeatures04.text = listModel.planFeatures[3].feature
+        holder.binding.tvPlanFeatures01.text = listModel.planFeatures?.get(0)?.feature
+        holder.binding.tvPlanFeatures02.text = listModel.planFeatures?.get(1)?.feature
+        holder.binding.tvPlanFeatures03.text = listModel.planFeatures?.get(2)?.feature
+        holder.binding.tvPlanFeatures04.text = listModel.planFeatures?.get(3)?.feature
         holder.binding.tvPlanAmount.text = "$" + listModel.planAmount
         holder.binding.tvSubName.text = listModel.subName
         holder.binding.tvPlanInterval.text = listModel.planInterval
@@ -84,9 +84,9 @@ class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanL
         holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.white))
         holder.binding.tvPlanInterval.setTextColor(ContextCompat.getColor(activity, R.color.white))
         holder.binding.llFeatures.setBackgroundColor(ContextCompat.getColor(activity, R.color.white))
-        planFlag = listModel.planFlag
-        price = listModel.planAmount
-        planId = listModel.planID //        i = new Intent(ctx, OrderSummaryActivity.class);
+        planFlag = listModel.planFlag.toString()
+        price = listModel.planAmount.toString()
+        planId = listModel.planID.toString() //        i = new Intent(ctx, OrderSummaryActivity.class);
         //        i.putParcelableArrayListExtra("PlanData", listModelList);
         //        i.putExtra("TrialPeriod", TrialPeriod);
         //        i.putExtra("position", position);

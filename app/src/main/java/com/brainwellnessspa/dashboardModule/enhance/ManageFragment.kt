@@ -164,7 +164,7 @@ class ManageFragment : Fragment() {
             btnSendCode.setOnClickListener {
                 if (isNetworkConnected(ctx)) {
                     showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                    val listCall = APINewClient.getClient().getCreatePlaylist(coUserId, edtCreate.text.toString())
+                    val listCall = APINewClient.client.getCreatePlaylist(coUserId, edtCreate.text.toString())
                     listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                         override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                             try {
@@ -554,7 +554,7 @@ class ManageFragment : Fragment() {
     private fun prepareData() {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.getClient().getHomeData(coUserId)
+            val listCall = APINewClient.client.getHomeData(coUserId)
             listCall.enqueue(object : Callback<HomeDataModel?> {
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call<HomeDataModel?>, response: Response<HomeDataModel?>) {

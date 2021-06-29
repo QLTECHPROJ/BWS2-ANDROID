@@ -134,7 +134,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                     showToast("Please provide the playlist's name", activity)
                 } else {
                     if (isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient().getCreatePlaylist(coUserId, edtCreate.text.toString())
+                        val listCall = APINewClient.client.getCreatePlaylist(coUserId, edtCreate.text.toString())
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                             override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                                 try {
@@ -210,7 +210,7 @@ class AddPlaylistActivity : AppCompatActivity() {
     private fun prepareData(ctx: Context) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getPlaylisting(coUserId)
+            val listCall = APINewClient.client.getPlaylisting(coUserId)
             listCall.enqueue(object : Callback<CreatePlaylistingModel?> {
                 override fun onResponse(call: Call<CreatePlaylistingModel?>, response: Response<CreatePlaylistingModel?>) {
                     try {
@@ -261,7 +261,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         myBackPress = true
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
+            val listCall = APINewClient.client.getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
@@ -296,7 +296,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 }
                                 for (i in listModels.responseData!!.indices) {
                                     val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
-                                    mainPlayModel.id = listModels.responseData!![i].iD
+                                    mainPlayModel.iD = listModels.responseData!![i].iD
                                     mainPlayModel.name = listModels.responseData!![i].name
                                     mainPlayModel.audioFile = listModels.responseData!![i].audioFile
                                     mainPlayModel.playlistID = listModels.responseData!![i].playlistID

@@ -178,7 +178,7 @@ class SubPlayListModel {
 
             @SerializedName("Download")
             @Expose
-            private var download: String? = null
+            internal var download: String? = null
 
             @SerializedName("Like")
             @Expose

@@ -208,7 +208,7 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.GONE
                     binding.txtEmailError.visibility = View.GONE
-                    val listCall = APINewClient.getClient().getEditProfile(userId, coUserId, binding.etUser.text.toString(), dob, binding.etMobileNumber.text.toString(), binding.etEmail.text.toString())
+                    val listCall = APINewClient.client.getEditProfile(userId, coUserId, binding.etUser.text.toString(), dob, binding.etMobileNumber.text.toString(), binding.etEmail.text.toString())
                     listCall.enqueue(object : Callback<EditProfileModel> {
                         override fun onResponse(call: Call<EditProfileModel>, response: Response<EditProfileModel>) {
                             val viewModel = response.body()
@@ -250,7 +250,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun profileViewData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
-            val listCall = APINewClient.getClient().getCoUserDetails(coUserId)
+            val listCall = APINewClient.client.getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {

@@ -78,7 +78,7 @@ class ForgotPswdActivity : AppCompatActivity() {
             binding.txtEmailError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ForgotPswdActivity)
-                val listCall: Call<ForgotPasswordModel> = APINewClient.getClient().getForgotPassword(binding.etEmail.text.toString())
+                val listCall: Call<ForgotPasswordModel> = APINewClient.client.getForgotPassword(binding.etEmail.text.toString())
                 listCall.enqueue(object : Callback<ForgotPasswordModel> {
                     override fun onResponse(call: Call<ForgotPasswordModel>, response: Response<ForgotPasswordModel>) {
                         try {

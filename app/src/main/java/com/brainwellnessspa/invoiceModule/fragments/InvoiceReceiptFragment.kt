@@ -70,7 +70,7 @@ class InvoiceReceiptFragment : DialogFragment() {
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.getClient()
+            val listCall = APIClient.client
                 .getInvoiceDetailPlaylist(userID, invoiceID, "1") /*Flag = 0 Staging Flag = 1 Live*/
             if (listCall != null) {
                 listCall.enqueue(object : Callback<InvoiceDetailModel?> {

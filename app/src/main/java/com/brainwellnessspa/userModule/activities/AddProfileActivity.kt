@@ -193,7 +193,7 @@ class AddProfileActivity : AppCompatActivity() {
             } else {
                 if (isNetworkConnected(this)) {
                     showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    val listCall: Call<AddUserModel> = APINewClient.getClient().getAddUser(userID, binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.etMobileNumber.text.toString())
+                    val listCall: Call<AddUserModel> = APINewClient.client.getAddUser(userID, binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.etMobileNumber.text.toString())
                     listCall.enqueue(object : Callback<AddUserModel> {
                         override fun onResponse(call: Call<AddUserModel>, response: Response<AddUserModel>) {
                             try {
@@ -232,7 +232,7 @@ class AddProfileActivity : AppCompatActivity() {
         binding.btnSendNewPin.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall: Call<SucessModel> = APINewClient.getClient().getForgotPin(userID, coEMAIL)
+                val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(userID, coEMAIL)
                 listCall.enqueue(object : Callback<SucessModel> {
                     override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)

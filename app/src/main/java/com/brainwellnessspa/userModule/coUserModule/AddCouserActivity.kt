@@ -1,4 +1,4 @@
-package com.brainwellnessspa.coUserModule
+package com.brainwellnessspa.userModule.coUserModule
 
 import android.app.Activity
 import android.app.Dialog

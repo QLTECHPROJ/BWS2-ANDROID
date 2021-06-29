@@ -1,4 +1,4 @@
-package com.brainwellnessspa.coUserModule
+package com.brainwellnessspa.userModule.coUserModule
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCouserSetupPinBinding
-import com.brainwellnessspa.userModule.activities.UserListActivity
 
 class CouserSetupPinActivity : AppCompatActivity() {
     lateinit var binding: ActivityCouserSetupPinBinding

@@ -174,7 +174,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AssessmentQusModel> = APINewClient.getClient().assessmentQus
+            val listCall: Call<AssessmentQusModel> = APINewClient.client.assessmentQus
             listCall.enqueue(object : Callback<AssessmentQusModel> {
                 override fun onResponse(call: Call<AssessmentQusModel>, response: Response<AssessmentQusModel>) {
                     try {
@@ -405,7 +405,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AssessmentSaveDataModel> = APINewClient.getClient().getAssessmentSaveData(CoUserID, gson.toJson(assAns).toString())
+            val listCall: Call<AssessmentSaveDataModel> = APINewClient.client.getAssessmentSaveData(CoUserID, gson.toJson(assAns).toString())
             listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
                 override fun onResponse(call: Call<AssessmentSaveDataModel>, response: Response<AssessmentSaveDataModel>) {
                     try {

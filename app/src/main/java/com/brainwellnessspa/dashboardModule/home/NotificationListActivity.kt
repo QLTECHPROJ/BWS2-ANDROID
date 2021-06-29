@@ -62,7 +62,7 @@ class NotificationListActivity : AppCompatActivity() {
     private fun prepareNotiData() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<NotificationlistModel> = APINewClient.getClient().getNotificationlist(coUserId)
+            val listCall: Call<NotificationlistModel> = APINewClient.client.getNotificationlist(coUserId)
             listCall.enqueue(object : Callback<NotificationlistModel> {
                 override fun onResponse(call: Call<NotificationlistModel>, response: Response<NotificationlistModel>) {
                     try {

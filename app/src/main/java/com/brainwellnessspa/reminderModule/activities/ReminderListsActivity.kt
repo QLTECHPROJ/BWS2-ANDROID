@@ -134,7 +134,7 @@ class ReminderListsActivity : AppCompatActivity() {
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getReminderList(coUserId)
+            val listCall = APINewClient.client.getReminderList(coUserId)
             listCall.enqueue(object : Callback<ReminderListModel?> {
                 override fun onResponse(call: Call<ReminderListModel?>, response: Response<ReminderListModel?>) {
                     try {
@@ -217,7 +217,7 @@ class ReminderListsActivity : AppCompatActivity() {
             }
             tvconfirm.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    val listCall = APINewClient.getClient().getDeleteRemider(coUserId, TextUtils.join(",", remiderIds))
+                    val listCall = APINewClient.client.getDeleteRemider(coUserId, TextUtils.join(",", remiderIds))
                     listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                         override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                             try {
@@ -414,7 +414,7 @@ class ReminderListsActivity : AppCompatActivity() {
     private fun prepareSwitchStatus(reminderStatus: String, PlaylistID: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getReminderStatus(coUserId, PlaylistID, reminderStatus) /*set 1 or not 0 */
+            val listCall = APINewClient.client.getReminderStatus(coUserId, PlaylistID, reminderStatus) /*set 1 or not 0 */
             listCall.enqueue(object : Callback<ReminderStatusModel?> {
                 override fun onResponse(call: Call<ReminderStatusModel?>, response: Response<ReminderStatusModel?>) {
                     try {
@@ -510,7 +510,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 }
                 tvconfirm.setOnClickListener {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        val listCall = APINewClient.getClient().getDeleteRemider(coUserId, listReminderModel!!.responseData!![position]!!.reminderId)
+                        val listCall = APINewClient.client.getDeleteRemider(coUserId, listReminderModel!!.responseData!![position]!!.reminderId)
                         listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                             override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                 try {

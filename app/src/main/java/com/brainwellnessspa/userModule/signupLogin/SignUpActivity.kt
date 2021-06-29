@@ -369,7 +369,7 @@ class SignUpActivity : AppCompatActivity() {
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
-            val listCall: Call<CountryListModel> = APINewClient.getClient().countryLists
+            val listCall: Call<CountryListModel> = APINewClient.client.countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
@@ -404,7 +404,7 @@ class SignUpActivity : AppCompatActivity() {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             Log.e("countryCode", countryCode)
             Log.e("countryFullName", countryFullName)
-            val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key)
+            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {

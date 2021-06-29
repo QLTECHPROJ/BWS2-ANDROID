@@ -186,7 +186,7 @@ class AppointmentFragment : Fragment() {
 */try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall = APIClient.getClient().getNextSessionVIew(userId)
+                val listCall = APIClient.client.getNextSessionVIew(userId)
                 listCall!!.enqueue(object : Callback<NextSessionViewModel?> {
                     override fun onResponse(call: Call<NextSessionViewModel?>, response: Response<NextSessionViewModel?>) {
                         try {
@@ -257,7 +257,7 @@ class AppointmentFragment : Fragment() {
             }
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall1 = APIClient.getClient().getAppointmentVIew(userId)
+                val listCall1 = APIClient.client.getAppointmentVIew(userId)
                 listCall1!!.enqueue(object : Callback<PreviousAppointmentsModel?> {
                     override fun onResponse(call: Call<PreviousAppointmentsModel?>, response: Response<PreviousAppointmentsModel?>) {
                         try {

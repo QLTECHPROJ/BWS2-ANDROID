@@ -480,7 +480,7 @@ public class BWSApplication extends Application {
             } else {
                 if (isNetworkConnected(ctx)) {
                     showProgressBar(progressBar, progressBarHolder, act);
-                    Call<SucessModel> listCall = APINewClient.getClient().RemoveAudio(CoUserID, audioId, PlaylistId);
+                    Call<SucessModel> listCall = APINewClient.getClient().removeAudio(CoUserID, audioId, PlaylistId);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

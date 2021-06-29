@@ -251,7 +251,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.txtConfirmPswdError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
-                val listCall: Call<ChangePinModel> = APINewClient.getClient().getChangePassword(userID, coUserID, binding.etCurrentPswd.text.toString(), binding.etConfirmPswd.text.toString())
+                val listCall: Call<ChangePinModel> = APINewClient.client.getChangePassword(userID, coUserID, binding.etCurrentPswd.text.toString(), binding.etConfirmPswd.text.toString())
                 listCall.enqueue(object : Callback<ChangePinModel> {
                     override fun onResponse(call: Call<ChangePinModel>, response: Response<ChangePinModel>) {
                         try {

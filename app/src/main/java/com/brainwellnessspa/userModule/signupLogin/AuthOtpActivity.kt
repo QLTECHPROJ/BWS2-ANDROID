@@ -153,7 +153,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             }
 
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
+            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {
@@ -239,7 +239,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
-            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
+            val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {

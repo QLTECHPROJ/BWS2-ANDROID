@@ -1,4 +1,4 @@
-package com.brainwellnessspa.coUserModule
+package com.brainwellnessspa.userModule.coUserModule
 
 import android.content.Context
 import android.content.Intent

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.coUserModule.AddCouserActivity
+import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.databinding.ActivityEnhanceDoneBinding
 
 class EnhanceDoneActivity : AppCompatActivity() {

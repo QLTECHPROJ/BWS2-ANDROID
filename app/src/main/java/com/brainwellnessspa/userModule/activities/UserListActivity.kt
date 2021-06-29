@@ -25,16 +25,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.coUserModule.ThankYouActivity
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
+import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -196,7 +192,7 @@ class UserListActivity : AppCompatActivity() {
                         if (isNetworkConnected(activity)) {
 
                             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                             listCall.enqueue(object : Callback<AuthOtpModel> {
                                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                     try {
@@ -217,7 +213,7 @@ class UserListActivity : AppCompatActivity() {
                                                 Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
                                                 Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
                                                 logout = false
-                                                val listCall: Call<AuthOtpModel> = APINewClient.getClient().getCoUserDetails(listModel.ResponseData.UserId)
+                                                val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(listModel.ResponseData.UserId)
                                                 listCall.enqueue(object : Callback<AuthOtpModel> {
                                                     @SuppressLint("HardwareIds")
                                                     override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
@@ -437,7 +433,7 @@ class UserListActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AddedUserListModel> = APINewClient.getClient().getUserList(userId)
+            val listCall: Call<AddedUserListModel> = APINewClient.client.getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
                 override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
                     try {

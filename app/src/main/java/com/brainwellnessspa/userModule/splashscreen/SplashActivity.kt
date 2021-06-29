@@ -117,7 +117,7 @@ class SplashActivity : AppCompatActivity() {
     private fun checkAppVersion() {
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
         if (BWSApplication.isNetworkConnected(this)) {
-            val listCall: Call<VersionModel> = APINewClient.getClient().getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
+            val listCall: Call<VersionModel> = APINewClient.client.getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
             listCall.enqueue(object : Callback<VersionModel> {
                 override fun onResponse(call: Call<VersionModel>, response: Response<VersionModel>) {
                     try {
@@ -169,7 +169,7 @@ class SplashActivity : AppCompatActivity() {
     /* TODO function for check user details  */
     private fun checkUserDetails() {
         if (BWSApplication.isNetworkConnected(this)) {
-            val listCall: Call<AuthOtpModel> = APINewClient.getClient().getCoUserDetails(coUserId)
+            val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {

@@ -111,7 +111,7 @@ class ViewAllAudioFragment : Fragment() {
             val listModelList = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
             for (i in audioList.indices) {
                 val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
-                mainPlayModel.id = audioList[i].id
+                mainPlayModel.iD = audioList[i].id
                 mainPlayModel.name = audioList[i].name
                 mainPlayModel.audioFile = audioList[i].audioFile
                 mainPlayModel.audioDirection = audioList[i].audioDirection
@@ -130,7 +130,7 @@ class ViewAllAudioFragment : Fragment() {
         //        refreshData();
         if (isNetworkConnected(getActivity())) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
-            val listCall = APINewClient.getClient().getViewAllAudioLists(coUserId, id, category)
+            val listCall = APINewClient.client.getViewAllAudioLists(coUserId, id, category)
             listCall.enqueue(object : Callback<ViewAllAudioListModel?> {
                 override fun onResponse(call: Call<ViewAllAudioListModel?>, response: Response<ViewAllAudioListModel?>) {
                     try {
@@ -138,18 +138,18 @@ class ViewAllAudioFragment : Fragment() {
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
                             val listModel = response.body()
                             if (category.equals("", ignoreCase = true)) {
-                                binding.tvTitle.text = listModel!!.responseData.view
+                                binding.tvTitle.text = listModel!!.responseData?.view
                             } else {
                                 binding.tvTitle.text = category
                             }
                             val section = ArrayList<SegmentAudio>()
-                            for (i in listModel!!.responseData.details.indices) {
+                            for (i in listModel!!.responseData?.details?.indices!!) {
                                 val e = SegmentAudio()
-                                e.audioId = listModel.responseData.details[i].id
-                                e.audioName = listModel.responseData.details[i].name
-                                e.masterCategory = listModel.responseData.details[i].audiomastercat
-                                e.subCategory = listModel.responseData.details[i].audioSubCategory
-                                e.audioDuration = listModel.responseData.details[i].audioDirection
+                                e.audioId = listModel.responseData?.details?.get(i)?.iD
+                                e.audioName = listModel.responseData?.details?.get(i)?.name
+                                e.masterCategory = listModel.responseData?.details?.get(i)?.audiomastercat
+                                e.subCategory = listModel.responseData?.details?.get(i)?.audioSubCategory
+                                e.audioDuration = listModel.responseData?.details?.get(i)?.audioDirection
                                 section.add(e)
                             }
                             val p = Properties()
@@ -162,7 +162,7 @@ class ViewAllAudioFragment : Fragment() {
                             }
                             p.putValue("source", name)
                             addToSegment("Audio ViewAll Screen Viewed", p, CONSTANTS.screen)
-                            val adapter = AudiolistAdapter(listModel.responseData.details)
+                            val adapter = AudiolistAdapter(listModel.responseData?.details)
                             binding.rvMainAudio.adapter = adapter
                         }
                     } catch (e: Exception) {
@@ -199,7 +199,7 @@ class ViewAllAudioFragment : Fragment() {
           e.printStackTrace();
       }
   }*/
-    inner class AudiolistAdapter(private val listModelList: ArrayList<ViewAllAudioListModel.ResponseData.Detail>) : RecyclerView.Adapter<AudiolistAdapter.MyViewHolder>() {
+    inner class AudiolistAdapter(private val listModelList: ArrayList<ViewAllAudioListModel.ResponseData.Detail>?) : RecyclerView.Adapter<AudiolistAdapter.MyViewHolder>() {
         var index = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: AudiolistCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.audiolist_custom_layout, parent, false)
@@ -215,11 +215,11 @@ class ViewAllAudioFragment : Fragment() {
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-            holder.binding.tvAudioName.text = listModelList[position].name
-            Glide.with(requireActivity()).load(listModelList[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            holder.binding.tvAudioName.text = listModelList?.get(position)?.name
+            Glide.with(requireActivity()).load(listModelList?.get(position)?.imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMore.visibility = View.VISIBLE
             holder.binding.llMore.setOnClickListener {
-                callAudioDetails(listModelList[position].id, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
+                callAudioDetails(listModelList?.get(position)?.iD, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
             }
             /*            if (IsLock.equalsIgnoreCase("1")) {
           if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -250,7 +250,7 @@ class ViewAllAudioFragment : Fragment() {
             }
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val i = Intent(getActivity(), AddPlaylistActivity::class.java)
-                i.putExtra("AudioId", listModelList[position].id)
+                i.putExtra("AudioId", listModelList?.get(position)?.iD)
                 i.putExtra("ScreenView", "Audio View All Screen")
                 i.putExtra("PlaylistID", "")
                 i.putExtra("PlaylistName", "")
@@ -296,12 +296,16 @@ class ViewAllAudioFragment : Fragment() {
                                     }
                                     callMyPlayer()
                                 } else {
-                                    callPlayer(position, listModelList, true)
+                                    if (listModelList != null) {
+                                        callPlayer(position, listModelList, true)
+                                    }
                                 }
                             }
                         } else {
                             val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                            listModelList2.addAll(listModelList)
+                            if (listModelList != null) {
+                                listModelList2.addAll(listModelList)
+                            }
                             val gson = Gson()
                             val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                             val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
@@ -309,7 +313,7 @@ class ViewAllAudioFragment : Fragment() {
                             val type = object : TypeToken<DisclaimerAudio?>() {}.type
                             val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                             val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
-                            mainPlayModel.id = arrayList.id
+                            mainPlayModel.iD = arrayList.id
                             mainPlayModel.name = arrayList.name
                             mainPlayModel.audioFile = arrayList.audioFile
                             mainPlayModel.audioDirection = arrayList.audioDirection
@@ -367,12 +371,16 @@ class ViewAllAudioFragment : Fragment() {
                                 }
                                 callMyPlayer()
                             } else {
-                                callPlayer(position, listModelList, true)
+                                if (listModelList != null) {
+                                    callPlayer(position, listModelList, true)
+                                }
                             }
                         }
                     } else {
                         val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                        listModelList2.addAll(listModelList)
+                        if (listModelList != null) {
+                            listModelList2.addAll(listModelList)
+                        }
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
@@ -380,7 +388,7 @@ class ViewAllAudioFragment : Fragment() {
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
-                        mainPlayModel.id = arrayList.id
+                        mainPlayModel.iD = arrayList.id
                         mainPlayModel.name = arrayList.name
                         mainPlayModel.audioFile = arrayList.audioFile
                         mainPlayModel.audioDirection = arrayList.audioDirection
@@ -434,12 +442,16 @@ class ViewAllAudioFragment : Fragment() {
                                 }
                                 callMyPlayer()
                             } else {
-                                callPlayer(0, listModelList, true)
+                                if (listModelList != null) {
+                                    callPlayer(0, listModelList, true)
+                                }
                             }
                         }
                     } else {
                         val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                        listModelList2.addAll(listModelList)
+                        if (listModelList != null) {
+                            listModelList2.addAll(listModelList)
+                        }
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
@@ -447,7 +459,7 @@ class ViewAllAudioFragment : Fragment() {
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
-                        mainPlayModel.id = arrayList.id
+                        mainPlayModel.iD = arrayList.id
                         mainPlayModel.name = arrayList.name
                         mainPlayModel.audioFile = arrayList.audioFile
                         mainPlayModel.audioDirection = arrayList.audioDirection
@@ -504,7 +516,7 @@ class ViewAllAudioFragment : Fragment() {
                         showToast("The audio shall start playing after the disclaimer", activity)
                     } else {
                         val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                        for (i in listModelList.indices) {
+                        for (i in listModelList?.indices!!) {
                             if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                                 listModelList2.add(listModelList[i])
                             }
@@ -525,7 +537,7 @@ class ViewAllAudioFragment : Fragment() {
                     }
                 } else {
                     val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                    for (i in listModelList.indices) {
+                    for (i in listModelList?.indices!!) {
                         if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                             listModelList2.add(listModelList[i])
                         }
@@ -539,7 +551,7 @@ class ViewAllAudioFragment : Fragment() {
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
-                        mainPlayModel.id = arrayList.id
+                        mainPlayModel.iD = arrayList.id
                         mainPlayModel.name = arrayList.name
                         mainPlayModel.audioFile = arrayList.audioFile
                         mainPlayModel.audioDirection = arrayList.audioDirection
@@ -607,9 +619,9 @@ class ViewAllAudioFragment : Fragment() {
             when {
                 name.equals("My Downloads", ignoreCase = true) -> {
                     val downloadAudioDetails = ArrayList<DownloadAudioDetails>()
-                    for (i in listModelList.indices) {
+                    for (i in listModelList?.indices!!) {
                         val mainPlayModel = DownloadAudioDetails()
-                        mainPlayModel.id = listModelList[i].id
+                        mainPlayModel.id = listModelList[i].iD
                         mainPlayModel.name = listModelList[i].name
                         mainPlayModel.audioFile = listModelList[i].audioFile
                         mainPlayModel.audioDirection = listModelList[i].audioDirection
@@ -643,7 +655,7 @@ class ViewAllAudioFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return listModelList.size
+            return listModelList?.size!!
         }
 
         inner class MyViewHolder(var binding: AudiolistCustomLayoutBinding) : RecyclerView.ViewHolder(binding.root)

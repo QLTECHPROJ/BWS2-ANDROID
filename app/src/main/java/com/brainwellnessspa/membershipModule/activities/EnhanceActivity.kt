@@ -156,7 +156,7 @@ class EnhanceActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<PlanlistInappModel> = APINewClient.getClient().getPlanlistInapp(coUserId)
+            val listCall: Call<PlanlistInappModel> = APINewClient.client.getPlanlistInapp(coUserId)
             listCall.enqueue(object : Callback<PlanlistInappModel> {
                 override fun onResponse(call: Call<PlanlistInappModel>, response: Response<PlanlistInappModel>) {
                     try {

@@ -109,7 +109,7 @@ class MembershipInvoiceFragment : Fragment() {
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            downloadUrl = listModelList!![position].invoicePdf
+            downloadUrl = listModelList!![position].invoicePdf.toString()
             holder.binding.tvStatus.visibility = View.VISIBLE
             holder.binding.tvInvoiceID.text = "Invoice #" + listModelList[position].invoiceId
             holder.binding.tvTitle.text = listModelList[position].name

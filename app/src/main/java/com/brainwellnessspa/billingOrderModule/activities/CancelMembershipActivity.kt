@@ -175,7 +175,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         }
                         MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
-                                val listCall = APIClient.getClient().getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
+                                val listCall = APIClient.client.getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
                                 if (listCall != null) {
                                     listCall.enqueue(object : Callback<CancelPlanModel?> {
                                         override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {

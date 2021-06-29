@@ -51,7 +51,7 @@ class SleepTimeActivity : AppCompatActivity() {
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<AverageSleepTimeModel> = APINewClient.getClient().averageSleepTimeLists
+            val listCall: Call<AverageSleepTimeModel> = APINewClient.client.averageSleepTimeLists
             listCall.enqueue(object : Callback<AverageSleepTimeModel> {
                 override fun onResponse(call: Call<AverageSleepTimeModel>, response: Response<AverageSleepTimeModel>) {
                     try {

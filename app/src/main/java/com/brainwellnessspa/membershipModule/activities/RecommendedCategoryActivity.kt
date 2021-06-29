@@ -132,7 +132,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     private fun prepareRecommnedData() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<RecommendedCategoryModel> = APINewClient.getClient().getRecommendedCategory(coUserId)
+            val listCall: Call<RecommendedCategoryModel> = APINewClient.client.getRecommendedCategory(coUserId)
             listCall.enqueue(object : Callback<RecommendedCategoryModel> {
                 override fun onResponse(call: Call<RecommendedCategoryModel>, response: Response<RecommendedCategoryModel>) {
                     try {
@@ -582,7 +582,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     private fun sendCategoryData(toJson: String) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SaveRecommendedCatModel> = APINewClient.getClient().getSaveRecommendedCategory(coUserId, toJson, sleepTime)
+            val listCall: Call<SaveRecommendedCatModel> = APINewClient.client.getSaveRecommendedCategory(coUserId, toJson, sleepTime)
             listCall.enqueue(object : Callback<SaveRecommendedCatModel> {
                 override fun onResponse(call: Call<SaveRecommendedCatModel>, response: Response<SaveRecommendedCatModel>) {
                     try {

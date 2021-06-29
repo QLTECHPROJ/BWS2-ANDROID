@@ -205,7 +205,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getSearchBoth(coUserId, search)
+            val listCall = APINewClient.client.getSearchBoth(coUserId, search)
             listCall.enqueue(object : Callback<SearchBothModel?> {
                 @SuppressLint("SetTextI18n") override fun onResponse(call: Call<SearchBothModel?>, response: Response<SearchBothModel?>) {
                     try {
@@ -263,7 +263,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getSuggestedLists(coUserId)
+            val listCall = APINewClient.client.getSuggestedLists(coUserId)
             listCall.enqueue(object : Callback<SuggestedModel?> {
                 override fun onResponse(call: Call<SuggestedModel?>, response: Response<SuggestedModel?>) {
                     try {
@@ -375,7 +375,7 @@ class AddAudioActivity : AppCompatActivity() {
     private fun callAddSearchAudio(AudioID: String?, s: String, FromPlaylistId: String?) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId)
+            val listCall = APINewClient.client.getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
@@ -414,7 +414,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     }
                                     for (i in listModels.responseData!!.indices) {
                                         val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
-                                        mainPlayModel.id = listModels.responseData!![i].iD
+                                        mainPlayModel.iD = listModels.responseData!![i].iD
                                         mainPlayModel.name = listModels.responseData!![i].name
                                         mainPlayModel.audioFile = listModels.responseData!![i].audioFile
                                         mainPlayModel.playlistID = listModels.responseData!![i].playlistID

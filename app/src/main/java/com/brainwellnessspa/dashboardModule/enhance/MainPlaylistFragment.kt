@@ -119,7 +119,7 @@ class MainPlaylistFragment : Fragment() {
     private fun prepareData(comeFrom: String) {
         if (isNetworkConnected(activity)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getMainPlayLists(coUserId)
+            val listCall = APINewClient.client.getMainPlayLists(coUserId)
             listCall.enqueue(object : Callback<MainPlaylistLibraryModel?> {
                 override fun onResponse(call: Call<MainPlaylistLibraryModel?>, response: Response<MainPlaylistLibraryModel?>) {
                     try {
@@ -282,7 +282,7 @@ class MainPlaylistFragment : Fragment() {
                 btnSendCode.setOnClickListener {
                     if (isNetworkConnected(ctx)) {
                         showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listCall = APINewClient.getClient().getCreatePlaylist(CoUserID, edtCreate.text.toString())
+                        val listCall = APINewClient.client.getCreatePlaylist(CoUserID, edtCreate.text.toString())
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                             override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                                 try {

@@ -209,7 +209,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
     private fun callAddAudioToPlaylist(AudioID: String?, FromPlaylistId: String, s1: String) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId)
+            val listCall = APINewClient.client.getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
@@ -247,7 +247,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                                 }
                                 for (i in listModels.responseData!!.indices) {
                                     val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
-                                    mainPlayModel.id = listModels.responseData!![i].iD
+                                    mainPlayModel.iD = listModels.responseData!![i].iD
                                     mainPlayModel.name = listModels.responseData!![i].name
                                     mainPlayModel.audioFile = listModels.responseData!![i].audioFile
                                     mainPlayModel.playlistID = listModels.responseData!![i].playlistID

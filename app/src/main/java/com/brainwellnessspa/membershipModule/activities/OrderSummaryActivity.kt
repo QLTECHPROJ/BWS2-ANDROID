@@ -385,7 +385,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     fun prepareCheckReferCode(promoCode: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-            val listCall = APIClient.getClient().checkReferCode(promoCode)
+            val listCall = APIClient.client.checkReferCode(promoCode)
             listCall!!.enqueue(object : Callback<CheckReferCodeModel?> {
                 override fun onResponse(call: Call<CheckReferCodeModel?>, response: Response<CheckReferCodeModel?>) {
                     try {

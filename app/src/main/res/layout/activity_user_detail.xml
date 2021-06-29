@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".coUserModule.UserDetailActivity">
+        tools:context=".userModule.coUserModule.UserDetailActivity">
 
         <LinearLayout
             android:id="@+id/llBack"

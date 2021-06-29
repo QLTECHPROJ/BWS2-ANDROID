@@ -133,7 +133,7 @@ class ResourceActivity : AppCompatActivity() {
                         p4!!.putValue("resourceType", "Documentaries")
                     }
                 }
-                val listCalls = APINewClient.getClient().getResourceList(coUserId, tabFlag, category)
+                val listCalls = APINewClient.client.getResourceList(coUserId, tabFlag, category)
                 listCalls.enqueue(object : Callback<ResourceListModel?> {
                     override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                         try {
@@ -246,7 +246,7 @@ class ResourceActivity : AppCompatActivity() {
     fun prepareData(rvFilterList: RecyclerView?, dialogBox: Dialog?, tvAll: TextView?, ivFilter: ImageView?) {
         try {
             if (BWSApplication.isNetworkConnected(ctx)) {
-                val listCall = APINewClient.getClient().getResourceCatList(coUserId)
+                val listCall = APINewClient.client.getResourceCatList(coUserId)
                 listCall.enqueue(object : Callback<ResourceFilterModel?> {
                     override fun onResponse(call: Call<ResourceFilterModel?>, response: Response<ResourceFilterModel?>) {
                         val listModel = response.body()

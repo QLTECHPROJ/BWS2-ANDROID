@@ -231,7 +231,7 @@ class ContactBookActivity : AppCompatActivity() {
     fun prepareContactData(ContactName: String?, ContactNumber: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.getClient().setContactList(userId, ContactNumber, userPromoCode)
+            val listCall = APIClient.client.setContactList(userId, ContactNumber, userPromoCode)
             listCall!!.enqueue(object : Callback<AllContactListModel?> {
                 override fun onResponse(call: Call<AllContactListModel?>, response: Response<AllContactListModel?>) {
                     try {

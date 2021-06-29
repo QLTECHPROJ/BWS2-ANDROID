@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,8 +39,8 @@ import java.util.*
 
 class InvoiceActivity : AppCompatActivity() {
     lateinit var binding: ActivityInvoiceBinding
-    lateinit var appointmentList: ArrayList<Appointment>
-    lateinit var memberShipList: ArrayList<MemberShip>
+    var appointmentList: ArrayList<Appointment?>? = null
+    var memberShipList: ArrayList<MemberShip?>?  = null
     var UserID: String? = ""
     var ComeFrom: String? = ""
     var context: Context? = null
@@ -63,7 +62,7 @@ class InvoiceActivity : AppCompatActivity() {
         val p = Properties()
         p.putValue("userId", UserID)
         BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen)
-        binding.llBack.setOnClickListener { view: View? -> callBack() }
+        binding.llBack.setOnClickListener { callBack() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
@@ -75,18 +74,22 @@ class InvoiceActivity : AppCompatActivity() {
         if (invoiceToRecepit == 0) {
             invoiceToRecepit = 1
             BWSApplication.tutorial = false
-            if (ComeFrom.equals("1", ignoreCase = true)) {
-                invoiceToDashboard = 1
-                val i = Intent(context, BottomNavigationActivity::class.java)
-                startActivity(i)
-                finish()
-            } else if (ComeFrom.equals("", ignoreCase = true)) {
-                invoiceToDashboard = 1
-                val i = Intent(context, BottomNavigationActivity::class.java)
-                startActivity(i)
-            } else {
-                AudioDownloadsFragment.comefromDownload = "0"
-                finish()
+            when {
+                ComeFrom.equals("1", ignoreCase = true) -> {
+                    invoiceToDashboard = 1
+                    val i = Intent(context, BottomNavigationActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+                ComeFrom.equals("", ignoreCase = true) -> {
+                    invoiceToDashboard = 1
+                    val i = Intent(context, BottomNavigationActivity::class.java)
+                    startActivity(i)
+                }
+                else -> {
+                    AudioDownloadsFragment.comefromDownload = "0"
+                    finish()
+                }
             }
         } else if (invoiceToRecepit == 1) {
             if (ComeFrom.equals("", ignoreCase = true)) {
@@ -105,7 +108,7 @@ class InvoiceActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1")
+            val listCall = APIClient.client.getInvoicelistPlaylist(UserID, "1")
             listCall!!.enqueue(object : Callback<InvoiceListModel?> {
                 override fun onResponse(call: Call<InvoiceListModel?>, response: Response<InvoiceListModel?>) {
                     try {
@@ -114,8 +117,8 @@ class InvoiceActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             appointmentList = ArrayList()
                             memberShipList = ArrayList()
-                            appointmentList = listModel.responseData.appointment
-                            memberShipList = listModel.responseData.memberShip
+                            appointmentList = listModel.responseData?.appointment
+                            memberShipList = listModel.responseData?.memberShip
                             binding.viewPager.offscreenPageLimit = 2
                             binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Manage"))
                             binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Wellness"))
@@ -125,7 +128,7 @@ class InvoiceActivity : AppCompatActivity() {
                             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
                             binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                                 override fun onTabSelected(tab: TabLayout.Tab) {
-                                    binding!!.viewPager.currentItem = tab.position
+                                    binding.viewPager.currentItem = tab.position
                                     p = Properties()
                                     p!!.putValue("userId", UserID)
                                     if (tab.position == 0) {
@@ -133,10 +136,10 @@ class InvoiceActivity : AppCompatActivity() {
                                         val section1 = ArrayList<SegmentMembership>()
                                         val e = SegmentMembership()
                                         val gson = Gson()
-                                        for (i in memberShipList.indices) {
-                                            e.invoiceId = memberShipList.get(i).invoiceId
-                                            e.invoiceAmount = memberShipList.get(i).amount
-                                            e.invoiceDate = memberShipList.get(i).date
+                                        for (i in memberShipList?.indices!!) {
+                                            e.invoiceId = memberShipList!![i]?.invoiceId
+                                            e.invoiceAmount = memberShipList!![i]?.amount
+                                            e.invoiceDate = memberShipList!![i]?.date
                                             e.invoiceCurrency = ""
                                             e.plan = ""
                                             e.planStartDt = ""
@@ -160,7 +163,7 @@ class InvoiceActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<InvoiceListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {

@@ -138,8 +138,8 @@ class FaqActivity : AppCompatActivity() {
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.getClient().faqLists
-            listCall.enqueue(object : Callback<FaqListModel?> {
+            val listCall = APINewClient.client.faqLists
+            listCall?.enqueue(object : Callback<FaqListModel?> {
                 override fun onResponse(call: Call<FaqListModel?>, response: Response<FaqListModel?>) {
                     try {
                         val listModel = response.body()

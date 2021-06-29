@@ -290,7 +290,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         if (isNetworkConnected(this)) {
             if (!myDownloads.equals("1", true)) {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall: Call<PlaylistDetailsModel> = APINewClient.getClient().getPlaylistDetail(coUserId, playlistId)
+                val listCall: Call<PlaylistDetailsModel> = APINewClient.client.getPlaylistDetail(coUserId, playlistId)
                 listCall.enqueue(object : Callback<PlaylistDetailsModel> {
                     override fun onResponse(call: Call<PlaylistDetailsModel>, response: Response<PlaylistDetailsModel>) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -805,7 +805,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             if (isNetworkConnected(this.ctx)) {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, this.activity)
-                val listCall = APINewClient.getClient().RemoveAudio(coUserId, id, PlaylistID)
+                val listCall = APINewClient.client.removeAudio(coUserId, id, PlaylistID)
                 listCall.enqueue(object : Callback<SucessModel?> {
                     override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) { //                        try {
                         if (response.isSuccessful) { ////                            handler2.removeCallbacks(UpdateSongTime2);
@@ -1038,7 +1038,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         private fun callDragApi() {
             try {
                 if (isNetworkConnected(ctx)) {
-                    val listCall = APINewClient.getClient().SortAudio(coUserId, PlaylistID, TextUtils.join(",", changedAudio))
+                    val listCall = APINewClient.client.sortAudio(coUserId, PlaylistID, TextUtils.join(",", changedAudio))
                     listCall.enqueue(object : Callback<SucessModel?> {
                         override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                             if (response.isSuccessful) {

@@ -410,7 +410,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
             } else if (options[item] == getString(R.string.removeProfilePicture)) {
                 if (isNetworkConnected(activity)) {
                     showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    val listCall = APINewClient.getClient().getRemoveProfile(coUserId)
+                    val listCall = APINewClient.client.getRemoveProfile(coUserId)
                     listCall.enqueue(object : Callback<RemoveProfileModel?> {
                         override fun onResponse(call: Call<RemoveProfileModel?>, response: Response<RemoveProfileModel?>) {
                             try {
@@ -462,7 +462,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
     fun profileViewData(ctx: Context?) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-            val listCall = APINewClient.getClient().getCoUserDetails(coUserId)
+            val listCall = APINewClient.client.getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<AuthOtpModel?> {
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
                     try {
@@ -669,7 +669,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         }
-        val listCall = APINewClient.getClient().getLogout(userId, fcmId, CONSTANTS.FLAG_ONE)
+        val listCall = APINewClient.client.getLogout(userId, fcmId, CONSTANTS.FLAG_ONE)
         listCall.enqueue(object : Callback<SucessModel?> {
             override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                 val sucessModel = response.body()

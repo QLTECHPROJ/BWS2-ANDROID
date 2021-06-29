@@ -319,7 +319,7 @@ class HomeFragment : Fragment() {
         if (isNetworkConnected(act)) {
             progressBar.visibility = View.VISIBLE
             progressBar.invalidate()
-            val listCall = APINewClient.getClient().getUserList(userId)
+            val listCall = APINewClient.client.getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
                 override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
                     try {
@@ -389,7 +389,7 @@ class HomeFragment : Fragment() {
         }
         if (isNetworkConnected(act)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.getClient().getHomeScreenData(coUserId)
+            val listCall = APINewClient.client.getHomeScreenData(coUserId)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor", "SetTextI18n") override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
@@ -1080,7 +1080,7 @@ class HomeFragment : Fragment() {
                                 txtError.text = ""
                                 progressBar.visibility = View.VISIBLE
                                 progressBar.invalidate()
-                                val listCall = APINewClient.getClient().getVerifyPin(modelList[position].coUserId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                val listCall = APINewClient.client.getVerifyPin(modelList[position].coUserId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                                 listCall.enqueue(object : Callback<AuthOtpModel> {
                                     @SuppressLint("HardwareIds") override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                         try {

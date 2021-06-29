@@ -110,7 +110,7 @@ class MembershipChangeActivity : AppCompatActivity() {
     private fun prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.getClient().getPlanListBilling(userId)
+            val listCall = APIClient.client.getPlanListBilling(userId)
             listCall?.enqueue(object : Callback<PlanListBillingModel?> {
                 override fun onResponse(call: Call<PlanListBillingModel?>, response: Response<PlanListBillingModel?>) {
                     try {
@@ -118,14 +118,14 @@ class MembershipChangeActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val membershipPlanListModel = response.body()
                             if (membershipPlanListModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                binding.tvTitle.text = membershipPlanListModel.responseData.title
-                                binding.tvDesc.text = membershipPlanListModel.responseData.desc
+                                binding.tvTitle.text = membershipPlanListModel.responseData?.title
+                                binding.tvDesc.text = membershipPlanListModel.responseData?.desc
                                 val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
                                 binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
                                 binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                                 binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner)
-                                membershipPlanAdapter = MembershipPlanAdapter(membershipPlanListModel.responseData.plan, ctx, binding.btnFreeJoin)
+                                membershipPlanAdapter = MembershipPlanAdapter(membershipPlanListModel.responseData?.plan, ctx, binding.btnFreeJoin)
                                 binding.rvPlanList.adapter = membershipPlanAdapter
                             }
                         }
@@ -144,7 +144,7 @@ class MembershipChangeActivity : AppCompatActivity() {
     }
 
     /* This class is preparing to membership plan data */
-    inner class MembershipPlanAdapter(private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>, var ctx: Context, var btnFreeJoin: Button) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
+    inner class MembershipPlanAdapter(private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan?>?, var ctx: Context, var btnFreeJoin: Button) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
         private var rowIndex = -1
         private var pos = 0
         var i: Intent? = null
@@ -155,25 +155,29 @@ class MembershipChangeActivity : AppCompatActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val listModel = listModelList[position] //        holder.binding.tvTitle.setText(listModel.getTitle());
-            holder.binding.tvPlanFeatures01.text = listModel.planFeatures[0].feature
-            holder.binding.tvPlanFeatures02.text = listModel.planFeatures[1].feature
-            holder.binding.tvPlanFeatures03.text = listModel.planFeatures[2].feature
-            holder.binding.tvPlanFeatures04.text = listModel.planFeatures[3].feature
-            holder.binding.tvPlanAmount.text = "$" + listModel.planAmount
-            holder.binding.tvSubName.text = listModel.subName
-            holder.binding.tvPlanInterval.text = listModel.planInterval
-            if (listModel.recommendedFlag.equals("1", ignoreCase = true)) {
-                holder.binding.tvRecommended.visibility = View.VISIBLE/*  if (pos == 0) {
-                holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
-                holder.binding.llFeatures.setVisibility(View.VISIBLE);
-                holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
-                holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
-                holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
-                holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
-            }*/
-            } else {
-                holder.binding.tvRecommended.visibility = View.GONE
+            val listModel = listModelList?.get(position) //        holder.binding.tvTitle.setText(listModel.getTitle());
+            if (listModel != null) {
+                holder.binding.tvSubName.text = listModel.subName
+                holder.binding.tvPlanInterval.text = listModel.planInterval
+                holder.binding.tvPlanFeatures01.text = listModel.planFeatures?.get(0)?.feature
+                holder.binding.tvPlanFeatures02.text = listModel.planFeatures?.get(1)?.feature
+                holder.binding.tvPlanFeatures03.text = listModel.planFeatures?.get(2)?.feature
+                holder.binding.tvPlanFeatures04.text = listModel.planFeatures?.get(3)?.feature
+                holder.binding.tvPlanAmount.text = "$" + listModel.planAmount
+            }
+            if (listModel != null) {
+                if (listModel.recommendedFlag.equals("1", ignoreCase = true)) {
+                    holder.binding.tvRecommended.visibility = View.VISIBLE/*  if (pos == 0) {
+                            holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+                            holder.binding.llFeatures.setVisibility(View.VISIBLE);
+                            holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
+                            holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
+                            holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
+                            holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+                        }*/
+                } else {
+                    holder.binding.tvRecommended.visibility = View.GONE
+                }
             }
             holder.binding.llPlanMain.setOnClickListener {
                 rowIndex = position
@@ -181,11 +185,15 @@ class MembershipChangeActivity : AppCompatActivity() {
                 notifyDataSetChanged()
             }
             if (rowIndex == position) {
-                changeFunction(holder, listModel)
-            } else {
-                if (listModel.recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
-                    holder.binding.tvRecommended.visibility = View.VISIBLE
+                if (listModel != null) {
                     changeFunction(holder, listModel)
+                }
+            } else {
+                if (listModel?.recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
+                    holder.binding.tvRecommended.visibility = View.VISIBLE
+                    if (listModel != null) {
+                        changeFunction(holder, listModel)
+                    }
                 } else {
                     holder.binding.llPlanSub.background = ContextCompat.getDrawable(activity, R.drawable.rounded_light_gray)
                     holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.black))
@@ -221,7 +229,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return listModelList.size
+            return listModelList?.size!!
         }
 
         inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(binding.root)

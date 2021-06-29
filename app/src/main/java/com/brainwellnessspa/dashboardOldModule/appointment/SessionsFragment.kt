@@ -207,7 +207,7 @@ class SessionsFragment : Fragment() {
 */try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall = APIClient.getClient().getAppointmentSession(userId, appointmentName)
+                val listCall = APIClient.client.getAppointmentSession(userId, appointmentName)
                 listCall!!.enqueue(object : Callback<SessionListModel?> {
                     override fun onResponse(call: Call<SessionListModel?>, response: Response<SessionListModel?>) {
                         try {

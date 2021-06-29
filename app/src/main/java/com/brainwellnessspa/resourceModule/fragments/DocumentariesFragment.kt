@@ -62,7 +62,7 @@ class DocumentariesFragment : Fragment() {
 
     fun prepareData() {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall = APINewClient.getClient().getResourceList(CoUserID, CONSTANTS.FLAG_TWO, Category)
+        val listCall = APINewClient.client.getResourceList(CoUserID, CONSTANTS.FLAG_TWO, Category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
             override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {

@@ -212,7 +212,7 @@ class ViewAllPlaylistFragment : Fragment() {
         if (isNetworkConnected(activity)) {
             try {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall = APINewClient.getClient().getViewAllPlayLists(coUserId, getLibraryId)
+                val listCall = APINewClient.client.getViewAllPlayLists(coUserId, getLibraryId)
                 listCall.enqueue(object : Callback<ViewAllPlayListModel?> {
                     override fun onResponse(call: Call<ViewAllPlayListModel?>, response: Response<ViewAllPlayListModel?>) {
                         try {

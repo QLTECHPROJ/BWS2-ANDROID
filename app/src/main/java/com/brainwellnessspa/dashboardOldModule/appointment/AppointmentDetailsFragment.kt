@@ -205,7 +205,7 @@ class AppointmentDetailsFragment : Fragment() {
         get() {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall = APIClient.getClient().getAppointmentDetails(userId, appointmentTypeId)
+                val listCall = APIClient.client.getAppointmentDetails(userId, appointmentTypeId)
                 listCall!!.enqueue(object : Callback<AppointmentDetailModel?> {
                     override fun onResponse(call: Call<AppointmentDetailModel?>, response: Response<AppointmentDetailModel?>) {
                         try {
@@ -214,51 +214,51 @@ class AppointmentDetailsFragment : Fragment() {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 globalAppointmentDetailModel = appointmentDetailModel
                                 if (appointmentDetailModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    if (appointmentDetailModel.responseData.audio.size == 0 && appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    if (appointmentDetailModel.responseData?.audio?.size == 0 && appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.GONE
                                         binding.llViewTwo.visibility = View.VISIBLE
                                         binding.viewPager.offscreenPageLimit = 1
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
-                                    } else if (appointmentDetailModel.responseData.audio.size != 0 && appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size != 0 && appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 2
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"))
-                                    } else if (appointmentDetailModel.responseData.audio.size == 0 && !appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size == 0 && !appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 2
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"))
-                                    } else if (appointmentDetailModel.responseData.audio.size == 0 && appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size == 0 && appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 2
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"))
-                                    } else if (appointmentDetailModel.responseData.audio.size != 0 && !appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size != 0 && !appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 3
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"))
-                                    } else if (appointmentDetailModel.responseData.audio.size != 0 && appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size != 0 && appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 3
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"))
-                                    } else if (appointmentDetailModel.responseData.audio.size == 0 && !appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size == 0 && !appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 3
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"))
-                                    } else if (appointmentDetailModel.responseData.audio.size != 0 && !appointmentDetailModel.responseData.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData.myAnswers.equals("", ignoreCase = true)) {
+                                    } else if (appointmentDetailModel.responseData?.audio?.size != 0 && !appointmentDetailModel.responseData?.booklet.equals("", ignoreCase = true) && !appointmentDetailModel.responseData?.myAnswers.equals("", ignoreCase = true)) {
                                         binding.llViewOne.visibility = View.VISIBLE
                                         binding.llViewTwo.visibility = View.GONE
                                         binding.viewPager.offscreenPageLimit = 4
@@ -267,6 +267,8 @@ class AppointmentDetailsFragment : Fragment() {
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"))
                                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"))
                                     }
+
+
                                     binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
                                     val adapter = TabAdapter(requireActivity().supportFragmentManager, requireActivity(), binding.tabLayout.tabCount)
                                     binding.viewPager.adapter = adapter
@@ -285,19 +287,19 @@ class AppointmentDetailsFragment : Fragment() {
                                     val measureRatio = BWSApplication.measureRatio(getActivity(), 10f, 1f, 1f, 0.24f, 10f)
                                     binding.civProfile.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
                                     binding.civProfile.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-                                    binding.tvTilte.text = globalAppointmentDetailModel!!.responseData.name
-                                    binding.tvFacilitator.text = globalAppointmentDetailModel!!.responseData.facilitator
-                                    binding.tvUserName.text = globalAppointmentDetailModel!!.responseData.userName
-                                    binding.tvSubTitle.text = globalAppointmentDetailModel!!.responseData.desc
-                                    binding.tvDate.text = globalAppointmentDetailModel!!.responseData.date
-                                    binding.tvTime.text = globalAppointmentDetailModel!!.responseData.time
-                                    Glide.with(requireActivity()).load(globalAppointmentDetailModel!!.responseData.image).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile)
-                                    if (globalAppointmentDetailModel!!.responseData.date.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.userName.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.time.equals("", ignoreCase = true)) {
+                                    binding.tvTilte.text = globalAppointmentDetailModel!!.responseData?.name
+                                    binding.tvFacilitator.text = globalAppointmentDetailModel!!.responseData?.facilitator
+                                    binding.tvUserName.text = globalAppointmentDetailModel!!.responseData?.userName
+                                    binding.tvSubTitle.text = globalAppointmentDetailModel!!.responseData?.desc
+                                    binding.tvDate.text = globalAppointmentDetailModel!!.responseData?.date
+                                    binding.tvTime.text = globalAppointmentDetailModel!!.responseData?.time
+                                    Glide.with(requireActivity()).load(globalAppointmentDetailModel!!.responseData?.image).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile)
+                                    if (globalAppointmentDetailModel!!.responseData?.date.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.userName.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.time.equals("", ignoreCase = true)) {
                                         binding.llDetails.visibility = View.GONE
                                     } else {
                                         binding.llDetails.visibility = View.VISIBLE
                                     }
-                                    if (globalAppointmentDetailModel!!.responseData.bookUrl.equals("", ignoreCase = true)) {
+                                    if (globalAppointmentDetailModel!!.responseData?.bookUrl.equals("", ignoreCase = true)) {
                                         binding.btnCompletes.visibility = View.GONE
                                     } else {
                                         binding.btnCompletes.visibility = View.VISIBLE
@@ -305,14 +307,14 @@ class AppointmentDetailsFragment : Fragment() {
                                     binding.btnCompletes.setOnClickListener {
                                         BWSApplication.showToast("Book Now", getActivity())
                                         val i = Intent(Intent.ACTION_VIEW)
-                                        i.data = Uri.parse(globalAppointmentDetailModel!!.responseData.bookUrl)
+                                        i.data = Uri.parse(globalAppointmentDetailModel!!.responseData?.bookUrl)
                                         startActivity(i)
                                         BWSApplication.showToast("Complete the booklet", getActivity())
                                         p = Properties()
                                         p!!.putValue("userId", userId)
-                                        p!!.putValue("sessionId", appointmentDetailModel.responseData.id)
-                                        p!!.putValue("sessionName", appointmentDetailModel.responseData.name)
-                                        p!!.putValue("bookletUrl", appointmentDetailModel.responseData.bookUrl)
+                                        p!!.putValue("sessionId", appointmentDetailModel.responseData?.id)
+                                        p!!.putValue("sessionName", appointmentDetailModel.responseData?.name)
+                                        p!!.putValue("bookletUrl", appointmentDetailModel.responseData?.bookUrl)
                                         BWSApplication.addToSegment("Complete Booklet Clicked", p, CONSTANTS.track)
                                     }
                                 } else {
@@ -320,23 +322,23 @@ class AppointmentDetailsFragment : Fragment() {
                                 }
                                 p = Properties()
                                 p!!.putValue("userId", userId)
-                                p!!.putValue("id", appointmentDetailModel.responseData.id)
-                                p!!.putValue("name", appointmentDetailModel.responseData.name)
-                                p!!.putValue("desc", appointmentDetailModel.responseData.desc)
-                                p!!.putValue("status", appointmentDetailModel.responseData.status)
-                                p!!.putValue("facilitator", appointmentDetailModel.responseData.facilitator)
-                                p!!.putValue("userName", appointmentDetailModel.responseData.userName)
-                                p!!.putValue("date", appointmentDetailModel.responseData.date)
-                                p!!.putValue("time", appointmentDetailModel.responseData.time)
-                                p!!.putValue("bookUrl", appointmentDetailModel.responseData.bookUrl)
-                                p!!.putValue("booklet", appointmentDetailModel.responseData.booklet)
-                                p!!.putValue("myAnswers", appointmentDetailModel.responseData.myAnswers)
-                                for (i in appointmentDetailModel.responseData.audio.indices) {
-                                    section!!.add(appointmentDetailModel.responseData.audio[i].id)
-                                    section!!.add(appointmentDetailModel.responseData.audio[i].name)
-                                    section!!.add(appointmentDetailModel.responseData.audio[i].audiomastercat)
-                                    section!!.add(appointmentDetailModel.responseData.audio[i].audioSubCategory)
-                                    section!!.add(appointmentDetailModel.responseData.audio[i].audioDuration)
+                                p!!.putValue("id", appointmentDetailModel.responseData?.id)
+                                p!!.putValue("name", appointmentDetailModel.responseData?.name)
+                                p!!.putValue("desc", appointmentDetailModel.responseData?.desc)
+                                p!!.putValue("status", appointmentDetailModel.responseData?.status)
+                                p!!.putValue("facilitator", appointmentDetailModel.responseData?.facilitator)
+                                p!!.putValue("userName", appointmentDetailModel.responseData?.userName)
+                                p!!.putValue("date", appointmentDetailModel.responseData?.date)
+                                p!!.putValue("time", appointmentDetailModel.responseData?.time)
+                                p!!.putValue("bookUrl", appointmentDetailModel.responseData?.bookUrl)
+                                p!!.putValue("booklet", appointmentDetailModel.responseData?.booklet)
+                                p!!.putValue("myAnswers", appointmentDetailModel.responseData?.myAnswers)
+                                for (i in appointmentDetailModel.responseData?.audio?.indices!!) {
+                                    section!!.add(appointmentDetailModel.responseData?.audio!![i]?.iD.toString())
+                                    section!!.add(appointmentDetailModel.responseData?.audio!![i]?.name.toString())
+                                    section!!.add(appointmentDetailModel.responseData?.audio!![i]?.audiomastercat.toString())
+                                    section!!.add(appointmentDetailModel.responseData?.audio!![i]?.audioSubCategory.toString())
+                                    section!!.add(appointmentDetailModel.responseData?.audio!![i]?.audioDuration.toString())
                                 }
                                 p!!.putValue("sessionAudios", gson!!.toJson(section))
                                 BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen)
@@ -365,15 +367,15 @@ class AppointmentDetailsFragment : Fragment() {
             val bundle2 = Bundle()
             bundle.putParcelable("AppointmentDetail", globalAppointmentDetailModel!!.responseData)
             bundle2.putParcelable("AppointmentDetail", globalAppointmentDetailModel!!.responseData)
-            bundle2.putParcelableArrayList("AppointmentDetailList", globalAppointmentDetailModel!!.responseData.audio)
-            if (globalAppointmentDetailModel!!.responseData.audio.size == 0 && globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            bundle2.putParcelableArrayList("AppointmentDetailList", globalAppointmentDetailModel!!.responseData?.audio)
+            if (globalAppointmentDetailModel!!.responseData?.audio?.size == 0 && globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
                         return aptDetailsFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size != 0 && globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size != 0 && globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -384,7 +386,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptAudioFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size == 0 && !globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size == 0 && !globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -395,7 +397,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptBookletFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size == 0 && globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size == 0 && globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -406,7 +408,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptAnswersFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size != 0 && !globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size != 0 && !globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -421,7 +423,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptBookletFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size != 0 && globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size != 0 && globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -436,7 +438,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptAnswersFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size == 0 && !globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size == 0 && !globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle
@@ -451,7 +453,7 @@ class AppointmentDetailsFragment : Fragment() {
                         return aptAnswersFragment
                     }
                 }
-            } else if (globalAppointmentDetailModel!!.responseData.audio.size != 0 && !globalAppointmentDetailModel!!.responseData.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData.myAnswers.equals("", ignoreCase = true)) {
+            } else if (globalAppointmentDetailModel!!.responseData?.audio?.size != 0 && !globalAppointmentDetailModel!!.responseData?.booklet.equals("", ignoreCase = true) && !globalAppointmentDetailModel!!.responseData?.myAnswers.equals("", ignoreCase = true)) {
                 when (position) {
                     0 -> {
                         aptDetailsFragment.arguments = bundle

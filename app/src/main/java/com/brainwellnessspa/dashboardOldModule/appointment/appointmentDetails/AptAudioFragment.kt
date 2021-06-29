@@ -346,7 +346,7 @@ class AptAudioFragment : Fragment() {
                 holder.binding.pbProgress.visibility = View.GONE
                 holder.binding.ivDownload.visibility = View.VISIBLE
             }
-            getMedia(audiolist.audioFile, activity, audiolist.download, holder.binding.llDownload, holder.binding.ivDownload)
+            getMedia(audiolist.audioFile, activity, audiolist.download.toString(), holder.binding.llDownload, holder.binding.ivDownload)
             val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.13f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
@@ -390,7 +390,7 @@ class AptAudioFragment : Fragment() {
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                     val mainPlayModel = AppointmentDetailModel.Audio()
-                    mainPlayModel.id = arrayList.id
+                    mainPlayModel.iD = arrayList.id
                     mainPlayModel.name = arrayList.name
                     mainPlayModel.audioFile = arrayList.audioFile
                     mainPlayModel.audioDirection = arrayList.audioDirection
@@ -443,7 +443,7 @@ class AptAudioFragment : Fragment() {
                 }
                 name = listModelList[position].name
                 val audioFile = listModelList[position].audioFile
-                url1.add(audioFile)
+                url1.add(audioFile.toString())
                 name1.add(name)
                 downloadPlaylistId.add("")
                 if (url1.size != 0) {
@@ -479,7 +479,7 @@ class AptAudioFragment : Fragment() {
                     BWSApplication.showToast(getString(R.string.reactive_plan), activity)
                 } else if (listModelList[position].isLock.equals("0", ignoreCase = true) || listModelList[position].isLock.equals("", ignoreCase = true)) {
                     val i = Intent(ctx, AddPlaylistActivity::class.java)
-                    i.putExtra("AudioId", listModelList[position].id)
+                    i.putExtra("AudioId", listModelList[position].iD)
                     i.putExtra("ScreenView", "Appointment Audio Screen")
                     i.putExtra("PlaylistID", "")
                     i.putExtra("PlaylistName", "")
@@ -521,7 +521,7 @@ class AptAudioFragment : Fragment() {
             val coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             val downloadAudioDetails = DownloadAudioDetails()
             downloadAudioDetails.userId = coUserId
-            downloadAudioDetails.id = audio.id
+            downloadAudioDetails.id = audio.iD
             downloadAudioDetails.name = audio.name
             downloadAudioDetails.audioFile = audio.audioFile
             downloadAudioDetails.playlistId = ""
@@ -545,7 +545,7 @@ class AptAudioFragment : Fragment() {
                 p!!.putValue("audioDuration", downloadAudioDetails.audioDuration)
                 p!!.putValue("position", GetCurrentAudioPosition())
                 val name = audio.name
-                if (name.contains(downloadAudioDetails.name)) {
+                if (name?.contains(downloadAudioDetails.name) == true) {
                     p!!.putValue("audioType", "Downloaded")
                 } else {
                     p!!.putValue("audioType", "Streaming")

@@ -84,7 +84,7 @@ class BillingAddressFragment : Fragment() {
                     binding.tlPostCode.error = "Postcode is required"
                 } else {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    val listCall = APIClient.getClient().getBillingAddressSave(userId, binding.etName.text.toString(), binding.etEmail.text.toString(), binding.etCountry.text.toString(), binding.etAddressLine1.text.toString(), binding.etAddressLine2.text.toString(), binding.etCity.text.toString(), binding.etState.text.toString(), binding.etPostCode.text.toString())
+                    val listCall = APIClient.client.getBillingAddressSave(userId, binding.etName.text.toString(), binding.etEmail.text.toString(), binding.etCountry.text.toString(), binding.etAddressLine1.text.toString(), binding.etAddressLine2.text.toString(), binding.etCity.text.toString(), binding.etState.text.toString(), binding.etPostCode.text.toString())
                     listCall!!.enqueue(object : Callback<BillingAddressSaveModel?> {
                         override fun onResponse(call: Call<BillingAddressSaveModel?>, response: Response<BillingAddressSaveModel?>) {
                             val listModel = response.body()
@@ -122,7 +122,7 @@ class BillingAddressFragment : Fragment() {
     private val prepareData: Unit
         get() {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.getClient().getBillingAddressView(userId)
+            val listCall = APIClient.client.getBillingAddressView(userId)
             listCall!!.enqueue(object : Callback<BillingAddressViewModel?> {
                 override fun onResponse(call: Call<BillingAddressViewModel?>, response: Response<BillingAddressViewModel?>) {
                     try {
