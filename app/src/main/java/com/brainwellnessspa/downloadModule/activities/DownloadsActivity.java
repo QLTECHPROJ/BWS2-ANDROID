@@ -42,9 +42,9 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
+import static com.brainwellnessspa.BWSApplication.notificationId;
 import static com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.BWSApplication.notificationId;
 
 public class DownloadsActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     public static boolean ComeFrom_Playlist = false;

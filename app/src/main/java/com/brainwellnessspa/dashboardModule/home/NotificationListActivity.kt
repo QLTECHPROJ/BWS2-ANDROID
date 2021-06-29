@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.NotificationlistModel
 import com.brainwellnessspa.databinding.ActivityNotificationListBinding
@@ -38,7 +38,8 @@ class NotificationListActivity : AppCompatActivity() {
     var userName: String? = ""
     lateinit var ctx: Context
 
-    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
         activity = this@NotificationListActivity
@@ -52,20 +53,20 @@ class NotificationListActivity : AppCompatActivity() {
         }
         val p = Properties()
         p.putValue("coUserId", coUserId)
-        BWSApplication.addToSegment("Notification List Viewed", p, CONSTANTS.screen)
+        addToSegment("Notification List Viewed", p, CONSTANTS.screen)
         binding.llError.visibility = View.GONE
-        binding.tvFound.text = "Welcome " + userName + " hope you're doing great!!"
+        binding.tvFound.text = "Welcome $userName hope you're doing great!!"
         prepareNotiData()
     }
 
     private fun prepareNotiData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(this)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<NotificationlistModel> = APINewClient.getClient().getNotificationlist(coUserId)
             listCall.enqueue(object : Callback<NotificationlistModel> {
                 override fun onResponse(call: Call<NotificationlistModel>, response: Response<NotificationlistModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: NotificationlistModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvNotiList.layoutManager = LinearLayoutManager(this@NotificationListActivity)
@@ -86,17 +87,17 @@ class NotificationListActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<NotificationlistModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
     class NotiListAdapter(private val listModel: List<NotificationlistModel.ResponseData?>, var activity: Activity) : RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
 
-        inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {}
+        inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: NotificationListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.notification_list_layout, parent, false)

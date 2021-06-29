@@ -16,9 +16,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio
@@ -67,7 +67,7 @@ class ViewAllAudioFragment : Fragment() {
             name = requireArguments().getString("Name")
             category = requireArguments().getString("Category")
         }
-        BWSApplication.DB = BWSApplication.getAudioDataBase(ctx)
+        DB = getAudioDataBase(ctx)
         val view = binding.root
         view.isFocusableInTouchMode = true
         view.requestFocus()
@@ -105,20 +105,20 @@ class ViewAllAudioFragment : Fragment() {
     }
 
     private fun callObserverMethod() {
-        BWSApplication.DB.taskDao().geAllDataz("", coUserId).observe(requireActivity(), { audioList: List<DownloadAudioDetailsUniq> ->
+        DB.taskDao().geAllDataz("", coUserId).observe(requireActivity(), { audioList: List<DownloadAudioDetailsUniq> ->
             //            refreshData();
             binding.tvTitle.text = name
             val listModelList = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
             for (i in audioList.indices) {
                 val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
                 mainPlayModel.id = audioList[i].id
-                mainPlayModel.setName(audioList[i].name)
-                mainPlayModel.setAudioFile(audioList[i].audioFile)
-                mainPlayModel.setAudioDirection(audioList[i].audioDirection)
-                mainPlayModel.setAudiomastercat(audioList[i].audiomastercat)
-                mainPlayModel.setAudioSubCategory(audioList[i].audioSubCategory)
-                mainPlayModel.setImageFile(audioList[i].imageFile)
-                mainPlayModel.setAudioDuration(audioList[i].audioDuration)
+                mainPlayModel.name = audioList[i].name
+                mainPlayModel.audioFile = audioList[i].audioFile
+                mainPlayModel.audioDirection = audioList[i].audioDirection
+                mainPlayModel.audiomastercat = audioList[i].audiomastercat
+                mainPlayModel.audioSubCategory = audioList[i].audioSubCategory
+                mainPlayModel.imageFile = audioList[i].imageFile
+                mainPlayModel.audioDuration = audioList[i].audioDuration
                 listModelList.add(mainPlayModel)
             }
             val adapter = AudiolistAdapter(listModelList)
@@ -128,28 +128,28 @@ class ViewAllAudioFragment : Fragment() {
 
     private fun prepareData() {
         //        refreshData();
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
+        if (isNetworkConnected(getActivity())) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
             val listCall = APINewClient.getClient().getViewAllAudioLists(coUserId, id, category)
             listCall.enqueue(object : Callback<ViewAllAudioListModel?> {
                 override fun onResponse(call: Call<ViewAllAudioListModel?>, response: Response<ViewAllAudioListModel?>) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
                             val listModel = response.body()
                             if (category.equals("", ignoreCase = true)) {
-                                binding.tvTitle.text = listModel!!.responseData.getView()
+                                binding.tvTitle.text = listModel!!.responseData.view
                             } else {
                                 binding.tvTitle.text = category
                             }
                             val section = ArrayList<SegmentAudio>()
-                            for (i in listModel!!.responseData.getDetails().indices) {
+                            for (i in listModel!!.responseData.details.indices) {
                                 val e = SegmentAudio()
-                                e.audioId = listModel.responseData.getDetails()[i].id
-                                e.audioName = listModel.responseData.getDetails()[i].getName()
-                                e.masterCategory = listModel.responseData.getDetails()[i].getAudiomastercat()
-                                e.subCategory = listModel.responseData.getDetails()[i].getAudioSubCategory()
-                                e.audioDuration = listModel.responseData.getDetails()[i].getAudioDirection()
+                                e.audioId = listModel.responseData.details[i].id
+                                e.audioName = listModel.responseData.details[i].name
+                                e.masterCategory = listModel.responseData.details[i].audiomastercat
+                                e.subCategory = listModel.responseData.details[i].audioSubCategory
+                                e.audioDuration = listModel.responseData.details[i].audioDirection
                                 section.add(e)
                             }
                             val p = Properties()
@@ -161,8 +161,8 @@ class ViewAllAudioFragment : Fragment() {
                                 p.putValue("categoryName", category)
                             }
                             p.putValue("source", name)
-                            BWSApplication.addToSegment("Audio ViewAll Screen Viewed", p, CONSTANTS.screen)
-                            val adapter = AudiolistAdapter(listModel.responseData.getDetails())
+                            addToSegment("Audio ViewAll Screen Viewed", p, CONSTANTS.screen)
+                            val adapter = AudiolistAdapter(listModel.responseData.details)
                             binding.rvMainAudio.adapter = adapter
                         }
                     } catch (e: Exception) {
@@ -171,11 +171,11 @@ class ViewAllAudioFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<ViewAllAudioListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity())
+            showToast(getString(R.string.no_server_found), getActivity())
         }
     }
 
@@ -207,7 +207,7 @@ class ViewAllAudioFragment : Fragment() {
         }
 
         @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val measureRatio = BWSApplication.measureRatio(getActivity(), 0f, 1f, 1f, 0.46f, 0f)
+            val measureRatio = measureRatio(getActivity(), 0f, 1f, 1f, 0.46f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
@@ -215,11 +215,11 @@ class ViewAllAudioFragment : Fragment() {
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-            holder.binding.tvAudioName.text = listModelList[position].getName()
-            Glide.with(requireActivity()).load(listModelList[position].getImageFile()).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            holder.binding.tvAudioName.text = listModelList[position].name
+            Glide.with(requireActivity()).load(listModelList[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMore.visibility = View.VISIBLE
             holder.binding.llMore.setOnClickListener {
-                BWSApplication.callAudioDetails(listModelList[position].id, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
+                callAudioDetails(listModelList[position].id, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
             }
             /*            if (IsLock.equalsIgnoreCase("1")) {
           if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -272,23 +272,23 @@ class ViewAllAudioFragment : Fragment() {
                 //                String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (name.equals("My Downloads", ignoreCase = true)) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (isNetworkConnected(ctx)) {
                         if (audioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
                             if (isDisclaimer == 1) {
-                                if (BWSApplication.player != null) {
-                                    if (!BWSApplication.player.playWhenReady) {
-                                        BWSApplication.player.playWhenReady = true
+                                if (player != null) {
+                                    if (!player.playWhenReady) {
+                                        player.playWhenReady = true
                                     }
                                 } else {
-                                    BWSApplication.audioClick = true
+                                    audioClick = true
                                 }
                                 callMyPlayer()
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                                showToast("The audio shall start playing after the disclaimer", activity)
                             } else {
-                                if (BWSApplication.player != null) {
+                                if (player != null) {
                                     if (position != playerPosition) {
-                                        BWSApplication.player.seekTo(position, 0)
-                                        BWSApplication.player.playWhenReady = true
+                                        player.seekTo(position, 0)
+                                        player.playWhenReady = true
                                         val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                         val editor = sharedxx.edit()
                                         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -310,17 +310,17 @@ class ViewAllAudioFragment : Fragment() {
                             val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                             val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
                             mainPlayModel.id = arrayList.id
-                            mainPlayModel.setName(arrayList.name)
-                            mainPlayModel.setAudioFile(arrayList.audioFile)
-                            mainPlayModel.setAudioDirection(arrayList.audioDirection)
-                            mainPlayModel.setAudiomastercat(arrayList.audiomastercat)
-                            mainPlayModel.setAudioSubCategory(arrayList.audioSubCategory)
-                            mainPlayModel.setImageFile(arrayList.imageFile)
-                            mainPlayModel.setAudioDuration(arrayList.audioDuration)
+                            mainPlayModel.name = arrayList.name
+                            mainPlayModel.audioFile = arrayList.audioFile
+                            mainPlayModel.audioDirection = arrayList.audioDirection
+                            mainPlayModel.audiomastercat = arrayList.audiomastercat
+                            mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                            mainPlayModel.imageFile = arrayList.imageFile
+                            mainPlayModel.audioDuration = arrayList.audioDuration
                             var audioc = true
                             if (isDisclaimer == 1) {
-                                if (BWSApplication.player != null) {
-                                    BWSApplication.player.playWhenReady = true
+                                if (player != null) {
+                                    player.playWhenReady = true
                                     audioc = false
                                     listModelList2.add(mainPlayModel)
                                 } else {
@@ -346,20 +346,20 @@ class ViewAllAudioFragment : Fragment() {
                     val catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "")
                     if (catName.equals(category, ignoreCase = true)) {
                         if (isDisclaimer == 1) {
-                            if (BWSApplication.player != null) {
-                                if (!BWSApplication.player.playWhenReady) {
-                                    BWSApplication.player.playWhenReady = true
+                            if (player != null) {
+                                if (!player.playWhenReady) {
+                                    player.playWhenReady = true
                                 }
                             } else {
-                                BWSApplication.audioClick = true
+                                audioClick = true
                             }
                             callMyPlayer()
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                            showToast("The audio shall start playing after the disclaimer", activity)
                         } else {
-                            if (BWSApplication.player != null) {
+                            if (player != null) {
                                 if (position != playerPosition) {
-                                    BWSApplication.player.seekTo(position, 0)
-                                    BWSApplication.player.playWhenReady = true
+                                    player.seekTo(position, 0)
+                                    player.playWhenReady = true
                                     val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedxx.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -381,17 +381,17 @@ class ViewAllAudioFragment : Fragment() {
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
                         mainPlayModel.id = arrayList.id
-                        mainPlayModel.setName(arrayList.name)
-                        mainPlayModel.setAudioFile(arrayList.audioFile)
-                        mainPlayModel.setAudioDirection(arrayList.audioDirection)
-                        mainPlayModel.setAudiomastercat(arrayList.audiomastercat)
-                        mainPlayModel.setAudioSubCategory(arrayList.audioSubCategory)
-                        mainPlayModel.setImageFile(arrayList.imageFile)
-                        mainPlayModel.setAudioDuration(arrayList.audioDuration)
+                        mainPlayModel.name = arrayList.name
+                        mainPlayModel.audioFile = arrayList.audioFile
+                        mainPlayModel.audioDirection = arrayList.audioDirection
+                        mainPlayModel.audiomastercat = arrayList.audiomastercat
+                        mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                        mainPlayModel.imageFile = arrayList.imageFile
+                        mainPlayModel.audioDuration = arrayList.audioDuration
                         var audioc = true
                         if (isDisclaimer == 1) {
-                            if (BWSApplication.player != null) {
-                                BWSApplication.player.playWhenReady = true
+                            if (player != null) {
+                                player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(mainPlayModel)
                             } else {
@@ -413,20 +413,20 @@ class ViewAllAudioFragment : Fragment() {
                 } else {
                     if ((audioPlayerFlag.equals("MainAudioList", ignoreCase = true) || audioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && myPlaylist.equals(name, ignoreCase = true)) {
                         if (isDisclaimer == 1) {
-                            if (BWSApplication.player != null) {
-                                if (!BWSApplication.player.playWhenReady) {
-                                    BWSApplication.player.playWhenReady = true
+                            if (player != null) {
+                                if (!player.playWhenReady) {
+                                    player.playWhenReady = true
                                 }
                             } else {
-                                BWSApplication.audioClick = true
+                                audioClick = true
                             }
                             callMyPlayer()
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                            showToast("The audio shall start playing after the disclaimer", activity)
                         } else {
-                            if (BWSApplication.player != null) {
+                            if (player != null) {
                                 if (position != playerPosition) {
-                                    BWSApplication.player.seekTo(position, 0)
-                                    BWSApplication.player.playWhenReady = true
+                                    player.seekTo(position, 0)
+                                    player.playWhenReady = true
                                     val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedxx.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -448,17 +448,17 @@ class ViewAllAudioFragment : Fragment() {
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
                         mainPlayModel.id = arrayList.id
-                        mainPlayModel.setName(arrayList.name)
-                        mainPlayModel.setAudioFile(arrayList.audioFile)
-                        mainPlayModel.setAudioDirection(arrayList.audioDirection)
-                        mainPlayModel.setAudiomastercat(arrayList.audiomastercat)
-                        mainPlayModel.setAudioSubCategory(arrayList.audioSubCategory)
-                        mainPlayModel.setImageFile(arrayList.imageFile)
-                        mainPlayModel.setAudioDuration(arrayList.audioDuration)
+                        mainPlayModel.name = arrayList.name
+                        mainPlayModel.audioFile = arrayList.audioFile
+                        mainPlayModel.audioDirection = arrayList.audioDirection
+                        mainPlayModel.audiomastercat = arrayList.audiomastercat
+                        mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                        mainPlayModel.imageFile = arrayList.imageFile
+                        mainPlayModel.audioDuration = arrayList.audioDuration
                         var audioc = true
                         if (isDisclaimer == 1) {
-                            if (BWSApplication.player != null) {
-                                BWSApplication.player.playWhenReady = true
+                            if (player != null) {
+                                player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(mainPlayModel)
                             } else {
@@ -484,7 +484,7 @@ class ViewAllAudioFragment : Fragment() {
         }
 
         private fun getMedia(position: Int) {
-            BWSApplication.DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe((ctx as LifecycleOwner?)!!, { audioList: List<String> ->
+            DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe((ctx as LifecycleOwner?)!!, { audioList: List<String> ->
                 val downloadAudioDetailsList = audioList
                 var pos = 0
                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -492,45 +492,45 @@ class ViewAllAudioFragment : Fragment() {
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
                     if (isDisclaimer == 1) {
-                        if (BWSApplication.player != null) {
-                            if (!BWSApplication.player.playWhenReady) {
-                                BWSApplication.player.playWhenReady = true
+                        if (player != null) {
+                            if (!player.playWhenReady) {
+                                player.playWhenReady = true
                             }
                         } else {
-                            BWSApplication.audioClick = true
-                            BWSApplication.miniPlayer = 1
+                            audioClick = true
+                            miniPlayer = 1
                         }
                         callMyPlayer()
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                        showToast("The audio shall start playing after the disclaimer", activity)
                     } else {
                         val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
                         for (i in listModelList.indices) {
-                            if (downloadAudioDetailsList.contains(listModelList[i].getName())) {
+                            if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                                 listModelList2.add(listModelList[i])
                             }
                         }
                         if (position != playerPosition) {
-                            if (downloadAudioDetailsList.contains(listModelList[position].getName())) {
+                            if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                                 pos = position
                                 callPlayer(pos, listModelList2, true)
                             } else {
                                 //                                pos = 0;
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                                showToast(ctx.getString(R.string.no_server_found), activity)
                             }
                         }
                         if (listModelList2.size == 0) {
                             //                                callTransFrag(pos, listModelList2, true);
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                            showToast(ctx.getString(R.string.no_server_found), activity)
                         }
                     }
                 } else {
                     val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
                     for (i in listModelList.indices) {
-                        if (downloadAudioDetailsList.contains(listModelList[i].getName())) {
+                        if (downloadAudioDetailsList.contains(listModelList[i].name)) {
                             listModelList2.add(listModelList[i])
                         }
                     }
-                    if (downloadAudioDetailsList.contains(listModelList[position].getName())) {
+                    if (downloadAudioDetailsList.contains(listModelList[position].name)) {
                         pos = position
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
@@ -540,17 +540,17 @@ class ViewAllAudioFragment : Fragment() {
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
                         val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
                         mainPlayModel.id = arrayList.id
-                        mainPlayModel.setName(arrayList.name)
-                        mainPlayModel.setAudioFile(arrayList.audioFile)
-                        mainPlayModel.setAudioDirection(arrayList.audioDirection)
-                        mainPlayModel.setAudiomastercat(arrayList.audiomastercat)
-                        mainPlayModel.setAudioSubCategory(arrayList.audioSubCategory)
-                        mainPlayModel.setImageFile(arrayList.imageFile)
-                        mainPlayModel.setAudioDuration(arrayList.audioDuration)
+                        mainPlayModel.name = arrayList.name
+                        mainPlayModel.audioFile = arrayList.audioFile
+                        mainPlayModel.audioDirection = arrayList.audioDirection
+                        mainPlayModel.audiomastercat = arrayList.audiomastercat
+                        mainPlayModel.audioSubCategory = arrayList.audioSubCategory
+                        mainPlayModel.imageFile = arrayList.imageFile
+                        mainPlayModel.audioDuration = arrayList.audioDuration
                         var audioc = true
                         if (isDisclaimer == 1) {
-                            if (BWSApplication.player != null) {
-                                BWSApplication.player.playWhenReady = true
+                            if (player != null) {
+                                player.playWhenReady = true
                                 audioc = false
                                 listModelList2.add(pos, mainPlayModel)
                             } else {
@@ -568,22 +568,22 @@ class ViewAllAudioFragment : Fragment() {
                             }
                         }
                         if (listModelList2.size != 0) {
-                            if (!listModelList2[pos].getAudioFile().equals("", ignoreCase = true)) {
+                            if (!listModelList2[pos].audioFile.equals("", ignoreCase = true)) {
                                 if (listModelList2.size != 0) {
                                     callPlayer(pos, listModelList2, audioc)
                                 } else {
-                                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                                    showToast(ctx.getString(R.string.no_server_found), activity)
                                 }
-                            } else if (listModelList2[pos].getAudioFile().equals("", ignoreCase = true) && listModelList2.size > 1) {
+                            } else if (listModelList2[pos].audioFile.equals("", ignoreCase = true) && listModelList2.size > 1) {
                                 callPlayer(pos, listModelList2, audioc)
                             } else {
-                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                                showToast(ctx.getString(R.string.no_server_found), activity)
                             }
                         } else {
-                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                            showToast(ctx.getString(R.string.no_server_found), activity)
                         }
                     } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                        showToast(ctx.getString(R.string.no_server_found), activity)
                     }
                 }
             })
@@ -610,13 +610,13 @@ class ViewAllAudioFragment : Fragment() {
                     for (i in listModelList.indices) {
                         val mainPlayModel = DownloadAudioDetails()
                         mainPlayModel.id = listModelList[i].id
-                        mainPlayModel.name = listModelList[i].getName()
-                        mainPlayModel.audioFile = listModelList[i].getAudioFile()
-                        mainPlayModel.audioDirection = listModelList[i].getAudioDirection()
-                        mainPlayModel.audiomastercat = listModelList[i].getAudiomastercat()
-                        mainPlayModel.audioSubCategory = listModelList[i].getAudioSubCategory()
-                        mainPlayModel.imageFile = listModelList[i].getImageFile()
-                        mainPlayModel.audioDuration = listModelList[i].getAudioDuration()
+                        mainPlayModel.name = listModelList[i].name
+                        mainPlayModel.audioFile = listModelList[i].audioFile
+                        mainPlayModel.audioDirection = listModelList[i].audioDirection
+                        mainPlayModel.audiomastercat = listModelList[i].audiomastercat
+                        mainPlayModel.audioSubCategory = listModelList[i].audioSubCategory
+                        mainPlayModel.imageFile = listModelList[i].imageFile
+                        mainPlayModel.audioDuration = listModelList[i].audioDuration
                         downloadAudioDetails.add(mainPlayModel)
                     }
                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio")
@@ -638,7 +638,7 @@ class ViewAllAudioFragment : Fragment() {
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, name)
             editor.apply()
-            BWSApplication.audioClick = audioc
+            audioClick = audioc
             callMyPlayer()
         }
 

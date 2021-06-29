@@ -22,8 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.logout
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
@@ -150,18 +149,18 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
             var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
             if (key.equals("", ignoreCase = true)) {
-                key = BWSApplication.getKey(applicationContext)
+                key = getKey(applicationContext)
             }
 
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<UserAccessModel> = APINewClient.getClient().getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, activity)
                             logout = false
                             countDownTimer = object : CountDownTimer(30000, 1000) {
                                 override fun onTick(millisUntilFinished: Long) {
@@ -182,7 +181,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             binding.edtOTP3.setText("")
                             binding.edtOTP4.setText("")
                             tvSendOTPbool = true
-                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, activity)
                             startSMSListener()
                             binding.edtOTP1.requestFocus()
                         } else {
@@ -196,7 +195,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 }
 
                 override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         }
@@ -222,7 +221,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     fun authotpUserAcess() {
         binding.txtError.visibility = View.GONE
         binding.txtError.text = ""
-        if (BWSApplication.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
@@ -238,13 +237,13 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
 
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
             val listCall: Call<AuthOtpModel> = APINewClient.getClient().getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         binding.txtError.visibility = View.GONE
                         binding.txtError.text = ""
                         val listModel: AuthOtpModel = response.body()!!
@@ -284,7 +283,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             p.putValue("countryName", "")
                             p.putValue("countryShortName", "")
                             p.putValue("email", "")
-                            BWSApplication.addToSegment("", p, CONSTANTS.track)
+                            addToSegment("", p, CONSTANTS.track)
 
                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                             val editor = shared.edit()
@@ -314,7 +313,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
                             edited.apply()
-                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, activity)
                         } else {
                             binding.txtError.visibility = View.VISIBLE
                             binding.txtError.text = listModel.ResponseMessage
@@ -325,11 +324,11 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, null, activity)
+                    hideProgressBar(binding.progressBar, null, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 

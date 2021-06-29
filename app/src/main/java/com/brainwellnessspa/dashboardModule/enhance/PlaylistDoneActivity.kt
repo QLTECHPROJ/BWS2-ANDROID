@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityPlaylistDoneBinding
@@ -18,7 +18,8 @@ class PlaylistDoneActivity : AppCompatActivity() {
     var coUserId: String? = ""
     var userId: String? = ""
 
-    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_done)
 
@@ -28,7 +29,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
 
         val p = Properties()
         p.putValue("coUserId", coUserId)
-        BWSApplication.addToSegment("Suggested Playlist Created", p, CONSTANTS.screen)
+        addToSegment("Suggested Playlist Created", p, CONSTANTS.screen)
 
         binding.tvTitle.text = "You playlist is ready"
         binding.tvSubTitle.text = "We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program."

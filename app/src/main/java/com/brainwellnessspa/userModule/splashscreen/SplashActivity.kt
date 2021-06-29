@@ -17,7 +17,6 @@ import com.brainwellnessspa.BWSApplication.key
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.coUserModule.AddCouserActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
@@ -38,7 +37,7 @@ class SplashActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
-    var emailUser: String? = ""
+    private var emailUser: String? = ""
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var indexScore: String? = ""
@@ -53,7 +52,7 @@ class SplashActivity : AppCompatActivity() {
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE)
         val editor = sharedx.edit()
-        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures.get(0))
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures[0])
         editor.apply()
         if (key.equals("", ignoreCase = true)) {
             key = BWSApplication.getKey(this)
@@ -175,10 +174,10 @@ class SplashActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
                         val authOtpModel: AuthOtpModel = response.body()!!
-                        isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted.toString()
-                        isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted.toString()
-                        indexScore = authOtpModel.ResponseData.indexScore.toString()
-                        avgSleepTime = authOtpModel.ResponseData.AvgSleepTime.toString()
+                        isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
+                        isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
+                        indexScore = authOtpModel.ResponseData.indexScore
+                        avgSleepTime = authOtpModel.ResponseData.AvgSleepTime
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)

@@ -368,14 +368,14 @@ class HomeFragment : Fragment() {
     @SuppressLint("HardwareIds")/* This function is use for get main home data */
     fun prepareHomeData() {/* Get firebase token form share pref*/
         val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
-        var fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "")
-        val DeviceId = Settings.Secure.getString(BWSApplication.getContext().contentResolver, Settings.Secure.ANDROID_ID)
+        var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        val deviceId = Settings.Secure.getString(BWSApplication.getContext().contentResolver, Settings.Secure.ANDROID_ID)
 
-        Log.e("newToken", fcm_id.toString())
-        Log.e("deviceid", DeviceId.toString())
+        Log.e("newToken", fcmId.toString())
+        Log.e("deviceid", deviceId.toString())
         Log.e("UserID", userId.toString())
         Log.e("CoUSerID", coUserId.toString())
-        if (TextUtils.isEmpty(fcm_id)) {
+        if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
                     val newToken = task.result.token
                     Log.e("newToken", newToken)
@@ -385,7 +385,7 @@ class HomeFragment : Fragment() {
                     editor.commit()
                 }
             val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
-            fcm_id = sharedPreferences3.getString(CONSTANTS.Token, "")
+            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")
         }
         if (isNetworkConnected(act)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -498,7 +498,7 @@ class HomeFragment : Fragment() {
                         binding.llPlayPause.setOnClickListener {
                             if (isNetworkConnected(activity)) {
                                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                                val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                 when (isPlayPlaylist) {
                                     1 -> {
                                         player.playWhenReady = false
@@ -526,7 +526,7 @@ class HomeFragment : Fragment() {
                                         binding.llPause.visibility = View.VISIBLE
                                     }
                                     else -> {
-                                        PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![PlayerPosition].id
+                                        PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![playerPosition].id
                                         callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, act, listModel.responseData!!.suggestedPlaylist!!.playlistID!!, listModel.responseData!!.suggestedPlaylist!!.playlistName!!)
                                         binding.llPlay.visibility = View.GONE
                                         binding.llPause.visibility = View.VISIBLE
@@ -576,10 +576,10 @@ class HomeFragment : Fragment() {
 
         /* Get String of Player play from */
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "") //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "") //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         if (myDownloads.equals("1", ignoreCase = true)) {
-            if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+            if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
                 if (player != null) {
                     if (player.playWhenReady) {
                         isPlayPlaylist = 1 //                    handler3.postDelayed(UpdateSongTime3, 500);
@@ -601,7 +601,7 @@ class HomeFragment : Fragment() {
                 binding.llPlay.visibility = View.VISIBLE
             }
         } else {
-            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
+            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
                 if (player != null) {
                     if (player.playWhenReady) {
                         isPlayPlaylist = 1
@@ -628,14 +628,14 @@ class HomeFragment : Fragment() {
     /* function for play suggested playlist */
     private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity?, playlistID: String, playlistName: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-        val AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-        val PlayerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+        val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+        val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
-                if (AudioPlayerFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+                if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             if (!player.playWhenReady) {
@@ -648,7 +648,7 @@ class HomeFragment : Fragment() {
                         showToast("The audio shall start playing after the disclaimer", act)
                     } else {
                         if (player != null) {
-                            if (position != PlayerPosition) {
+                            if (position != playerPosition) {
                                 player.seekTo(position, 0)
                                 player.playWhenReady = true
                                 val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -664,9 +664,9 @@ class HomeFragment : Fragment() {
                 } else {
                     val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                     listModelList2.addAll(listModel)
-                    val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                    val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
-                    val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                    val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                     val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                     mainPlayModel.id = arrayList.id
                     mainPlayModel.name = arrayList.name
@@ -684,14 +684,14 @@ class HomeFragment : Fragment() {
                             listModelList2.add(position, mainPlayModel)
                         } else {
                             isDisclaimer = 0
-                            if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                            if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(position, mainPlayModel)
                             }
                         }
                     } else {
                         isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(position, mainPlayModel)
                         }
@@ -699,10 +699,10 @@ class HomeFragment : Fragment() {
                     callPlayerSuggested(position, view, listModelList2, ctx, act!!, playlistID, playlistName, audioc)
                 }
             } else {
-                getAllCompletedMedia(AudioPlayerFlag, playlistID, playlistName, position, listModel, ctx, act!!, DB)
+                getAllCompletedMedia(audioPlayerFlag, playlistID, playlistName, position, listModel, ctx, act!!, DB)
             }
         } else {
-            if (AudioPlayerFlag.equals("playlist", ignoreCase = true) && MyPlaylist.equals(playlistID, ignoreCase = true)) {
+            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.playWhenReady) {
@@ -715,7 +715,7 @@ class HomeFragment : Fragment() {
                     showToast("The audio shall start playing after the disclaimer", act)
                 } else {
                     if (player != null) {
-                        if (position != PlayerPosition) {
+                        if (position != playerPosition) {
                             player.seekTo(position, 0)
                             player.playWhenReady = true
                             val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -731,9 +731,9 @@ class HomeFragment : Fragment() {
             } else {
                 val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 listModelList2.addAll(listModel)
-                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
-                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                 mainPlayModel.id = arrayList.id
                 mainPlayModel.name = arrayList.name
@@ -751,14 +751,14 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     } else {
                         isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(position, mainPlayModel)
                         }
                     }
                 } else {
                     isDisclaimer = 0
-                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                    if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                         audioc = true
                         listModelList2.add(position, mainPlayModel)
                     }
@@ -769,17 +769,17 @@ class HomeFragment : Fragment() {
     }
 
     /* Get Downloaded Media for offline play and play that media  */
-    private fun getAllCompletedMedia(AudioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
+    private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
         AudioDatabase.databaseWriteExecutor.execute {
             downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
         }
         var pos = 0
         val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+        val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
-        if (AudioFlag.equals("Downloadlist", ignoreCase = true) && MyPlaylist.equals(pID, ignoreCase = true)) {
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
             if (isDisclaimer == 1) {
                 if (player != null) {
                     if (!player.playWhenReady) {
@@ -821,9 +821,9 @@ class HomeFragment : Fragment() {
             if (downloadAudioDetailsList.contains(listModel[position].name)) {
                 pos = position
                 val gson = Gson()
-                val DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
+                val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
-                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(DisclimerJson, type)
+                val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                 val mainPlayModel = HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong()
                 mainPlayModel.id = arrayList.id
                 mainPlayModel.name = arrayList.name
@@ -841,14 +841,14 @@ class HomeFragment : Fragment() {
                         listModelList2.add(pos, mainPlayModel)
                     } else {
                         isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(pos, mainPlayModel)
                         }
                     }
                 } else {
                     isDisclaimer = 0
-                    if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                    if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                         audioc = true
                         listModelList2.add(pos, mainPlayModel)
                     }

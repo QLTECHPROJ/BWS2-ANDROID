@@ -1208,10 +1208,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
                     val tvHeader = dialog.findViewById<TextView>(R.id.tvHeader)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                    val Btn = dialog.findViewById<Button>(R.id.Btn)
+                    val btn = dialog.findViewById<Button>(R.id.Btn)
                     tvTitle.text = "Remove playlist"
                     tvHeader.text = "Are you sure you want to remove the $playlistName from downloads??"
-                    Btn.text = "Confirm"
+                    btn.text = "Confirm"
                     dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                             dialog.dismiss()
@@ -1220,7 +1220,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                     val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
                     coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-                    Btn.setOnClickListener {
+                    btn.setOnClickListener {
                         getDeleteDownloadData(ctx)
                         getPlaylistMedia(playlistId!!, ctx, DB, coUserId)
                         dialog.dismiss()
@@ -1280,7 +1280,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             //        }
         }
 
-        fun getPlaylistMedia(playlistId: String, ctx: Context, DB: AudioDatabase, coUserId: String?) {
+        private fun getPlaylistMedia(playlistId: String, ctx: Context, DB: AudioDatabase, coUserId: String?) {
             DB.taskDao().getAllAudioByPlaylist1(playlistId, coUserId).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
                 deleteDownloadFile(ctx, playlistId, DB, coUserId)
                 if (audioList.isNotEmpty()) {

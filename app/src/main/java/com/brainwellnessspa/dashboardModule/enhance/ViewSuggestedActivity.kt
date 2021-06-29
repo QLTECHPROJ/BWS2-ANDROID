@@ -17,13 +17,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewSuggestedBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
@@ -133,7 +131,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                 mainPlayModelList = gson.fromJson(json, type)
             }
-            BWSApplication.PlayerAudioId = mainPlayModelList[playerPositionx].id
+            PlayerAudioId = mainPlayModelList[playerPositionx].id
         }
         /* try {
             GlobalInitExoPlayer globalInitExoPlayer = new GlobalInitExoPlayer();
@@ -183,7 +181,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
             p.putValue("userId", userId)
             p.putValue("audios", gson.toJson(section))
             p.putValue("source", "Search Screen")
-            BWSApplication.addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen)
+            addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen)
             adpater = AudiosListAdpater(listModel)
             LocalBroadcastManager.getInstance(this@ViewSuggestedActivity).registerReceiver(listener, IntentFilter("play_pause_Action"))
             binding.rvMainAudio.adapter = adpater
@@ -209,14 +207,14 @@ class ViewSuggestedActivity : AppCompatActivity() {
     }
 
     private fun callAddAudioToPlaylist(AudioID: String?, FromPlaylistId: String, s1: String) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, AudioID, playlistId, FromPlaylistId)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModels = response.body()
                             val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -290,23 +288,23 @@ class ViewSuggestedActivity : AppCompatActivity() {
                                     //                                    callAddFrag();
                                 }
                             }
-                            BWSApplication.showToast(listModels!!.responseMessage, activity)
+                            showToast(listModels!!.responseMessage, activity)
                             if (s1.equals("1", ignoreCase = true)) {
                                 finish()
                             }
                         }
                     } catch (e: Exception) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         e.printStackTrace()
                     }
                 }
 
                 override fun onFailure(call: Call<AddToPlaylistModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
@@ -330,7 +328,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
             holder.binds.tvTime.text = listModel[position].audioDuration
             holder.binds.pbProgress.visibility = View.GONE
             holder.binds.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
-            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.12f, 0f)
+            val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.12f, 0f)
             holder.binds.cvImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binds.cvImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binds.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
@@ -347,8 +345,8 @@ class ViewSuggestedActivity : AppCompatActivity() {
             val playFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
             val playerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
-                if (BWSApplication.PlayerAudioId.equals(listModel[position].iD, ignoreCase = true)) {
-                    songId = BWSApplication.PlayerAudioId
+                if (PlayerAudioId.equals(listModel[position].iD, ignoreCase = true)) {
+                    songId = PlayerAudioId
                     if (player != null) {
                         if (!player.playWhenReady) {
                             holder.binds.equalizerview.pause()
@@ -429,7 +427,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 } else {
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
                         if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
+                            showToast("The audio shall add after playing the disclaimer", activity)
                         } else {
                             callAddAudioToPlaylist(listModel[position].iD, "", "0")
                         }
@@ -454,10 +452,10 @@ class ViewSuggestedActivity : AppCompatActivity() {
                                 player.playWhenReady = true
                             }
                         } else {
-                            BWSApplication.audioClick = true
+                            audioClick = true
                         }
                         callMyPlayer()
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity)
+                        showToast("The audio shall start playing after the disclaimer", activity)
                     } else {
                         val listModelList2 = ArrayList<SuggestedModel.ResponseData>()
                         listModelList2.add(listModel!![position])
@@ -499,7 +497,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                             audioc = false
                             listModelList2.add(mainPlayModel)
                         } else {
-                           isDisclaimer = 0
+                            isDisclaimer = 0
                             if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
@@ -542,7 +540,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Recommended Search")
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SearchAudio")
             editor.apply()
-            BWSApplication.audioClick = audioc
+            audioClick = audioc
             callMyPlayer()
         }
 

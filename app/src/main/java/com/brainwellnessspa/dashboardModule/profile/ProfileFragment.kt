@@ -28,11 +28,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
-import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity
 import com.brainwellnessspa.dashboardModule.models.AddProfileModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.FragmentProfileBinding
@@ -117,7 +116,7 @@ class ProfileFragment : Fragment() {
         binding.tvVersion.text = "Version " + BuildConfig.VERSION_NAME
         val name: String?
         profilePicPath = userImage
-        if (BWSApplication.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             if (profilePicPath.equals("", ignoreCase = true)) {
                 binding.civProfile.visibility = View.GONE
                 name = if (userName.equals("", ignoreCase = true)) {
@@ -155,26 +154,26 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 selectImage()
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         val p = Properties()
         p.putValue("coUserId", coUserId)
-        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
         binding.llAcInfo.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, AccountInfoActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llDownloads.setOnClickListener {
@@ -191,14 +190,14 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 InvoiceActivity.invoiceToRecepit = 1
                 val i = Intent(activity, InvoiceActivity::class.java)
                 i.putExtra("ComeFrom", "")
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llBillingOrder.setOnClickListener {
@@ -206,12 +205,12 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, BillingOrderActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llReminder.setOnClickListener {
@@ -220,12 +219,12 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, ReminderListsActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llPlan.setOnClickListener {
@@ -233,12 +232,12 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, EnhanceActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llResources.setOnClickListener {
@@ -246,12 +245,12 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, ResourceActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llFAQ.setOnClickListener {
@@ -259,16 +258,16 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 val i = Intent(activity, FaqActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         binding.llLogOut.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 logoutDialog = Dialog(requireActivity())
                 logoutDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 logoutDialog!!.setContentView(R.layout.logout_layout)
@@ -287,14 +286,14 @@ class ProfileFragment : Fragment() {
                 }
                 btn.setOnClickListener {
                     logoutDialog!!.hide()
-                    BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+                    showProgressBar(progressBar, progressBarHolder, activity)
                     deleteCall(logoutDialog!!, progressBar, progressBarHolder)
                 }
                 tvGoBack.setOnClickListener { logoutDialog!!.hide() }
                 logoutDialog!!.show()
                 logoutDialog!!.setCancelable(false)
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
         return view
@@ -409,17 +408,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(intent, 2)
             } else if (options[item] == getString(R.string.removeProfilePicture)) {
-                if (BWSApplication.isNetworkConnected(activity)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                if (isNetworkConnected(activity)) {
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     val listCall = APINewClient.getClient().getRemoveProfile(coUserId)
                     listCall.enqueue(object : Callback<RemoveProfileModel?> {
                         override fun onResponse(call: Call<RemoveProfileModel?>, response: Response<RemoveProfileModel?>) {
                             try {
                                 val viewModel = response.body()
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                                 if (viewModel != null) {
                                     if (viewModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                        BWSApplication.showToast(viewModel.responseMessage, requireActivity())
+                                        showToast(viewModel.responseMessage, requireActivity())
                                         val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                         val editor = shared.edit()
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
@@ -433,7 +432,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         }
 
                         override fun onFailure(call: Call<RemoveProfileModel?>, t: Throwable) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                         }
                     })
                 }
@@ -441,7 +440,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 val p = Properties()
                 p.putValue("userId", userId)
                 p.putValue("coUserId", coUserId)
-                BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
             }
         }
@@ -461,8 +460,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
     }
 
     fun profileViewData(ctx: Context?) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
             val listCall = APINewClient.getClient().getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<AuthOtpModel?> {
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
@@ -470,7 +469,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         val viewModel = response.body()
                         if (viewModel != null) {
                             if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                                 if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
                                     binding.tvName.setText(R.string.Guest)
                                 } else {
@@ -494,7 +493,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     setProfilePic(profilePicPath)
                                 }
                             } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             }
                         }
                     } catch (e: Exception) {
@@ -503,7 +502,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         }
@@ -514,8 +513,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 setProfilePic(profilePicPath)
-                if (BWSApplication.isNetworkConnected(requireActivity())) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                if (isNetworkConnected(requireActivity())) {
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                     val map = HashMap<String, String?>()
                     map[CONSTANTS.PREF_KEY_UserID] = coUserId
                     val typedFile = TypedFile(CONSTANTS.MULTIPART_FORMAT, image)
@@ -523,17 +522,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
                             try {
                                 if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                                     setProfilePic(profilePicPath)
-                                    BWSApplication.showToast(addProfileModel.responseMessage, requireActivity())
+                                    showToast(addProfileModel.responseMessage, requireActivity())
                                     val p = Properties()
                                     p.putValue("userId", userId)
                                     p.putValue("coUserId", coUserId)
-                                    BWSApplication.addToSegment("Camera Photo Added", p, CONSTANTS.track)
-                                    profilePicPath = addProfileModel.responseData.profileImage
+                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
+                                    profilePicPath = addProfileModel.responseData?.profileImage
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData.profileImage)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                     editor.apply()
                                     profileViewData(activity)
                                 }
@@ -543,12 +542,12 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         }
 
                         override fun failure(e: RetrofitError) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            BWSApplication.showToast(e.message, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            showToast(e.message, activity)
                         }
                     })
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                    showToast(getString(R.string.no_server_found), activity)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -561,8 +560,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
                 //                        .into(binding.civProfile);
                 setProfilePic(selectedImageUri.toString())
-                if (BWSApplication.isNetworkConnected(activity)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                if (isNetworkConnected(activity)) {
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     val map = HashMap<String, String?>()
                     map[CONSTANTS.PREF_KEY_UserID] = coUserId
                     val file = File(Objects.requireNonNull(getPath(selectedImageUri!!, requireActivity())))
@@ -570,36 +569,36 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     apiService!!.getAddProfiles(coUserId, typedFile, object : retrofit.Callback<AddProfileModel> {
                         override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
                             if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                profilePicPath = addProfileModel.responseData.profileImage
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                profilePicPath = addProfileModel.responseData?.profileImage
                                 setProfilePic(profilePicPath)
                                 val p = Properties()
                                 p.putValue("userId", userId)
                                 p.putValue("coUserId", coUserId)
-                                BWSApplication.addToSegment("Gallery Photo Added", p, CONSTANTS.track)
-                                BWSApplication.showToast(addProfileModel.responseMessage, activity)
+                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
+                                showToast(addProfileModel.responseMessage, activity)
                                 val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
-                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData.profileImage)
+                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                 editor.apply()
                                 profileViewData(activity)
                             }
                         }
 
                         override fun failure(e: RetrofitError) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            BWSApplication.showToast(e.message, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            showToast(e.message, activity)
                         }
                     })
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                    showToast(getString(R.string.no_server_found), activity)
                 }
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
             val p = Properties()
             p.putValue("userId", userId)
             p.putValue("coUserId", coUserId)
-            BWSApplication.addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
             requireActivity().finish()
         }
     }
@@ -651,8 +650,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
         edited2.clear()
         edited2.apply()
-        BWSApplication.logout = true
-        BWSApplication.deleteCache(activity)
+        logout = true
+        deleteCache(activity)
         callLogoutApi(dialog, progressBar, progressBarHolder)
     }
 
@@ -693,13 +692,13 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     p1.putValue("scoreLevel", scoreLevel)
                     p1.putValue("avgSleepTime", avgSleepTime)
                     p1.putValue("areaOfFocus", "")
-                    BWSApplication.addToSegment("CoUser Logout", p1, CONSTANTS.track)
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                    addToSegment("CoUser Logout", p1, CONSTANTS.track)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(progressBar, progressBarHolder, activity)
                     dialog.hide()
                     try {
-                        BWSApplication.analytics.flush()
-                        BWSApplication.analytics.reset()
+                        analytics.flush()
+                        analytics.reset()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -713,7 +712,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
 
             override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
-                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             }
         })
     }

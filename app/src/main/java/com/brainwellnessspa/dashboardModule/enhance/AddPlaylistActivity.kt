@@ -16,13 +16,13 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.brainwellnessspa.BWSApplication.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
@@ -131,9 +131,9 @@ class AddPlaylistActivity : AppCompatActivity() {
             edtCreate.addTextChangedListener(popupTextWatcher)
             btnSendCode.setOnClickListener {
                 if (edtCreate.text.toString().equals("", ignoreCase = true)) {
-                    BWSApplication.showToast("Please provide the playlist's name", activity)
+                    showToast("Please provide the playlist's name", activity)
                 } else {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (isNetworkConnected(ctx)) {
                         val listCall = APINewClient.getClient().getCreatePlaylist(coUserId, edtCreate.text.toString())
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                             override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
@@ -149,7 +149,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                             val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                                             if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
                                                 if (isDisclaimer == 1) {
-                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
+                                                    showToast("The audio shall add after playing the disclaimer", activity)
                                                 } else {
                                                     callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
                                                 }
@@ -162,7 +162,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                             //                                            p.putValue("source", "Add To Playlist Screen");
                                             //                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
                                         } else {
-                                            BWSApplication.showToast(listsModel.responseMessage, activity)
+                                            showToast(listsModel.responseMessage, activity)
                                         }
                                     }
                                 } catch (e: Exception) {
@@ -174,7 +174,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                             }
                         })
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                        showToast(getString(R.string.no_server_found), activity)
                     }
                 }
             }
@@ -208,14 +208,14 @@ class AddPlaylistActivity : AppCompatActivity() {
     }
 
     private fun prepareData(ctx: Context) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getPlaylisting(coUserId)
             listCall.enqueue(object : Callback<CreatePlaylistingModel?> {
                 override fun onResponse(call: Call<CreatePlaylistingModel?>, response: Response<CreatePlaylistingModel?>) {
                     try {
                         if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val model = response.body()
                             if (model!!.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.GONE
@@ -249,25 +249,25 @@ class AddPlaylistActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<CreatePlaylistingModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
     private fun callAddPlaylistFromPlaylist(PlaylistID: String?, name: String?, New: String) {
         myBackPress = true
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.getClient().getAddSearchAudioFromPlaylist(coUserId, audioId, PlaylistID, fromPlaylistID)
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
                         val listModels = response.body()
                         if (listModels!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity) //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity) //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
                             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                             val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -399,21 +399,21 @@ class AddPlaylistActivity : AppCompatActivity() {
                             dialog.show()
                             dialog.setCancelable(false)
                         } else if (listModels.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            BWSApplication.showToast(listModels.responseMessage, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            showToast(listModels.responseMessage, activity)
                         }
                     } catch (e: Exception) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         e.printStackTrace()
                     }
                 }
 
                 override fun onFailure(call: Call<AddToPlaylistModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
@@ -425,7 +425,7 @@ class AddPlaylistActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModel!![position].name
-            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.16f, 0f)
+            val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.16f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
@@ -437,7 +437,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                 if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall add after playing the disclaimer", activity)
+                        showToast("The audio shall add after playing the disclaimer", activity)
                     } else {
                         callAddPlaylistFromPlaylist(playlistID, listModel[position].name, "0")
                     }
@@ -486,7 +486,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destoryed")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(BWSApplication.notificationId)
+                notificationManager.cancel(notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

@@ -1005,14 +1005,14 @@ class GlobalInitExoPlayer : Service() {
                         for (i in arrayList2.indices) {
                             val mainPlayModel = MainPlayModel()
                             mainPlayModel.id = arrayList[i].id
-                            mainPlayModel.name = arrayList[i].getName()
-                            mainPlayModel.audioFile = arrayList[i].getAudioFile()
+                            mainPlayModel.name = arrayList[i].name
+                            mainPlayModel.audioFile = arrayList[i].audioFile
                             mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].getAudioDirection()
-                            mainPlayModel.audiomastercat = arrayList[i].getAudiomastercat()
-                            mainPlayModel.audioSubCategory = arrayList[i].getAudioSubCategory()
-                            mainPlayModel.imageFile = arrayList[i].getImageFile()
-                            mainPlayModel.audioDuration = arrayList[i].getAudioDuration()
+                            mainPlayModel.audioDirection = arrayList[i].audioDirection
+                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat
+                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory
+                            mainPlayModel.imageFile = arrayList[i].imageFile
+                            mainPlayModel.audioDuration = arrayList[i].audioDuration
                             arrayList1.add(mainPlayModel)
                         }
                     }
