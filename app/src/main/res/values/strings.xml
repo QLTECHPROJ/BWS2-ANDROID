@@ -428,5 +428,13 @@
     <string name="set_up_pin">Set Up PIN</string>
     <string name="before_adding_new_user_let_s_make_your_profile_more_personal_set_up_pin">Before adding new user let\'s make your profile more personal, set up pin</string>
     <string name="did_not_arrive">Did Not Arrive</string>
+    <string name="don_t_have_account">Don\'t have account?</string>
+    <string name="proceed_with_adding_new_user">Proceed with adding New User</string>
+    <string name="user_detail">User Detail</string>
+    <string name="email_address">Email address</string>
+    <string name="Proceed">Proceed</string>
+    <string name="forgot_pin">Forgot PIN?</string>
+    <string name="done">Done</string>
+    <string name="you_already_have_access_to_6_month_of_enhance_program">You already have access to 6 month of Enhance program.</string>
 </resources>
 

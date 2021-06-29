@@ -206,7 +206,7 @@ class AppointmentDetailsFragment : Fragment() {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall = APIClient.getClient().getAppointmentDetails(userId, appointmentTypeId)
-                listCall.enqueue(object : Callback<AppointmentDetailModel?> {
+                listCall!!.enqueue(object : Callback<AppointmentDetailModel?> {
                     override fun onResponse(call: Call<AppointmentDetailModel?>, response: Response<AppointmentDetailModel?>) {
                         try {
                             val appointmentDetailModel = response.body()

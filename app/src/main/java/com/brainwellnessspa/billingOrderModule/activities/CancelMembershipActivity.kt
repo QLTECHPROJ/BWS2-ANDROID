@@ -176,34 +176,36 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
                                 val listCall = APIClient.getClient().getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
-                                listCall.enqueue(object : Callback<CancelPlanModel?> {
-                                    override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
-                                        try {
-                                            val model = response.body()
-                                            BWSApplication.showToast(model!!.responseMessage, activity)
-                                            dialog.dismiss()
+                                if (listCall != null) {
+                                    listCall.enqueue(object : Callback<CancelPlanModel?> {
+                                        override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
+                                            try {
+                                                val model = response.body()
+                                                BWSApplication.showToast(model!!.responseMessage, activity)
+                                                dialog.dismiss()
 
-//                                            Properties p = new Properties();
-//                                            p.putValue("userId", userID);
-//                                            p.putValue("cancelId", cancelId);
-//                                            p.putValue("cancelReason", CancelReason);
-//                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+                                //                                            Properties p = new Properties();
+                                //                                            p.putValue("userId", userID);
+                                //                                            p.putValue("cancelId", cancelId);
+                                //                                            p.putValue("cancelReason", CancelReason);
+                                //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
 
-                                            if (BWSApplication.player != null) {
-                                                if (BWSApplication.player.playWhenReady) {
-                                                    BWSApplication.player.playWhenReady = false
-                                                    audioPause = true
+                                                if (BWSApplication.player != null) {
+                                                    if (BWSApplication.player.playWhenReady) {
+                                                        BWSApplication.player.playWhenReady = false
+                                                        audioPause = true
+                                                    }
                                                 }
+                                                finish()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
                                             }
-                                            finish()
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
                                         }
-                                    }
 
-                                    override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
-                                    }
-                                })
+                                        override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
+                                        }
+                                    })
+                                }
                             } else {
                                 BWSApplication.showToast(getString(R.string.no_server_found), activity)
                             }

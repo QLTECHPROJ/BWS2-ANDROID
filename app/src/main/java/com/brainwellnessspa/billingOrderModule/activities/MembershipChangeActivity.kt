@@ -111,7 +111,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APIClient.getClient().getPlanListBilling(userId)
-            listCall.enqueue(object : Callback<PlanListBillingModel?> {
+            listCall?.enqueue(object : Callback<PlanListBillingModel?> {
                 override fun onResponse(call: Call<PlanListBillingModel?>, response: Response<PlanListBillingModel?>) {
                     try {
                         if (response.isSuccessful) {

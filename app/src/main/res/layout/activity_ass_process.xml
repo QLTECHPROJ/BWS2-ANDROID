@@ -17,8 +17,8 @@
             <ImageView
                 android:id="@+id/ivDoAss"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_260sdp"
-                android:layout_marginTop="@dimen/_31sdp"
+                android:layout_height="@dimen/_240sdp"
+                android:layout_marginTop="@dimen/_28sdp"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_do_ass_icon" />
 
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ivDoAss"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:text="@string/great"
@@ -41,14 +41,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvTitle"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
+                android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_10sdp"
                 android:text="@string/ass_quotes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
-                tools:ignore="SpUsage" />
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
 
             <Button
                 android:id="@+id/btnDoAss"
