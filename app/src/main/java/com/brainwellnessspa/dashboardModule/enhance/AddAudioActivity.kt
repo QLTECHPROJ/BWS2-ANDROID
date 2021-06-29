@@ -122,6 +122,8 @@ class AddAudioActivity : AppCompatActivity() {
         searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
         val closeButton = binding.searchView.findViewById<ImageView>(R.id.search_close_btn)
         binding.searchView.clearFocus()
+
+        /* close button click of search view */
         closeButton.setOnClickListener {
             binding.searchView.clearFocus()
             searchEditText.setText("")
@@ -187,7 +189,7 @@ class AddAudioActivity : AppCompatActivity() {
         finish()
     }
 
-    /* main Api function for serch audio */
+    /* main Api function for search audio */
     private fun prepareSearchData(search: String, searchEditText: EditText?) {
         val gson = Gson()
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -218,6 +220,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvFound.text = "Please use another term and try searching again"
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
+                                    /* set adapter data to search screen */
                                     binding.llError.visibility = View.GONE
                                     binding.rvSerachList.visibility = View.VISIBLE
                                     serachListAdpater = SerachListAdpater(listModel.responseData, activity, binding.rvSerachList, coUserId)
@@ -244,6 +247,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
     }
 
+    /* suggested serch audio api function */
     private fun prepareSuggestedData() {
         val gson = Gson()
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -292,6 +296,8 @@ class AddAudioActivity : AppCompatActivity() {
                             p!!.putValue("audios", gson.toJson(section))
                             BWSApplication.addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen)
                             LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+
+                            /* view all button click for view all audios */
                             binding.tvSAViewAll.setOnClickListener {
                                 notificationStatus = true
                                 val i = Intent(ctx, ViewSuggestedActivity::class.java)
@@ -366,6 +372,7 @@ class AddAudioActivity : AppCompatActivity() {
         callback()
     }
 
+    /* add audio to play list function and audio add to player*/
     private fun callAddSearchAudio(AudioID: String?, s: String, FromPlaylistId: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -427,6 +434,7 @@ class AddAudioActivity : AppCompatActivity() {
                                             break
                                         }
                                     }
+                                    /* add audio to player */
                                     val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                                     val editor = sharedd.edit()
                                     val gson = Gson()
@@ -441,6 +449,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
                                     editor.apply()
                                     if (mainPlayModelList[playerPosition].audioFile != "") {
+                                        /* add audio to payer list */
                                         val downloadAudioDetailsList: List<String> = ArrayList()
                                         val ge = GlobalInitExoPlayer()
                                         ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx)
@@ -467,7 +476,7 @@ class AddAudioActivity : AppCompatActivity() {
             BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
         }
     }
-
+    /* Search Audio data set in to adapter */
     inner class SerachListAdpater(private val modelList: List<SearchBothModel.ResponseData>?, var ctx: Context?, var rvSerachList: RecyclerView, var UserID: String?) : RecyclerView.Adapter<SerachListAdpater.MyViewHolder>() {
         var songId: String? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -527,6 +536,7 @@ class AddAudioActivity : AppCompatActivity() {
 //                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
                     callMainTransFrag(position)
                 }
+
                 holder.binding.llRemoveAudio.setOnClickListener {
 //                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
 //                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
@@ -734,6 +744,7 @@ class AddAudioActivity : AppCompatActivity() {
         inner class MyViewHolder(var binding: GlobalSearchLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
+    /* Suggested Audio data set in to adapter */
     inner class SuggestedAdpater(private val listModel: List<SuggestedModel.ResponseData?>?, var ctx: Context?) : RecyclerView.Adapter<SuggestedAdpater.MyViewHolder>() {
         var songId: String? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -962,6 +973,7 @@ class AddAudioActivity : AppCompatActivity() {
         inner class MyViewHolder(var binding: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
+    /* Suggested playlist data set in to adapter */
     inner class SuggestedPlayListsAdpater(private val PlaylistModel: List<SearchPlaylistModel.ResponseData>) : RecyclerView.Adapter<SuggestedPlayListsAdpater.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: DownloadsLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.downloads_layout, parent, false)
@@ -1064,6 +1076,7 @@ class AddAudioActivity : AppCompatActivity() {
         inner class MyViewHolder(var binding: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
+    /* app life cycle class */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
         override fun onActivityStarted(activity: Activity) {

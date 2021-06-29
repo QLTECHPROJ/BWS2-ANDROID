@@ -39,6 +39,7 @@ import com.brainwellnessspa.databinding.FragmentProfileBinding
 import com.brainwellnessspa.downloadModule.activities.DownloadsActivity
 import com.brainwellnessspa.faqModule.activities.FaqActivity
 import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.reminderModule.activities.ReminderListsActivity
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity
@@ -233,7 +234,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (BWSApplication.isNetworkConnected(activity)) {
-                val i = Intent(activity, UpgradePlanActivity::class.java)
+                val i = Intent(activity, EnhanceActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
