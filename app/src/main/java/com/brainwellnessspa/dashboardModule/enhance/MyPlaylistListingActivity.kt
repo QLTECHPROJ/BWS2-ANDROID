@@ -367,18 +367,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             }
                         }
                         downloadPlaylistDetails = DownloadPlaylistDetails()
-                        downloadPlaylistDetails.playlistID = listModel.responseData!!.playlistID
-                        downloadPlaylistDetails.playlistName = listModel.responseData!!.playlistName
-                        downloadPlaylistDetails.playlistDesc = listModel.responseData!!.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
-                        downloadPlaylistDetails.playlistMastercat = listModel.responseData!!.playlistMastercat
-                        downloadPlaylistDetails.playlistSubcat = listModel.responseData!!.playlistSubcat
-                        downloadPlaylistDetails.playlistImage = listModel.responseData!!.playlistImage
-                        downloadPlaylistDetails.playlistImageDetails = listModel.responseData!!.playlistImageDetail
-                        downloadPlaylistDetails.totalAudio = listModel.responseData!!.totalAudio
-                        downloadPlaylistDetails.totalDuration = listModel.responseData!!.totalDuration
-                        downloadPlaylistDetails.totalhour = listModel.responseData!!.totalhour
-                        downloadPlaylistDetails.totalminute = listModel.responseData!!.totalminute
-                        downloadPlaylistDetails.created = listModel.responseData!!.created
+                        downloadPlaylistDetails.PlaylistID = listModel.responseData!!.playlistID
+                        downloadPlaylistDetails.PlaylistName = listModel.responseData!!.playlistName
+                        downloadPlaylistDetails.PlaylistDesc = listModel.responseData!!.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
+                        downloadPlaylistDetails.PlaylistMastercat = listModel.responseData!!.playlistMastercat
+                        downloadPlaylistDetails.PlaylistSubcat = listModel.responseData!!.playlistSubcat
+                        downloadPlaylistDetails.PlaylistImage = listModel.responseData!!.playlistImage
+                        downloadPlaylistDetails.PlaylistImageDetails = listModel.responseData!!.playlistImageDetail
+                        downloadPlaylistDetails.TotalAudio = listModel.responseData!!.totalAudio
+                        downloadPlaylistDetails.TotalDuration = listModel.responseData!!.totalDuration
+                        downloadPlaylistDetails.Totalhour = listModel.responseData!!.totalhour
+                        downloadPlaylistDetails.Totalminute = listModel.responseData!!.totalminute
+                        downloadPlaylistDetails.Created = listModel.responseData!!.created
 
                         setData(listModel.responseData)
                     }
@@ -1281,10 +1281,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
 
         private fun getPlaylistMedia(playlistId: String, ctx: Context, DB: AudioDatabase, coUserId: String?) {
-            DB.taskDao().getAllAudioByPlaylist1(playlistId, coUserId).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+            DB.taskDao().getAllAudioByPlaylist1(playlistId, coUserId).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
                 deleteDownloadFile(ctx, playlistId, DB, coUserId)
-                if (audioList.isNotEmpty()) {
-                    getSingleMedia(audioList[0].audioFile, ctx, playlistId, audioList, 0, DB, coUserId)
+                if (audioList!!.isNotEmpty()) {
+                    getSingleMedia(audioList[0]!!.AudioFile, ctx, playlistId, audioList as List<DownloadAudioDetails>, 0, DB, coUserId)
                 }
             })
         }
@@ -1302,16 +1302,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
         }
 
-        fun getSingleMedia(AudioFile: String?, ctx: Context, playlistID: String?, audioList: List<DownloadAudioDetails>, i: Int, DB: AudioDatabase, CoUserID: String?) {
-            DB.taskDao().getLastIdByuId1(AudioFile, coUserId).observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails> ->
+        fun getSingleMedia(AudioFile: String?, ctx: Context, playlistID: String?, audioList: List<DownloadAudioDetails?>?, i: Int, DB: AudioDatabase, CoUserID: String?) {
+            DB.taskDao().getLastIdByuId1(AudioFile, coUserId).observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails?>? ->
                 try {
-                    if (audioList1.isNotEmpty()) {
+                    if (audioList1!!.isNotEmpty()) {
                         if (audioList1.size == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, audioList1[0].name)
+                            FileUtils.deleteDownloadedFile(ctx, audioList1[0]!!.Name)
                         }
                     }
-                    if (i < audioList.size - 1) {
-                        getSingleMedia(audioList[i + 1].audioFile, ctx.applicationContext, playlistID, audioList, i + 1, DB, CoUserID)
+                    if (i < audioList!!.size - 1) {
+                        getSingleMedia(audioList[i + 1]!!.AudioFile, ctx.applicationContext, playlistID, audioList, i + 1, DB, CoUserID)
                         Log.e("DownloadMedia Call", (i + 1).toString())
                     }
                 } catch (e: java.lang.Exception) {
@@ -1406,14 +1406,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                     val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
-                    mainPlayModel.id = arrayList.id
-                    mainPlayModel.name = arrayList.name
-                    mainPlayModel.audioFile = arrayList.audioFile
-                    mainPlayModel.audioDirection = arrayList.audioDirection
-                    mainPlayModel.audiomastercat = arrayList.audiomastercat
-                    mainPlayModel.audioSubCategory = arrayList.audioSubCategory
-                    mainPlayModel.imageFile = arrayList.imageFile
-                    mainPlayModel.audioDuration = arrayList.audioDuration
+                    mainPlayModel.id = arrayList.id!!
+                    mainPlayModel.name = arrayList.name!!
+                    mainPlayModel.audioFile = arrayList.audioFile!!
+                    mainPlayModel.audioDirection = arrayList.audioDirection!!
+                    mainPlayModel.audiomastercat = arrayList.audiomastercat!!
+                    mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
+                    mainPlayModel.imageFile = arrayList.imageFile!!
+                    mainPlayModel.audioDuration = arrayList.audioDuration!!
                     var audioc = true
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -1474,14 +1474,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                 val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                 val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
-                mainPlayModel.id = arrayList.id
-                mainPlayModel.name = arrayList.name
-                mainPlayModel.audioFile = arrayList.audioFile
-                mainPlayModel.audioDirection = arrayList.audioDirection
-                mainPlayModel.audiomastercat = arrayList.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
-                mainPlayModel.imageFile = arrayList.imageFile
-                mainPlayModel.audioDuration = arrayList.audioDuration
+                mainPlayModel.id = arrayList.id!!
+                mainPlayModel.name = arrayList.name!!
+                mainPlayModel.audioFile = arrayList.audioFile!!
+                mainPlayModel.audioDirection = arrayList.audioDirection!!
+                mainPlayModel.audiomastercat = arrayList.audiomastercat!!
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
+                mainPlayModel.imageFile = arrayList.imageFile!!
+                mainPlayModel.audioDuration = arrayList.audioDuration!!
                 var audioc = true
                 if (isDisclaimer == 1) {
                     if (player != null) {
@@ -1527,14 +1527,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         if (MyDownloads.equals("1", ignoreCase = true)) {
             for (i in listModel.indices) {
                 val mainPlayModel = DownloadAudioDetails()
-                mainPlayModel.id = listModel[i].id
-                mainPlayModel.name = listModel[i].name
-                mainPlayModel.audioFile = listModel[i].audioFile
-                mainPlayModel.audioDirection = listModel[i].audioDirection
-                mainPlayModel.audiomastercat = listModel[i].audiomastercat
-                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
-                mainPlayModel.imageFile = listModel[i].imageFile
-                mainPlayModel.audioDuration = listModel[i].audioDuration
+                mainPlayModel.ID = listModel[i].id
+                mainPlayModel.Name = listModel[i].name
+                mainPlayModel.AudioFile = listModel[i].audioFile
+                mainPlayModel.AudioDirection = listModel[i].audioDirection
+                mainPlayModel.Audiomastercat = listModel[i].audiomastercat
+                mainPlayModel.AudioSubCategory = listModel[i].audioSubCategory
+                mainPlayModel.ImageFile = listModel[i].imageFile
+                mainPlayModel.AudioDuration = listModel[i].audioDuration
                 downloadAudioDetails.add(mainPlayModel)
             }
             json = gson.toJson(downloadAudioDetails)
@@ -1571,16 +1571,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     enableDisableDownload(false, "gray")
                     removeobserver(DB)
                 } /*else if (download.equals("1", ignoreCase = true) *//* New.equalsIgnoreCase("1") ||*//*) {
-                                enableDisableDownload(false, "orange")
-                                getMediaByPer(PlaylistID!!, SongListSize)
-                                removeobserver()
-                            } */
+                                        enableDisableDownload(false, "orange")
+                                        getMediaByPer(PlaylistID!!, SongListSize)
+                                        removeobserver()
+                                    } */
                 else -> {
                     enableDisableDownload(true, "white")
                     removeobserver(DB)
                 }
             }
-        }) //                })
+        } as (List<DownloadPlaylistDetails?>) -> Unit) //                })
         //        } catch (e: java.lang.Exception) {
         //            e.printStackTrace()
         //        }
@@ -1588,7 +1588,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun getMediaByPer(PlaylistId: String, totalAudio: Int, ctx: Context, DB: AudioDatabase) { //        try {
-        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId, coUserId).observe(ctx as (LifecycleOwner), { countx: List<DownloadPlaylistDetails?> ->
+        DB.taskDao().getCountDownloadProgress1("Complete", PlaylistId, coUserId).observe(ctx as (LifecycleOwner), { countx: List<DownloadAudioDetails?> ->
             count = countx.size //                if (downloadPlaylistDetailsList.size() != 0) {
             if (count <= totalAudio) {
                 if (count == totalAudio) {
@@ -1645,7 +1645,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             downloadPlaylistDetailsList = arrayListOf()
             downloadPlaylistDetailsList = audioList as ArrayList<DownloadPlaylistDetails>
             getMedia(ctx, DB)
-        })
+        } as (List<DownloadPlaylistDetails?>) -> Unit)
     }
 
     private fun callObserveMethodGetAllMedia(ctx: Context, DB: AudioDatabase) {
@@ -1656,8 +1656,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     onlySingleDownloaded = ArrayList()
                     if (audioList.isNotEmpty()) {
                         for (i in audioList) {
-                            if (i.playlistId.equals("", ignoreCase = true)) {
-                                onlySingleDownloaded.add(i.name)
+                            if (i.PlaylistId.equals("", ignoreCase = true)) {
+                                onlySingleDownloaded.add(i.Name!!)
                             }
                         }
                     } else {
@@ -1667,7 +1667,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     onlySingleDownloaded = ArrayList()
                     downloadAudioDetailsList = ArrayList()
                 }
-            })
+            } as (List<DownloadAudioDetails?>) -> Unit)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -1710,7 +1710,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     } else {
                         for (x in 0 until playlistSongs2.size) if (playlistSongs2.size != 0) {
                             if (x < playlistSongs2.size) {
-                                if (playlistSongs2[x].audioFile.equals(y.audioFile, ignoreCase = true)) {
+                                if (playlistSongs2[x].audioFile.equals(y.AudioFile, ignoreCase = true)) {
                                     playlistSongs2.removeAt(x)
                                 }
                             }
@@ -1769,7 +1769,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             var downloadOrNot = false
             if (downloadAudioDetailsListGlobal.size != 0) {
                 for (i in downloadAudioDetailsListGlobal.indices) {
-                    if (downloadAudioDetailsListGlobal[i].audioFile.equals(audioFile, ignoreCase = true)) {
+                    if (downloadAudioDetailsListGlobal[i].AudioFile.equals(audioFile, ignoreCase = true)) {
                         downloadOrNot = false
                         break
                     } else if (i == downloadAudioDetailsListGlobal.size - 1) {
@@ -1846,14 +1846,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             if (audioPlayerFlag.equals("DownloadListAudio", ignoreCase = true)) {
                 val mainPlayModel = DownloadAudioDetails()
-                mainPlayModel.id = playlistSongs[position].id
-                mainPlayModel.name = playlistSongs[position].name
-                mainPlayModel.audioFile = playlistSongs[position].audioFile
-                mainPlayModel.audioDirection = playlistSongs[position].audioDirection
-                mainPlayModel.audiomastercat = playlistSongs[position].audiomastercat
-                mainPlayModel.audioSubCategory = playlistSongs[position].audioSubCategory
-                mainPlayModel.imageFile = playlistSongs[position].imageFile
-                mainPlayModel.audioDuration = playlistSongs[position].audioDuration
+                mainPlayModel.ID = playlistSongs[position].id
+                mainPlayModel.Name = playlistSongs[position].name
+                mainPlayModel.AudioFile = playlistSongs[position].audioFile
+                mainPlayModel.AudioDirection = playlistSongs[position].audioDirection
+                mainPlayModel.Audiomastercat = playlistSongs[position].audiomastercat
+                mainPlayModel.AudioSubCategory = playlistSongs[position].audioSubCategory
+                mainPlayModel.ImageFile = playlistSongs[position].imageFile
+                mainPlayModel.AudioDuration = playlistSongs[position].audioDuration
                 arrayList.add(mainPlayModel)
                 val mainPlayModel1 = MainPlayModel()
                 mainPlayModel1.id = playlistSongs[position].id.toString()
@@ -1911,31 +1911,31 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
            p.putValue("sound", hundredVolume.toString())*/ //        BWSApplication.addToSegment("Playlist Download Started", p, CONSTANTS.track)
         for (i in playlistSongs) {
             val downloadAudioDetails = DownloadAudioDetails()
-            downloadAudioDetails.userId = coUserId
-            downloadAudioDetails.id = i.id
-            downloadAudioDetails.name = i.name
-            downloadAudioDetails.audioFile = i.audioFile
-            downloadAudioDetails.audioDirection = i.audioDirection
-            downloadAudioDetails.audiomastercat = i.audiomastercat
-            downloadAudioDetails.audioSubCategory = i.audioSubCategory
-            downloadAudioDetails.imageFile = i.imageFile
-            downloadAudioDetails.playlistId = i.playlistID
-            downloadAudioDetails.audioDuration = i.audioDuration
-            downloadAudioDetails.isSingle = "0"
+            downloadAudioDetails.UserID = coUserId!!
+            downloadAudioDetails.ID = i.id
+            downloadAudioDetails.Name = i.name
+            downloadAudioDetails.AudioFile = i.audioFile
+            downloadAudioDetails.AudioDirection = i.audioDirection
+            downloadAudioDetails.Audiomastercat = i.audiomastercat
+            downloadAudioDetails.AudioSubCategory = i.audioSubCategory
+            downloadAudioDetails.ImageFile = i.imageFile
+            downloadAudioDetails.PlaylistId = i.playlistID
+            downloadAudioDetails.AudioDuration = i.audioDuration
+            downloadAudioDetails.IsSingle = "0"
             if (downloadAudioDetailsListGlobal.size != 0) {
                 for (y in downloadAudioDetailsListGlobal) {
-                    if (i.audioFile.equals(y.audioFile, ignoreCase = true)) {
-                        downloadAudioDetails.isDownload = "Complete"
-                        downloadAudioDetails.downloadProgress = 100
+                    if (i.audioFile.equals(y.AudioFile, ignoreCase = true)) {
+                        downloadAudioDetails.IsDownload = "Complete"
+                        downloadAudioDetails.DownloadProgress = 100
                         break
                     } else {
-                        downloadAudioDetails.isDownload = "pending"
-                        downloadAudioDetails.downloadProgress = 0
+                        downloadAudioDetails.IsDownload = "pending"
+                        downloadAudioDetails.DownloadProgress = 0
                     }
                 }
             } else {
-                downloadAudioDetails.isDownload = "pending"
-                downloadAudioDetails.downloadProgress = 0
+                downloadAudioDetails.IsDownload = "pending"
+                downloadAudioDetails.DownloadProgress = 0
             } //            try {
             AudioDatabase.databaseWriteExecutor.execute {
                 DB.taskDao().insertMedia(downloadAudioDetails)
@@ -1945,7 +1945,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             //                println(e.message)
             //            }
         } //        try {
-        downloadPlaylistDetails.userId = coUserId
+        downloadPlaylistDetails.UserID = coUserId!!
         AudioDatabase.databaseWriteExecutor.execute {
             DB.taskDao().insertPlaylist(downloadPlaylistDetails)
         }
@@ -1959,23 +1959,23 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun saveMedia(playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, i: Int, llDownload: RelativeLayout, ivDownloads: ImageView, progress: Int, ctx: Context, DB: AudioDatabase) {
         val downloadAudioDetails = DownloadAudioDetails()
-        downloadAudioDetails.userId = coUserId
-        downloadAudioDetails.id = playlistSongs[i].id
-        downloadAudioDetails.name = playlistSongs[i].name
-        downloadAudioDetails.audioFile = playlistSongs[i].audioFile
-        downloadAudioDetails.audioDirection = playlistSongs[i].audioDirection
-        downloadAudioDetails.audiomastercat = playlistSongs[i].audiomastercat
-        downloadAudioDetails.audioSubCategory = playlistSongs[i].audioSubCategory
-        downloadAudioDetails.imageFile = playlistSongs[i].imageFile
-        downloadAudioDetails.audioDuration = playlistSongs[i].audioDuration
-        downloadAudioDetails.isSingle = "1"
-        downloadAudioDetails.playlistId = ""
+        downloadAudioDetails.UserID = coUserId!!
+        downloadAudioDetails.ID = playlistSongs[i].id
+        downloadAudioDetails.Name = playlistSongs[i].name
+        downloadAudioDetails.AudioFile = playlistSongs[i].audioFile
+        downloadAudioDetails.AudioDirection = playlistSongs[i].audioDirection
+        downloadAudioDetails.Audiomastercat = playlistSongs[i].audiomastercat
+        downloadAudioDetails.AudioSubCategory = playlistSongs[i].audioSubCategory
+        downloadAudioDetails.ImageFile = playlistSongs[i].imageFile
+        downloadAudioDetails.AudioDuration = playlistSongs[i].audioDuration
+        downloadAudioDetails.IsSingle = "1"
+        downloadAudioDetails.PlaylistId = ""
         if (progress == 0) {
-            downloadAudioDetails.isDownload = "pending"
+            downloadAudioDetails.IsDownload = "pending"
         } else {
-            downloadAudioDetails.isDownload = "Complete"
+            downloadAudioDetails.IsDownload = "Complete"
         }
-        downloadAudioDetails.downloadProgress = progress
+        downloadAudioDetails.DownloadProgress = progress
         try {
             AudioDatabase.databaseWriteExecutor.execute {
                 DB.taskDao().insertMedia(downloadAudioDetails)
@@ -2016,34 +2016,34 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun getMedia(ctx: Context, DB: AudioDatabase) {
         try { //        playlistWiseAudioDetails = new ArrayList<>();
-            DB.taskDao().getAllAudioByPlaylist1(playlistId, coUserId).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+            DB.taskDao().getAllAudioByPlaylist1(playlistId, coUserId).observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
                 if (myDownloads.equals("1", ignoreCase = true)) {
                     if (downloadPlaylistDetailsList.size != 0) {
                         val details = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
                         val listModel = PlaylistDetailsModel.ResponseData()
-                        listModel.playlistID = downloadPlaylistDetailsList[0].playlistID
-                        listModel.playlistName = downloadPlaylistDetailsList[0].playlistName
-                        listModel.playlistDesc = downloadPlaylistDetailsList[0].playlistDesc
-                        listModel.playlistMastercat = downloadPlaylistDetailsList[0].playlistMastercat
-                        listModel.playlistSubcat = downloadPlaylistDetailsList[0].playlistSubcat
-                        listModel.playlistImage = downloadPlaylistDetailsList[0].playlistImage
-                        listModel.playlistImageDetail = downloadPlaylistDetailsList[0].playlistImageDetails
-                        listModel.totalAudio = downloadPlaylistDetailsList[0].totalAudio
-                        listModel.totalDuration = downloadPlaylistDetailsList[0].totalDuration
-                        listModel.totalhour = downloadPlaylistDetailsList[0].totalhour
-                        listModel.totalminute = downloadPlaylistDetailsList[0].totalminute
-                        listModel.created = downloadPlaylistDetailsList[0].created //                        listModel.isReminder = downloadPlaylistDetailsList[0]!!.isReminder
-                        if (audioList.isNotEmpty()) {
+                        listModel.playlistID = downloadPlaylistDetailsList[0].PlaylistID!!
+                        listModel.playlistName = downloadPlaylistDetailsList[0].PlaylistName!!
+                        listModel.playlistDesc = downloadPlaylistDetailsList[0].PlaylistDesc!!
+                        listModel.playlistMastercat = downloadPlaylistDetailsList[0].PlaylistMastercat!!
+                        listModel.playlistSubcat = downloadPlaylistDetailsList[0].PlaylistSubcat!!
+                        listModel.playlistImage = downloadPlaylistDetailsList[0].PlaylistImage!!
+                        listModel.playlistImageDetail = downloadPlaylistDetailsList[0].PlaylistImageDetails!!
+                        listModel.totalAudio = downloadPlaylistDetailsList[0].TotalAudio!!
+                        listModel.totalDuration = downloadPlaylistDetailsList[0].TotalDuration!!
+                        listModel.totalhour = downloadPlaylistDetailsList[0].Totalhour!!
+                        listModel.totalminute = downloadPlaylistDetailsList[0].Totalminute!!
+                        listModel.created = downloadPlaylistDetailsList[0].Created!! //                        listModel.isReminder = downloadPlaylistDetailsList[0]!!.isReminder
+                        if (audioList!!.isNotEmpty()) {
                             for (i in audioList.indices) {
                                 val detail = PlaylistDetailsModel.ResponseData.PlaylistSong()
-                                detail.id = audioList[i].id
-                                detail.name = audioList[i].name
-                                detail.audioFile = audioList[i].audioFile
-                                detail.audioDirection = audioList[i].audioDirection
-                                detail.audiomastercat = audioList[i].audiomastercat
-                                detail.audioSubCategory = audioList[i].audioSubCategory
-                                detail.imageFile = audioList[i].imageFile
-                                detail.audioDuration = audioList[i].audioDuration
+                                detail.id = audioList[i]!!.ID!!
+                                detail.name = audioList[i]!!.Name!!
+                                detail.audioFile = audioList[i]!!.AudioFile!!
+                                detail.audioDirection = audioList[i]!!.AudioDirection!!
+                                detail.audiomastercat = audioList[i]!!.Audiomastercat!!
+                                detail.audioSubCategory = audioList[i]!!.AudioSubCategory!!
+                                detail.imageFile = audioList[i]!!.ImageFile!!
+                                detail.audioDuration = audioList[i]!!.AudioDuration!!
                                 details.add(detail)
                             }
                             listModel.playlistSongs = details
@@ -2139,14 +2139,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                 val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
                 val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
-                mainPlayModel.id = arrayList.id
-                mainPlayModel.name = arrayList.name
-                mainPlayModel.audioFile = arrayList.audioFile
-                mainPlayModel.audioDirection = arrayList.audioDirection
-                mainPlayModel.audiomastercat = arrayList.audiomastercat
-                mainPlayModel.audioSubCategory = arrayList.audioSubCategory
-                mainPlayModel.imageFile = arrayList.imageFile
-                mainPlayModel.audioDuration = arrayList.audioDuration
+                mainPlayModel.id = arrayList.id!!
+                mainPlayModel.name = arrayList.name!!
+                mainPlayModel.audioFile = arrayList.audioFile!!
+                mainPlayModel.audioDirection = arrayList.audioDirection!!
+                mainPlayModel.audiomastercat = arrayList.audiomastercat!!
+                mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
+                mainPlayModel.imageFile = arrayList.imageFile!!
+                mainPlayModel.audioDuration = arrayList.audioDuration!!
                 var audioc = true
                 var view = ""
                 if (isDisclaimer == 1) {

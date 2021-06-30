@@ -256,14 +256,14 @@ class ManageFragment : Fragment() {
             if (downloadAudioDetails.isNotEmpty()) {
                 for (i in downloadAudioDetails.indices) {
                     val detail = HomeDataModel.ResponseData.Audio.Detail()
-                    detail.id = downloadAudioDetails[i].id
-                    detail.name = downloadAudioDetails[i].name
-                    detail.audioFile = downloadAudioDetails[i].audioFile
-                    detail.audioDirection = downloadAudioDetails[i].audioDirection
-                    detail.audiomastercat = downloadAudioDetails[i].audiomastercat
-                    detail.audioSubCategory = downloadAudioDetails[i].audioSubCategory
-                    detail.imageFile = downloadAudioDetails[i].imageFile
-                    detail.audioDuration = downloadAudioDetails[i].audioDuration
+                    detail.id = downloadAudioDetails[i].ID
+                    detail.name = downloadAudioDetails[i].Name
+                    detail.audioFile = downloadAudioDetails[i].AudioFile
+                    detail.audioDirection = downloadAudioDetails[i].AudioDirection
+                    detail.audiomastercat = downloadAudioDetails[i].Audiomastercat
+                    detail.audioSubCategory = downloadAudioDetails[i].AudioSubCategory
+                    detail.imageFile = downloadAudioDetails[i].ImageFile
+                    detail.audioDuration = downloadAudioDetails[i].AudioDuration
                     details.add(detail)
                 }
                 for (i in listModel.indices) {
@@ -288,8 +288,6 @@ class ManageFragment : Fragment() {
     fun callMainPlayer(position: Int, views: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity, DB: AudioDatabase) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
@@ -377,7 +375,7 @@ class ManageFragment : Fragment() {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String> ->
+        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
         })
@@ -388,7 +386,7 @@ class ManageFragment : Fragment() {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String> ->
+        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
             var pos = 0
@@ -525,14 +523,14 @@ class ManageFragment : Fragment() {
             val downloadAudioDetails = ArrayList<DownloadAudioDetails>()
             for (i in listModel.indices) {
                 val mainPlayModel = DownloadAudioDetails()
-                mainPlayModel.id = listModel[i].id
-                mainPlayModel.name = listModel[i].name
-                mainPlayModel.audioFile = listModel[i].audioFile
-                mainPlayModel.audioDirection = listModel[i].audioDirection
-                mainPlayModel.audiomastercat = listModel[i].audiomastercat
-                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
-                mainPlayModel.imageFile = listModel[i].imageFile
-                mainPlayModel.audioDuration = listModel[i].audioDuration
+                mainPlayModel.ID = listModel[i].id!!
+                mainPlayModel.Name = listModel[i].name!!
+                mainPlayModel.AudioFile = listModel[i].audioFile!!
+                mainPlayModel.AudioDirection = listModel[i].audioDirection!!
+                mainPlayModel.Audiomastercat = listModel[i].audiomastercat!!
+                mainPlayModel.AudioSubCategory = listModel[i].audioSubCategory!!
+                mainPlayModel.ImageFile = listModel[i].imageFile!!
+                mainPlayModel.AudioDuration = listModel[i].audioDuration!!
                 downloadAudioDetails.add(mainPlayModel)
             }
             json = gson.toJson(downloadAudioDetails)
@@ -723,7 +721,6 @@ class ManageFragment : Fragment() {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         if (myDownloads.equals("1", ignoreCase = true)) {
             if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(homelistModel.responseData!!.suggestedPlaylist!!.playlistID, ignoreCase = true)) {
                 if (player != null) {
@@ -772,7 +769,7 @@ class ManageFragment : Fragment() {
     }
 
     private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String> ->
+        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
             var pos = 0
@@ -1047,14 +1044,14 @@ class ManageFragment : Fragment() {
         val downloadAudioDetails = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
         for (i in listModel.indices) {
             val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
-            mainPlayModel.id = listModel[i].id
-            mainPlayModel.name = listModel[i].name
-            mainPlayModel.audioFile = listModel[i].audioFile
-            mainPlayModel.audioDirection = listModel[i].audioDirection
-            mainPlayModel.audiomastercat = listModel[i].audiomastercat
-            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
-            mainPlayModel.imageFile = listModel[i].imageFile
-            mainPlayModel.audioDuration = listModel[i].audioDuration
+            mainPlayModel.id = listModel[i].id!!
+            mainPlayModel.name = listModel[i].name!!
+            mainPlayModel.audioFile = listModel[i].audioFile!!
+            mainPlayModel.audioDirection = listModel[i].audioDirection!!
+            mainPlayModel.audiomastercat = listModel[i].audiomastercat!!
+            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory!!
+            mainPlayModel.imageFile = listModel[i].imageFile!!
+            mainPlayModel.audioDuration = listModel[i].audioDuration!!
             downloadAudioDetails.add(mainPlayModel)
         }
         val json = gson.toJson(downloadAudioDetails)

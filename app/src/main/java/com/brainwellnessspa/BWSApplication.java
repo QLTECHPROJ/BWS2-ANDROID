@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -115,8 +114,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
@@ -149,7 +146,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 
 /* TODO BWS App Common function */
-public class BWSApplication extends Application {
+public class BWSApplication extends Application{
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -1283,7 +1280,7 @@ public class BWSApplication extends Application {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        downloadPlaylistDetails.setUserId(CoUserID);
+        downloadPlaylistDetails.setUserID(CoUserID);
         try {
             AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().insertPlaylist(downloadPlaylistDetails));
         } catch (Exception | OutOfMemoryError e) {
@@ -1298,7 +1295,7 @@ public class BWSApplication extends Application {
 
     private static void saveAllMedia(List<PlaylistDetailsModel.ResponseData.PlaylistSong> playlistSongs, String PlaylistID, String CoUserId, Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
         DB = getAudioDataBase(ctx);
-        downloadPlaylistDetails.setUserId(CoUserId);
+        downloadPlaylistDetails.setUserID(CoUserId);
         Properties p = new Properties();
         p.putValue("userId", CoUserId);
         p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
@@ -1325,7 +1322,7 @@ public class BWSApplication extends Application {
         addToSegment("Playlist Download Started", p, CONSTANTS.track);
         for (int i = 0; i < playlistSongs.size(); i++) {
             DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-            downloadAudioDetails.setUserId(CoUserId);
+            downloadAudioDetails.setUserID(CoUserId);
             downloadAudioDetails.setID(playlistSongs.get(i).getId());
             downloadAudioDetails.setName(playlistSongs.get(i).getName());
             downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
@@ -1621,7 +1618,7 @@ public class BWSApplication extends Application {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        downloadAudioDetails.setUserId(CoUserID);
+        downloadAudioDetails.setUserID(CoUserID);
         if (comeFrom.equalsIgnoreCase("downloadList")) {
             downloadAudioDetails.setID(mDataDownload.get(i).getID());
             downloadAudioDetails.setName(mDataDownload.get(i).getName());

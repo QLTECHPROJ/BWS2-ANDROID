@@ -900,14 +900,14 @@ class HomeFragment : Fragment() {
         val downloadAudioDetails = ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>()
         for (i in listModel.indices) {
             val mainPlayModel = PlaylistDetailsModel.ResponseData.PlaylistSong()
-            mainPlayModel.id = listModel[i].id
-            mainPlayModel.name = listModel[i].name
-            mainPlayModel.audioFile = listModel[i].audioFile
-            mainPlayModel.audioDirection = listModel[i].audioDirection
-            mainPlayModel.audiomastercat = listModel[i].audiomastercat
-            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory
-            mainPlayModel.imageFile = listModel[i].imageFile
-            mainPlayModel.audioDuration = listModel[i].audioDuration
+            mainPlayModel.id = listModel[i].id!!
+            mainPlayModel.name = listModel[i].name!!
+            mainPlayModel.audioFile = listModel[i].audioFile!!
+            mainPlayModel.audioDirection = listModel[i].audioDirection!!
+            mainPlayModel.audiomastercat = listModel[i].audiomastercat!!
+            mainPlayModel.audioSubCategory = listModel[i].audioSubCategory!!
+            mainPlayModel.imageFile = listModel[i].imageFile!!
+            mainPlayModel.audioDuration = listModel[i].audioDuration!!
             downloadAudioDetails.add(mainPlayModel)
         }
         val json = gson.toJson(downloadAudioDetails)

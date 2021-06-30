@@ -154,7 +154,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
         SLEEPTIME = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
 
         ctx = DownloadPlaylistActivity.this;

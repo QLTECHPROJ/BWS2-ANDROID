@@ -520,32 +520,32 @@ class AptAudioFragment : Fragment() {
             val userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
             val coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             val downloadAudioDetails = DownloadAudioDetails()
-            downloadAudioDetails.userId = coUserId
-            downloadAudioDetails.id = audio.iD
-            downloadAudioDetails.name = audio.name
-            downloadAudioDetails.audioFile = audio.audioFile
-            downloadAudioDetails.playlistId = ""
-            downloadAudioDetails.audioDirection = audio.audioDirection
-            downloadAudioDetails.audiomastercat = audio.audiomastercat
-            downloadAudioDetails.audioSubCategory = audio.audioSubCategory
-            downloadAudioDetails.imageFile = audio.imageFile
-            downloadAudioDetails.audioDuration = audio.audioDuration
-            downloadAudioDetails.isSingle = "1"
-            downloadAudioDetails.playlistId = ""
-            downloadAudioDetails.isDownload = "pending"
-            downloadAudioDetails.downloadProgress = 0
+            downloadAudioDetails.UserID = coUserId!!
+            downloadAudioDetails.ID = audio.iD!!
+            downloadAudioDetails.Name = audio.name!!
+            downloadAudioDetails.AudioFile = audio.audioFile!!
+            downloadAudioDetails.PlaylistId = ""
+            downloadAudioDetails.AudioDirection = audio.audioDirection!!
+            downloadAudioDetails.Audiomastercat = audio.audiomastercat!!
+            downloadAudioDetails.AudioSubCategory = audio.audioSubCategory!!
+            downloadAudioDetails.ImageFile = audio.imageFile!!
+            downloadAudioDetails.AudioDuration = audio.audioDuration!!
+            downloadAudioDetails.IsSingle = "1"
+            downloadAudioDetails.PlaylistId = ""
+            downloadAudioDetails.IsDownload = "pending"
+            downloadAudioDetails.DownloadProgress = 0
             try {
                 p!!.putValue("userId", userId)
-                p!!.putValue("audioId", downloadAudioDetails.id)
-                p!!.putValue("audioName", downloadAudioDetails.name)
+                p!!.putValue("audioId", downloadAudioDetails.ID)
+                p!!.putValue("audioName", downloadAudioDetails.Name)
                 p!!.putValue("audioDescription", "")
-                p!!.putValue("directions", downloadAudioDetails.audioDirection)
-                p!!.putValue("masterCategory", downloadAudioDetails.audiomastercat)
-                p!!.putValue("subCategory", downloadAudioDetails.audioSubCategory)
-                p!!.putValue("audioDuration", downloadAudioDetails.audioDuration)
+                p!!.putValue("directions", downloadAudioDetails.AudioDirection)
+                p!!.putValue("masterCategory", downloadAudioDetails.Audiomastercat)
+                p!!.putValue("subCategory", downloadAudioDetails.AudioSubCategory)
+                p!!.putValue("audioDuration", downloadAudioDetails.AudioDuration)
                 p!!.putValue("position", GetCurrentAudioPosition())
                 val name = audio.name
-                if (name?.contains(downloadAudioDetails.name) == true) {
+                if (name?.contains(downloadAudioDetails.Name!!) == true) {
                     p!!.putValue("audioType", "Downloaded")
                 } else {
                     p!!.putValue("audioType", "Streaming")
@@ -577,14 +577,14 @@ class AptAudioFragment : Fragment() {
             if (audioFlag.equals("DownloadListAudio", ignoreCase = true)) {
                 arrayList.add(downloadAudioDetails)
                 val mainPlayModel1 = MainPlayModel()
-                mainPlayModel1.id = downloadAudioDetails.id
-                mainPlayModel1.name = downloadAudioDetails.name
-                mainPlayModel1.audioFile = downloadAudioDetails.audioFile
-                mainPlayModel1.audioDirection = downloadAudioDetails.audioDirection
-                mainPlayModel1.audiomastercat = downloadAudioDetails.audiomastercat
-                mainPlayModel1.audioSubCategory = downloadAudioDetails.audioSubCategory
-                mainPlayModel1.imageFile = downloadAudioDetails.imageFile
-                mainPlayModel1.audioDuration = downloadAudioDetails.audioDuration
+                mainPlayModel1.id = downloadAudioDetails.ID!!
+                mainPlayModel1.name = downloadAudioDetails.Name!!
+                mainPlayModel1.audioFile = downloadAudioDetails.AudioFile!!
+                mainPlayModel1.audioDirection = downloadAudioDetails.AudioDirection!!
+                mainPlayModel1.audiomastercat = downloadAudioDetails.Audiomastercat!!
+                mainPlayModel1.audioSubCategory = downloadAudioDetails.AudioSubCategory!!
+                mainPlayModel1.imageFile = downloadAudioDetails.ImageFile!!
+                mainPlayModel1.audioDuration = downloadAudioDetails.AudioDuration!!
                 arrayList2.add(mainPlayModel1)
                 val sharedd = activity!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedd.edit()
@@ -602,7 +602,7 @@ class AptAudioFragment : Fragment() {
                 if (arrayList2[position].audioFile != "") {
                     val downloadAudioDetailsList: MutableList<String?> = ArrayList()
                     val ge = GlobalInitExoPlayer()
-                    downloadAudioDetailsList.add(downloadAudioDetails.name)
+                    downloadAudioDetailsList.add(downloadAudioDetails.Name)
                     ge.AddAudioToPlayer(size, arrayList2, downloadAudioDetailsList, ctx!!)
                 }
                 callAddTransFrag()

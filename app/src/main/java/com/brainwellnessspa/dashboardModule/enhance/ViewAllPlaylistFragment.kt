@@ -83,28 +83,28 @@ class ViewAllPlaylistFragment : Fragment() {
             val listModelList = ArrayList<ViewAllPlayListModel.ResponseData.Detail>()
             for (i in audioList.indices) {
                 val detail = ViewAllPlayListModel.ResponseData.Detail()
-                detail.totalAudio = audioList[i].totalAudio
-                detail.totalhour = audioList[i].totalhour
-                detail.totalminute = audioList[i].totalminute
-                detail.playlistID = audioList[i].playlistID
-                detail.playlistDesc = audioList[i].playlistDesc
-                detail.playlistMastercat = audioList[i].playlistMastercat
-                detail.playlistSubcat = audioList[i].playlistSubcat
-                detail.playlistName = audioList[i].playlistName
-                detail.playlistImage = audioList[i].playlistImage
+                detail.totalAudio = audioList[i].TotalAudio
+                detail.totalhour = audioList[i].Totalhour
+                detail.totalminute = audioList[i].Totalminute
+                detail.playlistID = audioList[i].PlaylistID
+                detail.playlistDesc = audioList[i].PlaylistDesc
+                detail.playlistMastercat = audioList[i].PlaylistMastercat
+                detail.playlistSubcat = audioList[i].PlaylistSubcat
+                detail.playlistName = audioList[i].PlaylistName
+                detail.playlistImage = audioList[i].PlaylistImage
                 //                detail.setPlaylistImageDetails("");
-                detail.created = audioList[i].created
+                detail.created = audioList[i].Created
                 listModelList.add(detail)
             }
             val p = Properties()
             val section = ArrayList<SegmentPlaylist>()
             for (i in audioList.indices) {
                 val e = SegmentPlaylist()
-                e.playlistId = audioList[i].playlistID
-                e.playlistName = audioList[i].playlistName
-                e.playlistType = audioList[i].created
-                e.playlistDuration = (audioList[i].totalhour + "h " + audioList[i].totalminute + "m")
-                e.audioCount = audioList[i].totalAudio
+                e.playlistId = audioList[i].PlaylistID
+                e.playlistName = audioList[i].PlaylistName
+                e.playlistType = audioList[i].Created
+                e.playlistDuration = (audioList[i].Totalhour + "h " + audioList[i].Totalminute + "m")
+                e.audioCount = audioList[i].TotalAudio
                 section.add(e)
             }
             p.putValue("userId", coUserId)

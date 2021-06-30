@@ -390,15 +390,15 @@ class MyPlayerActivity : AppCompatActivity() {
                 listSize = arrayList.size
                 for (i in 0 until listSize) {
                     mainPlayModel = MainPlayModel()
-                    mainPlayModel.id = arrayList[i]!!.id
-                    mainPlayModel.name = arrayList[i]!!.name
-                    mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                    mainPlayModel.id = arrayList[i]!!.ID!!
+                    mainPlayModel.name = arrayList[i]!!.Name!!
+                    mainPlayModel.audioFile = arrayList[i]!!.AudioFile!!
                     mainPlayModel.playlistID = ""
-                    mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                    mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                    mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                    mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                    mainPlayModel.audioDirection = arrayList[i]!!.AudioDirection!!
+                    mainPlayModel.audiomastercat = arrayList[i]!!.Audiomastercat!!
+                    mainPlayModel.audioSubCategory = arrayList[i]!!.AudioSubCategory!!
+                    mainPlayModel.imageFile = arrayList[i]!!.ImageFile!!
+                    mainPlayModel.audioDuration = arrayList[i]!!.AudioDuration!!
                     mainPlayModelList.add(mainPlayModel)
                 }
                 val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -412,15 +412,15 @@ class MyPlayerActivity : AppCompatActivity() {
                 listSize = arrayList.size
                 for (i in 0 until listSize) {
                     mainPlayModel = MainPlayModel()
-                    mainPlayModel.id = arrayList[i]!!.id
-                    mainPlayModel.name = arrayList[i]!!.name
-                    mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                    mainPlayModel.id = arrayList[i]!!.ID!!
+                    mainPlayModel.name = arrayList[i]!!.Name!!
+                    mainPlayModel.audioFile = arrayList[i]!!.AudioFile!!
                     mainPlayModel.playlistID = ""
-                    mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
-                    mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
-                    mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
-                    mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+                    mainPlayModel.audioDirection = arrayList[i]!!.AudioDirection!!
+                    mainPlayModel.audiomastercat = arrayList[i]!!.Audiomastercat!!
+                    mainPlayModel.audioSubCategory = arrayList[i]!!.AudioSubCategory!!
+                    mainPlayModel.imageFile = arrayList[i]!!.ImageFile!!
+                    mainPlayModel.audioDuration = arrayList[i]!!.AudioDuration!!
                     mainPlayModelList.add(mainPlayModel)
                 }
                 val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -735,7 +735,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
                 mainPlayModelList = gson.fromJson(json1, type1)
                 listSize = arrayList.size
-                if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
+                if (arrayList[position]!!.ID.equals("0", ignoreCase = true)) {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
@@ -751,7 +751,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
                 mainPlayModelList = gson.fromJson(json1, type1)
                 listSize = arrayList.size
-                if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
+                if (arrayList[position]!!.ID.equals("0", ignoreCase = true)) {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
@@ -1684,15 +1684,15 @@ class MyPlayerActivity : AppCompatActivity() {
         downloadClick = true
         val downloadAudioDetails = DownloadAudioDetails()
         //                if (audioPlay) {
-        downloadAudioDetails.id = mainPlayModelList[position].id
-        downloadAudioDetails.userId = coUserId
-        downloadAudioDetails.name = mainPlayModelList[position].name
-        downloadAudioDetails.audioFile = mainPlayModelList[position].audioFile
-        downloadAudioDetails.audioDirection = mainPlayModelList[position].audioDirection
-        downloadAudioDetails.audiomastercat = mainPlayModelList[position].audiomastercat
-        downloadAudioDetails.audioSubCategory = mainPlayModelList[position].audioSubCategory
-        downloadAudioDetails.imageFile = mainPlayModelList[position].imageFile
-        downloadAudioDetails.audioDuration = mainPlayModelList[position].audioDuration
+        downloadAudioDetails.ID = mainPlayModelList[position].id
+        downloadAudioDetails.UserID = coUserId!!
+        downloadAudioDetails.Name = mainPlayModelList[position].name
+        downloadAudioDetails.AudioFile = mainPlayModelList[position].audioFile
+        downloadAudioDetails.AudioDirection = mainPlayModelList[position].audioDirection
+        downloadAudioDetails.Audiomastercat = mainPlayModelList[position].audiomastercat
+        downloadAudioDetails.AudioSubCategory = mainPlayModelList[position].audioSubCategory
+        downloadAudioDetails.ImageFile = mainPlayModelList[position].imageFile
+        downloadAudioDetails.AudioDuration = mainPlayModelList[position].audioDuration
         /* } else if (queuePlay) {
             downloadAudioDetails.setID(addToQueueModelList.get(position).getID());
             downloadAudioDetails.setName(addToQueueModelList.get(position).getName());
@@ -1704,14 +1704,14 @@ class MyPlayerActivity : AppCompatActivity() {
             downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
             downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
         }*/
-        downloadAudioDetails.isSingle = "1"
-        downloadAudioDetails.playlistId = ""
+        downloadAudioDetails.IsSingle = "1"
+        downloadAudioDetails.PlaylistId = ""
         if (progressx == 0) {
-            downloadAudioDetails.isDownload = "pending"
+            downloadAudioDetails.IsDownload = "pending"
         } else {
-            downloadAudioDetails.isDownload = "Complete"
+            downloadAudioDetails.IsDownload = "Complete"
         }
-        downloadAudioDetails.downloadProgress = progressx
+        downloadAudioDetails.DownloadProgress = progressx
         DB = getAudioDataBase(ctx)
         try {
             AudioDatabase.databaseWriteExecutor.execute {
@@ -1732,7 +1732,7 @@ class MyPlayerActivity : AppCompatActivity() {
             DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).observe(this, { audiolist: List<DownloadAudioDetails> ->
                 if (audiolist.isNotEmpty()) {
                     disableDownload()
-                    if (audiolist[0].downloadProgress == 100) {
+                    if (audiolist[0].DownloadProgress == 100) {
                         binding.ivDownloads.visibility = View.VISIBLE
                         binding.pbProgress.visibility = View.GONE
                     } else {
@@ -1740,26 +1740,26 @@ class MyPlayerActivity : AppCompatActivity() {
                         binding.pbProgress.visibility = View.VISIBLE
                         GetMediaPer()
                     }
-                    DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { audiolistx: List<DownloadAudioDetails?>? -> }
+                    DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { }
                 } else {
                     /* boolean entryNot = false;
- for (int i = 0; i < fileNameList.size(); i++) {
-     if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
-             && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-         entryNot = true;
-         break;
-     }
- }
- if (!entryNot) {*/
+             for (int i = 0; i < fileNameList.size(); i++) {
+                 if (fileNameList.get(i).equalsIgnoreCase(mainPlayModelList.get(position).getName())
+                         && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                     entryNot = true;
+                     break;
+                 }
+             }
+             if (!entryNot) {*/
                     enableDownload()
                     binding.ivDownloads.visibility = View.VISIBLE
                     binding.pbProgress.visibility = View.GONE
                     /*    } else {
-GetMediaPer();
-disableDownload();
-}*/DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { }
+            GetMediaPer();
+            disableDownload();
+            }*/DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { }
                 }
-            })
+            } as (List<DownloadAudioDetails?>) -> Unit)
         } catch (e: java.lang.Exception) {
             println(e.message)
         } catch (e: OutOfMemoryError) {

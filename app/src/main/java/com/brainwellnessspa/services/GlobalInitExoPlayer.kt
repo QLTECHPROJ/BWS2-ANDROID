@@ -1188,7 +1188,7 @@ class GlobalInitExoPlayer : Service() {
         DB = getAudioDataBase(ctx)
         DB.taskDao().getNotDownloadData("Complete", coUserId).observe((ctx as LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
             notDownloadedData = ArrayList()
-            DB.taskDao().getNotDownloadData("Complete", coUserId).removeObserver { audioListx: List<DownloadAudioDetails> -> }
+            DB.taskDao().getNotDownloadData("Complete", coUserId).removeObserver { audioListx: List<DownloadAudioDetails?>? -> } as (List<DownloadAudioDetails?>) -> Unit
             if (audioList != null) {
                 (notDownloadedData as ArrayList<DownloadAudioDetails>).addAll(audioList)
                 if (notDownloadedData.isNotEmpty() && !DownloadMedia.isDownloading) {
@@ -1205,9 +1205,9 @@ class GlobalInitExoPlayer : Service() {
                             playlistDownloadId = gson.fromJson(json2, type)
                             if (fileNameList.size == 0) {
                                 for (i in notDownloadedData.indices) {
-                                    audioFile.add(notDownloadedData[i].audioFile)
-                                    fileNameList.add(notDownloadedData[i].name)
-                                    playlistDownloadId.add(notDownloadedData[i].playlistId)
+                                    audioFile.add(notDownloadedData[i].AudioFile!!)
+                                    fileNameList.add(notDownloadedData[i].Name!!)
+                                    playlistDownloadId.add(notDownloadedData[i].PlaylistId!!)
                                 }
                             }
                         }
@@ -1228,7 +1228,7 @@ class GlobalInitExoPlayer : Service() {
                     }
                 }
             }
-        })
+        } as (List<DownloadAudioDetails?>) -> Unit)
     }
 
     private fun removeSharepref(ctx: Context) {

@@ -171,22 +171,22 @@ class MainPlaylistFragment : Fragment() {
     }
 
     private fun getPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
-        DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
+        DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique?>? ->
                 val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
-                if (audioList.isNotEmpty()) {
+                if (audioList!!.isNotEmpty()) {
                     for (i in audioList.indices) {
                         val detail = MainPlaylistLibraryModel.ResponseData.Detail()
-                        detail.totalAudio = audioList[i].totalAudio
-                        detail.totalhour = audioList[i].totalhour
-                        detail.totalminute = audioList[i].totalminute
-                        detail.playlistID = audioList[i].playlistID
-                        detail.playlistDesc = audioList[i].playlistDesc
-                        detail.playlistMastercat = audioList[i].playlistMastercat
-                        detail.playlistSubcat = audioList[i].playlistSubcat
-                        detail.playlistName = audioList[i].playlistName
-                        detail.playlistImage = audioList[i].playlistImage //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
-                        detail.playlistID = audioList[i].playlistID
-                        detail.created = audioList[i].created
+                        detail.totalAudio = audioList[i]!!.TotalAudio
+                        detail.totalhour = audioList[i]!!.Totalhour
+                        detail.totalminute = audioList[i]!!.Totalminute
+                        detail.playlistID = audioList[i]!!.PlaylistID
+                        detail.playlistDesc = audioList[i]!!.PlaylistDesc
+                        detail.playlistMastercat = audioList[i]!!.PlaylistMastercat
+                        detail.playlistSubcat = audioList[i]!!.PlaylistSubcat
+                        detail.playlistName = audioList[i]!!.PlaylistName
+                        detail.playlistImage = audioList[i]!!.PlaylistImage //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
+                        detail.playlistID = audioList[i]!!.PlaylistID
+                        detail.created = audioList[i]!!.Created
                         details.add(detail)
                     }
                     for (i in responseData.indices) {
