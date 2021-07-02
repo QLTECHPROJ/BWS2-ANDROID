@@ -573,7 +573,7 @@ class ManageFragment : Fragment() {
                         section.add(listModel.responseData!!.audio[i].view!!)
                     }
                     val p = Properties()
-                    p.putValue("coUserId", coUserId)
+
                     val gson: Gson
                     val gsonBuilder = GsonBuilder()
                     gson = gsonBuilder.create()

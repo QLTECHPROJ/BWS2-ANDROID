@@ -161,7 +161,7 @@ class ProfileFragment : Fragment() {
             }
         }
         val p = Properties()
-        p.putValue("coUserId", coUserId)
+
         addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
         binding.llAcInfo.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -438,8 +438,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
             } else if (options[item] == getString(R.string.cancel)) {
                 val p = Properties()
-                p.putValue("userId", userId)
-                p.putValue("coUserId", coUserId)
                 addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
             }
@@ -526,8 +524,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     setProfilePic(profilePicPath)
                                     showToast(addProfileModel.responseMessage, requireActivity())
                                     val p = Properties()
-                                    p.putValue("userId", userId)
-                                    p.putValue("coUserId", coUserId)
                                     addToSegment("Camera Photo Added", p, CONSTANTS.track)
                                     profilePicPath = addProfileModel.responseData?.profileImage
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -573,8 +569,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                 profilePicPath = addProfileModel.responseData?.profileImage
                                 setProfilePic(profilePicPath)
                                 val p = Properties()
-                                p.putValue("userId", userId)
-                                p.putValue("coUserId", coUserId)
                                 addToSegment("Gallery Photo Added", p, CONSTANTS.track)
                                 showToast(addProfileModel.responseMessage, activity)
                                 val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -596,8 +590,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
             val p = Properties()
-            p.putValue("userId", userId)
-            p.putValue("coUserId", coUserId)
             addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
             requireActivity().finish()
         }
@@ -680,8 +672,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 mLastClickTime = SystemClock.elapsedRealtime()
                 if (sucessModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                     val p1 = Properties()
-                    p1.putValue("userId", userId)
-                    p1.putValue("coUserId", coUserId)
                     p1.putValue("deviceId", deviceId)
                     p1.putValue("deviceType", "Android")
                     p1.putValue("phone", userMobile)

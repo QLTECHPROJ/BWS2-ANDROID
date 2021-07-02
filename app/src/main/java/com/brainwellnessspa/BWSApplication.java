@@ -738,8 +738,7 @@ public class BWSApplication extends Application{
                             }
 
                             //                                Properties p = new Properties();
-                            //                                p.putValue("userId", UserID);
-                            //                                p.putValue("playlistId", model.getResponseData().getPlaylistID());
+                            //     p.putValue("playlistId", model.getResponseData().getPlaylistID());
                             //                                p.putValue("playlistName", model.getResponseData().getPlaylistName());
                             //                                p.putValue("playlistDescription", PlaylistDesc);
                             //                                if (PlaylistType.equalsIgnoreCase("1")) {
@@ -1053,7 +1052,6 @@ public class BWSApplication extends Application{
                                                             dialogs.dismiss();
                                                         }
                                                         //                                        Properties p = new Properties();
-                                                        //                                        p.putValue("userId", UserID);
                                                         //                                        p.putValue("playlistId", PlaylistID);
                                                         //                                        p.putValue("playlistName", PlaylistName);
                                                         //                                        p.putValue("playlistDescription", PlaylistDesc);
@@ -1297,7 +1295,6 @@ public class BWSApplication extends Application{
         DB = getAudioDataBase(ctx);
         downloadPlaylistDetails.setUserID(CoUserId);
         Properties p = new Properties();
-        p.putValue("userId", CoUserId);
         p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID());
         p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName());
         p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc());
@@ -1993,6 +1990,14 @@ public class BWSApplication extends Application{
                 upSpeed = (float) (nc.getLinkUpstreamBandwidthKbps() / 1000);
             }
         }
+        SharedPreferences shared1 = getContext().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
+
+        if(!mainAccountId.isEmpty() || !mainAccountId.equalsIgnoreCase(""))
+            properties.putValue("mainAccountId", mainAccountId);
+        if(!userId.isEmpty() || !userId.equalsIgnoreCase(""))
+            properties.putValue("userId", userId);
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel + " %");
         properties.putValue("batteryState", BatteryStatus);

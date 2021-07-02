@@ -168,11 +168,7 @@ class GlobalInitExoPlayer : Service() {
 
         @JvmStatic
         fun relesePlayer(context: Context) {
-            val shared2 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-            val userId = shared2.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-            val coUserId = shared2.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             val p = Properties()
-            p.putValue("userId", userId)
             p.putValue("Screen", "Dashboard")
             addToSegment("Application Killed", p, CONSTANTS.track)
             if (player != null) {
@@ -342,8 +338,6 @@ class GlobalInitExoPlayer : Service() {
         }
         InitNotificationAudioPLayer(ctx, mainPlayModelList)
         val p = Properties()
-        p.putValue("userId", UserID)
-        p.putValue("coUserId", CoUserID)
         p.putValue("audioId", mainPlayModelList[position].id)
         p.putValue("audioName", mainPlayModelList[position].name)
         p.putValue("audioDescription", "")
@@ -411,7 +405,7 @@ class GlobalInitExoPlayer : Service() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 var intruptMethod: String? = ""
                 val p = Properties()
-                p.putValue("userId", UserID)
+
                 p.putValue("audioId", mainPlayModelList[position].id)
                 p.putValue("audioName", mainPlayModelList[position].name)
                 p.putValue("audioDescription", "")

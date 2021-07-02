@@ -59,7 +59,6 @@ class AptDetailsFragment : Fragment() {
             startActivity(i)
             BWSApplication.showToast("Book Now", activity)
             p = Properties()
-            p!!.putValue("userId", userId)
             p!!.putValue("sessionId", appointmentDetail!!.id)
             p!!.putValue("sessionName", appointmentDetail!!.name)
             p!!.putValue("sessionBookUrl", appointmentDetail!!.bookUrl)

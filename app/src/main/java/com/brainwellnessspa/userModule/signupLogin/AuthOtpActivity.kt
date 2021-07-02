@@ -267,7 +267,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             }
 
                             val p = Properties()
-                            p.putValue("userId", "")
                             p.putValue("name", "")
                             p.putValue("mobileNo", listModel.ResponseData.Mobile)
                             p.putValue("countryCode", countryCode)

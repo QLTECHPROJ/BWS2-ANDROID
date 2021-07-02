@@ -122,8 +122,6 @@ class MyPlayerActivity : AppCompatActivity() {
     /* method for put hart bit at every 5 min at segment */
     private fun callHeartbeat() {
         val p = Properties()
-        p.putValue("userId", userId)
-        p.putValue("coUserId", coUserId)
         p.putValue("audioId", mainPlayModelList[position].id)
         p.putValue("audioName", mainPlayModelList[position].name)
         p.putValue("audioDescription", "")
@@ -172,7 +170,6 @@ class MyPlayerActivity : AppCompatActivity() {
                 mainPlayModelList2 = gson.fromJson(json, type)
             }
             val p = Properties()
-            p.putValue("userId", userId)
             try {
                 p.putValue("audioId", mainPlayModelList2[xposition].id)
                 p.putValue("audioName", mainPlayModelList2[xposition].name)
@@ -487,8 +484,6 @@ class MyPlayerActivity : AppCompatActivity() {
                             editor.apply()
                             removeArray()
                             val p = Properties()
-                            p.putValue("userId", userId)
-                            p.putValue("coUserId", coUserId)
                             p.putValue("position", GetCurrentAudioPosition())
                             p.putValue("source", GetSourceName(ctx))
                             p.putValue("playerType", "Main")
@@ -504,8 +499,6 @@ class MyPlayerActivity : AppCompatActivity() {
                         }
                         if (state == ExoPlayer.STATE_READY) {
                             val p = Properties()
-                            p.putValue("userId", userId)
-                            p.putValue("coUserId", coUserId)
                             p.putValue("position", GetCurrentAudioPosition())
                             p.putValue("source", GetSourceName(ctx))
                             p.putValue("playerType", "Main")
@@ -524,8 +517,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                     exoBinding.llPause.visibility = View.VISIBLE
                                     exoBinding.progressBar.visibility = View.GONE
                                     val p = Properties()
-                                    p.putValue("userId", userId)
-                                    p.putValue("coUserId", coUserId)
+
                                     p.putValue("position", GetCurrentAudioPosition())
                                     p.putValue("source", GetSourceName(ctx))
                                     p.putValue("playerType", "Main")
@@ -613,8 +605,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     exoBinding.llPause.visibility = View.GONE
                     exoBinding.progressBar.visibility = View.GONE
                     val p = Properties()
-                    p.putValue("userId", userId)
-                    p.putValue("coUserId", coUserId)
                     p.putValue("position", GetCurrentAudioPosition())
                     p.putValue("source", GetSourceName(ctx))
                     p.putValue("playerType", "Main")
@@ -873,7 +863,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     }
                     player.playWhenReady = true
                     val p = Properties()
-                    p.putValue("userId", userId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -896,7 +885,6 @@ class MyPlayerActivity : AppCompatActivity() {
                 } else {
                     player.playWhenReady = true
                     val p = Properties()
-                    p.putValue("userId", userId)
                     p.putValue("position", GetCurrentAudioPosition())
                     p.putValue("source", GetSourceName(ctx))
                     p.putValue("playerType", "Mini")
@@ -1019,8 +1007,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     callButtonText(position)
 
                     val p = Properties()
-                    p.putValue("userId", userId)
-                    p.putValue("coUserId", coUserId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -1073,8 +1059,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     if (state == ExoPlayer.STATE_READY) {
 
                         val p = Properties()
-                        p.putValue("userId", userId)
-                        p.putValue("coUserId", coUserId)
                         p.putValue("audioId", mainPlayModelList[position].id)
                         p.putValue("audioName", mainPlayModelList[position].name)
                         p.putValue("audioDescription", "")
@@ -1111,8 +1095,6 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.progressBar.visibility = View.VISIBLE
 
                         val p = Properties()
-                        p.putValue("userId", userId)
-                        p.putValue("coUserId", coUserId)
                         p.putValue("audioId", mainPlayModelList[position].id)
                         p.putValue("audioName", mainPlayModelList[position].name)
                         p.putValue("audioDescription", "")
@@ -1135,8 +1117,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         try {
                             val p = Properties()
-                            p.putValue("userId", userId)
-                            p.putValue("coUserId", coUserId)
                             p.putValue("audioId", mainPlayModelList[position].id)
                             p.putValue("audioName", mainPlayModelList[position].name)
                             p.putValue("audioDescription", "")
@@ -1164,7 +1144,6 @@ class MyPlayerActivity : AppCompatActivity() {
                                 localIntent.putExtra("MyData", "pause")
                                 localBroadcastManager.sendBroadcast(localIntent)
                                 val p = Properties()
-                                p.putValue("userId", userId)
                                 p.putValue("audioId", mainPlayModelList[position].id)
                                 p.putValue("audioName", mainPlayModelList[position].name)
                                 p.putValue("audioDescription", "")
@@ -1198,7 +1177,6 @@ class MyPlayerActivity : AppCompatActivity() {
                                     val TotalAudio = shared1.getString(CONSTANTS.PREF_KEY_TotalAudio, "")
                                     val ScreenView = shared1.getString(CONSTANTS.PREF_KEY_ScreenView, "")
                                     val p = Properties()
-                                    p.putValue("userId", userId)
                                     p.putValue("playlistId", PlaylistID)
                                     p.putValue("playlistName", PlaylistName)
                                     p.putValue("playlistDescription", PlaylistDescription)
@@ -1247,8 +1225,6 @@ class MyPlayerActivity : AppCompatActivity() {
                 override fun onPlayerError(error: ExoPlaybackException) {
                     val intruptMethod: String?
                     val p = Properties()
-                    p.putValue("userId", userId)
-                    p.putValue("CoUserId", coUserId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -1344,7 +1320,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
                     globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
                     val p = Properties()
-                    p.putValue("userId", userId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -1388,7 +1363,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
                     globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
                     val p = Properties()
-                    p.putValue("userId", userId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -1475,7 +1449,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     exoBinding.llPause.visibility = View.GONE
                     exoBinding.progressBar.visibility = View.GONE
                     val p = Properties()
-                    p.putValue("userId", userId)
                     p.putValue("audioId", mainPlayModelList[position].id)
                     p.putValue("audioName", mainPlayModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -1636,7 +1609,6 @@ class MyPlayerActivity : AppCompatActivity() {
             saveMedia(0)
             showToast("Your audio has been downloaded", act)
             val p = Properties()
-            p.putValue("userId", userId)
             p.putValue("audioId", mainPlayModelList[position].id)
             p.putValue("audioName", mainPlayModelList[position].name)
             p.putValue("audioDescription", "")

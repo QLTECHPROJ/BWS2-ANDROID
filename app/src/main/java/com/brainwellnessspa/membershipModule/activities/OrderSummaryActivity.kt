@@ -21,26 +21,21 @@ import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivi
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
-import com.brainwellnessspa.referralModule.models.CheckReferCodeModel
-import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
 class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, PurchaseHistoryResponseListener, ConsumeResponseListener, AcknowledgePurchaseResponseListener {
     var binding: ActivityOrderSummaryBinding? = null
     var TrialPeriod: String? = ""
     var comeFrom: String? = ""
-    var UserId: String? = ""/* renewPlanFlag, renewPlanId, */
+    var MainAccountId: String? = ""/* renewPlanFlag, renewPlanId, */
 
     /* renewPlanFlag, renewPlanId, */
-    var CoUserID: String? = ""
+    var UserID: String? = ""
     var ComesTrue: String? = ""
     var Promocode: String? = ""
     var OldPromocode: String? = ""
@@ -64,15 +59,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
     code : - 4/eWdxD7b-YSQ5CNNb-c2iI83KQx19.wp6198ti5Zc7dJ3UXOl0T3aRLxQmbwI
 */
-    val skuList = listOf("weekly_2_profile", "weekly_3_profile", "monthly_2_profile", "monthly_3_profile", "six_monthly_2_profile", "six_monthly_3_profile", "annual_2_profile", "annual_3_profile")
+    val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "weekly_5_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "monthly_5_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "six_monthly_5_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile", "annual_5_profile")
     lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        MainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@OrderSummaryActivity
         activity = this@OrderSummaryActivity
 
@@ -99,7 +94,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
         val p = Properties()
-        p.putValue("coUserId", CoUserID)
+
         if (!comeFrom.equals("", ignoreCase = true)) {
             val gson: Gson
             val gsonBuilder = GsonBuilder()
@@ -150,11 +145,11 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 binding!!.tvPlanAmount1.text = "$" + listModelList!![position].planAmount
                 binding!!.tvTotalAmount.text = "$" + listModelList!![position].planAmount
 
-                if (listModelList!![position].planInterval.equals("Annualy")) {
-                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
-                } else {
-                    sku = listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) + "_" + listModelList!![position].profileCount!! + "_" + "profile"
-                }
+//                if (listModelList!![position].planInterval.equals("Annualy")) {
+//                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
+//                } else {
+                    sku = listModelList!![position].androidplanId!!
+//                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -169,138 +164,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 finish()
             }
         }
-        binding!!.btnApply.setOnClickListener { prepareCheckReferCode(binding!!.edtCode.text.toString()) }/*binding!!.btnCheckout.setOnClickListener { view ->
-            try {
-                  if (binding!!.edtCode.getText().toString().equalsIgnoreCase("")) {
-                      Promocode = "";
-                      Properties p1 = new Properties();
-                      if (!comeFrom.equalsIgnoreCase("")) {
-                          if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                              return;
-                          }
-                          mLastClickTime = SystemClock.elapsedRealtime();
-                          Gson gson;
-                          GsonBuilder gsonBuilder = new GsonBuilder();
-                          gson = gsonBuilder.create();
-                          p1.putValue("plan", gson.toJson(listModelList2));
-                          p1.putValue("planStartDt ", "");
-                          p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
-                          p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
-                          p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                        *//*  Intent i = new Intent(ctx, PaymentActivity.class);
-                                   i.putExtra("ComesTrue", ComesTrue);
-                                   i.putExtra("comeFrom", "membership");
-                                   i.putParcelableArrayListExtra("PlanData", listModelList2);
-                                   i.putExtra("TrialPeriod", "");
-                                   i.putExtra("position", position);
-                                   startActivity(i);
-                                   finish();*//*
-                               } else {
-                                   if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                       return;
-                                   }
-                                   mLastClickTime = SystemClock.elapsedRealtime();
-                                   GsonBuilder gsonBuilder = new GsonBuilder();
-                                   Gson gson;
-                                   gson = gsonBuilder.create();
-                                   p1.putValue("plan", gson.toJson(listModelList));
-                                   p1.putValue("planStartDt ", "");
-                                   p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
-                                   p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
-                                   p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                                   Intent i = new Intent(ctx, ThankYouMpActivity.class);
-                                   i.putExtra("Name", "");
-                                   i.putExtra("Code", "");
-                                   i.putExtra("MobileNo", "");
-                                   i.putExtra("PlanData", gson.toJson(listModelList));
-                                   i.putExtra("TrialPeriod", TrialPeriod);
-                                   i.putExtra("position", position);
-                                   i.putExtra("Promocode", Promocode);
-                                   startActivity(i);
-                                   finish();
-                               }
-                               BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
-                           } else {
-                               Promocode = binding!!.edtCode.getText().toString();
-                               if (BWSApplication.isNetworkConnected(ctx)) {
-                                   BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity);
-                                   Call<CheckReferCodeModel> listCall = APIClient.getClient().CheckReferCode(Promocode);
-                                   listCall.enqueue(new Callback<CheckReferCodeModel>() {
-                                       @Override
-                                       public void onResponse(Call<CheckReferCodeModel> call, Response<CheckReferCodeModel> response) {
-                                               CheckReferCodeModel listModel = response.body();
-                                               if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                   BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity);
-                                                   if (!listModel.getResponseData().getCodeExist().equalsIgnoreCase("0")){
-                                                       BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                                       Properties p1 = new Properties();
-                                                       if (!comeFrom.equalsIgnoreCase("")) {
-                                                           if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                                               return;
-                                                           }
-                                                           mLastClickTime = SystemClock.elapsedRealtime();
-                                                           Gson gson;
-                                                           GsonBuilder gsonBuilder = new GsonBuilder();
-                                                           gson = gsonBuilder.create();
-                                                           p1.putValue("plan", gson.toJson(listModelList2));
-                                                           p1.putValue("planStartDt ", "");
-                                                           p1.putValue("planExpiryDt", listModelList2.get(position).getPlanNextRenewal());
-                                                           p1.putValue("planRenewalDt", listModelList2.get(position).getPlanNextRenewal());
-                                                           p1.putValue("planAmount", listModelList2.get(position).getPlanAmount());
-                                                        *//*   Intent i = new Intent(ctx, PaymentActivity.class);
-                                                           i.putExtra("ComesTrue", ComesTrue);
-                                                           i.putExtra("comeFrom", "membership");
-                                                           i.putParcelableArrayListExtra("PlanData", listModelList2);
-                                                           i.putExtra("TrialPeriod", "");
-                                                           i.putExtra("position", position);
-                                                           startActivity(i);
-                                                           finish();*//*
-                                                       } else {
-                                                           if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                                               return;
-                                                           }
-                                                           mLastClickTime = SystemClock.elapsedRealtime();
-                                                           Gson gson;
-                                                           GsonBuilder gsonBuilder = new GsonBuilder();
-                                                           gson = gsonBuilder.create();
-                                                           p1.putValue("plan", gson.toJson(listModelList));
-                                                           p1.putValue("planStartDt ", "");
-                                                           p1.putValue("planExpiryDt", listModelList.get(position).getPlanNextRenewal());
-                                                           p1.putValue("planRenewalDt", listModelList.get(position).getPlanNextRenewal());
-                                                           p1.putValue("planAmount", listModelList.get(position).getPlanAmount());
-                                                           Intent i = new Intent(ctx, ThankYouMpActivity.class);
-                                                           i.putExtra("Name", "");
-                                                           i.putExtra("Code", "");
-                                                           i.putExtra("MobileNo", "");
-                                                           i.putExtra("PlanData", gson.toJson(listModelList));
-                                                           i.putExtra("TrialPeriod", TrialPeriod);
-                                                           i.putExtra("position", position);
-                                                           i.putExtra("Promocode", Promocode);
-                                                           startActivity(i);
-                                                           finish();
-                                                       }
-                                                       BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track);
-                                                   }else {
-                                                       BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                                   }
-                                               }
-                                       }
-
-                                       @Override
-                                       public void onFailure(Call<CheckReferCodeModel> call, Throwable t) {
-                                           BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity);
-                                       }
-                                   });
-                               } else {
-                                   BWSApplication.showToast(getString(R.string.no_server_found), activity);
-                               }
-                           }
-
-                       } catch (Exception e) {
-                           e.printStackTrace();
-                       }
-
-        }*/
     }
 
     private fun setupBillingClient() {
@@ -333,7 +196,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                         billingClient.launchBillingFlow(this, billingFlowParams)
 
                         val p = Properties()
-                        p.putValue("coUserId", CoUserID)
                         if (!comeFrom.equals("", ignoreCase = true)) {
                             val gson: Gson
                             val gsonBuilder = GsonBuilder()
@@ -382,7 +244,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         override fun afterTextChanged(s: Editable) {}
     }
 
-    fun prepareCheckReferCode(promoCode: String?) {
+   /* fun prepareCheckReferCode(promoCode: String?) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
             val listCall = APIClient.client.checkReferCode(promoCode)
@@ -410,11 +272,12 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
-    }
+    }*/
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
+                call_IAP_Api(purchase.purchaseToken,sku,MainAccountId,UserID)
                 val gson = Gson()
                 val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
                 val editor = shared.edit()
@@ -433,11 +296,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         }
     }
 
+    private fun call_IAP_Api(purchaseToken: String, sku: String, mainAccountId: String?, userID: String?) {
+        TODO("Not yet implemented")
+    }
+
     private fun acknowledgePurchase(purchaseToken: String, purchase: MutableList<Purchase>?) {
         val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchaseToken).build()
         billingClient.acknowledgePurchase(params, this)
         billingClient.acknowledgePurchase(params) { billingResult ->
-            checkPurchases()
+//            checkPurchases()
             val responseCode = billingResult.responseCode
             val debugMessage = billingResult.debugMessage
             val i = Intent(ctx, EnhanceDoneActivity::class.java)
@@ -452,7 +319,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             finish()
 
             val p = Properties()
-            p.putValue("coUserId", CoUserID)
             if (!comeFrom.equals("", ignoreCase = true)) {
                 val gson: Gson
                 val gsonBuilder = GsonBuilder()
@@ -468,11 +334,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         }
     }
 
-    private fun checkPurchases() {
+  /*  private fun checkPurchases() {
         val client = BillingClient.newBuilder(application).enablePendingPurchases().setListener { billingResult, list -> }.build()
         client.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(@NonNull
-            billingResult: BillingResult) {
+            override fun onBillingSetupFinished(@NonNull billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { //                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)
@@ -517,15 +382,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 for (skuDetails in skuDetailsList) {
                     if (skuDetails.sku == sku) binding!!.btnCheckout.setOnClickListener { // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync()
                         val flowParams = BillingFlowParams.newBuilder().setSubscriptionUpdateParams(BillingFlowParams.SubscriptionUpdateParams.newBuilder().setOldSkuPurchaseToken(token).setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION).build()).setSkuDetails(skuDetails).build()
-                        billingClient.launchBillingFlow(activity, flowParams)/*      val billingFlowParams = BillingFlowParams
+                        billingClient.launchBillingFlow(activity, flowParams)*//*      val billingFlowParams = BillingFlowParams
                                             .newBuilder()
                                             .setSkuDetails(skuDetails)
                                             .setOldSku(oldsku, sku)
                                             .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
-                                            .build()*/ //                                    billingClient.launchBillingFlow(this, billingFlowParams)
+                                            .build()*//* //                                    billingClient.launchBillingFlow(this, billingFlowParams)
 
                         val p = Properties()
-                        p.putValue("coUserId", CoUserID)
+
                         if (!comeFrom.equals("", ignoreCase = true)) {
                             val gson: Gson
                             val gsonBuilder = GsonBuilder()
@@ -546,7 +411,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     } else {
         println("Billing Client not ready")
     }
-
+*/
     private fun consumePurchases(purchaseToken: String) {
         val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build()
         Log.e("consumes", consumeParams.purchaseToken)
@@ -575,20 +440,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             Log.e("Consume aaa ", billingResult.debugMessage)
         }
     }
-}/*
+}
+/*
    public static String GOOGLE_AUTHORIZATION = "authorization_code";
     public static String GOOGLE_CLIENT_ID = "861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com";
     public static String GOOGLE_CLIENT_SECRET = "0hQBynI-gzUrHQtSR-ayUFaK";
     public static String GOOGLE_CODE = "4/0AY0e-g7LoHIAy2ulpKIfeciuZSkBrFBh6RseKYb372xyxSb7Gmleh-vHyywKqAEGWlTiMg";
-//    public static String GOOGLE_CODE = "4/0AY0e-g611fwyaxP6xRR4fEMDBbIxZExfTJ_sB8TKGji28VzLM3XTViiPv6yNuY-BOk_b5Q";
-//            "4/0AY0e-g7QBZ_mWlvZnM0WncCwEo9Y6YslTFbyc61ToQwcG4pqJLSKgR99ibIbkEBZaQanxQ";
-//    public static String GOOGLE_CODE = "4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q";
-//                                         4%2F0AY0e-g611fwyaxP6xRR4fEMDBbIxZExfTJ_sB8TKGji28VzLM3XTViiPv6yNuY-BOk_b5Q
-//                                        4%2F0AY0e-g7QBZ_mWlvZnM0WncCwEo9Y6YslTFbyc61ToQwcG4pqJLSKgR99ibIbkEBZaQanxQ
-//                                          4%2F0AY0e-g75th0nAoXj0X5W9BeW7e3NwbqzAN_eNk_MLrkwxIlmAV30tGHCObjHPawlYdNpEQ
     public static String GOOGLE_REDIRECT_URI = "https://brainwellnessspa.com.au/";
     public static String GOOGLE_ACCESS_TYPE = "offline";
-    public static String GOOGLE_REDIRECT_URI1 = "https://brainwellnessspa.com.au/?code=4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fandroidpublisher/";
+    public static String GOOGLE_REDIRECT_URI1 = "https://brainwellnessspa.com.au?code=4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fandroidpublisher/";
 
    public static SubscriptionPurchase getRefreshToken() {
         String refreshToken = "";
@@ -597,8 +457,9 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
         try {
-//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&redirect_uri=https://brainwellnessspa.com.au/&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
-//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=https://brainwellnessspa.com.au/&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&prompt=consent&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
             List<NameValuePair> nameValuePairs = new ArrayList<>(6);
             nameValuePairs.add(new BasicNameValuePair("grant_type",GOOGLE_AUTHORIZATION));
             nameValuePairs.add(new BasicNameValuePair("client_id",GOOGLE_CLIENT_ID));

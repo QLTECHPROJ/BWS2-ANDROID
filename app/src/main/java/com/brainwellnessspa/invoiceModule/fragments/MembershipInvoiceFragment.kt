@@ -175,7 +175,7 @@ class MembershipInvoiceFragment : Fragment() {
                                     tvOrderTotalAmountTitle.setText("Order Total:");
                                     try {
                                         Properties p = new Properties();
-                                        p.putValue("userId", userId);
+
                                         p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                                         p.putValue("invoiceType", "Memebrship");
                                         p.putValue("invoiceAmount", listModel.getResponseData().getAmount());
@@ -261,7 +261,7 @@ class MembershipInvoiceFragment : Fragment() {
             holder.binding.llDownloads.setOnClickListener {
                 requestPermissionDownlaod()
                 val p = Properties()
-                p.putValue("userId", userId)
+
                 p.putValue("invoiceId", listModelList[position].invoiceId)
                 p.putValue("invoiceType", "Appointment")
                 p.putValue("invoiceAmount", listModelList[position].amount)

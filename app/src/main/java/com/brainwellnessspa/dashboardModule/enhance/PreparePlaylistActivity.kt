@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.addToSegment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityPreparePlaylistBinding
@@ -24,8 +25,7 @@ class PreparePlaylistActivity : AppCompatActivity() {
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         val p = Properties()
-        p.putValue("coUserId", coUserId)
-        addToSegment("Preparing Playlist Screen Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment("Preparing Playlist Screen Viewed", p, CONSTANTS.screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
             val i = Intent(applicationContext, PlaylistDoneActivity::class.java)

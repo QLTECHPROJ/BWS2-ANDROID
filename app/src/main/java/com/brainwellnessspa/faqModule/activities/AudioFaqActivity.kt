@@ -107,7 +107,7 @@ class AudioFaqActivity : AppCompatActivity() {
 
         @SuppressLint("ResourceType") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             p = Properties()
-            p.putValue("coUserId", coUserId)
+
             when {
                 flag.equals("Audio", ignoreCase = true) -> {
                     p.putValue("faqCategory", "Audio")

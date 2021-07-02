@@ -420,7 +420,6 @@ class SignUpActivity : AppCompatActivity() {
                             i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
                             startActivity(i)
                             val p = Properties()
-                            p.putValue("userId", "")
                             p.putValue("name", "")
                             p.putValue("mobileNo", listModel.ResponseData.MobileNo)
                             p.putValue("countryCode", countryCode)

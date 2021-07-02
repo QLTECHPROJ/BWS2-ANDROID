@@ -153,8 +153,6 @@ class ViewAllAudioFragment : Fragment() {
                                 section.add(e)
                             }
                             val p = Properties()
-                            p.putValue("userId", userId)
-                            p.putValue("coUserId", coUserId)
                             val gson = Gson()
                             p.putValue("audios", gson.toJson(section))
                             if (name.equals(getString(R.string.top_categories), ignoreCase = true)) {

@@ -60,7 +60,7 @@ class InvoiceActivity : AppCompatActivity() {
             ComeFrom = intent.getStringExtra("ComeFrom")
         }
         val p = Properties()
-        p.putValue("userId", UserID)
+
         BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen)
         binding.llBack.setOnClickListener { callBack() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -130,7 +130,6 @@ class InvoiceActivity : AppCompatActivity() {
                                 override fun onTabSelected(tab: TabLayout.Tab) {
                                     binding.viewPager.currentItem = tab.position
                                     p = Properties()
-                                    p!!.putValue("userId", UserID)
                                     if (tab.position == 0) {
                                         p!!.putValue("invoiceType", "Memebrship")
                                         val section1 = ArrayList<SegmentMembership>()

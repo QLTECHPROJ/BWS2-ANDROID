@@ -311,7 +311,6 @@ class AppointmentDetailsFragment : Fragment() {
                                         startActivity(i)
                                         BWSApplication.showToast("Complete the booklet", getActivity())
                                         p = Properties()
-                                        p!!.putValue("userId", userId)
                                         p!!.putValue("sessionId", appointmentDetailModel.responseData?.id)
                                         p!!.putValue("sessionName", appointmentDetailModel.responseData?.name)
                                         p!!.putValue("bookletUrl", appointmentDetailModel.responseData?.bookUrl)
@@ -321,7 +320,6 @@ class AppointmentDetailsFragment : Fragment() {
                                     BWSApplication.showToast(appointmentDetailModel.responseMessage, getActivity())
                                 }
                                 p = Properties()
-                                p!!.putValue("userId", userId)
                                 p!!.putValue("id", appointmentDetailModel.responseData?.id)
                                 p!!.putValue("name", appointmentDetailModel.responseData?.name)
                                 p!!.putValue("desc", appointmentDetailModel.responseData?.desc)

@@ -324,32 +324,30 @@ class UserListActivity : AppCompatActivity() {
 
                                                                 analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
 
-                                                                val p1 = Properties()
-                                                                p1.putValue("CoUserID", listModel.ResponseData.UserId)
-                                                                p1.putValue("userID", listModel.ResponseData.MainAccountID)
-                                                                p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
-                                                                p1.putValue("deviceType", "Android")
-                                                                p1.putValue("name", listModel.ResponseData.Name)
-                                                                p1.putValue("countryCode", "")
-                                                                p1.putValue("countryName", "")
-                                                                p1.putValue("phone", listModel.ResponseData.Mobile)
-                                                                p1.putValue("email", listModel.ResponseData.Email)
-                                                                p1.putValue("plan", "")
-                                                                p1.putValue("planStatus", "")
-                                                                p1.putValue("planStartDt", "")
-                                                                p1.putValue("planExpiryDt", "")
-                                                                p1.putValue("clinikoId", "")
-                                                                p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                                                p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                                                p1.putValue("indexScore", listModel.ResponseData.indexScore)
-                                                                p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                                                p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                                                p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                                                addToSegment("CoUser Login", p1, CONSTANTS.track)
-                                                            } catch (e: Exception) {
-                                                                e.printStackTrace()
-                                                            }
+                                                            val p1 = Properties()
+                                                            p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                            p1.putValue("deviceType", "Android")
+                                                            p1.putValue("name", listModel.ResponseData.Name)
+                                                            p1.putValue("countryCode", "")
+                                                            p1.putValue("countryName", "")
+                                                            p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                            p1.putValue("email", listModel.ResponseData.Email)
+                                                            p1.putValue("plan", "")
+                                                            p1.putValue("planStatus", "")
+                                                            p1.putValue("planStartDt", "")
+                                                            p1.putValue("planExpiryDt", "")
+                                                            p1.putValue("clinikoId", "")
+                                                            p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                            p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                            p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                            p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                            p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                            p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                        } catch (e: Exception) {
+                                                            e.printStackTrace()
                                                         }
+                                                    }
 
                                                         override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
                                                         }
@@ -536,7 +534,7 @@ class UserListActivity : AppCompatActivity() {
                             }
                             val p = Properties()
                             val gson = Gson()
-                            p.putValue("userID", userId)
+
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                             p.putValue("coUserList", gson.toJson(section))
                             addToSegment("Couser List Viewed", p, CONSTANTS.screen)

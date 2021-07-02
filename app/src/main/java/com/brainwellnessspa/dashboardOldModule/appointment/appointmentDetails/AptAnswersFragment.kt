@@ -36,7 +36,6 @@ class AptAnswersFragment : Fragment() {
             startActivity(i)
             BWSApplication.showToast("Download PDF", activity)
             p = Properties()
-            p!!.putValue("userId", userId)
             p!!.putValue("sessionId", appointmentDetail!!.id)
             p!!.putValue("sessionName", appointmentDetail!!.name)
             p!!.putValue("myAnswersUrl", appointmentDetail!!.myAnswers)

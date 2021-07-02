@@ -156,8 +156,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                             } else {
                                                 callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
                                             } //                                            Properties p = new Properties();
-                                            //                                            p.putValue("userId", UserID);
-                                            //                                            p.putValue("playlistId", PlaylistID);
+                                            //                                           p.putValue("playlistId", PlaylistID);
                                             //                                            p.putValue("playlistName", listsModel.getResponseData().getName());
                                             //                                            p.putValue("source", "Add To Playlist Screen");
                                             //                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
@@ -224,7 +223,6 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 binding.rvPlayLists.visibility = View.VISIBLE
 
                                 //                            p = new Properties();
-                                //                            p.putValue("userId", UserID);
                                 //                            p.putValue("source", ScreenView);
                                 //                            ArrayList<SegmentPlaylist> section = new ArrayList<>();
                                 //                            for (int i = 0; i < model.getResponseData().size(); i++) {

@@ -535,7 +535,6 @@ class AptAudioFragment : Fragment() {
             downloadAudioDetails.IsDownload = "pending"
             downloadAudioDetails.DownloadProgress = 0
             try {
-                p!!.putValue("userId", userId)
                 p!!.putValue("audioId", downloadAudioDetails.ID)
                 p!!.putValue("audioName", downloadAudioDetails.Name)
                 p!!.putValue("audioDescription", "")

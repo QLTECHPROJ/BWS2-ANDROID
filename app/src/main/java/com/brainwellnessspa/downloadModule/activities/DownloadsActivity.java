@@ -122,7 +122,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
                 p = new Properties();
-                p.putValue("coUserId", CoUserID);
                 if (tab.getPosition() == 0) {
                     p.putValue("tabType", "Audio Tab");
                     SegmentAudio e = new SegmentAudio();

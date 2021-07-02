@@ -107,7 +107,6 @@ class ViewAllPlaylistFragment : Fragment() {
                 e.audioCount = audioList[i].TotalAudio
                 section.add(e)
             }
-            p.putValue("userId", coUserId)
             val gson = Gson()
             p.putValue("playlists", gson.toJson(section))
             p.putValue("section", screenView)
@@ -233,7 +232,6 @@ class ViewAllPlaylistFragment : Fragment() {
                                         e.audioCount = listModel.responseData!!.details!![i].totalAudio
                                         section.add(e)
                                     }
-                                    p.putValue("userId", coUserId)
                                     val gson = Gson()
                                     p.putValue("playlists", gson.toJson(section))
                                     p.putValue("section", screenView)

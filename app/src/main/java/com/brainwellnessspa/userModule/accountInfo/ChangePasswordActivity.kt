@@ -117,8 +117,6 @@ class ChangePasswordActivity : AppCompatActivity() {
         userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
-        p.putValue("userId", userID)
-        p.putValue("coUserId", coUserID)
         BWSApplication.addToSegment("Change Password Screen Viewed", p, CONSTANTS.screen)
         binding.etCurrentPswd.transformationMethod = PasswordTransformationMethod.getInstance()
         binding.etNewPswd.transformationMethod = PasswordTransformationMethod.getInstance()
@@ -262,8 +260,6 @@ class ChangePasswordActivity : AppCompatActivity() {
                             val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 val p = Properties()
-                                p.putValue("userId", userID)
-                                p.putValue("coUserId", coUserID)
                                 BWSApplication.addToSegment("Password Changed", p, CONSTANTS.track)
                                 finish()
                                 BWSApplication.showToast(listModel.responseMessage, activity)

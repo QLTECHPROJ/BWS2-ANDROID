@@ -74,7 +74,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
 
         val p = Properties()
-        p.putValue("coUserId", coUserId)
+
         addToSegment("Recommeded Category Screen Viewed", p, CONSTANTS.screen)
 
         val layoutManager = FlexboxLayoutManager(ctx)
@@ -618,7 +618,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 section.add(listModel.responseData!!.categoryData!![i].recommendedCat.toString())
                             }
                             val p = Properties()
-                            p.putValue("coUserId", coUserId)
+
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                             p.putValue("areaOfFocus", gson.toJson(section))
                             addToSegment("Area of Focus Savedd", p, CONSTANTS.track)

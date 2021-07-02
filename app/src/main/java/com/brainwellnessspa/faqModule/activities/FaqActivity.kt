@@ -57,7 +57,6 @@ class FaqActivity : AppCompatActivity() {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
         p = Properties()
-        p!!.putValue("coUserId", coUserId)
         section!!.add("Audio")
         section!!.add("Playlist")
         section!!.add("General")

@@ -36,7 +36,6 @@ class AptBookletFragment : Fragment() {
             startActivity(i)
             BWSApplication.showToast("Complete the booklet", activity)
             p = Properties()
-            p!!.putValue("userId", userId)
             p!!.putValue("sessionId", appointmentDetail!!.id)
             p!!.putValue("sessionName", appointmentDetail!!.name)
             p!!.putValue("bookletUrl", appointmentDetail!!.bookUrl)

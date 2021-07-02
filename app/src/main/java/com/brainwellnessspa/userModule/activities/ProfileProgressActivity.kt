@@ -58,8 +58,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         activity = this@ProfileProgressActivity
         val p = Properties()
-        p.putValue("userId", userId)
-        p.putValue("coUserId", coUserId)
+
+
         BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
         callSecondPrev()
 
@@ -472,8 +472,8 @@ class ProfileProgressActivity : AppCompatActivity() {
                         val listModel: ProfileSaveDataModel = response.body()!!
                         if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val p = Properties()
-                            p.putValue("userId", userId)
-                            p.putValue("coUserId", coUserId)
+
+
                             p.putValue("profileType", profileType)
                             p.putValue("gender", gender)
                             p.putValue("genderX", genderX)

@@ -71,13 +71,12 @@ class BillingOrderActivity : AppCompatActivity() {
 
         /* This is segment tag */
         val p = Properties()
-        p.putValue("userId", userId)
         p.putValue("plan", "")
         p.putValue("planStatus", "")
         p.putValue("planStartDt", "")
         p.putValue("planExpiryDt", "")
         p.putValue("planAmount", "")
-        BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment(CONSTANTS.Billing_Order_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the tab layout showing code */
         binding.viewPager.offscreenPageLimit = 2

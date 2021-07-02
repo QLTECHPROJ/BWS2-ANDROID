@@ -73,13 +73,12 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         /*This is to youtube video playing */
         binding.youtubeView.initialize(API_KEY, this)
         val p = Properties()
-        p.putValue("userId", userID)
         p.putValue("plan", "")
         p.putValue("planStatus", "")
         p.putValue("planStartDt", "")
         p.putValue("planExpiryDt", "")
         p.putValue("planAmount", "")
-        BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
 
         /*This condition is to audio playing or not  */
         if (BWSApplication.player != null) {
@@ -185,7 +184,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                 dialog.dismiss()
 
                                 //                                            Properties p = new Properties();
-                                //                                            p.putValue("userId", userID);
                                 //                                            p.putValue("cancelId", cancelId);
                                 //                                            p.putValue("cancelReason", CancelReason);
                                 //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);

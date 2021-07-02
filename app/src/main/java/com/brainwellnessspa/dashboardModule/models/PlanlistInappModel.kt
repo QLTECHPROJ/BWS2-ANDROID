@@ -119,6 +119,8 @@ class PlanlistInappModel{
         }
 
         class Plan {
+
+
             @SerializedName("PlanPosition")
             @Expose
             var planPosition: String? = ""
@@ -158,6 +160,14 @@ class PlanlistInappModel{
             @SerializedName("FreeTrial")
             @Expose
             var freeTrial: String? = ""
+
+            @SerializedName("IOSplanId")
+            @Expose
+            var iOSplanId: String? = ""
+
+            @SerializedName("AndroidplanId")
+            @Expose
+            var androidplanId: String? = ""
 
             @SerializedName("SubName")
             @Expose

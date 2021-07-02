@@ -297,7 +297,6 @@ public class MiniPlayerFragment extends Fragment {
                     public void onPlayerError(ExoPlaybackException error) {
                         String intruptMethod = "";
                         p = new Properties();
-                        p.putValue("userId", UserID);
                         p.putValue("audioId", mainPlayModelList.get(position).getId());
                         p.putValue("audioName", mainPlayModelList.get(position).getName());
                         p.putValue("audioDescription", "");
@@ -430,7 +429,7 @@ public class MiniPlayerFragment extends Fragment {
 
                         if (SegmentTagPlayer == 0) {
                             p = new Properties();
-                            p.putValue("userId", UserID);
+
                             p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
@@ -487,7 +486,6 @@ public class MiniPlayerFragment extends Fragment {
                     public void onPlaybackStateChanged(int state) {
                         if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
-                            p.putValue("userId", UserID);
                             p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
@@ -528,7 +526,6 @@ public class MiniPlayerFragment extends Fragment {
                             exoBinding.llPause.setVisibility(View.GONE);
                             exoBinding.progressBar.setVisibility(View.VISIBLE);
                             p = new Properties();
-                            p.putValue("userId", UserID);
                             p.putValue("audioId", mainPlayModelList.get(position).getId());
                             p.putValue("audioName", mainPlayModelList.get(position).getName());
                             p.putValue("audioDescription", "");
@@ -551,7 +548,6 @@ public class MiniPlayerFragment extends Fragment {
                         } else if (state == ExoPlayer.STATE_ENDED) {
                             try {
                                 p = new Properties();
-                                p.putValue("userId", UserID);
                                 p.putValue("audioId", mainPlayModelList.get(position).getId());
                                 p.putValue("audioName", mainPlayModelList.get(position).getName());
                                 p.putValue("audioDescription", "");
@@ -580,7 +576,6 @@ public class MiniPlayerFragment extends Fragment {
                                     localIntent.putExtra("MyData", "pause");
                                     localBroadcastManager.sendBroadcast(localIntent);
                                     p = new Properties();
-                                    p.putValue("userId", UserID);
                                     p.putValue("audioId", mainPlayModelList.get(position).getId());
                                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                                     p.putValue("audioDescription", "");
@@ -615,7 +610,6 @@ public class MiniPlayerFragment extends Fragment {
                                         String ScreenView = (shared1.getString(CONSTANTS.PREF_KEY_ScreenView, ""));
 
                                         p = new Properties();
-                                        p.putValue("userId", UserID);
                                         p.putValue("playlistId", PlaylistID);
                                         p.putValue("playlistName", PlaylistName);
                                         p.putValue("playlistDescription", PlaylistDescription);
@@ -722,7 +716,6 @@ public class MiniPlayerFragment extends Fragment {
     private void callHeartbeat() {
         if (SegmentTagPlayer == 0) {
             p = new Properties();
-            p.putValue("userId", UserID);
             p.putValue("audioId", mainPlayModelList.get(position).getId());
             p.putValue("audioName", mainPlayModelList.get(position).getName());
             p.putValue("audioDescription", "");
@@ -756,7 +749,6 @@ public class MiniPlayerFragment extends Fragment {
                     localIntent.putExtra("MyData", "pause");
                     localBroadcastManager.sendBroadcast(localIntent);
                     p = new Properties();
-                    p.putValue("userId", UserID);
                     p.putValue("audioId", mainPlayModelList.get(position).getId());
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDescription", "");
@@ -814,7 +806,6 @@ public class MiniPlayerFragment extends Fragment {
                         if (state == ExoPlayer.STATE_ENDED) {
                             //player back ended
                             p = new Properties();
-                            p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
@@ -838,7 +829,6 @@ public class MiniPlayerFragment extends Fragment {
                             Log.e("send brod cast", "desc");
                         } else if (state == ExoPlayer.STATE_READY) {
                             p = new Properties();
-                            p.putValue("userId", UserID);
                             p.putValue("position", GetCurrentAudioPosition());
                             p.putValue("source", GetSourceName(ctx));
                             p.putValue("playerType", "Mini");
@@ -858,7 +848,6 @@ public class MiniPlayerFragment extends Fragment {
                                 localIntent.putExtra("MyData", "play");
                                 localBroadcastManager.sendBroadcast(localIntent);
                                 p = new Properties();
-                                p.putValue("userId", UserID);
                                 p.putValue("position", GetCurrentAudioPosition());
                                 p.putValue("source", GetSourceName(ctx));
                                 p.putValue("playerType", "Mini");
@@ -927,7 +916,6 @@ public class MiniPlayerFragment extends Fragment {
                 localIntent.putExtra("MyData", "pause");
                 localBroadcastManager.sendBroadcast(localIntent);
                 p = new Properties();
-                p.putValue("userId", UserID);
                 p.putValue("position", GetCurrentAudioPosition());
                 p.putValue("source", GetSourceName(ctx));
                 p.putValue("playerType", "Mini");
@@ -1112,7 +1100,7 @@ public class MiniPlayerFragment extends Fragment {
                     }
                     player.setPlayWhenReady(true);
                     p = new Properties();
-                    p.putValue("userId", UserID);
+
                     p.putValue("audioId", mainPlayModelList.get(position).getId());
                     p.putValue("audioName", mainPlayModelList.get(position).getName());
                     p.putValue("audioDescription", "");
@@ -1135,7 +1123,6 @@ public class MiniPlayerFragment extends Fragment {
                 } else {
                     player.setPlayWhenReady(true);
                     p = new Properties();
-                    p.putValue("userId", UserID);
                     p.putValue("position", GetCurrentAudioPosition());
                     p.putValue("source", GetSourceName(ctx));
                     p.putValue("playerType", "Mini");

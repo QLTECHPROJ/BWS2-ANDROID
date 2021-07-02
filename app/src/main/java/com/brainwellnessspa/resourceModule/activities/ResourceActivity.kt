@@ -89,7 +89,6 @@ class ResourceActivity : AppCompatActivity() {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         p4 = Properties()
-        p4!!.putValue("coUserId", coUserId)
         section = ArrayList()
         gsonBuilder = GsonBuilder()
         gson = gsonBuilder!!.create()
@@ -105,7 +104,6 @@ class ResourceActivity : AppCompatActivity() {
                 binding.viewPager.currentItem = tab.position
                 currentTab = tab.position
                 p = Properties()
-                p!!.putValue("coUserId", coUserId)
                 when (tab.position) {
                     0 -> {
                         tabFlag = CONSTANTS.FLAG_ONE

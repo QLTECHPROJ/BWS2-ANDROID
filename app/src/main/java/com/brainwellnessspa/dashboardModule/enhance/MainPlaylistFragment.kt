@@ -140,7 +140,6 @@ class MainPlaylistFragment : Fragment() {
 
                             if (comeFrom.equals("onResume", ignoreCase = true)) {
                                 val p = Properties()
-                                p.putValue("userId", coUserId)
                                 val gson: Gson
                                 val gsonBuilder = GsonBuilder()
                                 gson = gsonBuilder.create()

@@ -521,7 +521,6 @@ public class AudioDownloadsFragment extends Fragment {
                     getMedia(AudioPlayerFlag, position);
                 }
                 Properties p = new Properties();
-                p.putValue("userId", UserID);
                 p.putValue("audioId", listModelList.get(position).getID());
                 p.putValue("audioName", listModelList.get(position).getName());
                 BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
@@ -783,7 +782,6 @@ public class AudioDownloadsFragment extends Fragment {
                     int pos = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     try {
                         Properties p = new Properties();
-                        p.putValue("coUserId", CoUserID);
                         p.putValue("audioId", listModelList.get(position).getID());
                         p.putValue("audioName", listModelList.get(position).getName());
                         p.putValue("audioDescription", "");

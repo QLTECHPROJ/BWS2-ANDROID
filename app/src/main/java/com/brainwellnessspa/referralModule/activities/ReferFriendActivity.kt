@@ -49,7 +49,6 @@ class ReferFriendActivity : AppCompatActivity() {
         UserPromocode = shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, "")
         ReferLink = shareded.getString(CONSTANTS.PREF_KEY_ReferLink, "")
         p = Properties()
-        p!!.putValue("userId", UserID)
         p!!.putValue("referLink", ReferLink)
         p!!.putValue("userReferCode", UserPromocode)
         BWSApplication.addToSegment("Refer A Friend Screen Viewed", p, CONSTANTS.screen)
@@ -125,7 +124,6 @@ class ReferFriendActivity : AppCompatActivity() {
                 manager.setPrimaryClip(clipData)
                 BWSApplication.showToast("Promo Code Copied", activity)
                 p = Properties()
-                p!!.putValue("userId", UserID)
                 p!!.putValue("userReferCode", UserPromocode)
                 BWSApplication.addToSegment("Promo Code Copied", p, CONSTANTS.track)
             }
@@ -135,7 +133,6 @@ class ReferFriendActivity : AppCompatActivity() {
             i.putExtra(CONSTANTS.Web, "HowReferWorks")
             startActivity(i)
             p = Properties()
-            p!!.putValue("userId", UserID)
             p!!.putValue("invitationRuleUrl", "")
             BWSApplication.addToSegment("Invitation Rules Viewed", p, CONSTANTS.screen)
         }
@@ -152,7 +149,6 @@ class ReferFriendActivity : AppCompatActivity() {
      """.trimIndent())
                 startActivity(Intent.createChooser(shareIntent, "Share via"))
                 p = Properties()
-                p!!.putValue("userId", UserID)
                 p!!.putValue("referLink", ReferLink)
                 p!!.putValue("userReferCode", UserPromocode)
                 p!!.putValue("shareText", """

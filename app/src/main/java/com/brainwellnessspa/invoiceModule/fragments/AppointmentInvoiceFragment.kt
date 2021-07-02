@@ -147,7 +147,6 @@ class AppointmentInvoiceFragment : Fragment() {
                                     tvOrderTotalAmountTitle.setText("Order Total:");
                                     try {
                                         Properties p = new Properties();
-                                        p.putValue("userId", userId);
                                         p.putValue("invoiceId", listModelList.get(position).getInvoiceId());
                                         p.putValue("invoiceType", "Appointment");
                                         p.putValue("invoiceAmount", listModel.getResponseData().getAmount());

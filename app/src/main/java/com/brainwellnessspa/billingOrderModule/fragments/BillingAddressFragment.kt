@@ -93,7 +93,6 @@ class BillingAddressFragment : Fragment() {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                     /*Properties p = new Properties();
-                                    p.putValue("userId", UserID);
                                     BWSApplication.addToSegment("Billing Address Updated", p, CONSTANTS.track);*/BillingOrderActivity.myBackPressbill = true
                                     activity!!.finish()
                                 } catch (e: Exception) {
@@ -154,7 +153,6 @@ class BillingAddressFragment : Fragment() {
                             binding.etState.setText(listModel.responseData!!.state)
                             binding.etPostCode.setText(listModel.responseData!!.postcode)
                             val p = Properties()
-                            p.putValue("userId", userId)
                             p.putValue("fullName", listModel.responseData!!.name)
                             p.putValue("emailId", listModel.responseData!!.email)
                             p.putValue("mobile", listModel.responseData!!.phoneNumber)

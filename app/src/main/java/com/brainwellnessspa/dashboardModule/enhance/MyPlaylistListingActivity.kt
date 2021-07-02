@@ -931,8 +931,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             val userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserID, "")
             coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_CoUserID, "")
-            p.putValue("userId",userId )
-            p.putValue("coUserId", coUserId)
+
             p.putValue("playlistId", PlaylistID)
             p.putValue("playlistName", PlaylistName)
             p.putValue("playlistDescription", "")
@@ -1885,7 +1884,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun saveAllMedia(ctx: Context, playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, DB: AudioDatabase) {/*   p = Properties()
-           p.putValue("userId", userId)
+
            p.putValue("playlistId", downloadPlaylistDetails.getPlaylistID())
            p.putValue("playlistName", downloadPlaylistDetails.getPlaylistName())
            p.putValue("playlistDescription", downloadPlaylistDetails.getPlaylistDesc())

@@ -67,7 +67,6 @@ class ChangePinActivity : AppCompatActivity() {
         userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
-        p.putValue("coUserId", coUserID)
         BWSApplication.addToSegment("Change Pin Screen Viewed", p, CONSTANTS.screen)
         binding.etCurrentPIN.addTextChangedListener(userTextWatcher)
         binding.etNewPIN.addTextChangedListener(userTextWatcher)
@@ -138,7 +137,6 @@ class ChangePinActivity : AppCompatActivity() {
                             val listModel: ChangePinModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 val p = Properties()
-                                p.putValue("coUserId", coUserID)
                                 BWSApplication.addToSegment("Login Pin Changed", p, CONSTANTS.track)
                                 finish()
                                 BWSApplication.showToast(listModel.responseMessage, activity)

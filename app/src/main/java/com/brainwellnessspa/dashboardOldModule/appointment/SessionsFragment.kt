@@ -223,7 +223,6 @@ class SessionsFragment : Fragment() {
                                 val appointmentsAdapter = SessionListAdapter(listModel.responseData, getActivity(), fManager)
                                 binding.rvSessionList.adapter = appointmentsAdapter
                                 p = Properties()
-                                p!!.putValue("userId", userId)
                                 for (i in listModel.responseData!!.indices) {
                                     section!!.add(listModel.responseData!![i].id)
                                     section!!.add(listModel.responseData!![i].catName)
@@ -306,7 +305,6 @@ class SessionsFragment : Fragment() {
                 appointmentDetailsFragment.arguments = bundle
                 fragmentManager1.beginTransaction().addToBackStack("AppointmentDetailsFragment").replace(R.id.flContainer, appointmentDetailsFragment).commit()
                 p = Properties()
-                p!!.putValue("userId", userId)
                 p!!.putValue("sessionId", listModel.id)
                 p!!.putValue("sessionName", listModel.name)
                 BWSApplication.addToSegment("Session List Item Clicked", p, CONSTANTS.track)

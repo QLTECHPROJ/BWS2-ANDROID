@@ -216,7 +216,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         }
 
         Properties p = new Properties();
-        p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
         p.putValue("playlistDescription", PlaylistDescription);
@@ -578,7 +577,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
     public void SegmentTag() {
         Properties p = new Properties();
-        p.putValue("userId", UserID);
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
         p.putValue("playlistDescription", PlaylistDescription);

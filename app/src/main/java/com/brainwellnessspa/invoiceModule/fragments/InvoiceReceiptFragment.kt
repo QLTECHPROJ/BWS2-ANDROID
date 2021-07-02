@@ -91,7 +91,6 @@ class InvoiceReceiptFragment : DialogFragment() {
                                     binding.tvOrderTotalAmountTitle.text = "Order Total:"
                                     try {
                                         val p = Properties()
-                                        p.putValue("userId", userID)
                                         p.putValue("invoiceId", invoiceID)
                                         if (flag.equals("1", ignoreCase = true)) {
                                             p.putValue("invoiceType", "Memebrship")

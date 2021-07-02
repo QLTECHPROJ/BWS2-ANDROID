@@ -107,8 +107,6 @@ class AddAudioActivity : AppCompatActivity() {
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         notificationStatus = false
         p = Properties()
-        p!!.putValue("userId", userId)
-        p!!.putValue("coUserId", coUserId)
         if (playlistId.equals("", ignoreCase = true)) {
             p!!.putValue("source", "Manage Search Screen")
         } else {
@@ -144,8 +142,6 @@ class AddAudioActivity : AppCompatActivity() {
                     prepareSearchData(search, searchEditText)
                 }
                 p = Properties()
-                p!!.putValue("userId", userId)
-                p!!.putValue("coUserId", coUserId)
                 if (playlistId.equals("", ignoreCase = true)) {
                     p!!.putValue("source", "Manage Search Screen")
                 } else {
@@ -275,8 +271,6 @@ class AddAudioActivity : AppCompatActivity() {
                             suggestedAdpater = SuggestedAdpater(listModel!!.responseData, ctx)
                             binding.rvSuggestedList.adapter = suggestedAdpater
                             p = Properties()
-                            p!!.putValue("userId", userId)
-                            p!!.putValue("coUserId", coUserId)
                             if (playlistId.equals("", ignoreCase = true)) {
                                 p!!.putValue("source", "Manage Search Screen")
                             } else {
@@ -335,7 +329,6 @@ class AddAudioActivity : AppCompatActivity() {
                             binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
 
                             p = new Properties();
-                            p.putValue("userId", UserID);
                             p.putValue("source", "Add Audio Screen");
                             BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
 

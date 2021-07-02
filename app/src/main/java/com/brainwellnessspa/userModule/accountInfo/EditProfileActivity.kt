@@ -119,7 +119,6 @@ class EditProfileActivity : AppCompatActivity() {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         val p = Properties()
-        p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Edit Profile Screen View", p, CONSTANTS.screen)
 
         binding.ivCheckNumber.visibility = View.VISIBLE
@@ -223,7 +222,6 @@ class EditProfileActivity : AppCompatActivity() {
 
                                 analytics.identify(Traits().putEmail(viewModel.responseData!!.email).putName(viewModel.responseData!!.name).putPhone(viewModel.responseData!!.phoneNumber).putValue("coUserId", coUserId).putValue("userId", userId).putValue("name", viewModel.responseData!!.name).putValue("phone", viewModel.responseData!!.phoneNumber).putValue("email", viewModel.responseData!!.email))
                                 val p = Properties()
-                                p.putValue("coUserId", coUserId)
                                 p.putValue("name", viewModel.responseData!!.name)
                                 p.putValue("dob", viewModel.responseData!!.dob)
                                 p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)

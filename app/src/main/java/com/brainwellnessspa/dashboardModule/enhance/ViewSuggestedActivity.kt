@@ -178,7 +178,6 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 section.add(e)
             }
             val p = Properties()
-            p.putValue("userId", userId)
             p.putValue("audios", gson.toJson(section))
             p.putValue("source", "Search Screen")
             addToSegment("Suggested Audios List Viewed", p, CONSTANTS.screen)
@@ -197,7 +196,6 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 section.add(e);
             }
             Properties p = new Properties();
-            p.putValue("userId", UserID);
             p.putValue("playlists", gson.toJson(section));
             p.putValue("source", "Search Screen");
             BWSApplication.addToSegment("Suggested Playlists List Viewed", p, CONSTANTS.screen);

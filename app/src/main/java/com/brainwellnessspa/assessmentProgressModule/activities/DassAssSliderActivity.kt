@@ -74,9 +74,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
         /* This is segment tag */
         val p = Properties()
-        p.putValue("userId", USERID)
-        p.putValue("coUserId", CoUserID)
-        BWSApplication.addToSegment("Assessment Screen Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the next button click */
         binding.btnNext.setOnClickListener {
@@ -426,12 +424,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                             editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, CONSTANTS.FLAG_ONE)
                             editor.apply()
                             val p = Properties()
-                            p.putValue("userId", USERID)
-                            p.putValue("coUserId", CoUserID)
                             p.putValue("ans", gson.toJson(assAns).toString())
                             p.putValue("indexScore", listModel.getResponseData()?.indexScore)
                             p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
-                            BWSApplication.addToSegment("Assessment Form Submitted", p, CONSTANTS.track)
+                            BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
                             i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)

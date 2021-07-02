@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
         }
 
         val p = Properties()
-        p.putValue("coUserId", coUserId)
+
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (sleepTime.equals("", true)) {
@@ -341,8 +341,6 @@ class HomeFragment : Fragment() {
 
                         val p = Properties()
                         val gson = Gson()
-                        p.putValue("coUserId", coUserId)
-                        p.putValue("userId", userId)
                         p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                         p.putValue("coUserList", gson.toJson(section))
                         addToSegment("User List Popup Viewed", p, CONSTANTS.screen)

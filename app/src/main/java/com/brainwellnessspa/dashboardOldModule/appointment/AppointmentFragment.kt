@@ -80,7 +80,6 @@ class AppointmentFragment : Fragment() {
             i.data = Uri.parse("https://brainwellnessspa.com.au/bookings/services.php")
             startActivity(i)
             p = Properties()
-            p.putValue("userId", userId)
             p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php")
             BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track)
         }
@@ -268,7 +267,6 @@ class AppointmentFragment : Fragment() {
                                 val appointmentsAdapter = PreviousAppointmentsAdapter(listModel.responseData, getActivity())
                                 binding.rvPreviousData.adapter = appointmentsAdapter
                                 p = Properties()
-                                p.putValue("userId", userId)
                                 if (nextSessionViewModel!!.responseData!!.response.equals("", ignoreCase = true)) {
                                     p.putValue("nextSession", "")
                                 } else {
@@ -328,7 +326,7 @@ class AppointmentFragment : Fragment() {
             Glide.with(ctx!!).load(listModel[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
                 p = Properties()
-                p.putValue("userId", userId)
+
                 p.putValue("appointmentName", listModel[position].category)
                 p.putValue("appointmentCategory", listModel[position].catMenual)
                 BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track)

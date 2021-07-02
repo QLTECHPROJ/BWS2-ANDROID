@@ -335,7 +335,6 @@ class SignInActivity : AppCompatActivity() {
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                                 val p = Properties()
-                                p.putValue("userId", "")
                                 p.putValue("name", "")
                                 p.putValue("mobileNo", binding.etNumber.text.toString())
                                 p.putValue("email", "")

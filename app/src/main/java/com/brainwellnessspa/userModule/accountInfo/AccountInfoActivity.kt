@@ -26,7 +26,6 @@ class AccountInfoActivity : AppCompatActivity() {
         }
 
         val p = Properties()
-        p.putValue("coUserId", coUserId)
         BWSApplication.addToSegment("Account Info Screen Viewed", p, CONSTANTS.screen)
         binding.llEtProfile.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {

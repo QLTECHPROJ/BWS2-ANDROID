@@ -195,16 +195,11 @@ object CONSTANTS {
     const val SECRET_KEY = "SECRET_KEY"
     const val REGISTRATION_COMPLETE = "registrationComplete"
 
-    interface ACTION {
-        companion object {
-            const val MAIN_ACTION = "com.brainwellnessspa.action.main"
-            const val INIT_ACTION = "com.brainwellnessspa.action.init"
-            const val PREV_ACTION = "com.brainwellnessspa.action.prev"
-            const val PLAY_ACTION = "com.brainwellnessspa.action.play"
-            const val NEXT_ACTION = "com.brainwellnessspa.action.next"
-            const val STARTFOREGROUND_ACTION = "com.brainwellnessspa.action.startforeground"
-            const val STOPFOREGROUND_ACTION = "com.brainwellnessspa.action.stopforeground"
-        }
-    }
+    // Segment Events
+    const val Index_Score_Screen_Viewed = "Index Score Screen Viewed"
+    const val Assessment_Screen_Viewed = "Assessment Screen Viewed"
+    const val Assessment_Form_Submitted = "Assessment Form Submitted"
+    const val Billing_Order_Screen_Viewed = "Billing & Order Screen Viewed"
+    const val Cancel_Subscription_Viewed = "Cancel Subscription Viewed"
 
 }

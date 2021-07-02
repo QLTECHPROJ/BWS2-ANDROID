@@ -131,8 +131,6 @@ class AddProfileActivity : AppCompatActivity() {
             binding.etEmail.isEnabled = false
 
             val p = Properties()
-            p.putValue("userId", userID)
-            p.putValue("coUserId", coUserID)
             p.putValue("name", coName)
             p.putValue("mobileNo", coNumber)
             p.putValue("email", coEMAIL)
@@ -203,8 +201,6 @@ class AddProfileActivity : AppCompatActivity() {
                                 if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     showToast(listModel.responseMessage, activity)
                                     val p = Properties()
-                                    p.putValue("userId", listModel.responseData!!.mainAccountID)
-                                    p.putValue("coUserId", listModel.responseData!!.userId)
                                     p.putValue("name", listModel.responseData!!.name)
                                     p.putValue("mobileNo", binding.etMobileNumber.text.toString())
                                     p.putValue("email", listModel.responseData!!.email)
@@ -244,8 +240,6 @@ class AddProfileActivity : AppCompatActivity() {
                                 finish()
                                 showToast(listModel.responseMessage, activity)
                                 val p = Properties()
-                                p.putValue("userId", userID)
-                                p.putValue("coUserId", coUserID)
                                 p.putValue("name", coName)
                                 p.putValue("mobileNo", coNumber)
                                 p.putValue("email", coEMAIL)

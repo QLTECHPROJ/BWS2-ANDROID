@@ -148,7 +148,6 @@ class ReminderListsActivity : AppCompatActivity() {
                             showTooltips()
                             LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
                             p = Properties()
-                            p!!.putValue("coUserId", coUserId)
                             if (listModel.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.VISIBLE
                                 binding.rvReminderDetails.visibility = View.GONE
