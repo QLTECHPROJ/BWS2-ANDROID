@@ -105,7 +105,7 @@ class ViewAllAudioFragment : Fragment() {
     }
 
     private fun callObserverMethod() {
-        DB.taskDao().geAllDataz("", coUserId).observe(requireActivity(), { audioList: List<DownloadAudioDetailsUniq> ->
+        DB.taskDao()?.geAllDataz("", coUserId)?.observe(requireActivity(), { audioList: List<DownloadAudioDetailsUniq> ->
             //            refreshData();
             binding.tvTitle.text = name
             val listModelList = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
@@ -496,7 +496,7 @@ class ViewAllAudioFragment : Fragment() {
         }
 
         private fun getMedia(position: Int) {
-            DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe((ctx as LifecycleOwner?)!!, { audioList: List<String?>? ->
+            DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.observe((ctx as LifecycleOwner?)!!, { audioList: List<String?>? ->
                 val downloadAudioDetailsList = audioList
                 var pos:Int = 0
                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)

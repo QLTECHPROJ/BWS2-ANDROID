@@ -70,17 +70,23 @@ interface APINewInterface {
         @Field("Email")
         email: String?): Call<ForgotPasswordModel>
 
+    @POST("setloginpin")
+    @FormUrlEncoded
+    fun getSetLoginPin(
+        @Field("UserId")
+        userId: String?,
+        @Field("Pin")
+        pin: String?): Call<SetLoginPinModel>
+
     @POST("addcouser")
     @FormUrlEncoded
     fun getAddUser(
         @Field("MainAccountID")
         MainAccountID: String?,
-        @Field("UserName")
-        userName: String?,
+        @Field("Name")
+        name: String?,
         @Field("Email")
-        email: String?,
-        @Field("MobileNo")
-        mobileNo: String?): Call<AddUserModel>
+        email: String?): Call<AddUserModel>
 
     @get:GET("assesmentquestionlist")
     val assessmentQus: Call<AssessmentQusModel>

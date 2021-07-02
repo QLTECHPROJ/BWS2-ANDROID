@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
@@ -434,15 +433,15 @@ class MyPlayerActivity : AppCompatActivity() {
                 listSize = arrayList.size
                 for (i in 0 until listSize) {
                     mainPlayModel = MainPlayModel()
-                    mainPlayModel.id = arrayList[i]!!.id.toString()
-                    mainPlayModel.name = arrayList[i]!!.name.toString()
-                    mainPlayModel.audioFile = arrayList[i]!!.audioFile.toString()
-                    mainPlayModel.playlistID = arrayList[i]!!.playlistID.toString()
-                    mainPlayModel.audioDirection = arrayList[i]!!.audioDirection.toString()
-                    mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat.toString()
-                    mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory.toString()
-                    mainPlayModel.imageFile = arrayList[i]!!.imageFile.toString()
-                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
+                    mainPlayModel.id = arrayList[i]!!.id
+                    mainPlayModel.name = arrayList[i]!!.name
+                    mainPlayModel.audioFile = arrayList[i]!!.audioFile
+                    mainPlayModel.playlistID = arrayList[i]!!.playlistID
+                    mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
+                    mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
+                    mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
+                    mainPlayModel.imageFile = arrayList[i]!!.imageFile
+                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
                     mainPlayModelList.add(mainPlayModel)
                 }
                 val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -841,7 +840,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 //                } else if (AudioFragment.IsLock.equals("2", ignoreCase = true)) {
                 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx)
                 //                } else {
-                if (!mainPlayModelList[position].id.equals("0")) callDownload()
+                if (mainPlayModelList[position].id != "0") callDownload()
                 //                }
             } else {
                 showToast(getString(R.string.no_server_found), act)
@@ -1258,8 +1257,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
                     p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
                     p.putValue("position", GetCurrentAudioPosition())
-                    var audioType: String
-                    audioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
+                    val audioType: String = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
                         p.putValue("audioType", "Downloaded")
                         "Downloaded"
                     } else {
@@ -1657,7 +1655,7 @@ class MyPlayerActivity : AppCompatActivity() {
             p.putValue("bitRate", "")
             p.putValue("audioService", appStatus(ctx))
             p.putValue("sound", hundredVolume.toString())
-            BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track)
+            addToSegment("Audio Download Started", p, CONSTANTS.track)
             // }
         }
     }
@@ -1715,7 +1713,7 @@ class MyPlayerActivity : AppCompatActivity() {
         DB = getAudioDataBase(ctx)
         try {
             AudioDatabase.databaseWriteExecutor.execute {
-                DB!!.taskDao().insertMedia(downloadAudioDetails)
+                DB!!.taskDao()?.insertMedia(downloadAudioDetails)
             }
         } catch (e: java.lang.Exception) {
             println(e.message)
@@ -1729,7 +1727,7 @@ class MyPlayerActivity : AppCompatActivity() {
     private fun getMedia2() {
         DB = getAudioDataBase(ctx)
         try {
-            DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).observe(this, { audiolist: List<DownloadAudioDetails> ->
+            DB!!.taskDao()?.getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId)?.observe(this, { audiolist: List<DownloadAudioDetails> ->
                 if (audiolist.isNotEmpty()) {
                     disableDownload()
                     if (audiolist[0].DownloadProgress == 100) {
@@ -1740,7 +1738,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         binding.pbProgress.visibility = View.VISIBLE
                         GetMediaPer()
                     }
-                    DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { }
+                    DB!!.taskDao()?.getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId)?.removeObserver { }
                 } else {
                     /* boolean entryNot = false;
              for (int i = 0; i < fileNameList.size(); i++) {
@@ -1757,7 +1755,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     /*    } else {
             GetMediaPer();
             disableDownload();
-            }*/DB!!.taskDao().getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId).removeObserver { }
+            }*/DB!!.taskDao()?.getaudioByPlaylist1(mainPlayModelList[position].audioFile, "", coUserId)?.removeObserver { }
                 }
             } as (List<DownloadAudioDetails?>) -> Unit)
         } catch (e: java.lang.Exception) {
@@ -1843,13 +1841,13 @@ class MyPlayerActivity : AppCompatActivity() {
     /* get completed downlaoded file name list for play and player initialize*/
     private fun getAllMedia(DB: AudioDatabase): List<String?> {
         try {
-            DB.taskDao().geAllDataBYDownloadedForAll("Complete").observe(this, { audioList: List<String?> ->
+            DB.taskDao()?.geAllDataBYDownloadedForAll("Complete")?.observe(this, { audioList: List<String?> ->
                 downloadAudioDetailsList = audioList as ArrayList<String>
                 audioClick = true
                 if (!downloadClick) {
                     getPrepareShowData()
                 }
-                DB.taskDao().geAllDataBYDownloadedForAll("Complete").removeObserver { }
+                DB.taskDao()?.geAllDataBYDownloadedForAll("Complete")?.removeObserver { }
             })
         } catch (e: java.lang.Exception) {
             println(e.message)
@@ -1878,9 +1876,9 @@ class MyPlayerActivity : AppCompatActivity() {
     /* get completed downlaoded file name list for play */
     private fun getAllMedia1(DB: AudioDatabase): List<String?> {
         try {
-            DB.taskDao().geAllDataBYDownloadedForAll("Complete").observe(this, { audioList: List<String?> ->
+            DB.taskDao()?.geAllDataBYDownloadedForAll("Complete")?.observe(this, { audioList: List<String?> ->
                 downloadAudioDetailsList = audioList as ArrayList<String>
-                DB.taskDao().geAllDataBYDownloadedForAll("Complete").removeObserver { }
+                DB.taskDao()?.geAllDataBYDownloadedForAll("Complete")?.removeObserver { }
             })
         } catch (e: java.lang.Exception) {
             println(e.message)

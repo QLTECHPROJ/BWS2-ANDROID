@@ -86,7 +86,7 @@
                     app:hintTextColor="@color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNewPin"
+                        android:id="@+id/etNewPIN"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_31sdp"
                         android:background="@null"
@@ -95,7 +95,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/newly_login_pin"
                         android:imeOptions="actionNext"
-                        android:maxLength="16"
+                        android:maxLength="4"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black"
@@ -109,7 +109,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txtNewPinError"
+                android:id="@+id/txtNewPINError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -143,7 +143,7 @@
                     app:hintTextColor="@color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etConfirmPin"
+                        android:id="@+id/etConfirmPIN"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_31sdp"
                         android:background="@null"
@@ -152,7 +152,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/confirm_login_pin"
                         android:imeOptions="actionNext"
-                        android:maxLength="16"
+                        android:maxLength="4"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black"
@@ -166,7 +166,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txtConfirmPinError"
+                android:id="@+id/txtConfirmPINError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -188,13 +188,41 @@
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_25sdp"
-            android:background="@drawable/light_green_rounded_filled"
+            android:background="@drawable/gray_round_cornor"
             android:fontFamily="@font/montserrat_medium"
             android:paddingVertical="@dimen/_2sdp"
             android:text="@string/Done"
+            android:enabled="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
             tools:ignore="SpUsage" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

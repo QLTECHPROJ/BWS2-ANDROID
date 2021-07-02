@@ -181,7 +181,7 @@ class AptAudioFragment : Fragment() {
         val userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         BWSApplication.DB = BWSApplication.getAudioDataBase(ctx)
-        BWSApplication.DB.taskDao().getLastIdByuId1(audioFile, coUserId).observe(requireActivity(), { audioList: List<DownloadAudioDetails?> ->
+        BWSApplication.DB.taskDao()?.getLastIdByuId1(audioFile, coUserId)?.observe(requireActivity(), { audioList: List<DownloadAudioDetails?> ->
             when {
                 audioList.isNotEmpty() -> {
             //                if (audioList.get(0).getDownload().equalsIgnoreCase("1")) {
@@ -467,7 +467,7 @@ class AptAudioFragment : Fragment() {
                 holder.binding.ivDownload.visibility = View.GONE
                 fileNameList = url1
                 //                handler1.postDelayed(updateSongTime1, 500);
-                val dirPath = FileUtils.getFilePath(activity!!.applicationContext, name)
+                val dirPath = FileUtils.getFilePath(activity!!.applicationContext, name.toString())
                 saveMedia(ByteArray(1024), dirPath, listModelList[position], holder.binding.llDownload)
             }
             holder.binding.llRemoveAudio.setOnClickListener {
@@ -609,7 +609,7 @@ class AptAudioFragment : Fragment() {
             }
             BWSApplication.DB = BWSApplication.getAudioDataBase(ctx)
             try {
-                AudioDatabase.databaseWriteExecutor.execute { BWSApplication.DB.taskDao().insertMedia(downloadAudioDetails) }
+                AudioDatabase.databaseWriteExecutor.execute { BWSApplication.DB.taskDao()?.insertMedia(downloadAudioDetails) }
             } catch (e: Exception) {
                 println(e.message)
             } catch (e: OutOfMemoryError) {

@@ -32,17 +32,15 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.BWSApplication.audioClick
-import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
-import com.brainwellnessspa.BWSApplication.player
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.AddProfileActivity
+import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
@@ -113,7 +111,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n") override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @SuppressLint("SetTextI18n")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         ctx = requireActivity()
@@ -216,12 +215,7 @@ class HomeFragment : Fragment() {
 
                 /* Add new user button click */
                 layoutBinding.llAddNewUser.setOnClickListener {
-                    val i = Intent(act, AddProfileActivity::class.java)
-                    i.putExtra("AddProfile", "Add")
-                    i.putExtra("CoUserID", "")
-                    i.putExtra("CoEMAIL", "")
-                    i.putExtra("CoName", "")
-                    i.putExtra("CoNumber", "")
+                    val i = Intent(act, AddCouserActivity::class.java)
                     startActivity(i)
                     mBottomSheetDialog!!.hide()
                 }
@@ -377,13 +371,13 @@ class HomeFragment : Fragment() {
         Log.e("CoUSerID", coUserId.toString())
         if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result.token
-                    Log.e("newToken", newToken)
-                    val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
-                    editor.apply()
-                    editor.commit()
-                }
+                val newToken = task.result.token
+                Log.e("newToken", newToken)
+                val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, newToken) //Friend
+                editor.apply()
+                editor.commit()
+            }
             val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
             fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")
         }
@@ -391,7 +385,8 @@ class HomeFragment : Fragment() {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.client.getHomeScreenData(coUserId)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
-                @SuppressLint("ResourceAsColor", "SetTextI18n") override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
+                @SuppressLint("ResourceAsColor", "SetTextI18n")
+                override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel = response.body()!!
@@ -771,7 +766,7 @@ class HomeFragment : Fragment() {
     /* Get Downloaded Media for offline play and play that media  */
     private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
         AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList = DB.taskDao().geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
+            downloadAudioDetailsList = DB.taskDao()?.geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
         }
         var pos = 0
         val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -877,13 +872,13 @@ class HomeFragment : Fragment() {
     /* Get Playlist is downloaded or not */
     private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
-            DB.taskDao().getPlaylist1(PlaylistID, coUserId).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+            DB.taskDao()?.getPlaylist1(PlaylistID, coUserId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
                 myDownloads = if (audioList.isNotEmpty()) {
-                        "1"
-                    } else {
-                        "0"
-                    }
-                })
+                    "1"
+                } else {
+                    "0"
+                }
+            })
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -993,7 +988,8 @@ class HomeFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val modelList = model.userList
             holder.bind.tvName.text = modelList!![position].name
 
@@ -1082,7 +1078,8 @@ class HomeFragment : Fragment() {
                                 progressBar.invalidate()
                                 val listCall = APINewClient.client.getVerifyPin(modelList[position].coUserId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                                 listCall.enqueue(object : Callback<AuthOtpModel> {
-                                    @SuppressLint("HardwareIds") override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                    @SuppressLint("HardwareIds")
+                                    override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                         try {
                                             progressBar.visibility = View.GONE
                                             val listModel: AuthOtpModel = response.body()!!

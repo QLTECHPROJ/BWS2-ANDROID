@@ -436,5 +436,13 @@
     <string name="forgot_pin">Forgot PIN?</string>
     <string name="done">Done</string>
     <string name="you_already_have_access_to_6_month_of_enhance_program">You already have access to 6 month of Enhance program.</string>
+    <string name="pls_provide_valid_email">Please provide a valid email address</string>
+    <string name="pls_provide_email">Please provide a email address</string>
+    <string name="pls_provide_name">Please provide a Name</string>
+    <string name="pls_provide_mobileno">Please provide a mobile number</string>
+    <string name="pls_provide_valid_mobileno">Please provide a valid mobile number</string>
+    <string name="your_playlist_is_ready">You playlist is ready</string>
+    <string name="playlist_ready_subtitle">We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program.</string>
+    <string name="with_same_mobileno">With Same Mobile Number</string>
 </resources>
 

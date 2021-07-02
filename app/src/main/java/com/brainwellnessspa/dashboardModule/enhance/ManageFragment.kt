@@ -239,8 +239,8 @@ class ManageFragment : Fragment() {
     }
 
     override fun onPause() {
-        DB.taskDao().geAllDataz("", coUserId).removeObserver {}
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).removeObserver {}
+        DB.taskDao()?.geAllDataz("", coUserId)?.removeObserver {}
+        DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.removeObserver {}
         super.onPause()
     }
 
@@ -251,7 +251,7 @@ class ManageFragment : Fragment() {
     }
 
     private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>, act: Activity, DB: AudioDatabase) {
-        DB.taskDao().geAllDataz("", coUserId).observe(requireActivity(), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
+        DB.taskDao()?.geAllDataz("", coUserId)?.observe(requireActivity(), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
             val details = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
             if (downloadAudioDetails.isNotEmpty()) {
                 for (i in downloadAudioDetails.indices) {
@@ -375,7 +375,7 @@ class ManageFragment : Fragment() {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
+        DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
         })
@@ -386,7 +386,7 @@ class ManageFragment : Fragment() {
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
+        DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
             var pos = 0
@@ -769,7 +769,7 @@ class ManageFragment : Fragment() {
     }
 
     private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
-        DB.taskDao().geAllLiveDataBYDownloaded("Complete", coUserId).observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
+        DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.observe(ctx as (LifecycleOwner), { audioList: List<String?>? ->
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
             var pos = 0
@@ -1021,7 +1021,7 @@ class ManageFragment : Fragment() {
 
     private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
-            DB.taskDao().getPlaylist1(PlaylistID, coUserId).observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+            DB.taskDao()?.getPlaylist1(PlaylistID, coUserId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
                 myDownloads = if (audioList.isNotEmpty()) {
                     "1"
                 } else {
@@ -1276,6 +1276,7 @@ class ManageFragment : Fragment() {
             return MyViewHolder(v)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModel[position].name
             val measureRatio = measureRatio(ctx, 20f, 1f, 1f, 0.48f, 20f)

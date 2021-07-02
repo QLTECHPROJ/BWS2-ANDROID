@@ -1,5 +1,6 @@
 package com.brainwellnessspa.userModule.accountInfo
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -83,6 +84,7 @@ class ChangePinActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun changePin() {
         if (binding.etCurrentPIN.text.toString() == "") {
             binding.txtCurrentPINError.text = "Please provide a current valid PIN"

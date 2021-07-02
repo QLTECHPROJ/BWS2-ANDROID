@@ -31,8 +31,8 @@ class PlaylistDoneActivity : AppCompatActivity() {
         p.putValue("coUserId", coUserId)
         addToSegment("Suggested Playlist Created", p, CONSTANTS.screen)
 
-        binding.tvTitle.text = "You playlist is ready"
-        binding.tvSubTitle.text = "We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program."
+        binding.tvTitle.text = getString(R.string.your_playlist_is_ready)
+        binding.tvSubTitle.text = getString(R.string.playlist_ready_subtitle)
 
         binding.btnContinue.setOnClickListener {
             if (intent.extras != null) {

@@ -171,7 +171,7 @@ class MainPlaylistFragment : Fragment() {
     }
 
     private fun getPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
-        DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique?>? ->
+        DB.taskDao()?.getAllPlaylist1(coUserId)?.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique?>? ->
                 val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
                 if (audioList!!.isNotEmpty()) {
                     for (i in audioList.indices) {

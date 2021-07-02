@@ -15,20 +15,20 @@ import com.brainwellnessspa.utility.CONSTANTS
 
 class ThankYouActivity : AppCompatActivity() {
     lateinit var binding: ActivityThankYouBinding
-    var userId :String? = null
-    var coUserId :String? = null
-    var userName :String? = null
-    var isProfileCompleted :String? = null
-    var isAssessmentCompleted :String? = null
-    var avgSleepTime :String? = null
+    var userId: String? = null
+    private var mainAccountID: String? = null
+    var userName: String? = null
+    var isProfileCompleted: String? = null
+    var isAssessmentCompleted: String? = null
+    var avgSleepTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_thank_you)
 
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")

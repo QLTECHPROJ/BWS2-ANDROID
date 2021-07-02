@@ -10,6 +10,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,12 +27,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -51,6 +57,10 @@ class UserListActivity : AppCompatActivity() {
     var userId: String? = ""
     var coUserId: String? = ""
     var coEmail: String? = ""
+    var isMainAccount: String? = ""
+    var isProfileCompleted: String? = ""
+    var isAssessmentCompleted: String? = ""
+    var avgSleepTime: String? = ""
     lateinit var adapter: UserListAdapter
     private lateinit var editTexts: Array<EditText>
     var tvSendOTPool: Boolean = true
@@ -65,18 +75,19 @@ class UserListActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")/* binding.llBack.setOnClickListener {
+        coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        isProfileCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
+        isAssessmentCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+        avgSleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+        /* binding.llBack.setOnClickListener {
              finish()
          }*/
 
 
         binding.llAddNewUser.setOnClickListener {
-            val i = Intent(applicationContext, AddProfileActivity::class.java)
-            i.putExtra("AddProfile", "Add")
-            i.putExtra("CoUserID", "")
-            i.putExtra("CoEMAIL", "")
-            i.putExtra("CoName", "")
-            i.putExtra("CoNumber", "")
+            val i = Intent(applicationContext, AddCouserActivity::class.java)
             startActivity(i)
         }
 
@@ -95,7 +106,7 @@ class UserListActivity : AppCompatActivity() {
         finishAffinity()
     }
 
-    class UserListAdapter(listModel: AddedUserListModel.ResponseData, private var activity: Activity, private var ctx: Context, var binding: ActivityUserListBinding, var userId: String, var coUserId: String, var coEmail: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    class UserListAdapter(listModel: AddedUserListModel.ResponseData, private var activity: Activity, private var ctx: Context, var binding: ActivityUserListBinding, var userId: String, var coUserId: String, var coEmail: String, var isMainAccount: String, var isProfileCompleted: String, var avgSleepTime: String, var isAssessmentCompleted: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var userList = UserListActivity()
         private var selectedItem = -1
         private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.userList
@@ -150,221 +161,261 @@ class UserListActivity : AppCompatActivity() {
             }
 
             binding.btnLogIn.setOnClickListener {
-                userList.dialog = Dialog(activity)
-                userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                userList.dialog.setContentView(R.layout.comfirm_pin_layout)
-                userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-                val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
-                val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
-                val tvTitle: TextView = userList.dialog.findViewById(R.id.tvTitle)
-                val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
-                val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
-                val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
-                val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
-                tvTitle.text = "Unlock the app"
-                userList.editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
-                edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
-                edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
-                edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
-                edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
-                edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
-                edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
-                edtOTP4.setOnKeyListener(PinOnKeyListener(3, userList.editTexts))
-                userList.dialog.setCancelable(true)
-                userList.dialog.setCanceledOnTouchOutside(true)
-                userList.dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        userList.dialog.dismiss()
-                        return@setOnKeyListener true
+                if (isMainAccount.equals("1", ignoreCase = true)) {
+                    if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(activity, WalkScreenActivity::class.java)
+                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            activity.startActivity(intent)
+                            activity.finish()
+                        }, (2 * 800).toLong())
+                    } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(activity, SleepTimeActivity::class.java)
+                            activity.startActivity(intent)
+                            activity.finish()
+                        }, (2 * 800).toLong())
+                    } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(activity, BottomNavigationActivity::class.java)
+                            intent.putExtra("IsFirst", "0")
+                            activity.startActivity(intent)
+                            activity.finish()
+                        }, (2 * 800).toLong())
                     }
-                    false
-                }
-                btnDone.setOnClickListener {
-                    if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
-                        txtError.visibility = View.VISIBLE
-                        txtError.text = "Please enter OTP"
-                    } else {
-                        txtError.visibility = View.GONE
-                        txtError.text = ""
-                        if (isNetworkConnected(activity)) {
+                } else {
+                    userList.dialog = Dialog(activity)
+                    userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    userList.dialog.setContentView(R.layout.comfirm_pin_layout)
+                    userList.dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    userList.dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-                            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
-                            listCall.enqueue(object : Callback<AuthOtpModel> {
-                                override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
-                                    try {
-                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                        val listModel: AuthOtpModel = response.body()!!
-                                        when {
-                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
-                                                val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
-                                                val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
-
-                                                /*   if (!listModel.responseData!!.userID.equals(logoutUserID, ignoreCase = true)
-                                                                                           && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
-                                                                                       callObserve1(ctx)
-                                                                                   } else {
-                                                                                       callObserve2(ctx)
-                                                                                   }*/
-                                                Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
-                                                Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
-                                                logout = false
-                                                val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(listModel.ResponseData.UserId)
-                                                listCall.enqueue(object : Callback<AuthOtpModel> {
-                                                    @SuppressLint("HardwareIds")
-                                                    override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
-                                                        try {
-                                                            val authOtpModel: AuthOtpModel = response.body()!!
-                                                            val intent = Intent(activity, ThankYouActivity::class.java)
-                                                            activity.startActivity(intent)
-                                                            activity.finish()
-                                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                                            val editor = shared.edit()
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
-                                                            editor.apply()
-                                                            val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                                            val edited = sharded.edit()
-                                                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                                                            val selectedCategoriesTitle = arrayListOf<String>()
-                                                            val selectedCategoriesName = arrayListOf<String>()
-                                                            val gson = Gson()
-                                                            for (i in authOtpModel.ResponseData.AreaOfFocus) {
-                                                                selectedCategoriesTitle.add(i.MainCat)
-                                                                selectedCategoriesName.add(i.RecommendedCat)
-                                                            }
-                                                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                                            edited.apply()
-
-                                                            val activity = SplashActivity()
-                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real))
-
-                                                            analytics.identify(Traits().putEmail(listModel.ResponseData.Email)
-                                                                .putName(listModel.ResponseData.Name)
-                                                                .putPhone(listModel.ResponseData.Mobile)
-                                                                .putValue("coUserId", listModel.ResponseData.UserId)
-                                                                .putValue("userId", listModel.ResponseData.MainAccountID)
-                                                                .putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
-                                                                .putValue("deviceType", "Android")
-                                                                .putValue("name", listModel.ResponseData.Name)
-                                                                .putValue("countryCode", "").putValue("countryName", "")
-                                                                .putValue("phone", listModel.ResponseData.Mobile)
-                                                                .putValue("email", listModel.ResponseData.Email)
-                                                                .putValue("DOB", listModel.ResponseData.DOB)
-                                                                .putValue("profileImage", listModel.ResponseData.Image)
-                                                                .putValue("plan", "").putValue("planStatus", "")
-                                                                .putValue("planStartDt", "")
-                                                                .putValue("planExpiryDt", "")
-                                                                .putValue("clinikoId", "")
-                                                                .putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                                                .putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                                                .putValue("indexScore", listModel.ResponseData.indexScore)
-                                                                .putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                                                .putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                                                .putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
-
-                                                            val p1 = Properties()
-                                                            p1.putValue("CoUserID", listModel.ResponseData.UserId)
-                                                            p1.putValue("userID", listModel.ResponseData.MainAccountID)
-                                                            p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
-                                                            p1.putValue("deviceType", "Android")
-                                                            p1.putValue("name", listModel.ResponseData.Name)
-                                                            p1.putValue("countryCode", "")
-                                                            p1.putValue("countryName", "")
-                                                            p1.putValue("phone", listModel.ResponseData.Mobile)
-                                                            p1.putValue("email", listModel.ResponseData.Email)
-                                                            p1.putValue("plan", "")
-                                                            p1.putValue("planStatus", "")
-                                                            p1.putValue("planStartDt", "")
-                                                            p1.putValue("planExpiryDt", "")
-                                                            p1.putValue("clinikoId", "")
-                                                            p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                                            p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                                            p1.putValue("indexScore", listModel.ResponseData.indexScore)
-                                                            p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                                            p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                                            p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
-                                                        } catch (e: Exception) {
-                                                            e.printStackTrace()
-                                                        }
-                                                    }
-
-                                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                                                    }
-                                                })
-
-                                                userList.dialog.dismiss() //                                            showToast(
-                                                //                                                listModel.responseMessage,
-                                                //                                                activity
-                                                //                                            )
-                                            }
-                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
-                                                txtError.visibility = View.VISIBLE
-                                                txtError.text = listModel.ResponseMessage
-                                            }
-                                            else -> {
-                                                txtError.visibility = View.VISIBLE
-                                                txtError.text = listModel.ResponseMessage
-                                            }
-                                        }
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                }
-                            })
+                    val btnDone: Button = userList.dialog.findViewById(R.id.btnDone)
+                    val txtError: TextView = userList.dialog.findViewById(R.id.txtError)
+                    val tvForgotPin: TextView = userList.dialog.findViewById(R.id.tvForgotPin)
+                    val tvTitle: TextView = userList.dialog.findViewById(R.id.tvTitle)
+                    val edtOTP1: EditText = userList.dialog.findViewById(R.id.edtOTP1)
+                    val edtOTP2: EditText = userList.dialog.findViewById(R.id.edtOTP2)
+                    val edtOTP3: EditText = userList.dialog.findViewById(R.id.edtOTP3)
+                    val edtOTP4: EditText = userList.dialog.findViewById(R.id.edtOTP4)
+                    tvTitle.text = "Unlock the app"
+                    userList.editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                    edtOTP1.addTextChangedListener(PinTextWatcher(activity, 0, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                    edtOTP2.addTextChangedListener(PinTextWatcher(activity, 1, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                    edtOTP3.addTextChangedListener(PinTextWatcher(activity, 2, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                    edtOTP4.addTextChangedListener(PinTextWatcher(activity, 3, userList.editTexts, btnDone, edtOTP1, edtOTP2, edtOTP3, edtOTP4, userList.tvSendOTPool))
+                    edtOTP1.setOnKeyListener(PinOnKeyListener(0, userList.editTexts))
+                    edtOTP2.setOnKeyListener(PinOnKeyListener(1, userList.editTexts))
+                    edtOTP3.setOnKeyListener(PinOnKeyListener(2, userList.editTexts))
+                    edtOTP4.setOnKeyListener(PinOnKeyListener(3, userList.editTexts))
+                    userList.dialog.setCancelable(true)
+                    userList.dialog.setCanceledOnTouchOutside(true)
+                    userList.dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            userList.dialog.dismiss()
+                            return@setOnKeyListener true
+                        }
+                        false
+                    }
+                    btnDone.setOnClickListener {
+                        if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                            txtError.visibility = View.VISIBLE
+                            txtError.text = "Please enter OTP"
                         } else {
-                            showToast(activity.getString(R.string.no_server_found), activity)
+                            txtError.visibility = View.GONE
+                            txtError.text = ""
+                            if (isNetworkConnected(activity)) {
+
+                                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                listCall.enqueue(object : Callback<AuthOtpModel> {
+                                    override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                        try {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            val listModel: AuthOtpModel = response.body()!!
+                                            when {
+                                                listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                    val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
+                                                    val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
+                                                    val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
+
+                                                    /*   if (!listModel.responseData!!.userID.equals(logoutUserID, ignoreCase = true)
+                                                                                               && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
+                                                                                           callObserve1(ctx)
+                                                                                       } else {
+                                                                                           callObserve2(ctx)
+                                                                                       }*/
+                                                    Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
+                                                    Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
+                                                    logout = false
+                                                    val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(listModel.ResponseData.UserId)
+                                                    listCall.enqueue(object : Callback<AuthOtpModel> {
+                                                        @SuppressLint("HardwareIds")
+                                                        override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                                            try {
+                                                                val authOtpModel: AuthOtpModel = response.body()!!
+                                                                if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
+                                                                    if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                                        Handler(Looper.getMainLooper()).postDelayed({
+                                                                            val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                            activity.startActivity(intent)
+                                                                            activity.finish()
+                                                                        }, (2 * 800).toLong())
+                                                                    } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                                        Handler(Looper.getMainLooper()).postDelayed({
+                                                                            val intent = Intent(activity, WalkScreenActivity::class.java)
+                                                                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                                                                            activity.startActivity(intent)
+                                                                            activity.finish()
+                                                                        }, (2 * 800).toLong())
+                                                                    } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                                                        Handler(Looper.getMainLooper()).postDelayed({
+                                                                            val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                                            activity.startActivity(intent)
+                                                                            activity.finish()
+                                                                        }, (2 * 800).toLong())
+                                                                    } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                                                        Handler(Looper.getMainLooper()).postDelayed({
+                                                                            val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                            intent.putExtra("IsFirst", "0")
+                                                                            activity.startActivity(intent)
+                                                                            activity.finish()
+                                                                        }, (2 * 800).toLong())
+                                                                    }
+                                                                } else if (authOtpModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || authOtpModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                                    Handler(Looper.getMainLooper()).postDelayed({
+                                                                        val intent = Intent(activity, AddCouserActivity::class.java)
+                                                                        activity.startActivity(intent)
+                                                                        activity.finish()
+                                                                    }, (2 * 800).toLong())
+                                                                }
+
+                                                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                                val editor = shared.edit()
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                                                                editor.apply()
+                                                                val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                                val edited = sharded.edit()
+                                                                edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                                val selectedCategoriesTitle = arrayListOf<String>()
+                                                                val selectedCategoriesName = arrayListOf<String>()
+                                                                val gson = Gson()
+                                                                for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                                                                    selectedCategoriesTitle.add(i.MainCat)
+                                                                    selectedCategoriesName.add(i.RecommendedCat)
+                                                                }
+                                                                edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                                edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                                edited.apply()
+
+                                                                val activity = SplashActivity()
+                                                                activity.setAnalytics(activity.getString(R.string.segment_key_real))
+
+                                                                analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
+
+                                                                val p1 = Properties()
+                                                                p1.putValue("CoUserID", listModel.ResponseData.UserId)
+                                                                p1.putValue("userID", listModel.ResponseData.MainAccountID)
+                                                                p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                                p1.putValue("deviceType", "Android")
+                                                                p1.putValue("name", listModel.ResponseData.Name)
+                                                                p1.putValue("countryCode", "")
+                                                                p1.putValue("countryName", "")
+                                                                p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                                p1.putValue("email", listModel.ResponseData.Email)
+                                                                p1.putValue("plan", "")
+                                                                p1.putValue("planStatus", "")
+                                                                p1.putValue("planStartDt", "")
+                                                                p1.putValue("planExpiryDt", "")
+                                                                p1.putValue("clinikoId", "")
+                                                                p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                                p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                                p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                                p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                                p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                                p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                                addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                            } catch (e: Exception) {
+                                                                e.printStackTrace()
+                                                            }
+                                                        }
+
+                                                        override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                                        }
+                                                    })
+
+                                                    userList.dialog.dismiss() //                                            showToast(
+                                                    //                                                listModel.responseMessage,
+                                                    //                                                activity
+                                                    //                                            )
+                                                }
+                                                listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                    txtError.visibility = View.VISIBLE
+                                                    txtError.text = listModel.ResponseMessage
+                                                }
+                                                else -> {
+                                                    txtError.visibility = View.VISIBLE
+                                                    txtError.text = listModel.ResponseMessage
+                                                }
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    }
+                                })
+                            } else {
+                                showToast(activity.getString(R.string.no_server_found), activity)
+                            }
                         }
                     }
-                }
-                userList.dialog.show()
-            }
 
-            binding.tvForgotPin.setOnClickListener {
-                val dialog = Dialog(activity)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.add_couser_continue_layout)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
-                val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
-                val tvText = dialog.findViewById<TextView>(R.id.tvText)
-                ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                tvText.text = "A new pin has been sent to \nyour mail id \njoh*****@gmail.com."
+                    tvForgotPin.setOnClickListener {
+                        val dialog = Dialog(activity)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.add_couser_continue_layout)
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
+                        val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
+                        val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                        ivIcon.setImageResource(R.drawable.ic_email_success_icon)
+                        val email: String = coUsersModel!![position].name.toString()
+                        tvText.text = "A new pin has been sent to \nyour mail id \n$email."
 
-                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        return@setOnKeyListener true
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                return@setOnKeyListener true
+                            }
+                            false
+                        }
+                        mainLayout.setOnClickListener {
+                            dialog.dismiss()
+                        }
+
+                        dialog.show()
+                        dialog.setCancelable(true)
                     }
-                    false
-                }
-                mainLayout.setOnClickListener {
-                      dialog.dismiss()
-                }
 
-                dialog.show()
-                dialog.setCancelable(true)
+                    userList.dialog.show()
+                }
             }
+
         }
 
         override fun getItemCount(): Int {
@@ -464,7 +515,7 @@ class UserListActivity : AppCompatActivity() {
                         val listModel: AddedUserListModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             binding.rvUserList.layoutManager = LinearLayoutManager(activity)
-                            adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString())
+                            adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString(), isMainAccount.toString(), isProfileCompleted.toString(), avgSleepTime.toString(), isAssessmentCompleted.toString())
                             binding.rvUserList.adapter = adapter
 
                             if (listModel.responseData!!.userList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {

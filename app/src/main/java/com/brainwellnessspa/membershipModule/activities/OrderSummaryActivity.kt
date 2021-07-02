@@ -437,9 +437,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchaseToken).build()
         billingClient.acknowledgePurchase(params, this)
         billingClient.acknowledgePurchase(params) { billingResult ->
-            checkPurchases()/*   val responseCode = billingResult.responseCode
+            checkPurchases()
+            val responseCode = billingResult.responseCode
             val debugMessage = billingResult.debugMessage
-            val i = Intent(ctx, ThankYouMpActivity::class.java)
+            val i = Intent(ctx, EnhanceDoneActivity::class.java)
             i.putExtra("Name", "")
             i.putExtra("Code", "")
             i.putExtra("MobileNo", "")
@@ -448,7 +449,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             i.putExtra("position", position)
             i.putExtra("Promocode", Promocode)
             startActivity(i)
-            finish()*/
+            finish()
 
             val p = Properties()
             p.putValue("coUserId", CoUserID)

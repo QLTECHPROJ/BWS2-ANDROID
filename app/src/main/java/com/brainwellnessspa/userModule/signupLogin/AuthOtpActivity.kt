@@ -27,7 +27,8 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.UserListActivity
+import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
@@ -258,18 +259,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     startActivity(intent)
                                     finish()
-                                } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                    val intent = Intent(activity, WalkScreenActivity::class.java)
-                                    intent.putExtra(CONSTANTS.ScreenView, "2")
-                                    startActivity(intent)
-                                    finish()
-                                } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
-                                    val intent = Intent(activity, SleepTimeActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                    intent.putExtra("IsFirst", "0")
+                                } else {
+                                    val intent = Intent(activity, UserListActivity::class.java)
                                     startActivity(intent)
                                     finish()
                                 }
@@ -298,6 +289,9 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
                             editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
                             editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                             editor.apply()
 
                             val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)

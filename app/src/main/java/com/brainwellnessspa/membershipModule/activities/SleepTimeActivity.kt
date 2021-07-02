@@ -25,7 +25,6 @@ import retrofit2.Response
 class SleepTimeActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySleepTimeBinding
     lateinit var adapter: SleepTimeAdapter
-    lateinit var ctx: Context
     var sleepTime: String? = ""
     lateinit var activity: Activity
     var coUserId: String? = ""
@@ -34,9 +33,8 @@ class SleepTimeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
-        ctx = this@SleepTimeActivity
         activity = this@SleepTimeActivity
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent.extras != null) {
@@ -58,8 +56,8 @@ class SleepTimeActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AverageSleepTimeModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            binding.rvTimeSlot.layoutManager = GridLayoutManager(ctx, 2)
-                            adapter = SleepTimeAdapter(listModel.responseData!!, ctx, activity)
+                            binding.rvTimeSlot.layoutManager = GridLayoutManager(activity, 2)
+                            adapter = SleepTimeAdapter(listModel.responseData!!, activity, activity)
                             binding.rvTimeSlot.adapter = adapter
                         }
 

@@ -44,7 +44,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var catListadapter: SelectedCategory
     var ctx: Context? = null
     var userId: String? = ""
-    var backClick: String? = ""
+    private var backClick: String? = ""
     lateinit var gsonBuilder: GsonBuilder
     lateinit var section: java.util.ArrayList<String>
     var sleepTime: String? = ""
@@ -268,13 +268,13 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     if (listModel != null) {
                         if (catList.selectedCategoriesTitle.size == 0) {
                             catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
-                            catList.selectedCategoriesName.add(listModel[pos].details!![position].problemName.toString())
+                            catList.selectedCategoriesName.add(listModel[pos].details!![layoutPosition].problemName.toString())
 
                         } else {
                             if (catList.selectedCategoriesTitle.contains(listModel[pos].view)) {
                                 for (i in 0 until catList.selectedCategoriesTitle.size) {
                                     if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
-                                        if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
+                                        if (catList.selectedCategoriesName[i] == listModel[pos].details!![layoutPosition].problemName) {
                                             catList.selectedCategoriesTitle.removeAt(i)
                                             catList.selectedCategoriesName.removeAt(i)
                                             posItem = -1
@@ -283,14 +283,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                             notifyItemChanged(mSelectedItem)
                                         } else {
                                             catList.selectedCategoriesName.removeAt(i)
-                                            catList.selectedCategoriesName.add(i, listModel[pos].details!![position].problemName.toString())
+                                            catList.selectedCategoriesName.add(i, listModel[pos].details!![layoutPosition].problemName.toString())
                                         }
                                     }
                                 }
                             } else {
                                 if (catList.selectedCategoriesTitle.size < 3) { //                                    if (pos > catList.selectedCategoriesTitle.size) {
                                     catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
-                                    catList.selectedCategoriesName.add(listModel[pos].details!![position].problemName.toString()) //                                    } else {
+                                    catList.selectedCategoriesName.add(listModel[pos].details!![layoutPosition].problemName.toString()) //                                    } else {
                                     //                                        catList.selectedCategoriesTitle.add(pos, listModel[pos].view.toString())
                                     //                                        catList.selectedCategories.add(pos, adapterPosition.toString())
                                     //                                        catList.selectedCategoriesName.add(pos, listModel[pos].details!![position].problemName.toString())
@@ -340,7 +340,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 if (catList.selectedCategoriesTitle.contains(listModel!![pos].view)) {
                     for (i in 0 until catList.selectedCategoriesTitle.size) {
                         if (catList.selectedCategoriesTitle[i] == listModel[pos].view) {
-                            if (catList.selectedCategoriesName[i] == listModel[pos].details!![position].problemName) {
+                            if (catList.selectedCategoriesName[i] == listModel[pos].details!![layoutPosition].problemName) {
                                 catList.selectedCategoriesTitle.removeAt(i)
                                 catList.selectedCategoriesName.removeAt(i)
                                 catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE).edit()
@@ -603,7 +603,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
                             editor.apply()
 
-
                             val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
                             i.putExtra("BackClick", intent.getStringExtra("BackClick"))
                             startActivity(i)
@@ -615,8 +614,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             gsonBuilder = GsonBuilder()
                             val gson: Gson = gsonBuilder.create()
                             for (i in listModel.responseData!!.categoryData!!.indices) {
-                                section.add(listModel.responseData!!.categoryData!!.get(i).mainCat.toString())
-                                section.add(listModel.responseData!!.categoryData!!.get(i).recommendedCat.toString())
+                                section.add(listModel.responseData!!.categoryData!![i].mainCat.toString())
+                                section.add(listModel.responseData!!.categoryData!![i].recommendedCat.toString())
                             }
                             val p = Properties()
                             p.putValue("coUserId", coUserId)

@@ -166,34 +166,34 @@ class AddProfileActivity : AppCompatActivity() {
 
         binding.btnSendPin.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.txtNameError.text = "Please provide a Name"
+                binding.txtNameError.text = getString(R.string.pls_provide_name)
                 binding.txtNameError.visibility = View.VISIBLE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE
             } else if (binding.etMobileNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
-                binding.txtNumberError.text = "Please provide a mobile number"
+                binding.txtNumberError.text = getString(R.string.pls_provide_mobileno)
                 binding.txtEmailError.visibility = View.GONE
             } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 || binding.etMobileNumber.text.toString().length > 10) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
-                binding.txtNumberError.text = "Please provide a valid mobile number"
+                binding.txtNumberError.text = getString(R.string.pls_provide_valid_mobileno)
                 binding.txtEmailError.visibility = View.GONE
             } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = "Please provide a email address"
+                binding.txtEmailError.text = getString(R.string.pls_provide_email)
             } else if (!binding.etEmail.text.toString().isEmailValid()) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = "Please provide a valid email address"
+                binding.txtEmailError.text = getString(R.string.pls_provide_valid_email)
             } else {
                 if (isNetworkConnected(this)) {
                     showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    val listCall: Call<AddUserModel> = APINewClient.client.getAddUser(userID, binding.etUser.text.toString(), binding.etEmail.text.toString(), binding.etMobileNumber.text.toString())
+                    val listCall: Call<AddUserModel> = APINewClient.client.getAddUser(userID, binding.etUser.text.toString(), binding.etEmail.text.toString())
                     listCall.enqueue(object : Callback<AddUserModel> {
                         override fun onResponse(call: Call<AddUserModel>, response: Response<AddUserModel>) {
                             try {

@@ -1186,45 +1186,43 @@ class GlobalInitExoPlayer : Service() {
         val userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         DB = getAudioDataBase(ctx)
-        DB.taskDao().getNotDownloadData("Complete", coUserId).observe((ctx as LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+        DB.taskDao()?.getNotDownloadData("Complete", coUserId)?.observe((ctx as LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
             notDownloadedData = ArrayList()
-            DB.taskDao().getNotDownloadData("Complete", coUserId).removeObserver { audioListx: List<DownloadAudioDetails?>? -> } as (List<DownloadAudioDetails?>) -> Unit
-            if (audioList != null) {
-                (notDownloadedData as ArrayList<DownloadAudioDetails>).addAll(audioList)
-                if (notDownloadedData.isNotEmpty() && !DownloadMedia.isDownloading) {
-                    if (isNetworkConnected(ctx)) {
-                        val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
-                        val gson = Gson()
-                        val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
-                        val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
-                        val json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
-                        if (!json1.equals(gson.toString(), ignoreCase = true)) {
-                            val type = object : TypeToken<List<String?>?>() {}.type
-                            fileNameList = gson.fromJson(json, type)
-                            audioFile = gson.fromJson(json1, type)
-                            playlistDownloadId = gson.fromJson(json2, type)
-                            if (fileNameList.size == 0) {
-                                for (i in notDownloadedData.indices) {
-                                    audioFile.add(notDownloadedData[i].AudioFile!!)
-                                    fileNameList.add(notDownloadedData[i].Name!!)
-                                    playlistDownloadId.add(notDownloadedData[i].PlaylistId!!)
-                                }
+            DB.taskDao()?.getNotDownloadData("Complete", coUserId)?.removeObserver { audioListx: List<DownloadAudioDetails?>? -> } as (List<DownloadAudioDetails?>) -> Unit
+            (notDownloadedData as ArrayList<DownloadAudioDetails>).addAll(audioList)
+            if (notDownloadedData.isNotEmpty() && !DownloadMedia.isDownloading) {
+                if (isNetworkConnected(ctx)) {
+                    val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                    val gson = Gson()
+                    val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
+                    val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
+                    val json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
+                    if (!json1.equals(gson.toString(), ignoreCase = true)) {
+                        val type = object : TypeToken<List<String?>?>() {}.type
+                        fileNameList = gson.fromJson(json, type)
+                        audioFile = gson.fromJson(json1, type)
+                        playlistDownloadId = gson.fromJson(json2, type)
+                        if (fileNameList.size == 0) {
+                            for (i in notDownloadedData.indices) {
+                                audioFile.add(notDownloadedData[i].AudioFile!!)
+                                fileNameList.add(notDownloadedData[i].Name!!)
+                                playlistDownloadId.add(notDownloadedData[i].PlaylistId!!)
                             }
                         }
-                        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
-                        val editor = shared1.edit()
-                        val nameJson = gson.toJson(fileNameList)
-                        val urlJson = gson.toJson(audioFile)
-                        val playlistIdJson = gson.toJson(playlistDownloadId)
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
-                        editor.apply()
-                        if (fileNameList.size != 0) {
-                            DownloadMedia.isDownloading = true
-                            val downloadMedia = DownloadMedia(ctx.applicationContext, activity)
-                            downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId)
-                        }
+                    }
+                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                    val editor = shared1.edit()
+                    val nameJson = gson.toJson(fileNameList)
+                    val urlJson = gson.toJson(audioFile)
+                    val playlistIdJson = gson.toJson(playlistDownloadId)
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson)
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson)
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
+                    editor.apply()
+                    if (fileNameList.size != 0) {
+                        DownloadMedia.isDownloading = true
+                        val downloadMedia = DownloadMedia(ctx.applicationContext, activity)
+                        downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId)
                     }
                 }
             }

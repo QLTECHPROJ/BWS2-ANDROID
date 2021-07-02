@@ -77,7 +77,7 @@ class ViewAllPlaylistFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n") private fun getAllMedia() {
-        DB.taskDao().getAllPlaylist1(coUserId).observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
+        DB.taskDao()?.getAllPlaylist1(coUserId)?.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
             binding.tvTitle.text = "My Downloads"
             screenView = "My Downloads"
             val listModelList = ArrayList<ViewAllPlayListModel.ResponseData.Detail>()

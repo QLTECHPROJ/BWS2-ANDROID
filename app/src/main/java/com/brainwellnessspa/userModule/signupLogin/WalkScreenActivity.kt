@@ -39,21 +39,25 @@ class WalkScreenActivity : AppCompatActivity() {
         binding.rlStepTwo.visibility = View.GONE
         binding.rlStepThree.visibility = View.GONE
 
-        if (screenView.equals("1", ignoreCase = true)) {
-            binding.rlWelcome.visibility = View.GONE
-            binding.rlStepOne.visibility = View.VISIBLE
-            binding.rlStepTwo.visibility = View.GONE
-            binding.rlStepThree.visibility = View.GONE
-        } else if (screenView.equals("2", ignoreCase = true)) {
-            binding.rlWelcome.visibility = View.GONE
-            binding.rlStepOne.visibility = View.GONE
-            binding.rlStepTwo.visibility = View.VISIBLE
-            binding.rlStepThree.visibility = View.GONE
-        } else if (screenView.equals("3", ignoreCase = true)) {
-            binding.rlWelcome.visibility = View.GONE
-            binding.rlStepOne.visibility = View.GONE
-            binding.rlStepTwo.visibility = View.GONE
-            binding.rlStepThree.visibility = View.VISIBLE
+        when {
+            screenView.equals("1", ignoreCase = true) -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.VISIBLE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.GONE
+            }
+            screenView.equals("2", ignoreCase = true) -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.VISIBLE
+                binding.rlStepThree.visibility = View.GONE
+            }
+            screenView.equals("3", ignoreCase = true) -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.VISIBLE
+            }
         }
 
         binding.btnContinue.setOnClickListener {
@@ -64,19 +68,19 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.rlStepOne.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, DassAssSliderActivity::class.java)
+            val intent = Intent(applicationContext, DassAssSliderActivity::class.java)
             startActivity(intent)
             finish()
         }
 
         binding.rlStepTwo.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, ProfileProgressActivity::class.java)
+            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
             startActivity(intent)
             finish()
         }
 
         binding.rlStepThree.setOnClickListener {
-            val intent = Intent(this@WalkScreenActivity, DoingGoodActivity::class.java)
+            val intent = Intent(applicationContext, DoingGoodActivity::class.java)
             startActivity(intent)
             finish()
         }

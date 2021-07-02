@@ -1,4 +1,4 @@
-package com.brainwellnessspa.referralModule.activities
+package com.brainwellnessspa.userModule.coUserModule
 
 import android.Manifest
 import android.app.Activity

@@ -18,10 +18,10 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/ic_arrow_left_icon_two"
                 android:visibility="invisible"
-                app:tint="@color/black"
-                android:contentDescription="@string/todo" />
+                app:tint="@color/black" />
 
         </LinearLayout>
 
@@ -95,8 +95,8 @@
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
                             android:layout_gravity="center_horizontal"
-                            android:src="@drawable/ic_add_user_icon"
-                            android:contentDescription="@string/todo" />
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_add_user_icon" />
 
                     </LinearLayout>
 
@@ -129,9 +129,9 @@
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
                             android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/todo"
                             android:src="@drawable/add_icon"
-                            android:visibility="invisible"
-                            android:contentDescription="@string/todo" />
+                            android:visibility="invisible" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -167,12 +167,12 @@
                 android:layout_marginBottom="@dimen/_18sdp"
                 android:background="@color/white"
                 android:enabled="false"
-                android:visibility="gone"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:text="@string/i_forgot_my_pin"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/_13sdp"
+                android:visibility="gone"
                 tools:ignore="SpUsage" />
 
         </LinearLayout>

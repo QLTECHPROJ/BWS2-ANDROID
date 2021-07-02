@@ -22,6 +22,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityReferFriendBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.coUserModule.ContactBookActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
 import com.segment.analytics.Properties
