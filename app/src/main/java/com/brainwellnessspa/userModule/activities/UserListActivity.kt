@@ -161,7 +161,7 @@ class UserListActivity : AppCompatActivity() {
             }
 
             binding.btnLogIn.setOnClickListener {
-                if (isMainAccount.equals("1", ignoreCase = true)) {
+                if (isMainAccount.equals(coUsersModel!![position].userID, ignoreCase = true)) {
                     if (isProfileCompleted.equals("0", ignoreCase = true)) {
                         Handler(Looper.getMainLooper()).postDelayed({
                             val intent = Intent(activity, WalkScreenActivity::class.java)
