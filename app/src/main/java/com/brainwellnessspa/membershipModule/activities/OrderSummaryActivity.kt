@@ -7,25 +7,27 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
+import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
+import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, PurchaseHistoryResponseListener, ConsumeResponseListener, AcknowledgePurchaseResponseListener {
@@ -33,7 +35,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     var TrialPeriod: String? = ""
     var comeFrom: String? = ""
     var MainAccountId: String? = ""/* renewPlanFlag, renewPlanId, */
-
+//    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
     var UserID: String? = ""
     var ComesTrue: String? = ""
@@ -47,6 +49,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     var json = ""
     var sku = ""
     lateinit var billingClient: BillingClient
+    lateinit var params: SkuDetailsParams
     val gson = Gson()
 
     //TODO : Oauth Client ID
@@ -59,7 +62,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
     code : - 4/eWdxD7b-YSQ5CNNb-c2iI83KQx19.wp6198ti5Zc7dJ3UXOl0T3aRLxQmbwI
 */
-    val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "weekly_5_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "monthly_5_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "six_monthly_5_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile", "annual_5_profile")
+    val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile","monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
     lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,7 +187,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     }
 
     private fun loadAllSKUs() = if (billingClient.isReady) {
-        val params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
+        params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
         billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList -> // Process the result.
 
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
@@ -277,18 +280,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
-                call_IAP_Api(purchase.purchaseToken,sku,MainAccountId,UserID)
-                val gson = Gson()
-                val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
-                val editor = shared.edit()
-                editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
-                editor.putString(CONSTANTS.PREF_KEY_PurchaseToken, purchase.purchaseToken)
-                editor.putString(CONSTANTS.PREF_KEY_PurchaseID, sku)
-                editor.commit()
-                purchase.originalJson
-                Log.e("purchase Original json", gson.toJson(purchase.originalJson))
                 acknowledgePurchase(purchase.purchaseToken, purchases)
-                Log.e("Purchase Token", purchase.purchaseToken)
             }
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) { // Handle an error caused by a user cancelling the purchase flow.
 
@@ -296,41 +288,70 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         }
     }
 
-    private fun call_IAP_Api(purchaseToken: String, sku: String, mainAccountId: String?, userID: String?) {
-        TODO("Not yet implemented")
-    }
+    private fun call_IAP_Api(purchaseToken: String) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+            val listCall: Call<UpdatePlanPurchase> = APINewClient.client.getUpdatePlanPurchase(UserID,MainAccountId,purchaseToken,sku,"1")
+            listCall.enqueue(object : Callback<UpdatePlanPurchase> {
+                override fun onResponse(call: Call<UpdatePlanPurchase>, response: Response<UpdatePlanPurchase>) {
+                    try {
+                        BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                        val listModel: UpdatePlanPurchase = response.body()!!
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            val i = Intent(ctx, EnhanceDoneActivity::class.java)
+                            i.putExtra("Name", "")
+                            i.putExtra("Code", "")
+                            i.putExtra("MobileNo", "")
+                            i.putExtra("PlanData", gson.toJson(listModelList))
+                            i.putExtra("TrialPeriod", TrialPeriod)
+                            i.putExtra("position", position)
+                            i.putExtra("Promocode", Promocode)
+                            startActivity(i)
+                            finish()
+
+                            val p = Properties()
+                            if (!comeFrom.equals("", ignoreCase = true)) {
+                                val gson: Gson
+                                val gsonBuilder = GsonBuilder()
+                                gson = gsonBuilder.create()
+                                p.putValue("plan", gson.toJson(listModelList2))
+                            } else {
+                                val gson: Gson
+                                val gsonBuilder = GsonBuilder()
+                                gson = gsonBuilder.create()
+                                p.putValue("plan", gson.toJson(listModelList))
+                            }
+                            BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdatePlanPurchase>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+        }
+     }
 
     private fun acknowledgePurchase(purchaseToken: String, purchase: MutableList<Purchase>?) {
         val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchaseToken).build()
         billingClient.acknowledgePurchase(params, this)
         billingClient.acknowledgePurchase(params) { billingResult ->
 //            checkPurchases()
-            val responseCode = billingResult.responseCode
-            val debugMessage = billingResult.debugMessage
-            val i = Intent(ctx, EnhanceDoneActivity::class.java)
-            i.putExtra("Name", "")
-            i.putExtra("Code", "")
-            i.putExtra("MobileNo", "")
-            i.putExtra("PlanData", gson.toJson(listModelList))
-            i.putExtra("TrialPeriod", TrialPeriod)
-            i.putExtra("position", position)
-            i.putExtra("Promocode", Promocode)
-            startActivity(i)
-            finish()
-
-            val p = Properties()
-            if (!comeFrom.equals("", ignoreCase = true)) {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList2))
-            } else {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList))
-            }
-            BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
+            val gson = Gson()
+            val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
+            val editor = shared.edit()
+            editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
+            editor.putString(CONSTANTS.PREF_KEY_PurchaseToken, purchaseToken)
+            editor.putString(CONSTANTS.PREF_KEY_PurchaseID, sku)
+            editor.commit()
+            Log.e("Purchase Token", purchaseToken)
+            call_IAP_Api(purchaseToken)
         }
     }
 
