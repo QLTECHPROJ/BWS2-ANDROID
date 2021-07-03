@@ -28,7 +28,6 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
-import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
@@ -260,9 +259,24 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    val intent = Intent(activity, UserListActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
+                                    if (listModel.ResponseData.CoUserCount > "1") {
+                                        val intent = Intent(activity, UserListActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                                            startActivity(intent)
+                                            finish()
+                                        } else {
+                                            val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                            intent.putExtra("IsFirst", "0")
+                                            startActivity(intent)
+                                            finish()
+
+                                        }
+                                    }
                                 }
                             }
 

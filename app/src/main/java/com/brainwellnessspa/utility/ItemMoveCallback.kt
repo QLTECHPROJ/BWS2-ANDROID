@@ -16,7 +16,7 @@ class ItemMoveCallback(private val mAdapter: ItemTouchHelperContract) : ItemTouc
     override fun getMovementFlags(recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+//        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
         return makeMovementFlags(dragFlags, 0)
     }
 
@@ -27,17 +27,6 @@ class ItemMoveCallback(private val mAdapter: ItemTouchHelperContract) : ItemTouc
         return true
     }
 
-    override fun canDropOver(recyclerView: RecyclerView,
-        current: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder): Boolean {
-        return super.canDropOver(recyclerView, current, target)
-    }
-
-    //    @Override
-    //    public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
-    //        mAdapter.onMovedPos(fromPos,toPos);
-    //        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
-    //    }
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             if (viewHolder != null) {

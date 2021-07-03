@@ -15,7 +15,7 @@ class EmailVerifyActivity : AppCompatActivity() {
     lateinit var binding: ActivityEmailVerifyBinding
     var userId: String? = ""
     var coUserId: String? = ""
-    var emailUser: String? = ""
+    private var emailUser: String? = ""
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var indexScore: String? = ""

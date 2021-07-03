@@ -79,6 +79,16 @@ interface APINewInterface {
         @Field("Pin")
         pin: String?): Call<SetLoginPinModel>
 
+ @POST("inviteuser")
+    @FormUrlEncoded
+    fun getSetInviteUser(
+        @Field("UserId")
+        userId: String?,
+        @Field("Name")
+        name: String?,
+        @Field("MobileNo")
+        mobileNo: String?): Call<SetInviteUserModel>
+
     @POST("addcouser")
     @FormUrlEncoded
     fun getAddUser(
@@ -88,6 +98,12 @@ interface APINewInterface {
         name: String?,
         @Field("Email")
         email: String?): Call<AddUserModel>
+
+    @POST("manageuserlist")
+    @FormUrlEncoded
+    fun getManageUserList(
+        @Field("MainAccountID")
+        MainAccountID: String?): Call<ManageUserListModel>
 
     @get:GET("assesmentquestionlist")
     val assessmentQus: Call<AssessmentQusModel>

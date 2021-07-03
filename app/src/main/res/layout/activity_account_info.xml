@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -25,7 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -35,7 +36,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Account Info"
+                android:text="@string/account_info"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
@@ -55,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-
                 android:background="@drawable/account_gray_bg"
                 android:paddingVertical="@dimen/_22sdp"
                 android:weightSum="1">
@@ -63,69 +63,34 @@
                 <ImageView
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
                     android:layout_weight="0.1"
                     android:paddingVertical="@dimen/_2sdp"
-                    android:src="@drawable/ic_user_two_icon" />
+                    android:src="@drawable/ic_user_two_icon"
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:id="@+id/tvEtProfile"
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_18sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
                     android:layout_weight="0.8"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:text="Edit Profile"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="SpUsage" />
 
                 <ImageView
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
                     android:layout_weight="0.1"
-                    android:src="@drawable/ic_right_arrow_ac_icon" />
+                    android:src="@drawable/ic_right_arrow_ac_icon"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llChangePswd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:background="@drawable/account_gray_bg"
-                android:paddingVertical="@dimen/_22sdp"
-                android:weightSum="1">
-
-                <ImageView
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_6sdp"
-                    android:layout_weight="0.1"
-                    android:paddingVertical="@dimen/_2sdp"
-                    android:src="@drawable/ic_change_pswd_icon" />
-
-                <TextView
-                    android:id="@+id/tvChangePswd"
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_18sdp"
-                    android:layout_weight="0.8"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="Change Password"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
-
-                <ImageView
-                    android:layout_width="@dimen/_0sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_6sdp"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/ic_right_arrow_ac_icon" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llChangePin"
@@ -141,16 +106,17 @@
                 <ImageView
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
                     android:layout_weight="0.1"
                     android:paddingVertical="@dimen/_2sdp"
-                    android:src="@drawable/ic_pin_lock_icon" />
+                    android:src="@drawable/ic_pin_lock_icon"
+                    android:contentDescription="@string/todo" />
 
                 <TextView
                     android:id="@+id/tvChangePin"
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_18sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
                     android:layout_weight="0.8"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
@@ -161,10 +127,54 @@
                 <ImageView
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
                     android:layout_weight="0.1"
-                    android:src="@drawable/ic_right_arrow_ac_icon" />
+                    android:src="@drawable/ic_right_arrow_ac_icon"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llDeleteAc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/account_gray_bg"
+                android:paddingVertical="@dimen/_22sdp"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_weight="0.1"
+                    android:paddingVertical="@dimen/_2sdp"
+                    android:src="@drawable/ic_remove_ac_icon"
+                    android:contentDescription="@string/todo" />
+
+                <TextView
+                    android:id="@+id/tvDeleteAc"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_weight="0.8"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="start"
+                    android:text="Delete Account"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    android:layout_weight="0.1"
+                    android:src="@drawable/ic_right_arrow_ac_icon"
+                    android:contentDescription="@string/todo" />
+            </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

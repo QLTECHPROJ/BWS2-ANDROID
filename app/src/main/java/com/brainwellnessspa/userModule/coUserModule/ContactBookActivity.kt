@@ -37,11 +37,11 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityContactBookBinding
 import com.brainwellnessspa.databinding.ContactListLayoutBinding
 import com.brainwellnessspa.databinding.FavouriteContactListLayoutBinding
-import com.brainwellnessspa.referralModule.models.AllContactListModel
 import com.brainwellnessspa.referralModule.models.ContactlistModel
 import com.brainwellnessspa.referralModule.models.FavContactlistModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
-import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.userModule.models.SetInviteUserModel
+import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -55,6 +55,7 @@ class ContactBookActivity : AppCompatActivity() {
     var userPromoCode: String? = null
     var referLink: String? = null
     var userId: String? = null
+    var mainAccountID: String? = null
     lateinit var activity: Activity
     lateinit var searchEditText: EditText
     var contactListAdapter: ContactListAdapter? = null
@@ -70,11 +71,9 @@ class ContactBookActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contact_book)
         ctx = this@ContactBookActivity
         activity = this@ContactBookActivity
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        userId = shared.getString(CONSTANTS.PREF_KEY_UserID, "")
-        val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, MODE_PRIVATE)
-        userPromoCode = shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, "")
-        referLink = shareded.getString(CONSTANTS.PREF_KEY_ReferLink, "")
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvFavContactList.layoutManager = mLayoutManager
         binding.rvFavContactList.itemAnimator = DefaultItemAnimator()
@@ -228,45 +227,6 @@ class ContactBookActivity : AppCompatActivity() {
         }
     }
 
-    fun prepareContactData(ContactName: String?, ContactNumber: String?) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.client.setContactList(userId, ContactNumber, userPromoCode)
-            listCall!!.enqueue(object : Callback<AllContactListModel?> {
-                override fun onResponse(call: Call<AllContactListModel?>, response: Response<AllContactListModel?>) {
-                    try {
-                        val listModel = response.body()
-                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            myBackPress = true
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val uri = Uri.parse("smsto:$ContactNumber")
-                            val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
-                            // smsIntent.setData(uri);
-                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
-                            startActivity(smsIntent)
-                            finish()
-                            p = Properties()
-                            p!!.putValue("userId", userId)
-                            p!!.putValue("referLink", referLink)
-                            p!!.putValue("userReferCode", userPromoCode)
-                            p!!.putValue("contactName", ContactName)
-                            p!!.putValue("contactNumber", ContactNumber)
-                            BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<AllContactListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                }
-            })
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
-        }
-    }
-
     inner class ContactListAdapter(var contactlistModel: List<ContactlistModel>) : RecyclerView.Adapter<ContactListAdapter.MyViewHolder>(), Filterable {
         private var listFilterContact: List<ContactlistModel>
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -281,12 +241,52 @@ class ContactBookActivity : AppCompatActivity() {
             holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_gray_cornor_normal)
             holder.binding.BtnInvite.setTextColor(ContextCompat.getColor(activity, R.color.gray))
             holder.binding.BtnInvite.setOnClickListener {
-                myBackPress = true
-                prepareContactData(model.contactName, model.contactNumber)
-                notifyDataSetChanged()
-                holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
-                holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
-                holder.binding.BtnInvite.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                if (BWSApplication.isNetworkConnected(activity)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, model.contactName, model.contactNumber)
+                    listCall.enqueue(object : Callback<SetInviteUserModel> {
+                        override fun onResponse(call: Call<SetInviteUserModel>, response: Response<SetInviteUserModel>) {
+                            try {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listModel: SetInviteUserModel = response.body()!!
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    myBackPress = true
+                                    notifyDataSetChanged()
+                                    holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
+                                    holder.binding.BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
+                                    holder.binding.BtnInvite.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                                    val contactNumber = model.contactNumber
+                                    val referLink = listModel.responseData?.inviteLink
+                                    val uri = Uri.parse("smsto:$contactNumber")
+                                    val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
+                                    // smsIntent.setData(uri);
+                                    smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
+                                    startActivity(smsIntent)
+                                    finish()
+
+                                    p = Properties()
+                                    p!!.putValue("userId", userId)
+                                    p!!.putValue("referLink", referLink)
+                                    p!!.putValue("userReferCode", userPromoCode)
+                                    p!!.putValue("contactName", model.contactName)
+                                    p!!.putValue("contactNumber", model.contactNumber)
+                                    BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
+                                } else {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<SetInviteUserModel>, t: Throwable) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        }
+                    })
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                }
             }
         }
 
@@ -345,9 +345,50 @@ class ContactBookActivity : AppCompatActivity() {
             holder.binding.tvName.text = favcontactlistModel[position].contactName
             holder.binding.tvNumber.text = favcontactlistModel[position].contactNumber
             holder.binding.cvMainLayout.setOnClickListener {
-                myBackPress = true
-                notifyDataSetChanged()
-                prepareContactData(favcontactlistModel[position].contactName, favcontactlistModel[position].contactNumber)
+                if (BWSApplication.isNetworkConnected(activity)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, favcontactlistModel[position].contactName, favcontactlistModel[position].contactNumber)
+                    listCall.enqueue(object : Callback<SetInviteUserModel> {
+                        override fun onResponse(call: Call<SetInviteUserModel>, response: Response<SetInviteUserModel>) {
+                            try {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listModel: SetInviteUserModel = response.body()!!
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    myBackPress = true
+                                    notifyDataSetChanged()
+                                    val contactNumber = favcontactlistModel[position].contactNumber
+                                    val referLink = listModel.responseData?.inviteLink
+                                    val uri = Uri.parse("smsto:$contactNumber")
+                                    val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
+                                    // smsIntent.setData(uri);
+                                    smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
+                                    startActivity(smsIntent)
+                                    finish()
+
+                                    p = Properties()
+                                    p!!.putValue("userId", userId)
+                                    p!!.putValue("referLink", referLink)
+                                    p!!.putValue("userReferCode", userPromoCode)
+                                    p!!.putValue("contactName", favcontactlistModel[position].contactName)
+                                    p!!.putValue("contactNumber", favcontactlistModel[position].contactNumber)
+                                    BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
+
+                                } else {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<SetInviteUserModel>, t: Throwable) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        }
+                    })
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                }
             }
         }
 

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".dashboardModule.profile.EnhanceUserListActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/enhance_user"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
+
+
+            <LinearLayout
+                android:id="@+id/llAddNewUser"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/_10sdp"
+                    android:src="@drawable/ic_add_user_icon"
+                    app:tint="@color/black" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUserList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlLayout"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/_60sdp"
+            android:visibility="visible"
+            tools:listitem="@layout/enhance_user_list_layout"
+            tools:targetApi="lollipop" />
+
+
+        <Button
+            android:id="@+id/btnRemove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_18sdp"
+            android:background="@drawable/gray_round_cornor"
+            android:fontFamily="@font/montserrat_medium"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/Remove"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13sdp"
+            tools:ignore="SpUsage" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
+    </RelativeLayout>
+</layout>

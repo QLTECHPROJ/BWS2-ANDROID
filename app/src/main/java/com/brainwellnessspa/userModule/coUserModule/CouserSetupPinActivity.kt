@@ -103,10 +103,13 @@ class CouserSetupPinActivity : AppCompatActivity() {
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please check if both the PINs are same"
+            binding.txtConfirmPINError.text = getString(R.string.check_both_pin_same_or_not)
         } else {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
+
+
+
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(mainAccountID, binding.etConfirmPIN.text.toString())
@@ -117,32 +120,35 @@ class CouserSetupPinActivity : AppCompatActivity() {
                             binding.txtConfirmPINError.visibility = View.GONE
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: SetLoginPinModel = response.body()!!
-                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                val dialog = Dialog(applicationContext)
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                dialog.setContentView(R.layout.add_couser_continue_layout)
-                                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
-                                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss()
-                                        return@setOnKeyListener true
+                            if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                if (listModel.getResponseData()?.errormsg.equals("0",ignoreCase = true)){
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                                    val dialog = Dialog(applicationContext)
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                    dialog.setContentView(R.layout.add_couser_continue_layout)
+                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                    val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
+                                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss()
+                                            return@setOnKeyListener true
+                                        }
+                                        false
                                     }
-                                    false
-                                }
 
-                                mainLayout.setOnClickListener {
-                                    val intent = Intent(applicationContext, UserDetailActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                    dialog.dismiss()
-                                }
+                                    mainLayout.setOnClickListener {
+                                        val intent = Intent(applicationContext, UserDetailActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                        dialog.dismiss()
+                                    }
 
-                                dialog.show()
-                                dialog.setCancelable(true)
+                                    dialog.show()
+                                    dialog.setCancelable(true)
+                                }
                             } else {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             }
 
                         } catch (e: Exception) {

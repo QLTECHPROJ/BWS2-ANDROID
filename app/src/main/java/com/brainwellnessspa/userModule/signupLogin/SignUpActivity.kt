@@ -112,7 +112,8 @@ class SignUpActivity : AppCompatActivity() {
         override fun afterTextChanged(s: Editable) {}
     }
 
-    @SuppressLint("SetTextI18n") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_account)
         ctx = this@SignUpActivity
@@ -392,7 +393,8 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("HardwareIds") fun signUpUser() {
+    @SuppressLint("HardwareIds")
+    fun signUpUser() {
         if (BWSApplication.isNetworkConnected(this)) {
             val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
             var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
@@ -456,7 +458,8 @@ class SignUpActivity : AppCompatActivity() {
             listFilterData = modelList
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val mData: CountryListModel.ResponseData = listFilterData[position]
             holder.bindingAdapter.tvCountryName.text = mData.name
             holder.bindingAdapter.tvCountryCode.text = "+" + mData.code
@@ -493,7 +496,8 @@ class SignUpActivity : AppCompatActivity() {
                     return filterResults
                 }
 
-                @SuppressLint("SetTextI18n") override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                @SuppressLint("SetTextI18n")
+                override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.isEmpty()) {
                         tvFound.visibility = View.VISIBLE
                         tvFound.text = "Sorry we are not available in this country yet"

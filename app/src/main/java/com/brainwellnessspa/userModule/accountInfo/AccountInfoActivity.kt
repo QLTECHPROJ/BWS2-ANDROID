@@ -37,7 +37,7 @@ class AccountInfoActivity : AppCompatActivity() {
             }
         }
 
-        binding.llChangePswd.setOnClickListener {
+        binding.llDeleteAc.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
                 val i = Intent(this, ChangePasswordActivity::class.java)
                 startActivity(i)

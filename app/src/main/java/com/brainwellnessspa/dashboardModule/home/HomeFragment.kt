@@ -16,6 +16,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
@@ -1041,6 +1043,7 @@ class HomeFragment : Fragment() {
                     val btnDone = dialog.findViewById<Button>(R.id.btnDone)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                     val txtError = dialog.findViewById<TextView>(R.id.txtError)
+                    val tvForgotPin: TextView = dialog.findViewById(R.id.tvForgotPin)
                     val edtOTP1 = dialog.findViewById<EditText>(R.id.edtOTP1)
                     val edtOTP2 = dialog.findViewById<EditText>(R.id.edtOTP2)
                     val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
@@ -1180,6 +1183,61 @@ class HomeFragment : Fragment() {
                             }
                         }
                     }
+
+                    tvForgotPin.setOnClickListener {
+                        val dialog = Dialog(act)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.add_couser_continue_layout)
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
+                        val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
+                        val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                        ivIcon.setImageResource(R.drawable.ic_email_success_icon)
+                        val email: String = modelList[position].email.toString()
+                        tvText.text = "A new pin has been sent to \nyour mail id \n$email."
+
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                return@setOnKeyListener true
+                            }
+                            false
+                        }
+                        mainLayout.setOnClickListener {
+                            if (isNetworkConnected(act)) {
+                                showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
+                                listCall.enqueue(object : Callback<SucessModel> {
+                                    override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        val listModel: SucessModel = response.body()!!
+                                        when {
+                                            listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                dialog.dismiss()
+                                            }
+                                            listModel.responseCode.equals(act.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                showToast(listModel.responseMessage, act)
+                                            }
+                                            else -> {
+                                                showToast(listModel.responseMessage, act)
+                                            }
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    }
+                                })
+                            } else {
+                                showToast(act.getString(R.string.no_server_found), act)
+                            }
+                        }
+
+                        dialog.show()
+                        dialog.setCancelable(true)
+                    }
+
                     dialog.show()
                     dialog.setCanceledOnTouchOutside(true)
                     dialog.setCancelable(true)

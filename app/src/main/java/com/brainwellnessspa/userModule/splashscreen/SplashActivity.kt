@@ -20,7 +20,6 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
-import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel

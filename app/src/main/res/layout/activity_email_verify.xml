@@ -54,8 +54,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/_80sdp"
-                    android:src="@drawable/email_verify"
-                    android:contentDescription="@string/todo" />
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/email_verify" />
 
             </LinearLayout>
 

@@ -412,7 +412,7 @@
     <string name="get_sms_code">Get sms code</string>
     <string name="new_sign_up">Sign Up</string>
     <string name="you_will_received_a_verification_mail_make_sure_click_on_the_link_to_verify">You will received a verification mail, make sure click on the link to verify</string>
-    <string name="verify_email">Verify Email</string>
+    <string name="verify_email">Email Sent!</string>
     <string name="new_login_in">Log In</string>
     <string name="login_text">Already have account?</string>
     <string name="new_sign_in">Log In</string>
@@ -444,5 +444,20 @@
     <string name="your_playlist_is_ready">You playlist is ready</string>
     <string name="playlist_ready_subtitle">We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program.</string>
     <string name="with_same_mobileno">With Same Mobile Number</string>
+    <string name="manage_user">Manage User</string>
+    <string name="downloads_profile">Downloads</string>
+    <string name="reminder_profile">Reminder</string>
+    <string name="invoices_profile">Invoices</string>
+    <string name="check_both_pin_same_or_not">Please check if both the PINs are same</string>
+    <string name="enhance_user">Enhance User</string>
+    <string name="Remove">Remove</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="are_you_sure_you_want_to_remove_user">Are you sure you want to remove user?</string>
+    <string name="you_can_t_undo_this_action">You can\'t undo this action</string>
+    <string name="request_sent">Request sent</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="add_your_comments_here">Add your comments here</string>
+    <string name="delete_account">Delete Account</string>
 </resources>
 

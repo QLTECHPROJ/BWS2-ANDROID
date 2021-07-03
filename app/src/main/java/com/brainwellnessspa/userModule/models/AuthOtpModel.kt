@@ -25,6 +25,7 @@ data class AuthOtpResponseData(
     val isPinSet: String,
     val isProfileCompleted: String,
     val isMainAccount: String,
+    val CoUserCount: String,
     val planDetails: List<Any>
 )
 

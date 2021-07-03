@@ -176,6 +176,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llDownloads.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -185,6 +186,7 @@ class ProfileFragment : Fragment() {
             startActivity(i)
             requireActivity().overridePendingTransition(0, 0)
         }
+
         binding.llInvoices.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -200,6 +202,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llBillingOrder.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -213,6 +216,21 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
+         binding.llManageUser.setOnClickListener {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
+            if (isNetworkConnected(activity)) {
+                val i = Intent(activity, EnhanceUserListActivity::class.java)
+                startActivity(i)
+                requireActivity().overridePendingTransition(0, 0)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+        }
+
         binding.llReminder.setOnClickListener {
             ComeScreenReminder = 1
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -227,6 +245,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llPlan.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -240,6 +259,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -253,6 +273,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llFAQ.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -266,6 +287,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.llLogOut.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 logoutDialog = Dialog(requireActivity())
