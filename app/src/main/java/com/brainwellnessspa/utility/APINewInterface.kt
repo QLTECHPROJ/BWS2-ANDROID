@@ -89,6 +89,15 @@ interface APINewInterface {
         @Field("MobileNo")
         mobileNo: String?): Call<SetInviteUserModel>
 
+
+    @POST("cancelinviteuser")
+    @FormUrlEncoded
+    fun getCancelInviteUser(
+        @Field("UserId")
+        userId: String?,
+        @Field("MobileNo")
+        mobileNo: String?): Call<CancelInviteUserModel>
+
     @POST("addcouser")
     @FormUrlEncoded
     fun getAddUser(

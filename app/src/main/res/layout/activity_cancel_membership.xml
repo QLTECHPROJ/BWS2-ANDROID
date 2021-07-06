@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,6 +27,18 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvTilte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
+
+<!--
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -35,158 +47,332 @@
                 android:text="@string/cancel_plan"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
+-->
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/llPlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rlLayout"
-            android:layout_marginHorizontal="@dimen/_16sdp" >
-
-            <com.google.android.youtube.player.YouTubePlayerView
-                android:id="@+id/youtubeView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/rlCancelPlan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/llPlay"
-            android:orientation="vertical">
+            android:layout_below="@id/rlLayout"
+            android:visibility="gone">
+
 
             <LinearLayout
-                android:id="@+id/llCancelVideo"
+                android:id="@+id/llPlay"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_6sdp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginHorizontal="@dimen/_16sdp" >
 
-                <TextView
+                <com.google.android.youtube.player.YouTubePlayerView
+                    android:id="@+id/youtubeView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_28sdp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:gravity="start"
-                    android:text="@string/Select_reason"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_20sdp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <CheckBox
-                        android:id="@+id/cbOne"
-                        style="@android:style/Widget.CompoundButton.RadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_20sdp"
-                        android:button="@drawable/radio_btn_app_background"
-                        android:checked="true"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical|start"
-                        android:paddingLeft="@dimen/_12sdp"
-                        android:text="@string/Feeling_better"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-                    <CheckBox
-                        android:id="@+id/cbTwo"
-                        style="@android:style/Widget.CompoundButton.RadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_app_background"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical|start"
-                        android:paddingLeft="@dimen/_12sdp"
-                        android:text="@string/Condition_worse"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-                    <CheckBox
-                        android:id="@+id/cbThree"
-                        style="@android:style/Widget.CompoundButton.RadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_app_background"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical|start"
-                        android:paddingLeft="@dimen/_12sdp"
-                        android:text="@string/Pricing"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-                    <CheckBox
-                        android:id="@+id/cbFour"
-                        style="@android:style/Widget.CompoundButton.RadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
-                        android:button="@drawable/radio_btn_app_background"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical|start"
-                        android:paddingLeft="@dimen/_12sdp"
-                        android:text="@string/Other_reason"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-
-                    <EditText
-                        android:id="@+id/edtCancelBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_140sdp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_22sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_marginBottom="@dimen/_16sdp"
-                        android:background="@drawable/edittext_background"
-                        android:cursorVisible="true"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="top"
-                        android:hint="Add your comments here"
-                        android:inputType="textMultiLine|textVisiblePassword"
-                        android:overScrollMode="always"
-                        android:paddingLeft="@dimen/_8sdp"
-                        android:paddingTop="@dimen/_8sdp"
-                        android:paddingRight="@dimen/_8sdp"
-                        android:scrollbarStyle="insideInset"
-                        android:scrollbars="vertical"
-                        android:singleLine="false"
-                        android:textColor="@color/gray"
-                        android:textCursorDrawable="@null"
-                        android:textSize="@dimen/_14sdp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnCancelSubscrible"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/llPlay"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/llCancelVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_28sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="@string/Select_reason"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_20sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <CheckBox
+                            android:id="@+id/cbOne"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:checked="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Feeling_better"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbTwo"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Condition_worse"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbThree"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Pricing"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbFour"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Other_reason"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+
+                        <EditText
+                            android:id="@+id/edtCancelBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_140sdp"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_22sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_16sdp"
+                            android:background="@drawable/edittext_background"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="top"
+                            android:hint="Add your comments here"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:overScrollMode="always"
+                            android:paddingLeft="@dimen/_8sdp"
+                            android:paddingTop="@dimen/_8sdp"
+                            android:paddingRight="@dimen/_8sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:textColor="@color/gray"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_14sdp"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCancelSubscrible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="@dimen/_40sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_green_rounded_filled"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/cancel_program"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlDeleteAc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="@dimen/_40sdp"
-            android:layout_marginBottom="@dimen/_25sdp"
-            android:background="@drawable/light_green_rounded_filled"
-            android:fontFamily="@font/montserrat_bold"
-            android:paddingVertical="@dimen/_4sdp"
-            android:text="@string/cancel_program"
-            android:textColor="@color/white" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_below="@id/rlLayout">
+
+
+            <LinearLayout
+                android:id="@+id/llImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/llImage"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/llCancelAc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_28sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="@string/Select_reason"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_20sdp"
+                        tools:ignore="SpUsage" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <CheckBox
+                            android:id="@+id/cbOneAc"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:checked="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Feeling_better"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbTwoAc"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingStart="@dimen/_12sdp"
+                            android:text="@string/Condition_worse"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbThreeAc"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingStart="@dimen/_12sdp"
+                            android:text="@string/Pricing"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
+
+                        <CheckBox
+                            android:id="@+id/cbFourAc"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:button="@drawable/radio_btn_app_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingStart="@dimen/_12sdp"
+                            android:text="@string/Other_reason"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
+
+
+                        <EditText
+                            android:id="@+id/edtCancelBoxAc"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_140sdp"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_22sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_16sdp"
+                            android:background="@drawable/edittext_background"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="top"
+                            android:hint="@string/add_your_comments_here"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:overScrollMode="always"
+                            android:paddingLeft="@dimen/_8sdp"
+                            android:paddingTop="@dimen/_8sdp"
+                            android:paddingRight="@dimen/_8sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:textColor="@color/gray"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_14sdp"
+                            android:visibility="visible"
+                            tools:ignore="SpUsage" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnDeleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="@dimen/_40sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:background="@drawable/light_green_rounded_filled"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/delete_account"
+                android:textColor="@color/white" />
+        </RelativeLayout>
 
     </RelativeLayout>
 </layout>

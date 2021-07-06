@@ -33,6 +33,7 @@ class CurrentPlanFragment : Fragment() {
 
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, CancelMembershipActivity::class.java)
+            i.putExtra("screenView","1")
             startActivity(i)
         }
         return view

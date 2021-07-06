@@ -458,6 +458,8 @@
     <string name="request_sent">Request sent</string>
     <string name="delete_account">Delete Account</string>
     <string name="add_your_comments_here">Add your comments here</string>
-    <string name="delete_account">Delete Account</string>
+    <string name="req_expired">Request expired</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="resend">Resend</string>
 </resources>
 

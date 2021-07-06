@@ -42,7 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
     var userName: String? = ""
     var userCalendar: String? = ""
     var userMobileNumber: String? = ""
-    var UserEmail: String? = ""
+    var userEmail: String? = ""
     private var mYear: Int = 0
     private var mMonth: Int = 0
     private var mDay: Int = 0
@@ -59,7 +59,7 @@ class EditProfileActivity : AppCompatActivity() {
             val ckNumber: String = binding.etMobileNumber.text.toString().trim()
             val ckEmail: String = binding.etEmail.text.toString().trim()
             when {
-                ckName.equals(userName, ignoreCase = true) && ckCalendar.equals(userCalendar, ignoreCase = true) && ckNumber.equals(userMobileNumber, ignoreCase = true) && ckEmail.equals(UserEmail, ignoreCase = true) -> {
+                ckName.equals(userName, ignoreCase = true) && ckCalendar.equals(userCalendar, ignoreCase = true) && ckNumber.equals(userMobileNumber, ignoreCase = true) && ckEmail.equals(userEmail, ignoreCase = true) -> {
                     binding.btnSave.isEnabled = false
                     binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                     binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -148,7 +148,8 @@ class EditProfileActivity : AppCompatActivity() {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
-    @SuppressLint("SetTextI18n") fun profileUpdate() {
+    @SuppressLint("SetTextI18n")
+    fun profileUpdate() {
         try {
             if (BWSApplication.isNetworkConnected(applicationContext)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
@@ -264,7 +265,7 @@ class EditProfileActivity : AppCompatActivity() {
                                 userName = viewModel.ResponseData.Name
                                 userCalendar = viewModel.ResponseData.DOB
                                 userMobileNumber = viewModel.ResponseData.Mobile
-                                UserEmail = viewModel.ResponseData.Email
+                                userEmail = viewModel.ResponseData.Email
                                 binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
                                 binding.etEmail.setText(viewModel.ResponseData.Email)
                                 binding.etCalendar.setText(viewModel.ResponseData.DOB)
@@ -285,7 +286,9 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SimpleDateFormat") @RequiresApi(api = Build.VERSION_CODES.N) fun setDate() {
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    fun setDate() {
         val c = Calendar.getInstance()
         mYear = c[Calendar.YEAR]
         mMonth = c[Calendar.MONTH]

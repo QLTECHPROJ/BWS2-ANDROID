@@ -19,7 +19,9 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
+import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
@@ -41,6 +43,7 @@ class SplashActivity : AppCompatActivity() {
     private var emailUser: String? = ""
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
+    var coUserCount: String? = ""
     var indexScore: String? = ""
     var avgSleepTime: String? = ""
     var isPinSet: String? = ""
@@ -67,6 +70,7 @@ class SplashActivity : AppCompatActivity() {
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         isProfileCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
         isAssessmentCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+        coUserCount = shared.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
     }
@@ -182,6 +186,7 @@ class SplashActivity : AppCompatActivity() {
                         indexScore = authOtpModel.ResponseData.indexScore
                         avgSleepTime = authOtpModel.ResponseData.AvgSleepTime
                         isPinSet = authOtpModel.ResponseData.isPinSet
+                        coUserCount = authOtpModel.ResponseData.CoUserCount
                         directLogin = authOtpModel.ResponseData.directLogin
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
@@ -189,6 +194,7 @@ class SplashActivity : AppCompatActivity() {
                         editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
                         editor.apply()
                         val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         val edited = shred.edit()
@@ -244,6 +250,7 @@ class SplashActivity : AppCompatActivity() {
         Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
         Log.e("indexScore", indexScore.toString())
         Log.e("avgSleepTime", avgSleepTime.toString())
+        Log.e("coUserCount", coUserCount.toString())
         if (isPinSet.equals("1", ignoreCase = true)) {
             if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -252,30 +259,41 @@ class SplashActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }, (2 * 800).toLong())
-            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                    intent.putExtra(CONSTANTS.ScreenView, "2")
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            } else if (avgSleepTime.equals("", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                    intent.putExtra("IsFirst", "0")
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
+            } else  {
+                if (coUserCount.toString() > "1"){
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(applicationContext, UserListActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }, (2 * 800).toLong())
+                }else {
+                    if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                            intent.putExtra("IsFirst", "0")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    }
+
+                }
             }
         } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(applicationContext, AddCouserActivity::class.java)
+                val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
                 startActivity(intent)
                 finish()
             }, (2 * 800).toLong())

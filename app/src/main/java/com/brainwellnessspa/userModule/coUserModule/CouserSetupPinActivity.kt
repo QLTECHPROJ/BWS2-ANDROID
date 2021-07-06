@@ -1,27 +1,20 @@
 package com.brainwellnessspa.userModule.coUserModule
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCouserSetupPinBinding
 import com.brainwellnessspa.userModule.models.SetLoginPinModel
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -119,36 +112,17 @@ class CouserSetupPinActivity : AppCompatActivity() {
                             binding.txtNewPINError.visibility = View.GONE
                             binding.txtConfirmPINError.visibility = View.GONE
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listModel: SetLoginPinModel = response.body()!!
-                            if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                if (listModel.getResponseData()?.errormsg.equals("0",ignoreCase = true)){
-                                    BWSApplication.showToast(listModel.getResponseMessage(), activity)
-                                    val dialog = Dialog(applicationContext)
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                    dialog.setContentView(R.layout.add_couser_continue_layout)
-                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                    val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
-                                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss()
-                                            return@setOnKeyListener true
-                                        }
-                                        false
-                                    }
-
-                                    mainLayout.setOnClickListener {
-                                        val intent = Intent(applicationContext, UserDetailActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-                                        dialog.dismiss()
-                                    }
-
-                                    dialog.show()
-                                    dialog.setCancelable(true)
+                            val listModel: SetLoginPinModel? = response.body()
+                            if (listModel != null) {
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                                    intent.putExtra(CONSTANTS.ScreenView, "4")
+                                    startActivity(intent)
+                                    finish()
+                                } else {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
-                            } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity)
                             }
 
                         } catch (e: Exception) {

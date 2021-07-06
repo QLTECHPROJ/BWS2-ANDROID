@@ -6,14 +6,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -25,7 +19,9 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEnhanceUserListBinding
 import com.brainwellnessspa.databinding.EnhanceUserListLayoutBinding
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
+import com.brainwellnessspa.userModule.models.CancelInviteUserModel
 import com.brainwellnessspa.userModule.models.ManageUserListModel
+import com.brainwellnessspa.userModule.models.SetInviteUserModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -59,7 +55,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, AddCouserActivity::class.java)
             startActivity(intent)
         }
-        prepareEnhanceUserList(activity, binding)
+        prepareEnhanceUserList(activity)
     }
 
     override fun onBackPressed() {
@@ -70,9 +66,12 @@ class EnhanceUserListActivity : AppCompatActivity() {
         binding.btnRemove.isEnabled = false
         binding.btnRemove.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
         binding.btnRemove.setBackgroundResource(R.drawable.gray_round_cornor)
+
+        prepareEnhanceUserList(activity)
         super.onResume()
     }
-    fun prepareEnhanceUserList(activity: Activity, binding: ActivityEnhanceUserListBinding) {
+
+    fun prepareEnhanceUserList(activity: Activity) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<ManageUserListModel> = APINewClient.client.getManageUserList(mainAccountID)
@@ -83,7 +82,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
                         val listModel: ManageUserListModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             listModel.responseData?.let {
-                                enhanceUserListAdapter = EnhanceUserListAdapter(it,binding)
+                                enhanceUserListAdapter = EnhanceUserListAdapter(it)
                                 binding.rvUserList.adapter = enhanceUserListAdapter
                             }
                         } else {
@@ -105,26 +104,121 @@ class EnhanceUserListActivity : AppCompatActivity() {
 
     }
 
-    inner class EnhanceUserListAdapter(private var manageUserListModel: ManageUserListModel.ResponseData, binding: ActivityEnhanceUserListBinding) : RecyclerView.Adapter<EnhanceUserListAdapter.MyViewHolder>() {
+    inner class EnhanceUserListAdapter(private var manageUserListModel: ManageUserListModel.ResponseData) : RecyclerView.Adapter<EnhanceUserListAdapter.MyViewHolder>() {
+        var selectedItem = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: EnhanceUserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.enhance_user_list_layout, parent, false)
             return MyViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-/*
-            android:button="@drawable/radio_btn_enhance_background"
-            ic_green_label_icon
-            ic_yellow_label_icon Request expired
-*/
             val list = manageUserListModel.userList
-            holder.binding.tvName.text = list?.get(position)?.name
-            holder.binding.llMainLayout.setOnClickListener {
-                binding.btnRemove.isEnabled = true
-                binding.btnRemove.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                binding.btnRemove.setBackgroundResource(R.drawable.light_green_rounded_filled)
-                holder.binding.ivStatus.setImageResource(R.drawable.ic_checked_user_icon)
+
+            list?.let {
+                holder.binding.tvName.text = list[position].name
+
+                holder.binding.ivStatus.setOnClickListener {
+                    selectedItem = position
+                    notifyDataSetChanged()
+                    binding.btnRemove.isEnabled = true
+                    binding.btnRemove.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                    binding.btnRemove.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                }
+
+                if (position == selectedItem) {
+                    holder.binding.ivStatus.setImageResource(R.drawable.ic_checked_user_icon)
+                } else {
+                    holder.binding.ivStatus.setImageResource(R.drawable.ic_uncheck_user_icon)
+                }
+                when {
+                    list[position].inviteStatus.equals("0") -> {
+                        holder.binding.ivStatus.visibility = View.VISIBLE
+                        holder.binding.tvStatus.visibility = View.GONE
+                        holder.binding.ivBanner.visibility = View.GONE
+                        holder.binding.tvLabel.visibility = View.GONE
+                    }
+                    list[position].inviteStatus.equals("1") -> {
+                        holder.binding.ivStatus.visibility = View.GONE
+                        holder.binding.tvStatus.visibility = View.VISIBLE
+                        holder.binding.ivBanner.visibility = View.VISIBLE
+                        holder.binding.ivBanner.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_green_label_icon))
+                        holder.binding.tvLabel.visibility = View.VISIBLE
+                        holder.binding.tvLabel.text = getString(R.string.request_sent)
+                        holder.binding.tvStatus.text = getString(R.string.cancel)
+                        holder.binding.tvStatus.setTextColor(ContextCompat.getColor(activity, R.color.progressfilled))
+
+                        holder.binding.tvStatus.setOnClickListener {
+                            if (BWSApplication.isNetworkConnected(activity)) {
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listCall: Call<CancelInviteUserModel> = APINewClient.client.getCancelInviteUser(userId, list[position].mobile)
+                                listCall.enqueue(object : Callback<CancelInviteUserModel> {
+                                    override fun onResponse(call: Call<CancelInviteUserModel>, response: Response<CancelInviteUserModel>) {
+                                        try {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            val listModel: CancelInviteUserModel = response.body()!!
+                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                prepareEnhanceUserList(activity)
+                                            } else {
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                            }
+
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<CancelInviteUserModel>, t: Throwable) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    }
+                                })
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                            }
+                        }
+                    }
+                    list[position].inviteStatus.equals("2") -> {
+                        holder.binding.ivStatus.visibility = View.GONE
+                        holder.binding.tvStatus.visibility = View.VISIBLE
+                        holder.binding.ivBanner.visibility = View.VISIBLE
+                        holder.binding.tvLabel.visibility = View.VISIBLE
+                        holder.binding.ivBanner.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_yellow_label_icon))
+                        holder.binding.tvLabel.text = getString(R.string.req_expired)
+                        holder.binding.tvStatus.text = getString(R.string.resend)
+                        holder.binding.tvStatus.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
+
+                        holder.binding.tvStatus.setOnClickListener {
+                            if (BWSApplication.isNetworkConnected(activity)) {
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, list[position].name, list[position].mobile)
+                                listCall.enqueue(object : Callback<SetInviteUserModel> {
+                                    override fun onResponse(call: Call<SetInviteUserModel>, response: Response<SetInviteUserModel>) {
+                                        try {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            val listModel: SetInviteUserModel = response.body()!!
+                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                prepareEnhanceUserList(activity)
+                                            } else {
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                            }
+
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<SetInviteUserModel>, t: Throwable) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    }
+                                })
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                            }
+                        }
+                    }
+                }
+
             }
 
             binding.btnRemove.setOnClickListener {
@@ -135,8 +229,6 @@ class EnhanceUserListActivity : AppCompatActivity() {
                 dialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 val btnYes = dialog!!.findViewById<Button>(R.id.btnYes)
                 val btnNo = dialog!!.findViewById<Button>(R.id.btnNo)
-                val progressBar = dialog!!.findViewById<ProgressBar>(R.id.progressBar)
-                val progressBarHolder = dialog!!.findViewById<FrameLayout>(R.id.progressBarHolder)
                 dialog!!.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog!!.hide()

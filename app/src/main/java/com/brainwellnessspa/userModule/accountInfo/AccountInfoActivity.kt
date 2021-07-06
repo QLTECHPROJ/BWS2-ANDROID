@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.databinding.ActivityAccountInfoBinding
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -39,7 +40,8 @@ class AccountInfoActivity : AppCompatActivity() {
 
         binding.llDeleteAc.setOnClickListener {
             if (BWSApplication.isNetworkConnected(this)) {
-                val i = Intent(this, ChangePasswordActivity::class.java)
+                val i = Intent(this, CancelMembershipActivity::class.java)
+                i.putExtra("screenView","0")
                 startActivity(i)
                 finish()
             } else {

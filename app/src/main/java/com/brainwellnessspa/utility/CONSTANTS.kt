@@ -97,6 +97,7 @@ object CONSTANTS {
     const val PREFE_ACCESS_directLogin = "directLogin"
     const val PREFE_ACCESS_isPinSet = "isPinSet"
     const val PREFE_ACCESS_isMainAccount = "isMainAccount"
+    const val PREFE_ACCESS_coUserCount = "coUserCount"
     const val PREFE_ACCESS_SCORELEVEL = "scoreLevel"
     const val PREFE_ACCESS_EMAIL = "Email"
     const val PREFE_ACCESS_MOBILE = "mobile"

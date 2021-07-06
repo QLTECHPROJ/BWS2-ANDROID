@@ -264,6 +264,7 @@ class ContactBookActivity : AppCompatActivity() {
                                     startActivity(smsIntent)
                                     finish()
 
+                                    Log.e("contactNumber", contactNumber.toString())
                                     p = Properties()
                                     p!!.putValue("userId", userId)
                                     p!!.putValue("referLink", referLink)

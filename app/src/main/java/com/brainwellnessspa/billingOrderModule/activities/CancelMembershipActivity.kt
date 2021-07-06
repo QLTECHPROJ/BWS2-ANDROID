@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -25,6 +26,11 @@ import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -44,6 +50,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     private var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
+    var screenView: String? = ""
 
     /* This is the first lunched function */
     @SuppressLint("ClickableViewAccessibility") override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +63,16 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
 
+        if (intent.extras != null) {
+            screenView = intent.getStringExtra("screenView")
+        }
+
+        val measureRatio = BWSApplication.measureRatio(ctx, 0f, 5f, 3f, 1f, 0f)
+        binding.imageView.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+        binding.imageView.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+        binding.imageView.scaleType = ImageView.ScaleType.FIT_XY
+        binding.imageView.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.delete_account_bg))
+
         /* This is the screen back button click */
         binding.llBack.setOnClickListener {
             myBackPress = true
@@ -65,6 +82,21 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
             finish()
         }
 
+        when {
+//            Delete Account
+            screenView.equals("0") -> {
+                binding.rlDeleteAc.visibility = View.VISIBLE
+                binding.rlCancelPlan.visibility = View.GONE
+                binding.tvTilte.text = getString(R.string.delete_account)
+            }
+//            Cancel plan
+            screenView.equals("1") -> {
+                binding.rlDeleteAc.visibility = View.GONE
+                binding.rlCancelPlan.visibility = View.VISIBLE
+                binding.tvTilte.text = getString(R.string.cancel_plan)
+
+            }
+        }
         /* This condition is check about application in background or foreground */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())

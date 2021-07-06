@@ -55,7 +55,8 @@
                     android:layout_height="match_parent"
                     android:padding="@dimen/_10sdp"
                     android:src="@drawable/ic_add_user_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
 
         </RelativeLayout>

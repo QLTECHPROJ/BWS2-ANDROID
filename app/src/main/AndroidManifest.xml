@@ -72,10 +72,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".dashboardModule.profile.DeleteAccountActivity"></activity>
-        <activity android:name=".dashboardModule.profile.EnhanceUserListActivity" />
-        <activity android:name=".userModule.coUserModule.ThankYouActivity" />
-        <activity android:name=".userModule.coUserModule.UserDetailActivity" />
+
+        <activity
+            android:name=".dashboardModule.profile.EnhanceUserListActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".userModule.coUserModule.ThankYouActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".userModule.coUserModule.UserDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".userModule.coUserModule.AddCouserActivity"
             android:configChanges="orientation|screenSize"

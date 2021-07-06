@@ -10,6 +10,7 @@ import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderAct
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
+import com.brainwellnessspa.userModule.coUserModule.UserDetailActivity
 import com.brainwellnessspa.utility.CONSTANTS
 
 class WalkScreenActivity : AppCompatActivity() {
@@ -45,18 +46,29 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepOne.visibility = View.VISIBLE
                 binding.rlStepTwo.visibility = View.GONE
                 binding.rlStepThree.visibility = View.GONE
+                binding.rlStepFour.visibility = View.GONE
             }
             screenView.equals("2", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
                 binding.rlStepOne.visibility = View.GONE
                 binding.rlStepTwo.visibility = View.VISIBLE
                 binding.rlStepThree.visibility = View.GONE
+                binding.rlStepFour.visibility = View.GONE
             }
             screenView.equals("3", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
                 binding.rlStepOne.visibility = View.GONE
                 binding.rlStepTwo.visibility = View.GONE
                 binding.rlStepThree.visibility = View.VISIBLE
+                binding.rlStepFour.visibility = View.GONE
+            }
+
+            screenView.equals("4", ignoreCase = true) -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.GONE
+                binding.rlStepFour.visibility = View.VISIBLE
             }
         }
 
@@ -84,6 +96,13 @@ class WalkScreenActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        binding.rlStepFour.setOnClickListener {
+            val intent = Intent(applicationContext, UserDetailActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     override fun onBackPressed() {
