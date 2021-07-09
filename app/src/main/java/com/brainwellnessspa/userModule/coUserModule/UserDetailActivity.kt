@@ -105,9 +105,13 @@ class UserDetailActivity : AppCompatActivity() {
                             binding.txtEmailError.visibility = View.GONE
                             val listModel: AddUserModel = response.body()!!
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                val intent = Intent(applicationContext, UserListActivity::class.java)
-                                startActivity(intent)
-                                finish()
+                                if (BWSApplication.addCouserBackStatus == 1) {
+                                    finish()
+                                } else {
+                                    val intent = Intent(applicationContext, UserListActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else {
                                 BWSApplication.showToast(listModel.responseMessage, activity)

@@ -352,7 +352,7 @@
                             android:textColor="@color/gray"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_14sdp"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             tools:ignore="SpUsage" />
 
                     </LinearLayout>

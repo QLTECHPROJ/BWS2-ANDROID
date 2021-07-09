@@ -28,7 +28,7 @@ import retrofit2.Response
 
 class AddProfileActivity : AppCompatActivity() {
     var userID: String? = ""
-    var coUserID: String? = ""
+    private var coUserID: String? = ""
     var coEMAIL: String? = ""
     var coName: String? = ""
     var coNumber: String? = ""

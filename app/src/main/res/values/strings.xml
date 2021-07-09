@@ -461,5 +461,6 @@
     <string name="req_expired">Request expired</string>
     <string name="cancelled">Cancelled</string>
     <string name="resend">Resend</string>
+    <string name="set_reminder_for_suggested_playlist">Set Reminder \nfor suggested playlist</string>
 </resources>
 

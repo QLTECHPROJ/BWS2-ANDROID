@@ -1,6 +1,8 @@
 package com.brainwellnessspa.utility
 
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
+import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
+import com.brainwellnessspa.billingOrderModule.models.DeleteAccountModel
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
@@ -79,7 +81,7 @@ interface APINewInterface {
         @Field("Pin")
         pin: String?): Call<SetLoginPinModel>
 
- @POST("inviteuser")
+    @POST("inviteuser")
     @FormUrlEncoded
     fun getSetInviteUser(
         @Field("UserId")
@@ -89,6 +91,11 @@ interface APINewInterface {
         @Field("MobileNo")
         mobileNo: String?): Call<SetInviteUserModel>
 
+    @POST("proceed")
+    @FormUrlEncoded
+    fun getReminderProceed(
+        @Field("UserId")
+        userId: String?): Call<ReminderProceedModel>
 
     @POST("cancelinviteuser")
     @FormUrlEncoded
@@ -97,6 +104,22 @@ interface APINewInterface {
         userId: String?,
         @Field("MobileNo")
         mobileNo: String?): Call<CancelInviteUserModel>
+
+    @POST("deleteaccount")
+    @FormUrlEncoded
+    fun getDeleteAccount(
+        @Field("UserID")
+        userID: String?,
+        @Field("CancelId")
+        cancelId: String?,
+        @Field("CancelReason")
+        cancelReason: String?): Call<DeleteAccountModel?>?
+
+    @POST("deleteuser")
+    @FormUrlEncoded
+    fun getDeleteInviteUser(
+        @Field("UserId")
+        userId: String?): Call<DeleteInviteUserModel>
 
     @POST("addcouser")
     @FormUrlEncoded
@@ -518,4 +541,14 @@ interface APINewInterface {
         internetUpSpeed: String?,
         @Field("appType")
         appType: String?): Call<AudioInterruptionModel>
+
+    @POST("cancelplan")
+    @FormUrlEncoded
+    fun getCancelPlan(
+        @Field("UserID")
+        userID: String?,
+        @Field("CancelId")
+        cancelId: String?,
+        @Field("CancelReason")
+        cancelReason: String?): Call<CancelPlanModel?>?
 }

@@ -118,6 +118,7 @@ class AddCouserActivity : AppCompatActivity() {
                 if (BWSApplication.isNetworkConnected(this)) {
                     val i = Intent(applicationContext, ContactBookActivity::class.java)
                     startActivity(i)
+                    finish()
                     dialog.dismiss()
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), this)

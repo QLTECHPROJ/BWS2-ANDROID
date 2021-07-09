@@ -33,6 +33,7 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dashboardModule.models.ReminderProceedModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
@@ -41,7 +42,6 @@ import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.activities.AddProfileActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -74,12 +74,13 @@ class HomeFragment : Fragment() {
     lateinit var ctx: Context
     lateinit var act: Activity
     var adapter: UserListAdapter? = null
-    var coUserId: String? = ""
     var userId: String? = ""
+    var mainAccountId: String? = ""
     var userName: String? = ""
     private var userImage: String? = ""
     var scoreLevel: String? = ""
     var download = ""
+    var isMainAccount: String? = ""
     var liked = ""
     var myDownloads: String? = ""
     var sleepTime: String? = ""
@@ -118,13 +119,14 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         ctx = requireActivity()
-        act = requireActivity()/* Get UserId, and MAin Account Id from share pref*/
+        act = requireActivity()/* Get mainAccountId, and MAin Account Id from share pref*/
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+        isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
 
         /* Get sleep time from share pref*/
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -265,13 +267,56 @@ class HomeFragment : Fragment() {
             }
         }
         prepareHomeData()
-
         return view
     }
 
     override fun onResume() {
         networkCheck()
         super.onResume()
+    }
+
+    private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String) {
+        dialog = Dialog(requireActivity())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.reminder_popup_layout)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+        val btn = dialog.findViewById<Button>(R.id.Btn)
+        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog.hide()
+                return@setOnKeyListener true
+            }
+            false
+        }
+        btn.setOnClickListener {
+            if (isNetworkConnected(ctx)) {
+                val listCall = APINewClient.client.getReminderProceed(userId)
+                listCall.enqueue(object : Callback<ReminderProceedModel?> {
+                    override fun onResponse(call: Call<ReminderProceedModel?>, response: Response<ReminderProceedModel?>) {
+                        try {
+                            val model = response.body()
+                            showToast(model!!.responseMessage, activity)
+                            getReminderDay(ctx, act, userId, playlistID, playlistName, activity!!, reminderTime, reminderDay)
+
+                            dialog.hide()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ReminderProceedModel?>, t: Throwable) {
+                    }
+                })
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+
+        }
+        tvGoBack.setOnClickListener { dialog.hide() }
+        dialog.show()
+        dialog.setCancelable(false)
     }
 
     /* network is available or not function for visible other layout of net is not available image display */
@@ -315,7 +360,7 @@ class HomeFragment : Fragment() {
         if (isNetworkConnected(act)) {
             progressBar.visibility = View.VISIBLE
             progressBar.invalidate()
-            val listCall = APINewClient.client.getUserList(userId)
+            val listCall = APINewClient.client.getUserList(mainAccountId)
             listCall.enqueue(object : Callback<AddedUserListModel> {
                 override fun onResponse(call: Call<AddedUserListModel>, response: Response<AddedUserListModel>) {
                     try {
@@ -324,15 +369,15 @@ class HomeFragment : Fragment() {
                         adapter = UserListAdapter(listModel.responseData!!, mBottomSheetDialog)
                         rvUserList.adapter = adapter
 
-                        if (listModel.responseData!!.userList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
-                            llAddNewUser.visibility = View.GONE
-                        } else {
+                        if (isMainAccount.equals("1",ignoreCase = true)) {
                             llAddNewUser.visibility = View.VISIBLE
+                        } else {
+                            llAddNewUser.visibility = View.GONE
                         }
                         val section = java.util.ArrayList<SegmentUserList>()
                         for (i in listModel.responseData!!.userList!!.indices) {
                             val e = SegmentUserList()
-                            e.coUserId = listModel.responseData!!.userList!![i].coUserId
+                            e.coUserId = listModel.responseData!!.userList!![i].userID
                             e.name = listModel.responseData!!.userList!![i].name
                             e.mobile = listModel.responseData!!.userList!![i].mobile
                             e.email = listModel.responseData!!.userList!![i].email
@@ -367,8 +412,8 @@ class HomeFragment : Fragment() {
 
         Log.e("newToken", fcmId.toString())
         Log.e("deviceid", deviceId.toString())
-        Log.e("UserID", userId.toString())
-        Log.e("CoUSerID", coUserId.toString())
+        Log.e("MainAccountId", mainAccountId.toString())
+        Log.e("UserId", userId.toString())
         if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
                 val newToken = task.result.token
@@ -383,7 +428,7 @@ class HomeFragment : Fragment() {
         }
         if (isNetworkConnected(act)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getHomeScreenData(coUserId)
+            val listCall = APINewClient.client.getHomeScreenData(userId)
             listCall.enqueue(object : Callback<HomeScreenModel?> {
                 @SuppressLint("ResourceAsColor", "SetTextI18n")
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
@@ -411,6 +456,10 @@ class HomeFragment : Fragment() {
                                 binding.tvPercent.setTextColor(ContextCompat.getColor(act, R.color.green_dark_s))
                                 binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                             }
+                        }
+
+                        if (listModel.responseData!!.isFirst.equals("1", ignoreCase = true)) {
+                            getReminderPopup(listModel.responseData!!.suggestedPlaylist!!.playlistID.toString(), listModel.responseData!!.suggestedPlaylist!!.playlistName.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderTime.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderDay.toString())
                         }
 
                         /* register reciver fro get play pause action update and reminder update */
@@ -448,15 +497,15 @@ class HomeFragment : Fragment() {
                             if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.text = "Set reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
+                                getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                             }
                         }
 
@@ -766,7 +815,7 @@ class HomeFragment : Fragment() {
     /* Get Downloaded Media for offline play and play that media  */
     private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
         AudioDatabase.databaseWriteExecutor.execute {
-            downloadAudioDetailsList = DB.taskDao()?.geAllDataBYDownloaded("Complete", coUserId) as ArrayList<String>
+            downloadAudioDetailsList = DB.taskDao()?.geAllDataBYDownloaded("Complete", userId) as ArrayList<String>
         }
         var pos = 0
         val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -872,7 +921,7 @@ class HomeFragment : Fragment() {
     /* Get Playlist is downloaded or not */
     private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
         try {
-            DB.taskDao()?.getPlaylist1(PlaylistID, coUserId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
+            DB.taskDao()?.getPlaylist1(PlaylistID, userId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
                 myDownloads = if (audioList.isNotEmpty()) {
                     "1"
                 } else {
@@ -1021,7 +1070,7 @@ class HomeFragment : Fragment() {
             if (selectedItem == position) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
             } else {
-                if (coUserId!! == modelList[position].coUserId && pos == 0) {
+                if (userId!! == modelList[position].userID && pos == 0) {
                     holder.bind.ivCheck.visibility = View.VISIBLE
                 } else {
                     holder.bind.ivCheck.visibility = View.INVISIBLE
@@ -1029,7 +1078,7 @@ class HomeFragment : Fragment() {
             }
 
             holder.bind.llAddNewCard.setOnClickListener {
-                if (coUserId!! == modelList[position].coUserId) {
+                if (userId!! == modelList[position].userID) {
                     mBottomSheetDialog.hide()
                 } else {
                     selectedItem = position
@@ -1077,7 +1126,7 @@ class HomeFragment : Fragment() {
                                 txtError.text = ""
                                 progressBar.visibility = View.VISIBLE
                                 progressBar.invalidate()
-                                val listCall = APINewClient.client.getVerifyPin(modelList[position].coUserId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                val listCall = APINewClient.client.getVerifyPin(modelList[position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                                 listCall.enqueue(object : Callback<AuthOtpModel> {
                                     @SuppressLint("HardwareIds")
                                     override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
@@ -1101,10 +1150,10 @@ class HomeFragment : Fragment() {
                                                         callObserve2(ctx)
                                                     }*/
                                                     Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
-                                                    Log.e("Old UserId MobileNo", "$userId.....$coUserId")
+                                                    Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
                                                     logout = false
-                                                    userId = listModel.ResponseData.MainAccountID
-                                                    coUserId = listModel.ResponseData.UserId
+                                                    mainAccountId = listModel.ResponseData.MainAccountID
+                                                    userId = listModel.ResponseData.UserId
                                                     if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                                         val intent = Intent(act, WalkScreenActivity::class.java)
                                                         intent.putExtra(CONSTANTS.ScreenView, "1")

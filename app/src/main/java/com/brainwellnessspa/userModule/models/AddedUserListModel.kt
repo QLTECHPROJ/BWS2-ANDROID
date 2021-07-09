@@ -46,10 +46,6 @@ class AddedUserListModel {
             @Expose
             var isPinSet: String? = ""
 
-            @SerializedName("CoUserId")
-            @Expose
-            var coUserId: String? = ""
-
             @SerializedName("Name")
             @Expose
             var name: String? = ""

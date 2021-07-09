@@ -35,13 +35,13 @@ class ForgotPswdActivity : AppCompatActivity() {
     var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val Email: String = binding.etEmail.getText().toString().trim()
-            if (Email.equals("", ignoreCase = true)) {
-                binding.btnResetPswd.setEnabled(false)
+            val email: String = binding.etEmail.text.toString().trim()
+            if (email.equals("", ignoreCase = true)) {
+                binding.btnResetPswd.isEnabled = false
                 binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnResetPswd.setBackgroundResource(R.drawable.gray_round_cornor)
             } else {
-                binding.btnResetPswd.setEnabled(true)
+                binding.btnResetPswd.isEnabled = true
                 binding.btnResetPswd.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnResetPswd.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
@@ -70,10 +70,10 @@ class ForgotPswdActivity : AppCompatActivity() {
     private fun prepareData() {
         if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
             binding.txtEmailError.visibility = View.VISIBLE
-            binding.txtEmailError.text = "Please provide a email address"
-        } else if (!binding.etEmail.text.toString().equals("") && !BWSApplication.isEmailValid(binding.etEmail.text.toString())) {
+            binding.txtEmailError.text = getString(R.string.please_provide_a_email_address)
+        } else if (binding.etEmail.text.toString() != "" && !BWSApplication.isEmailValid(binding.etEmail.text.toString())) {
             binding.txtEmailError.visibility = View.VISIBLE
-            binding.txtEmailError.text = "Please provide a valid email address"
+            binding.txtEmailError.text = getString(R.string.pls_provide_valid_email)
         } else {
             binding.txtEmailError.visibility = View.GONE
             if (BWSApplication.isNetworkConnected(this)) {

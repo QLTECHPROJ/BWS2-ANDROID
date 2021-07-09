@@ -40,9 +40,14 @@ class HomeScreenModel {
         @SerializedName("shouldPlayDisclaimer")
         @Expose
         var shouldPlayDisclaimer: String? = ""
+
         @SerializedName("IndexScoreDiff")
         @Expose
         var indexScoreDiff: String? = ""
+
+        @SerializedName("IsFirst")
+        @Expose
+        var isFirst: String? = ""
 
         @SerializedName("SuggestedPlaylist")
         @Expose
@@ -213,6 +218,7 @@ class HomeScreenModel {
             @Expose
             var bitrate: String? = ""
         }
+
         class SessionScore {
 
         }

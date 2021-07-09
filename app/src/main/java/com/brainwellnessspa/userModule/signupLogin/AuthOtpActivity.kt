@@ -271,7 +271,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                             finish()
                                         } else {
                                             val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                            intent.putExtra("IsFirst", "0")
+                                            intent.putExtra("IsFirst", "1")
                                             startActivity(intent)
                                             finish()
 
@@ -321,7 +321,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
                             edited.apply()
-                            showToast(listModel.ResponseMessage, activity)
+//                            showToast(listModel.ResponseMessage, activity)
                         } else {
                             binding.txtError.visibility = View.VISIBLE
                             binding.txtError.text = listModel.ResponseMessage

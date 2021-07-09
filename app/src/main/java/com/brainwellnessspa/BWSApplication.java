@@ -161,6 +161,7 @@ public class BWSApplication extends Application{
         }
     };
     public static int miniPlayer = 0;
+    public static int addCouserBackStatus = 0;
     public static String BatteryStatus = "", IsLock;
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
@@ -1727,7 +1728,6 @@ public class BWSApplication extends Application{
     }
 
     public static void getReminderDay(Context ctx, Activity act, String CoUSERID, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay) {
-
         ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{new ReminderSelectionModel("Sunday"), new ReminderSelectionModel("Monday"), new ReminderSelectionModel("Tuesday"), new ReminderSelectionModel("Wednesday"), new ReminderSelectionModel("Thursday"), new ReminderSelectionModel("Friday"), new ReminderSelectionModel("Saturday"),};
         localIntent = new Intent("Reminder");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);

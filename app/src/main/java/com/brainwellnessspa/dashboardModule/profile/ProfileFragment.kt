@@ -217,7 +217,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-         binding.llManageUser.setOnClickListener {
+        binding.llManageUser.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -495,6 +495,15 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                 } else {
                                     binding.tvName.text = viewModel.ResponseData.Name
                                 }
+
+                                if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
+                                    binding.llManageUser.visibility = View.VISIBLE
+                                    binding.viewManage.visibility = View.VISIBLE
+                                } else {
+                                    binding.llManageUser.visibility = View.GONE
+                                    binding.viewManage.visibility = View.GONE
+                                }
+
                                 val name: String
                                 profilePicPath = viewModel.ResponseData.Image
                                 if (profilePicPath.equals("", ignoreCase = true)) {
@@ -715,6 +724,11 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         e.printStackTrace()
                     }
                     val i = Intent(activity, SignInActivity::class.java)
+                    i.putExtra("mobileNo", "")
+                    i.putExtra("countryCode", "")
+                    i.putExtra("name", "")
+                    i.putExtra("email", "")
+                    i.putExtra("countryShortName", "")
                     startActivity(i)
                     requireActivity().finish()
                 }

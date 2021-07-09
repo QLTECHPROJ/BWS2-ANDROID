@@ -40,9 +40,9 @@ import java.util.*
 class InvoiceActivity : AppCompatActivity() {
     lateinit var binding: ActivityInvoiceBinding
     var appointmentList: ArrayList<Appointment?>? = null
-    var memberShipList: ArrayList<MemberShip?>?  = null
-    var UserID: String? = ""
-    var ComeFrom: String? = ""
+    var memberShipList: ArrayList<MemberShip?>? = null
+    var userId: String? = ""
+    var comeFrom: String? = ""
     var context: Context? = null
     var activity: Activity? = null
     var p: Properties? = null
@@ -55,9 +55,9 @@ class InvoiceActivity : AppCompatActivity() {
         context = this@InvoiceActivity
         activity = this@InvoiceActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        UserID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         if (intent != null) {
-            ComeFrom = intent.getStringExtra("ComeFrom")
+            comeFrom = intent.getStringExtra("ComeFrom")
         }
         val p = Properties()
 
@@ -75,13 +75,13 @@ class InvoiceActivity : AppCompatActivity() {
             invoiceToRecepit = 1
             BWSApplication.tutorial = false
             when {
-                ComeFrom.equals("1", ignoreCase = true) -> {
+                comeFrom.equals("1", ignoreCase = true) -> {
                     invoiceToDashboard = 1
                     val i = Intent(context, BottomNavigationActivity::class.java)
                     startActivity(i)
                     finish()
                 }
-                ComeFrom.equals("", ignoreCase = true) -> {
+                comeFrom.equals("", ignoreCase = true) -> {
                     invoiceToDashboard = 1
                     val i = Intent(context, BottomNavigationActivity::class.java)
                     startActivity(i)
@@ -92,7 +92,7 @@ class InvoiceActivity : AppCompatActivity() {
                 }
             }
         } else if (invoiceToRecepit == 1) {
-            if (ComeFrom.equals("", ignoreCase = true)) {
+            if (comeFrom.equals("", ignoreCase = true)) {
                 invoiceToDashboard = 0
                 finish()
             } else {
@@ -108,7 +108,7 @@ class InvoiceActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.client.getInvoicelistPlaylist(UserID, "1")
+            val listCall = APIClient.client.getInvoicelistPlaylist(userId, "1")
             listCall!!.enqueue(object : Callback<InvoiceListModel?> {
                 override fun onResponse(call: Call<InvoiceListModel?>, response: Response<InvoiceListModel?>) {
                     try {
@@ -241,8 +241,10 @@ class InvoiceActivity : AppCompatActivity() {
     }
 
     companion object {
-        @JvmField var invoiceToDashboard = 0
+        @JvmField
+        var invoiceToDashboard = 0
 
-        @JvmField var invoiceToRecepit = 0
+        @JvmField
+        var invoiceToRecepit = 0
     }
 }

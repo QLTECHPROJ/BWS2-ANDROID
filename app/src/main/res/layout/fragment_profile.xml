@@ -433,8 +433,10 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/viewManage"
                         android:layout_width="match_parent"
                         android:layout_height="1.5dp"
+                        android:visibility="gone"
                         android:background="@color/dim_light_gray" />
 
                     <LinearLayout
@@ -444,6 +446,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
+                        android:visibility="gone"
                         android:weightSum="1">
 
                         <ImageView
@@ -463,7 +466,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="@string/enhance_user"
+                            android:text="@string/manage_user"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />

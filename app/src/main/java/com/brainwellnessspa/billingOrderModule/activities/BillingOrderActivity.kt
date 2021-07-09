@@ -61,7 +61,7 @@ class BillingOrderActivity : AppCompatActivity() {
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, CancelMembershipActivity::class.java)
-            i.putExtra("screenView","1")
+            i.putExtra("screenView", "1")
             startActivity(i)
         }
 
@@ -187,6 +187,7 @@ class BillingOrderActivity : AppCompatActivity() {
 
     /* This is object declaration */
     companion object {
-        @JvmField var myBackPressbill = false
+        @JvmField
+        var myBackPressbill = false
     }
 }

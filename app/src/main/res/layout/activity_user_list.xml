@@ -83,6 +83,7 @@
                     android:paddingHorizontal="@dimen/_16sdp"
                     android:paddingVertical="@dimen/_18sdp"
                     android:weightSum="1"
+                    android:visibility="gone"
                     tools:ignore="DisableBaselineAlignment"
                     tools:targetApi="lollipop">
 

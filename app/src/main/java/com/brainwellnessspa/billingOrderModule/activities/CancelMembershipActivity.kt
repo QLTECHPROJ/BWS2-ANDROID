@@ -22,15 +22,12 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
+import com.brainwellnessspa.billingOrderModule.models.DeleteAccountModel
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -43,8 +40,10 @@ import retrofit2.Response
 class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
     lateinit var binding: ActivityCancelMembershipBinding
     lateinit var ctx: Context
-    var userID: String? = ""
+    var mainAccountId: String? = ""
+    var userId: String? = ""
     var cancelId = ""
+    var deleteId = ""
     lateinit var activity: Activity
     var audioPause = false
     private var numStarted = 0
@@ -53,15 +52,17 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     var screenView: String? = ""
 
     /* This is the first lunched function */
-    @SuppressLint("ClickableViewAccessibility") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership)
         ctx = this@CancelMembershipActivity
         activity = this@CancelMembershipActivity
 
         /* This is the get string userID */
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         if (intent.extras != null) {
             screenView = intent.getStringExtra("screenView")
@@ -71,16 +72,14 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         binding.imageView.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.imageView.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.imageView.scaleType = ImageView.ScaleType.FIT_XY
-        binding.imageView.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.delete_account_bg))
+        binding.imageView.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.delete_account_bg))
+
+        /* This condition is check about application in background or foreground */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
+        }
 
         /* This is the screen back button click */
-        binding.llBack.setOnClickListener {
-            myBackPress = true
-            if (audioPause) {
-                BWSApplication.player.playWhenReady = true
-            }
-            finish()
-        }
 
         when {
 //            Delete Account
@@ -88,6 +87,130 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlDeleteAc.visibility = View.VISIBLE
                 binding.rlCancelPlan.visibility = View.GONE
                 binding.tvTilte.text = getString(R.string.delete_account)
+
+                binding.llBack.setOnClickListener {
+                    finish()
+                }
+
+                binding.cbOneAc.setOnClickListener {
+                    binding.cbOneAc.isChecked = true
+                    binding.cbTwoAc.isChecked = false
+                    binding.cbThreeAc.isChecked = false
+                    binding.cbFourAc.isChecked = false
+                    deleteId = "1"
+                    binding.edtCancelBoxAc.visibility = View.GONE
+                    binding.edtCancelBoxAc.setText("")
+                }
+
+                binding.cbTwoAc.setOnClickListener {
+                    binding.cbOneAc.isChecked = false
+                    binding.cbTwoAc.isChecked = true
+                    binding.cbThreeAc.isChecked = false
+                    binding.cbFourAc.isChecked = false
+                    deleteId = "2"
+                    binding.edtCancelBoxAc.visibility = View.GONE
+                    binding.edtCancelBoxAc.setText("")
+                }
+
+                binding.cbThreeAc.setOnClickListener {
+                    binding.cbOneAc.isChecked = false
+                    binding.cbTwoAc.isChecked = false
+                    binding.cbThreeAc.isChecked = true
+                    binding.cbFourAc.isChecked = false
+                    deleteId = "3"
+                    binding.edtCancelBoxAc.visibility = View.GONE
+                    binding.edtCancelBoxAc.setText("")
+                }
+
+                binding.cbFourAc.setOnClickListener {
+                    binding.cbOneAc.isChecked = false
+                    binding.cbTwoAc.isChecked = false
+                    binding.cbThreeAc.isChecked = false
+                    binding.cbFourAc.isChecked = true
+                    deleteId = "4"
+                    binding.edtCancelBoxAc.visibility = View.VISIBLE
+                }
+
+                binding.btnDeleteAccount.setOnClickListener {
+                    if (deleteId.equals("4", ignoreCase = true) && binding.edtCancelBoxAc.text.toString().equals("", ignoreCase = true)) {
+                        BWSApplication.showToast("Cancellation reason is required", activity)
+                    } else {/*This dialog is cancel membership  */
+                        val dialog = Dialog(ctx)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.cancel_membership)
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
+                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                        val btn = dialog.findViewById<Button>(R.id.Btn)
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                if (BWSApplication.player != null) {
+                                    if (BWSApplication.player.playWhenReady) {
+                                        BWSApplication.player.playWhenReady = false
+                                        audioPause = true
+                                    }
+                                }
+                                return@setOnKeyListener true
+                            }
+                            false
+                        }
+
+                        /* This click event is called when cancelling subscription */
+                        btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                            when (event.action) {
+                                MotionEvent.ACTION_DOWN -> {
+                                    val views = view1 as Button
+                                    views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+                                    view1.invalidate()
+                                }
+                                MotionEvent.ACTION_UP -> {
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        val listCall = APINewClient.client.getDeleteAccount(userId, deleteId, binding.edtCancelBox.text.toString())
+                                        if (listCall != null) {
+                                            listCall.enqueue(object : Callback<DeleteAccountModel?> {
+                                                override fun onResponse(call: Call<DeleteAccountModel?>, response: Response<DeleteAccountModel?>) {
+                                                    try {
+                                                        val model = response.body()
+                                                        BWSApplication.showToast(model!!.responseMessage, activity)
+                                                        dialog.dismiss()
+                                                        finish()
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<DeleteAccountModel?>, t: Throwable) {
+                                                }
+                                            })
+                                        }
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                    }
+                                    run {
+                                        val views = view1 as Button
+                                        views.background.clearColorFilter()
+                                        views.invalidate()
+                                    }
+                                }
+                                MotionEvent.ACTION_CANCEL -> {
+                                    val views = view1 as Button
+                                    views.background.clearColorFilter()
+                                    views.invalidate()
+                                }
+                            }
+                            true
+                        }
+
+                        /* This click event is called when not cancelling subscription */
+                        tvGoBack.setOnClickListener {
+                            dialog.dismiss()
+                        }
+                        dialog.show()
+                        dialog.setCancelable(false)
+                    }
+                }
+
             }
 //            Cancel plan
             screenView.equals("1") -> {
@@ -95,212 +218,230 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlCancelPlan.visibility = View.VISIBLE
                 binding.tvTilte.text = getString(R.string.cancel_plan)
 
-            }
-        }
-        /* This condition is check about application in background or foreground */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(AppLifecycleCallback())
-        }
-
-        /*This is to youtube video playing */
-        binding.youtubeView.initialize(API_KEY, this)
-        val p = Properties()
-        p.putValue("plan", "")
-        p.putValue("planStatus", "")
-        p.putValue("planStartDt", "")
-        p.putValue("planExpiryDt", "")
-        p.putValue("planAmount", "")
-        BWSApplication.addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
-
-        /*This condition is to audio playing or not  */
-        if (BWSApplication.player != null) {
-            if (BWSApplication.player.playWhenReady) {
-                BWSApplication.player.playWhenReady = false
-                audioPause = true
-            }
-        }
-
-        /*This click event is option one select  */
-        binding.cbOne.setOnClickListener {
-            binding.cbOne.isChecked = true
-            binding.cbTwo.isChecked = false
-            binding.cbThree.isChecked = false
-            binding.cbFour.isChecked = false
-            cancelId = "1"
-            binding.edtCancelBox.visibility = View.GONE
-            binding.edtCancelBox.setText("")
-        }
-
-        /*This click event is option two select  */
-        binding.cbTwo.setOnClickListener {
-            binding.cbOne.isChecked = false
-            binding.cbTwo.isChecked = true
-            binding.cbThree.isChecked = false
-            binding.cbFour.isChecked = false
-            cancelId = "2"
-            binding.edtCancelBox.visibility = View.GONE
-            binding.edtCancelBox.setText("")
-        }
-
-        /*This click event is option three select  */
-        binding.cbThree.setOnClickListener {
-            binding.cbOne.isChecked = false
-            binding.cbTwo.isChecked = false
-            binding.cbThree.isChecked = true
-            binding.cbFour.isChecked = false
-            cancelId = "3"
-            binding.edtCancelBox.visibility = View.GONE
-            binding.edtCancelBox.setText("")
-        }
-
-        /*This click event is option four select  */
-        binding.cbFour.setOnClickListener {
-            binding.cbOne.isChecked = false
-            binding.cbTwo.isChecked = false
-            binding.cbThree.isChecked = false
-            binding.cbFour.isChecked = true
-            cancelId = "4"
-            binding.edtCancelBox.visibility = View.VISIBLE
-        }
-
-        /*This click event is called when going to cancel subscription  */
-        binding.btnCancelSubscrible.setOnClickListener {
-            myBackPress = true
-            if (BWSApplication.player != null) {
-                if (BWSApplication.player.playWhenReady) {
-                    BWSApplication.player.playWhenReady = false
-                    audioPause = true
-                }
-            }
-            if (cancelId.equals("4", ignoreCase = true) && binding.edtCancelBox.text.toString().equals("", ignoreCase = true)) {
-                BWSApplication.showToast("Cancellation reason is required", activity)
-            } else {/*This dialog is cancel membership  */
-                val dialog = Dialog(ctx)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.cancel_membership)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                val btn = dialog.findViewById<Button>(R.id.Btn)
-                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        if (BWSApplication.player != null) {
-                            if (BWSApplication.player.playWhenReady) {
-                                BWSApplication.player.playWhenReady = false
-                                audioPause = true
-                            }
-                        }
-                        return@setOnKeyListener true
+                binding.llBack.setOnClickListener {
+                    myBackPress = true
+                    if (audioPause) {
+                        BWSApplication.player.playWhenReady = true
                     }
-                    false
+                    finish()
                 }
 
-                /* This click event is called when cancelling subscription */
-                btn.setOnTouchListener { view1: View, event: MotionEvent ->
-                    when (event.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            val views = view1 as Button
-                            views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
-                            view1.invalidate()
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            if (BWSApplication.isNetworkConnected(ctx)) {
-                                val listCall = APIClient.client.getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
-                                if (listCall != null) {
-                                    listCall.enqueue(object : Callback<CancelPlanModel?> {
-                                        override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
-                                            try {
-                                                val model = response.body()
-                                                BWSApplication.showToast(model!!.responseMessage, activity)
-                                                dialog.dismiss()
+                /*This is to youtube video playing */
+                binding.youtubeView.initialize(API_KEY, this)
+                val p = Properties()
+                p.putValue("plan", "")
+                p.putValue("planStatus", "")
+                p.putValue("planStartDt", "")
+                p.putValue("planExpiryDt", "")
+                p.putValue("planAmount", "")
+                BWSApplication.addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
 
-                                //                                            Properties p = new Properties();
-                                //                                            p.putValue("cancelId", cancelId);
-                                //                                            p.putValue("cancelReason", CancelReason);
-                                //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
-
-                                                if (BWSApplication.player != null) {
-                                                    if (BWSApplication.player.playWhenReady) {
-                                                        BWSApplication.player.playWhenReady = false
-                                                        audioPause = true
-                                                    }
-                                                }
-                                                finish()
-                                            } catch (e: Exception) {
-                                                e.printStackTrace()
-                                            }
-                                        }
-
-                                        override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
-                                        }
-                                    })
-                                }
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
-                            }
-                            run {
-                                val views = view1 as Button
-                                views.background.clearColorFilter()
-                                views.invalidate()
-                            }
-                        }
-                        MotionEvent.ACTION_CANCEL -> {
-                            val views = view1 as Button
-                            views.background.clearColorFilter()
-                            views.invalidate()
-                        }
+                /*This condition is to audio playing or not  */
+                if (BWSApplication.player != null) {
+                    if (BWSApplication.player.playWhenReady) {
+                        BWSApplication.player.playWhenReady = false
+                        audioPause = true
                     }
-                    true
                 }
 
-                /* This click event is called when not cancelling subscription */
-                tvGoBack.setOnClickListener {
-                    dialog.dismiss()
+                /*This click event is option one select  */
+                binding.cbOne.setOnClickListener {
+                    binding.cbOne.isChecked = true
+                    binding.cbTwo.isChecked = false
+                    binding.cbThree.isChecked = false
+                    binding.cbFour.isChecked = false
+                    cancelId = "1"
+                    binding.edtCancelBox.visibility = View.GONE
+                    binding.edtCancelBox.setText("")
+                }
+
+                /*This click event is option two select  */
+                binding.cbTwo.setOnClickListener {
+                    binding.cbOne.isChecked = false
+                    binding.cbTwo.isChecked = true
+                    binding.cbThree.isChecked = false
+                    binding.cbFour.isChecked = false
+                    cancelId = "2"
+                    binding.edtCancelBox.visibility = View.GONE
+                    binding.edtCancelBox.setText("")
+                }
+
+                /*This click event is option three select  */
+                binding.cbThree.setOnClickListener {
+                    binding.cbOne.isChecked = false
+                    binding.cbTwo.isChecked = false
+                    binding.cbThree.isChecked = true
+                    binding.cbFour.isChecked = false
+                    cancelId = "3"
+                    binding.edtCancelBox.visibility = View.GONE
+                    binding.edtCancelBox.setText("")
+                }
+
+                /*This click event is option four select  */
+                binding.cbFour.setOnClickListener {
+                    binding.cbOne.isChecked = false
+                    binding.cbTwo.isChecked = false
+                    binding.cbThree.isChecked = false
+                    binding.cbFour.isChecked = true
+                    cancelId = "4"
+                    binding.edtCancelBox.visibility = View.VISIBLE
+                }
+                /*This click event is called when going to cancel subscription  */
+                binding.btnCancelSubscrible.setOnClickListener {
+                    myBackPress = true
                     if (BWSApplication.player != null) {
                         if (BWSApplication.player.playWhenReady) {
                             BWSApplication.player.playWhenReady = false
                             audioPause = true
                         }
                     }
+                    if (cancelId.equals("4", ignoreCase = true) && binding.edtCancelBox.text.toString().equals("", ignoreCase = true)) {
+                        BWSApplication.showToast("Cancellation reason is required", activity)
+                    } else {/*This dialog is cancel membership  */
+                        val dialog = Dialog(ctx)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.cancel_membership)
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
+                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                        val btn = dialog.findViewById<Button>(R.id.Btn)
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                if (BWSApplication.player != null) {
+                                    if (BWSApplication.player.playWhenReady) {
+                                        BWSApplication.player.playWhenReady = false
+                                        audioPause = true
+                                    }
+                                }
+                                return@setOnKeyListener true
+                            }
+                            false
+                        }
+
+                        /* This click event is called when cancelling subscription */
+                        btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                            when (event.action) {
+                                MotionEvent.ACTION_DOWN -> {
+                                    val views = view1 as Button
+                                    views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+                                    view1.invalidate()
+                                }
+                                MotionEvent.ACTION_UP -> {
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        val listCall = APINewClient.client.getCancelPlan(mainAccountId, cancelId, binding.edtCancelBox.text.toString())
+                                        if (listCall != null) {
+                                            listCall.enqueue(object : Callback<CancelPlanModel?> {
+                                                override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
+                                                    try {
+                                                        val model = response.body()
+                                                        BWSApplication.showToast(model!!.responseMessage, activity)
+                                                        dialog.dismiss()
+
+                                                        //                                            Properties p = new Properties();
+                                                        //                                            p.putValue("cancelId", cancelId);
+                                                        //                                            p.putValue("cancelReason", CancelReason);
+                                                        //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+
+                                                        if (BWSApplication.player != null) {
+                                                            if (BWSApplication.player.playWhenReady) {
+                                                                BWSApplication.player.playWhenReady = false
+                                                                audioPause = true
+                                                            }
+                                                        }
+                                                        finish()
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
+                                                }
+                                            })
+                                        }
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                    }
+                                    run {
+                                        val views = view1 as Button
+                                        views.background.clearColorFilter()
+                                        views.invalidate()
+                                    }
+                                }
+                                MotionEvent.ACTION_CANCEL -> {
+                                    val views = view1 as Button
+                                    views.background.clearColorFilter()
+                                    views.invalidate()
+                                }
+                            }
+                            true
+                        }
+
+                        /* This click event is called when not cancelling subscription */
+                        tvGoBack.setOnClickListener {
+                            dialog.dismiss()
+                            if (BWSApplication.player != null) {
+                                if (BWSApplication.player.playWhenReady) {
+                                    BWSApplication.player.playWhenReady = false
+                                    audioPause = true
+                                }
+                            }
+                        }
+                        dialog.show()
+                        dialog.setCancelable(false)
+                    }
                 }
-                dialog.show()
-                dialog.setCancelable(false)
             }
         }
     }
 
     /* This is the device back click event */
     override fun onBackPressed() {
-        myBackPress = true
-        if (audioPause) {
-            BWSApplication.player.playWhenReady = true
+        if (screenView.equals("0")) {
+            finish()
+        } else {
+            myBackPress = true
+            if (audioPause) {
+                BWSApplication.player.playWhenReady = true
+            }
+            finish()
         }
-        finish()
     }
 
     /* This fuction is youtube video sucessfully playing */
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, wasRestored: Boolean) {
-        if (!wasRestored) {
-            youTubePlayer.loadVideo(VIDEO_ID)
-            youTubePlayer.setShowFullscreenButton(true)
+        if (screenView.equals("0")) {
+
+        } else {
+            if (!wasRestored) {
+                youTubePlayer.loadVideo(VIDEO_ID)
+                youTubePlayer.setShowFullscreenButton(true)
+            }
         }
     }
 
     /* This fuction is youtube video can't play and generating error  */
     override fun onInitializationFailure(provider: YouTubePlayer.Provider, errorReason: YouTubeInitializationResult) {
-        if (errorReason.isUserRecoverableError) {
-            errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
+        if (screenView.equals("0")) {
+
         } else {
-            val errorMessage = String.format(getString(R.string.error_player), errorReason.toString())
-            BWSApplication.showToast(errorMessage, activity)
+            if (errorReason.isUserRecoverableError) {
+                errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
+            } else {
+                val errorMessage = String.format(getString(R.string.error_player), errorReason.toString())
+                BWSApplication.showToast(errorMessage, activity)
+            }
         }
     }
 
     /* This is the initialize youtube player view */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            youTubePlayerProvider.initialize(API_KEY, this)
+        if (screenView.equals("0")) {
+
+        } else {
+            if (requestCode == RECOVERY_DIALOG_REQUEST) {
+                youTubePlayerProvider.initialize(API_KEY, this)
+            }
         }
     }
 

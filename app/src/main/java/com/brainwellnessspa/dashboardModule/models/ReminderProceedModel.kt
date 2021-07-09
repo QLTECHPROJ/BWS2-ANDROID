@@ -1,13 +1,12 @@
-package com.brainwellnessspa.userModule.models
+package com.brainwellnessspa.dashboardModule.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class CancelInviteUserModel {
-
+class ReminderProceedModel {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: ResponseData? = null
+    var responseData: List<Any?>? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -20,11 +19,4 @@ class CancelInviteUserModel {
     @SerializedName("ResponseStatus")
     @Expose
     var responseStatus: String? = null
-
-    class ResponseData {
-
-        @SerializedName("errormsg")
-        @Expose
-        var errormsg: String? = null
-    }
 }

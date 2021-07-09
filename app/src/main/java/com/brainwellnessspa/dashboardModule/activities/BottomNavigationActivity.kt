@@ -1,10 +1,13 @@
 package com.brainwellnessspa.dashboardModule.activities
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.NotificationManager
 import android.app.UiModeManager
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -13,9 +16,17 @@ import android.os.Handler
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
@@ -46,6 +57,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     var playlistImage = ""
     var playlistType = ""
     var new = ""
+    lateinit var dialog: Dialog
     private var uiModeManager: UiModeManager? = null
     private var myNetworkReceiver: MyNetworkReceiver? = null
     private var myBatteryReceiver: MyBatteryReceiver? = null

@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityUserListBinding
@@ -153,8 +152,8 @@ class UserListActivity : AppCompatActivity() {
                 binding.btnLogIn.isEnabled = true
                 binding.tvForgotPin.isEnabled = true
                 binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
-                userId = coUsersModel!![position].userID.toString()
-                coUserId = coUsersModel!![position].coUserId.toString()
+                userId = coUsersModel!![position].mainAccountID.toString()
+                coUserId = coUsersModel!![position].userID.toString()
                 coEmail = coUsersModel!![position].email.toString()
 
             }
@@ -233,12 +232,14 @@ class UserListActivity : AppCompatActivity() {
                                                         try {
                                                             val authOtpModel: AuthOtpModel = response.body()!!
                                                             if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                                                if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                                /*if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                     val intent = Intent(activity, AssProcessActivity::class.java)
                                                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                                     activity.startActivity(intent)
                                                                     activity.finish()
-                                                                } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                                } else */
+
+                                                                if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                                                     val intent = Intent(activity, WalkScreenActivity::class.java)
                                                                     intent.putExtra(CONSTANTS.ScreenView, "2")
                                                                     activity.startActivity(intent)
@@ -511,16 +512,16 @@ class UserListActivity : AppCompatActivity() {
                             adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString(), isMainAccount.toString(), isProfileCompleted.toString(), avgSleepTime.toString(), isAssessmentCompleted.toString())
                             binding.rvUserList.adapter = adapter
 
-                            if (listModel.responseData!!.userList!!.size == listModel.responseData!!.maxuseradd!!.toInt()) {
-                                binding.llAddNewUser.visibility = View.GONE
-                            } else {
+                            if (isMainAccount.equals("1",ignoreCase = true)) {
                                 binding.llAddNewUser.visibility = View.VISIBLE
+                            } else {
+                                binding.llAddNewUser.visibility = View.GONE
                             }
 
                             val section = ArrayList<SegmentUserList>()
                             for (i in listModel.responseData!!.userList!!.indices) {
                                 val e = SegmentUserList()
-                                e.coUserId = listModel.responseData!!.userList!![i].coUserId
+                                e.coUserId = listModel.responseData!!.userList!![i].userID
                                 e.name = listModel.responseData!!.userList!![i].name
                                 e.mobile = listModel.responseData!!.userList!![i].mobile
                                 e.email = listModel.responseData!!.userList!![i].email

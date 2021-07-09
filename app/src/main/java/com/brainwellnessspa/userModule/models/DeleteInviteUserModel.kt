@@ -3,7 +3,7 @@ package com.brainwellnessspa.userModule.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class CancelInviteUserModel {
+class DeleteInviteUserModel {
 
     @SerializedName("ResponseData")
     @Expose

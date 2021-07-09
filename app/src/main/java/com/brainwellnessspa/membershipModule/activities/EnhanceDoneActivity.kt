@@ -25,7 +25,7 @@ class EnhanceDoneActivity : AppCompatActivity() {
 
         binding.btnExplore.setOnClickListener {
             val i = Intent(applicationContext, BottomNavigationActivity::class.java)
-            intent.putExtra("IsFirst", "0")
+            intent.putExtra("IsFirst", "1")
             startActivity(i)
             finish()
         }

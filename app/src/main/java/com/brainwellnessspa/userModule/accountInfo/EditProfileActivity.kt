@@ -50,6 +50,7 @@ class EditProfileActivity : AppCompatActivity() {
     var ageYear: Int = 0
     var ageMonth: Int = 0
     var ageDate: Int = 0
+    lateinit var activity:Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -117,7 +118,7 @@ class EditProfileActivity : AppCompatActivity() {
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-
+        activity = this@EditProfileActivity
         val p = Properties()
         BWSApplication.addToSegment("Edit Profile Screen View", p, CONSTANTS.screen)
 
@@ -152,7 +153,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun profileUpdate() {
         try {
             if (BWSApplication.isNetworkConnected(applicationContext)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 var dob = ""
                 if (binding.etCalendar.text.toString().isNotEmpty()) {
                     dob = binding.etCalendar.text.toString()
@@ -213,8 +214,8 @@ class EditProfileActivity : AppCompatActivity() {
                         override fun onResponse(call: Call<EditProfileModel>, response: Response<EditProfileModel>) {
                             val viewModel = response.body()
                             if (viewModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
-                                BWSApplication.showToast(viewModel.responseMessage, applicationContext as Activity?)
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                BWSApplication.showToast(viewModel.responseMessage, activity)
                                 profileViewData(applicationContext)
                                 val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                 val editor = shared.edit()
@@ -230,13 +231,13 @@ class EditProfileActivity : AppCompatActivity() {
                                 BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
                                 finish()
                             } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
-                                BWSApplication.showToast(viewModel.responseMessage, applicationContext as Activity?)
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                BWSApplication.showToast(viewModel.responseMessage, activity)
                             }
                         }
 
                         override fun onFailure(call: Call<EditProfileModel>, t: Throwable) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         }
                     })
                 }
@@ -248,7 +249,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     fun profileViewData(ctx: Context) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getCoUserDetails(coUserId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
@@ -256,7 +257,7 @@ class EditProfileActivity : AppCompatActivity() {
                         val viewModel = response.body()
                         if (viewModel != null) {
                             if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
                                     binding.etUser.setText(R.string.Guest)
                                 } else {
@@ -271,7 +272,7 @@ class EditProfileActivity : AppCompatActivity() {
                                 binding.etCalendar.setText(viewModel.ResponseData.DOB)
 
                             } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             }
                         }
                     } catch (e: Exception) {
@@ -280,7 +281,7 @@ class EditProfileActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, applicationContext as Activity?)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         }
