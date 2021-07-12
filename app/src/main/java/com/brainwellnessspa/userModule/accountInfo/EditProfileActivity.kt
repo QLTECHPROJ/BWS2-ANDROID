@@ -294,6 +294,17 @@ class EditProfileActivity : AppCompatActivity() {
         mYear = c[Calendar.YEAR]
         mMonth = c[Calendar.MONTH]
         mDay = c[Calendar.DAY_OF_MONTH]
+        if(binding.etCalendar.equals("")) {
+            val c = Calendar.getInstance()
+            mYear = c[Calendar.YEAR]
+            mMonth = c[Calendar.MONTH]
+            mDay = c[Calendar.DAY_OF_MONTH]
+        }else{
+            val ageArray = binding.etCalendar.text.toString().split("-")
+            mYear = Integer.parseInt(ageArray[0])
+            mMonth = Integer.parseInt(ageArray[1]) - 1
+            mDay = Integer.parseInt(ageArray[2])
+        }
         val datePickerDialog = DatePickerDialog(this, R.style.DialogTheme, { view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             view.minDate = System.currentTimeMillis() - 1000
             val cal = Calendar.getInstance()
@@ -306,7 +317,7 @@ class EditProfileActivity : AppCompatActivity() {
             ageMonth = monthOfYear
             ageDate = dayOfMonth
             birthYear = getAge(ageYear, ageMonth, ageDate)
-            if (birthYear < 18) {
+            if (birthYear < 0) {
                 binding.txtDobError.visibility = View.VISIBLE
                 binding.txtDobError.text = getString(R.string.check_dob)
                 binding.btnSave.isEnabled = false
@@ -321,15 +332,20 @@ class EditProfileActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    fun getAge(year: Int, month: Int, day: Int): Int {
+
+    private fun getAge(year: Int, month: Int, day: Int): Int {
         val dob = Calendar.getInstance()
         val today = Calendar.getInstance()
         dob[year, month] = day
-        var age = today[Calendar.YEAR] - dob[Calendar.YEAR]
-        if (today[Calendar.DAY_OF_YEAR] < dob[Calendar.DAY_OF_YEAR]) {
-            age--
+        var age1 = today[Calendar.YEAR] - dob[Calendar.YEAR]
+        if(dob == today){
+            age1--
+        }else {
+            if (today[Calendar.DAY_OF_YEAR] < dob[Calendar.DAY_OF_YEAR]) {
+                age1--
+            }
         }
-        return age
+        return age1
     }
 
     override fun onBackPressed() {

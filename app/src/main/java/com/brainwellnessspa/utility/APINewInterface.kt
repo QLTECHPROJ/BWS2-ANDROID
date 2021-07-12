@@ -173,8 +173,6 @@ interface APINewInterface {
     fun getProfileSaveData(
         @Field("UserId")
         UserId: String?,
-        @Field("profileType")
-        profileType: String?,
         @Field("gender")
         gender: String?,
         @Field("genderX")
