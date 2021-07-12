@@ -381,7 +381,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                             val p = Properties()
                             p.putValue("gender", gender)
                             p.putValue("genderX", genderX)
-                            p.putValue("age", age)
+                            p.putValue("dob", age)
                             p.putValue("prevDrugUse", prevDrugUse)
                             p.putValue("medication", medication)
                             BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)

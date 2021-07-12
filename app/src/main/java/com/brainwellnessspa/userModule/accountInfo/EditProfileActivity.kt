@@ -290,17 +290,13 @@ class EditProfileActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(api = Build.VERSION_CODES.N)
     fun setDate() {
-        val c = Calendar.getInstance()
-        mYear = c[Calendar.YEAR]
-        mMonth = c[Calendar.MONTH]
-        mDay = c[Calendar.DAY_OF_MONTH]
-        if(binding.etCalendar.equals("")) {
+        if(userCalendar == "") {
             val c = Calendar.getInstance()
             mYear = c[Calendar.YEAR]
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
         }else{
-            val ageArray = binding.etCalendar.text.toString().split("-")
+            val ageArray = userCalendar!!.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
             mDay = Integer.parseInt(ageArray[2])

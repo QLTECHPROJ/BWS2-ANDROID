@@ -177,7 +177,7 @@ interface APINewInterface {
         gender: String?,
         @Field("genderX")
         genderX: String?,
-        @Field("age")
+        @Field("dob")
         age: String?,
         @Field("prevDrugUse")
         prevDrugUse: String?,
