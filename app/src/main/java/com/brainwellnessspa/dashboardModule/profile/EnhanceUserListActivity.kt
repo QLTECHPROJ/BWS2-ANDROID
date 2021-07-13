@@ -22,10 +22,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEnhanceUserListBinding
 import com.brainwellnessspa.databinding.EnhanceUserListLayoutBinding
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
-import com.brainwellnessspa.userModule.models.CancelInviteUserModel
-import com.brainwellnessspa.userModule.models.DeleteInviteUserModel
-import com.brainwellnessspa.userModule.models.ManageUserListModel
-import com.brainwellnessspa.userModule.models.SetInviteUserModel
+import com.brainwellnessspa.userModule.models.*
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -125,10 +122,11 @@ class EnhanceUserListActivity : AppCompatActivity() {
 
                 holder.binding.ivStatus.setOnClickListener {
                     selectedItem = position
-                    notifyDataSetChanged()
+                    Log.e("userId dynamic", list[position].userId.toString())
                     binding.btnRemove.isEnabled = true
                     binding.btnRemove.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                     binding.btnRemove.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                    notifyDataSetChanged()
                 }
 
                 if (position == selectedItem) {
@@ -226,68 +224,60 @@ class EnhanceUserListActivity : AppCompatActivity() {
                 }
 
                 binding.btnRemove.setOnClickListener {
-                    dialog = Dialog(activity)
-                    dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    dialog!!.setContentView(R.layout.remove_user_layout)
-                    dialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.dark_blue_gray)))
-                    dialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    val btnYes = dialog!!.findViewById<Button>(R.id.btnYes)
-                    val btnNo = dialog!!.findViewById<Button>(R.id.btnNo)
-                    dialog!!.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog!!.hide()
-                            return@setOnKeyListener true
+                    if (list[selectedItem].userId.equals(list[selectedItem].mainAccountID, ignoreCase = true)) {
+                        BWSApplication.showToast("You can't remove main user over here", activity)
+                    } else {
+                        dialog = Dialog(activity)
+                        dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog!!.setContentView(R.layout.remove_user_layout)
+                        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.dark_blue_gray)))
+                        dialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val btnYes = dialog!!.findViewById<Button>(R.id.btnYes)
+                        val btnNo = dialog!!.findViewById<Button>(R.id.btnNo)
+                        dialog!!.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog!!.hide()
+                                return@setOnKeyListener true
+                            }
+                            false
                         }
-                        false
-                    }
-                    btnYes.setOnClickListener {
-                        Log.e("userId", userId.toString())
-                        Log.e("userId dynamic", list[position].userId.toString())
-                        if (BWSApplication.isNetworkConnected(activity)) {
-                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<DeleteInviteUserModel> = APINewClient.client.getDeleteInviteUser(list[position].userId)
-                            listCall.enqueue(object : Callback<DeleteInviteUserModel> {
-                                override fun onResponse(call: Call<DeleteInviteUserModel>, response: Response<DeleteInviteUserModel>) {
-                                    try {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                        val listModel: DeleteInviteUserModel = response.body()!!
-                                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            if (!list[position].userId.equals(mainAccountID, ignoreCase = true)) {
+                        btnYes.setOnClickListener {
+                            Log.e("userId", userId.toString())
+                            Log.e("userId dynamic", list[position].userId.toString())
+                            if (BWSApplication.isNetworkConnected(activity)) {
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                val listCall: Call<RemoveInviteUserModel> = APINewClient.client.getRemoveInviteUser(list[selectedItem].userId, list[selectedItem].mainAccountID)
+                                listCall.enqueue(object : Callback<RemoveInviteUserModel> {
+                                    override fun onResponse(call: Call<RemoveInviteUserModel>, response: Response<RemoveInviteUserModel>) {
+                                        try {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            val listModel: RemoveInviteUserModel = response.body()!!
+                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                 prepareEnhanceUserList(activity)
+
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                dialog!!.hide()
                                             } else {
-                                                deleteCall()
-                                                val i = Intent(activity, SignInActivity::class.java)
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                startActivity(i)
-                                                finish()
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
                                             }
-                                            BWSApplication.showToast(listModel.responseMessage, activity)
-                                            dialog!!.hide()
-                                        } else {
-                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
                                         }
-
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
                                     }
-                                }
 
-                                override fun onFailure(call: Call<DeleteInviteUserModel>, t: Throwable) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                }
-                            })
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                    override fun onFailure(call: Call<RemoveInviteUserModel>, t: Throwable) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    }
+                                })
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                            }
                         }
-                    }
 
-                    btnNo.setOnClickListener { dialog!!.hide() }
-                    dialog!!.show()
-                    dialog!!.setCancelable(false)
+                        btnNo.setOnClickListener { dialog!!.hide() }
+                        dialog!!.show()
+                        dialog!!.setCancelable(false)
+                    }
                 }
             }
         }
@@ -297,52 +287,5 @@ class EnhanceUserListActivity : AppCompatActivity() {
         }
 
         inner class MyViewHolder(var binding: EnhanceUserListLayoutBinding) : RecyclerView.ViewHolder(binding.root)
-    }
-
-    private fun deleteCall() {
-        val preferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        val edit = preferences.edit()
-        edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID)
-        edit.remove(CONSTANTS.PREFE_ACCESS_UserId)
-        edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER)
-        edit.remove(CONSTANTS.PREFE_ACCESS_NAME)
-        edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL)
-        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType)
-        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID)
-        edit.clear()
-        edit.apply()
-        val preferred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-        val edited = preferred.edit()
-        edited.remove(CONSTANTS.selectedCategoriesTitle)
-        edited.remove(CONSTANTS.selectedCategoriesName)
-        edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
-        edited.clear()
-        edited.apply()
-        val preferred1 = getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-        val edited1 = preferred1.edit()
-        edited1.remove(CONSTANTS.AssQus)
-        edited1.remove(CONSTANTS.AssAns)
-        edited1.remove(CONSTANTS.AssSort)
-        edited1.clear()
-        edited1.apply()
-     /*   val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
-        val editorcv = shared.edit()
-        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
-        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
-        editorcv.apply()*/
-        val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-        val edited2 = preferred2.edit()
-        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-        edited2.clear()
-        edited2.apply()
-        BWSApplication.logout = true
-        BWSApplication.deleteCache(activity)
     }
 }

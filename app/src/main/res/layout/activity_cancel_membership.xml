@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -22,6 +22,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_left_arrow_icon" />
 
             </LinearLayout>
@@ -37,17 +38,17 @@
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage" />
 
-<!--
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="@string/cancel_plan"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
--->
+            <!--
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:text="@string/cancel_plan"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+            -->
 
         </RelativeLayout>
 
@@ -63,13 +64,13 @@
                 android:id="@+id/llPlay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:layout_marginHorizontal="@dimen/_16sdp" >
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp">
 
                 <com.google.android.youtube.player.YouTubePlayerView
                     android:id="@+id/youtubeView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
 
@@ -95,7 +96,8 @@
                         android:gravity="start"
                         android:text="@string/Select_reason"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_20sdp" />
+                        android:textSize="@dimen/_20sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -114,10 +116,11 @@
                             android:checked="true"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
-                            android:paddingLeft="@dimen/_12sdp"
+                            android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Feeling_better"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
                         <CheckBox
                             android:id="@+id/cbTwo"
@@ -129,10 +132,11 @@
                             android:button="@drawable/radio_btn_app_background"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
-                            android:paddingLeft="@dimen/_12sdp"
+                            android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Condition_worse"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
                         <CheckBox
                             android:id="@+id/cbThree"
@@ -144,10 +148,11 @@
                             android:button="@drawable/radio_btn_app_background"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
-                            android:paddingLeft="@dimen/_12sdp"
+                            android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Pricing"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
                         <CheckBox
                             android:id="@+id/cbFour"
@@ -159,10 +164,11 @@
                             android:button="@drawable/radio_btn_app_background"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
-                            android:paddingLeft="@dimen/_12sdp"
+                            android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Other_reason"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
 
                         <EditText
@@ -214,16 +220,16 @@
             android:id="@+id/rlDeleteAc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:visibility="gone"
+            android:layout_below="@id/rlLayout"
             android:layout_marginTop="@dimen/_10sdp"
-            android:layout_below="@id/rlLayout">
+            android:background="@color/white"
+            android:visibility="gone">
 
 
             <LinearLayout
                 android:id="@+id/llImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -275,10 +281,11 @@
                             android:checked="true"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
-                            android:paddingLeft="@dimen/_12sdp"
+                            android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Feeling_better"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
                         <CheckBox
                             android:id="@+id/cbTwoAc"
@@ -293,7 +300,8 @@
                             android:paddingStart="@dimen/_12sdp"
                             android:text="@string/Condition_worse"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
 
                         <CheckBox
                             android:id="@+id/cbThreeAc"

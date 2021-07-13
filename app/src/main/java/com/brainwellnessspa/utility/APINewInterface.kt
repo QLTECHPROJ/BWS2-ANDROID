@@ -2,7 +2,6 @@ package com.brainwellnessspa.utility
 
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
-import com.brainwellnessspa.billingOrderModule.models.DeleteAccountModel
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
@@ -105,21 +104,23 @@ interface APINewInterface {
         @Field("MobileNo")
         mobileNo: String?): Call<CancelInviteUserModel>
 
-    @POST("deleteaccount")
+    @POST("deleteuser")
     @FormUrlEncoded
     fun getDeleteAccount(
-        @Field("UserID")
+        @Field("UserId")
         userID: String?,
         @Field("CancelId")
         cancelId: String?,
         @Field("CancelReason")
-        cancelReason: String?): Call<DeleteAccountModel?>?
+        cancelReason: String?): Call<DeleteInviteUserModel?>?
 
-    @POST("deleteuser")
+    @POST("removeuser")
     @FormUrlEncoded
-    fun getDeleteInviteUser(
+    fun getRemoveInviteUser(
         @Field("UserId")
-        userId: String?): Call<DeleteInviteUserModel>
+        userId: String?,
+        @Field("MainAccountID")
+        MainAccountID: String?): Call<RemoveInviteUserModel>
 
     @POST("addcouser")
     @FormUrlEncoded

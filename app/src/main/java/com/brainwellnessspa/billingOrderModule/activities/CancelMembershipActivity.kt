@@ -22,10 +22,10 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
-import com.brainwellnessspa.billingOrderModule.models.DeleteAccountModel
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.APIClient
+import com.brainwellnessspa.userModule.models.DeleteInviteUserModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -166,24 +166,31 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                 }
                                 MotionEvent.ACTION_UP -> {
                                     if (BWSApplication.isNetworkConnected(ctx)) {
-                                        val listCall = APINewClient.client.getDeleteAccount(userId, deleteId, binding.edtCancelBox.text.toString())
-                                        if (listCall != null) {
-                                            listCall.enqueue(object : Callback<DeleteAccountModel?> {
-                                                override fun onResponse(call: Call<DeleteAccountModel?>, response: Response<DeleteAccountModel?>) {
-                                                    try {
-                                                        val model = response.body()
-                                                        BWSApplication.showToast(model!!.responseMessage, activity)
-                                                        dialog.dismiss()
-                                                        finish()
-                                                    } catch (e: Exception) {
-                                                        e.printStackTrace()
-                                                    }
+                                        val listCall = APINewClient.client.getDeleteAccount(userId, deleteId, binding.edtCancelBoxAc.text.toString())
+                                        listCall?.enqueue(object : Callback<DeleteInviteUserModel?> {
+                                            override fun onResponse(call: Call<DeleteInviteUserModel?>, response: Response<DeleteInviteUserModel?>) {
+                                                try {
+                                                    val model = response.body()
+                                                    BWSApplication.showToast(model!!.responseMessage, activity)
+                                                    dialog.dismiss()
+                                                    deleteCall()
+                                                    val i = Intent(activity, SignInActivity::class.java)
+                                                    i.putExtra("mobileNo", "")
+                                                    i.putExtra("countryCode", "")
+                                                    i.putExtra("name", "")
+                                                    i.putExtra("email", "")
+                                                    i.putExtra("countryShortName", "")
+                                                    startActivity(i)
+                                                    finish()
+                                                } catch (e: Exception) {
+                                                    e.printStackTrace()
                                                 }
+                                            }
 
-                                                override fun onFailure(call: Call<DeleteAccountModel?>, t: Throwable) {
-                                                }
-                                            })
-                                        }
+                                            override fun onFailure(call: Call<DeleteInviteUserModel?>, t: Throwable) {
+                                            }
+                                        })
+
                                     } else {
                                         BWSApplication.showToast(getString(R.string.no_server_found), activity)
                                     }
@@ -489,6 +496,53 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 Log.e("Destroy", "Activity go in main activity")
             }
         }
+    }
+
+    private fun deleteCall() {
+        val preferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val edit = preferences.edit()
+        edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID)
+        edit.remove(CONSTANTS.PREFE_ACCESS_UserId)
+        edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER)
+        edit.remove(CONSTANTS.PREFE_ACCESS_NAME)
+        edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL)
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType)
+        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID)
+        edit.clear()
+        edit.apply()
+        val preferred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val edited = preferred.edit()
+        edited.remove(CONSTANTS.selectedCategoriesTitle)
+        edited.remove(CONSTANTS.selectedCategoriesName)
+        edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
+        edited.clear()
+        edited.apply()
+        val preferred1 = getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
+        val edited1 = preferred1.edit()
+        edited1.remove(CONSTANTS.AssQus)
+        edited1.remove(CONSTANTS.AssAns)
+        edited1.remove(CONSTANTS.AssSort)
+        edited1.clear()
+        edited1.apply()
+        /*   val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
+           val editorcv = shared.edit()
+           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
+           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
+           editorcv.apply()*/
+        val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val edited2 = preferred2.edit()
+        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+        edited2.clear()
+        edited2.apply()
+        BWSApplication.logout = true
+        BWSApplication.deleteCache(activity)
     }
 
     /* This is object declaration */
