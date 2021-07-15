@@ -243,7 +243,7 @@ class AddProfileActivity : AppCompatActivity() {
                                 p.putValue("name", coName)
                                 p.putValue("mobileNo", coNumber)
                                 p.putValue("email", coEMAIL)
-                                addToSegment("Send New Pin Clicked", p, CONSTANTS.track)
+                                addToSegment("Forgot Pin Clicked", p, CONSTANTS.track)
                             }
                             listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
                                 showToast(listModel.responseMessage, activity)

@@ -377,7 +377,7 @@ class HomeFragment : Fragment() {
                         val section = java.util.ArrayList<SegmentUserList>()
                         for (i in listModel.responseData!!.userList!!.indices) {
                             val e = SegmentUserList()
-                            e.coUserId = listModel.responseData!!.userList!![i].userID
+                            e.userId = listModel.responseData!!.userList!![i].userID
                             e.name = listModel.responseData!!.userList!![i].name
                             e.mobile = listModel.responseData!!.userList!![i].mobile
                             e.email = listModel.responseData!!.userList!![i].email

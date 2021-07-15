@@ -41,7 +41,6 @@ class SleepTimeActivity : AppCompatActivity() {
             sleepTime = intent.getStringExtra("SleepTime")
         }
         val p = Properties()
-
         BWSApplication.addToSegment("Sleep Time Screen Viewed", p, CONSTANTS.screen)
         prepareUserData()
     }

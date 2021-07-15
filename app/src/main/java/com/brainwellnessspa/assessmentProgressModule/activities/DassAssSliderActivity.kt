@@ -72,9 +72,6 @@ class DassAssSliderActivity : AppCompatActivity() {
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
-        /* This is segment tag */
-        val p = Properties()
-        BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the next button click */
         binding.btnNext.setOnClickListener {
@@ -89,6 +86,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnContinue.visibility = View.GONE
                 }
+                val p = Properties()
+                p.putValue("screen", myPos)
+                BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
@@ -127,7 +127,9 @@ class DassAssSliderActivity : AppCompatActivity() {
     private fun callBack() {
         if (myPos > 1) {
             myPos -= 2
-
+            val p = Properties()
+            p.putValue("screen", myPos)
+            BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
             binding.lpIndicator.progress = myPos //            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 binding.btnNext.visibility = View.GONE
@@ -200,6 +202,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 binding.lpIndicator.progress = myPos
                                 Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + assQus.size.toString())
                             }
+                            val p = Properties()
+                            p.putValue("screen", myPos)
+                            BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
                             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                                 binding.btnNext.visibility = View.GONE
                                 binding.btnContinue.visibility = View.VISIBLE

@@ -293,7 +293,7 @@ class UserListActivity : AppCompatActivity() {
 
                                                             analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
 
-                                                            val p1 = Properties()
+                                                         /*   val p1 = Properties()
                                                             p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
                                                             p1.putValue("deviceType", "Android")
                                                             p1.putValue("name", listModel.ResponseData.Name)
@@ -312,7 +312,7 @@ class UserListActivity : AppCompatActivity() {
                                                             p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
                                                             p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
                                                             p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)*/
                                                         } catch (e: Exception) {
                                                             e.printStackTrace()
                                                         }
@@ -521,7 +521,7 @@ class UserListActivity : AppCompatActivity() {
                             val section = ArrayList<SegmentUserList>()
                             for (i in listModel.responseData!!.userList!!.indices) {
                                 val e = SegmentUserList()
-                                e.coUserId = listModel.responseData!!.userList!![i].userID
+                                e.userId = listModel.responseData!!.userList!![i].userID
                                 e.name = listModel.responseData!!.userList!![i].name
                                 e.mobile = listModel.responseData!!.userList!![i].mobile
                                 e.email = listModel.responseData!!.userList!![i].email
@@ -533,7 +533,7 @@ class UserListActivity : AppCompatActivity() {
                             val gson = Gson()
 
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
-                            p.putValue("coUserList", gson.toJson(section))
+                            p.putValue("UserList", gson.toJson(section))
                             addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                         } //                        else {
                         //                            BWSApplication.showToast(listModel.getResponseMessage(), applicationContext)

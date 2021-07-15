@@ -17,6 +17,7 @@ import com.brainwellnessspa.userModule.models.SetLoginPinModel
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,7 +60,8 @@ class CouserSetupPinActivity : AppCompatActivity() {
         activity = this@CouserSetupPinActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-
+        val p = Properties()
+        BWSApplication.addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
         binding.llBack.setOnClickListener {
             finish()
         }

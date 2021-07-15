@@ -10,9 +10,12 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityEnhanceDoneBinding
+import com.brainwellnessspa.utility.CONSTANTS
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.segment.analytics.Properties
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
-import com.brainwellnessspa.utility.CONSTANTS
 
 class EnhanceDoneActivity : AppCompatActivity() {
     lateinit var binding: ActivityEnhanceDoneBinding
@@ -42,7 +45,8 @@ class EnhanceDoneActivity : AppCompatActivity() {
         binding.ivLogo.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivLogo.scaleType = ImageView.ScaleType.FIT_XY
         binding.ivLogo.setImageResource(R.drawable.ic_thank_you_bg_two)
-
+        val p = Properties()
+        BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen)
         binding.btnExplore.setOnClickListener {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, WalkScreenActivity::class.java)
@@ -54,6 +58,8 @@ class EnhanceDoneActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                val p = Properties()
+                BWSApplication.addToSegment("Explore App Clicked", p, CONSTANTS.track)
                 val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
                 intent.putExtra("IsFirst", "0")
                 startActivity(intent)

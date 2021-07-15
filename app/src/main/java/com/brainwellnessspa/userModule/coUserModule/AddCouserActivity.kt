@@ -22,6 +22,8 @@ import com.brainwellnessspa.databinding.ActivityAddCouserBinding
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.google.gson.Gson
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,7 +42,8 @@ class AddCouserActivity : AppCompatActivity() {
 
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-
+        val p = Properties()
+        BWSApplication.addToSegment("Add User Screen Viewed", p, CONSTANTS.screen)
         binding.ivInfo.setOnClickListener {
             val dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

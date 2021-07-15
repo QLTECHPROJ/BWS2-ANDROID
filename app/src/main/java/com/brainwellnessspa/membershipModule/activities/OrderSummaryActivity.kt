@@ -35,7 +35,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     var TrialPeriod: String? = ""
     var comeFrom: String? = ""
     var MainAccountId: String? = ""/* renewPlanFlag, renewPlanId, */
-//    lateinit var params:SkuDetailsParams
+
+    //    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
     var UserID: String? = ""
     var ComesTrue: String? = ""
@@ -109,7 +110,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             gson = gsonBuilder.create()
             p.putValue("plan", gson.toJson(listModelList))
         }
-        BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.track)
+        BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
         if (!OldPromocode.equals("", ignoreCase = true)) {
             binding!!.edtCode.setText(OldPromocode)
         }
@@ -152,7 +153,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 //                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
                 //                } else {
                 sku = listModelList!![position].androidplanId!!
-                Log.e("sku",sku)
+                Log.e("sku", sku)
                 //                }
             }
         } catch (e: Exception) {
@@ -198,20 +199,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             //                                    .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
                             .build()
                         billingClient.launchBillingFlow(this, billingFlowParams)
-
-                        val p = Properties()
-                        if (!comeFrom.equals("", ignoreCase = true)) {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList2))
-                        } else {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList))
-                        }
-                        BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
                     }
                 }
             }
@@ -322,7 +309,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                 gson = gsonBuilder.create()
                                 p.putValue("plan", gson.toJson(listModelList))
                             }
-                            BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
+                            BWSApplication.addToSegment("Checkout Completed",p,CONSTANTS.track)
                         }
 
                     } catch (e: Exception) {
@@ -352,6 +339,19 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             editor.putString(CONSTANTS.PREF_KEY_PurchaseID, sku)
             editor.commit()
             Log.e("Purchase Token", purchaseToken)
+            val p = Properties()
+            if (!comeFrom.equals("", ignoreCase = true)) {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList2))
+            } else {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList))
+            }
+            BWSApplication.addToSegment("Checkout Proceeded",p,CONSTANTS.track)
             call_IAP_Api(purchaseToken)
         }
     }
@@ -410,21 +410,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                             .setOldSku(oldsku, sku)
                                             .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
                                             .build()*//* //                                    billingClient.launchBillingFlow(this, billingFlowParams)
-
-                        val p = Properties()
-
-                        if (!comeFrom.equals("", ignoreCase = true)) {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList2))
-                        } else {
-                            val gson: Gson
-                            val gsonBuilder = GsonBuilder()
-                            gson = gsonBuilder.create()
-                            p.putValue("plan", gson.toJson(listModelList))
-                        }
-                        BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
                     }
                 }
             }

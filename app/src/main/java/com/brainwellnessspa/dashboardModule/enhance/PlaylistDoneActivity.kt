@@ -28,8 +28,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         val p = Properties()
-
-        addToSegment("Suggested Playlist Created", p, CONSTANTS.screen)
+        addToSegment(" Playlist  Ready Screen Viewed", p, CONSTANTS.screen)
 
         binding.tvTitle.text = getString(R.string.your_playlist_is_ready)
         binding.tvSubTitle.text = getString(R.string.playlist_ready_subtitle)

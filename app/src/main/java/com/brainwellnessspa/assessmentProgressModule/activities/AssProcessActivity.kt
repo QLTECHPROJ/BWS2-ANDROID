@@ -19,8 +19,8 @@ import com.segment.analytics.Properties
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
-    var coUserId: String? = ""
     var userId: String? = ""
+    var MainAccountId: String? = ""
     var indexScore: Int = 0
     var scoreLevel: String? = ""
 
@@ -31,9 +31,8 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the get string userid & couserid */
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-
+        MainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         /* This condition is get string access */
         if (intent.extras != null) {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
@@ -41,6 +40,8 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This condition is string access */
         if (assProcess.equals("0", ignoreCase = true)) {
+            val p = Properties()
+            BWSApplication.addToSegment(CONSTANTS.Assessment_Start_Screen_Viewed, p, CONSTANTS.screen)
             binding.rlDoAss.visibility = View.VISIBLE
             binding.rlDoneAss.visibility = View.GONE
         } else if (assProcess.equals("1", ignoreCase = true)) {

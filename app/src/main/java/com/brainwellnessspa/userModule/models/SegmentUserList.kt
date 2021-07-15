@@ -1,7 +1,7 @@
 package com.brainwellnessspa.userModule.models
 
 class SegmentUserList {
-    var coUserId: String? = ""
+    var userId: String? = ""
     var name: String? = ""
     var mobile: String? = ""
     var email: String? = ""

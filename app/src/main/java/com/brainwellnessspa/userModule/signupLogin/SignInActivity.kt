@@ -51,11 +51,12 @@ class SignInActivity : AppCompatActivity() {
     lateinit var activity: Activity
     private lateinit var dialog: Dialog
     lateinit var searchEditText: EditText
-    var mobileNo: String? = null
-    var countryCode: String? = null
-    var name: String? = null
-    var email: String? = null
-    var countryShortName: String? = null
+    var mobileNo: String? = ""
+    var countryCode: String? = ""
+    var name: String? = ""
+    var email: String? = ""
+    var countryShortName: String? = ""
+    var countryFullName: String? = ""
     var p: Properties? = null
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
@@ -331,14 +332,19 @@ class SignInActivity : AppCompatActivity() {
                                 i.putExtra(CONSTANTS.name, "")
                                 i.putExtra(CONSTANTS.email, "")
                                 i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
+                                i.putExtra(CONSTANTS.countryName,countryFullName)
                                 startActivity(i)
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                                 val p = Properties()
-                                p.putValue("name", "")
-                                p.putValue("mobileNo", binding.etNumber.text.toString())
-                                p.putValue("email", "")
-                                BWSApplication.addToSegment("User Login", p, CONSTANTS.track)
+                                p.putValue("name", name)
+                                p.putValue("mobileNo", listModel.ResponseData.MobileNo)
+                                p.putValue("countryCode", countryCode)
+                                p.putValue("countryName", countryFullName)
+                                p.putValue("countryShortName",countryShortName)
+                                p.putValue("email", email)
+                                p.putValue("source","Login")
+                                BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             } else {
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)
                             }
@@ -361,7 +367,7 @@ class SignInActivity : AppCompatActivity() {
 
     class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivitySignInBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
-        var catList = SignUpActivity()
+        var catList = SignInActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.country_popup_layout, parent, false)
             return MyViewHolder(v)

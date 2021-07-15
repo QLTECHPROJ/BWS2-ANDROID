@@ -68,10 +68,7 @@ class ProfileProgressActivity : AppCompatActivity() {
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         activity = this@ProfileProgressActivity
-        val p = Properties()
 
-
-        BWSApplication.addToSegment("Profile Form Screen Viewed", p, CONSTANTS.screen)
         callFirstNext()
         binding.btnMale.setOnClickListener {
             gender = "Male"
@@ -407,6 +404,9 @@ class ProfileProgressActivity : AppCompatActivity() {
     }
 
     private fun callFourthNext() {
+        val p = Properties()
+        p.putValue("screen",3)
+        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.llIndicate.progress = 2
         binding.llSecond.visibility = View.GONE
         binding.llThird.visibility = View.GONE
@@ -444,6 +444,9 @@ class ProfileProgressActivity : AppCompatActivity() {
     }
 
     private fun callFifthNext() {
+        val p = Properties()
+        p.putValue("screen",4)
+        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.llIndicate.progress = 3
         binding.llSecond.visibility = View.GONE
         binding.llThird.visibility = View.GONE
@@ -493,6 +496,9 @@ class ProfileProgressActivity : AppCompatActivity() {
     }
 
     private fun callSecondNext(s: String) {
+        val p = Properties()
+        p.putValue("screen",2)
+        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.btnPrev.visibility = View.VISIBLE
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
@@ -581,6 +587,9 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.btnPrev.visibility = View.GONE
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
+        val p = Properties()
+        p.putValue("screen",1)
+        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         when {
             gender.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
@@ -625,6 +634,7 @@ class ProfileProgressActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun setDate() {
         if(age.equals("")) {
             val c = Calendar.getInstance()

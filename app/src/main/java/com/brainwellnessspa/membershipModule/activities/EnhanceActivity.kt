@@ -68,7 +68,7 @@ class EnhanceActivity : AppCompatActivity() {
         ctx = this@EnhanceActivity
 
         val p = Properties()
-        BWSApplication.addToSegment("Manage Plan Screen Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment("Enhance Plan Screen Viewed", p, CONSTANTS.screen)
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)

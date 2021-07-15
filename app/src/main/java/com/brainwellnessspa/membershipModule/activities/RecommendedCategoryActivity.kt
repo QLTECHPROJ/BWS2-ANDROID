@@ -74,8 +74,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
 
         val p = Properties()
-
-        addToSegment("Recommeded Category Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Area of Focus Screen Viewed", p, CONSTANTS.screen)
 
         val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
@@ -614,14 +613,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             gsonBuilder = GsonBuilder()
                             val gson: Gson = gsonBuilder.create()
                             for (i in listModel.responseData!!.categoryData!!.indices) {
-                                section.add(listModel.responseData!!.categoryData!![i].mainCat.toString())
+                                section.add(listModel.responseData!!.categoryData!![i].mainCat.toString()+":")
                                 section.add(listModel.responseData!!.categoryData!![i].recommendedCat.toString())
                             }
                             val p = Properties()
-
+                            Log.e("section area of focus",section.toString())
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                             p.putValue("areaOfFocus", gson.toJson(section))
-                            addToSegment("Area of Focus Savedd", p, CONSTANTS.track)
+                            addToSegment("Area of Focus Saved", p, CONSTANTS.track)
                             finish()
                         } else {
                             showToast(listModel.responseMessage, activity)

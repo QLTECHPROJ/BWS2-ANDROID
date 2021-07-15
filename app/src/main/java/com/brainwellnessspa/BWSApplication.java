@@ -1995,7 +1995,7 @@ public class BWSApplication extends Application{
         String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
 
         if(!mainAccountId.isEmpty() || !mainAccountId.equalsIgnoreCase(""))
-            properties.putValue("mainAccountId", mainAccountId);
+            properties.putValue("userGroupId", mainAccountId);
         if(!userId.isEmpty() || !userId.equalsIgnoreCase(""))
             properties.putValue("userId", userId);
         properties.putValue("deviceSpace", mySpace + " MB");
@@ -2003,6 +2003,9 @@ public class BWSApplication extends Application{
         properties.putValue("batteryState", BatteryStatus);
         properties.putValue("internetDownSpeed", downSpeed + " Mbps");
         properties.putValue("internetUpSpeed", upSpeed + " Mbps");
+        properties.putValue("appType", "Android");
+        properties.putValue("appVersion", String.valueOf(BuildConfig.VERSION_CODE));
+        properties.putValue("deviceID", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
         if (analytics == null) {
             SplashActivity sp = new SplashActivity();
             sp.setAnalytics(getContext().getString(R.string.segment_key_real));

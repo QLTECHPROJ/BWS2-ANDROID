@@ -51,6 +51,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     private var tvSendOTPbool = true
     var mobileNo: String? = null
     var countryCode: String? = null
+    var countryName: String? = null
     var signupFlag: String? = null
     var name: String? = null
     var email: String? = null
@@ -72,6 +73,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             name = intent.getStringExtra(CONSTANTS.name)
             email = intent.getStringExtra(CONSTANTS.email)
             countryShortName = intent.getStringExtra(CONSTANTS.countryShortName)
+            countryName = intent.getStringExtra(CONSTANTS.countryName)
         }
 
         binding.llBack.setOnClickListener {
@@ -151,7 +153,19 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             if (key.equals("", ignoreCase = true)) {
                 key = getKey(applicationContext)
             }
-
+            val p = Properties()
+            p.putValue("name", name)
+            p.putValue("mobileNo", mobileNo)
+            p.putValue("countryCode", countryCode)
+            p.putValue("countryName", countryName)
+            p.putValue("countryShortName",countryShortName)
+            p.putValue("email", email)
+            if(signupFlag.equals("1")) {
+                p.putValue("source", "SignUp")
+            }else{
+                p.putValue("source", "Login")
+            }
+            addToSegment(CONSTANTS.Resend_OTP_Clicked, p, CONSTANTS.track)
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
@@ -248,6 +262,20 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         binding.txtError.text = ""
                         val listModel: AuthOtpModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
+                            val p = Properties()
+                            p.putValue("userId",listModel.ResponseData.UserId)
+                            p.putValue("userGroupId",listModel.ResponseData.MainAccountID)
+                            p.putValue("name",name)
+                            p.putValue("mobileNo", listModel.ResponseData.Mobile)
+                            p.putValue("countryCode", countryCode)
+                            p.putValue("countryName", countryName)
+                            p.putValue("countryShortName",countryShortName)
+                            p.putValue("email", email)
+                            if(signupFlag.equals("1")){
+                                addToSegment(CONSTANTS.User_Sign_up, p, CONSTANTS.track)
+                            }else{
+                                addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
+                            }
                             if (signupFlag.equals("1", ignoreCase = true)) {
                                 val i = Intent(activity, EmailVerifyActivity::class.java)
                                 startActivity(i)
@@ -279,15 +307,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     }
                                 }
                             }
-
-                            val p = Properties()
-                            p.putValue("name", "")
-                            p.putValue("mobileNo", listModel.ResponseData.Mobile)
-                            p.putValue("countryCode", countryCode)
-                            p.putValue("countryName", "")
-                            p.putValue("countryShortName", "")
-                            p.putValue("email", "")
-                            addToSegment("", p, CONSTANTS.track)
 
                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                             val editor = shared.edit()

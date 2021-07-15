@@ -178,6 +178,7 @@ object CONSTANTS {
     const val email = "Email"
     const val countryCode = "CountryCode"
     const val countryShortName = "CountryShortName"
+    const val countryName = "CountryName"
     const val signupFlag = "SignupFlag"
     const val mobileNumber = "MobileNo"
 
@@ -202,5 +203,10 @@ object CONSTANTS {
     const val Assessment_Form_Submitted = "Assessment Form Submitted"
     const val Billing_Order_Screen_Viewed = "Billing & Order Screen Viewed"
     const val Cancel_Subscription_Viewed = "Cancel Subscription Viewed"
+    const val Assessment_Start_Screen_Viewed = "Assessment Start Screen Viewed"
+    const val Email_Sent_Screen_Viewed = "Email Sent Screen Viewed"
+    const val User_Sign_up = "User Sign up"
+    const val User_Login = "User Login"
+    const val Resend_OTP_Clicked ="Resend OTP Clicked"
 
 }
