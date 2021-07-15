@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".membershipModule.activities.SessionStatusActivity">
+        tools:context=".dashboardModule.session.SessionExpContinueActivity">
 
         <LinearLayout
             android:id="@+id/llContinue"
@@ -21,12 +20,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
                 android:layout_gravity="center"
-                android:layout_weight="0.6"
+                android:layout_weight="0.58"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/todo"
                     android:scaleType="fitXY"
                     android:src="@drawable/session_continue_bg" />
 
@@ -35,7 +35,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.42"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_16sdp">
 
@@ -53,9 +53,10 @@
                         android:layout_marginTop="@dimen/_40sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="Experience a free Brain Wellness Spa Session"
+                        android:text="@string/experience_a_free_brain_wellness_spa_session"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvCESubTitle"
@@ -66,10 +67,11 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
-                        android:text="This free Brain Wellness Spa session is a one off and its effects may last between 24 and 48 hours. How long they last depend on your environmental stresses and triggers. Download the audio to discover how we may help you with your mental health challenges."
                         android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="@string/this_free_brain_wellness_spa_session_is_a_one_off_and_its_effects_may_last_between_24_and_48_hours_how_long_they_last_depend_on_your_environmental_stresses_and_triggers_download_the_audio_to_discover_how_we_may_help_you_with_your_mental_health_challenges"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                     <Button
                         android:id="@+id/btnContinue"
@@ -82,7 +84,7 @@
                         android:background="@drawable/light_green_rounded_filled"
                         android:fontFamily="@font/montserrat_medium"
                         android:paddingVertical="@dimen/_2sdp"
-                        android:text="Continue"
+                        android:text="@string/Continue"
                         android:textColor="@color/white" />
 
                     <Button
@@ -96,7 +98,7 @@
                         android:background="@drawable/light_green_rounded_unfilled"
                         android:fontFamily="@font/montserrat_medium"
                         android:paddingVertical="@dimen/_2sdp"
-                        android:text="Create Your Playlist"
+                        android:text="@string/create_your_playlist"
                         android:textColor="@color/app_theme_color" />
 
 

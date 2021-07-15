@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".dashboardModule.session.SessionWalkScreenActivity">
+
+        <!--Section 1-->
+        <RelativeLayout
+            android:id="@+id/rlSectionOne"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_1"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_one_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/your_personal_details"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/session_one_quotes"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 2-->
+        <RelativeLayout
+            android:id="@+id/rlSectionTwo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_2"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_two_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/how_you_are_feeling"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/please_indicate_if_you_are_experiencing_any_of_the_following_and_rate_on_a_scale_of_read_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 3-->
+        <RelativeLayout
+            android:id="@+id/rlSectionThree"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_3"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_two_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/perceptions"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/your_perceptions_are_the_way_you_view_yourself_others_and_your_environment"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 4-->
+        <RelativeLayout
+            android:id="@+id/rlSectionFour"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_4"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_four_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/dass21"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/please_read_each_statement_and_select_a_number_0_1_2_or_3_which_i_read_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 5-->
+        <RelativeLayout
+            android:id="@+id/rlSectionFive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_5"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_five_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/worry_questionnaire"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/rate_each_of_the_following_statements_on_a_scale_of_1_not_at_all_typical_of_me_read_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 6-->
+        <RelativeLayout
+            android:id="@+id/rlSectionSix"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_6"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_six_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/rosenberg_self_esteem_scale"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/below_is_a_list_of_statements_dealing_with_your_general_feelings_about_yourself"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 7-->
+        <RelativeLayout
+            android:id="@+id/rlSectionSeven"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_7"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_seven_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/aggression_questionnaire"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/using_the_5_point_scale_shown_below_indicate_how_uncharacteristic_or_red_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+        <!--Section 8-->
+        <RelativeLayout
+            android:id="@+id/rlSectionEight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/session_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/section_8"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_session_sec_eight_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/personal_history"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/rate_each_of_the_following_statements_on_a_scale_of_1_not_at_all_typical_of_red_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_80sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/tap_anywhere_to_continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

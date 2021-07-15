@@ -1,31 +1,38 @@
-package com.brainwellnessspa.membershipModule.activities
+package com.brainwellnessspa.dashboardModule.session
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
-import com.brainwellnessspa.databinding.ActivitySessionStatusBinding
+import com.brainwellnessspa.databinding.ActivitySessionExpContinueBinding
 import com.brainwellnessspa.utility.MySpannable
 
-class SessionStatusActivity : AppCompatActivity() {
-    lateinit var binding: ActivitySessionStatusBinding
+class SessionExpContinueActivity : AppCompatActivity() {
+    lateinit var binding: ActivitySessionExpContinueBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_status)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_exp_continue)
 
-        binding.tvCESubTitle.post(Runnable {
+        binding.tvCESubTitle.post {
             val lineCount: Int = binding.tvCESubTitle.getLineCount()
             if (lineCount < 3 || lineCount == 3) {
             } else {
                 makeTextViewResizable(binding.tvCESubTitle, 3, "...More", true)
             }
-        })
+        }
+
+        binding.btnContinue.setOnClickListener {
+            val i = Intent(this, SessionExpActivity::class.java)
+            startActivity(i)
+        }
+
     }
 
     fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean) {
@@ -33,7 +40,7 @@ class SessionStatusActivity : AppCompatActivity() {
             tv.tag = tv.text
         }
         val vto = tv.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val text: String
                 val lineEndIndex: Int

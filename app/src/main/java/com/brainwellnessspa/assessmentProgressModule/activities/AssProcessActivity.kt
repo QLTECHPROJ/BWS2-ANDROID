@@ -10,6 +10,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -394,11 +395,11 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
-            val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+            val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
             startActivity(i)
             finish()
-            /*val i = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
-            i.putExtra(CONSTANTS.ScreenView, "2")
+            /* TODO when add plan in user flow comment open */
+            /*val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
             startActivity(i)
             finish()*/
         }

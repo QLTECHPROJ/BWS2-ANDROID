@@ -222,7 +222,8 @@ class EnhanceActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetJavaScriptEnabled") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetJavaScriptEnabled")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bind.tvHeadingTwo.text = model[position].videoDesc
             holder.bind.tvName.text = model[position].userName
             val videoUrl = model[position].videoLink!!.split("=").toTypedArray()
@@ -253,7 +254,8 @@ class EnhanceActivity : AppCompatActivity() {
         "PlanCurrency":"Aus","PlanInterval":"Weekly","PlanImage":"",
         "PlanTenure":"1 Week","PlanNextRenewal":"17 May, 2021",
         "FreeTrial":"TRY 14 DAYS FOR FREE","SubName":"Week \/ Per 3 User","RecommendedFlag":"0","PlanFlag":"1"}*/
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
             holder.binding.tvContent.text = listModelList[position].subName
@@ -352,7 +354,8 @@ class EnhanceActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("ResourceType") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("ResourceType")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc
 

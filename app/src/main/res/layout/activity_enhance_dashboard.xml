@@ -29,9 +29,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_44sdp"
-                        android:layout_marginLeft="@dimen/_34sdp"
+                        android:layout_marginStart="@dimen/_34sdp"
                         android:layout_marginTop="@dimen/_9sdp"
-                        android:layout_marginRight="@dimen/_26sdp"
+                        android:layout_marginEnd="@dimen/_26sdp"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -46,7 +46,8 @@
                                 android:layout_width="@dimen/_34sdp"
                                 android:layout_height="@dimen/_34sdp"
                                 android:layout_gravity="center"
-                                android:background="@drawable/ic_gray_user" />
+                                android:background="@drawable/ic_gray_user"
+                                android:contentDescription="@string/todo" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -54,7 +55,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:layout_weight="0.8"
-                            android:gravity="left">
+                            android:gravity="start">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -68,7 +69,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:paddingLeft="@dimen/_12sdp"
                                     android:text="Jhon Smit"
                                     android:textColor="@color/dark_blue_gray"
@@ -79,7 +80,7 @@
                                     android:layout_width="@dimen/_13sdp"
                                     android:layout_height="@dimen/_8sdp"
                                     android:layout_gravity="center"
-                                    android:layout_marginLeft="@dimen/_12sdp"
+                                    android:layout_marginStart="@dimen/_12sdp"
                                     android:src="@drawable/ic_down_arrow"
                                     app:tint="@color/gray" />
 
@@ -91,9 +92,9 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_weight="0.1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -101,7 +102,8 @@
                                 android:layout_width="@dimen/_18sdp"
                                 android:layout_height="@dimen/_21sdp"
                                 android:layout_gravity="center"
-                                android:layout_marginLeft="@dimen/_12sdp"
+                                android:layout_marginStart="@dimen/_12sdp"
+                                android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_notifications_black_24dp"
                                 app:tint="@color/gray" />
                         </LinearLayout>
@@ -119,7 +121,8 @@
                     android:background="@drawable/round_gray_border"
                     android:backgroundTint="#1597AA"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:targetApi="lollipop">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -127,7 +130,8 @@
                         android:background="@drawable/rounded_light_gray"
                         android:backgroundTint="#36C2D6"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        tools:targetApi="lollipop">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -152,9 +156,9 @@
                                         android:id="@+id/llsetReminder"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/_20sdp"
+                                        android:layout_marginStart="@dimen/_20sdp"
                                         android:layout_marginTop="@dimen/_13sdp"
-                                        android:layout_marginRight="@dimen/_13sdp"
+                                        android:layout_marginEnd="@dimen/_13sdp"
                                         android:background="@drawable/rounded_extra_gray_corner"
                                         android:backgroundTint="@color/lighit_new_blue1"
                                         android:orientation="horizontal">
@@ -165,10 +169,11 @@
                                             android:layout_height="wrap_content"
                                             android:fontFamily="@font/montserrat_light"
                                             android:gravity="start"
-                                            android:paddingLeft="@dimen/_9sdp"
+                                            android:paddingStart="@dimen/_9sdp"
                                             android:text="@string/Set_Reminder"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_12sdp" />
+                                            android:textSize="@dimen/_12sdp"
+                                            tools:ignore="SpUsage" />
 
                                     </LinearLayout>
                                 </LinearLayout>
@@ -214,13 +219,13 @@
                                         <TextView
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
-                                            android:layout_marginLeft="@dimen/_25sdp"
+                                            android:layout_marginStart="@dimen/_25sdp"
                                             android:fontFamily="@font/montserrat_bold"
-                                            android:gravity="left"
+                                            android:gravity="start"
                                             android:text="Ultimate Anger Relief"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_14sdp" />
+                                            android:textSize="@dimen/_14sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout
@@ -235,23 +240,24 @@
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
                                             android:layout_weight="7"
                                             android:fontFamily="@font/montserrat_regular"
-                                            android:gravity="left"
+                                            android:gravity="start"
                                             android:text="Sleep start in your brain"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_13sdp" />
+                                            android:textSize="@dimen/_13sdp"
+                                            tools:ignore="SpUsage" />
 
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="3"
                                             android:fontFamily="@font/montserrat_regular"
-                                            android:gravity="right"
+                                            android:gravity="end"
                                             android:text="07:10:47"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_13sdp" />
+                                            android:textSize="@dimen/_13sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout
@@ -284,12 +290,11 @@
                         android:layout_marginRight="@dimen/_17sdp"
                         android:orientation="horizontal">
 
-
                         <ImageView
                             android:layout_width="@dimen/_50sdp"
                             android:layout_height="match_parent"
-                            android:background="@drawable/ic_moon_sleep" />
-
+                            android:background="@drawable/ic_moon_sleep"
+                            android:contentDescription="@string/todo" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -297,10 +302,11 @@
                             android:layout_gravity="center"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:paddingLeft="@dimen/_9sdp"
+                            android:paddingStart="@dimen/_9sdp"
                             android:text="Your average sleep time is 7 hours"
                             android:textColor="@color/text_new_light_blue"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_14sdp"
+                            tools:ignore="SpUsage" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -327,7 +333,8 @@
                                 android:id="@+id/ivEditCategory"
                                 android:layout_width="@dimen/_20sdp"
                                 android:layout_height="@dimen/_20sdp"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
+                                android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_edit_number_icon"
                                 app:tint="@color/light_black" />
 
@@ -336,8 +343,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
-                                android:text="Area of focus"
+                                android:gravity="start"
+                                android:text="@string/area_of_focus"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_18sdp" />
                         </RelativeLayout>
@@ -371,8 +378,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:gravity="left"
-                                android:text="Lorem ipsum"
+                                android:gravity="start"
+                                android:text="@string/lorem_ipsum"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_18sdp" />
                         </LinearLayout>
@@ -384,12 +391,13 @@
                             android:background="@drawable/round_chip_gray"
                             android:backgroundTint="#DC828E"
                             android:orientation="horizontal"
-                            android:weightSum="10">
+                            android:weightSum="10"
+                            tools:targetApi="lollipop">
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/_12sdp"
+                                android:layout_marginStart="@dimen/_12sdp"
                                 android:layout_marginTop="@dimen/_25sdp"
                                 android:layout_marginBottom="@dimen/_25sdp"
                                 android:layout_weight="6"
@@ -400,8 +408,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="left"
-                                    android:text="Check you Index Score"
+                                    android:gravity="start"
+                                    android:text="@string/check_you_index_score"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_18sdp" />
 
@@ -409,7 +417,7 @@
                                     android:layout_width="150dp"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:maxLines="2"
                                     android:text="You are completely on track, keep it up!"
                                     android:textColor="@color/white"
@@ -436,8 +444,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
-                            android:text="Index Score"
+                            android:gravity="start"
+                            android:text="@string/index_score"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_18sdp" />
 
@@ -446,8 +454,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="left"
-                            android:text="Your latest index score"
+                            android:gravity="start"
+                            android:text="@string/your_latest_index_score"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp" />
 
@@ -476,32 +484,32 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:text="46"
                                     android:textColor="@color/dark_yellow"
-                                    android:textSize="@dimen/_35sdp" />
+                                    android:textSize="@dimen/_35sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:text="Severe"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_18sdp" />
+                                    android:textSize="@dimen/_18sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentBottom="true"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="3"
-                                android:gravity="right"
+                                android:gravity="end"
                                 android:orientation="horizontal">
 
                                 <ImageView
@@ -510,17 +518,20 @@
                                     android:layout_gravity="bottom"
                                     android:background="@drawable/ic_arrow_blue_icon"
                                     android:backgroundTint="@color/green_dark_s"
-                                    android:rotation="-90" />
+                                    android:contentDescription="@string/todo"
+                                    android:rotation="-90"
+                                    tools:targetApi="lollipop" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:layout_marginLeft="@dimen/_10sdp"
+                                    android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="bottom"
                                     android:text="15%"
                                     android:textColor="@color/green_dark_s"
-                                    android:textSize="@dimen/_20sdp" />
+                                    android:textSize="@dimen/_20sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
 
 
@@ -532,18 +543,20 @@
                             android:layout_marginBottom="@dimen/_20sdp"
                             android:max="100"
                             android:progress="46"
-                            android:progressBackgroundTint="@color/green_dark_s" />
+                            android:progressBackgroundTint="@color/green_dark_s"
+                            tools:targetApi="lollipop" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginRight="@dimen/_33sdp"
+                            android:layout_marginEnd="@dimen/_33sdp"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="bottom"
                             android:maxLines="2"
                             android:text="Index scores would not improve this would not let it increase the problem."
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_20sdp" />
+                            android:textSize="@dimen/_20sdp"
+                            tools:ignore="SpUsage" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -568,12 +581,13 @@
                             android:background="@drawable/round_chip_gray"
                             android:backgroundTint="#9A86BB"
                             android:orientation="horizontal"
-                            android:weightSum="10">
+                            android:weightSum="10"
+                            tools:targetApi="lollipop">
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/_12sdp"
+                                android:layout_marginStart="@dimen/_12sdp"
                                 android:layout_marginTop="@dimen/_15sdp"
                                 android:layout_marginBottom="@dimen/_15sdp"
                                 android:layout_weight="7"
@@ -584,7 +598,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:text="Emotional Empowerment"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_18sdp" />
@@ -593,7 +607,7 @@
                                     android:layout_width="150dp"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:gravity="left"
+                                    android:gravity="start"
                                     android:maxLines="2"
                                     android:text="Lorem ipsum dolor sit amet, consetetur"
                                     android:textColor="@color/white"
@@ -607,7 +621,7 @@
                                     android:background="@drawable/rounded_extra_gray_corner"
                                     android:backgroundTint="#7352AA"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:text="Join Now"
+                                    android:text="@string/join_now"
                                     android:textAllCaps="false"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_10sdp" />
@@ -617,7 +631,7 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="3"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -625,18 +639,13 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:contentDescription="@string/todo"
                                     android:src="@drawable/ic_star" />
                             </LinearLayout>
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
-
             </RelativeLayout>
-
         </androidx.core.widget.NestedScrollView>
-
     </LinearLayout>
 </layout>

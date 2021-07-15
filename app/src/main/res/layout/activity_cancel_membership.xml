@@ -183,7 +183,7 @@
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="top"
-                            android:hint="Add your comments here"
+                            android:hint="@string/add_your_comments_here"
                             android:inputType="textMultiLine|textVisiblePassword"
                             android:overScrollMode="always"
                             android:paddingLeft="@dimen/_8sdp"
@@ -195,7 +195,8 @@
                             android:textColor="@color/gray"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_14sdp"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
                 </LinearLayout>

@@ -10,7 +10,92 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_16sdp">
+
+            <LinearLayout
+                android:id="@+id/llExpSession"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="@string/experience_session"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/round_chip_gray"
+                    android:backgroundTint="#008892"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    tools:targetApi="lollipop">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_25sdp"
+                        android:layout_marginBottom="@dimen/_25sdp"
+                        android:layout_weight="5.2"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="start"
+                            android:text="@string/experience_free_session"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="start"
+                            android:maxLines="2"
+                            android:text="@string/this_free_brain_wellness_spa_session_is_a_one_off_and_its_effects_read_more"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10sdp"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4.8"
+                        android:orientation="vertical">
+                        <!-- graph-->
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_90sdp"
+                            android:layout_marginVertical="@dimen/_10sdp"
+                            android:layout_marginStart="@dimen/_20sdp"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/ic_free_session_icon" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llNoInternet"

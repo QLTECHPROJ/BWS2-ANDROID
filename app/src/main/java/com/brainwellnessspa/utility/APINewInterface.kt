@@ -5,12 +5,8 @@ import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
-import com.brainwellnessspa.reminderModule.models.DeleteRemiderModel
-import com.brainwellnessspa.reminderModule.models.ReminderListModel
-import com.brainwellnessspa.reminderModule.models.ReminderStatusModel
-import com.brainwellnessspa.reminderModule.models.SetReminderOldModel
-import com.brainwellnessspa.resourceModule.models.ResourceFilterModel
-import com.brainwellnessspa.resourceModule.models.ResourceListModel
+import com.brainwellnessspa.reminderModule.models.*
+import com.brainwellnessspa.resourceModule.models.*
 import com.brainwellnessspa.userModule.models.*
 import retrofit2.Call
 import retrofit2.http.Field

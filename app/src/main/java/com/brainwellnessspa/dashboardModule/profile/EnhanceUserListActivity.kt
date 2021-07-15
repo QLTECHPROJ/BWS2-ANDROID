@@ -2,7 +2,6 @@ package com.brainwellnessspa.dashboardModule.profile
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -23,7 +22,6 @@ import com.brainwellnessspa.databinding.ActivityEnhanceUserListBinding
 import com.brainwellnessspa.databinding.EnhanceUserListLayoutBinding
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.*
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -56,7 +54,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
         binding.llAddNewUser.setOnClickListener {
             val intent = Intent(applicationContext, AddCouserActivity::class.java)
             startActivity(intent)
-            addCouserBackStatus = 1;
+            addCouserBackStatus = 1
         }
         prepareEnhanceUserList(activity)
     }

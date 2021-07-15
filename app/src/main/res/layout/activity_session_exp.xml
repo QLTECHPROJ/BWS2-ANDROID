@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".membershipModule.activities.SessionExpActivity">
+        tools:context=".dashboardModule.session.SessionExpActivity">
 
         <RelativeLayout
             android:id="@+id/rlLayout"
@@ -25,7 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -35,9 +36,10 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Experience Session"
+                android:text="@string/experience_session"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -56,24 +58,24 @@
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_round_play_icon" />
+                    android:src="@drawable/ic_round_play_icon"
+                    android:contentDescription="@string/todo" />
             </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/_29sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
                 android:textColor="#707070"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
@@ -85,7 +87,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
@@ -107,7 +108,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="Download Audio"
+            android:text="@string/download_audio"
             android:textColor="@color/white" />
     </RelativeLayout>
 </layout>
