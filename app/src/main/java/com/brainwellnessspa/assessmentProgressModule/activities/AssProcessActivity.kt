@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -23,6 +25,10 @@ class AssProcessActivity : AppCompatActivity() {
     var MainAccountId: String? = ""
     var indexScore: Int = 0
     var scoreLevel: String? = ""
+    var isProfileCompleted: String? = ""
+    var isAssessmentCompleted: String? = ""
+    var avgSleepTime: String? = ""
+    var assesmentContent: String? = ""
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +39,18 @@ class AssProcessActivity : AppCompatActivity() {
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         MainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
+        isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+        assesmentContent = shared1.getString(CONSTANTS.PREFE_ACCESS_assesmentContent, "")
+        val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         /* This condition is get string access */
         if (intent.extras != null) {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
         }
 
+        binding.assesmentTitle.text =getString(R.string.what_is_wellness_score)
+        binding.assesmentContent.text = assesmentContent
         /* This condition is string access */
         if (assProcess.equals("0", ignoreCase = true)) {
             val p = Properties()
@@ -396,13 +409,19 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
-            val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
-            startActivity(i)
-            finish()
-            /* TODO when add plan in user flow comment open */
-            /*val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-            startActivity(i)
-            finish()*/
+            if (MainAccountId.equals(userId, ignoreCase = true)) {
+                /* TODO when add plan in user flow comment open */
+                /*val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                startActivity(i)
+                finish()*/
+                val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                val intent = Intent(applicationContext, ThankYouActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 

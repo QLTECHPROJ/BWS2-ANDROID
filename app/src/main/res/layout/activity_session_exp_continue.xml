@@ -8,48 +8,43 @@
         android:background="@color/white"
         tools:context=".dashboardModule.session.SessionExpContinueActivity">
 
-        <LinearLayout
-            android:id="@+id/llContinue"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:weightSum="1">
+            android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/llContinue"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_0sdp"
-                android:layout_gravity="center"
-                android:layout_weight="0.58"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/todo"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/session_continue_bg" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.42"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/_16sdp">
+                android:visibility="visible"
+                android:weightSum="1">
 
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="@dimen/_400sdp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/todo"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/session_continue_bg" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/_16sdp">
 
                     <TextView
                         android:id="@+id/tvCETitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
                         android:layout_marginTop="@dimen/_40sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
@@ -62,8 +57,6 @@
                         android:id="@+id/tvCESubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tvCETitle"
-                        android:layout_centerVertical="true"
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
@@ -77,8 +70,7 @@
                         android:id="@+id/btnContinue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_above="@id/btnCreatePlaylist"
-                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/_20sdp"
                         android:layout_marginHorizontal="@dimen/_33sdp"
                         android:layout_marginBottom="@dimen/_30sdp"
                         android:background="@drawable/light_green_rounded_filled"
@@ -91,8 +83,6 @@
                         android:id="@+id/btnCreatePlaylist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginHorizontal="@dimen/_33sdp"
                         android:layout_marginBottom="@dimen/_25sdp"
                         android:background="@drawable/light_green_rounded_unfilled"
@@ -101,12 +91,10 @@
                         android:text="@string/create_your_playlist"
                         android:textColor="@color/app_theme_color" />
 
-
-                </RelativeLayout>
-
+                </LinearLayout>
 
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
     </RelativeLayout>
 </layout>

@@ -25,9 +25,9 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/todo"
                     android:scaleType="fitXY"
-                    android:src="@drawable/search_ce_icon"
-                    android:contentDescription="@string/todo" />
+                    android:src="@drawable/search_ce_icon" />
 
             </LinearLayout>
 
@@ -88,9 +88,8 @@
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_medium"
             android:paddingVertical="@dimen/_2sdp"
-            android:text="continue"
+            android:text="@string/Continue"
             android:textColor="@color/white" />
-
 
     </RelativeLayout>
 </layout>

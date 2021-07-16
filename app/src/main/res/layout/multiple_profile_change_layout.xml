@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -7,7 +8,8 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_4sdp"
         android:background="@drawable/account_gray_bg"
-        android:elevation="@dimen/_110sdp">
+        android:elevation="@dimen/_110sdp"
+        tools:targetApi="lollipop">
 
 
         <LinearLayout
@@ -29,7 +31,8 @@
                     android:id="@+id/ivProfileImage"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:contentDescription="@string/todo" />
 
                 <RelativeLayout
                     android:id="@+id/rlLetter"
@@ -47,7 +50,8 @@
                         android:gravity="center"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_16sdp"/>
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                 </RelativeLayout>
 
@@ -59,7 +63,7 @@
                 android:layout_weight="0.69"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/_13sdp">
+                android:paddingStart="@dimen/_13sdp">
 
                 <TextView
                     android:id="@+id/tvName"
@@ -67,7 +71,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,14 +87,16 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center_vertical"
                         android:text="Valid : 10/24"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
 
                     <ImageView
                         android:id="@+id/ivCardimg"
                         android:layout_width="@dimen/_33sdp"
                         android:layout_height="@dimen/_33sdp"
-                        android:layout_gravity="center|left"
-                        android:layout_marginLeft="@dimen/_16sdp" />
+                        android:layout_gravity="center|start"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:contentDescription="@string/todo" />
                     <!--                    android:src="@drawable/visa_card"-->
 
                 </LinearLayout>
@@ -106,8 +113,9 @@
                     android:id="@+id/ivCheck"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/todo" />
 
             </RelativeLayout>
         </LinearLayout>

@@ -40,7 +40,6 @@
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage" />
 
-
             <LinearLayout
                 android:id="@+id/llAddNewUser"
                 android:layout_width="42dp"
@@ -53,10 +52,10 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/todo"
                     android:padding="@dimen/_10sdp"
                     android:src="@drawable/ic_add_user_icon"
-                    app:tint="@color/black"
-                    android:contentDescription="@string/todo" />
+                    app:tint="@color/black" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -83,10 +82,10 @@
             android:layout_marginHorizontal="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_18sdp"
             android:background="@drawable/gray_round_cornor"
+            android:enabled="false"
             android:fontFamily="@font/montserrat_medium"
             android:paddingVertical="@dimen/_2sdp"
             android:text="@string/Remove"
-            android:enabled="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
             tools:ignore="SpUsage" />

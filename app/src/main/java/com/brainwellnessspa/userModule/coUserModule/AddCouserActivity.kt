@@ -80,7 +80,6 @@ class AddCouserActivity : AppCompatActivity() {
                             val authOtpModel: AuthOtpModel = response.body()!!
                             isPinSet = authOtpModel.ResponseData.isPinSet
                             directLogin = authOtpModel.ResponseData.directLogin
-
                             if (isPinSet.equals("1", ignoreCase = true)) {
                                 val i = Intent(applicationContext, UserDetailActivity::class.java)
                                 startActivity(i)

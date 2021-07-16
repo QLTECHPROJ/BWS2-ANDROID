@@ -8,52 +8,45 @@
         android:layout_height="match_parent"
         tools:context=".membershipModule.activities.SleepTimeActivity">
 
-        <RelativeLayout
+
+        <LinearLayout
             android:id="@+id/rlstep2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/sleep_time_banner" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="-10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/sleep_time_banner" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="@string/average_sleep_time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18sdp"
+                tools:ignore="SpUsage" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:gravity="left"
-                    android:text="Average Sleep time"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTimeSlot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_28sdp"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/sleep_time_raw"
+                tools:targetApi="lollipop" />
 
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvTimeSlot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_28sdp"
-                    android:nestedScrollingEnabled="true"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"
-                    tools:listitem="@layout/sleep_time_raw"
-                    tools:targetApi="lollipop" />
-
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +60,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

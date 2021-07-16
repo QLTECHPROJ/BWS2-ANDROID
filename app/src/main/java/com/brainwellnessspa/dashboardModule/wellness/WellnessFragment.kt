@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.enhance.ManageFragment
+import com.brainwellnessspa.dashboardModule.session.SessionDetailFragment
 import com.brainwellnessspa.dashboardModule.session.SessionExpContinueActivity
 import com.brainwellnessspa.databinding.FragmentWellnessBinding
 
@@ -19,8 +21,13 @@ class WellnessFragment : Fragment() {
         val view = binding.root
 
         binding.llExpSession.setOnClickListener {
-            val i = Intent(requireActivity(), SessionExpContinueActivity::class.java)
-            startActivity(i)
+          /*  val i = Intent(requireActivity(), SessionExpContinueActivity::class.java)
+            startActivity(i)*/
+            val fragment: Fragment = SessionDetailFragment()
+            val fragmentManager1 = requireActivity().supportFragmentManager
+            fragmentManager1.beginTransaction().replace(R.id.flContainer, fragment).commit()
+            val bundle = Bundle()
+            fragment.arguments = bundle
         }
         networkCheck()
         return view
@@ -33,11 +40,11 @@ class WellnessFragment : Fragment() {
 
     private fun networkCheck() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            binding.llRemainDev.visibility = View.GONE /* VISIBLE*/
+            binding.llRemainDev.visibility = View.VISIBLE /* VISIBLE*/
             binding.llNoInternet.visibility = View.GONE
         } else {
             binding.llRemainDev.visibility = View.GONE
-            binding.llNoInternet.visibility = View.GONE /* VISIBLE*/
+            binding.llNoInternet.visibility = View.VISIBLE /* VISIBLE*/
         }
     }
 }

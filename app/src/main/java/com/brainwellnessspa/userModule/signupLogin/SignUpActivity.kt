@@ -413,14 +413,15 @@ class SignUpActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
+                            BWSApplication.showToast(listModel.ResponseMessage, activity)
                             val p = Properties()
                             p.putValue("name", name)
                             p.putValue("mobileNo", listModel.ResponseData.MobileNo)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", countryFullName)
-                            p.putValue("countryShortName",countryShortName)
+                            p.putValue("countryShortName", countryShortName)
                             p.putValue("email", email)
-                            p.putValue("source","SignUp")
+                            p.putValue("source", "SignUp")
                             BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
                             i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
@@ -429,7 +430,7 @@ class SignUpActivity : AppCompatActivity() {
                             i.putExtra(CONSTANTS.name, binding.etUser.text.toString())
                             i.putExtra(CONSTANTS.email, binding.etEmail.text.toString())
                             i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
-                            i.putExtra(CONSTANTS.countryName,countryFullName)
+                            i.putExtra(CONSTANTS.countryName, countryFullName)
                             startActivity(i)
                         }
                         BWSApplication.showToast(listModel.ResponseMessage, activity)

@@ -553,7 +553,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="bottom"
                             android:maxLines="2"
-                            android:text="Index scores would not improve this would not let it increase the problem."
+                            android:text="Wellness scores would not improve this would not let it increase the problem."
                             android:textColor="@color/light_gray"
                             android:textSize="@dimen/_20sdp"
                             tools:ignore="SpUsage" />

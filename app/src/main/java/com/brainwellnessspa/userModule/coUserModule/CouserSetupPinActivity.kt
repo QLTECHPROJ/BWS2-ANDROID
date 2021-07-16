@@ -25,6 +25,7 @@ import retrofit2.Response
 class CouserSetupPinActivity : AppCompatActivity() {
     lateinit var binding: ActivityCouserSetupPinBinding
     var mainAccountID: String? = ""
+    var userId: String? = ""
     lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
@@ -60,6 +61,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
         activity = this@CouserSetupPinActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
         BWSApplication.addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
         binding.llBack.setOnClickListener {
@@ -103,11 +105,9 @@ class CouserSetupPinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
 
-
-
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(mainAccountID, binding.etConfirmPIN.text.toString())
+                val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(userId, binding.etConfirmPIN.text.toString())
                 listCall.enqueue(object : Callback<SetLoginPinModel> {
                     override fun onResponse(call: Call<SetLoginPinModel>, response: Response<SetLoginPinModel>) {
                         try {

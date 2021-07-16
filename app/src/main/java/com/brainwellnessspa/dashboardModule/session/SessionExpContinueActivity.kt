@@ -48,13 +48,13 @@ class SessionExpContinueActivity : AppCompatActivity() {
                 obs.removeGlobalOnLayoutListener(this)
                 if (maxLine == 0) {
                     lineEndIndex = tv.layout.getLineEnd(0)
-                    text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + "<font   color=\"#F15d36\">" + expandText + "</font>"
+                    text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + "<font   color=\"#313131\">" + expandText + "</font>"
                 } else if (maxLine > 0 && tv.lineCount >= maxLine) {
                     lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
-                    text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + "<font color=\"#F15d36\">" + expandText + "</font>"
+                    text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + "<font color=\"#313131\">" + expandText + "</font>"
                 } else {
                     lineEndIndex = tv.layout.getLineEnd(tv.layout.lineCount - 1)
-                    text = tv.text.subSequence(0, lineEndIndex).toString() + " " + "<font color=\"#F15d36\">" + expandText + "</font>"
+                    text = tv.text.subSequence(0, lineEndIndex).toString() + " " + "<font color=\"#313131\">" + expandText + "</font>"
                 }
                 tv.text = Html.fromHtml(text)
                 tv.movementMethod = LinkMovementMethod.getInstance()

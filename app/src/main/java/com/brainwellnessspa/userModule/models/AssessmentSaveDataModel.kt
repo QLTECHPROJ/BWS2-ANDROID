@@ -61,6 +61,14 @@ class AssessmentSaveDataModel {
         @Expose
         var scoreLevel: String? = ""
 
+        @SerializedName("AssesmentTitle")
+        @Expose
+        var assesmentTitle: String? = ""
+
+        @SerializedName("AssesmentContent")
+        @Expose
+        var assesmentContent: String? = ""
+
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = ""

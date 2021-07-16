@@ -158,11 +158,11 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             p.putValue("mobileNo", mobileNo)
             p.putValue("countryCode", countryCode)
             p.putValue("countryName", countryName)
-            p.putValue("countryShortName",countryShortName)
+            p.putValue("countryShortName", countryShortName)
             p.putValue("email", email)
-            if(signupFlag.equals("1")) {
+            if (signupFlag.equals("1")) {
                 p.putValue("source", "SignUp")
-            }else{
+            } else {
                 p.putValue("source", "Login")
             }
             addToSegment(CONSTANTS.Resend_OTP_Clicked, p, CONSTANTS.track)
@@ -263,17 +263,17 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         val listModel: AuthOtpModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
                             val p = Properties()
-                            p.putValue("userId",listModel.ResponseData.UserId)
-                            p.putValue("userGroupId",listModel.ResponseData.MainAccountID)
-                            p.putValue("name",name)
+                            p.putValue("userId", listModel.ResponseData.UserId)
+                            p.putValue("userGroupId", listModel.ResponseData.MainAccountID)
+                            p.putValue("name", name)
                             p.putValue("mobileNo", listModel.ResponseData.Mobile)
                             p.putValue("countryCode", countryCode)
                             p.putValue("countryName", countryName)
-                            p.putValue("countryShortName",countryShortName)
+                            p.putValue("countryShortName", countryShortName)
                             p.putValue("email", email)
-                            if(signupFlag.equals("1")){
+                            if (signupFlag.equals("1")) {
                                 addToSegment(CONSTANTS.User_Sign_up, p, CONSTANTS.track)
-                            }else{
+                            } else {
                                 addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
                             }
                             if (signupFlag.equals("1", ignoreCase = true)) {

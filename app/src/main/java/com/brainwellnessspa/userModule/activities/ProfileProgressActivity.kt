@@ -13,7 +13,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +36,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ProfileProgressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileProgressBinding
@@ -54,8 +52,8 @@ class ProfileProgressActivity : AppCompatActivity() {
     var ageYear: Int = 0
     var ageMonth: Int = 0
     var ageDate: Int = 0
-    var emailUser: String? = ""
-    var doubleBackToExitPressedOnce = false
+    private var emailUser: String? = ""
+    private var doubleBackToExitPressedOnce = false
     lateinit var activity: Activity
     private lateinit var exitDialog: Dialog
     lateinit var ctx: Context
@@ -374,7 +372,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ProfileSaveDataModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val p = Properties()
                             p.putValue("gender", gender)
                             p.putValue("genderX", genderX)
@@ -386,7 +384,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
                         }
 
                     } catch (e: Exception) {
@@ -636,7 +634,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     }
 
     private fun setDate() {
-        if(age.equals("")) {
+        if(age == "") {
             val c = Calendar.getInstance()
             mYear = c[Calendar.YEAR]
             mMonth = c[Calendar.MONTH]

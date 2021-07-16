@@ -1487,7 +1487,7 @@ public class BWSApplication extends Application{
             }
 
             BarDataSet barDataSet;
-            barDataSet = new BarDataSet(yAxisValues, "Past Index Score");
+            barDataSet = new BarDataSet(yAxisValues, "Past wellness Score");
             barDataSet.setDrawIcons(false);
             barDataSet.setColor(act.getResources().getColor(R.color.app_theme_color));
 

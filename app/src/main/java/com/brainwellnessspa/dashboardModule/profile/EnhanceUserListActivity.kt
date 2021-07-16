@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -35,6 +36,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
     var mainAccountID: String? = null
     lateinit var activity: Activity
     var dialog: Dialog? = null
+    var isMainAccount: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         val mListLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvUserList.layoutManager = mListLayoutManager
         binding.rvUserList.itemAnimator = DefaultItemAnimator()
@@ -51,11 +54,6 @@ class EnhanceUserListActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.llAddNewUser.setOnClickListener {
-            val intent = Intent(applicationContext, AddCouserActivity::class.java)
-            startActivity(intent)
-            addCouserBackStatus = 1
-        }
         prepareEnhanceUserList(activity)
     }
 
@@ -83,7 +81,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
                         val listModel: ManageUserListModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             listModel.responseData?.let {
-                                enhanceUserListAdapter = EnhanceUserListAdapter(it)
+                                enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
                                 binding.rvUserList.adapter = enhanceUserListAdapter
                             }
                         } else {
@@ -105,7 +103,7 @@ class EnhanceUserListActivity : AppCompatActivity() {
 
     }
 
-    inner class EnhanceUserListAdapter(private var manageUserListModel: ManageUserListModel.ResponseData) : RecyclerView.Adapter<EnhanceUserListAdapter.MyViewHolder>() {
+    inner class EnhanceUserListAdapter(private var manageUserListModel: ManageUserListModel.ResponseData, val llAddNewUser: LinearLayout) : RecyclerView.Adapter<EnhanceUserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: EnhanceUserListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.enhance_user_list_layout, parent, false)
@@ -117,6 +115,29 @@ class EnhanceUserListActivity : AppCompatActivity() {
 
             list?.let {
                 holder.binding.tvName.text = list[position].name
+
+                if (isMainAccount.equals("1", ignoreCase = true)) {
+                    binding.llAddNewUser.visibility = View.VISIBLE
+                } else {
+                    binding.llAddNewUser.visibility = View.GONE
+                }
+
+                binding.llAddNewUser.setOnClickListener {
+                    if (isMainAccount.equals("1", ignoreCase = true)) {
+                        binding.llAddNewUser.visibility = View.VISIBLE
+                        if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
+                            BWSApplication.showToast("Please upgrade your plan", activity)
+                        } else {
+                            addCouserBackStatus = 1
+                            val intent = Intent(applicationContext, AddCouserActivity::class.java)
+                            startActivity(intent)
+                        }
+                    } else {
+                        binding.llAddNewUser.visibility = View.GONE
+                    }
+                }
+
+
 
                 holder.binding.ivStatus.setOnClickListener {
                     selectedItem = position

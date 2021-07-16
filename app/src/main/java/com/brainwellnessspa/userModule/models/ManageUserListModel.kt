@@ -28,6 +28,10 @@ class ManageUserListModel {
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = null
+
+        @SerializedName("Maxuseradd")
+        @Expose
+        var maxuseradd: String? = null
     }
 
     class User {

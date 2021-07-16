@@ -385,18 +385,19 @@
                     tools:ignore="SpUsage" />
 
                 <TextView
+                    android:id="@+id/assesmentTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_70sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="What is Index Score ?"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     tools:ignore="SpUsage" />
 
                 <TextView
+                    android:id="@+id/assesmentContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
@@ -404,7 +405,6 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_10sdp"
-                    android:text="@string/index_quotes"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
@@ -421,7 +421,7 @@
                 android:background="@drawable/light_green_rounded_filled"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
-                android:text="Continue"
+                android:text="@string/Continue"
                 android:textColor="@color/white" />
 
         </RelativeLayout>

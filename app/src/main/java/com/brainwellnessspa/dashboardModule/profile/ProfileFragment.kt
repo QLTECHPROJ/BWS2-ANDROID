@@ -498,9 +498,11 @@ Tap Setting > permission, and turn "Files and media" on.""")
 
                                 if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
                                     binding.llManageUser.visibility = View.VISIBLE
+                                    binding.llPlan.visibility = View.VISIBLE
                                     binding.viewManage.visibility = View.VISIBLE
                                 } else {
                                     binding.llManageUser.visibility = View.GONE
+                                    binding.llPlan.visibility = View.GONE
                                     binding.viewManage.visibility = View.GONE
                                 }
 

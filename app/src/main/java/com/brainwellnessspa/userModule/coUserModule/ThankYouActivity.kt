@@ -34,15 +34,17 @@ class ThankYouActivity : AppCompatActivity() {
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
         avgSleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
+        binding.tvName.text = userName
+
         binding.btnExplore.setOnClickListener {
-            if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenView, "1")
-                startActivity(intent)
-                finish()
-            } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+            if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, AssProcessActivity::class.java)
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                startActivity(intent)
+                finish()
+            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                intent.putExtra(CONSTANTS.ScreenView, "1")
                 startActivity(intent)
                 finish()
             } else if (avgSleepTime.equals("", ignoreCase = true)) {

@@ -43,10 +43,12 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
+import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
+import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -217,12 +219,6 @@ class HomeFragment : Fragment() {
                 /* get all user lisst function */
                 prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar, layoutBinding.llAddNewUser, mBottomSheetDialog!!)
 
-                /* Add new user button click */
-                layoutBinding.llAddNewUser.setOnClickListener {
-                    val i = Intent(act, AddCouserActivity::class.java)
-                    startActivity(i)
-                    mBottomSheetDialog!!.hide()
-                }
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }
@@ -297,7 +293,6 @@ class HomeFragment : Fragment() {
                     override fun onResponse(call: Call<ReminderProceedModel?>, response: Response<ReminderProceedModel?>) {
                         try {
                             val model = response.body()
-                            showToast(model!!.responseMessage, activity)
                             getReminderDay(ctx, act, userId, playlistID, playlistName, activity!!, reminderTime, reminderDay)
 
                             dialog.hide()
@@ -366,14 +361,9 @@ class HomeFragment : Fragment() {
                     try {
                         progressBar.visibility = View.GONE
                         val listModel: AddedUserListModel = response.body()!!
-                        adapter = UserListAdapter(listModel.responseData!!, mBottomSheetDialog)
+                        adapter = UserListAdapter(listModel.responseData!!, mBottomSheetDialog, llAddNewUser)
                         rvUserList.adapter = adapter
 
-                        if (isMainAccount.equals("1",ignoreCase = true)) {
-                            llAddNewUser.visibility = View.VISIBLE
-                        } else {
-                            llAddNewUser.visibility = View.GONE
-                        }
                         val section = java.util.ArrayList<SegmentUserList>()
                         for (i in listModel.responseData!!.userList!!.indices) {
                             val e = SegmentUserList()
@@ -1029,7 +1019,7 @@ class HomeFragment : Fragment() {
     }
 
     /* Set User List Adapter*/
-    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData, val mBottomSheetDialog: BottomSheetDialog) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData, val mBottomSheetDialog: BottomSheetDialog, val llAddNewUser: LinearLayout) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         var pos = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -1041,6 +1031,29 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val modelList = model.userList
             holder.bind.tvName.text = modelList!![position].name
+
+            if (isMainAccount.equals("1", ignoreCase = true)) {
+                llAddNewUser.visibility = View.VISIBLE
+            } else {
+                llAddNewUser.visibility = View.GONE
+            }
+
+            llAddNewUser.setOnClickListener {
+                if (isMainAccount.equals("1", ignoreCase = true)) {
+                    llAddNewUser.visibility = View.VISIBLE
+                    if (modelList.size == model.maxuseradd!!.toInt()) {
+                        showToast("Please upgrade your plan", activity)
+                    } else {
+                        /* Add new user button click */
+                        addCouserBackStatus = 1
+                        val i = Intent(act, AddCouserActivity::class.java)
+                        startActivity(i)
+                        mBottomSheetDialog.hide()
+                    }
+                } else {
+                    llAddNewUser.visibility = View.GONE
+                }
+            }
 
             val name: String?
             if (modelList[position].image.equals("", ignoreCase = true)) {
@@ -1078,65 +1091,66 @@ class HomeFragment : Fragment() {
             }
 
             holder.bind.llAddNewCard.setOnClickListener {
-                if (userId!! == modelList[position].userID) {
-                    mBottomSheetDialog.hide()
-                } else {
-                    selectedItem = position
-                    pos++
-                    notifyDataSetChanged()
-                    val dialog = Dialog(act)
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    dialog.setContentView(R.layout.comfirm_pin_layout)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    val btnDone = dialog.findViewById<Button>(R.id.btnDone)
-                    val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                    val txtError = dialog.findViewById<TextView>(R.id.txtError)
-                    val tvForgotPin: TextView = dialog.findViewById(R.id.tvForgotPin)
-                    val edtOTP1 = dialog.findViewById<EditText>(R.id.edtOTP1)
-                    val edtOTP2 = dialog.findViewById<EditText>(R.id.edtOTP2)
-                    val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
-                    val edtOTP4 = dialog.findViewById<EditText>(R.id.edtOTP4)
-                    val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-                    tvTitle.text = "Unlock"
-                    editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                    edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                    edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                    edtOTP3.addTextChangedListener(PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                    edtOTP4.addTextChangedListener(PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                    edtOTP1.setOnKeyListener(PinOnKeyListener(0))
-                    edtOTP2.setOnKeyListener(PinOnKeyListener(1))
-                    edtOTP3.setOnKeyListener(PinOnKeyListener(2))
-                    edtOTP4.setOnKeyListener(PinOnKeyListener(3))
-                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss()
-                            return@setOnKeyListener true
+                if (modelList[position].isPinSet.equals("1", ignoreCase = true)) {
+                    if (userId!! == modelList[position].userID) {
+                        mBottomSheetDialog.hide()
+                    } else {
+                        selectedItem = position
+                        pos++
+                        notifyDataSetChanged()
+                        val dialog = Dialog(act)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.comfirm_pin_layout)
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        val btnDone = dialog.findViewById<Button>(R.id.btnDone)
+                        val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                        val txtError = dialog.findViewById<TextView>(R.id.txtError)
+                        val tvForgotPin: TextView = dialog.findViewById(R.id.tvForgotPin)
+                        val edtOTP1 = dialog.findViewById<EditText>(R.id.edtOTP1)
+                        val edtOTP2 = dialog.findViewById<EditText>(R.id.edtOTP2)
+                        val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
+                        val edtOTP4 = dialog.findViewById<EditText>(R.id.edtOTP4)
+                        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
+                        tvTitle.text = "Unlock"
+                        editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                        edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP3.addTextChangedListener(PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP4.addTextChangedListener(PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP1.setOnKeyListener(PinOnKeyListener(0))
+                        edtOTP2.setOnKeyListener(PinOnKeyListener(1))
+                        edtOTP3.setOnKeyListener(PinOnKeyListener(2))
+                        edtOTP4.setOnKeyListener(PinOnKeyListener(3))
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                return@setOnKeyListener true
+                            }
+                            false
                         }
-                        false
-                    }
 
-                    btnDone.setOnClickListener {
-                        if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
-                            txtError.visibility = View.VISIBLE
-                            txtError.text = "Please enter OTP"
-                        } else {
-                            if (isNetworkConnected(act)) {
-                                txtError.visibility = View.GONE
-                                txtError.text = ""
-                                progressBar.visibility = View.VISIBLE
-                                progressBar.invalidate()
-                                val listCall = APINewClient.client.getVerifyPin(modelList[position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
-                                listCall.enqueue(object : Callback<AuthOtpModel> {
-                                    @SuppressLint("HardwareIds")
-                                    override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
-                                        try {
-                                            progressBar.visibility = View.GONE
-                                            val listModel: AuthOtpModel = response.body()!!
-                                            when {
-                                                listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                    dialog.dismiss()
-                                                    mBottomSheetDialog.hide()/*if (!listModel.responseData!!.userID.equals(
+                        btnDone.setOnClickListener {
+                            if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                                txtError.visibility = View.VISIBLE
+                                txtError.text = "Please enter OTP"
+                            } else {
+                                if (isNetworkConnected(act)) {
+                                    txtError.visibility = View.GONE
+                                    txtError.text = ""
+                                    progressBar.visibility = View.VISIBLE
+                                    progressBar.invalidate()
+                                    val listCall = APINewClient.client.getVerifyPin(modelList[position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                    listCall.enqueue(object : Callback<AuthOtpModel> {
+                                        @SuppressLint("HardwareIds")
+                                        override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                            try {
+                                                progressBar.visibility = View.GONE
+                                                val listModel: AuthOtpModel = response.body()!!
+                                                when {
+                                                    listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                        dialog.dismiss()
+                                                        mBottomSheetDialog.hide()/*if (!listModel.responseData!!.userID.equals(
                                                             userId,
                                                             ignoreCase = true
                                                         )
@@ -1149,147 +1163,179 @@ class HomeFragment : Fragment() {
                                                     } else {
                                                         callObserve2(ctx)
                                                     }*/
-                                                    Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
-                                                    Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
-                                                    logout = false
-                                                    mainAccountId = listModel.ResponseData.MainAccountID
-                                                    userId = listModel.ResponseData.UserId
-                                                    if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                                        val intent = Intent(act, WalkScreenActivity::class.java)
-                                                        intent.putExtra(CONSTANTS.ScreenView, "1")
-                                                        act.startActivity(intent)
-                                                        act.finish()
-                                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                                        val intent = Intent(activity, AssProcessActivity::class.java)
-                                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                                        act.startActivity(intent)
-                                                        act.finish()
-                                                    } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
-                                                        val intent = Intent(activity, SleepTimeActivity::class.java)
-                                                        act.startActivity(intent)
-                                                        act.finish()
-                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                                                        val intent = Intent(act, BottomNavigationActivity::class.java)
-                                                        intent.putExtra("IsFirst", "1")
-                                                        act.startActivity(intent)
-                                                        act.finish()
-                                                    }
-                                                    val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, AppCompatActivity.MODE_PRIVATE)
-                                                    val editor = shared.edit()
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
-                                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
-                                                    editor.apply()
-                                                    val sharedd = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                                    val editord = sharedd.edit()
-                                                    editord.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                    val selectedCategoriesTitle = arrayListOf<String>()
-                                                    val selectedCategoriesName = arrayListOf<String>()
-                                                    val gson = Gson()
-                                                    for (i in listModel.ResponseData.AreaOfFocus) {
-                                                        selectedCategoriesTitle.add(i.MainCat)
-                                                        selectedCategoriesName.add(i.RecommendedCat)
-                                                    }
-                                                    editord.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                                    editord.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                                    editord.apply()
-                                                    prepareHomeData() //                                                    showToast(
-                                                    //                                                        listModel.responseMessage,
-                                                    //                                                        act
-                                                    //                                                    )
-                                                    prepareHomeData() //                                                    showToast(
-                                                    //                                                        listModel.responseMessage,
-                                                    //                                                        act
-                                                    //                                                    )
+                                                        Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
+                                                        Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
+                                                        logout = false
+                                                        mainAccountId = listModel.ResponseData.MainAccountID
+                                                        userId = listModel.ResponseData.UserId
+                                                        if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
+                                                            if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                                val intent = Intent(activity, WalkScreenActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ScreenView, "2")
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                                                val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                intent.putExtra("IsFirst", "0")
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            }
+                                                        } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                            val intent = Intent(activity, AddCouserActivity::class.java)
+                                                            act.startActivity(intent)
+                                                            act.finish()
+                                                        }
+                                                        val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                        val editor = shared.edit()
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                                        editor.apply()
+                                                        val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                        val edited = sharded.edit()
+                                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                        val selectedCategoriesTitle = arrayListOf<String>()
+                                                        val selectedCategoriesName = arrayListOf<String>()
+                                                        val gson = Gson()
+                                                        for (i in listModel.ResponseData.AreaOfFocus) {
+                                                            selectedCategoriesTitle.add(i.MainCat)
+                                                            selectedCategoriesName.add(i.RecommendedCat)
+                                                        }
+                                                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                        edited.apply()
 
-                                                    analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(act.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", "").putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
+                                                        prepareHomeData()
+
+                                                        val activity = SplashActivity()
+                                                        activity.setAnalytics(activity.getString(R.string.segment_key_real))
+
+                                                        //    showToast(listModel.responseMessage,act)
+
+                                                        analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(act.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", "").putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
+
+                                                        val p1 = Properties()
+                                                        p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                        p1.putValue("deviceType", "Android")
+                                                        p1.putValue("name", listModel.ResponseData.Name)
+                                                        p1.putValue("countryCode", "")
+                                                        p1.putValue("countryName", "")
+                                                        p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                        p1.putValue("email", listModel.ResponseData.Email)
+                                                        p1.putValue("plan", "")
+                                                        p1.putValue("planStatus", "")
+                                                        p1.putValue("planStartDt", "")
+                                                        p1.putValue("planExpiryDt", "")
+                                                        p1.putValue("clinikoId", "")
+                                                        p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                        p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                        p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                        p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                        p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                        p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                        addToSegment("CoUser Login", p1, CONSTANTS.track)
+                                                    }
+                                                    listModel.ResponseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                        txtError.visibility = View.VISIBLE
+                                                        txtError.text = listModel.ResponseMessage
+                                                    }
+                                                    else -> {
+                                                        txtError.visibility = View.VISIBLE
+                                                        txtError.text = listModel.ResponseMessage
+                                                    }
                                                 }
-                                                listModel.ResponseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
-                                                    txtError.visibility = View.VISIBLE
-                                                    txtError.text = listModel.ResponseMessage
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
+
+                                        override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                            progressBar.visibility = View.GONE
+                                        }
+                                    })
+                                }
+                            }
+                        }
+
+                        tvForgotPin.setOnClickListener {
+                            val dialog = Dialog(act)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.add_couser_continue_layout)
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
+                            val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
+                            val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                            ivIcon.setImageResource(R.drawable.ic_email_success_icon)
+                            val email: String = modelList[position].email.toString()
+                            tvText.text = "A new pin has been sent to \nyour mail id \n$email."
+
+                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss()
+                                    return@setOnKeyListener true
+                                }
+                                false
+                            }
+                            mainLayout.setOnClickListener {
+                                if (isNetworkConnected(act)) {
+                                    showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
+                                    listCall.enqueue(object : Callback<SucessModel> {
+                                        override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                            val listModel: SucessModel = response.body()!!
+                                            when {
+                                                listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                    dialog.dismiss()
+                                                }
+                                                listModel.responseCode.equals(act.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                    showToast(listModel.responseMessage, act)
                                                 }
                                                 else -> {
-                                                    txtError.visibility = View.VISIBLE
-                                                    txtError.text = listModel.ResponseMessage
+                                                    showToast(listModel.responseMessage, act)
                                                 }
                                             }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
                                         }
-                                    }
 
-                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                                        progressBar.visibility = View.GONE
-                                    }
-                                })
-                            }
-                        }
-                    }
-
-                    tvForgotPin.setOnClickListener {
-                        val dialog = Dialog(act)
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                        dialog.setContentView(R.layout.add_couser_continue_layout)
-                        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                        val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
-                        val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
-                        val tvText = dialog.findViewById<TextView>(R.id.tvText)
-                        ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                        val email: String = modelList[position].email.toString()
-                        tvText.text = "A new pin has been sent to \nyour mail id \n$email."
-
-                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                dialog.dismiss()
-                                return@setOnKeyListener true
-                            }
-                            false
-                        }
-                        mainLayout.setOnClickListener {
-                            if (isNetworkConnected(act)) {
-                                showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
-                                listCall.enqueue(object : Callback<SucessModel> {
-                                    override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
-                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                        val listModel: SucessModel = response.body()!!
-                                        when {
-                                            listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                dialog.dismiss()
-                                            }
-                                            listModel.responseCode.equals(act.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
-                                                showToast(listModel.responseMessage, act)
-                                            }
-                                            else -> {
-                                                showToast(listModel.responseMessage, act)
-                                            }
+                                        override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                         }
-                                    }
-
-                                    override fun onFailure(call: Call<SucessModel>, t: Throwable) {
-                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                    }
-                                })
-                            } else {
-                                showToast(act.getString(R.string.no_server_found), act)
+                                    })
+                                } else {
+                                    showToast(act.getString(R.string.no_server_found), act)
+                                }
                             }
+
+                            dialog.show()
+                            dialog.setCancelable(true)
                         }
 
                         dialog.show()
+                        dialog.setCanceledOnTouchOutside(true)
                         dialog.setCancelable(true)
                     }
-
-                    dialog.show()
-                    dialog.setCanceledOnTouchOutside(true)
-                    dialog.setCancelable(true)
+                }
+                else if (modelList[position].isPinSet.equals("0", ignoreCase = true) || modelList[position].isPinSet.equals("", ignoreCase = true)) {
+                    val i = Intent(act, CouserSetupPinActivity::class.java)
+                    act.startActivity(i)
                 }
             }
         }

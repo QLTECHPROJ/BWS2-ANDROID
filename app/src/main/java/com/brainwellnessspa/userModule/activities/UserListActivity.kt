@@ -31,6 +31,7 @@ import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
+import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
@@ -83,12 +84,6 @@ class UserListActivity : AppCompatActivity() {
              finish()
          }*/
 
-
-        binding.llAddNewUser.setOnClickListener {
-            val i = Intent(applicationContext, AddCouserActivity::class.java)
-            startActivity(i)
-        }
-
     }
 
     override fun onResume() {
@@ -108,6 +103,7 @@ class UserListActivity : AppCompatActivity() {
         var userList = UserListActivity()
         private var selectedItem = -1
         private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.userList
+        private var model: AddedUserListModel.ResponseData = listModel
         lateinit var txtError: TextView
 
         inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -121,6 +117,26 @@ class UserListActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
+
+            if (isMainAccount.equals("1", ignoreCase = true)) {
+                binding.llAddNewUser.visibility = View.VISIBLE
+            } else {
+                binding.llAddNewUser.visibility = View.GONE
+            }
+
+            binding.llAddNewUser.setOnClickListener {
+                if (isMainAccount.equals("1", ignoreCase = true)) {
+                    binding.llAddNewUser.visibility = View.VISIBLE
+                    if (coUsersModel!!.size == model.maxuseradd!!.toInt()) {
+                        showToast("Please upgrade your plan", activity)
+                    } else {
+                        val i = Intent(activity, AddCouserActivity::class.java)
+                        activity.startActivity(i)
+                    }
+                } else {
+                    binding.llAddNewUser.visibility = View.GONE
+                }
+            }
 
             if (coUsersModel!![position].image.equals("", true)) {
                 holder.bindingAdapter.ivProfileImage.visibility = View.GONE
@@ -144,18 +160,22 @@ class UserListActivity : AppCompatActivity() {
             }
 
             holder.bindingAdapter.rlAddNewCard.setOnClickListener {
-                val previousItem = selectedItem
-                selectedItem = position
-                notifyItemChanged(previousItem)
-                notifyItemChanged(position)
-                binding.btnLogIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
-                binding.btnLogIn.isEnabled = true
-                binding.tvForgotPin.isEnabled = true
-                binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
-                userId = coUsersModel!![position].mainAccountID.toString()
-                coUserId = coUsersModel!![position].userID.toString()
-                coEmail = coUsersModel!![position].email.toString()
-
+                if (coUsersModel!![position].isPinSet.equals("1", ignoreCase = true)) {
+                    val previousItem = selectedItem
+                    selectedItem = position
+                    notifyItemChanged(previousItem)
+                    notifyItemChanged(position)
+                    binding.btnLogIn.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                    binding.btnLogIn.isEnabled = true
+                    binding.tvForgotPin.isEnabled = true
+                    binding.tvForgotPin.setTextColor(ContextCompat.getColor(activity, R.color.app_theme_color))
+                    userId = coUsersModel!![position].mainAccountID.toString()
+                    coUserId = coUsersModel!![position].userID.toString()
+                    coEmail = coUsersModel!![position].email.toString()
+                } else if (coUsersModel!![position].isPinSet.equals("0", ignoreCase = true) || coUsersModel!![position].isPinSet.equals("", ignoreCase = true)) {
+                    val i = Intent(activity, CouserSetupPinActivity::class.java)
+                    activity.startActivity(i)
+                }
             }
 
             Log.e("isMainAccount", isMainAccount)
@@ -204,7 +224,7 @@ class UserListActivity : AppCompatActivity() {
                         if (isNetworkConnected(activity)) {
 
                             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(userId, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(coUsersModel!![position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                             listCall.enqueue(object : Callback<AuthOtpModel> {
                                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                     try {
@@ -293,26 +313,26 @@ class UserListActivity : AppCompatActivity() {
 
                                                             analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
 
-                                                         /*   val p1 = Properties()
-                                                            p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
-                                                            p1.putValue("deviceType", "Android")
-                                                            p1.putValue("name", listModel.ResponseData.Name)
-                                                            p1.putValue("countryCode", "")
-                                                            p1.putValue("countryName", "")
-                                                            p1.putValue("phone", listModel.ResponseData.Mobile)
-                                                            p1.putValue("email", listModel.ResponseData.Email)
-                                                            p1.putValue("plan", "")
-                                                            p1.putValue("planStatus", "")
-                                                            p1.putValue("planStartDt", "")
-                                                            p1.putValue("planExpiryDt", "")
-                                                            p1.putValue("clinikoId", "")
-                                                            p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                                            p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                                            p1.putValue("indexScore", listModel.ResponseData.indexScore)
-                                                            p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                                            p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                                            p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)*/
+                                                            /*   val p1 = Properties()
+                                                               p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                               p1.putValue("deviceType", "Android")
+                                                               p1.putValue("name", listModel.ResponseData.Name)
+                                                               p1.putValue("countryCode", "")
+                                                               p1.putValue("countryName", "")
+                                                               p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                               p1.putValue("email", listModel.ResponseData.Email)
+                                                               p1.putValue("plan", "")
+                                                               p1.putValue("planStatus", "")
+                                                               p1.putValue("planStartDt", "")
+                                                               p1.putValue("planExpiryDt", "")
+                                                               p1.putValue("clinikoId", "")
+                                                               p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                               p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                               p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                               p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                               p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                               p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                               addToSegment("CoUser Login", p1, CONSTANTS.track)*/
                                                         } catch (e: Exception) {
                                                             e.printStackTrace()
                                                         }
@@ -511,12 +531,6 @@ class UserListActivity : AppCompatActivity() {
                             binding.rvUserList.layoutManager = LinearLayoutManager(activity)
                             adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString(), isMainAccount.toString(), isProfileCompleted.toString(), avgSleepTime.toString(), isAssessmentCompleted.toString())
                             binding.rvUserList.adapter = adapter
-
-                            if (isMainAccount.equals("1",ignoreCase = true)) {
-                                binding.llAddNewUser.visibility = View.VISIBLE
-                            } else {
-                                binding.llAddNewUser.visibility = View.GONE
-                            }
 
                             val section = ArrayList<SegmentUserList>()
                             for (i in listModel.responseData!!.userList!!.indices) {

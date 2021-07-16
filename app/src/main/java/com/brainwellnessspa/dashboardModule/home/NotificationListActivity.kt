@@ -42,17 +42,17 @@ class NotificationListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
-        activity = this@NotificationListActivity
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        activity = this@NotificationListActivity
         ctx = this@NotificationListActivity
         binding.llBack.setOnClickListener {
             finish()
         }
-        val p = Properties()
 
+        val p = Properties()
         addToSegment("Notification List Viewed", p, CONSTANTS.screen)
         binding.llError.visibility = View.GONE
         binding.tvFound.text = "Welcome $userName hope you're doing great!!"
@@ -80,7 +80,6 @@ class NotificationListActivity : AppCompatActivity() {
                                 binding.rvNotiList.adapter = adapter
                             }
                         }
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -96,7 +95,6 @@ class NotificationListActivity : AppCompatActivity() {
     }
 
     class NotiListAdapter(private val listModel: List<NotificationlistModel.ResponseData?>, var activity: Activity) : RecyclerView.Adapter<NotiListAdapter.MyViewHolder>() {
-
         inner class MyViewHolder(var bindingAdapter: NotificationListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

@@ -96,7 +96,6 @@ class SignInActivity : AppCompatActivity() {
             countryShortName = intent.getStringExtra("countryShortName")
         }
 
-
         binding.etNumber.addTextChangedListener(userTextWatcher)
 
         if (!mobileNo.equals("", ignoreCase = true)) {
@@ -332,7 +331,7 @@ class SignInActivity : AppCompatActivity() {
                                 i.putExtra(CONSTANTS.name, "")
                                 i.putExtra(CONSTANTS.email, "")
                                 i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
-                                i.putExtra(CONSTANTS.countryName,countryFullName)
+                                i.putExtra(CONSTANTS.countryName, countryFullName)
                                 startActivity(i)
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)
 
@@ -341,9 +340,9 @@ class SignInActivity : AppCompatActivity() {
                                 p.putValue("mobileNo", listModel.ResponseData.MobileNo)
                                 p.putValue("countryCode", countryCode)
                                 p.putValue("countryName", countryFullName)
-                                p.putValue("countryShortName",countryShortName)
+                                p.putValue("countryShortName", countryShortName)
                                 p.putValue("email", email)
-                                p.putValue("source","Login")
+                                p.putValue("source", "Login")
                                 BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             } else {
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)

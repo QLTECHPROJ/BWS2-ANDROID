@@ -72,7 +72,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".dashboardModule.session.SessionWalkScreenActivity"></activity>
+        <activity android:name=".dashboardModule.session.SessionDetailContinueActivity"></activity>
+        <activity android:name=".dashboardModule.session.BrainStatusActivity" />
+        <activity android:name=".dashboardModule.session.SessionBookletContinueActivity" />
+        <activity android:name=".dashboardModule.session.SessionBookletActivity" />
+        <activity android:name=".dashboardModule.session.SessionWalkScreenActivity" />
         <activity android:name=".dashboardModule.session.SessionAudiosActivity" />
         <activity android:name=".dashboardModule.session.SessionDoneActivity" />
         <activity android:name=".dashboardModule.session.SessionActivitiesDetailActivity" />
