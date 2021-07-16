@@ -27,7 +27,6 @@ import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivi
 import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.AudioAptListLayoutBinding
 import com.brainwellnessspa.databinding.FragmentAptAudioBinding
@@ -221,9 +220,9 @@ class AptAudioFragment : Fragment() {
     }
 
     private fun callAddTransFrag() {
-        val fragment: Fragment = MiniPlayerFragment()
+//        val fragment: Fragment = MiniPlayerFragment()
         val fragmentManager1 = requireActivity().supportFragmentManager
-        fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()
+//        fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()
     }
 
     inner class AudioListAdapter(private val listModelList: ArrayList<AppointmentDetailModel.Audio>?, var ctx: Context?, var f_manager: FragmentManager?) : RecyclerView.Adapter<AudioListAdapter.MyViewHolder>() {

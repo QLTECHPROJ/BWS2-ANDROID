@@ -24,8 +24,10 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.enhance.PlaylistDoneActivity
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
+import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.membershipModule.models.SegmentAreaOfFocus
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
@@ -46,7 +48,6 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var userId: String? = ""
     private var backClick: String? = ""
     lateinit var gsonBuilder: GsonBuilder
-    lateinit var section: java.util.ArrayList<String>
     var sleepTime: String? = ""
     var coUserId: String? = ""
     var coEmail: String? = ""
@@ -609,12 +610,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 //                            val i = Intent(activity, PreparePlaylistActivity::class.java)
 //                            i.putExtra("BackClick", backClick)
 //                            startActivity(i)
-                            section = java.util.ArrayList<String>()
+                            val section = ArrayList<SegmentAreaOfFocus>()
                             gsonBuilder = GsonBuilder()
                             val gson: Gson = gsonBuilder.create()
-                            for (i in listModel.responseData!!.categoryData!!.indices) {
-                                section.add(listModel.responseData!!.categoryData!![i].mainCat.toString()+":")
-                                section.add(listModel.responseData!!.categoryData!![i].recommendedCat.toString())
+                            for (pos in listModel.responseData!!.categoryData!!.indices) {
+                                val e = SegmentAreaOfFocus()
+                                e.mainCategory = listModel.responseData!!.categoryData!![pos].mainCat.toString()
+                                e.problemName =listModel.responseData!!.categoryData!![pos].recommendedCat.toString()
+                                section.add(e)
                             }
                             val p = Properties()
                             Log.e("section area of focus",section.toString())

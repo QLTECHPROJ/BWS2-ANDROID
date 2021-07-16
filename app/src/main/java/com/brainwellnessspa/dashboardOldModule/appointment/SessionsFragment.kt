@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardOldModule.models.SessionListModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.databinding.FragmentSessionsBinding
 import com.brainwellnessspa.databinding.SessionListLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -117,9 +116,9 @@ class SessionsFragment : Fragment() {
             val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             if (!audioFlag.equals("0", ignoreCase = true)) {
-                val fragment: Fragment = MiniPlayerFragment()
+//                val fragment: Fragment = MiniPlayerFragment()
                 val fragmentManager1 = requireActivity().supportFragmentManager
-                fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()
+//                fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()
                 val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 params.setMargins(0, 6, 0, 260)
                 binding.llSpace.layoutParams = params

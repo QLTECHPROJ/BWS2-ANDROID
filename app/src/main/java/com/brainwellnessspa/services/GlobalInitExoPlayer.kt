@@ -338,25 +338,7 @@ class GlobalInitExoPlayer : Service() {
         }
         InitNotificationAudioPLayer(ctx, mainPlayModelList)
         val p = Properties()
-        p.putValue("audioId", mainPlayModelList[position].id)
-        p.putValue("audioName", mainPlayModelList[position].name)
-        p.putValue("audioDescription", "")
-        p.putValue("directions", mainPlayModelList[position].audioDirection)
-        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-        p.putValue("position", GetCurrentAudioPosition())
-        if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-            p.putValue("audioType", "Downloaded")
-        } else {
-            p.putValue("audioType", "Streaming")
-        }
-        p.putValue("source", GetSourceName(ctx))
-        p.putValue("playerType", "Main")
-        p.putValue("audioService", appStatus(ctx))
-        p.putValue("bitRate", "")
-        p.putValue("sound", hundredVolume.toString())
-        addToSegment("Audio Playback Started", p, CONSTANTS.track)
+        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Playback Started",CONSTANTS.track,downloadAudioDetailsList,p)
         Log.e("Audio Volume", hundredVolume.toString())
         getMediaBitmap(ctx, mainPlayModelList[position].imageFile)
         player.prepare()
@@ -405,28 +387,6 @@ class GlobalInitExoPlayer : Service() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 var intruptMethod: String? = ""
                 val p = Properties()
-
-                p.putValue("audioId", mainPlayModelList[position].id)
-                p.putValue("audioName", mainPlayModelList[position].name)
-                p.putValue("audioDescription", "")
-                p.putValue("directions", mainPlayModelList[position].audioDirection)
-                p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                p.putValue("position", GetCurrentAudioPosition())
-                var AudioType = ""
-                AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                    p.putValue("audioType", "Downloaded")
-                    "Downloaded"
-                } else {
-                    p.putValue("audioType", "Streaming")
-                    "Streaming"
-                }
-                p.putValue("source", GetSourceName(ctx))
-                p.putValue("playerType", "Main")
-                p.putValue("audioService", appStatus(ctx))
-                p.putValue("bitRate", "")
-                p.putValue("sound", hundredVolume.toString())
                 when (error.type) {
                     ExoPlaybackException.TYPE_SOURCE -> {
                         p.putValue("interruptionMethod", error.message + " " + error.sourceException.message)
@@ -455,7 +415,7 @@ class GlobalInitExoPlayer : Service() {
                     }
                 }
                 AudioInterrupted = true
-                addToSegment("Audio Interrupted", p, CONSTANTS.track)
+                addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Interrupted",CONSTANTS.track,downloadAudioDetailsList,p)
                 val cm = ctx.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
                 //should check null because in airplane mode it will be null
                 val nc: NetworkCapabilities?
@@ -475,6 +435,14 @@ class GlobalInitExoPlayer : Service() {
                 }
                 try {
                     if (isNetworkConnected(ctx)) {
+                        var AudioType = ""
+                        AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
+                            p.putValue("audioType", "Downloaded")
+                            "Downloaded"
+                        } else {
+                            p.putValue("audioType", "Streaming")
+                            "Streaming"
+                        }
                         val listCall = APINewClient.client.getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
                         listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {

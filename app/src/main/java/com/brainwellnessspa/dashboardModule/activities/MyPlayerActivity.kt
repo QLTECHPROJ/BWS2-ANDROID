@@ -122,25 +122,7 @@ class MyPlayerActivity : AppCompatActivity() {
     /* method for put hart bit at every 5 min at segment */
     private fun callHeartbeat() {
         val p = Properties()
-        p.putValue("audioId", mainPlayModelList[position].id)
-        p.putValue("audioName", mainPlayModelList[position].name)
-        p.putValue("audioDescription", "")
-        p.putValue("directions", mainPlayModelList[position].audioDirection)
-        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-        p.putValue("position", GetCurrentAudioPosition())
-        if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-            p.putValue("audioType", "Downloaded")
-        } else {
-            p.putValue("audioType", "Streaming")
-        }
-        p.putValue("source", GetSourceName(ctx))
-        p.putValue("playerType", "Mini")
-        p.putValue("audioService", appStatus(act))
-        p.putValue("bitRate", "")
-        p.putValue("sound", hundredVolume.toString())
-        addToSegment("Audio Playing", p, CONSTANTS.track)
+        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Playing",CONSTANTS.track,downloadAudioDetailsList,p)
     }
 
     /*
@@ -863,25 +845,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     }
                     player.playWhenReady = true
                     val p = Properties()
-                    p.putValue("audioId", mainPlayModelList[position].id)
-                    p.putValue("audioName", mainPlayModelList[position].name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", mainPlayModelList[position].audioDirection)
-                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                    p.putValue("position", GetCurrentAudioPosition())
-                    if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                        p.putValue("audioType", "Downloaded")
-                    } else {
-                        p.putValue("audioType", "Streaming")
-                    }
-                    p.putValue("source", GetSourceName(ctx))
-                    p.putValue("playerType", "Mini")
-                    p.putValue("audioService", appStatus(ctx))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Audio Resumed", p, CONSTANTS.track)
+                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Resumed",CONSTANTS.track,downloadAudioDetailsList,p)
                 } else {
                     player.playWhenReady = true
                     val p = Properties()
@@ -1005,27 +969,8 @@ class MyPlayerActivity : AppCompatActivity() {
                     setPlayerCtrView()
                     GetMediaPer()
                     callButtonText(position)
-
                     val p = Properties()
-                    p.putValue("audioId", mainPlayModelList[position].id)
-                    p.putValue("audioName", mainPlayModelList[position].name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", mainPlayModelList[position].audioDirection)
-                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                    p.putValue("position", GetCurrentAudioPosition())
-                    if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                        p.putValue("audioType", "Downloaded")
-                    } else {
-                        p.putValue("audioType", "Streaming")
-                    }
-                    p.putValue("source", GetSourceName(ctx))
-                    p.putValue("playerType", "Mini")
-                    p.putValue("audioService", appStatus(act))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Audio Started", p, CONSTANTS.track)
+                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Started",CONSTANTS.track,downloadAudioDetailsList,p)
                 }
 
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -1057,27 +1002,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 override fun onPlaybackStateChanged(state: Int) {
                     //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                     if (state == ExoPlayer.STATE_READY) {
-
                         val p = Properties()
-                        p.putValue("audioId", mainPlayModelList[position].id)
-                        p.putValue("audioName", mainPlayModelList[position].name)
-                        p.putValue("audioDescription", "")
-                        p.putValue("directions", mainPlayModelList[position].audioDirection)
-                        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                        p.putValue("position", GetCurrentAudioPosition())
-                        if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                            p.putValue("audioType", "Downloaded")
-                        } else {
-                            p.putValue("audioType", "Streaming")
-                        }
-                        p.putValue("source", GetSourceName(ctx))
-                        p.putValue("playerType", "Mini")
-                        p.putValue("audioService", appStatus(act))
-                        p.putValue("bitRate", "")
-                        p.putValue("sound", hundredVolume.toString())
-                        addToSegment("Audio Buffer Completed", p, CONSTANTS.track)
+                        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Buffer Completed",CONSTANTS.track,downloadAudioDetailsList,p)
                         if (player.playWhenReady) {
                             exoBinding.llPlay.visibility = View.GONE
                             exoBinding.llPause.visibility = View.VISIBLE
@@ -1093,49 +1019,12 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.llPlay.visibility = View.GONE
                         exoBinding.llPause.visibility = View.GONE
                         exoBinding.progressBar.visibility = View.VISIBLE
-
                         val p = Properties()
-                        p.putValue("audioId", mainPlayModelList[position].id)
-                        p.putValue("audioName", mainPlayModelList[position].name)
-                        p.putValue("audioDescription", "")
-                        p.putValue("directions", mainPlayModelList[position].audioDirection)
-                        p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                        p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                        p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                        p.putValue("position", GetCurrentAudioPosition())
-                        if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                            p.putValue("audioType", "Downloaded")
-                        } else {
-                            p.putValue("audioType", "Streaming")
-                        }
-                        p.putValue("source", GetSourceName(ctx))
-                        p.putValue("playerType", "Mini")
-                        p.putValue("audioService", appStatus(act))
-                        p.putValue("bitRate", "")
-                        p.putValue("sound", hundredVolume.toString())
-                        addToSegment("Audio Buffer Started", p, CONSTANTS.track)
+                        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Buffer Started",CONSTANTS.track,downloadAudioDetailsList,p)
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         try {
                             val p = Properties()
-                            p.putValue("audioId", mainPlayModelList[position].id)
-                            p.putValue("audioName", mainPlayModelList[position].name)
-                            p.putValue("audioDescription", "")
-                            p.putValue("directions", mainPlayModelList[position].audioDirection)
-                            p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                            p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                            p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                            p.putValue("position", GetCurrentAudioPosition())
-                            if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                                p.putValue("audioType", "Downloaded")
-                            } else {
-                                p.putValue("audioType", "Streaming")
-                            }
-                            p.putValue("source", GetSourceName(ctx))
-                            p.putValue("playerType", "Main")
-                            p.putValue("audioService", appStatus(ctx))
-                            p.putValue("bitRate", "")
-                            p.putValue("sound", hundredVolume.toString())
-                            addToSegment("Audio Completed", p, CONSTANTS.track)
+                            addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Completed",CONSTANTS.track,downloadAudioDetailsList,p)
                             if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)) {
                                 exoBinding.llPlay.visibility = View.VISIBLE
                                 exoBinding.llPause.visibility = View.GONE
@@ -1144,27 +1033,9 @@ class MyPlayerActivity : AppCompatActivity() {
                                 localIntent.putExtra("MyData", "pause")
                                 localBroadcastManager.sendBroadcast(localIntent)
                                 val p = Properties()
-                                p.putValue("audioId", mainPlayModelList[position].id)
-                                p.putValue("audioName", mainPlayModelList[position].name)
-                                p.putValue("audioDescription", "")
-                                p.putValue("directions", mainPlayModelList[position].audioDirection)
-                                p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                                p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                                p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                                p.putValue("position", GetCurrentAudioPosition())
-                                if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                                    p.putValue("audioType", "Downloaded")
-                                } else {
-                                    p.putValue("audioType", "Streaming")
-                                }
-                                p.putValue("source", GetSourceName(ctx))
-                                p.putValue("playerType", "Mini")
-                                p.putValue("audioService", appStatus(ctx))
-                                p.putValue("bitRate", "")
-                                p.putValue("sound", hundredVolume.toString())
                                 val source = GetSourceName(ctx)
                                 if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
-                                    addToSegment("Audio Playback Completed", p, CONSTANTS.track)
+                                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Playback Completed",CONSTANTS.track,downloadAudioDetailsList,p)
                                 }
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
@@ -1320,37 +1191,19 @@ class MyPlayerActivity : AppCompatActivity() {
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
                     globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
                     val p = Properties()
-                    p.putValue("audioId", mainPlayModelList[position].id)
-                    p.putValue("audioName", mainPlayModelList[position].name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", mainPlayModelList[position].audioDirection)
-                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                    p.putValue("position", GetCurrentAudioPosition())
                     p.putValue("seekPosition", pos)
                     when {
                         oldSeekPosition < pos -> {
                             p.putValue("seekDirection", "Forwarded")
                         }
                         oldSeekPosition > pos -> {
-                            p.putValue("seekDirection", "Backwarded")
+                            p.putValue("seekDirection", "Backward")
                         }
                         else -> {
                             p.putValue("seekDirection", "")
                         }
                     }
-                    if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                        p.putValue("audioType", "Downloaded")
-                    } else {
-                        p.putValue("audioType", "Streaming")
-                    }
-                    p.putValue("source", GetSourceName(ctx))
-                    p.putValue("playerType", "Main")
-                    p.putValue("audioService", appStatus(ctx))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Audio Seek Started", p, CONSTANTS.track)
+                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Seek Started",CONSTANTS.track,downloadAudioDetailsList,p)
                 }
 
                 override fun onScrubMove(timeBar: TimeBar, position: Long) {}
@@ -1363,14 +1216,6 @@ class MyPlayerActivity : AppCompatActivity() {
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
                     globalInitExoPlayer.UpdateNotificationAudioPLayer(ctx)
                     val p = Properties()
-                    p.putValue("audioId", mainPlayModelList[position].id)
-                    p.putValue("audioName", mainPlayModelList[position].name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", mainPlayModelList[position].audioDirection)
-                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                    p.putValue("position", GetCurrentAudioPosition())
                     p.putValue("seekPosition", pos)
                     when {
                         oldSeekPosition < pos -> {
@@ -1383,17 +1228,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             p.putValue("seekDirection", "")
                         }
                     }
-                    if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                        p.putValue("audioType", "Downloaded")
-                    } else {
-                        p.putValue("audioType", "Streaming")
-                    }
-                    p.putValue("source", GetSourceName(ctx))
-                    p.putValue("playerType", "Main")
-                    p.putValue("audioService", appStatus(ctx))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Audio Seek Completed", p, CONSTANTS.track)
+                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Seek Completed",CONSTANTS.track,downloadAudioDetailsList,p)
                 }
             })
 
@@ -1449,25 +1284,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     exoBinding.llPause.visibility = View.GONE
                     exoBinding.progressBar.visibility = View.GONE
                     val p = Properties()
-                    p.putValue("audioId", mainPlayModelList[position].id)
-                    p.putValue("audioName", mainPlayModelList[position].name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", mainPlayModelList[position].audioDirection)
-                    p.putValue("masterCategory", mainPlayModelList[position].audiomastercat)
-                    p.putValue("subCategory", mainPlayModelList[position].audioSubCategory)
-                    p.putValue("audioDuration", mainPlayModelList[position].audioDuration)
-                    p.putValue("position", GetCurrentAudioPosition())
-                    if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                        p.putValue("audioType", "Downloaded")
-                    } else {
-                        p.putValue("audioType", "Streaming")
-                    }
-                    p.putValue("source", GetSourceName(ctx))
-                    p.putValue("playerType", "Mini")
-                    p.putValue("audioService", appStatus(ctx))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Audio Paused", p, CONSTANTS.track)
+                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Paused",CONSTANTS.track,downloadAudioDetailsList,p)
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }

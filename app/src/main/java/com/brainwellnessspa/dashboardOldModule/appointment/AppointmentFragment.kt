@@ -19,7 +19,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardOldModule.models.NextSessionViewModel
 import com.brainwellnessspa.dashboardOldModule.models.PreviousAppointmentsModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.fragments.MiniPlayerFragment
 import com.brainwellnessspa.databinding.FragmentAppointmentBinding
 import com.brainwellnessspa.databinding.PreviousAppointmentsLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment

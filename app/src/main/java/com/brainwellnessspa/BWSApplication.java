@@ -144,6 +144,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application{
@@ -277,6 +279,55 @@ public class BWSApplication extends Application{
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent_extra)));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
+        Properties p = new Properties();
+        MainPlayModel m;
+        ArrayList mpm = new ArrayList<MainPlayModel>();
+        if (comeFrom.equalsIgnoreCase("downloadList")) {
+            for(int i = 0;i<mDataDownload.size();i++) {
+                m = new MainPlayModel();
+                m.setId(mDataDownload.get(i).getID());
+                m.setName(mDataDownload.get(i).getName());
+                m.setAudioFile(mDataDownload.get(i).getAudioFile());
+                m.setPlaylistID(mDataDownload.get(i).getPlaylistId());
+                m.setAudioDirection(mDataDownload.get(i).getAudioDirection());
+                m.setAudiomastercat(mDataDownload.get(i).getAudiomastercat());
+                m.setAudioSubCategory(mDataDownload.get(i).getAudioSubCategory());
+                m.setImageFile(mDataDownload.get(i).getImageFile());
+                m.setAudioDuration(mDataDownload.get(i).getAudioDuration());
+                mpm.add(m);
+            }
+        } else if (comeFrom.equalsIgnoreCase("playlist")) {
+            for(int i = 0;i<mDataPlaylist.size();i++) {
+                m = new MainPlayModel();
+                m.setId(mDataPlaylist.get(i).getId());
+                m.setName(mDataPlaylist.get(i).getName());
+                m.setAudioFile(mDataPlaylist.get(i).getAudioFile());
+                m.setPlaylistID(mDataPlaylist.get(i).getPlaylistID());
+                m.setAudioDirection(mDataPlaylist.get(i).getAudioDirection());
+                m.setAudiomastercat(mDataPlaylist.get(i).getAudiomastercat());
+                m.setAudioSubCategory(mDataPlaylist.get(i).getAudioSubCategory());
+                m.setImageFile(mDataPlaylist.get(i).getImageFile());
+                m.setAudioDuration(mDataPlaylist.get(i).getAudioDuration());
+                mpm.add(m);
+            }
+        } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
+            for(int i = 0;i<mDataViewAll.size();i++) {
+                m = new MainPlayModel();
+                m.setId(mDataViewAll.get(i).getID());
+                m.setName(mDataViewAll.get(i).getName());
+                m.setAudioFile(mDataViewAll.get(i).getAudioFile());
+                m.setPlaylistID("");
+                m.setAudioDirection(mDataViewAll.get(i).getAudioDirection());
+                m.setAudiomastercat(mDataViewAll.get(i).getAudiomastercat());
+                m.setAudioSubCategory(mDataViewAll.get(i).getAudioSubCategory());
+                m.setImageFile(mDataViewAll.get(i).getImageFile());
+                m.setAudioDuration(mDataViewAll.get(i).getAudioDuration());
+                mpm.add(m);
+            }
+        } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+            mpm.addAll(mDataPlayer);
+        }
+        addAudioSegmentEvent(ctx,position,mpm,"Audio Details Viewed",CONSTANTS.screen,downloadAudioDetailsList,p);
         final TextView tvTitleDec = dialog.findViewById(R.id.tvTitleDec);
         final TextView tvName = dialog.findViewById(R.id.tvName);
         final TextView tvSubDec = dialog.findViewById(R.id.tvSubDec);
@@ -616,7 +667,7 @@ public class BWSApplication extends Application{
         });
 
         llAddPlaylist.setOnClickListener(view11 -> {
-
+            addAudioSegmentEvent(ctx,position,mpm,"Add To Playlist Clicked",CONSTANTS.track,downloadAudioDetailsList,p);
             //                comeAddPlaylist = 2;
             Intent i = new Intent(ctx, AddPlaylistActivity.class);
             i.putExtra("AudioId", audioId);
@@ -1967,7 +2018,27 @@ public class BWSApplication extends Application{
             return false;
         }
     }
-
+    public static void addAudioSegmentEvent(Context ctx,int position,ArrayList<MainPlayModel> mainPlayModelList,String eventName,String methodName,List<String> downloadAudioDetailsList,Properties p) {
+        p.putValue("audioId", mainPlayModelList.get(position).getId());
+        p.putValue("audioName", mainPlayModelList.get(position).getName());
+        p.putValue("audioDescription", "");
+        p.putValue("directions", mainPlayModelList.get(position).getAudioDirection());
+        p.putValue("masterCategory", mainPlayModelList.get(position).getAudiomastercat());
+        p.putValue("subCategory", mainPlayModelList.get(position).getAudioSubCategory());
+        p.putValue("audioDuration", mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("position", GetCurrentAudioPosition());
+        if (downloadAudioDetailsList.contains(mainPlayModelList.get(position).getName())) {
+            p.putValue("audioType", "Downloaded");
+        } else {
+            p.putValue("audioType", "Streaming");
+        }
+        p.putValue("source", GetSourceName(ctx));
+        p.putValue("playerType", "Main");
+        p.putValue("audioService", appStatus(ctx));
+        p.putValue("bitRate", "");
+        p.putValue("sound", String.valueOf(hundredVolume));
+        addToSegment(eventName, p, methodName);
+    }
     public static void addToSegment(String TagName, Properties properties, String methodName) {
         long mySpace;
         mySpace = GlobalInitExoPlayer.getSpace();
