@@ -1259,7 +1259,7 @@ class HomeFragment : Fragment() {
                                                         i.putExtra("email", "")
                                                         i.putExtra("countryShortName", "")
                                                         startActivity(i)
-                                                        finish()
+                                                        act.finish()
                                                     }
                                                     listModel.ResponseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
                                                         txtError.visibility = View.VISIBLE
