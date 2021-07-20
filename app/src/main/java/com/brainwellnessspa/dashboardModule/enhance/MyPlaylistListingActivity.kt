@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
@@ -35,9 +34,11 @@ import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
+import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.*
 import com.brainwellnessspa.utility.ItemMoveCallback.ItemTouchHelperContract
 import com.bumptech.glide.Glide
@@ -291,93 +292,103 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 listCall.enqueue(object : Callback<PlaylistDetailsModel> {
                     override fun onResponse(call: Call<PlaylistDetailsModel>, response: Response<PlaylistDetailsModel>) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        var listModel = PlaylistDetailsModel()
-                        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
-                        try {
-                            listModel = response.body()!!
-                            listMOdelGloble = response.body()!!
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                        try { //                            if (listModel.responseData.getIsReminder().equals("0", ignoreCase = true) ||
-                            //                                    listModel.responseData.getIsReminder().equals("", ignoreCase = true)) {
-                            //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.white), PorterDuff.Mode.SRC_IN)
-                            //                            } else if (listModel.responseData.getIsReminder().equals("1", ignoreCase = true)) {
-                            //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
-                            //                            }
-                        } catch (e: java.lang.Exception) {
-                            e.printStackTrace()
-                        }
+                        val listModel = response.body()!!
 
+                        listMOdelGloble = response.body()!!
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
 
-                        binding.tvTag.visibility = View.VISIBLE
-                        binding.tvTag.setText(R.string.Audios_in_Playlist)
+                            try { //                            if (listModel.responseData.getIsReminder().equals("0", ignoreCase = true) ||
+                                //                                    listModel.responseData.getIsReminder().equals("", ignoreCase = true)) {
+                                //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.white), PorterDuff.Mode.SRC_IN)
+                                //                            } else if (listModel.responseData.getIsReminder().equals("1", ignoreCase = true)) {
+                                //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
+                                //                            }
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
 
+                            binding.tvTag.visibility = View.VISIBLE
+                            binding.tvTag.setText(R.string.Audios_in_Playlist)
 
-                        getDownloadData(ctx, DB)
-                        callObserveMethodGetAllMedia(ctx, DB)
-                        downloadPlaylistDetailsList = getPlaylistDetail(listModel.responseData!!.playlistSongs!!.size, ctx, DB)
+                            getDownloadData(ctx, DB)
+                            callObserveMethodGetAllMedia(ctx, DB)
+                            downloadPlaylistDetailsList = getPlaylistDetail(listModel.responseData!!.playlistSongs!!.size, ctx, DB)
 
-                        if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
-                            binding.tvReminder.text = ctx.getText(R.string.set_reminder)
-                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                        } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
-                            binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                        } else if (listModel.responseData!!.isReminder.equals("2", ignoreCase = true)) {
-                            binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                        }
+                            if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
+                                binding.tvReminder.text = ctx.getText(R.string.set_reminder)
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
+                                binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                            } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
+                                binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            }
 
-                        binding.llReminder.setOnClickListener {
-                            if (isNetworkConnected(ctx)) {
-                                if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
-                                    binding.tvReminder.text = ctx.getText(R.string.set_reminder)
-                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay)
-                                } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
-                                    binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                    getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay)
-                                } else if (listModel.responseData!!.isReminder.equals("2", ignoreCase = true)) {
-                                    binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay)
+                            binding.llReminder.setOnClickListener {
+                                if (isNetworkConnected(ctx)) {
+                                    if (listModel.responseData!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.isReminder.equals("", ignoreCase = true)) {
+                                        binding.tvReminder.text = ctx.getText(R.string.set_reminder)
+                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay, "0")
+                                    } else if (listModel.responseData!!.isReminder.equals("1", ignoreCase = true)) {
+                                        binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                        getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay, "0")
+                                    } else if (listModel.responseData!!.isReminder.equals("2", ignoreCase = true)) {
+                                        binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        getReminderDay(ctx, activity, coUserId, listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, activity as FragmentActivity?, listModel.responseData!!.reminderTime, listModel.responseData!!.reminderDay, "0")
+                                    }
+                                } else {
+                                    showToast(getString(R.string.no_server_found), activity)
                                 }
-                            } else {
-                                showToast(getString(R.string.no_server_found), activity)
                             }
-                        }
 
-                        //                            getMedia();
-                        //                            getMediaByPer(PlaylistId, SongListSize);
-                        binding.rlSearch.visibility = View.VISIBLE
-                        binding.llMore.visibility = View.VISIBLE
-                        binding.llReminder.visibility = View.VISIBLE
-                        binding.llMore.setOnClickListener {
-                            if (isNetworkConnected(ctx)) { //            handler2.removeCallbacks(UpdateSongTime2);
-                                val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+                            //                            getMedia();
+                            //                            getMediaByPer(PlaylistId, SongListSize);
+                            binding.rlSearch.visibility = View.VISIBLE
+                            binding.llMore.visibility = View.VISIBLE
+                            binding.llReminder.visibility = View.VISIBLE
+                            binding.llMore.setOnClickListener {
+                                if (isNetworkConnected(ctx)) { //            handler2.removeCallbacks(UpdateSongTime2);
+                                    val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
 
-                                callPlaylistDetails(ctx, activity, coUserId, playlistId, playlistName, fragmentManager1)
-                            } else {
-                                showToast(getString(R.string.no_server_found), activity)
+                                    callPlaylistDetails(ctx, activity, coUserId, playlistId, playlistName, fragmentManager1)
+                                } else {
+                                    showToast(getString(R.string.no_server_found), activity)
+                                }
                             }
-                        }
-                        downloadPlaylistDetails = DownloadPlaylistDetails()
-                        downloadPlaylistDetails.PlaylistID = listModel.responseData!!.playlistID
-                        downloadPlaylistDetails.PlaylistName = listModel.responseData!!.playlistName
-                        downloadPlaylistDetails.PlaylistDesc = listModel.responseData!!.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
-                        downloadPlaylistDetails.PlaylistMastercat = listModel.responseData!!.playlistMastercat
-                        downloadPlaylistDetails.PlaylistSubcat = listModel.responseData!!.playlistSubcat
-                        downloadPlaylistDetails.PlaylistImage = listModel.responseData!!.playlistImage
-                        downloadPlaylistDetails.PlaylistImageDetails = listModel.responseData!!.playlistImageDetail
-                        downloadPlaylistDetails.TotalAudio = listModel.responseData!!.totalAudio
-                        downloadPlaylistDetails.TotalDuration = listModel.responseData!!.totalDuration
-                        downloadPlaylistDetails.Totalhour = listModel.responseData!!.totalhour
-                        downloadPlaylistDetails.Totalminute = listModel.responseData!!.totalminute
-                        downloadPlaylistDetails.Created = listModel.responseData!!.created
+                            downloadPlaylistDetails = DownloadPlaylistDetails()
+                            downloadPlaylistDetails.PlaylistID = listModel.responseData.playlistID
+                            downloadPlaylistDetails.PlaylistName = listModel.responseData.playlistName
+                            downloadPlaylistDetails.PlaylistDesc = listModel.responseData.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
+                            downloadPlaylistDetails.PlaylistMastercat = listModel.responseData.playlistMastercat
+                            downloadPlaylistDetails.PlaylistSubcat = listModel.responseData.playlistSubcat
+                            downloadPlaylistDetails.PlaylistImage = listModel.responseData.playlistImage
+                            downloadPlaylistDetails.PlaylistImageDetails = listModel.responseData.playlistImageDetail
+                            downloadPlaylistDetails.TotalAudio = listModel.responseData.totalAudio
+                            downloadPlaylistDetails.TotalDuration = listModel.responseData.totalDuration
+                            downloadPlaylistDetails.Totalhour = listModel.responseData.totalhour
+                            downloadPlaylistDetails.Totalminute = listModel.responseData.totalminute
+                            downloadPlaylistDetails.Created = listModel.responseData.created
 
-                        setData(listModel.responseData)
+                            setData(listModel.responseData)
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            deleteCall(activity)
+                            showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
+                        } else {
+                            showToast(listModel.responseMessage, activity)
+                        }
                     }
 
                     override fun onFailure(call: Call<PlaylistDetailsModel>, t: Throwable) {
@@ -805,9 +816,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val listCall = APINewClient.client.removeAudio(coUserId, id, PlaylistID)
                 listCall.enqueue(object : Callback<SucessModel?> {
                     override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) { //                        try {
-                        if (response.isSuccessful) { ////                            handler2.removeCallbacks(UpdateSongTime2);
+                        val listModel1: SucessModel = response.body()!!
+                        if (listModel1.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                            ////                            handler2.removeCallbacks(UpdateSongTime2);
                             //                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder,activity)
-                            val listModel1: SucessModel = response.body()!!
+
                             listModel.removeAt(position)
                             if (listModel.isEmpty()) {
                                 try {
@@ -861,7 +875,20 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             localIntent.putExtra("MyReminder", "update")
                             localBroadcastManager.sendBroadcast(localIntent)
                             showToast(listModel1.responseMessage, activity)
-                        } //                        } catch (e: java.lang.Exception) {
+                        } else if (listModel1.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            deleteCall(activity)
+                            showToast(listModel1.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            activity.startActivity(i)
+                            activity.finish()
+                        }
+
+                    //                        } catch (e: java.lang.Exception) {
                         //                            e.printStackTrace()
                         //                        }
                     }
@@ -1037,8 +1064,22 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val listCall = APINewClient.client.sortAudio(coUserId, PlaylistID, TextUtils.join(",", changedAudio))
                     listCall.enqueue(object : Callback<SucessModel?> {
                         override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
-                            if (response.isSuccessful) {
-                                response.body()
+                            val listModel: SucessModel? = response.body()
+                            if (listModel != null) {
+                                if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                } else if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    deleteCall(activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    activity.startActivity(i)
+                                    activity.finish()
+                                } else {
+                            //                                showToast(listModel.responseMessage, activity)
+                                }
                             }
                         }
 

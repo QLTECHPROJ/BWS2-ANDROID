@@ -23,9 +23,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication.DB
-import com.brainwellnessspa.R
 import com.brainwellnessspa.BWSApplication.*
+import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
 import com.brainwellnessspa.dashboardModule.models.MainPlaylistLibraryModel
 import com.brainwellnessspa.databinding.FragmentPlaylistBinding
@@ -33,6 +32,7 @@ import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -123,28 +123,43 @@ class MainPlaylistFragment : Fragment() {
             listCall.enqueue(object : Callback<MainPlaylistLibraryModel?> {
                 override fun onResponse(call: Call<MainPlaylistLibraryModel?>, response: Response<MainPlaylistLibraryModel?>) {
                     try {
-                        if (response.isSuccessful) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listModel = response.body()
-                            binding.rlCreatePlaylist.visibility = View.VISIBLE
-                            listModelGlobal = listModel!!.responseData //                            adapter = new MainPlayListAdapter();
-                            //                            binding.rvMainPlayList.setAdapter(adapter);
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel = response.body()
+                        if (listModel != null) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                binding.rlCreatePlaylist.visibility = View.VISIBLE
+                                listModelGlobal = listModel!!.responseData //                            adapter = new MainPlayListAdapter();
+                                //                            binding.rvMainPlayList.setAdapter(adapter);
 
-                            //                            adapter = new MainPlayListAdapter();
-                            //                            binding.rvMainPlayList.setAdapter(adapter);
-                            getPlaylistDetail(listModel.responseData!!)
-                            val section = ArrayList<String>()
-                            for (i in listModel.responseData!!.indices) {
-                                section.add(listModel.responseData!![i].view!!)
-                            }
+                                //                            adapter = new MainPlayListAdapter();
+                                //                            binding.rvMainPlayList.setAdapter(adapter);
+                                getPlaylistDetail(listModel.responseData!!)
+                                val section = ArrayList<String>()
+                                for (i in listModel.responseData!!.indices) {
+                                    section.add(listModel.responseData!![i].view!!)
+                                }
 
-                            if (comeFrom.equals("onResume", ignoreCase = true)) {
-                                val p = Properties()
-                                val gson: Gson
-                                val gsonBuilder = GsonBuilder()
-                                gson = gsonBuilder.create()
-                                p.putValue("sections", gson.toJson(section))
-                                addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen)
+                                if (comeFrom.equals("onResume", ignoreCase = true)) {
+                                    val p = Properties()
+                                    val gson: Gson
+                                    val gsonBuilder = GsonBuilder()
+                                    gson = gsonBuilder.create()
+                                    p.putValue("sections", gson.toJson(section))
+                                    addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen)
+                                }
+                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                act.finish()
+                            } else {
+                                showToast(listModel.responseMessage, activity)
                             }
                         }
                     } catch (e: java.lang.Exception) {
@@ -171,37 +186,37 @@ class MainPlaylistFragment : Fragment() {
 
     private fun getPlaylistDetail(responseData: ArrayList<MainPlaylistLibraryModel.ResponseData>) {
         DB.taskDao()?.getAllPlaylist1(coUserId)?.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique?>? ->
-                val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
-                if (audioList!!.isNotEmpty()) {
-                    for (i in audioList.indices) {
-                        val detail = MainPlaylistLibraryModel.ResponseData.Detail()
-                        detail.totalAudio = audioList[i]!!.TotalAudio
-                        detail.totalhour = audioList[i]!!.Totalhour
-                        detail.totalminute = audioList[i]!!.Totalminute
-                        detail.playlistID = audioList[i]!!.PlaylistID
-                        detail.playlistDesc = audioList[i]!!.PlaylistDesc
-                        detail.playlistMastercat = audioList[i]!!.PlaylistMastercat
-                        detail.playlistSubcat = audioList[i]!!.PlaylistSubcat
-                        detail.playlistName = audioList[i]!!.PlaylistName
-                        detail.playlistImage = audioList[i]!!.PlaylistImage //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
-                        detail.playlistID = audioList[i]!!.PlaylistID
-                        detail.created = audioList[i]!!.Created
-                        details.add(detail)
-                    }
-                    for (i in responseData.indices) {
-                        if (responseData[i].view.equals("My Downloads", ignoreCase = true)) {
-                            responseData[i].details = details
-                        }
-                    }
-                    adapter = MainPlayListAdapter(ctx, binding, act, responseData, coUserId, playlistAdapter)
-                    binding.rvMainPlayList.adapter = adapter
-                } else {
-                    if (isNetworkConnected(activity)) {
-                        adapter = MainPlayListAdapter(ctx, binding, act, responseData, coUserId, playlistAdapter)
-                        binding.rvMainPlayList.adapter = adapter
+            val details = ArrayList<MainPlaylistLibraryModel.ResponseData.Detail>()
+            if (audioList!!.isNotEmpty()) {
+                for (i in audioList.indices) {
+                    val detail = MainPlaylistLibraryModel.ResponseData.Detail()
+                    detail.totalAudio = audioList[i]!!.TotalAudio
+                    detail.totalhour = audioList[i]!!.Totalhour
+                    detail.totalminute = audioList[i]!!.Totalminute
+                    detail.playlistID = audioList[i]!!.PlaylistID
+                    detail.playlistDesc = audioList[i]!!.PlaylistDesc
+                    detail.playlistMastercat = audioList[i]!!.PlaylistMastercat
+                    detail.playlistSubcat = audioList[i]!!.PlaylistSubcat
+                    detail.playlistName = audioList[i]!!.PlaylistName
+                    detail.playlistImage = audioList[i]!!.PlaylistImage //                            detail.playlistImageDetails = audioList[i].playlistImageDetails
+                    detail.playlistID = audioList[i]!!.PlaylistID
+                    detail.created = audioList[i]!!.Created
+                    details.add(detail)
+                }
+                for (i in responseData.indices) {
+                    if (responseData[i].view.equals("My Downloads", ignoreCase = true)) {
+                        responseData[i].details = details
                     }
                 }
-            })
+                adapter = MainPlayListAdapter(ctx, binding, act, responseData, coUserId, playlistAdapter)
+                binding.rvMainPlayList.adapter = adapter
+            } else {
+                if (isNetworkConnected(activity)) {
+                    adapter = MainPlayListAdapter(ctx, binding, act, responseData, coUserId, playlistAdapter)
+                    binding.rvMainPlayList.adapter = adapter
+                }
+            }
+        })
     }
 
     private fun callBack() {
@@ -285,14 +300,27 @@ class MainPlaylistFragment : Fragment() {
                         listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
                             override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                                 try {
+                                    val listModel = response.body()
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                    if (response.isSuccessful) {
-                                        val listModel = response.body()
-                                        if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                            showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
-                                        } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
-                                            MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
-                                            dialog.dismiss()
+                                    if (listModel != null) {
+                                        if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                                showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
+                                            } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
+                                                MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
+                                                dialog.dismiss()
+                                            }
+                                        } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                            deleteCall(act)
+                                            showToast(listModel.responseMessage, act)
+                                            val i = Intent(act, SignInActivity::class.java)
+                                            i.putExtra("mobileNo", "")
+                                            i.putExtra("countryCode", "")
+                                            i.putExtra("name", "")
+                                            i.putExtra("email", "")
+                                            i.putExtra("countryShortName", "")
+                                            act.startActivity(i)
+                                            act.finish()
                                         }
                                     }
                                 } catch (e: java.lang.Exception) {
@@ -355,7 +383,8 @@ class MainPlaylistFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()

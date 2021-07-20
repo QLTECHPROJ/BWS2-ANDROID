@@ -38,6 +38,7 @@ import com.brainwellnessspa.referralModule.models.ContactlistModel
 import com.brainwellnessspa.referralModule.models.FavContactlistModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
 import com.brainwellnessspa.userModule.models.SetInviteUserModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -361,6 +362,17 @@ class ContactBookActivity : AppCompatActivity() {
                             p!!.putValue("contactName", contactName)
                             p!!.putValue("contactNumber", number)
                             BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            BWSApplication.deleteCall(activity)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, activity)
                         }

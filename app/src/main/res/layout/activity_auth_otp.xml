@@ -70,7 +70,7 @@
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:paddingTop="@dimen/_13sdp"
-                    android:text="@string/signin_quotes"
+                    android:text="@string/otp_quotes"
                     android:textColor="@color/light_black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />

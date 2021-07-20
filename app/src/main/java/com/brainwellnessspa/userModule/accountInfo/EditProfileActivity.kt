@@ -23,6 +23,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.EditProfileModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -50,7 +51,7 @@ class EditProfileActivity : AppCompatActivity() {
     var ageYear: Int = 0
     var ageMonth: Int = 0
     var ageDate: Int = 0
-    lateinit var activity:Activity
+    lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -213,26 +214,42 @@ class EditProfileActivity : AppCompatActivity() {
                     listCall.enqueue(object : Callback<EditProfileModel> {
                         override fun onResponse(call: Call<EditProfileModel>, response: Response<EditProfileModel>) {
                             val viewModel = response.body()
-                            if (viewModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                BWSApplication.showToast(viewModel.responseMessage, activity)
-                                profileViewData(applicationContext)
-                                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                val editor = shared.edit()
-                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
-                                editor.apply()
+                            when {
+                                viewModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    BWSApplication.showToast(viewModel.responseMessage, activity)
+                                    profileViewData(applicationContext)
+                                    val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val editor = shared.edit()
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
+                                    editor.apply()
 
-                                analytics.identify(Traits().putEmail(viewModel.responseData!!.email).putName(viewModel.responseData!!.name).putPhone(viewModel.responseData!!.phoneNumber).putValue("coUserId", coUserId).putValue("userId", userId).putValue("name", viewModel.responseData!!.name).putValue("phone", viewModel.responseData!!.phoneNumber).putValue("email", viewModel.responseData!!.email))
-                                val p = Properties()
-                                p.putValue("name", viewModel.responseData!!.name)
-                                p.putValue("dob", viewModel.responseData!!.dob)
-                                p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
-                                p.putValue("email", viewModel.responseData!!.email)
-                                BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
-                                finish()
-                            } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                BWSApplication.showToast(viewModel.responseMessage, activity)
+                                    analytics.identify(Traits().putEmail(viewModel.responseData!!.email).putName(viewModel.responseData!!.name).putPhone(viewModel.responseData!!.phoneNumber).putValue("coUserId", coUserId).putValue("userId", userId).putValue("name", viewModel.responseData!!.name).putValue("phone", viewModel.responseData!!.phoneNumber).putValue("email", viewModel.responseData!!.email))
+                                    val p = Properties()
+                                    p.putValue("name", viewModel.responseData!!.name)
+                                    p.putValue("dob", viewModel.responseData!!.dob)
+                                    p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
+                                    p.putValue("email", viewModel.responseData!!.email)
+                                    BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
+                                    finish()
+                                }
+                                viewModel!!.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(viewModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    activity.finish()
+                                }
+                                else -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    BWSApplication.showToast(viewModel.responseMessage, activity)
+                                }
                             }
                         }
 
@@ -271,6 +288,17 @@ class EditProfileActivity : AppCompatActivity() {
                                 binding.etEmail.setText(viewModel.ResponseData.Email)
                                 binding.etCalendar.setText(viewModel.ResponseData.DOB)
 
+                            } else if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(viewModel.ResponseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                activity.startActivity(i)
+                                activity.finish()
                             } else {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             }
@@ -290,12 +318,12 @@ class EditProfileActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(api = Build.VERSION_CODES.N)
     fun setDate() {
-        if(userCalendar == "") {
+        if (userCalendar == "") {
             val c = Calendar.getInstance()
             mYear = c[Calendar.YEAR]
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
-        }else{
+        } else {
             val ageArray = userCalendar!!.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
@@ -328,15 +356,14 @@ class EditProfileActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-
     private fun getAge(year: Int, month: Int, day: Int): Int {
         val dob = Calendar.getInstance()
         val today = Calendar.getInstance()
         dob[year, month] = day
         var age1 = today[Calendar.YEAR] - dob[Calendar.YEAR]
-        if(dob == today){
+        if (dob == today) {
             age1--
-        }else {
+        } else {
             if (today[Calendar.DAY_OF_YEAR] < dob[Calendar.DAY_OF_YEAR]) {
                 age1--
             }

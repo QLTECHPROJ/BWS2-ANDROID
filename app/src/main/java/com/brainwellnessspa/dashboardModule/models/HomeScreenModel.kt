@@ -10,15 +10,15 @@ class HomeScreenModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = ""
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = ""
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = ""
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("IndexScore")

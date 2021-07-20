@@ -23,6 +23,7 @@ import com.brainwellnessspa.databinding.ActivityEnhanceUserListBinding
 import com.brainwellnessspa.databinding.EnhanceUserListLayoutBinding
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.models.*
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -182,6 +183,17 @@ class EnhanceUserListActivity : AppCompatActivity() {
                                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                                 prepareEnhanceUserList(activity)
+                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                BWSApplication.deleteCall(activity)
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                val i = Intent(activity, SignInActivity::class.java)
+                                                i.putExtra("mobileNo", "")
+                                                i.putExtra("countryCode", "")
+                                                i.putExtra("name", "")
+                                                i.putExtra("email", "")
+                                                i.putExtra("countryShortName", "")
+                                                startActivity(i)
+                                                finish()
                                             } else {
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                             }
@@ -222,6 +234,17 @@ class EnhanceUserListActivity : AppCompatActivity() {
                                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                                 prepareEnhanceUserList(activity)
+                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                BWSApplication.deleteCall(activity)
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                val i = Intent(activity, SignInActivity::class.java)
+                                                i.putExtra("mobileNo", "")
+                                                i.putExtra("countryCode", "")
+                                                i.putExtra("name", "")
+                                                i.putExtra("email", "")
+                                                i.putExtra("countryShortName", "")
+                                                startActivity(i)
+                                                finish()
                                             } else {
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                             }
@@ -273,9 +296,20 @@ class EnhanceUserListActivity : AppCompatActivity() {
                                             val listModel: RemoveInviteUserModel = response.body()!!
                                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                 prepareEnhanceUserList(activity)
-
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                                 dialog!!.hide()
+                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                dialog!!.hide()
+                                                BWSApplication.deleteCall(activity)
+                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                val i = Intent(activity, SignInActivity::class.java)
+                                                i.putExtra("mobileNo", "")
+                                                i.putExtra("countryCode", "")
+                                                i.putExtra("name", "")
+                                                i.putExtra("email", "")
+                                                i.putExtra("countryShortName", "")
+                                                startActivity(i)
+                                                finish()
                                             } else {
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                             }

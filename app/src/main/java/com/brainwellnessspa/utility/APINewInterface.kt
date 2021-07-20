@@ -1,5 +1,6 @@
 package com.brainwellnessspa.utility
 
+import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.dashboardModule.models.*
@@ -133,6 +134,12 @@ interface APINewInterface {
     fun getManageUserList(
         @Field("MainAccountID")
         MainAccountID: String?): Call<ManageUserListModel>
+
+    @POST("assesmentgetdetails")
+    @FormUrlEncoded
+    fun getAssesmentGetDetails(
+        @Field("UserId")
+        MainAccountID: String?): Call<AssesmentGetDetailsModel>
 
     @get:GET("assesmentquestionlist")
     val assessmentQus: Call<AssessmentQusModel>

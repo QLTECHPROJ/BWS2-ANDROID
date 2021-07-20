@@ -28,6 +28,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.ProfileSaveDataModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -208,7 +209,8 @@ class ProfileProgressActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n") private fun callBack() {
+    @SuppressLint("SetTextI18n")
+    private fun callBack() {
         when {
             binding.llSecond.visibility == View.VISIBLE -> {
                 binding.btnContinue.visibility = View.GONE
@@ -278,11 +280,11 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun callNext() {
         when {
-          /*  binding.llFirst.visibility == View.VISIBLE -> {
-                binding.btnContinue.visibility = View.GONE
-                binding.btnNext.visibility = View.VISIBLE
-                callFirstNext()
-            }*/
+            /*  binding.llFirst.visibility == View.VISIBLE -> {
+                  binding.btnContinue.visibility = View.GONE
+                  binding.btnNext.visibility = View.VISIBLE
+                  callFirstNext()
+              }*/
             binding.llSecond.visibility == View.VISIBLE -> {
                 binding.btnPrev.visibility = View.VISIBLE
                 binding.btnNext.visibility = View.VISIBLE
@@ -383,6 +385,17 @@ class ProfileProgressActivity : AppCompatActivity() {
                             val i = Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
                             startActivity(i)
                             finish()
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            BWSApplication.deleteCall(activity)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, activity)
                         }
@@ -403,7 +416,7 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun callFourthNext() {
         val p = Properties()
-        p.putValue("screen",3)
+        p.putValue("screen", 3)
         BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.llIndicate.progress = 2
         binding.llSecond.visibility = View.GONE
@@ -443,7 +456,7 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun callFifthNext() {
         val p = Properties()
-        p.putValue("screen",4)
+        p.putValue("screen", 4)
         BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.llIndicate.progress = 3
         binding.llSecond.visibility = View.GONE
@@ -495,7 +508,7 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun callSecondNext(s: String) {
         val p = Properties()
-        p.putValue("screen",2)
+        p.putValue("screen", 2)
         BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         binding.btnPrev.visibility = View.VISIBLE
         binding.btnNext.visibility = View.VISIBLE
@@ -586,7 +599,7 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
         val p = Properties()
-        p.putValue("screen",1)
+        p.putValue("screen", 1)
         BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
         when {
             gender.equals("Male", true) -> {
@@ -634,12 +647,12 @@ class ProfileProgressActivity : AppCompatActivity() {
     }
 
     private fun setDate() {
-        if(age == "") {
+        if (age == "") {
             val c = Calendar.getInstance()
             mYear = c[Calendar.YEAR]
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
-        }else{
+        } else {
             val ageArray = age.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
@@ -666,20 +679,22 @@ class ProfileProgressActivity : AppCompatActivity() {
         }, mYear, mMonth, mDay)
         datePickerDialog.show()
     }
+
     private fun getAge(year: Int, month: Int, day: Int): Int {
         val dob = Calendar.getInstance()
         val today = Calendar.getInstance()
         dob[year, month] = day
         var age1 = today[Calendar.YEAR] - dob[Calendar.YEAR]
-        if(dob == today){
+        if (dob == today) {
             age1--
-        }else {
+        } else {
             if (today[Calendar.DAY_OF_YEAR] < dob[Calendar.DAY_OF_YEAR]) {
                 age1--
             }
         }
         return age1
     }
+
     override fun onBackPressed() {
         callBack()
     }

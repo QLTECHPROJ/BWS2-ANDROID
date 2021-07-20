@@ -138,9 +138,13 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         val dialog = Dialog(ctx)
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                         dialog.setContentView(R.layout.cancel_membership)
-                        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
+                        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.transparent_white)))
                         dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                        val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
                         val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                        tvTitle.text = getString(R.string.delete_account_popup_title)
+                        tvSubTitle.text = getString(R.string.delete_account_popup_subtitle)
                         val btn = dialog.findViewById<Button>(R.id.Btn)
                         dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -170,18 +174,35 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                         listCall?.enqueue(object : Callback<DeleteInviteUserModel?> {
                                             override fun onResponse(call: Call<DeleteInviteUserModel?>, response: Response<DeleteInviteUserModel?>) {
                                                 try {
-                                                    val model = response.body()
-                                                    BWSApplication.showToast(model!!.responseMessage, activity)
-                                                    dialog.dismiss()
-                                                    deleteCall()
-                                                    val i = Intent(activity, SignInActivity::class.java)
-                                                    i.putExtra("mobileNo", "")
-                                                    i.putExtra("countryCode", "")
-                                                    i.putExtra("name", "")
-                                                    i.putExtra("email", "")
-                                                    i.putExtra("countryShortName", "")
-                                                    startActivity(i)
-                                                    finish()
+                                                    val listModel = response.body()
+                                                    if (listModel != null) {
+                                                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            dialog.dismiss()
+                                                            BWSApplication.deleteCall(activity)
+                                                            val i = Intent(activity, SignInActivity::class.java)
+                                                            i.putExtra("mobileNo", "")
+                                                            i.putExtra("countryCode", "")
+                                                            i.putExtra("name", "")
+                                                            i.putExtra("email", "")
+                                                            i.putExtra("countryShortName", "")
+                                                            startActivity(i)
+                                                            finish()
+                                                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                            BWSApplication.deleteCall(activity)
+                                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            val i = Intent(activity, SignInActivity::class.java)
+                                                            i.putExtra("mobileNo", "")
+                                                            i.putExtra("countryCode", "")
+                                                            i.putExtra("name", "")
+                                                            i.putExtra("email", "")
+                                                            i.putExtra("countryShortName", "")
+                                                            startActivity(i)
+                                                            finish()
+                                                        } else {
+                                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                                        }
+                                                    }
                                                 } catch (e: Exception) {
                                                     e.printStackTrace()
                                                 }
@@ -496,53 +517,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 Log.e("Destroy", "Activity go in main activity")
             }
         }
-    }
-
-    private fun deleteCall() {
-        val preferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        val edit = preferences.edit()
-        edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID)
-        edit.remove(CONSTANTS.PREFE_ACCESS_UserId)
-        edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER)
-        edit.remove(CONSTANTS.PREFE_ACCESS_NAME)
-        edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL)
-        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType)
-        edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID)
-        edit.clear()
-        edit.apply()
-        val preferred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-        val edited = preferred.edit()
-        edited.remove(CONSTANTS.selectedCategoriesTitle)
-        edited.remove(CONSTANTS.selectedCategoriesName)
-        edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
-        edited.clear()
-        edited.apply()
-        val preferred1 = getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-        val edited1 = preferred1.edit()
-        edited1.remove(CONSTANTS.AssQus)
-        edited1.remove(CONSTANTS.AssAns)
-        edited1.remove(CONSTANTS.AssSort)
-        edited1.clear()
-        edited1.apply()
-        /*   val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
-           val editorcv = shared.edit()
-           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
-           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
-           editorcv.apply()*/
-        val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-        val edited2 = preferred2.edit()
-        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-        edited2.clear()
-        edited2.apply()
-        BWSApplication.logout = true
-        BWSApplication.deleteCache(activity)
     }
 
     /* This is object declaration */

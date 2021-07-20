@@ -435,7 +435,8 @@
                             android:paddingTop="@dimen/_12sdp"
                             android:text="@string/login_text"
                             android:textColor="@color/light_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:id="@+id/tvSignIn"

@@ -1,6 +1,7 @@
 package com.brainwellnessspa.userModule.splashscreen
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -46,12 +47,13 @@ class SplashActivity : AppCompatActivity() {
     var avgSleepTime: String? = ""
     var isPinSet: String? = ""
     var directLogin: String? = ""
+    lateinit var activity: Activity
 
     /* TODO function for app started  */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-
+        activity = this@SplashActivity
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE)
@@ -180,36 +182,53 @@ class SplashActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
                         val authOtpModel: AuthOtpModel = response.body()!!
-                        isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
-                        isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
-                        indexScore = authOtpModel.ResponseData.indexScore
-                        avgSleepTime = authOtpModel.ResponseData.AvgSleepTime
-                        isPinSet = authOtpModel.ResponseData.isPinSet
-                        coUserCount = authOtpModel.ResponseData.CoUserCount
-                        directLogin = authOtpModel.ResponseData.directLogin
-                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                        val editor = shared.edit()
-                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
-                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
-                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
-                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
-                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
-                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
-                        editor.apply()
-                        val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                        val edited = shred.edit()
-                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                        val selectedCategoriesTitle = arrayListOf<String>()
-                        val selectedCategoriesName = arrayListOf<String>()
-                        val gson = Gson()
-                        for (i in authOtpModel.ResponseData.AreaOfFocus) {
-                            selectedCategoriesTitle.add(i.MainCat)
-                            selectedCategoriesName.add(i.RecommendedCat)
+                        if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
+                            isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
+                            indexScore = authOtpModel.ResponseData.indexScore
+                            avgSleepTime = authOtpModel.ResponseData.AvgSleepTime
+                            isPinSet = authOtpModel.ResponseData.isPinSet
+                            coUserCount = authOtpModel.ResponseData.CoUserCount
+                            directLogin = authOtpModel.ResponseData.directLogin
+                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, authOtpModel.ResponseData.Email)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, authOtpModel.ResponseData.isPinSet)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                            editor.apply()
+                            val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                            val edited = shred.edit()
+                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                            val selectedCategoriesTitle = arrayListOf<String>()
+                            val selectedCategoriesName = arrayListOf<String>()
+                            val gson = Gson()
+                            for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                                selectedCategoriesTitle.add(i.MainCat)
+                                selectedCategoriesName.add(i.RecommendedCat)
+                            }
+                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
+                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
+                            edited.apply()
+                            checkAppVersion()
+                        } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            BWSApplication.deleteCall(activity)
+                            BWSApplication.showToast(authOtpModel.ResponseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         }
-                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
-                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
-                        edited.apply()
-                        checkAppVersion()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -281,7 +300,6 @@ class SplashActivity : AppCompatActivity() {
                         finish()
                     }, (2 * 800).toLong())
                 }
-
 //                }
             }
         } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
@@ -294,7 +312,14 @@ class SplashActivity : AppCompatActivity() {
 //            } else {
 
             if (directLogin.equals("1", ignoreCase = true)) {
-                if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                        startActivity(intent)
+                        finish()
+                    }, (2 * 800).toLong())
+                } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
                     Handler(Looper.getMainLooper()).postDelayed({
                         val intent = Intent(applicationContext, WalkScreenActivity::class.java)
                         intent.putExtra(CONSTANTS.ScreenView, "2")
@@ -315,7 +340,7 @@ class SplashActivity : AppCompatActivity() {
                         finish()
                     }, (2 * 800).toLong())
                 }
-            }else {
+            } else {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
                     startActivity(intent)

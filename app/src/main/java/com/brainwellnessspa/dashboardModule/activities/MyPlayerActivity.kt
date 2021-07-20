@@ -20,8 +20,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.BWSApplication.addToRecentPlayId
-import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
@@ -34,6 +32,7 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAud
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetSourceName
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callNewPlayerRelease
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.getMediaBitmap
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.exoplayer2.C
@@ -122,7 +121,7 @@ class MyPlayerActivity : AppCompatActivity() {
     /* method for put hart bit at every 5 min at segment */
     private fun callHeartbeat() {
         val p = Properties()
-        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Playing",CONSTANTS.track,downloadAudioDetailsList,p)
+        addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playing", CONSTANTS.track, downloadAudioDetailsList, p)
     }
 
     /*
@@ -845,7 +844,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     }
                     player.playWhenReady = true
                     val p = Properties()
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Resumed",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Resumed", CONSTANTS.track, downloadAudioDetailsList, p)
                 } else {
                     player.playWhenReady = true
                     val p = Properties()
@@ -970,7 +969,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     GetMediaPer()
                     callButtonText(position)
                     val p = Properties()
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Started",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Started", CONSTANTS.track, downloadAudioDetailsList, p)
                 }
 
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -1003,7 +1002,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
                     if (state == ExoPlayer.STATE_READY) {
                         val p = Properties()
-                        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Buffer Completed",CONSTANTS.track,downloadAudioDetailsList,p)
+                        addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Buffer Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                         if (player.playWhenReady) {
                             exoBinding.llPlay.visibility = View.GONE
                             exoBinding.llPause.visibility = View.VISIBLE
@@ -1020,11 +1019,11 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.llPause.visibility = View.GONE
                         exoBinding.progressBar.visibility = View.VISIBLE
                         val p = Properties()
-                        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Buffer Started",CONSTANTS.track,downloadAudioDetailsList,p)
+                        addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Buffer Started", CONSTANTS.track, downloadAudioDetailsList, p)
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         try {
                             val p = Properties()
-                            addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Completed",CONSTANTS.track,downloadAudioDetailsList,p)
+                            addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                             if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)) {
                                 exoBinding.llPlay.visibility = View.VISIBLE
                                 exoBinding.llPause.visibility = View.GONE
@@ -1035,7 +1034,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                 val p = Properties()
                                 val source = GetSourceName(ctx)
                                 if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
-                                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Playback Completed",CONSTANTS.track,downloadAudioDetailsList,p)
+                                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                                 }
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
@@ -1203,7 +1202,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             p.putValue("seekDirection", "")
                         }
                     }
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Seek Started",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Seek Started", CONSTANTS.track, downloadAudioDetailsList, p)
                 }
 
                 override fun onScrubMove(timeBar: TimeBar, position: Long) {}
@@ -1228,7 +1227,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             p.putValue("seekDirection", "")
                         }
                     }
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Seek Completed",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Seek Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                 }
             })
 
@@ -1284,7 +1283,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     exoBinding.llPause.visibility = View.GONE
                     exoBinding.progressBar.visibility = View.GONE
                     val p = Properties()
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Paused",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Paused", CONSTANTS.track, downloadAudioDetailsList, p)
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }
@@ -1367,6 +1366,20 @@ class MyPlayerActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                     try {
                         val model: SucessModel = response.body()!!
+                        if (model.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                        } else if (model.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            deleteCall(act)
+                            showToast(model.responseMessage, act)
+                            val i = Intent(act, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
+                        }
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }

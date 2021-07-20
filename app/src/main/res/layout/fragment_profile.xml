@@ -118,7 +118,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:background="@drawable/account_gray_bg"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/llPlan"

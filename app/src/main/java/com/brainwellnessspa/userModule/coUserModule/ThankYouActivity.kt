@@ -37,12 +37,7 @@ class ThankYouActivity : AppCompatActivity() {
         binding.tvName.text = userName
 
         binding.btnExplore.setOnClickListener {
-            if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                val intent = Intent(applicationContext, AssProcessActivity::class.java)
-                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                startActivity(intent)
-                finish()
-            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+            if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, WalkScreenActivity::class.java)
                 intent.putExtra(CONSTANTS.ScreenView, "1")
                 startActivity(intent)

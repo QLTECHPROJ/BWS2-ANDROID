@@ -16,6 +16,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityUserDetailBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AddUserModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -60,8 +61,8 @@ class UserDetailActivity : AppCompatActivity() {
 
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-
         activity = this@UserDetailActivity
+
         binding.llBack.setOnClickListener {
             finish()
         }
@@ -113,6 +114,17 @@ class UserDetailActivity : AppCompatActivity() {
                                     finish()
                                 }
                                 BWSApplication.showToast(listModel.responseMessage, activity)
+                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
                             } else {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             }

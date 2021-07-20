@@ -33,6 +33,7 @@ import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -169,25 +170,38 @@ class ManageFragment : Fragment() {
                         override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
                             try {
                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                if (response.isSuccessful) {
-                                    val listModel = response.body()
-                                    if (listModel!!.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                val listModel = response.body()
+                                if (listModel != null) {
+                                    if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                        if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                            showToast(listModel.responseMessage, act)
+                                            dialog.dismiss()
+                                        } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) { //                                        try {
+                                            val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                                            i.putExtra("New", "1")
+                                            i.putExtra("PlaylistID", listModel.responseData!!.playlistID)
+                                            i.putExtra("PlaylistName", listModel.responseData!!.playlistName)
+                                            i.putExtra("PlaylistImage", "")
+                                            i.putExtra("MyDownloads", "0")
+                                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            ctx.startActivity(i)
+                                            act.overridePendingTransition(0, 0)
+                                            dialog.dismiss() //                                        } catch (e: Exception) {
+                                            //                                            e.printStackTrace()
+                                            //                                            dialog.dismiss()
+                                            //                                        }
+                                        }
+                                    } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                        deleteCall(act)
                                         showToast(listModel.responseMessage, act)
-                                        dialog.dismiss()
-                                    } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) { //                                        try {
-                                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-                                        i.putExtra("New", "1")
-                                        i.putExtra("PlaylistID", listModel.responseData!!.playlistID)
-                                        i.putExtra("PlaylistName", listModel.responseData!!.playlistName)
-                                        i.putExtra("PlaylistImage", "")
-                                        i.putExtra("MyDownloads", "0")
-                                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        ctx.startActivity(i)
-                                        act.overridePendingTransition(0, 0)
-                                        dialog.dismiss() //                                        } catch (e: Exception) {
-                                        //                                            e.printStackTrace()
-                                        //                                            dialog.dismiss()
-                                        //                                        }
+                                        val i = Intent(act, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        act.startActivity(i)
+                                        act.finish()
                                     }
                                 }
                             } catch (e: java.lang.Exception) {
@@ -557,125 +571,139 @@ class ManageFragment : Fragment() {
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call<HomeDataModel?>, response: Response<HomeDataModel?>) {
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
-                    getDownloadedList(ctx, DB)
-                    Log.e("download audio", downloadAudioDetailsList.toString())
-                    binding.llMainLayout.visibility = View.VISIBLE
-                    binding.llSpace.visibility = View.VISIBLE
-                    binding.llPlayer.visibility = View.VISIBLE
-                    binding.llUser.visibility = View.VISIBLE
-                    binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
-                    binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
-                    val section = java.util.ArrayList<String>()
-                    for (i in listModel.responseData!!.audio.indices) {
-                        section.add(listModel.responseData!!.audio[i].view!!)
-                    }
-                    val p = Properties()
+                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        getDownloadedList(ctx, DB)
+                        Log.e("download audio", downloadAudioDetailsList.toString())
+                        binding.llMainLayout.visibility = View.VISIBLE
+                        binding.llSpace.visibility = View.VISIBLE
+                        binding.llPlayer.visibility = View.VISIBLE
+                        binding.llUser.visibility = View.VISIBLE
+                        binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
+                        binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
+                        val section = java.util.ArrayList<String>()
+                        for (i in listModel.responseData!!.audio.indices) {
+                            section.add(listModel.responseData!!.audio[i].view!!)
+                        }
+                        val p = Properties()
 
-                    val gson: Gson
-                    val gsonBuilder = GsonBuilder()
-                    gson = gsonBuilder.create()
-                    p.putValue("sections", gson.toJson(section))
-                    addToSegment("Manage Screen Viewed", p, CONSTANTS.screen)
-                    val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-                    binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-                    binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-                    binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
-                    Glide.with(act).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
+                        val gson: Gson
+                        val gsonBuilder = GsonBuilder()
+                        gson = gsonBuilder.create()
+                        p.putValue("sections", gson.toJson(section))
+                        addToSegment("Manage Screen Viewed", p, CONSTANTS.screen)
+                        val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
+                        binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+                        binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+                        binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
+                        Glide.with(act).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
 
-                    playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)
-                    binding.rvMainPlayList.adapter = playlistAdapter
+                        playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)
+                        binding.rvMainPlayList.adapter = playlistAdapter
 
-                    if (listModel.responseData!!.playlist[0].details!!.size > 4) {
-                        binding.tvViewAll.visibility = View.VISIBLE
-                    } else {
-                        binding.tvViewAll.visibility = View.GONE
-                    }
-                    getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, DB)
-                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
-                    binding.llPlayerView1.setOnClickListener {
-                        callPlaylistDetails()
-                    }
-                    binding.llPlayerView2.setOnClickListener {
-                        callPlaylistDetails()
-                    }
-                    binding.llPlaylistDetails.setOnClickListener {
-                        callPlaylistDetails()
-                    }
-                    if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
-                        binding.tvReminder.text = "Set reminder"
-                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                    } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
-                        binding.tvReminder.text = "Update reminder"
-                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                    } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
-                        binding.tvReminder.text = "Update reminder"
-                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                    }
-
-                    binding.tvReminder.setOnClickListener {
+                        if (listModel.responseData!!.playlist[0].details!!.size > 4) {
+                            binding.tvViewAll.visibility = View.VISIBLE
+                        } else {
+                            binding.tvViewAll.visibility = View.GONE
+                        }
+                        getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, DB)
+                        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
+                        binding.llPlayerView1.setOnClickListener {
+                            callPlaylistDetails()
+                        }
+                        binding.llPlayerView2.setOnClickListener {
+                            callPlaylistDetails()
+                        }
+                        binding.llPlaylistDetails.setOnClickListener {
+                            callPlaylistDetails()
+                        }
                         if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                             binding.tvReminder.text = "Set reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                             binding.tvReminder.text = "Update reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                         } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
                             binding.tvReminder.text = "Update reminder"
                             binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay)
                         }
-                    }
 
-                    setPlayPauseIcon()
-                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
-                    binding.llPlayPause.setOnClickListener {
-                        if (isNetworkConnected(activity)) {
-                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                            val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                            when (isPlayPlaylist) {
-                                1 -> {
-                                    player.playWhenReady = false
-                                    isPlayPlaylist = 2
-                                    binding.llPlay.visibility = View.VISIBLE
-                                    binding.llPause.visibility = View.GONE
-                                }
-                                2 -> {
-                                    if (player != null) {
-                                        val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
-                                        if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                                            val editor = shared.edit()
-                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                            editor.apply()
-                                            player.seekTo(0, 0)
-                                            PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
-                                            player.playWhenReady = true
-                                        } else {
-                                            player.playWhenReady = true
-                                        }
-                                    }
-                                    isPlayPlaylist = 1
-                                    binding.llPlay.visibility = View.GONE
-                                    binding.llPause.visibility = View.VISIBLE
-                                }
-                                else -> {
-                                    PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![playerPosition].id
-                                    callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, act, listModel.responseData!!.suggestedPlaylist!!.playlistID!!, listModel.responseData!!.suggestedPlaylist!!.playlistName!!)
-                                    binding.llPlay.visibility = View.GONE
-                                    binding.llPause.visibility = View.VISIBLE
-                                }
+                        binding.tvReminder.setOnClickListener {
+                            if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                                binding.tvReminder.text = "Set reminder"
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
+                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                                binding.tvReminder.text = "Update reminder"
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
+                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
+                                binding.tvReminder.text = "Update reminder"
+                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                             }
-                        } else {
-                            showToast(getString(R.string.no_server_found), activity)
                         }
-                    }
 
-                    callObserverMethod(listModel.responseData!!.audio, act, DB)
+                        setPlayPauseIcon()
+                        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                        binding.llPlayPause.setOnClickListener {
+                            if (isNetworkConnected(activity)) {
+                                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                when (isPlayPlaylist) {
+                                    1 -> {
+                                        player.playWhenReady = false
+                                        isPlayPlaylist = 2
+                                        binding.llPlay.visibility = View.VISIBLE
+                                        binding.llPause.visibility = View.GONE
+                                    }
+                                    2 -> {
+                                        if (player != null) {
+                                            val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                            if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                                val editor = shared.edit()
+                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                                editor.apply()
+                                                player.seekTo(0, 0)
+                                                PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                                player.playWhenReady = true
+                                            } else {
+                                                player.playWhenReady = true
+                                            }
+                                        }
+                                        isPlayPlaylist = 1
+                                        binding.llPlay.visibility = View.GONE
+                                        binding.llPause.visibility = View.VISIBLE
+                                    }
+                                    else -> {
+                                        PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![playerPosition].id
+                                        callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, act, listModel.responseData!!.suggestedPlaylist!!.playlistID!!, listModel.responseData!!.suggestedPlaylist!!.playlistName!!)
+                                        binding.llPlay.visibility = View.GONE
+                                        binding.llPause.visibility = View.VISIBLE
+                                    }
+                                }
+                            } else {
+                                showToast(getString(R.string.no_server_found), activity)
+                            }
+                        }
+
+                        callObserverMethod(listModel.responseData!!.audio, act, DB)
+                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                        deleteCall(act)
+                        showToast(listModel.responseMessage, act)
+                        val i = Intent(act, SignInActivity::class.java)
+                        i.putExtra("mobileNo", "")
+                        i.putExtra("countryCode", "")
+                        i.putExtra("name", "")
+                        i.putExtra("email", "")
+                        i.putExtra("countryShortName", "")
+                        startActivity(i)
+                        act.finish()
+                    } else {
+                        showToast(listModel.responseMessage, activity)
+                    }
                 }
 
                 private fun callPlaylistDetails() {

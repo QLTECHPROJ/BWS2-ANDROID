@@ -24,10 +24,10 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.enhance.PlaylistDoneActivity
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
-import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.membershipModule.models.SegmentAreaOfFocus
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
@@ -154,6 +154,19 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             binding.rvPerantCat.visibility = View.VISIBLE
                             adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!, activity)
                             binding.rvPerantCat.adapter = adapter1 //                            }
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            deleteCall(activity)
+                            showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
+                        } else {
+                            showToast(listModel.responseMessage, activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -616,11 +629,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             for (pos in listModel.responseData!!.categoryData!!.indices) {
                                 val e = SegmentAreaOfFocus()
                                 e.mainCategory = listModel.responseData!!.categoryData!![pos].mainCat.toString()
-                                e.problemName =listModel.responseData!!.categoryData!![pos].recommendedCat.toString()
+                                e.problemName = listModel.responseData!!.categoryData!![pos].recommendedCat.toString()
                                 section.add(e)
                             }
                             val p = Properties()
-                            Log.e("section area of focus",section.toString())
+                            Log.e("section area of focus", section.toString())
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                             p.putValue("areaOfFocus", gson.toJson(section))
                             addToSegment("Area of Focus Saved", p, CONSTANTS.track)

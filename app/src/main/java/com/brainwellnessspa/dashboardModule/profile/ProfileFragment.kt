@@ -446,6 +446,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
                                         editor.apply()
                                         profileViewData(requireActivity())
+                                    } else if (viewModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                        deleteCall(activity)
+                                        showToast(viewModel.responseMessage, activity)
+                                        val i = Intent(activity, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        startActivity(i)
+                                        activity?.finish()
                                     }
                                 }
                             } catch (e: Exception) {
@@ -523,6 +534,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     binding.rlLetter.visibility = View.GONE
                                     setProfilePic(profilePicPath)
                                 }
+                            } else if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                deleteCall(activity)
+                                showToast(viewModel.ResponseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                activity?.startActivity(i)
+                                activity?.finish()
                             } else {
                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             }
@@ -564,6 +586,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                     editor.apply()
                                     profileViewData(activity)
+                                } else if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    deleteCall(activity)
+                                    showToast(addProfileModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    activity?.finish()
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -609,6 +642,17 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                 editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                 editor.apply()
                                 profileViewData(activity)
+                            } else if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                deleteCall(activity)
+                                showToast(addProfileModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                activity?.finish()
                             }
                         }
 

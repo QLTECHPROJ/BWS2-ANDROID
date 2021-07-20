@@ -49,7 +49,7 @@
                 android:layout_gravity="top"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/set_up_pin"
+                android:text="@string/create_pin"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_24sdp"
                 tools:ignore="SpUsage" />
@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:paddingTop="@dimen/_13sdp"
-                android:text="@string/before_adding_new_user_let_s_make_your_profile_more_personal_set_up_pin"
+                android:text="@string/enter_a_4_digit_number_this_is_your_secret_access_code"
                 android:textColor="@color/light_black"
                 android:textSize="@dimen/_16sdp"
                 tools:ignore="SpUsage" />

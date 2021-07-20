@@ -305,9 +305,9 @@ class AppointmentFragment : Fragment() {
     }
 
     private fun callAddTransFrag() {
-        val fragment: Fragment = MiniPlayerFragment()
+        /*val fragment: Fragment = MiniPlayerFragment()
         val fragmentManager1 = requireActivity().supportFragmentManager
-        fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()
+        fragmentManager1.beginTransaction().add(R.id.flContainer, fragment).commit()*/
     }
 
     inner class PreviousAppointmentsAdapter(private val listModel: List<PreviousAppointmentsModel.ResponseData>?, var ctx: Context?) : RecyclerView.Adapter<PreviousAppointmentsAdapter.MyViewHolder>() {

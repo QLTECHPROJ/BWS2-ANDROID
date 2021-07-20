@@ -16,6 +16,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityAddProfileBinding
 import com.brainwellnessspa.userModule.models.AddUserModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -205,6 +206,17 @@ class AddProfileActivity : AppCompatActivity() {
                                     p.putValue("mobileNo", binding.etMobileNumber.text.toString())
                                     p.putValue("email", listModel.responseData!!.email)
                                     addToSegment("Couser Added", p, CONSTANTS.track)
+                                    finish()
+                                } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    deleteCall(activity)
+                                    showToast(listModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
                                     finish()
                                 } else {
                                     showToast(listModel.responseMessage, activity)

@@ -18,11 +18,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAddCouserBinding
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,9 +58,9 @@ class AddCouserActivity : AppCompatActivity() {
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvAction = dialog.findViewById<TextView>(R.id.tvAction)
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
-            tvTitle.text = getString(R.string.with_same_mobileno)
-            tvDesc.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-            tvAction.text = "Ok"
+            tvTitle.text = getString(R.string.popup_title)
+            tvDesc.text = getString(R.string.popup_subtitle)
+            tvAction.text = getString(R.string.ok)
             dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
@@ -78,16 +82,53 @@ class AddCouserActivity : AppCompatActivity() {
                     listCall.enqueue(object : Callback<AuthOtpModel> {
                         override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                             val authOtpModel: AuthOtpModel = response.body()!!
-                            isPinSet = authOtpModel.ResponseData.isPinSet
-                            directLogin = authOtpModel.ResponseData.directLogin
-                            if (isPinSet.equals("1", ignoreCase = true)) {
-                                val i = Intent(applicationContext, UserDetailActivity::class.java)
-                                startActivity(i)
-                            } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
-                                val i = Intent(applicationContext, CouserSetupPinActivity::class.java)
-                                startActivity(i)
+                            if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                isPinSet = authOtpModel.ResponseData.isPinSet
+                                directLogin = authOtpModel.ResponseData.directLogin
+                                if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
+                                    if (authOtpModel.ResponseData.MainAccountID.equals(authOtpModel.ResponseData.UserId, ignoreCase = true)) {
+                                        val i = Intent(applicationContext, UserDetailActivity::class.java)
+                                        startActivity(i)
+                                    } else {
+                                        if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                            startActivity(intent)
+                                            finish()
+                                        } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                                            startActivity(intent)
+                                            finish()
+                                        } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                                            intent.putExtra("IsFirst", "0")
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                    }
+                                } else if (authOtpModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || authOtpModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                    val i = Intent(applicationContext, CouserSetupPinActivity::class.java)
+                                    i.putExtra("subUserId", authOtpModel.ResponseData.UserId)
+                                    startActivity(i)
+                                }
+                                finish()
+                            } else if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(authOtpModel.ResponseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                activity.startActivity(i)
+                                activity.finish()
                             }
-                            finish()
                         }
 
                         override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {

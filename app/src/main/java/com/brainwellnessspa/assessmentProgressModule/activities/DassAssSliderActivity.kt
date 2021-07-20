@@ -25,6 +25,7 @@ import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel
 import com.brainwellnessspa.userModule.models.OptionsDataListModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -440,6 +441,17 @@ class DassAssSliderActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
 
+                        } else if (listModel.getResponseCode().equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            BWSApplication.deleteCall(activity)
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         } else {
                             BWSApplication.showToast(listModel.getResponseMessage(), activity)
                         }

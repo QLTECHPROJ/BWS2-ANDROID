@@ -98,7 +98,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             }
         }
 
-        binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to \n+$countryCode $mobileNo"
+        binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to \n+$countryCode $mobileNo."
 
         editTexts = arrayOf(binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4)
         binding.edtOTP1.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 0, tvSendOTPbool))

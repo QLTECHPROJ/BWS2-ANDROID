@@ -36,6 +36,7 @@ import com.brainwellnessspa.reminderModule.models.ReminderListModel
 import com.brainwellnessspa.reminderModule.models.ReminderStatusModel
 import com.brainwellnessspa.reminderModule.models.SegmentReminder
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -55,14 +56,14 @@ class ReminderListsActivity : AppCompatActivity() {
     lateinit var binding: ActivityReminderDetailsBinding
     var userId: String? = ""
     var coUserId: String? = ""
-    var ReminderFirstLogin: String? = "0"
+    var reminderFirstLogin: String? = "0"
     lateinit var ctx: Context
     lateinit var activity: Activity
     var remiderIds = ArrayList<String?>()
     var adapter: RemiderDetailsAdapter? = null
     var fancyShowCaseView1: FancyShowCaseView? = null
     var fancyShowCaseView2: FancyShowCaseView? = null
-    var queue: FancyShowCaseQueue? = null
+    private var queue: FancyShowCaseQueue? = null
     var listReminderModel: ReminderListModel? = null
     var p: Properties? = null
     private var numStarted = 0
@@ -246,8 +247,8 @@ class ReminderListsActivity : AppCompatActivity() {
 
     private fun showTooltips() {
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        ReminderFirstLogin = shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
-        if (ReminderFirstLogin.equals("1", ignoreCase = true)) {
+        reminderFirstLogin = shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
+        if (reminderFirstLogin.equals("1", ignoreCase = true)) {
             val enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top)
             val exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom)
             fancyShowCaseView1 = FancyShowCaseView.Builder(activity).customView(R.layout.layout_reminder_status, object : OnViewInflateListener {
@@ -299,7 +300,8 @@ class ReminderListsActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bind.tvName.text = model!![position]!!.playlistName
             holder.bind.tvDate.text = model[position]!!.reminderDay
             holder.bind.tvTime.text = model[position]!!.reminderTime
@@ -362,7 +364,9 @@ class ReminderListsActivity : AppCompatActivity() {
                 holder.bind.switchStatus.isChecked = true
             } else {
                 holder.bind.switchStatus.isChecked = false
-            } //            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+            }
+
+            //            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
             //                holder.bind.switchStatus.setClickable(false);
             //                holder.bind.switchStatus.setEnabled(false);
             //                holder.bind.llSwitchStatus.setClickable(true);
@@ -396,7 +400,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 if (BWSApplication.isNetworkConnected(activity)) {
                     notificationStatus = true
                     myBackPress = false
-                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay)
+                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay, "0")
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), activity)
                 }
@@ -417,10 +421,23 @@ class ReminderListsActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<ReminderStatusModel?> {
                 override fun onResponse(call: Call<ReminderStatusModel?>, response: Response<ReminderStatusModel?>) {
                     try {
-                        if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listModel = response.body()
-                            BWSApplication.showToast(listModel!!.responseMessage, activity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel = response.body()
+                        if (listModel != null) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -486,7 +503,8 @@ class ReminderListsActivity : AppCompatActivity() {
             return false
         }
 
-        @SuppressLint("SetTextI18n") override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        @SuppressLint("SetTextI18n")
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.absoluteAdapterPosition
             if (direction == ItemTouchHelper.LEFT) {
                 val dialog = Dialog(ctx)

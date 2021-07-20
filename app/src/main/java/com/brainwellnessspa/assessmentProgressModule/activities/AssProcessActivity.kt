@@ -1,5 +1,7 @@
 package com.brainwellnessspa.assessmentProgressModule.activities
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,36 +10,41 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
+import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
+import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /* This is to Assessment started activity and ended activity */
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
     var userId: String? = ""
-    var MainAccountId: String? = ""
+    var mainAccountId: String? = ""
     var indexScore: Int = 0
     var scoreLevel: String? = ""
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var avgSleepTime: String? = ""
     var assesmentContent: String? = ""
+    lateinit var activity: Activity
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
-
+        activity = this@AssProcessActivity
         /* This is the get string userid & couserid */
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        MainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
@@ -49,8 +56,6 @@ class AssProcessActivity : AppCompatActivity() {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
         }
 
-        binding.assesmentTitle.text =getString(R.string.what_is_wellness_score)
-        binding.assesmentContent.text = assesmentContent
         /* This condition is string access */
         if (assProcess.equals("0", ignoreCase = true)) {
             val p = Properties()
@@ -65,6 +70,7 @@ class AssProcessActivity : AppCompatActivity() {
             binding.tvIndexScore.text = indexScore.toString()
             binding.tvTag.text = scoreLevel.toString()
 
+            prepareData(userId)
             /* This is segment tag */
             val p = Properties()
             p.putValue("indexScore", indexScore)
@@ -409,7 +415,7 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
-            if (MainAccountId.equals(userId, ignoreCase = true)) {
+            if (mainAccountId.equals(userId, ignoreCase = true)) {
                 /* TODO when add plan in user flow comment open */
                 /*val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                 startActivity(i)
@@ -429,4 +435,52 @@ class AssProcessActivity : AppCompatActivity() {
     override fun onBackPressed() {
         finish()
     }
+
+    private fun prepareData(userID: String?) {
+        if (BWSApplication.isNetworkConnected(activity)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APINewClient.client.getAssesmentGetDetails(userID) /*Flag = 0 Staging Flag = 1 Live*/
+            listCall.enqueue(object : Callback<AssesmentGetDetailsModel?> {
+                @SuppressLint("SetTextI18n")
+                override fun onResponse(call: Call<AssesmentGetDetailsModel?>, response: Response<AssesmentGetDetailsModel?>) {
+                    try {
+                        val listModel = response.body()
+                        if (listModel != null) {
+                            when {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
+                                    binding.assesmentContent.text = listModel.responseData?.assesmentContent
+                                }
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    finish()
+                                }
+                                else -> {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<AssesmentGetDetailsModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+        }
+    }
+
 }

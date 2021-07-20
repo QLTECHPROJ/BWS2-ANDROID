@@ -72,6 +72,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
+                    android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="@string/you_already_have_access_to_6_month_of_enhance_program"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17sdp"

@@ -20,6 +20,7 @@ import com.brainwellnessspa.databinding.AppsListLayoutBinding
 import com.brainwellnessspa.databinding.FragmentAppsBinding
 import com.brainwellnessspa.resourceModule.activities.ResourceDetailsActivity
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -78,6 +79,17 @@ class AppsFragment : Fragment() {
                             binding.llError.visibility = View.VISIBLE
                             binding.rvAppsList.visibility = View.GONE
                         }
+                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                        BWSApplication.deleteCall(activity)
+                        BWSApplication.showToast(listModel.responseMessage, activity)
+                        val i = Intent(activity, SignInActivity::class.java)
+                        i.putExtra("mobileNo", "")
+                        i.putExtra("countryCode", "")
+                        i.putExtra("name", "")
+                        i.putExtra("email", "")
+                        i.putExtra("countryShortName", "")
+                        startActivity(i)
+                        finish()
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }

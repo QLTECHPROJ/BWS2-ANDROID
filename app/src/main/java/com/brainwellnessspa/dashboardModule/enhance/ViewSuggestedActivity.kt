@@ -26,6 +26,7 @@ import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlay
 import com.brainwellnessspa.databinding.ActivityViewSuggestedBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -211,83 +212,96 @@ class ViewSuggestedActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<AddToPlaylistModel?> {
                 override fun onResponse(call: Call<AddToPlaylistModel?>, response: Response<AddToPlaylistModel?>) {
                     try {
-                        if (response.isSuccessful) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listModels = response.body()
-                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                            val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                            val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                            val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-                            val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                            var playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                            if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                                val gsonx = Gson()
-                                val json = shared1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gsonx.toString())
-                                val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
-                                var mainPlayModelListold = ArrayList<MainPlayModel>()
-                                mainPlayModelListold = gsonx.fromJson(json, type)
-                                val id = mainPlayModelListold[playerPosition].id
-                                val size = mainPlayModelListold.size
-                                val mainPlayModelList = ArrayList<MainPlayModel>()
-                                val playlistSongs = ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
-                                for (i in listModels!!.responseData!!.indices) {
-                                    val mainPlayModel = MainPlayModel()
-                                    mainPlayModel.id = listModels.responseData!![i].iD!!
-                                    mainPlayModel.name = listModels.responseData!![i].name!!
-                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile!!
-                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID!!
-                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection!!
-                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat!!
-                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory!!
-                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile!!
-                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration!!
-                                    mainPlayModelList.add(mainPlayModel)
-                                }
-                                for (i in listModels.responseData!!.indices) {
-                                    val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
-                                    mainPlayModel.iD = listModels.responseData!![i].iD
-                                    mainPlayModel.name = listModels.responseData!![i].name
-                                    mainPlayModel.audioFile = listModels.responseData!![i].audioFile
-                                    mainPlayModel.playlistID = listModels.responseData!![i].playlistID
-                                    mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
-                                    mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
-                                    mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
-                                    mainPlayModel.imageFile = listModels.responseData!![i].imageFile
-                                    mainPlayModel.like = listModels.responseData!![i].like
-                                    mainPlayModel.download = listModels.responseData!![i].download
-                                    mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
-                                    playlistSongs.add(mainPlayModel)
-                                }
-                                for (i in mainPlayModelList.indices) {
-                                    if (mainPlayModelList[i].id.equals(id, ignoreCase = true)) {
-                                        playerPosition = i
-                                        break
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModels = response.body()
+                        if (listModels != null) {
+                            if (listModels.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                                val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                                val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+                                val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                var playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
+                                    val gsonx = Gson()
+                                    val json = shared1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gsonx.toString())
+                                    val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
+                                    var mainPlayModelListold = ArrayList<MainPlayModel>()
+                                    mainPlayModelListold = gsonx.fromJson(json, type)
+                                    val id = mainPlayModelListold[playerPosition].id
+                                    val size = mainPlayModelListold.size
+                                    val mainPlayModelList = ArrayList<MainPlayModel>()
+                                    val playlistSongs = ArrayList<SubPlayListModel.ResponseData.PlaylistSong>()
+                                    for (i in listModels.responseData!!.indices) {
+                                        val mainPlayModel = MainPlayModel()
+                                        mainPlayModel.id = listModels.responseData!![i].iD!!
+                                        mainPlayModel.name = listModels.responseData!![i].name!!
+                                        mainPlayModel.audioFile = listModels.responseData!![i].audioFile!!
+                                        mainPlayModel.playlistID = listModels.responseData!![i].playlistID!!
+                                        mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection!!
+                                        mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat!!
+                                        mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory!!
+                                        mainPlayModel.imageFile = listModels.responseData!![i].imageFile!!
+                                        mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration!!
+                                        mainPlayModelList.add(mainPlayModel)
+                                    }
+                                    for (i in listModels.responseData!!.indices) {
+                                        val mainPlayModel = SubPlayListModel.ResponseData.PlaylistSong()
+                                        mainPlayModel.iD = listModels.responseData!![i].iD
+                                        mainPlayModel.name = listModels.responseData!![i].name
+                                        mainPlayModel.audioFile = listModels.responseData!![i].audioFile
+                                        mainPlayModel.playlistID = listModels.responseData!![i].playlistID
+                                        mainPlayModel.audioDirection = listModels.responseData!![i].audioDirection
+                                        mainPlayModel.audiomastercat = listModels.responseData!![i].audiomastercat
+                                        mainPlayModel.audioSubCategory = listModels.responseData!![i].audioSubCategory
+                                        mainPlayModel.imageFile = listModels.responseData!![i].imageFile
+                                        mainPlayModel.like = listModels.responseData!![i].like
+                                        mainPlayModel.download = listModels.responseData!![i].download
+                                        mainPlayModel.audioDuration = listModels.responseData!![i].audioDuration
+                                        playlistSongs.add(mainPlayModel)
+                                    }
+                                    for (i in mainPlayModelList.indices) {
+                                        if (mainPlayModelList[i].id.equals(id, ignoreCase = true)) {
+                                            playerPosition = i
+                                            break
+                                        }
+                                    }
+                                    val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                    val editor = sharedd.edit()
+                                    val gson = Gson()
+                                    val jsonx = gson.toJson(mainPlayModelList)
+                                    val json11 = gson.toJson(playlistSongs)
+                                    editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, playerPosition)
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistId)
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, myPlaylistName)
+                                    editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created")
+                                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
+                                    editor.apply()
+                                    if (mainPlayModelList[playerPosition].audioFile != "") {
+                                        val downloadAudioDetailsList: List<String> = ArrayList()
+                                        val ge = GlobalInitExoPlayer()
+                                        ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx)
+                                    }
+                                    if (player != null) {
+                                        //                                    callAddFrag();
                                     }
                                 }
-                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                                val editor = sharedd.edit()
-                                val gson = Gson()
-                                val jsonx = gson.toJson(mainPlayModelList)
-                                val json11 = gson.toJson(playlistSongs)
-                                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
-                                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
-                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, playerPosition)
-                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistId)
-                                editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, myPlaylistName)
-                                editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created")
-                                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
-                                editor.apply()
-                                if (mainPlayModelList[playerPosition].audioFile != "") {
-                                    val downloadAudioDetailsList: List<String> = ArrayList()
-                                    val ge = GlobalInitExoPlayer()
-                                    ge.AddAudioToPlayer(size, mainPlayModelList, downloadAudioDetailsList, ctx)
+                                showToast(listModels.responseMessage, activity)
+                                if (s1.equals("1", ignoreCase = true)) {
+                                    finish()
                                 }
-                                if (player != null) {
-                                    //                                    callAddFrag();
-                                }
-                            }
-                            showToast(listModels!!.responseMessage, activity)
-                            if (s1.equals("1", ignoreCase = true)) {
+                            } else if (listModels.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                deleteCall(activity)
+                                showToast(listModels.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
                                 finish()
                             }
                         }

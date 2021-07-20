@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -33,6 +34,7 @@ import com.brainwellnessspa.resourceModule.models.ResourceFilterModel
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.resourceModule.models.SegmentResource
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
@@ -72,7 +74,8 @@ class ResourceActivity : AppCompatActivity() {
     var stackStatus = 0
     var myBackPress = false
 
-    @SuppressLint("InflateParams") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("InflateParams")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource)
         activity = this@ResourceActivity
@@ -158,6 +161,19 @@ class ResourceActivity : AppCompatActivity() {
                                 }
                                 p!!.putValue("resources", gsons.toJson(section1))
                                 BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen)
+                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            } else {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -248,13 +264,27 @@ class ResourceActivity : AppCompatActivity() {
                 listCall.enqueue(object : Callback<ResourceFilterModel?> {
                     override fun onResponse(call: Call<ResourceFilterModel?>, response: Response<ResourceFilterModel?>) {
                         val listModel = response.body()
-                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val adapter = ResourceFilterAdapter(listModel.responseData, dialogBox, tvAll, ivFilter)
-                            rvFilterList!!.adapter = adapter
-                            for (i in listModel.responseData!!.indices) {
-                                section!!.add(listModel.responseData!![i].categoryName)
+                        when {
+                            listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val adapter = ResourceFilterAdapter(listModel.responseData, dialogBox, tvAll, ivFilter)
+                                rvFilterList!!.adapter = adapter
+                                for (i in listModel.responseData!!.indices) {
+                                    section!!.add(listModel.responseData!![i].categoryName)
+                                }
+                                p4!!.putValue("allMasterCategory", gson!!.toJson(section))
                             }
-                            p4!!.putValue("allMasterCategory", gson!!.toJson(section))
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
                         }
                     }
 

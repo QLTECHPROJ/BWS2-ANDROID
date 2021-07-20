@@ -22,6 +22,7 @@ import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding
 import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -238,6 +239,18 @@ class ViewAllPlaylistFragment : Fragment() {
                                     addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen)
                                     val adapter = PlaylistAdapter(listModel.responseData!!.details!!)
                                     binding.rvMainAudio.adapter = adapter
+                                } else if(listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)){
+                                    deleteCall(activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    activity?.startActivity(i)
+                                    activity?.finish()
+                                }else {
+                                    showToast(listModel.responseMessage, activity)
                                 }
                             }
                         } catch (e: Exception) {

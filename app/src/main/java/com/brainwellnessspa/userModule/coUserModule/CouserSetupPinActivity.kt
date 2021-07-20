@@ -14,6 +14,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCouserSetupPinBinding
 import com.brainwellnessspa.userModule.models.SetLoginPinModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -26,6 +27,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
     lateinit var binding: ActivityCouserSetupPinBinding
     var mainAccountID: String? = ""
     var userId: String? = ""
+    var subUserId: String? = ""
     lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
@@ -64,6 +66,9 @@ class CouserSetupPinActivity : AppCompatActivity() {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
         BWSApplication.addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
+        if (intent.extras != null){
+            subUserId = intent.getStringExtra("subUserId")
+        }
         binding.llBack.setOnClickListener {
             finish()
         }
@@ -83,20 +88,20 @@ class CouserSetupPinActivity : AppCompatActivity() {
     private fun setupPin(activity: Activity) {
         if (binding.etNewPIN.text.toString() == "") {
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "Please provide the latest PIN to login"
+            binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "Please provide the latest PIN to login"
+            binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etConfirmPIN.text.toString() == "") {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
+            binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
         } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
+            binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
@@ -107,7 +112,14 @@ class CouserSetupPinActivity : AppCompatActivity() {
 
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(userId, binding.etConfirmPIN.text.toString())
+                var mainUserId = ""
+                if (subUserId.equals("")){
+                    mainUserId = userId.toString()
+                }else {
+                    mainUserId = subUserId.toString()
+                }
+                val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(mainUserId, binding.etConfirmPIN.text.toString())
+
                 listCall.enqueue(object : Callback<SetLoginPinModel> {
                     override fun onResponse(call: Call<SetLoginPinModel>, response: Response<SetLoginPinModel>) {
                         try {
@@ -122,7 +134,18 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     intent.putExtra(CONSTANTS.ScreenView, "4")
                                     startActivity(intent)
                                     finish()
-                                } else {
+                                } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    finish()
+                                }  else {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
                             }

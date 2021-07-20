@@ -9,6 +9,7 @@
     <string name="mansi_segment_key">"Zvo5vSa1Ih8CdMVilkKqzNf9UHMVTFuO"</string>
     <string name="ResponseCodesuccess">200</string>
     <string name="ResponseCodefail">401</string>
+    <string name="ResponseCodeDeleted">403</string>
     <string name="stripe_test_key">pk_test_Mm4d65j7STTpLo0YrkYGmaWH00tQO1qMnv</string>
     <string name="stripe_live_key">pk_live_nmRApzuiZfmKRruPcnpYhurb00tFp2EYYP</string>
 
@@ -425,8 +426,6 @@
     <string name="long_lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</string>
     <string name="newly_login_pin">New Login PIN</string>
     <string name="confirm_login_pin">Confirm Login PIN</string>
-    <string name="set_up_pin">Set Up PIN</string>
-    <string name="before_adding_new_user_let_s_make_your_profile_more_personal_set_up_pin">Before adding new user let\'s make your profile more personal, set up pin</string>
     <string name="did_not_arrive">Did Not Arrive</string>
     <string name="don_t_have_account">Don\'t have account?</string>
     <string name="proceed_with_adding_new_user">Proceed with adding New User</string>
@@ -443,7 +442,6 @@
     <string name="pls_provide_valid_mobileno">Please provide a valid mobile number</string>
     <string name="your_playlist_is_ready">You playlist is ready</string>
     <string name="playlist_ready_subtitle">We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program.</string>
-    <string name="with_same_mobileno">With Same Mobile Number</string>
     <string name="manage_user">Manage User</string>
     <string name="downloads_profile">Downloads</string>
     <string name="reminder_profile">Reminder</string>
@@ -515,5 +513,14 @@
     <string name="you_are_not_on_track_try_to_imprrove">You are not on track, try to imprrove!</string>
     <string name="what_is_wellness_score">What is Wellness Score ?</string>
     <string name="congrats">Congrats!</string>
+    <string name="otp_quotes">Please enter the OTP to begin your journey to better mental health.</string>
+    <string name="add_user_subtitle">New users can either use this device, or another one to access the app.</string>
+    <string name="popup_title">For multiple users on the same device</string>
+    <string name="popup_subtitle">With multiple users, we create separate access pins to ensure privacy. Each person’s details will remain inaccessible to others.</string>
+    <string name="create_pin">Create Pin</string>
+    <string name="enter_a_4_digit_number_this_is_your_secret_access_code">Enter a 4-digit number. This is your secret access code.</string>
+    <string name="delete_account_popup_title">Are you sure you want to permanently delete this account?</string>
+    <string name="delete_account_popup_subtitle">You can\'t undo this action</string>
+    <string name="pls_provide_latest_pin">Please provide the latest PIN to login</string>
 </resources>
 

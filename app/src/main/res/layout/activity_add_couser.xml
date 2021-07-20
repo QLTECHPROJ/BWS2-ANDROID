@@ -93,7 +93,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
                             android:lineSpacingExtra="@dimen/_4sdp"
-                            android:text="@string/long_lorem"
+                            android:text="@string/add_user_subtitle"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
                             tools:ignore="SpUsage" />

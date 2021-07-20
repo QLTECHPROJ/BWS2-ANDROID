@@ -496,7 +496,7 @@ class ViewAllAudioFragment : Fragment() {
         private fun getMedia(position: Int) {
             DB.taskDao()?.geAllLiveDataBYDownloaded("Complete", coUserId)?.observe((ctx as LifecycleOwner?)!!, { audioList: List<String?>? ->
                 val downloadAudioDetailsList = audioList
-                var pos:Int = 0
+                var pos = 0
                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
