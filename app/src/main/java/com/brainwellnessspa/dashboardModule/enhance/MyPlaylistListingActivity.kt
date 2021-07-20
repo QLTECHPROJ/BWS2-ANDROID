@@ -724,6 +724,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white)
                 holder.binding.ivBackgroundImage.visibility = View.GONE //                    handler3.removeCallbacks(UpdateSongTime3);
             }
+
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
             holder.binding.llMainLayout.setOnClickListener {
