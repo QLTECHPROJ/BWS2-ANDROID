@@ -308,6 +308,26 @@ class ViewAllPlaylistFragment : Fragment() {
                 true
             }
             holder.binding.tvAddToPlaylist.setOnClickListener {
+                val p = Properties()
+                p.putValue("playlistId", listModelList[position].playlistID)
+                p.putValue("playlistName", listModelList[position].playlistName)
+                p.putValue("source","Playlist View All Screen")
+                if (listModelList[position].created.equals("1",ignoreCase = true)) {
+                    p.putValue("playlistType", "Created")
+                } else if (listModelList[position].created == "0") {
+                    p.putValue("playlistType", "Default")
+                } else if (listModelList[position].created.equals("2"))
+                    p.putValue("playlistType", "Suggested")
+
+
+                if (listModelList[position].totalhour == "") {
+                    p.putValue("playlistDuration", "0h " + listModelList[position].totalhour  + "m")
+                } else if (listModelList[position].totalminute == "") {
+                    p.putValue("playlistDuration", listModelList[position].totalhour  + "h 0m")
+                } else {
+                    p.putValue("playlistDuration", listModelList[position].totalhour  + "h " + listModelList[position].totalminute + "m")
+                }
+                addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 holder.binding.ivLock.visibility = View.GONE
                 val i = Intent(activity, AddPlaylistActivity::class.java)
                 i.putExtra("AudioId", "")

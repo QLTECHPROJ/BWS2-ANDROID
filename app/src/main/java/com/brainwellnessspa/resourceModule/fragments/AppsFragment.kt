@@ -89,7 +89,7 @@ class AppsFragment : Fragment() {
                         i.putExtra("email", "")
                         i.putExtra("countryShortName", "")
                         startActivity(i)
-                        finish()
+                        activity!!.finish()
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }

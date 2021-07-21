@@ -86,6 +86,7 @@ class HomeFragment : Fragment() {
     var liked = ""
     var myDownloads: String? = ""
     var sleepTime: String? = ""
+    var indexScore: String? = ""
     var selectedCategoriesName = arrayListOf<String>()
     var downloadAudioDetailsList = arrayListOf<String>()
     lateinit var editTexts: Array<EditText>
@@ -128,6 +129,7 @@ class HomeFragment : Fragment() {
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+        indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
 
         /* Get sleep time from share pref*/
@@ -140,7 +142,9 @@ class HomeFragment : Fragment() {
         }
 
         val p = Properties()
-
+        val gson=Gson()
+        p.putValue("indexScore",indexScore)
+        p.putValue("areaOfFocus",gson.toJson(selectedCategoriesName))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (sleepTime.equals("", true)) {
@@ -360,7 +364,7 @@ class HomeFragment : Fragment() {
                         val p = Properties()
                         val gson = Gson()
                         p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
-                        p.putValue("coUserList", gson.toJson(section))
+                        p.putValue("UserList", gson.toJson(section))
                         addToSegment("User List Popup Viewed", p, CONSTANTS.screen)
 
                     } catch (e: Exception) {

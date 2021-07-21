@@ -257,6 +257,9 @@ class MainPlaylistFragment : Fragment() {
                 viewAllPlaylistFragment.arguments = bundle
             }
             binding.rlCreatePlaylist.setOnClickListener {
+                val p = Properties()
+                p.putValue("source", "Playlist Main Screen")
+                addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
                 val dialog = Dialog(ctx)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.create_palylist)
@@ -307,6 +310,12 @@ class MainPlaylistFragment : Fragment() {
                                             if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
                                                 showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
                                             } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
+                                                val p = Properties()
+                                                p.putValue("source", "Playlist Main Screen")
+                                                p.putValue("playlistId", listModel.responseData!!.playlistID)
+                                                p.putValue("playlistName",listModel.responseData!!.playlistName)
+                                                addToSegment(" Playlist Created", p, CONSTANTS.track)
+
                                                 MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
                                                 dialog.dismiss()
                                             }
@@ -411,6 +420,25 @@ class MainPlaylistFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
+                val p = Properties()
+                p.putValue("playlistId", listModel[position].playlistID)
+                p.putValue("playlistName", listModel[position].playlistName)
+                p.putValue("source","Playlist View All Screen")
+                if (listModel[position].created.equals("1",ignoreCase = true)) {
+                    p.putValue("playlistType", "Created")
+                } else if (listModel[position].created == "0") {
+                    p.putValue("playlistType", "Default")
+                } else if (listModel[position].created.equals("2"))
+                    p.putValue("playlistType", "Suggested")
+
+                if (listModel[position].totalhour == "") {
+                    p.putValue("playlistDuration", "0h " + listModel[position].totalhour  + "m")
+                } else if (listModel[position].totalminute == "") {
+                    p.putValue("playlistDuration", listModel[position].totalhour  + "h 0m")
+                } else {
+                    p.putValue("playlistDuration", listModel[position].totalhour  + "h " + listModel[position].totalminute + "m")
+                }
+                addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 val i = Intent(ctx, AddPlaylistActivity::class.java)
                 i.putExtra("AudioId", "")
                 i.putExtra("ScreenView", "Playlist View All Screen")

@@ -415,7 +415,9 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                             p.putValue("playlistType", "Created");
                         } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
                             p.putValue("playlistType", "Default");
-                        }
+                        } else if (listModelList.get(position).getCreated().equals("2"))
+                        p.putValue("playlistType", "Suggested");
+
                         p.putValue("audioCount", listModelList.get(position).getTotalAudio());
                         p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
                         if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {

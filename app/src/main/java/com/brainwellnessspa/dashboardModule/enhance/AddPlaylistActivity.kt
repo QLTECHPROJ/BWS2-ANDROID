@@ -95,6 +95,9 @@ class AddPlaylistActivity : AppCompatActivity() {
         binding.tvFound.text = "No result found"
         binding.btnAddPlatLists.setOnClickListener {
             myBackPress = true
+            val p = Properties()
+            p.putValue("source", "Add to Playlist Screen")
+            addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
             val dialog = Dialog(ctx)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.create_palylist)
@@ -144,8 +147,13 @@ class AddPlaylistActivity : AppCompatActivity() {
                                         if (listsModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                             if (listsModel.responseData!!.iscreate.equals("1", ignoreCase = true)) {
                                                 dialog.dismiss()
-                                                prepareData(ctx)
+                                                prepareData(ctx, "0")
                                                 val playlistID = listsModel.responseData!!.playlistID
+                                                val p = Properties()
+                                                p.putValue("source", "Add to Playlist Screen")
+                                                p.putValue("playlistId", listsModel.responseData!!.playlistID)
+                                                p.putValue("playlistName",listsModel.responseData!!.playlistName)
+                                                addToSegment(" Playlist Created", p, CONSTANTS.track)
                                                 val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                                                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                                                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
@@ -157,11 +165,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                                     }
                                                 } else {
                                                     callAddPlaylistFromPlaylist(playlistID, listsModel.responseData!!.playlistName, "1")
-                                                } //                                            Properties p = new Properties();
-                                                //                                           p.putValue("playlistId", PlaylistID);
-                                                //                                            p.putValue("playlistName", listsModel.getResponseData().getName());
-                                                //                                            p.putValue("source", "Add To Playlist Screen");
-                                                //                                            BWSApplication.addToSegment("Playlist Created", p, CONSTANTS.track);
+                                                }
                                             } else {
                                                 showToast(listsModel.responseMessage, activity)
                                             }
@@ -216,11 +220,11 @@ class AddPlaylistActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        prepareData(this@AddPlaylistActivity)
+        prepareData(ctx, "1")
         super.onResume()
     }
 
-    private fun prepareData(ctx: Context) {
+    private fun prepareData(ctx: Context, comes: String) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getPlaylisting(coUserId)
@@ -231,6 +235,12 @@ class AddPlaylistActivity : AppCompatActivity() {
                         val model = response.body()
                         if (model != null) {
                             if (model.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                if (comes.equals("0")) {
+                                    val p = Properties()
+                                    p.putValue("source",screenView)
+                                    p.putValue("playlists",model!!.responseData)
+                                    addToSegment("Add to Playlist Screen Viewed", p, CONSTANTS.screen)
+                                }
                                 if (model.responseData!!.isEmpty()) {
                                     binding.llError.visibility = View.GONE
                                     binding.rvPlayLists.visibility = View.GONE
@@ -412,6 +422,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 intent.putExtra("PlaylistID", PlaylistID)
                                 intent.putExtra("PlaylistName", name)
                                 intent.putExtra("MyDownloads", "0")
+                                intent.putExtra("ScreenView","Add to Playlist Screen")
                                 startActivity(intent)
                                 finish()
                                 overridePendingTransition(0, 0)

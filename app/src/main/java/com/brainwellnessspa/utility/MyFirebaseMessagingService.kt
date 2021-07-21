@@ -136,6 +136,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 resultIntent.putExtra("notification", "0")
                 resultIntent.putExtra("message", message)
                 resultIntent.putExtra("PlaylistImage", "")
+                resultIntent.putExtra("ScreenView", "Reminder Notification")
                 taskStackBuilder.addParentStack(MyPlaylistListingActivity::class.java)
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent)
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)

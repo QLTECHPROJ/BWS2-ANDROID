@@ -223,7 +223,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             p.putValue("playlistType", "Created");
         } else if (Created.equalsIgnoreCase("0")) {
             p.putValue("playlistType", "Default");
-        }
+        } else if (Created.equals("2"))
+        p.putValue("playlistType", "Suggested");
+
         if (Totalhour.equalsIgnoreCase("")) {
             p.putValue("playlistDuration", "0h " + Totalminute + "m");
         } else if (Totalminute.equalsIgnoreCase("")) {
@@ -576,6 +578,17 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     public void SegmentTag() {
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistID, PlaylistID);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistName, PlaylistName);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistDescription, PlaylistDescription);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistType, Created);
+        editor.putString(CONSTANTS.PREF_KEY_Totalhour, Totalhour);
+        editor.putString(CONSTANTS.PREF_KEY_Totalminute, Totalminute);
+        editor.putString(CONSTANTS.PREF_KEY_TotalAudio, TotalAudio);
+        editor.putString(CONSTANTS.PREF_KEY_ScreenView, "Downloaded Playlists");
+        editor.commit();
         Properties p = new Properties();
         p.putValue("playlistId", PlaylistID);
         p.putValue("playlistName", PlaylistName);
@@ -584,7 +597,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             p.putValue("playlistType", "Created");
         } else if (Created.equalsIgnoreCase("0")) {
             p.putValue("playlistType", "Default");
-        }
+        } else if (Created.equals("2"))
+        p.putValue("playlistType", "Suggested");
 
         if (Totalhour.equalsIgnoreCase("")) {
             p.putValue("playlistDuration", "0h " + Totalminute + "m");

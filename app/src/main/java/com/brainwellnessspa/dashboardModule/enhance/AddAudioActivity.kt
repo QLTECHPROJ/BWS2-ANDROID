@@ -33,6 +33,7 @@ import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -174,7 +175,7 @@ class AddAudioActivity : AppCompatActivity() {
     }
 
     public override fun onPause() {
-        LocalBroadcastManager.getInstance(this@AddAudioActivity).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
         super.onPause()
     }
 
@@ -582,6 +583,21 @@ class AddAudioActivity : AppCompatActivity() {
 //                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
                     val audioID = modelList[position].iD
                     if (playlistId.equals("", ignoreCase = true)) {
+                        val p = Properties()
+                        p.putValue("audioId", modelList[position].iD)
+                        p.putValue("audioName", modelList[position].name)
+                        p.putValue("audioDescription", "")
+                        p.putValue("directions",  modelList[position].audioDirection)
+                        p.putValue("masterCategory", modelList[position].audiomastercat)
+                        p.putValue("subCategory",  modelList[position].audioSubCategory)
+                        p.putValue("audioDuration",  modelList[position].audioDuration)
+                        p.putValue("position", GetCurrentAudioPosition())
+                        p.putValue("audioType", "Streaming")
+                        p.putValue("source", "Add Audio Screen")
+                        p.putValue("audioService", appStatus(ctx))
+                        p.putValue("bitRate", "")
+                        p.putValue("sound", hundredVolume.toString())
+                        addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                         val i = Intent(ctx, AddPlaylistActivity::class.java)
                         i.putExtra("AudioId", audioID)
                         i.putExtra("ScreenView", "Audio Details Screen")
@@ -878,6 +894,22 @@ class AddAudioActivity : AppCompatActivity() {
 //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
 //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0") || listModel.get(position).isLock().equalsIgnoreCase("")) {
                 if (playlistId.equals("", ignoreCase = true)) {
+                    val p = Properties()
+                    p.putValue("audioId", listModel[position]!!.iD)
+                    p.putValue("audioName", listModel[position]!!.name)
+                    p.putValue("audioDescription", "")
+                    p.putValue("directions",  listModel[position]!!.audioDirection)
+                    p.putValue("masterCategory", listModel[position]!!.audiomastercat)
+                    p.putValue("subCategory",  listModel[position]!!.audioSubCategory)
+                    p.putValue("audioDuration",  listModel[position]!!.audioDuration)
+                    p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
+                    p.putValue("audioType", "Streaming")
+                    p.putValue("source","Add Audio Screen")
+                    p.putValue("playerType", "Main")
+                    p.putValue("audioService", appStatus(ctx))
+                    p.putValue("bitRate", "")
+                    p.putValue("sound", hundredVolume.toString())
+                    addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                     val i = Intent(ctx, AddPlaylistActivity::class.java)
                     i.putExtra("AudioId", listModel[position]!!.iD)
                     i.putExtra("ScreenView", "Audio Details Screen")
@@ -1009,7 +1041,7 @@ class AddAudioActivity : AppCompatActivity() {
     }
 
     /* Suggested playlist data set in to adapter */
-    inner class SuggestedPlayListsAdpater(private val PlaylistModel: List<SearchPlaylistModel.ResponseData>) : RecyclerView.Adapter<SuggestedPlayListsAdpater.MyViewHolder>() {
+    /*inner class SuggestedPlayListsAdpater(private val PlaylistModel: List<SearchPlaylistModel.ResponseData>) : RecyclerView.Adapter<SuggestedPlayListsAdpater.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: DownloadsLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.downloads_layout, parent, false)
             return MyViewHolder(v)
@@ -1110,7 +1142,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
 
         inner class MyViewHolder(var binding: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binding.root)
-    }
+    }*/
 
     /* app life cycle class */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {

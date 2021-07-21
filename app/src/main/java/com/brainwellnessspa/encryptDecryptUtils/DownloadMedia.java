@@ -234,7 +234,6 @@ public class DownloadMedia implements OnDownloadListener {
                 p.putValue("audioName", fileNameList.get(0));
                 p.putValue("playerType", PlayerStatus);
                 p.putValue("audioService", appStatus(ctx));
-                p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition());
                 p.putValue("source", "Downloaded Audios");
                 p.putValue("bitRate", "");
                 p.putValue("sound", GlobalInitExoPlayer.GetDeviceVolume(ctx));

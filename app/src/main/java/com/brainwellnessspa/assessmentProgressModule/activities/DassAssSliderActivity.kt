@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.assessmentProgressModule.models.PostAssAns
@@ -31,6 +32,7 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
+import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -434,6 +436,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                             p.putValue("indexScore", listModel.getResponseData()?.indexScore)
                             p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
                             BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
+                            analytics.identify(Traits()
+                                .putValue("ans", gson.toJson(assAns).toString())
+                                .putValue("assessmentScore", listModel.getResponseData()?.indexScore)
+                                .putValue("ScoreLevel",listModel.getResponseData()?.scoreLevel)
+                                .putValue("isProfileCompleted", "Yes")
+                                .putValue("isAssessmentCompleted", "Yes"))
+//                                .putValue("lastAssessmentOn", viewModel.responseData!!.email))
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
                             i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)

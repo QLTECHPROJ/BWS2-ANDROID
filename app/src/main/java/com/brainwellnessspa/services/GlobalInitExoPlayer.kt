@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -437,10 +438,8 @@ class GlobalInitExoPlayer : Service() {
                     if (isNetworkConnected(ctx)) {
                         var AudioType = ""
                         AudioType = if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
-                            p.putValue("audioType", "Downloaded")
                             "Downloaded"
                         } else {
-                            p.putValue("audioType", "Streaming")
                             "Streaming"
                         }
                         val listCall = APINewClient.client.getAudioInterruption(CoUserID, mainPlayModelList[position].id, mainPlayModelList[position].name, "", mainPlayModelList[position].audioDirection, mainPlayModelList[position].audiomastercat, mainPlayModelList[position].audioSubCategory, mainPlayModelList[position].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
@@ -531,6 +530,77 @@ class GlobalInitExoPlayer : Service() {
         if (player.deviceVolume != 2) {
             player.deviceVolume = 2
         }
+        player.addListener(object: Player.EventListener{
+            override fun onPlayerError(error: ExoPlaybackException) {
+                var intruptMethod: String? = ""
+                val p = Properties()
+                when (error.type) {
+                    ExoPlaybackException.TYPE_SOURCE -> {
+                        p.putValue("interruptionMethod", error.message + " " + error.sourceException.message)
+                        intruptMethod = error.message + " " + error.sourceException.message
+                        Log.e("onPlaybackError", error.message + " " + error.sourceException.message)
+                    }
+                    ExoPlaybackException.TYPE_RENDERER -> {
+                        p.putValue("interruptionMethod", error.message + " " + error.rendererException.message)
+                        intruptMethod = error.message + " " + error.rendererException.message
+                        Log.e("onPlaybackError", error.message + " " + error.rendererException.message)
+                    }
+                    ExoPlaybackException.TYPE_UNEXPECTED -> {
+                        p.putValue("interruptionMethod", error.message + " " + error.unexpectedException.message)
+                        intruptMethod = error.message + " " + error.unexpectedException.message
+                        Log.e("onPlaybackError", error.message + " " + error.unexpectedException.message)
+                    }
+                    ExoPlaybackException.TYPE_REMOTE -> {
+                        p.putValue("interruptionMethod", error.message)
+                        intruptMethod = error.message
+                        Log.e("onPlaybackError", error.message!!)
+                    }
+                    else -> {
+                        p.putValue("interruptionMethod", error.message)
+                        intruptMethod = error.message
+                        Log.e("onPlaybackError", error.message!!)
+                    }
+                }
+                AudioInterrupted = true
+                addDisclaimerToSegment("Disclaimer Interrupted",ctx,p)
+                val cm = ctx.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+                //should check null because in airplane mode it will be null
+                val nc: NetworkCapabilities?
+                var downSpeed = 0f
+                var batLevel = 0
+                var upSpeed = 0f
+                if (isNetworkConnected(ctx)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        nc = cm.getNetworkCapabilities(cm.activeNetwork)
+                        downSpeed = nc!!.linkDownstreamBandwidthKbps.toFloat() / 1000
+                        upSpeed = (nc.linkUpstreamBandwidthKbps / 1000).toFloat()
+                    }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    val bm = ctx.getSystemService(BATTERY_SERVICE) as BatteryManager
+                    batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                }
+                try {
+                    if (isNetworkConnected(ctx)) {
+                        var AudioType = ""
+                        AudioType =  "Streaming"
+                        val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                        val USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+                        val CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+                        val listCall = APINewClient.client.getAudioInterruption(CoUserID, mainPlayModelList[pos].id, mainPlayModelList[pos].name, "", mainPlayModelList[pos].audioDirection, mainPlayModelList[pos].audiomastercat, mainPlayModelList[pos].audioSubCategory, mainPlayModelList[pos].audioDuration, "", AudioType, "Main", hundredVolume.toString(), appStatus(ctx), GetSourceName(ctx), GetCurrentAudioPosition(), "", intruptMethod, batLevel.toString(), BatteryStatus, downSpeed.toString(), upSpeed.toString(), "Android")
+                        listCall.enqueue(object : Callback<AudioInterruptionModel?> {
+                            override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
+                                val listModel = response.body()
+                            }
+                            override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
+                        })
+                    } else {
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+        })
         audioClick = false
         PlayerINIT = true
     }

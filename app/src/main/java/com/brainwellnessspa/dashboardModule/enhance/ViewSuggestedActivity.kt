@@ -426,6 +426,21 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 //                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
                 //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
                 //                        || listModel.get(position).isLock().equalsIgnoreCase("")) {
+                val p = Properties()
+                p.putValue("audioId", listModel[position].iD)
+                p.putValue("audioName", listModel[position].name)
+                p.putValue("audioDescription", "")
+                p.putValue("directions", listModel[position].audioDirection)
+                p.putValue("masterCategory", listModel[position].audiomastercat)
+                p.putValue("subCategory", listModel[position].audioSubCategory)
+                p.putValue("audioDuration", listModel[position].audioDuration)
+                p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
+                p.putValue("audioType", "Streaming")
+                p.putValue("source","Add Audio Screen")
+                p.putValue("audioService", appStatus(ctx))
+                p.putValue("bitRate", "")
+                p.putValue("sound", hundredVolume.toString())
+                addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 if (playlistId.equals("", ignoreCase = true)) {
                     val i = Intent(ctx, AddPlaylistActivity::class.java)
                     i.putExtra("AudioId", listModel[position].iD)

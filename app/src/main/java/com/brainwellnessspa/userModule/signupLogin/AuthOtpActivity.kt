@@ -39,6 +39,7 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.segment.analytics.Properties
+import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -276,6 +277,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             } else {
                                 addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
                             }
+                            analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", "").putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
                             if (signupFlag.equals("1", ignoreCase = true)) {
                                 val i = Intent(activity, EmailVerifyActivity::class.java)
                                 startActivity(i)
