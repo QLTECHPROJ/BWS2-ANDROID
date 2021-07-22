@@ -47,6 +47,7 @@ import retrofit2.Response
 class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     lateinit var binding: ActivityAuthOtpBinding
     lateinit var activity: Activity
+    lateinit var ctx: Context
     private var smsReceiver: SmsReceiver? = null
     private lateinit var editTexts: Array<EditText>
     private var tvSendOTPbool = true
@@ -66,6 +67,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_otp)
         activity = this@AuthOtpActivity
+        ctx = this@AuthOtpActivity
 
         if (intent != null) {
             mobileNo = intent.getStringExtra(CONSTANTS.mobileNumber)
@@ -277,7 +279,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             } else {
                                 addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
                             }
-                            analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", "").putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
                             if (signupFlag.equals("1", ignoreCase = true)) {
                                 val i = Intent(activity, EmailVerifyActivity::class.java)
                                 startActivity(i)
@@ -329,6 +330,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                             editor.apply()
 
+                            callIdentify(ctx)
                             val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             val edited = sharded.edit()
                             edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)

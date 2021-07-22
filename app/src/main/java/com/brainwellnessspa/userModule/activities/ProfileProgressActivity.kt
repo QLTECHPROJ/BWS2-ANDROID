@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityProfileProgressBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
@@ -374,6 +375,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ProfileSaveDataModel = response.body()!!
+                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                        val editor = shared.edit()
+                        editor.putString(CONSTANTS.PREFE_ACCESS_DOB, age)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "1")
+                        editor.apply()
+                        callIdentify(ctx)
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val p = Properties()
                             p.putValue("gender", gender)

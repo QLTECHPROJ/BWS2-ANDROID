@@ -26,11 +26,12 @@ import com.brainwellnessspa.userModule.models.*
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EnhanceUserListActivity : AppCompatActivity() {
+class ManageUserActivity : AppCompatActivity() {
     lateinit var binding: ActivityEnhanceUserListBinding
     var userId: String? = null
     var enhanceUserListAdapter: EnhanceUserListAdapter? = null
@@ -50,12 +51,10 @@ class EnhanceUserListActivity : AppCompatActivity() {
         val mListLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvUserList.layoutManager = mListLayoutManager
         binding.rvUserList.itemAnimator = DefaultItemAnimator()
-        activity = this@EnhanceUserListActivity
+        activity = this@ManageUserActivity
         binding.llBack.setOnClickListener {
             finish()
         }
-
-        prepareEnhanceUserList(activity)
     }
 
     override fun onBackPressed() {
@@ -81,6 +80,9 @@ class EnhanceUserListActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ManageUserListModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            val p = Properties()
+                            p.putValue("totalUsers",listModel.responseData!!.userList!!.size)
+                            BWSApplication.addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
                             listModel.responseData?.let {
                                 enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
                                 binding.rvUserList.adapter = enhanceUserListAdapter
@@ -295,6 +297,9 @@ class EnhanceUserListActivity : AppCompatActivity() {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: RemoveInviteUserModel = response.body()!!
                                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                val p = Properties()
+                                                p.putValue("removedUserId",list[selectedItem].userId)
+                                                BWSApplication.addToSegment("User Removed", p, CONSTANTS.track)
                                                 prepareEnhanceUserList(activity)
                                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                                 dialog!!.hide()

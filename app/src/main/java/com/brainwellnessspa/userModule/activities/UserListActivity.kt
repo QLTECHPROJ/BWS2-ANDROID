@@ -285,6 +285,7 @@ class UserListActivity : AppCompatActivity() {
 
                                                                 val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                                                 val editor = shared.edit()
+                                                                val gson = Gson()
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
@@ -294,6 +295,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(authOtpModel.ResponseData.AreaOfFocus))
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
                                                                 editor.apply()
@@ -302,7 +304,6 @@ class UserListActivity : AppCompatActivity() {
                                                                 edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
                                                                 val selectedCategoriesTitle = arrayListOf<String>()
                                                                 val selectedCategoriesName = arrayListOf<String>()
-                                                                val gson = Gson()
                                                                 for (i in authOtpModel.ResponseData.AreaOfFocus) {
                                                                     selectedCategoriesTitle.add(i.MainCat)
                                                                     selectedCategoriesName.add(i.RecommendedCat)
@@ -313,9 +314,7 @@ class UserListActivity : AppCompatActivity() {
 
                                                                 val activity = SplashActivity()
                                                                 activity.setAnalytics(activity.getString(R.string.segment_key_real))
-
-                                                                analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", listModel.ResponseData.ScoreLevel).putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
-
+                                                                callIdentify(ctx)
                                                                 /*   val p1 = Properties()
                                                                p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
                                                                p1.putValue("deviceType", "Android")

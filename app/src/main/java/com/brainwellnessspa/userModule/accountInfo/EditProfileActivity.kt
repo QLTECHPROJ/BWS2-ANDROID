@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -222,15 +223,18 @@ class EditProfileActivity : AppCompatActivity() {
                                     val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_DOB, viewModel.responseData!!.dob)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.responseData!!.email)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.responseData!!.phoneNumber)
                                     editor.apply()
 
-                                    analytics.identify(Traits().putEmail(viewModel.responseData!!.email).putName(viewModel.responseData!!.name).putPhone(viewModel.responseData!!.phoneNumber).putValue("coUserId", coUserId).putValue("userId", userId).putValue("name", viewModel.responseData!!.name).putValue("phone", viewModel.responseData!!.phoneNumber).putValue("email", viewModel.responseData!!.email))
+                                    callIdentify(applicationContext)
                                     val p = Properties()
                                     p.putValue("name", viewModel.responseData!!.name)
                                     p.putValue("dob", viewModel.responseData!!.dob)
                                     p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
                                     p.putValue("email", viewModel.responseData!!.email)
-                                    BWSApplication.addToSegment("Edit Profile Saved", p, CONSTANTS.track)
+                                    BWSApplication.addToSegment("Profile Changes Saved", p, CONSTANTS.track)
                                     finish()
                                 }
                                 viewModel!!.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
@@ -287,6 +291,12 @@ class EditProfileActivity : AppCompatActivity() {
                                 binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
                                 binding.etEmail.setText(viewModel.ResponseData.Email)
                                 binding.etCalendar.setText(viewModel.ResponseData.DOB)
+                                val p = Properties()
+                                p.putValue("name", userName)
+                                p.putValue("dob", userCalendar)
+                                p.putValue("mobileNo",userMobileNumber)
+                                p.putValue("email", userEmail)
+                                BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
 
                             } else if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                 BWSApplication.deleteCall(activity)

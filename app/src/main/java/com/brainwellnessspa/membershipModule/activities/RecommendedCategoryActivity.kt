@@ -605,10 +605,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
+                            val selectedCategoriesId = arrayListOf<String>()
                             val selectedCategoriesTitle = arrayListOf<String>()
                             val selectedCategoriesName = arrayListOf<String>()
                             val gsons = Gson()
-                            for (i in listModel.responseData!!.categoryData!!) {
+                            for (i in listModel.responseData!!.areaOfFocus!!) {
+                                selectedCategoriesId.add(i.catId!!)
                                 selectedCategoriesTitle.add(i.mainCat!!)
                                 selectedCategoriesName.add(i.recommendedCat!!)
                             }
@@ -616,26 +618,22 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
                             editor.apply()
 
+                            val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                            val editor1 = shared1.edit()
+                            editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME,  listModel.responseData!!.avgSleepTime)
+                            editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
+                            editor1.apply()
                             val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
                             i.putExtra("BackClick", intent.getStringExtra("BackClick"))
                             startActivity(i)
                             finish()
-//                            val i = Intent(activity, PreparePlaylistActivity::class.java)
-//                            i.putExtra("BackClick", backClick)
-//                            startActivity(i)
+                            callIdentify(ctx)
                             val section = ArrayList<SegmentAreaOfFocus>()
                             gsonBuilder = GsonBuilder()
-                            val gson: Gson = gsonBuilder.create()
-                            for (pos in listModel.responseData!!.categoryData!!.indices) {
-                                val e = SegmentAreaOfFocus()
-                                e.mainCategory = listModel.responseData!!.categoryData!![pos].mainCat.toString()
-                                e.problemName = listModel.responseData!!.categoryData!![pos].recommendedCat.toString()
-                                section.add(e)
-                            }
                             val p = Properties()
                             Log.e("section area of focus", section.toString())
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
-                            p.putValue("areaOfFocus", gson.toJson(section))
+                            p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
                             addToSegment("Area of Focus Saved", p, CONSTANTS.track)
                             finish()
                         } else {

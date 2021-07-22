@@ -367,7 +367,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                         p.putValue("playlistType", "Created")
                                     } else if (listModel.responseData.created == "0") {
                                         p.putValue("playlistType", "Default")
-                                    }else if (listModel.responseData.created == "2") {
+                                    } else if (listModel.responseData.created == "2") {
                                         p.putValue("playlistType", "suggested")
                                     }
                                     if (listModel.responseData.totalhour.equals("")) {
@@ -615,7 +615,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llMore.visibility = View.GONE
                     binding.llDownloads.visibility = View.GONE
                     binding.rlSearch.visibility = View.VISIBLE
-                    adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads)
+                    adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads,listModel)
                     binding.rvPlayLists2.adapter = adapter2
                     binding.rvPlayLists1.visibility = View.GONE
                     binding.rvPlayLists2.visibility = View.VISIBLE
@@ -648,7 +648,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             binding.tvSearch.visibility = View.GONE
                             binding.llDelete.visibility = View.GONE
                             binding.searchView.visibility = View.VISIBLE
-                            adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads)
+                            adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads, listModel)
                             binding.rvPlayLists1.visibility = View.GONE
                             binding.rvPlayLists2.visibility = View.VISIBLE
                             binding.rvPlayLists2.adapter = adapter2
@@ -660,7 +660,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             binding.tvSearch.visibility = View.GONE
                             binding.searchView.visibility = View.VISIBLE
                             binding.llDelete.visibility = View.GONE
-                            adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads)
+                            adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads, listModel)
                             binding.rvPlayLists1.visibility = View.GONE
                             binding.rvPlayLists2.visibility = View.VISIBLE
                             binding.rvPlayLists2.adapter = adapter2
@@ -1171,7 +1171,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     }
 
-    class PlayListsAdpater2(var listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, var ctx: Context, var coUserId: String?, var created: String?, var binding: ActivityMyPlaylistListingBinding, var activity: Activity, var playlistId: String?, var playlistName: String?, private var myDownloads: String?) : RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder>(), Filterable {
+    class PlayListsAdpater2(var listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, var ctx: Context, var coUserId: String?, var created: String?, var binding: ActivityMyPlaylistListingBinding, var activity: Activity, var playlistId: String?, var playlistName: String?, private var myDownloads: String?, var listModel1: PlaylistDetailsModel.ResponseData) : RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder>(), Filterable {
 
         private var listFilterData: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong> = listModel
 
@@ -1334,6 +1334,27 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     btn.setOnClickListener {
                         getDeleteDownloadData(ctx)
                         getPlaylistMedia(playlistId!!, ctx, DB, coUserId)
+
+                        val p = Properties()
+                        p.putValue("playlistId", listModel1.playlistID)
+                        p.putValue("playlistName", listModel1.playlistName)
+                        if (listModel1.created.equals("1", ignoreCase = true)) {
+                            p.putValue("playlistType", "Created")
+                        } else if (listModel1.created.equals("0", ignoreCase = true)) {
+                            p.putValue("playlistType", "Default")
+                        } else if (listModel1.created == "2") p.putValue("playlistType", "Suggested")
+
+                        p.putValue("audioCount", listModel1.totalAudio)
+                        p.putValue("playlistDescription", listModel1.playlistDesc)
+                        if (listModel1.totalhour.equals("", ignoreCase = true)) {
+                            p.putValue("playlistDuration", "0h " + listModel1.totalminute + "m")
+                        } else if (listModel1.totalminute.equals("", ignoreCase = true)) {
+                            p.putValue("playlistDuration", listModel1.totalhour + "h 0m")
+                        } else {
+                            p.putValue("playlistDuration", listModel1.totalhour + "h " + listModel1.totalminute + "m")
+                        }
+                        p.putValue("source", "Downloaded Playlists")
+                        addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track)
                         dialog.dismiss()
                         activity.finish()
                     }

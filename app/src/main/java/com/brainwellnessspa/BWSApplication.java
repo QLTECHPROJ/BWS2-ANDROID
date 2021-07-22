@@ -120,6 +120,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
+import com.segment.analytics.Traits;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -224,9 +225,6 @@ public class BWSApplication extends Application {
     }
 
     public static List<String> GetAllMediaDownload(Context ctx) {
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao().geAllDataBYDownloadedForAll("Complete").observe((LifecycleOwner) ctx, audioList -> {
             downloadAudioDetailsList = audioList;
@@ -2242,6 +2240,68 @@ public class BWSApplication extends Application {
         addToSegment(event, p, CONSTANTS.track);
     }
 
+    public static void callIdentify(Context ctx){
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        String mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
+        String email = shared1.getString(CONSTANTS.PREFE_ACCESS_EMAIL,"");
+        String name = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
+        String dob = shared1.getString(CONSTANTS.PREFE_ACCESS_DOB, "");
+        String mobile = shared1.getString(CONSTANTS.PREFE_ACCESS_MOBILE, "");
+        String indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE,"");
+        String scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL,"");
+        String sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
+        String image = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE,"");
+        String isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "");
+        String isAssCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,"");
+        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount,"");
+        String userCounnt = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount,"");
+        Gson gson = new Gson();
+        String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus,  gson.toString());
+        String areaOfFocus = "";
+
+        if (!json5.equalsIgnoreCase(gson.toString()))
+            areaOfFocus = json5;
+
+        boolean isProf = false,isAss = false, isadm = false;
+        if(isProfileCompleted.equalsIgnoreCase("1"))
+            isProf = true;
+        else
+            isProf = false;
+
+        if(isAssCompleted.equalsIgnoreCase("1"))
+            isAss = true;
+        else
+            isAss = false;
+
+        if(isAdmin.equalsIgnoreCase("1"))
+            isadm = true;
+        else
+            isadm = false;
+
+        analytics.identify(new Traits()
+                .putValue("userGroupId",mainAccountId)
+                .putValue("userId",userId)
+                .putValue("id",userId)
+                .putValue("isAdmin",isadm)
+                .putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID))
+                .putValue("deviceType", "Android")
+                .putName(name)
+                .putEmail(email)
+                .putPhone(mobile)
+                .putValue("DOB",dob)
+                .putValue("profileImage", image)
+                .putValue("isProfileCompleted",isProf)
+                .putValue("isAssessmentCompleted", isAss)
+                .putValue("wellnessScore",indexScore)
+                .putValue("scoreLevel", scoreLevel)
+                .putValue("areaOfFocus", areaOfFocus)
+                .putValue("avgSleepTime", sleepTime)
+                .putValue("plan", "")
+                .putValue("planStatus", "")
+                .putValue("planStartDt", "")
+                .putValue("planExpiryDt", ""));
+    }
     public static void addToSegment(String TagName, Properties properties, String methodName) {
         long mySpace;
         mySpace = GlobalInitExoPlayer.getSpace();
@@ -2267,11 +2327,17 @@ public class BWSApplication extends Application {
         SharedPreferences shared1 = getContext().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-
+        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount,"");
+        boolean isadm = false;
         if (!mainAccountId.isEmpty() || !mainAccountId.equalsIgnoreCase(""))
             properties.putValue("userGroupId", mainAccountId);
         if (!userId.isEmpty() || !userId.equalsIgnoreCase(""))
             properties.putValue("userId", userId);
+        if(isAdmin.equalsIgnoreCase("1"))
+            isadm = true;
+        else
+            isadm = false;
+        properties .putValue("isAdmin",isadm);
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel + " %");
         properties.putValue("batteryState", BatteryStatus);

@@ -87,7 +87,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlDeleteAc.visibility = View.VISIBLE
                 binding.rlCancelPlan.visibility = View.GONE
                 binding.tvTilte.text = getString(R.string.delete_account)
-
+                val p = Properties()
+                BWSApplication.addToSegment("Delete Account Screen Viewed", p, CONSTANTS.screen)
                 binding.llBack.setOnClickListener {
                     finish()
                 }
@@ -178,6 +179,26 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                     if (listModel != null) {
                                                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                             BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            val p = Properties()
+                                                            when {
+                                                                deleteId.equals("1") -> {
+                                                                    p.putValue("reason",binding.cbOneAc.text.toString())
+                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                }
+                                                                deleteId.equals("2") -> {
+                                                                    p.putValue("reason",binding.cbTwoAc.text.toString())
+                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                }
+                                                                deleteId.equals("3") -> {
+                                                                    p.putValue("reason",binding.cbThreeAc.text.toString())
+                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                }
+                                                                deleteId.equals("4") -> {
+                                                                    p.putValue("reason",binding.cbFourAc.text.toString())
+                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                }
+                                                            }
+                                                            BWSApplication.addToSegment("Account Deleted", p, CONSTANTS.track)
                                                             dialog.dismiss()
                                                             BWSApplication.deleteCall(activity)
                                                             val i = Intent(activity, SignInActivity::class.java)

@@ -64,7 +64,6 @@ import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -131,7 +130,13 @@ class HomeFragment : Fragment() {
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
+        var areaOfFocus: String? = ""
 
+        val p = Properties()
+        val gson=Gson()
+        if (!json5.equals(gson.toString(), ignoreCase = true)) areaOfFocus = json5
         /* Get sleep time from share pref*/
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -141,10 +146,8 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-        val p = Properties()
-        val gson=Gson()
-        p.putValue("indexScore",indexScore)
-        p.putValue("areaOfFocus",gson.toJson(selectedCategoriesName))
+        p.putValue("WellnessScore", indexScore)
+        p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (sleepTime.equals("", true)) {
@@ -1228,9 +1231,7 @@ class HomeFragment : Fragment() {
                                                         activity.setAnalytics(activity.getString(R.string.segment_key_real))
 
                                                         //    showToast(listModel.responseMessage,act)
-
-                                                        analytics.identify(Traits().putEmail(listModel.ResponseData.Email).putName(listModel.ResponseData.Name).putPhone(listModel.ResponseData.Mobile).putValue("coUserId", listModel.ResponseData.UserId).putValue("userId", listModel.ResponseData.MainAccountID).putValue("deviceId", Settings.Secure.getString(act.contentResolver, Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putValue("name", listModel.ResponseData.Name).putValue("countryCode", "").putValue("countryName", "").putValue("phone", listModel.ResponseData.Mobile).putValue("email", listModel.ResponseData.Email).putValue("DOB", listModel.ResponseData.DOB).putValue("profileImage", listModel.ResponseData.Image).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", "").putValue("clinikoId", "").putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted).putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted).putValue("indexScore", listModel.ResponseData.indexScore).putValue("scoreLevel", "").putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus).putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime))
-
+                                                        callIdentify(ctx)
                                                         val p1 = Properties()
                                                         p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
                                                         p1.putValue("deviceType", "Android")
@@ -1244,9 +1245,13 @@ class HomeFragment : Fragment() {
                                                         p1.putValue("planStartDt", "")
                                                         p1.putValue("planExpiryDt", "")
                                                         p1.putValue("clinikoId", "")
-                                                        p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                                        p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                                        p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                        var isProf = false
+                                                        var isAss = false
+                                                        isProf = if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true)) true else false
+                                                        isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) true else false
+                                                        p1.putValue("isProfileCompleted", isProf)
+                                                        p1.putValue("isAssessmentCompleted", isAss)
+                                                        p1.putValue("WellnessScore", listModel.ResponseData.indexScore)
                                                         p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
                                                         p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
                                                         p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)

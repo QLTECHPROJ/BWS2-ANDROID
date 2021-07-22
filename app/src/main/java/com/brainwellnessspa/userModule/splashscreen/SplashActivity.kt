@@ -267,7 +267,7 @@ class SplashActivity : AppCompatActivity() {
     private fun callDashboard() {
         Log.e("isProfileCompleted", isProfileCompleted.toString())
         Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
-        Log.e("indexScore", indexScore.toString())
+        Log.e("WellnessScore", indexScore.toString())
         Log.e("avgSleepTime", avgSleepTime.toString())
         Log.e("coUserCount", coUserCount.toString())
         if (isPinSet.equals("1", ignoreCase = true)) {

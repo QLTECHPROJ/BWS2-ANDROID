@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.analytics
+import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.assessmentProgressModule.models.PostAssAns
@@ -428,21 +429,15 @@ class DassAssSliderActivity : AppCompatActivity() {
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.getResponseData()?.indexScore)
                             editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.getResponseData()?.scoreLevel)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, CONSTANTS.FLAG_ONE)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, CONSTANTS.FLAG_ONE)
                             editor.putString(CONSTANTS.PREFE_ACCESS_assesmentContent, listModel.getResponseData()?.assesmentContent)
                             editor.apply()
                             val p = Properties()
                             p.putValue("ans", gson.toJson(assAns).toString())
-                            p.putValue("indexScore", listModel.getResponseData()?.indexScore)
+                            p.putValue("WellnessScore", listModel.getResponseData()?.indexScore)
                             p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
                             BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
-                            analytics.identify(Traits()
-                                .putValue("ans", gson.toJson(assAns).toString())
-                                .putValue("assessmentScore", listModel.getResponseData()?.indexScore)
-                                .putValue("ScoreLevel",listModel.getResponseData()?.scoreLevel)
-                                .putValue("isProfileCompleted", "Yes")
-                                .putValue("isAssessmentCompleted", "Yes"))
-//                                .putValue("lastAssessmentOn", viewModel.responseData!!.email))
+                            callIdentify(ctx)
                             val i = Intent(activity, AssProcessActivity::class.java)
                             i.putExtra(CONSTANTS.ASSPROCESS, "1")
                             i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)

@@ -86,7 +86,9 @@ object CONSTANTS {
     const val PREFE_ACCESS_countryCode = "countryCode"
     const val PREFE_ACCESS_EmailSend = "EmailSend"
     const val PREFE_ACCESS_NAME = "Name"
+    const val PREFE_ACCESS_DOB = "DOB"
     const val PREFE_ACCESS_IMAGE = "Image"
+    const val PREFE_ACCESS_AreaOfFocus = "AreaOfFocus"
     const val PREFE_ACCESS_USEREMAIL = "UserEmail"
     const val PREFE_ACCESS_DeviceType = "DeviceType"
     const val PREFE_ACCESS_DeviceID = "DeviceID"
@@ -199,7 +201,7 @@ object CONSTANTS {
     const val REGISTRATION_COMPLETE = "registrationComplete"
 
     // Segment Events
-    const val Index_Score_Screen_Viewed = "Index Score Screen Viewed"
+    const val Wellness_Score_Screen_Viewed = "Wellness Score Screen Viewed"
     const val Assessment_Screen_Viewed = "Assessment Screen Viewed"
     const val Assessment_Form_Submitted = "Assessment Form Submitted"
     const val Billing_Order_Screen_Viewed = "Billing & Order Screen Viewed"

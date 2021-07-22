@@ -163,7 +163,13 @@ class ReminderListsActivity : AppCompatActivity() {
                                     e.reminderId = listModel.responseData!![i]!!.reminderId
                                     e.playlistId = listModel.responseData!![i]!!.playlistId
                                     e.playlistName = listModel.responseData!![i]!!.playlistName
-                                    e.playlistType = ""
+                                    if( listModel.responseData!![i]!!.created.equals("1")){
+                                        e.playlistType = "created"
+                                    } else if( listModel.responseData!![i]!!.created.equals("0")){
+                                        e.playlistType = "Default"
+                                    } else if( listModel.responseData!![i]!!.created.equals("2")){
+                                        e.playlistType = "Suggested"
+                                    }
                                     if (listModel.responseData!![i]!!.isCheck.equals("1", ignoreCase = true)) {
                                         e.reminderStatus = "on"
                                     } else {
@@ -360,11 +366,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 binding.cbChecked.isChecked = true
                 binding.tvSelectAll.text = remiderIds.size.toString() + " selected"
             }
-            if (model[position]!!.isCheck.equals("1", ignoreCase = true)) {
-                holder.bind.switchStatus.isChecked = true
-            } else {
-                holder.bind.switchStatus.isChecked = false
-            }
+            holder.bind.switchStatus.isChecked = model[position]!!.isCheck.equals("1", ignoreCase = true)
 
             //            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
             //                holder.bind.switchStatus.setClickable(false);
@@ -391,9 +393,9 @@ class ReminderListsActivity : AppCompatActivity() {
             holder.bind.llSwitchStatus.isEnabled = false
             holder.bind.switchStatus.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
                 if (checked) {
-                    prepareSwitchStatus("1", model[position]!!.playlistId)
+                    prepareSwitchStatus("1", model[position]!!.playlistId, model[position]!!)
                 } else {
-                    prepareSwitchStatus("0", model[position]!!.playlistId)
+                    prepareSwitchStatus("0", model[position]!!.playlistId, model[position]!!)
                 }
             } //            }
             holder.bind.llMainLayout.setOnClickListener {
@@ -414,7 +416,7 @@ class ReminderListsActivity : AppCompatActivity() {
         inner class MyViewHolder(var bind: RemiderDetailsLayoutBinding) : RecyclerView.ViewHolder(bind.root)
     }
 
-    private fun prepareSwitchStatus(reminderStatus: String, PlaylistID: String?) {
+    private fun prepareSwitchStatus(reminderStatus: String, PlaylistID: String?, model: ReminderListModel.ResponseData) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getReminderStatus(coUserId, PlaylistID, reminderStatus) /*set 1 or not 0 */
@@ -425,6 +427,33 @@ class ReminderListsActivity : AppCompatActivity() {
                         val listModel = response.body()
                         if (listModel != null) {
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                p = Properties()
+                                p!!.putValue("reminderId ", model.reminderId)
+                                p!!.putValue("playlistId ", model.reminderId)
+                                p!!.putValue("playlistName ", model.reminderId)
+                                when {
+                                    model.created.equals("1") -> {
+                                        p!!.putValue("playlistType ", "Created")
+                                    }
+                                    model.created.equals("0") -> {
+                                        p!!.putValue("playlistType ", "Default")
+                                    }
+                                    model.created.equals("2") -> {
+                                        p!!.putValue("playlistType ", "Suggested")
+                                    }
+                                }
+                                if (model.isCheck.equals("1", ignoreCase = true)) {
+                                    p!!.putValue("reminderStatus ","on")
+                                } else {
+                                    p!!.putValue("reminderStatus ", "off")
+                                }
+                                p!!.putValue("reminderTime ", model.reminderId)
+                                p!!.putValue("reminderDay ", model.reminderId)
+
+                                if(reminderStatus.equals("1"))
+                                    BWSApplication.addToSegment("Playlist Reminder Set On", p, CONSTANTS.screen)
+                                else
+                                    BWSApplication.addToSegment("Playlist Reminder Set Off", p, CONSTANTS.screen)
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                 BWSApplication.deleteCall(activity)

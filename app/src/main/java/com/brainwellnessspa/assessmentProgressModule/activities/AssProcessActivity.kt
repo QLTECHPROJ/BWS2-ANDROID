@@ -73,9 +73,9 @@ class AssProcessActivity : AppCompatActivity() {
             prepareData(userId)
             /* This is segment tag */
             val p = Properties()
-            p.putValue("indexScore", indexScore)
+            p.putValue("WellnessScore", indexScore)
             p.putValue("scoreLevel", scoreLevel)
-            BWSApplication.addToSegment(CONSTANTS.Index_Score_Screen_Viewed, p, CONSTANTS.screen)
+            BWSApplication.addToSegment(CONSTANTS.Wellness_Score_Screen_Viewed, p, CONSTANTS.screen)
 
             /* This condition is indexscore result */
             when {

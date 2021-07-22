@@ -57,6 +57,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit.RetrofitError
 import retrofit.mime.TypedFile
@@ -89,7 +90,7 @@ class ProfileFragment : Fragment() {
     var indexScore: String? = null
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
-
+    var areaOfFocus: String? = ""
     //    areaOfFocus
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -109,6 +110,9 @@ class ProfileFragment : Fragment() {
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
         deviceId = shared1.getString(CONSTANTS.PREFE_ACCESS_DeviceID, "")
         deviceType = shared1.getString(CONSTANTS.PREFE_ACCESS_DeviceType, "")
+        val gson = Gson()
+        val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
+        if (!json5.equals(gson.toString(), ignoreCase = true)) areaOfFocus = json5
         val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         binding.tvName.text = userName
@@ -161,7 +165,6 @@ class ProfileFragment : Fragment() {
             }
         }
         val p = Properties()
-
         addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
         binding.llAcInfo.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -223,7 +226,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(activity)) {
-                val i = Intent(activity, EnhanceUserListActivity::class.java)
+                val i = Intent(activity, ManageUserActivity::class.java)
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -749,16 +752,21 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 mLastClickTime = SystemClock.elapsedRealtime()
                 if (sucessModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                     val p1 = Properties()
+                    var isProf = false
+                    var isAss = false
+                    isProf = isProfileCompleted.equals("1", ignoreCase = true)
+                    isAss = isAssessmentCompleted.equals("1", ignoreCase = true)
+
                     p1.putValue("deviceId", deviceId)
                     p1.putValue("deviceType", "Android")
                     p1.putValue("phone", userMobile)
                     p1.putValue("email", userEmail)
-                    p1.putValue("isProfileCompleted", isProfileCompleted)
-                    p1.putValue("isAssessmentCompleted", isAssessmentCompleted)
-                    p1.putValue("indexScore", indexScore)
+                    p1.putValue("isProfileCompleted", isProf)
+                    p1.putValue("isAssessmentCompleted", isAss)
+                    p1.putValue("WellnessScore", indexScore)
                     p1.putValue("scoreLevel", scoreLevel)
                     p1.putValue("avgSleepTime", avgSleepTime)
-                    p1.putValue("areaOfFocus", "")
+                    p1.putValue("areaOfFocus", areaOfFocus)
                     addToSegment("CoUser Logout", p1, CONSTANTS.track)
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     hideProgressBar(progressBar, progressBarHolder, activity)

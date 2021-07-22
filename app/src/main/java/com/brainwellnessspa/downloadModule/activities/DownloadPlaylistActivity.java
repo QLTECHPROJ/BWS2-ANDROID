@@ -368,6 +368,26 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 Btn.setOnClickListener(v -> {
                     getDownloadData();
                     GetPlaylistMedia(PlaylistID);
+                    Properties p = new Properties();
+                    p.putValue("playlistId", PlaylistID);
+                    p.putValue("playlistName", PlaylistName);
+                    p.putValue("playlistDescription", PlaylistDescription);
+                    if (Created.equalsIgnoreCase("1")) {
+                        p.putValue("playlistType", "Created");
+                    } else if (Created.equalsIgnoreCase("0")) {
+                        p.putValue("playlistType", "Default");
+                    } else if (Created.equals("2"))
+                        p.putValue("playlistType", "Suggested");
+
+                    if (Totalhour.equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", "0h " + Totalminute + "m");
+                    } else if (Totalminute.equalsIgnoreCase("")) {
+                        p.putValue("playlistDuration", Totalhour + "h 0m");
+                    } else {
+                        p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
+                    }
+                    p.putValue("audioCount", TotalAudio);
+                    BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
                     finish();
                     comeDeletePlaylist = 1;
                     dialog.dismiss();
