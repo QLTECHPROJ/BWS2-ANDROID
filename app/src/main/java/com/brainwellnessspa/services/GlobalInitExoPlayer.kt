@@ -32,6 +32,7 @@ import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.exoplayer2.*
@@ -446,6 +447,21 @@ class GlobalInitExoPlayer : Service() {
                         listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                 val listModel = response.body()
+                                if (listModel != null) {
+                                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                        deleteCall(ctx as Activity?)
+                                        showToast(listModel.responseMessage, ctx as Activity?)
+                                        val i = Intent(ctx, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        startActivity(i)
+                                        ctx.finish()
+                                    }
+                                }
                             }
 
                             override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
@@ -591,6 +607,21 @@ class GlobalInitExoPlayer : Service() {
                         listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                 val listModel = response.body()
+                                if (listModel != null) {
+                                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                        deleteCall(ctx as Activity?)
+                                        showToast(listModel.responseMessage, ctx as Activity?)
+                                        val i = Intent(ctx, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        startActivity(i)
+                                        ctx.finish()
+                                    }
+                                }
                             }
                             override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {}
                         })

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".assessmentProgressModule.activities.DassAssSliderActivity">
+        tools:context=".dashboardModule.session.SessionAssessmentActivity">
 
 
         <!--        <LinearLayout-->
@@ -99,12 +99,23 @@
                         android:id="@+id/tvQus"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
-                        android:text=""
+                        android:text="How You Are Feeling?"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_18sdp"
+                        tools:ignore="SpUsage" />
+                    <TextView
+                        android:id="@+id/tvSection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="Section 2 / 8"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
                         tools:ignore="SpUsage" />
                 </LinearLayout>
 
@@ -117,7 +128,7 @@
                     android:layout_marginRight="@dimen/_20sdp"
                     android:max="33"
                     android:progress="0"
-                    app:indicatorColor="#F1646A"
+                    app:indicatorColor="#8C7386"
                     app:trackColor="#DDDDDD" />
 
                 <RelativeLayout
@@ -189,11 +200,11 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_25sdp"
             android:clickable="true"
+            android:contentDescription="@string/todo"
             android:focusable="true"
             android:rotation="180"
             android:src="@drawable/ic_back_black_icon"
-            app:tint="@color/black"
-            android:contentDescription="@string/todo" />
+            app:tint="@color/black" />
 
         <ImageView
             android:id="@+id/btnNext"

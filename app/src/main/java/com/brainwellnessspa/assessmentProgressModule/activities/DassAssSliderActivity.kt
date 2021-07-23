@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
@@ -33,7 +32,6 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -417,47 +415,50 @@ class DassAssSliderActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AssessmentSaveDataModel = response.body()!!
-                        if (listModel.getResponseCode().equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
-                            val edited1 = preferencesd1.edit()
-                            edited1.remove(CONSTANTS.AssQus)
-                            edited1.remove(CONSTANTS.AssAns)
-                            edited1.remove(CONSTANTS.AssSort)
-                            edited1.clear()
-                            edited1.apply()
-                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                            val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.getResponseData()?.indexScore)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.getResponseData()?.scoreLevel)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, CONSTANTS.FLAG_ONE)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_assesmentContent, listModel.getResponseData()?.assesmentContent)
-                            editor.apply()
-                            val p = Properties()
-                            p.putValue("ans", gson.toJson(assAns).toString())
-                            p.putValue("WellnessScore", listModel.getResponseData()?.indexScore)
-                            p.putValue("scoreLevel", listModel.getResponseData()?.scoreLevel)
-                            BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
-                            callIdentify(ctx)
-                            val i = Intent(activity, AssProcessActivity::class.java)
-                            i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                            i.putExtra(CONSTANTS.IndexScore, listModel.getResponseData()?.indexScore)
-                            i.putExtra(CONSTANTS.ScoreLevel, listModel.getResponseData()?.scoreLevel)
-                            startActivity(i)
-                            finish()
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+                                val edited1 = preferencesd1.edit()
+                                edited1.remove(CONSTANTS.AssQus)
+                                edited1.remove(CONSTANTS.AssAns)
+                                edited1.remove(CONSTANTS.AssSort)
+                                edited1.clear()
+                                edited1.apply()
+                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                val editor = shared.edit()
+                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData?.indexScore)
+                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.responseData?.scoreLevel)
+                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, CONSTANTS.FLAG_ONE)
+                                editor.apply()
+                                val p = Properties()
+                                p.putValue("ans", gson.toJson(assAns).toString())
+                                p.putValue("WellnessScore", listModel.responseData?.indexScore)
+                                p.putValue("scoreLevel", listModel.responseData?.scoreLevel)
+                                BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
+                                callIdentify(ctx)
+                                val i = Intent(activity, AssProcessActivity::class.java)
+                                i.putExtra(CONSTANTS.ASSPROCESS, "1")
+                                i.putExtra(CONSTANTS.IndexScore, listModel.responseData?.indexScore)
+                                i.putExtra(CONSTANTS.ScoreLevel, listModel.responseData?.scoreLevel)
+                                startActivity(i)
+                                finish()
 
-                        } else if (listModel.getResponseCode().equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            BWSApplication.deleteCall(activity)
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity)
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/popup_background"
+    android:elevation="@dimen/_110sdp"
+    android:layout_margin="@dimen/_28sdp"
+    tools:targetApi="lollipop">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="start"
+                android:text="@string/dass21"
+                android:textColor="#707070"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="start"
+                android:text="Please read each statement and select a number 0, 1, 2 or 3, which indicates how much the statement applied to you over the past week. There are no right or wrong answers. Do not spend too much time on any statement. \n\nThe rating scale is as follows: \n0 - Did not apply to me at all \n1 - Applied to me to some degree, or some of the time \n2 - Applied to me to a considerable degree or a good part of time \n3 - Applied to me very much or most of the time"
+                android:scrollbars="vertical"
+                android:lineSpacingExtra="@dimen/_3sdp"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_26sdp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+
+                <RelativeLayout
+                    android:id="@+id/tvconfirm"
+                    android:layout_width="120dp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/extra_blue_corner"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="@string/confirm"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        tools:ignore="SpUsage" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvGoBack"
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center_vertical|right"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center_vertical|right"
+                    android:text="ok"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="HardcodedText,RtlHardcoded,SpUsage" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -28,6 +28,7 @@ import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -134,34 +135,47 @@ class ViewAllAudioFragment : Fragment() {
             listCall.enqueue(object : Callback<ViewAllAudioListModel?> {
                 override fun onResponse(call: Call<ViewAllAudioListModel?>, response: Response<ViewAllAudioListModel?>) {
                     try {
-                        if (response.isSuccessful) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
-                            val listModel = response.body()
-                            if (category.equals("", ignoreCase = true)) {
-                                binding.tvTitle.text = listModel!!.responseData?.view
-                            } else {
-                                binding.tvTitle.text = category
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity())
+                        val listModel = response.body()
+                        if (listModel != null) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                if (category.equals("", ignoreCase = true)) {
+                                    binding.tvTitle.text = listModel.responseData?.view
+                                } else {
+                                    binding.tvTitle.text = category
+                                }
+                                val section = ArrayList<SegmentAudio>()
+                                for (i in listModel.responseData?.details?.indices!!) {
+                                    val e = SegmentAudio()
+                                    e.audioId = listModel.responseData?.details?.get(i)?.iD
+                                    e.audioName = listModel.responseData?.details?.get(i)?.name
+                                    e.masterCategory = listModel.responseData?.details?.get(i)?.audiomastercat
+                                    e.subCategory = listModel.responseData?.details?.get(i)?.audioSubCategory
+                                    e.audioDuration = listModel.responseData?.details?.get(i)?.audioDirection
+                                    section.add(e)
+                                }
+                                val p = Properties()
+                                val gson = Gson()
+                                p.putValue("audios", gson.toJson(section))
+                                if (name.equals(getString(R.string.top_categories), ignoreCase = true)) {
+                                    p.putValue("categoryName", category)
+                                }
+                                p.putValue("source", name)
+                                addToSegment("Audio ViewAll Screen Viewed", p, CONSTANTS.screen)
+                                val adapter = AudiolistAdapter(listModel.responseData?.details)
+                                binding.rvMainAudio.adapter = adapter
+                            } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                activity.finish()
                             }
-                            val section = ArrayList<SegmentAudio>()
-                            for (i in listModel!!.responseData?.details?.indices!!) {
-                                val e = SegmentAudio()
-                                e.audioId = listModel.responseData?.details?.get(i)?.iD
-                                e.audioName = listModel.responseData?.details?.get(i)?.name
-                                e.masterCategory = listModel.responseData?.details?.get(i)?.audiomastercat
-                                e.subCategory = listModel.responseData?.details?.get(i)?.audioSubCategory
-                                e.audioDuration = listModel.responseData?.details?.get(i)?.audioDirection
-                                section.add(e)
-                            }
-                            val p = Properties()
-                            val gson = Gson()
-                            p.putValue("audios", gson.toJson(section))
-                            if (name.equals(getString(R.string.top_categories), ignoreCase = true)) {
-                                p.putValue("categoryName", category)
-                            }
-                            p.putValue("source", name)
-                            addToSegment("Audio ViewAll Screen Viewed", p, CONSTANTS.screen)
-                            val adapter = AudiolistAdapter(listModel.responseData?.details)
-                            binding.rvMainAudio.adapter = adapter
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

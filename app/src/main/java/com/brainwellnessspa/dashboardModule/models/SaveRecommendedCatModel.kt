@@ -1,6 +1,5 @@
 package com.brainwellnessspa.dashboardModule.models
 
-import com.brainwellnessspa.userModule.models.AreaOfFocus
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -11,41 +10,41 @@ class SaveRecommendedCatModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = ""
+    var responseCode: String? = null
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = ""
+    var responseMessage: String? = null
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = ""
+    var responseStatus: String? = null
 
     class ResponseData {
         @SerializedName("UserId")
         @Expose
-        var coUserId: String? = ""
+        var userId: String? = null
 
         @SerializedName("AvgSleepTime")
         @Expose
-        var avgSleepTime: String? = ""
+        var avgSleepTime: String? = null
 
-        @SerializedName("CategoryData")
+        @SerializedName("AreaOfFocus")
         @Expose
         var areaOfFocus: List<AreaOfFocus>? = null
 
         class AreaOfFocus {
             @SerializedName("CatId")
             @Expose
-            var catId: String? = ""
+            var catId: String? = null
 
             @SerializedName("MainCat")
             @Expose
-            var mainCat: String? = ""
+            var mainCat: String? = null
 
             @SerializedName("RecommendedCat")
             @Expose
-            var recommendedCat: String? = ""
+            var recommendedCat: String? = null
         }
     }
 }

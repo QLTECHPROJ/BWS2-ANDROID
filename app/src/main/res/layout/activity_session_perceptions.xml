@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".dashboardModule.session.SessionPerceptionsActivity">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/llMainFirst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tvQus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="@string/perceptions"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp"
+                        tools:ignore="SpUsage" />
+
+                    <TextView
+                        android:id="@+id/tvSection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="Section 3 / 8"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
+                </LinearLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/lpIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:max="33"
+                    android:progress="0"
+                    app:indicatorColor="#8C7386"
+                    app:trackColor="#DDDDDD" />
+
+                <TextView
+                    android:id="@+id/tvText1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/_1_are_you_experiencing_any_of_the_following"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/please_indicate_how_often_each_statement_applies_to_you"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/have_you_received_electric_shock_treatment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbYes"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/yes"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbNo"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/no"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/if_so_when_was_the_last_treatment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/light_gray_rounded_unfilled">
+
+                    <LinearLayout
+                        android:id="@+id/llDatePicker"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_48sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_20sdp"
+                            android:layout_marginVertical="@dimen/_24sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="start"
+                            android:lineSpacingExtra="@dimen/_4sdp"
+                            android:text="dd-mm-yyyy"
+                            android:textColor="@color/dim_light_gray"
+                            android:textSize="@dimen/_14sdp"
+                            tools:ignore="SpUsage" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivDatePicker"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_20sdp"
+                        android:layout_toStartOf="@id/llDatePicker"
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/ic_date_icon"
+                        android:visibility="visible" />
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/have_you_ever_taken_drugs_other_than_prescription"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbDrugYes"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/yes"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbDrugNo"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/no"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/if_the_answer_is_yes_then_can_you_list_the_types_of_drugs_including_alcohol_and_when_was_the_last_time_they_were_taken"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/we_also_need_to_know_the_age_illicit_substances_were_consumed_how_regular_the_use_was_or_is_e_g_daily_weekly_monthly_and_the_period_of_time_it_the_drug_was_taken_e_g_one_month_five_years_etc"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    tools:ignore="SpUsage" />
+
+                <EditText
+                    android:id="@+id/edtCancelBoxAc"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
+                    android:background="@drawable/edittext_background"
+                    android:cursorVisible="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="top"
+                    android:hint="@string/your_answer"
+                    android:inputType="textMultiLine|textVisiblePassword"
+                    android:overScrollMode="always"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_8sdp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textColor="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_14sdp"
+                    android:visibility="visible"
+                    tools:ignore="SpUsage" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_60sdp"
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/preceptions_main_layout"
+                    tools:targetApi="lollipop" />
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <TextView
+            android:id="@+id/tvFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="@string/no_result_found"
+            android:textSize="@dimen/_16sdp"
+            android:visibility="gone"
+            tools:ignore="SpUsage" />
+
+    </RelativeLayout>
+</layout>

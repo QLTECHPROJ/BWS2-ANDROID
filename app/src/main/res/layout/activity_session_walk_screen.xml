@@ -277,6 +277,7 @@
                     tools:ignore="SpUsage" />
 
                 <TextView
+                    android:id="@+id/tvSecFourReadMore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"

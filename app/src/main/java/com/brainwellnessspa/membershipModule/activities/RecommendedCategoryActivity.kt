@@ -636,6 +636,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
                             addToSegment("Area of Focus Saved", p, CONSTANTS.track)
                             finish()
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            deleteCall(activity)
+                            showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         } else {
                             showToast(listModel.responseMessage, activity)
                         }

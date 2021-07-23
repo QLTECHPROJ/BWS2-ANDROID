@@ -81,12 +81,23 @@ class ManageUserActivity : AppCompatActivity() {
                         val listModel: ManageUserListModel = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val p = Properties()
-                            p.putValue("totalUsers",listModel.responseData!!.userList!!.size)
+                            p.putValue("totalUsers", listModel.responseData!!.userList!!.size)
                             BWSApplication.addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
                             listModel.responseData?.let {
                                 enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
                                 binding.rvUserList.adapter = enhanceUserListAdapter
                             }
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                            BWSApplication.deleteCall(activity)
+                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", "")
+                            i.putExtra("countryCode", "")
+                            i.putExtra("name", "")
+                            i.putExtra("email", "")
+                            i.putExtra("countryShortName", "")
+                            startActivity(i)
+                            finish()
                         } else {
                             BWSApplication.showToast(listModel.responseMessage, activity)
                         }
@@ -140,8 +151,6 @@ class ManageUserActivity : AppCompatActivity() {
                     }
                 }
 
-
-
                 holder.binding.ivStatus.setOnClickListener {
                     selectedItem = position
                     Log.e("userId dynamic", list[position].userId.toString())
@@ -156,6 +165,7 @@ class ManageUserActivity : AppCompatActivity() {
                 } else {
                     holder.binding.ivStatus.setImageResource(R.drawable.ic_uncheck_user_icon)
                 }
+
                 when {
                     list[position].inviteStatus.equals("0") -> {
                         holder.binding.ivStatus.visibility = View.VISIBLE
@@ -298,7 +308,7 @@ class ManageUserActivity : AppCompatActivity() {
                                             val listModel: RemoveInviteUserModel = response.body()!!
                                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                 val p = Properties()
-                                                p.putValue("removedUserId",list[selectedItem].userId)
+                                                p.putValue("removedUserId", list[selectedItem].userId)
                                                 BWSApplication.addToSegment("User Removed", p, CONSTANTS.track)
                                                 prepareEnhanceUserList(activity)
                                                 BWSApplication.showToast(listModel.responseMessage, activity)

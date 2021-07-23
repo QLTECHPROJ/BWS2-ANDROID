@@ -85,6 +85,7 @@ class ResourceActivity : AppCompatActivity() {
             AudioDownloadsFragment.comefromDownload = "0"
             finish()
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }

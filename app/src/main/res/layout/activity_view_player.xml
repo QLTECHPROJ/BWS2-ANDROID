@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         tools:context=".dashboardModule.activities.MyPlayerActivity">
 
+        <!--ic_session_player_bg-->
         <ImageView
             android:id="@+id/ivBgChange"
             android:layout_width="match_parent"

@@ -139,57 +139,70 @@ class ReminderListsActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<ReminderListModel?> {
                 override fun onResponse(call: Call<ReminderListModel?>, response: Response<ReminderListModel?>) {
                     try {
-                        if (response.isSuccessful) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listModel = response.body()
-                            listReminderModel = listModel
-                            adapter = RemiderDetailsAdapter(listModel!!.responseData)
-                            binding.rvReminderDetails.adapter = adapter
-                            binding.btnAddReminder.visibility = View.GONE
-                            showTooltips()
-                            LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
-                            p = Properties()
-                            if (listModel.responseData!!.isEmpty()) {
-                                binding.llError.visibility = View.VISIBLE
-                                binding.rvReminderDetails.visibility = View.GONE
-                                p!!.putValue("reminders ", "")
-                            } else {
-                                binding.llError.visibility = View.GONE
-                                binding.rvReminderDetails.visibility = View.VISIBLE
-                                val section1 = ArrayList<SegmentReminder>()
-                                val e = SegmentReminder()
-                                val gson = Gson()
-                                for (i in listModel.responseData!!.indices) {
-                                    e.reminderId = listModel.responseData!![i]!!.reminderId
-                                    e.playlistId = listModel.responseData!![i]!!.playlistId
-                                    e.playlistName = listModel.responseData!![i]!!.playlistName
-                                    if( listModel.responseData!![i]!!.created.equals("1")){
-                                        e.playlistType = "created"
-                                    } else if( listModel.responseData!![i]!!.created.equals("0")){
-                                        e.playlistType = "Default"
-                                    } else if( listModel.responseData!![i]!!.created.equals("2")){
-                                        e.playlistType = "Suggested"
+                        val listModel = response.body()
+                        listReminderModel = listModel
+                        if (listModel != null) {
+                            if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                adapter = RemiderDetailsAdapter(listModel.responseData)
+                                binding.rvReminderDetails.adapter = adapter
+                                binding.btnAddReminder.visibility = View.GONE
+                                showTooltips()
+                                LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
+                                p = Properties()
+                                if (listModel.responseData!!.isEmpty()) {
+                                    binding.llError.visibility = View.VISIBLE
+                                    binding.rvReminderDetails.visibility = View.GONE
+                                    p!!.putValue("reminders ", "")
+                                } else {
+                                    binding.llError.visibility = View.GONE
+                                    binding.rvReminderDetails.visibility = View.VISIBLE
+                                    val section1 = ArrayList<SegmentReminder>()
+                                    val e = SegmentReminder()
+                                    val gson = Gson()
+                                    for (i in listModel.responseData!!.indices) {
+                                        e.reminderId = listModel.responseData!![i]!!.reminderId
+                                        e.playlistId = listModel.responseData!![i]!!.playlistId
+                                        e.playlistName = listModel.responseData!![i]!!.playlistName
+                                        if( listModel.responseData!![i]!!.created.equals("1")){
+                                            e.playlistType = "created"
+                                        } else if( listModel.responseData!![i]!!.created.equals("0")){
+                                            e.playlistType = "Default"
+                                        } else if( listModel.responseData!![i]!!.created.equals("2")){
+                                            e.playlistType = "Suggested"
+                                        }
+                                        if (listModel.responseData!![i]!!.isCheck.equals("1", ignoreCase = true)) {
+                                            e.reminderStatus = "on"
+                                        } else {
+                                            e.reminderStatus = "off"
+                                        }
+                                        e.reminderTime = listModel.responseData!![i]!!.reminderTime
+                                        e.reminderDay = listModel.responseData!![i]!!.reminderDay
+                                        section1.add(e)
                                     }
-                                    if (listModel.responseData!![i]!!.isCheck.equals("1", ignoreCase = true)) {
-                                        e.reminderStatus = "on"
-                                    } else {
-                                        e.reminderStatus = "off"
-                                    }
-                                    e.reminderTime = listModel.responseData!![i]!!.reminderTime
-                                    e.reminderDay = listModel.responseData!![i]!!.reminderDay
-                                    section1.add(e)
+                                    p!!.putValue("reminders ", gson.toJson(section1))
                                 }
-                                p!!.putValue("reminders ", gson.toJson(section1))
-                            }
-                            BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen)
-                            if (remiderIds.size == 0) {
-                                binding.llSelectAll.visibility = View.GONE
-                                binding.btnAddReminder.visibility = View.GONE
-                                binding.btnDeleteReminder.visibility = View.GONE
-                            } else {
-                                binding.llSelectAll.visibility = View.VISIBLE
-                                binding.btnAddReminder.visibility = View.GONE
-                                binding.btnDeleteReminder.visibility = View.VISIBLE
+                                BWSApplication.addToSegment("Reminder Screen Viewed", p, CONSTANTS.screen)
+                                if (remiderIds.size == 0) {
+                                    binding.llSelectAll.visibility = View.GONE
+                                    binding.btnAddReminder.visibility = View.GONE
+                                    binding.btnDeleteReminder.visibility = View.GONE
+                                } else {
+                                    binding.llSelectAll.visibility = View.VISIBLE
+                                    binding.btnAddReminder.visibility = View.GONE
+                                    binding.btnDeleteReminder.visibility = View.VISIBLE
+                                }
+                            } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
                             }
                         }
                     } catch (e: Exception) {
@@ -233,6 +246,17 @@ class ReminderListsActivity : AppCompatActivity() {
                                     BWSApplication.showToast(model.responseMessage, activity)
                                     dialog.dismiss()
                                     prepareData()
+                                } else if (model.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(model.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    finish()
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -560,11 +584,24 @@ class ReminderListsActivity : AppCompatActivity() {
                         listCall.enqueue(object : Callback<DeleteRemiderModel?> {
                             override fun onResponse(call: Call<DeleteRemiderModel?>, response: Response<DeleteRemiderModel?>) {
                                 try {
-                                    if (response.isSuccessful) {
-                                        val model = response.body()
-                                        BWSApplication.showToast(model!!.responseMessage, activity)
-                                        prepareData()
-                                        dialog.dismiss()
+                                    val model = response.body()
+                                    if (model != null) {
+                                        if (model.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            BWSApplication.showToast(model.responseMessage, activity)
+                                            prepareData()
+                                            dialog.dismiss()
+                                        } else if (model.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                            BWSApplication.deleteCall(activity)
+                                            BWSApplication.showToast(model.responseMessage, activity)
+                                            val i = Intent(activity, SignInActivity::class.java)
+                                            i.putExtra("mobileNo", "")
+                                            i.putExtra("countryCode", "")
+                                            i.putExtra("name", "")
+                                            i.putExtra("email", "")
+                                            i.putExtra("countryShortName", "")
+                                            startActivity(i)
+                                            finish()
+                                        }
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()

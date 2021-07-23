@@ -6,71 +6,31 @@ import com.google.gson.annotations.SerializedName
 class AssessmentSaveDataModel {
     @SerializedName("ResponseData")
     @Expose
-    private var responseData: ResponseData? = null
+    var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose
-    private var responseCode: String? = ""
+    var responseCode: String? = null
 
     @SerializedName("ResponseMessage")
     @Expose
-    private var responseMessage: String? = ""
+    var responseMessage: String? = null
 
     @SerializedName("ResponseStatus")
     @Expose
-    private var responseStatus: String? = ""
-
-    fun getResponseData(): ResponseData? {
-        return responseData
-    }
-
-    fun setResponseData(responseData: ResponseData?) {
-        this.responseData = responseData
-    }
-
-    fun getResponseCode(): String? {
-        return responseCode
-    }
-
-    fun setResponseCode(responseCode: String?) {
-        this.responseCode = responseCode
-    }
-
-    fun getResponseMessage(): String? {
-        return responseMessage
-    }
-
-    fun setResponseMessage(responseMessage: String?) {
-        this.responseMessage = responseMessage
-    }
-
-    fun getResponseStatus(): String? {
-        return responseStatus
-    }
-
-    fun setResponseStatus(responseStatus: String?) {
-        this.responseStatus = responseStatus
-    }
+    var responseStatus: String? = null
 
     class ResponseData {
         @SerializedName("indexScore")
         @Expose
-        var indexScore: String? = ""
+        var indexScore: String? = null
 
         @SerializedName("ScoreLevel")
         @Expose
-        var scoreLevel: String? = ""
-
-        @SerializedName("AssesmentTitle")
-        @Expose
-        var assesmentTitle: String? = ""
-
-        @SerializedName("AssesmentContent")
-        @Expose
-        var assesmentContent: String? = ""
+        var scoreLevel: String? = null
 
         @SerializedName("errormsg")
         @Expose
-        var errormsg: String? = ""
+        var errormsg: String? = null
     }
 }

@@ -14,6 +14,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityChangePinBinding
 import com.brainwellnessspa.userModule.models.ChangePinModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -135,13 +136,28 @@ class ChangePinActivity : AppCompatActivity() {
                             binding.txtConfirmPINError.visibility = View.GONE
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
                             val listModel: ChangePinModel = response.body()!!
-                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                val p = Properties()
-                                BWSApplication.addToSegment("Login Pin Changed", p, CONSTANTS.track)
-                                finish()
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                            } else {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            when {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    val p = Properties()
+                                    BWSApplication.addToSegment("Login Pin Changed", p, CONSTANTS.track)
+                                    finish()
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    finish()
+                                }
+                                else -> {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
                             }
 
                         } catch (e: Exception) {

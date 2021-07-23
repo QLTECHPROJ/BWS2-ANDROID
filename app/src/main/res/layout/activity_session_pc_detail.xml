@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".dashboardModule.session.SessionPcDetailActivity">
+
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_arrow_left_icon_two"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/rlLayout"
+            android:layout_marginHorizontal="@dimen/_16sdp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="@string/your_personal_details"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="@string/home_address"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llHomeAddress"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flHomeAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etHomeAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/enter_you_home_address"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_13sdp"
+                android:text="@string/suburb"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llSuburb"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flSuburb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSuburb"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/enter_you_suburb"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_13sdp"
+                android:text="@string/Postcode"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llPostcode"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flPostcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPostcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/enter_you_postcode"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_13sdp"
+                android:text="@string/ethnicity"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16sdp"
+                tools:ignore="SpUsage" />
+
+            <LinearLayout
+                android:id="@+id/llEthnicity"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/textview_background_two"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/flEthnicity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/light_gray"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorText"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEthnicity"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_31sdp"
+                        android:background="@null"
+                        android:backgroundTint="@color/black"
+                        android:cursorVisible="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/enter_you_ethnicity"
+                        android:imeOptions="actionNext"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dim_light_gray"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:background="@drawable/gray_round_cornor"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/Continue"
+            android:enabled="false"
+            android:visibility="visible"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+</layout>

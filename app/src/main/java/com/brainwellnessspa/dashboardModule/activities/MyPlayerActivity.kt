@@ -465,7 +465,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             editor.apply()
                             removeArray()
                             val p = Properties()
-                            addDisclaimerToSegment("Disclaimer Completed",ctx,p)
+                            addDisclaimerToSegment("Disclaimer Completed", ctx, p)
                         }
                         if (state == ExoPlayer.STATE_READY) {
                             val p = Properties()
@@ -996,8 +996,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                         p.putValue("playlistType", "Created")
                                     } else if (PlaylistType.equals("0", ignoreCase = true)) {
                                         p.putValue("playlistType", "Default")
-                                    } else if (PlaylistType.equals("2"))
-                                           p.putValue("playlistType", "Suggested")
+                                    } else if (PlaylistType.equals("2")) p.putValue("playlistType", "Suggested")
                                     when {
                                         Totalhour.equals("", ignoreCase = true) -> {
                                             p.putValue("playlistDuration", "0h " + Totalminute + "m")
@@ -1066,7 +1065,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         }
                     }
                     AudioInterrupted = true
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Interrupted",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Interrupted", CONSTANTS.track, downloadAudioDetailsList, p)
                     val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
                     //should check null because in airplane mode it will be null
                     val nc: NetworkCapabilities?
@@ -1096,6 +1095,21 @@ class MyPlayerActivity : AppCompatActivity() {
                             listCall.enqueue(object : Callback<AudioInterruptionModel?> {
                                 override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                     val listModel = response.body()
+                                    if (listModel != null) {
+                                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                        } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                            deleteCall(act)
+                                            showToast(listModel.responseMessage, act)
+                                            val i = Intent(act, SignInActivity::class.java)
+                                            i.putExtra("mobileNo", "")
+                                            i.putExtra("countryCode", "")
+                                            i.putExtra("name", "")
+                                            i.putExtra("email", "")
+                                            i.putExtra("countryShortName", "")
+                                            startActivity(i)
+                                            finish()
+                                        }
+                                    }
                                 }
 
                                 override fun onFailure(call: Call<AudioInterruptionModel?>, t: Throwable) {
@@ -1224,7 +1238,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     } else {
                         player.seekTo(position, player.currentPosition + 30000)
                         val p = Properties()
-                        addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Forward",CONSTANTS.track,downloadAudioDetailsList,p)
+                        addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Forward", CONSTANTS.track, downloadAudioDetailsList, p)
                     }
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
@@ -1239,7 +1253,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         player.seekTo(position, 0)
                     }
                     val p = Properties()
-                    addAudioSegmentEvent(ctx,position,mainPlayModelList,"Audio Backward",CONSTANTS.track,downloadAudioDetailsList,p)
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Backward", CONSTANTS.track, downloadAudioDetailsList, p)
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }

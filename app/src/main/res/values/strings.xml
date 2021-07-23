@@ -522,5 +522,28 @@
     <string name="delete_account_popup_title">Are you sure you want to permanently delete this account?</string>
     <string name="delete_account_popup_subtitle">You can\'t undo this action</string>
     <string name="pls_provide_latest_pin">Please provide the latest PIN to login</string>
+    <string name="session_description">Session Description</string>
+    <string name="start">Start</string>
+    <string name="home_address">Home Address</string>
+    <string name="enter_you_home_address">Enter you home address</string>
+    <string name="suburb">Suburb</string>
+    <string name="enter_you_suburb">Enter you suburb</string>
+    <string name="enter_you_postcode">Enter you postcode</string>
+    <string name="ethnicity">Ethnicity</string>
+    <string name="enter_you_ethnicity">Enter you ethnicity</string>
+    <string name="before_comparison">Before Comparison</string>
+    <string name="please_indicate_how_often_each_statement_applies_to_you">Please indicate how often each statement applies to you.</string>
+    <string name="very_frequently">Very Frequently</string>
+    <string name="frequently">Frequently</string>
+    <string name="occasionally">Occasionally</string>
+    <string name="rarely">Rarely</string>
+    <string name="never">Never</string>
+    <string name="if_so_when_was_the_last_treatment">If so when was the last treatment?</string>
+    <string name="have_you_received_electric_shock_treatment">Have you received electric shock treatment? *</string>
+    <string name="_1_are_you_experiencing_any_of_the_following">1 Are you experiencing any of the following? *</string>
+    <string name="have_you_ever_taken_drugs_other_than_prescription">Have you ever taken drugs other than prescription? *</string>
+    <string name="if_the_answer_is_yes_then_can_you_list_the_types_of_drugs_including_alcohol_and_when_was_the_last_time_they_were_taken">If the answer is yes then can you list the types of drugs (including alcohol), and when was the last time they were taken.</string>
+    <string name="we_also_need_to_know_the_age_illicit_substances_were_consumed_how_regular_the_use_was_or_is_e_g_daily_weekly_monthly_and_the_period_of_time_it_the_drug_was_taken_e_g_one_month_five_years_etc">We also need to know the age (illicit substances were consumed), how regular the use was or is e.g., daily, weekly, monthly, and the period of time it the drug was taken e.g., one month, five years etc.</string>
+    <string name="your_answer">Your answer</string>
 </resources>
 
