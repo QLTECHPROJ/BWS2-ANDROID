@@ -22,6 +22,7 @@ class DoingGoodActivity : AppCompatActivity() {
             val i = Intent(this@DoingGoodActivity, SleepTimeActivity::class.java)
             startActivity(i)
         }
+
     }
 
     /* This is the device back button click */
