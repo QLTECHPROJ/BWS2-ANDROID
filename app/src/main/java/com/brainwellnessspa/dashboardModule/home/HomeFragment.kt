@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -278,7 +279,7 @@ class HomeFragment : Fragment() {
         super.onResume()
     }
 
-    private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String) {
+    private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String, isReminder: String, reminderId: String) {
         dialog = Dialog(requireActivity())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.reminder_popup_layout)
@@ -286,6 +287,11 @@ class HomeFragment : Fragment() {
         dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
         val btn = dialog.findViewById<Button>(R.id.Btn)
+        val p = Properties()
+        p.putValue("reminderId ", reminderId)
+        p.putValue("playlistId ", playlistID)
+        p.putValue("playlistName ", playlistName)
+        p.putValue("playlistType", "Suggested")
         dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 dialog.hide()
@@ -294,16 +300,23 @@ class HomeFragment : Fragment() {
             false
         }
         btn.setOnClickListener {
-            getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1")
-
+            p.putValue("isReminderSet", "Yes")
+            addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
+            getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
         }
-        tvGoBack.setOnClickListener { dialog.hide() }
+        tvGoBack.setOnClickListener {
+            p.putValue("isReminderSet", "Later")
+            addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
+            dialog.hide()
+        }
         dialog.show()
         dialog.setCancelable(false)
     }
 
     /* network is available or not function for visible other layout of net is not available image display */
     private fun networkCheck() {
+        val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+        Log.e("areNotificationEnabled",areNotificationEnabled.toString())
         if (isNetworkConnected(activity)) {
             binding.llSetReminder.visibility = View.VISIBLE
             binding.llIndexScore.visibility = View.VISIBLE
@@ -438,7 +451,7 @@ class HomeFragment : Fragment() {
                             }
 
                             if (listModel.responseData!!.isFirst.equals("1", ignoreCase = true)) {
-                                getReminderPopup(listModel.responseData!!.suggestedPlaylist!!.playlistID.toString(), listModel.responseData!!.suggestedPlaylist!!.playlistName.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderTime.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderDay.toString())
+                                getReminderPopup(listModel.responseData!!.suggestedPlaylist!!.playlistID.toString(), listModel.responseData!!.suggestedPlaylist!!.playlistName.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderTime.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderDay.toString(), listModel.responseData!!.suggestedPlaylist!!.isReminder.toString(), listModel.responseData!!.suggestedPlaylist!!.reminderId.toString())
                             }
 
                             /* register reciver fro get play pause action update and reminder update */
@@ -476,16 +489,14 @@ class HomeFragment : Fragment() {
                                 if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                     binding.tvReminder.text = "Set reminder"
                                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                                 } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                     binding.tvReminder.text = "Update reminder"
                                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                    getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                                 } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
                                     binding.tvReminder.text = "Update reminder"
                                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                                 }
+                                getReminderDay(ctx, act, userId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity!!, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0", listModel.responseData!!.suggestedPlaylist!!.reminderId, listModel.responseData!!.suggestedPlaylist!!.isReminder, "2")
                             }
 
                             /* Get downloaded Playlist detail*/

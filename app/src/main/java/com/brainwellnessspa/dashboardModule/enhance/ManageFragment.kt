@@ -650,16 +650,19 @@ class ManageFragment : Fragment() {
                             if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                 binding.tvReminder.text = "Set reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0")
-                            }
+                              }
+                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID,
+                                listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
+                                listModel.responseData!!.suggestedPlaylist!!.reminderDay,
+                                "0",listModel.responseData!!.suggestedPlaylist!!.reminderId
+                                ,listModel.responseData!!.suggestedPlaylist!!.isReminder,"2")
                         }
 
                         setPlayPauseIcon()

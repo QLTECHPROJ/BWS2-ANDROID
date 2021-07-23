@@ -426,7 +426,10 @@ class ReminderListsActivity : AppCompatActivity() {
                 if (BWSApplication.isNetworkConnected(activity)) {
                     notificationStatus = true
                     myBackPress = false
-                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay, "0")
+                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName,
+                        activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay,
+                        "0", model[position]!!.reminderId,
+                    model[position]!!.isCheck,model[position]!!.created)
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), activity)
                 }
@@ -451,7 +454,7 @@ class ReminderListsActivity : AppCompatActivity() {
                         val listModel = response.body()
                         if (listModel != null) {
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                p = Properties()
+                              /*  p = Properties()
                                 p!!.putValue("reminderId ", model.reminderId)
                                 p!!.putValue("playlistId ", model.reminderId)
                                 p!!.putValue("playlistName ", model.reminderId)
@@ -477,7 +480,7 @@ class ReminderListsActivity : AppCompatActivity() {
                                 if(reminderStatus.equals("1"))
                                     BWSApplication.addToSegment("Playlist Reminder Set On", p, CONSTANTS.screen)
                                 else
-                                    BWSApplication.addToSegment("Playlist Reminder Set Off", p, CONSTANTS.screen)
+                                    BWSApplication.addToSegment("Playlist Reminder Set Off", p, CONSTANTS.screen)*/
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                 BWSApplication.deleteCall(activity)

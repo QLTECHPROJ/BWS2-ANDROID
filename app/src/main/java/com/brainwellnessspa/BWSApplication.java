@@ -3,6 +3,7 @@ package com.brainwellnessspa;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -13,6 +14,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -125,6 +127,9 @@ import com.segment.analytics.Traits;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -1965,7 +1970,7 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void getReminderDay(Context ctx, Activity act, String userId, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay, String isSuggested) {
+    public static void getReminderDay(Context ctx, Activity act, String userId, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay, String isSuggested,String reminderID,String isReminder,String created) {
         ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{new ReminderSelectionModel("Sunday"), new ReminderSelectionModel("Monday"), new ReminderSelectionModel("Tuesday"), new ReminderSelectionModel("Wednesday"), new ReminderSelectionModel("Thursday"), new ReminderSelectionModel("Friday"), new ReminderSelectionModel("Saturday"),};
         localIntent = new Intent("Reminder");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
@@ -1986,10 +1991,6 @@ public class BWSApplication extends Application {
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
-        //        calendar = Calendar.getInstance();
-        //        Chour = calendar.get(Calendar.HOUR_OF_DAY);
-        //        Cminute = calendar.get(Calendar.MINUTE);
-
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
             simpleDateFormat1.setTimeZone(TimeZone.getDefault());
@@ -2005,9 +2006,47 @@ public class BWSApplication extends Application {
             }
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
+            Properties p = new Properties();
+            p.putValue("reminderId ","");
+            p.putValue("playlistId ", "");
+            p.putValue("playlistName ","");
+            p.putValue("playlistType ","");
+            p.putValue("reminderStatus ","");
+            p.putValue("reminderTime ","");
+            p.putValue("reminderDay","");
+            addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         } else {
             tvTime.setText(Time);
             currantTime = Time;
+            Properties p = new Properties();
+            p.putValue("reminderId ",reminderID);
+            p.putValue("playlistId ", playlistID);
+            p.putValue("playlistName ",playlistName);
+            switch (created) {
+                case "1":
+                    p.putValue("playlistType", "Created");
+                    break;
+                case "0":
+                    p.putValue("playlistType", "Default");
+                    break;
+                case "2":
+                    p.putValue("playlistType", "Suggested");
+                    break;
+            }
+            switch (isReminder) {
+                case "0":
+                    p.putValue("reminderStatus ","");
+                    break;
+                case "1":
+                    p.putValue("reminderStatus ","On");
+                    break;
+                case "2":
+                    p.putValue("reminderStatus ","Off");
+                    break;
+            }
+            p.putValue("reminderTime ",Time);
+            p.putValue("reminderDay",RDay);
+            addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         }
         String[] time = currantTime.split(":");
         String[] min = time[1].split(" ");
@@ -2039,7 +2078,9 @@ public class BWSApplication extends Application {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll, tvUnSelectAll, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested);
+        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll,
+                tvUnSelectAll, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime,
+                progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested,reminderID,created);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -2599,7 +2640,7 @@ public class BWSApplication extends Application {
         Context ctx;
         TextView tvSelectAll, tvUnSelectAll;
         Button btnNext;
-        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested;
+        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested,reminderId,created;
         Dialog dialogOld;
         CheckBox cbCheck;
         FragmentActivity fragmentActivity;
@@ -2609,7 +2650,7 @@ public class BWSApplication extends Application {
         LinearLayout llSelectTime;
         private final ReminderSelectionModel[] selectionModels;
 
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested) {
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -2629,6 +2670,8 @@ public class BWSApplication extends Application {
             this.RDay = RDay;
             this.Time = Time;
             this.isSuggested = isSuggested;
+            this.reminderId = reminderId;
+            this.created = created;
         }
 
         @NotNull
@@ -2707,6 +2750,25 @@ public class BWSApplication extends Application {
                                         Time = tvTime.getText().toString();
                                         hideProgressBar(progressBar, progressBarHolder, act);
                                         showToast(listModel.getResponseMessage(), act);
+                                       /* Properties p = new Properties();
+                                        p.putValue("reminderId ",reminderId);
+                                        p.putValue("playlistId ", PlaylistID);
+                                        p.putValue("playlistName ",PlaylistName);
+                                        switch (created) {
+                                            case "1":
+                                                p.putValue("playlistType", "Created");
+                                                break;
+                                            case "0":
+                                                p.putValue("playlistType", "Default");
+                                                break;
+                                            case "2":
+                                                p.putValue("playlistType", "Suggested");
+                                                break;
+                                        }
+                                        p.putValue("reminderStatus ","On");
+                                        p.putValue("reminderTime ", tvTime.getText().toString());
+                                        p.putValue("reminderDay",TextUtils.join(",", remiderDays));
+                                        addToSegment("Playlist Reminder Set", p, CONSTANTS.screen);*/
                                         localIntent.putExtra("MyReminder", "update");
                                         localBroadcastManager.sendBroadcast(localIntent);
                                     } else if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodeDeleted))) {
@@ -2824,6 +2886,40 @@ public class BWSApplication extends Application {
                 minuteSting = "" + minute;
             tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
         }
+    }
+    public static boolean isNotificationEnabled() {
+
+        AppOpsManager mAppOps = (AppOpsManager) getContext().getSystemService(Context.APP_OPS_SERVICE);
+        ApplicationInfo appInfo = getContext().getApplicationInfo();
+        String CHECK_OP_NO_THROW = "checkOpNoThrow";
+        String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
+        String pkg = getContext().getApplicationContext().getPackageName();
+        int uid = appInfo.uid;
+        Class appOpsClass = null; /* Context.APP_OPS_MANAGER */
+
+        try {
+
+            appOpsClass = Class.forName(AppOpsManager.class.getName());
+
+            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
+
+            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
+            int value = (int)opPostNotificationValue.get(Integer.class);
+
+            return ((int)checkOpNoThrowMethod.invoke(mAppOps,value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {

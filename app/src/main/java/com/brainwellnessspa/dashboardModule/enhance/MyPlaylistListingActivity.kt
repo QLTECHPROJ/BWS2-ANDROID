@@ -384,16 +384,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
                                         binding.tvReminder.text = ctx.getText(R.string.set_reminder)
                                         binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0")
                                     } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
                                         binding.tvReminder.text = ctx.getText(R.string.update_reminder)
                                         binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0")
                                     } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
                                         binding.tvReminder.text = ctx.getText(R.string.update_reminder)
                                         binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0")
                                     }
+                                    getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID,
+                                        listModel.responseData.playlistName, activity as FragmentActivity?,
+                                        listModel.responseData.reminderTime, listModel.responseData.reminderDay,
+                                        "0", listModel.responseData.reminderId,
+                                        listModel.responseData.isReminder,listModel.responseData.created)
                                 } else {
                                     showToast(getString(R.string.no_server_found), activity)
                                 }

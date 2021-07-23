@@ -78,16 +78,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {/* TODO conditions for check user exist or not */
         if (userId.equals("", ignoreCase = true)) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val i = Intent(this@SplashActivity, SignInActivity::class.java)
-                i.putExtra("mobileNo", "")
-                i.putExtra("countryCode", "")
-                i.putExtra("name", "")
-                i.putExtra("email", "")
-                i.putExtra("countryShortName", "")
-                startActivity(i)
-                finish()
-            }, (2 * 800).toLong())
+            checkAppVersion()
         } /*else if (!userId.equals("", ignoreCase = true) && coUserId.equals(
                         "",
                         ignoreCase = true
@@ -265,53 +256,25 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun callDashboard() {
-        Log.e("isProfileCompleted", isProfileCompleted.toString())
-        Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
-        Log.e("WellnessScore", indexScore.toString())
-        Log.e("avgSleepTime", avgSleepTime.toString())
-        Log.e("coUserCount", coUserCount.toString())
-        if (isPinSet.equals("1", ignoreCase = true)) {
-            if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(applicationContext, AssProcessActivity::class.java)
-                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
-            } else {
-                if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                        intent.putExtra(CONSTANTS.ScreenView, "2")
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
-                } else if (avgSleepTime.equals("", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
-                } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                        intent.putExtra("IsFirst", "0")
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
-                }
-//                }
-            }
-        } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
-//            if (coUserCount.toString() > "1") {
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    val intent = Intent(applicationContext, UserListActivity::class.java)
-//                    startActivity(intent)
-//                    finish()
-//                }, (2 * 800).toLong())
-//            } else {
 
-            if (directLogin.equals("1", ignoreCase = true)) {
+        if(userId.equals("")) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val i = Intent(this@SplashActivity, SignInActivity::class.java)
+                i.putExtra("mobileNo", "")
+                i.putExtra("countryCode", "")
+                i.putExtra("name", "")
+                i.putExtra("email", "")
+                i.putExtra("countryShortName", "")
+                startActivity(i)
+                finish()
+            }, (2 * 800).toLong())
+        }else {
+            Log.e("isProfileCompleted", isProfileCompleted.toString())
+            Log.e("isAssessmentCompleted", isAssessmentCompleted.toString())
+            Log.e("WellnessScore", indexScore.toString())
+            Log.e("avgSleepTime", avgSleepTime.toString())
+            Log.e("coUserCount", coUserCount.toString())
+            if (isPinSet.equals("1", ignoreCase = true)) {
                 if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                     Handler(Looper.getMainLooper()).postDelayed({
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
@@ -319,36 +282,78 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     }, (2 * 800).toLong())
-                } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                        intent.putExtra(CONSTANTS.ScreenView, "2")
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
-                } else if (avgSleepTime.equals("", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
-                } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                        intent.putExtra("IsFirst", "0")
-                        startActivity(intent)
-                        finish()
-                    }, (2 * 800).toLong())
+                } else {
+                    if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                            intent.putExtra("IsFirst", "0")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    }
+                    //                }
                 }
-            } else {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }, (2 * 800).toLong())
+            } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
+                //            if (coUserCount.toString() > "1") {
+                //                Handler(Looper.getMainLooper()).postDelayed({
+                //                    val intent = Intent(applicationContext, UserListActivity::class.java)
+                //                    startActivity(intent)
+                //                    finish()
+                //                }, (2 * 800).toLong())
+                //            } else {
 
+                if (directLogin.equals("1", ignoreCase = true)) {
+                    if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                            intent.putExtra("IsFirst", "0")
+                            startActivity(intent)
+                            finish()
+                        }, (2 * 800).toLong())
+                    }
+                } else {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }, (2 * 800).toLong())
+
+                }
+                //            }
             }
-//            }
         }
     }
 

@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.addToSegment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
@@ -267,6 +268,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlCancelPlan.visibility = View.VISIBLE
                 binding.tvTilte.text = getString(R.string.cancel_plan)
 
+                val p1 = Properties()
+                addToSegment("Cancel Subscription Screen Viewed", p1, CONSTANTS.screen)
                 binding.llBack.setOnClickListener {
                     myBackPress = true
                     if (audioPause) {

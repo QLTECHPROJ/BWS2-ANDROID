@@ -752,12 +752,12 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 mLastClickTime = SystemClock.elapsedRealtime()
                 if (sucessModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                     val p1 = Properties()
-                    var isProf = false
+                   /* var isProf = false
                     var isAss = false
                     isProf = isProfileCompleted.equals("1", ignoreCase = true)
-                    isAss = isAssessmentCompleted.equals("1", ignoreCase = true)
+                    isAss = isAssessmentCompleted.equals("1", ignoreCase = true)*/
 
-                    p1.putValue("deviceId", deviceId)
+                   /* p1.putValue("deviceId", deviceId)
                     p1.putValue("deviceType", "Android")
                     p1.putValue("phone", userMobile)
                     p1.putValue("email", userEmail)
@@ -766,8 +766,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     p1.putValue("WellnessScore", indexScore)
                     p1.putValue("scoreLevel", scoreLevel)
                     p1.putValue("avgSleepTime", avgSleepTime)
-                    p1.putValue("areaOfFocus", areaOfFocus)
-                    addToSegment("CoUser Logout", p1, CONSTANTS.track)
+                    p1.putValue("areaOfFocus", areaOfFocus)*/
+                    addToSegment("User Logout", p1, CONSTANTS.track)
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     hideProgressBar(progressBar, progressBarHolder, activity)
                     dialog.hide()

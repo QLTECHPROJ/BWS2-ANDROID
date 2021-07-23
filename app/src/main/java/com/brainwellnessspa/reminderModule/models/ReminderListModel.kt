@@ -41,10 +41,6 @@ class ReminderListModel {
         @Expose
         var isLock: String? = ""
 
-        @SerializedName("IsActive")
-        @Expose
-        var isActive: String? = ""
-
         @SerializedName("RDay")
         @Expose
         var rDay: String? = ""

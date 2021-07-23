@@ -623,18 +623,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME,  listModel.responseData!!.avgSleepTime)
                             editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
                             editor1.apply()
-                            val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
-                            i.putExtra("BackClick", intent.getStringExtra("BackClick"))
-                            startActivity(i)
-                            finish()
+
                             callIdentify(ctx)
-                            val section = ArrayList<SegmentAreaOfFocus>()
-                            gsonBuilder = GsonBuilder()
+
                             val p = Properties()
-                            Log.e("section area of focus", section.toString())
                             p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                             p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
                             addToSegment("Area of Focus Saved", p, CONSTANTS.track)
+
+                            val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
+                            i.putExtra("BackClick", intent.getStringExtra("BackClick"))
+                            startActivity(i)
                             finish()
                         } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                             deleteCall(activity)
