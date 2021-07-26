@@ -35,11 +35,11 @@ class AptAnswersFragment : Fragment() {
             i.data = Uri.parse(appointmentDetail!!.myAnswers)
             startActivity(i)
             BWSApplication.showToast("Download PDF", activity)
-            p = Properties()
+          /*  p = Properties()
             p!!.putValue("sessionId", appointmentDetail!!.id)
             p!!.putValue("sessionName", appointmentDetail!!.name)
             p!!.putValue("myAnswersUrl", appointmentDetail!!.myAnswers)
-            BWSApplication.addToSegment("My Answer Download PDF Clicked", p, CONSTANTS.track)
+            BWSApplication.addToSegment("My Answer Download PDF Clicked", p, CONSTANTS.track)*/
         }
         return view
     }
