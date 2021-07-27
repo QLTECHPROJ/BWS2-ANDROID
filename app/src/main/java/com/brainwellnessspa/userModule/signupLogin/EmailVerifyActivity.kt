@@ -10,6 +10,7 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityEmailVerifyBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
 
@@ -48,8 +49,7 @@ class EmailVerifyActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenView, "2")
+                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                 startActivity(intent)
                 finish()
             } else if (avgSleepTime.equals("", ignoreCase = true)) {

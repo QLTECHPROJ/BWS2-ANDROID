@@ -22,6 +22,7 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAddCouserBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
@@ -53,7 +54,7 @@ class AddCouserActivity : AppCompatActivity() {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.full_desc_layout)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.window!!.setLayout(640, ViewGroup.LayoutParams.WRAP_CONTENT)
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvAction = dialog.findViewById<TextView>(R.id.tvAction)
@@ -96,8 +97,7 @@ class AddCouserActivity : AppCompatActivity() {
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {

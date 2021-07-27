@@ -36,7 +36,6 @@ import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -263,8 +262,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 } else */
 
                                                                     if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                                                        val intent = Intent(activity, WalkScreenActivity::class.java)
-                                                                        intent.putExtra(CONSTANTS.ScreenView, "2")
+                                                                        val intent = Intent(activity, ProfileProgressActivity::class.java)
                                                                         activity.startActivity(intent)
                                                                         activity.finish()
                                                                     } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {

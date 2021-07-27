@@ -157,7 +157,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Whoooops!\nNo active internet :("
+                android:text="@string/whoooops_nno_active_internet"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:textColor="@color/app_theme_color"
                 android:textSize="@dimen/_20sdp"

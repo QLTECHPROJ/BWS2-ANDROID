@@ -150,8 +150,8 @@ class SignUpActivity : AppCompatActivity() {
             binding.tvCountry.text = "+$countryCode"
             binding.tvCountryShortName.text = "$countryShortName"
         } else {
-            binding.tvCountry.text = "+61"
-            binding.tvCountryShortName.text = "AU"
+            binding.tvCountry.text = getString(R.string.country_code_61)
+            binding.tvCountryShortName.text = getString(R.string.country_shortname_default)
         }
 
         p = Properties()
@@ -213,7 +213,7 @@ class SignUpActivity : AppCompatActivity() {
 
         binding.btnCreateAc.setOnClickListener {
             if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
-                binding.txtNameError.text = "Please provide a Name"
+                binding.txtNameError.text = getString(R.string.pls_provide_a_name)
                 binding.txtNameError.visibility = View.VISIBLE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.GONE
@@ -221,26 +221,26 @@ class SignUpActivity : AppCompatActivity() {
             } else if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
-                binding.txtNumberError.text = "Please provide a mobile number"
+                binding.txtNumberError.text = getString(R.string.pls_provide_mobileno)
                 binding.txtEmailError.visibility = View.GONE
                 binding.txtPassowrdError.visibility = View.GONE
             } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 || binding.etNumber.text.toString().length > 10) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
-                binding.txtNumberError.text = "Please provide a valid mobile number"
+                binding.txtNumberError.text = getString(R.string.pls_provide_valid_mobileno)
                 binding.txtEmailError.visibility = View.GONE
                 binding.txtPassowrdError.visibility = View.GONE
             } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = "Please provide a email address"
+                binding.txtEmailError.text = getString(R.string.please_provide_a_email_address)
                 binding.txtPassowrdError.visibility = View.GONE
             } else if (!binding.etEmail.text.toString().isEmailValid()) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.GONE
                 binding.txtEmailError.visibility = View.VISIBLE
-                binding.txtEmailError.text = "Please provide a valid email address"
+                binding.txtEmailError.text = getString(R.string.pls_provide_valid_email)
                 binding.txtPassowrdError.visibility = View.GONE
             } else {
                 signUpUser()
@@ -377,7 +377,7 @@ class SignUpActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         rvCountryList.layoutManager = LinearLayoutManager(ctx)
-                        adapter = CountrySelectAdapter(dialog, binding, listModel.responseData!!, rvCountryList, tvFound)
+                        adapter = CountrySelectAdapter(dialog, binding, listModel.responseData!!, rvCountryList, tvFound, activity)
                         rvCountryList.adapter = adapter
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -449,7 +449,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivityCreateAccountBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
+    class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivityCreateAccountBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView, private var activity: Activity) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
         var catList = SignUpActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -503,7 +503,7 @@ class SignUpActivity : AppCompatActivity() {
                 override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
                     if (listFilterData.isEmpty()) {
                         tvFound.visibility = View.VISIBLE
-                        tvFound.text = "Sorry we are not available in this country yet"
+                        tvFound.text = activity.getString(R.string.no_country_matchlist)
                         rvCountryList.visibility = View.GONE
                     } else {
                         tvFound.visibility = View.GONE

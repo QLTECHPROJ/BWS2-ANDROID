@@ -10,6 +10,7 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityThankYouBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.CONSTANTS
 
@@ -38,8 +39,7 @@ class ThankYouActivity : AppCompatActivity() {
 
         binding.btnExplore.setOnClickListener {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
-                val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                intent.putExtra(CONSTANTS.ScreenView, "1")
+                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                 startActivity(intent)
                 finish()
             } else if (avgSleepTime.equals("", ignoreCase = true)) {

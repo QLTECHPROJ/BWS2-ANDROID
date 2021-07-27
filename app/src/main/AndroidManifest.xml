@@ -72,7 +72,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".dashboardModule.session.SessionPerceptionsActivity"></activity>
+        <activity android:name=".dashboardModule.session.SessionSelfScaleActivity"></activity>
+        <activity android:name=".dashboardModule.session.SessionPersonalHistoryActivity" />
+        <activity android:name=".dashboardModule.session.AggressionQuestionsActivity" />
+        <activity android:name=".dashboardModule.session.SessionQuestionsActivity" />
+        <activity android:name=".dashboardModule.session.SessionPerceptionsActivity" />
         <activity android:name=".dashboardModule.session.SessionComparisonStatusActivity" />
         <activity android:name=".dashboardModule.session.SessionAssessmentActivity" />
         <activity android:name=".dashboardModule.session.SessionPcDetailActivity" />

@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="start"
-            android:text="1. Feelings of Loneliness"
+            android:text="1. I found it hard to wind down"
             android:textColor="@color/black"
             android:textSize="@dimen/_15sdp"
             tools:ignore="SpUsage" />
@@ -35,7 +35,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingVertical="@dimen/_16sdp"
-                android:weightSum="5"
+                android:weightSum="4"
                 tools:ignore="UselessParent">
 
                 <LinearLayout
@@ -50,11 +50,11 @@
                     <TextView
                         android:id="@+id/tvOne"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/very_frequently"
+                        android:text="@string/_0"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
@@ -87,11 +87,11 @@
                     <TextView
                         android:id="@+id/tvTwo"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/frequently"
+                        android:text="@string/_1"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
@@ -123,11 +123,11 @@
                     <TextView
                         android:id="@+id/tvThree"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/occasionally"
+                        android:text="@string/_2"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
@@ -159,11 +159,11 @@
                     <TextView
                         android:id="@+id/tvFour"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/rarely"
+                        android:text="@string/_3"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
@@ -182,43 +182,6 @@
                         tools:ignore="SpUsage" />
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="@dimen/_4sdp">
-
-                    <TextView
-                        android:id="@+id/tvFive"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center"
-                        android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/never"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        tools:ignore="SpUsage" />
-
-                    <CheckBox
-                        android:id="@+id/cbFive"
-                        style="@android:style/Widget.CompoundButton.RadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:button="@drawable/radio_btn_session_background"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical|start"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp"
-                        tools:ignore="SpUsage" />
-
-                </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
 

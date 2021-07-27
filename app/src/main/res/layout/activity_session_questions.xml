@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".dashboardModule.session.SessionAssessmentActivity">
+        tools:context=".dashboardModule.session.SessionQuestionsActivity">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -37,10 +37,11 @@
                         android:layout_weight="0.75"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
-                        android:text="@string/dass21"
+                        android:text="Penn State Worry"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_18sdp"
                         tools:ignore="SpUsage" />
+
                     <TextView
                         android:id="@+id/tvSection"
                         android:layout_width="0dp"
@@ -48,7 +49,7 @@
                         android:layout_weight="0.25"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
-                        android:text="Section 4 / 8"
+                        android:text="Section 5 / 8"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
                         tools:ignore="SpUsage" />
@@ -103,10 +104,10 @@
                         android:id="@+id/tvTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:gravity="start"
                         android:layout_below="@id/tvText"
                         android:layout_marginTop="@dimen/_14sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
                         android:text="#1 Select the appropriate option"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_18sdp"
@@ -116,13 +117,13 @@
                         android:id="@+id/rvList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/tvTitle"
                         android:layout_marginHorizontal="@dimen/_8sdp"
                         android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_below="@id/tvTitle"
                         android:layout_marginBottom="@dimen/_60sdp"
                         android:nestedScrollingEnabled="true"
                         android:overScrollMode="never"
-                        tools:listitem="@layout/preceptions_assessment_layout"
+                        tools:listitem="@layout/preceptions_main_layout"
                         tools:targetApi="lollipop" />
 
                 </RelativeLayout>
@@ -209,4 +210,5 @@
             android:background="#C0000000"
             android:visibility="gone" />
     </RelativeLayout>
+
 </layout>

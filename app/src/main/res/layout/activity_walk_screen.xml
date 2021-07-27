@@ -67,7 +67,7 @@
                 android:background="@drawable/light_green_rounded_filled"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
-                android:text="Continue"
+                android:text="@string/Continue"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -173,7 +173,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="Let's assess how you are \ncurrently doing"
+                    android:text="@string/let_s_assess_how_you_are_ncurrently_doing"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
@@ -187,7 +187,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/_80sdp"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="TAP anywhere to continue"
+                android:text="@string/tap_anywhere_to_continue"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16sdp"
@@ -234,7 +234,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="we're analysing your inputs"
+                    android:text="@string/we_re_analysing_your_inputs"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
@@ -249,7 +249,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/_80sdp"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="TAP anywhere to continue"
+                android:text="@string/tap_anywhere_to_continue"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16sdp"

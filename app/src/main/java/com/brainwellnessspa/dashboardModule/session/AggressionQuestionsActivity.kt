@@ -13,30 +13,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionActivitiesModel
-import com.brainwellnessspa.databinding.ActivitySessionPerceptionsBinding
+import com.brainwellnessspa.databinding.ActivityAggressionQuestionsBinding
 import com.brainwellnessspa.databinding.PreceptionsMainLayoutBinding
 
-class SessionPerceptionsActivity : AppCompatActivity() {
-    lateinit var binding: ActivitySessionPerceptionsBinding
+class AggressionQuestionsActivity : AppCompatActivity() {
+    lateinit var binding: ActivityAggressionQuestionsBinding
     lateinit var ctx: Context
     var userID: String? = ""
-    lateinit var adapter: SessionPerceptionsAdapter
+    lateinit var adapter: AggressionQuestionsAdapter
     var coUserId: String? = ""
     var model = arrayOf(SessionActivitiesModel("1. Feelings of Loneliness"), SessionActivitiesModel("2. Feelings of being Isolated"), SessionActivitiesModel("3. Feelings of Unhappiness"), SessionActivitiesModel("4. Feelings of Desperation"), SessionActivitiesModel("5. Feelings of being unable to cope with life"))
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_perceptions)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_aggression_questions)
 
-        ctx = this@SessionPerceptionsActivity
+        ctx = this@AggressionQuestionsActivity
         val searchList: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvList.layoutManager = searchList
         binding.rvList.itemAnimator = DefaultItemAnimator()
-        adapter = SessionPerceptionsAdapter(model, ctx, binding.rvList, binding.tvFound)
+        adapter = AggressionQuestionsAdapter(model, ctx, binding.rvList, binding.tvFound)
         binding.rvList.adapter = adapter
     }
 
-    inner class SessionPerceptionsAdapter(private val modelList: Array<SessionActivitiesModel>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<SessionPerceptionsAdapter.MyViewHolder>() {
+    inner class AggressionQuestionsAdapter(private val modelList: Array<SessionActivitiesModel>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<AggressionQuestionsAdapter.MyViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PreceptionsMainLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.preceptions_main_layout, parent, false)
@@ -47,6 +46,11 @@ class SessionPerceptionsActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val model: SessionActivitiesModel = modelList[position]
             holder.binding.tvTitle.text = model.title
+            holder.binding.tvOne.text = "1 (Low)"
+            holder.binding.tvTwo.text = "2"
+            holder.binding.tvThree.text = "3"
+            holder.binding.tvFour.text = "4"
+            holder.binding.tvFive.text = "5 (High)"
         }
 
         override fun getItemCount(): Int {

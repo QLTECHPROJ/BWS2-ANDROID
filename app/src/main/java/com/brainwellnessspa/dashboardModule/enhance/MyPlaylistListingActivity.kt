@@ -34,6 +34,7 @@ import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -224,6 +225,15 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         binding.llBack.setOnClickListener {
             finish()
+        }
+
+        binding.llSleepTime.setOnClickListener {
+            if (isNetworkConnected(activity)) {
+                val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                startActivity(intent)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
         }
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
@@ -1311,7 +1321,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                 if (audioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
-                    showToast("Unable to remove as this playlist is in player right now", activity)
+                    showToast("You can't delete a playlist while it's playing.", activity)
                 } else {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -1480,7 +1490,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         binding.llError.visibility = View.VISIBLE
                         binding.tvTag.visibility = View.GONE
                         binding.rvPlayLists2.visibility = View.GONE //                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
-                        binding.tvFound.text = "Please use another term and try searching again" //                        Log.e("search", SearchFlag)
+                        binding.tvFound.text = "Please try again with another search term." //                        Log.e("search", SearchFlag)
                     } else {
                         binding.llError.visibility = View.GONE
                         binding.tvTag.visibility = View.VISIBLE
@@ -1934,7 +1944,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
             }
-            showToast("Downloading the playlist right now", act)
+            showToast("Your playlist is being downloaded!", act)
             saveAllMedia(ctx, playlistSongs, DB)
         } else {
             var downloadOrNot = false
@@ -1992,10 +2002,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     fileNameList = name
                     playlistDownloadId = downloadPlaylistId
                 }
-                showToast("Your audio has been downloaded", act)
+                showToast("Yess! Download complete. Your wellness journey is ready!", act)
                 saveMedia(playlistSongs, position, llDownload, ivDownloads, 0, ctx, DB)
             } else {
-                showToast("Downloading the audio right now", act)
+                showToast("Your audio is being downloaded!", act)
                 saveMedia(playlistSongs, position, llDownload, ivDownloads, 100, ctx, DB)
             }
             val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)

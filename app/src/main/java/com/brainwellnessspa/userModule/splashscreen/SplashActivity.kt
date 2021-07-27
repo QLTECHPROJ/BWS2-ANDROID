@@ -22,10 +22,10 @@ import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
@@ -74,6 +74,8 @@ class SplashActivity : AppCompatActivity() {
         directLogin = shared.getString(CONSTANTS.PREFE_ACCESS_directLogin, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+//        BWSApplication.showToast("Notify Me "+ ("\ud83d\ude01")+("\ud83d\udc34"),this)
     }
 
     override fun onResume() {/* TODO conditions for check user exist or not */
@@ -285,8 +287,7 @@ class SplashActivity : AppCompatActivity() {
                 } else {
                     if (isProfileCompleted.equals("0", ignoreCase = true)) {
                         Handler(Looper.getMainLooper()).postDelayed({
-                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                             startActivity(intent)
                             finish()
                         }, (2 * 800).toLong())
@@ -325,8 +326,7 @@ class SplashActivity : AppCompatActivity() {
                         }, (2 * 800).toLong())
                     } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
                         Handler(Looper.getMainLooper()).postDelayed({
-                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                             startActivity(intent)
                             finish()
                         }, (2 * 800).toLong())

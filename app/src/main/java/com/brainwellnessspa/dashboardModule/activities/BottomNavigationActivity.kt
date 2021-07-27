@@ -83,7 +83,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             isFirst = intent.getStringExtra("IsFirst")
         }
         if (isFirst.equals("1", ignoreCase = true)) {
-            BWSApplication.showToast("Welcome $userName!!", this@BottomNavigationActivity)
+            BWSApplication.showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
         } else {
             //            nothing
         }

@@ -371,135 +371,137 @@ public class BWSApplication extends Application {
             Call<AudioDetailModel> listCall = APINewClient.getClient().getAudioDetail(CoUserID, audioId);
             listCall.enqueue(new Callback<AudioDetailModel>() {
                 @Override
-                public void onResponse(Call<AudioDetailModel> call, Response<AudioDetailModel> response) {
+                public void onResponse(@NotNull Call<AudioDetailModel> call, @NotNull Response<AudioDetailModel> response) {
                     try {
                         progressBar.setVisibility(View.GONE);
                         AudioDetailModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
-                            cvImage.setVisibility(View.VISIBLE);
-                            llAddPlaylist.setVisibility(View.VISIBLE);
-                            llDownload.setVisibility(View.VISIBLE);
+                        if (listModel != null) {
+                            if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
+                                cvImage.setVisibility(View.VISIBLE);
+                                llAddPlaylist.setVisibility(View.VISIBLE);
+                                llDownload.setVisibility(View.VISIBLE);
 
-                            if (comeFrom.equalsIgnoreCase("audioPlayer")) {
-                                if (PlayFrom.equalsIgnoreCase("Created")) {
-                                    llRemovePlaylist.setVisibility(View.VISIBLE);
-                                } else {
-                                    llRemovePlaylist.setVisibility(View.GONE);
-                                }
-                            }
-                            String AudioFile = "", PlaylistId = "", audioFileName = "";
-                            if (comeFrom.equalsIgnoreCase("downloadList")) {
-                                AudioFile = mDataDownload.get(position).getAudioFile();
-                                PlaylistId = mDataDownload.get(position).getPlaylistId();
-                                audioFileName = mDataDownload.get(position).getName();
-                            } else if (comeFrom.equalsIgnoreCase("playlist")) {
-                                AudioFile = mDataPlaylist.get(position).getAudioFile();
-                                PlaylistId = mDataPlaylist.get(position).getPlaylistID();
-                                audioFileName = mDataPlaylist.get(position).getName();
-                            } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
-                                AudioFile = mDataViewAll.get(position).getAudioFile();
-                                PlaylistId = "";
-                                audioFileName = mDataViewAll.get(position).getName();
-                            } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
-                                AudioFile = mDataPlayer.get(position).getAudioFile();
-                                PlaylistId = mDataPlayer.get(position).getPlaylistID();
-                                audioFileName = mDataPlayer.get(position).getName();
-                            }
-                            GetMedia(AudioFile, ctx, audioFileName, ivDownloads, tvDownloads, llDownload);
-                            try {
-                                Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            tvName.setText(listModel.getResponseData().get(0).getName());
-                            if (listModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
-                                tvTitleDec.setVisibility(View.GONE);
-                                tvSubDec.setVisibility(View.GONE);
-                            } else {
-                                tvTitleDec.setVisibility(View.VISIBLE);
-                                tvSubDec.setVisibility(View.VISIBLE);
-                            }
-
-                            tvSubDec.setText(listModel.getResponseData().get(0).getAudioDescription());
-                            int linecount = tvSubDec.getLineCount();
-                            if (linecount >= 4) {
-                                tvReadMore.setVisibility(View.VISIBLE);
-                            } else {
-                                tvReadMore.setVisibility(View.GONE);
-                            }
-                            if (listModel.getResponseData().get(0).getAudiomastercat().equalsIgnoreCase("")) {
-                                tvDesc.setVisibility(View.GONE);
-                            } else {
-                                tvDesc.setVisibility(View.VISIBLE);
-                                tvDesc.setText(listModel.getResponseData().get(0).getAudiomastercat());
-                            }
-                            tvDuration.setText(listModel.getResponseData().get(0).getAudioDuration());
-
-                            if (listModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
-                                tvSubDire.setText("");
-                                tvSubDire.setVisibility(View.GONE);
-                                tvDire.setVisibility(View.GONE);
-                            } else {
-                                tvSubDire.setText(listModel.getResponseData().get(0).getAudioDirection());
-                                tvSubDire.setVisibility(View.VISIBLE);
-                                tvDire.setVisibility(View.VISIBLE);
-                            }
-
-                            //                            if (listModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
-                            //                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                            //                            } else if (!listModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
-                            //                                ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                            //                            }
-
-                            tvReadMore.setOnClickListener(v12 -> {
-                                final Dialog dialog1 = new Dialog(ctx);
-                                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog1.setContentView(R.layout.full_desc_layout);
-                                dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                final TextView tvDesc = dialog1.findViewById(R.id.tvDesc);
-                                final RelativeLayout tvClose = dialog1.findViewById(R.id.tvClose);
-                                tvDesc.setText(listModel.getResponseData().get(0).getAudioDescription());
-
-                                dialog1.setOnKeyListener((v3, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog1.dismiss();
-                                        return true;
+                                if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                                    if (PlayFrom.equalsIgnoreCase("Created")) {
+                                        llRemovePlaylist.setVisibility(View.VISIBLE);
+                                    } else {
+                                        llRemovePlaylist.setVisibility(View.GONE);
                                     }
-                                    return false;
+                                }
+                                String AudioFile = "", PlaylistId = "", audioFileName = "";
+                                if (comeFrom.equalsIgnoreCase("downloadList")) {
+                                    AudioFile = mDataDownload.get(position).getAudioFile();
+                                    PlaylistId = mDataDownload.get(position).getPlaylistId();
+                                    audioFileName = mDataDownload.get(position).getName();
+                                } else if (comeFrom.equalsIgnoreCase("playlist")) {
+                                    AudioFile = mDataPlaylist.get(position).getAudioFile();
+                                    PlaylistId = mDataPlaylist.get(position).getPlaylistID();
+                                    audioFileName = mDataPlaylist.get(position).getName();
+                                } else if (comeFrom.equalsIgnoreCase("viewAllAudioList")) {
+                                    AudioFile = mDataViewAll.get(position).getAudioFile();
+                                    PlaylistId = "";
+                                    audioFileName = mDataViewAll.get(position).getName();
+                                } else if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                                    AudioFile = mDataPlayer.get(position).getAudioFile();
+                                    PlaylistId = mDataPlayer.get(position).getPlaylistID();
+                                    audioFileName = mDataPlayer.get(position).getName();
+                                }
+                                GetMedia(AudioFile, ctx, audioFileName, ivDownloads, tvDownloads, llDownload);
+                                try {
+                                    Glide.with(ctx).load(listModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(ivRestaurantImage);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                tvName.setText(listModel.getResponseData().get(0).getName());
+                                if (listModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
+                                    tvTitleDec.setVisibility(View.GONE);
+                                    tvSubDec.setVisibility(View.GONE);
+                                } else {
+                                    tvTitleDec.setVisibility(View.VISIBLE);
+                                    tvSubDec.setVisibility(View.VISIBLE);
+                                }
+
+                                tvSubDec.setText(listModel.getResponseData().get(0).getAudioDescription());
+                                int linecount = tvSubDec.getLineCount();
+                                if (linecount >= 4) {
+                                    tvReadMore.setVisibility(View.VISIBLE);
+                                } else {
+                                    tvReadMore.setVisibility(View.GONE);
+                                }
+                                if (listModel.getResponseData().get(0).getAudiomastercat().equalsIgnoreCase("")) {
+                                    tvDesc.setVisibility(View.GONE);
+                                } else {
+                                    tvDesc.setVisibility(View.VISIBLE);
+                                    tvDesc.setText(listModel.getResponseData().get(0).getAudiomastercat());
+                                }
+                                tvDuration.setText(listModel.getResponseData().get(0).getAudioDuration());
+
+                                if (listModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
+                                    tvSubDire.setText("");
+                                    tvSubDire.setVisibility(View.GONE);
+                                    tvDire.setVisibility(View.GONE);
+                                } else {
+                                    tvSubDire.setText(listModel.getResponseData().get(0).getAudioDirection());
+                                    tvSubDire.setVisibility(View.VISIBLE);
+                                    tvDire.setVisibility(View.VISIBLE);
+                                }
+
+                                //                            if (listModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
+                                //                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                //                            } else if (!listModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+                                //                                ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                                //                            }
+
+                                tvReadMore.setOnClickListener(v12 -> {
+                                    final Dialog dialog1 = new Dialog(ctx);
+                                    dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog1.setContentView(R.layout.full_desc_layout);
+                                    dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    final TextView tvDesc = dialog1.findViewById(R.id.tvDesc);
+                                    final RelativeLayout tvClose = dialog1.findViewById(R.id.tvClose);
+                                    tvDesc.setText(listModel.getResponseData().get(0).getAudioDescription());
+
+                                    dialog1.setOnKeyListener((v3, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog1.dismiss();
+                                            return true;
+                                        }
+                                        return false;
+                                    });
+
+                                    tvClose.setOnClickListener(v14 -> dialog1.dismiss());
+                                    dialog1.show();
+                                    dialog1.setCancelable(false);
                                 });
 
-                                tvClose.setOnClickListener(v14 -> dialog1.dismiss());
-                                dialog1.show();
-                                dialog1.setCancelable(false);
-                            });
+                                if (listModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
+                                    rvDirlist.setVisibility(View.GONE);
+                                } else {
+                                    rvDirlist.setVisibility(View.VISIBLE);
+                                    String[] elements = listModel.getResponseData().get(0).getAudioSubCategory().split(",");
+                                    List<String> direction = Arrays.asList(elements);
 
-                            if (listModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
-                                rvDirlist.setVisibility(View.GONE);
+                                    DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
+                                    RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+                                    rvDirlist.setLayoutManager(recentlyPlayed);
+                                    rvDirlist.setItemAnimator(new DefaultItemAnimator());
+                                    rvDirlist.setAdapter(directionAdapter);
+                                }
+                            } else if (listModel.getResponseCode().equals(act.getString(R.string.ResponseCodeDeleted))) {
+                                deleteCall(act);
+                                showToast(listModel.getResponseMessage(), act);
+                                Intent i = new Intent(act, SignInActivity.class);
+                                i.putExtra("mobileNo", "");
+                                i.putExtra("countryCode", "");
+                                i.putExtra("name", "");
+                                i.putExtra("email", "");
+                                i.putExtra("countryShortName", "");
+                                act.startActivity(i);
+                                act.finish();
                             } else {
-                                rvDirlist.setVisibility(View.VISIBLE);
-                                String[] elements = listModel.getResponseData().get(0).getAudioSubCategory().split(",");
-                                List<String> direction = Arrays.asList(elements);
-
-                                DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
-                                RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
-                                rvDirlist.setLayoutManager(recentlyPlayed);
-                                rvDirlist.setItemAnimator(new DefaultItemAnimator());
-                                rvDirlist.setAdapter(directionAdapter);
+                                showToast(listModel.getResponseMessage(), act);
                             }
-                        } else if (listModel.getResponseCode().equals(act.getString(R.string.ResponseCodeDeleted))) {
-                            deleteCall(act);
-                            showToast(listModel.getResponseMessage(), act);
-                            Intent i = new Intent(act, SignInActivity.class);
-                            i.putExtra("mobileNo", "");
-                            i.putExtra("countryCode", "");
-                            i.putExtra("name", "");
-                            i.putExtra("email", "");
-                            i.putExtra("countryShortName", "");
-                            act.startActivity(i);
-                            act.finish();
-                        } else {
-                            showToast(listModel.getResponseMessage(), act);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -557,8 +559,8 @@ public class BWSApplication extends Application {
                             hideProgressBar(progressBar, progressBarHolder, act);
                             if (listModel != null) {
                                 if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
-                                    p.putValue("audioId",audioId);
-                                    p.putValue("audioName",mpm.get(position).getName());
+                                    p.putValue("audioId", audioId);
+                                    p.putValue("audioName", mpm.get(position).getName());
                                     p.putValue("audioDescription", "");
                                     p.putValue("directions", mpm.get(position).getAudioDirection());
                                     p.putValue("masterCategory", mpm.get(position).getAudiomastercat());
@@ -570,15 +572,15 @@ public class BWSApplication extends Application {
                                     } else {
                                         p.putValue("audioType", "Streaming");
                                     }
-                                    p.putValue("source","Audio Details Screen");
+                                    p.putValue("source", "Audio Details Screen");
                                     p.putValue("audioService", appStatus(ctx));
                                     p.putValue("bitRate", "");
-                                    p.putValue("playlistId",mpm.get(pos).getPlaylistID());
+                                    p.putValue("playlistId", mpm.get(pos).getPlaylistID());
                                     p.putValue("playlistName", "");
                                     p.putValue("playlistType", "");
                                     p.putValue("playlistDuration", "");
                                     p.putValue("sound", String.valueOf(hundredVolume));
-                                    addToSegment("Audio Removed From Playlist",p,CONSTANTS.track);
+                                    addToSegment("Audio Removed From Playlist", p, CONSTANTS.track);
 
                                     if (AudioFlag.equalsIgnoreCase("playlist")) {
                                         Gson gson12 = new Gson();
@@ -637,7 +639,7 @@ public class BWSApplication extends Application {
                                                     Gson gsonz = new Gson();
                                                     String jsonz = gsonz.toJson(mDataPlayer);
                                                     editor1.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonz);
-                                                    editor1.commit();
+                                                    editor1.apply();
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
                                                         player.setPlayWhenReady(true);
@@ -723,8 +725,8 @@ public class BWSApplication extends Application {
         });
 
         llAddPlaylist.setOnClickListener(view11 -> {
-            p.putValue("audioId",audioId);
-            p.putValue("audioName",mpm.get(position).getName());
+            p.putValue("audioId", audioId);
+            p.putValue("audioName", mpm.get(position).getName());
             p.putValue("audioDescription", "");
             p.putValue("directions", mpm.get(position).getAudioDirection());
             p.putValue("masterCategory", mpm.get(position).getAudiomastercat());
@@ -736,11 +738,11 @@ public class BWSApplication extends Application {
             } else {
                 p.putValue("audioType", "Streaming");
             }
-            p.putValue("source","Audio Details Screen");
+            p.putValue("source", "Audio Details Screen");
             p.putValue("audioService", appStatus(ctx));
             p.putValue("bitRate", "");
             p.putValue("sound", String.valueOf(hundredVolume));
-            addToSegment("Add To Playlist Clicked",p,CONSTANTS.track);
+            addToSegment("Add To Playlist Clicked", p, CONSTANTS.track);
             //                comeAddPlaylist = 2;
             Intent i = new Intent(ctx, AddPlaylistActivity.class);
             i.putExtra("AudioId", audioId);
@@ -757,7 +759,7 @@ public class BWSApplication extends Application {
         dialog.setCancelable(false);
     }
 
-    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID, String PlaylistId, String PlaylistName, FragmentManager fragmentManager1,String ScreenView) {
+    public static void callPlaylistDetails(Context ctx, Activity act, String CoUSERID, String PlaylistId, String PlaylistName, FragmentManager fragmentManager1, String ScreenView) {
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.open_playlist_detail_layout);
@@ -837,15 +839,15 @@ public class BWSApplication extends Application {
                             String Totalminute = listModel.getResponseData().getTotalminute();
                             llAddPlaylist.setOnClickListener(view -> {
                                 Properties p = new Properties();
-                                p.putValue("playlistId",PlaylistID);
-                                p.putValue("playlistName",PlaylistName);
-                                p.putValue("source","Playlist Details Screen");
+                                p.putValue("playlistId", PlaylistID);
+                                p.putValue("playlistName", PlaylistName);
+                                p.putValue("source", "Playlist Details Screen");
                                 if (listModel.getResponseData().getCreated().equals("1")) {
                                     p.putValue("playlistType", "Created");
                                 } else if (listModel.getResponseData().getCreated().equals("0")) {
                                     p.putValue("playlistType", "Default");
                                 } else if (listModel.getResponseData().getCreated().equals("2"))
-                                p.putValue("playlistType", "Suggested");
+                                    p.putValue("playlistType", "Suggested");
 
                                 if (Totalhour.equals("")) {
                                     p.putValue("playlistDuration", "0h " + Totalminute + "m");
@@ -854,7 +856,7 @@ public class BWSApplication extends Application {
                                 } else {
                                     p.putValue("playlistDuration", Totalhour + "h " + Totalminute + "m");
                                 }
-                                addToSegment("Add To Playlist Clicked",p,CONSTANTS.track);
+                                addToSegment("Add To Playlist Clicked", p, CONSTANTS.track);
                                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                                 i.putExtra("AudioId", "");
                                 i.putExtra("ScreenView", "Playlist Details Screen");
@@ -888,7 +890,7 @@ public class BWSApplication extends Application {
                                 p.putValue("playlistType", "Created");
                             } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
                                 p.putValue("playlistType", "Default");
-                            }else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
+                            } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
                                 p.putValue("playlistType", "suggested");
                             }
                             if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
@@ -1038,32 +1040,32 @@ public class BWSApplication extends Application {
                             }
 
                             llDelete.setOnClickListener(view43 -> {
-                                 Properties p1 = new Properties();
-                                 p1.putValue("playlistId", listModel.getResponseData().getPlaylistID());
-                                 p1.putValue("playlistName", listModel.getResponseData().getPlaylistName());
-                                 p1.putValue("playlistDescription", PlaylistDesc);
-                                 if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                     p1.putValue("playlistType", "Created");
-                                 } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
-                                     p1.putValue("playlistType", "Default");
-                                 }else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
-                                     p1.putValue("playlistType", "suggested");
-                                 }
-                                 if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
-                                     p1.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
-                                 } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                     p1.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
-                                 } else {
-                                     p1.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
-                                 }
-                                 p1.putValue("audioCount", listModel.getResponseData().getTotalAudio());
-                                 p1.putValue("source", ScreenView);
-                                 addToSegment("Delete Playlist Clicked", p1, CONSTANTS.screen);
+                                Properties p1 = new Properties();
+                                p1.putValue("playlistId", listModel.getResponseData().getPlaylistID());
+                                p1.putValue("playlistName", listModel.getResponseData().getPlaylistName());
+                                p1.putValue("playlistDescription", PlaylistDesc);
+                                if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                    p1.putValue("playlistType", "Created");
+                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                                    p1.putValue("playlistType", "Default");
+                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
+                                    p1.putValue("playlistType", "suggested");
+                                }
+                                if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                                    p1.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
+                                } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    p1.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    p1.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                                }
+                                p1.putValue("audioCount", listModel.getResponseData().getTotalAudio());
+                                p1.putValue("source", ScreenView);
+                                addToSegment("Delete Playlist Clicked", p1, CONSTANTS.screen);
                                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                 if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistId)) {
-                                    showToast("Unable to remove as this playlist is in player right now", act);
+                                    showToast("You can't delete a playlist while it's playing.", act);
                                 } else {
                                     final Dialog dialoged = new Dialog(ctx);
                                     dialoged.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1112,7 +1114,7 @@ public class BWSApplication extends Application {
                                                                     p.putValue("playlistType", "Created");
                                                                 } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
                                                                     p.putValue("playlistType", "Default");
-                                                                }else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
+                                                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
                                                                     p.putValue("playlistType", "suggested");
                                                                 }
                                                                 if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
@@ -1124,7 +1126,8 @@ public class BWSApplication extends Application {
                                                                 }
                                                                 p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
                                                                 p.putValue("source", ScreenView);
-                                                                addToSegment("Playlist Deleted", p, CONSTANTS.screen);  dialoged.dismiss();
+                                                                addToSegment("Playlist Deleted", p, CONSTANTS.screen);
+                                                                dialoged.dismiss();
                                                                 showToast(listModel.getResponseMessage(), act);
                                                                 act.finish();
                                                                 dialog.dismiss();
@@ -1195,27 +1198,27 @@ public class BWSApplication extends Application {
                                     }
                                     return false;
                                 });
-                                 Properties p1 = new Properties();
-                                 p1.putValue("playlistId", listModel.getResponseData().getPlaylistID());
-                                 p1.putValue("playlistName", listModel.getResponseData().getPlaylistName());
-                                 p1.putValue("playlistDescription", PlaylistDesc);
-                                 if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                     p.putValue("playlistType", "Created");
-                                 } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
-                                     p.putValue("playlistType", "Default");
-                                 }else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
-                                     p.putValue("playlistType", "suggested");
-                                 }
-                                 if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
-                                     p.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
-                                 } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                     p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
-                                 } else {
-                                     p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
-                                 }
-                                 p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
-                                 p.putValue("source", ScreenView);
-                                 addToSegment("Playlist Rename Clicked", p, CONSTANTS.screen);
+                                Properties p1 = new Properties();
+                                p1.putValue("playlistId", listModel.getResponseData().getPlaylistID());
+                                p1.putValue("playlistName", listModel.getResponseData().getPlaylistName());
+                                p1.putValue("playlistDescription", PlaylistDesc);
+                                if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                    p.putValue("playlistType", "Created");
+                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                                    p.putValue("playlistType", "Default");
+                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
+                                    p.putValue("playlistType", "suggested");
+                                }
+                                if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", "0h " + listModel.getResponseData().getTotalminute() + "m");
+                                } else if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    p.putValue("playlistDuration", listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                                }
+                                p.putValue("audioCount", listModel.getResponseData().getTotalAudio());
+                                p.putValue("source", ScreenView);
+                                addToSegment("Playlist Rename Clicked", p, CONSTANTS.screen);
 
                                 TextWatcher popupTextWatcher = new TextWatcher() {
                                     @Override
@@ -1275,7 +1278,7 @@ public class BWSApplication extends Application {
                                                                     p.putValue("playlistType", "Created");
                                                                 } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("0")) {
                                                                     p.putValue("playlistType", "Default");
-                                                                }else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
+                                                                } else if (listModel.getResponseData().getCreated().equalsIgnoreCase("2")) {
                                                                     p.putValue("playlistType", "suggested");
                                                                 }
                                                                 if (listModel.getResponseData().getTotalhour().equalsIgnoreCase("")) {
@@ -1514,7 +1517,7 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
-        showToast("Downloading the playlist right now", act);
+        showToast("Your playlist is being downloaded!", act);
         savePlaylist(ctx, downloadPlaylistDetails);
         saveAllMedia(playlistSongsList, PlaylistID, CoUserId, ctx, downloadPlaylistDetails);
     }
@@ -1549,7 +1552,7 @@ public class BWSApplication extends Application {
         } else if (downloadPlaylistDetails.getCreated().equalsIgnoreCase("0")) {
             p.putValue("playlistType", "Default");
         } else if (downloadPlaylistDetails.getCreated().equals("2"))
-        p.putValue("playlistType", "Suggested");
+            p.putValue("playlistType", "Suggested");
 
         if (downloadPlaylistDetails.getTotalhour().equalsIgnoreCase("")) {
             p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.getTotalminute() + "m");
@@ -1791,7 +1794,7 @@ public class BWSApplication extends Application {
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                showToast("Downloading the audio right now", act);
+                showToast("Your audio is being downloaded!", act);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -1847,7 +1850,7 @@ public class BWSApplication extends Application {
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                    showToast("Your audio has been downloaded", act);
+                    showToast("Yess! Download complete. Your wellness journey is ready!", act);
                 }
             }
         } catch (Exception e) {
@@ -1970,7 +1973,7 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void getReminderDay(Context ctx, Activity act, String userId, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay, String isSuggested,String reminderID,String isReminder,String created) {
+    public static void getReminderDay(Context ctx, Activity act, String userId, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay, String isSuggested, String reminderID, String isReminder, String created) {
         ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{new ReminderSelectionModel("Sunday"), new ReminderSelectionModel("Monday"), new ReminderSelectionModel("Tuesday"), new ReminderSelectionModel("Wednesday"), new ReminderSelectionModel("Thursday"), new ReminderSelectionModel("Friday"), new ReminderSelectionModel("Saturday"),};
         localIntent = new Intent("Reminder");
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
@@ -1979,22 +1982,23 @@ public class BWSApplication extends Application {
         dialog.setContentView(R.layout.select_days_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final LinearLayout llBack = dialog.findViewById(R.id.llBack);
+        final ImageView ivBack = dialog.findViewById(R.id.ivBack);
         final RecyclerView rvSelectDay = dialog.findViewById(R.id.rvSelectDay);
         final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
-        final TextView tvSelectAll = dialog.findViewById(R.id.tvSelectAll);
-        final TextView tvUnSelectAll = dialog.findViewById(R.id.tvUnSelectAll);
         tvTime = dialog.findViewById(R.id.tvTime);
         final Button btnNext = dialog.findViewById(R.id.btnNext);
         final CheckBox cbChecked = dialog.findViewById(R.id.cbChecked);
         final LinearLayout llSelectTime = dialog.findViewById(R.id.llSelectTime);
+        final LinearLayout llOptions = dialog.findViewById(R.id.llOptions);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+
+        cbChecked.setText(R.string.select_all);
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
             simpleDateFormat1.setTimeZone(TimeZone.getDefault());
-            Log.e("Default Time Zone" , simpleDateFormat1.getTimeZone().getDisplayName() + simpleDateFormat1.getTimeZone());
+            Log.e("Default Time Zone", simpleDateFormat1.getTimeZone().getDisplayName() + simpleDateFormat1.getTimeZone());
             DateFormat df = DateFormat.getTimeInstance();
             String gmtTime = df.format(new Date());
             Date currdate = new Date();
@@ -2007,21 +2011,21 @@ public class BWSApplication extends Application {
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
             Properties p = new Properties();
-            p.putValue("reminderId ","");
+            p.putValue("reminderId ", "");
             p.putValue("playlistId ", "");
-            p.putValue("playlistName ","");
-            p.putValue("playlistType ","");
-            p.putValue("reminderStatus ","");
-            p.putValue("reminderTime ","");
-            p.putValue("reminderDay","");
+            p.putValue("playlistName ", "");
+            p.putValue("playlistType ", "");
+            p.putValue("reminderStatus ", "");
+            p.putValue("reminderTime ", "");
+            p.putValue("reminderDay", "");
             addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         } else {
             tvTime.setText(Time);
             currantTime = Time;
             Properties p = new Properties();
-            p.putValue("reminderId ",reminderID);
+            p.putValue("reminderId ", reminderID);
             p.putValue("playlistId ", playlistID);
-            p.putValue("playlistName ",playlistName);
+            p.putValue("playlistName ", playlistName);
             switch (created) {
                 case "1":
                     p.putValue("playlistType", "Created");
@@ -2035,17 +2039,17 @@ public class BWSApplication extends Application {
             }
             switch (isReminder) {
                 case "0":
-                    p.putValue("reminderStatus ","");
+                    p.putValue("reminderStatus ", "");
                     break;
                 case "1":
-                    p.putValue("reminderStatus ","On");
+                    p.putValue("reminderStatus ", "On");
                     break;
                 case "2":
-                    p.putValue("reminderStatus ","Off");
+                    p.putValue("reminderStatus ", "Off");
                     break;
             }
-            p.putValue("reminderTime ",Time);
-            p.putValue("reminderDay",RDay);
+            p.putValue("reminderTime ", Time);
+            p.putValue("reminderDay", RDay);
             addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         }
         String[] time = currantTime.split(":");
@@ -2060,7 +2064,7 @@ public class BWSApplication extends Application {
         }
 
         tvPlaylistName.setText(playlistName);
-        llBack.setOnClickListener(view12 -> dialog.dismiss());
+        ivBack.setOnClickListener(view12 -> dialog.dismiss());
         remiderDays.clear();
         dialog.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -2074,13 +2078,10 @@ public class BWSApplication extends Application {
             dialogfragment.show(fragmentActivity.getSupportFragmentManager(), "Time Picker with Theme 4");
         });
 
-        llBack.setOnClickListener(v -> dialog.dismiss());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, tvSelectAll,
-                tvUnSelectAll, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime,
-                progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested,reminderID,created);
+        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -2281,68 +2282,48 @@ public class BWSApplication extends Application {
         addToSegment(event, p, CONSTANTS.track);
     }
 
-    public static void callIdentify(Context ctx){
+    public static void callIdentify(Context ctx) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        String email = shared1.getString(CONSTANTS.PREFE_ACCESS_EMAIL,"");
+        String email = shared1.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "");
         String name = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         String dob = shared1.getString(CONSTANTS.PREFE_ACCESS_DOB, "");
         String mobile = shared1.getString(CONSTANTS.PREFE_ACCESS_MOBILE, "");
-        String indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE,"");
-        String scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL,"");
+        String indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "");
+        String scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "");
         String sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
-        String image = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE,"");
+        String image = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "");
         String isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "");
-        String isAssCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED,"");
-        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount,"");
-        String userCounnt = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount,"");
+        String isAssCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "");
+        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "");
+        String userCounnt = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "");
         Gson gson = new Gson();
-        String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus,  gson.toString());
+        String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString());
         String areaOfFocus = "";
 
         if (!json5.equalsIgnoreCase(gson.toString()))
             areaOfFocus = json5;
 
-        boolean isProf = false,isAss = false, isadm = false;
-        if(isProfileCompleted.equalsIgnoreCase("1"))
+        boolean isProf = false, isAss = false, isadm = false;
+        if (isProfileCompleted.equalsIgnoreCase("1"))
             isProf = true;
         else
             isProf = false;
 
-        if(isAssCompleted.equalsIgnoreCase("1"))
+        if (isAssCompleted.equalsIgnoreCase("1"))
             isAss = true;
         else
             isAss = false;
 
-        if(isAdmin.equalsIgnoreCase("1"))
+        if (isAdmin.equalsIgnoreCase("1"))
             isadm = true;
         else
             isadm = false;
 
-        analytics.identify(new Traits()
-                .putValue("userGroupId",mainAccountId)
-                .putValue("userId",userId)
-                .putValue("id",userId)
-                .putValue("isAdmin",isadm)
-                .putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID))
-                .putValue("deviceType", "Android")
-                .putName(name)
-                .putEmail(email)
-                .putPhone(mobile)
-                .putValue("DOB",dob)
-                .putValue("profileImage", image)
-                .putValue("isProfileCompleted",isProf)
-                .putValue("isAssessmentCompleted", isAss)
-                .putValue("wellnessScore",indexScore)
-                .putValue("scoreLevel", scoreLevel)
-                .putValue("areaOfFocus", areaOfFocus)
-                .putValue("avgSleepTime", sleepTime)
-                .putValue("plan", "")
-                .putValue("planStatus", "")
-                .putValue("planStartDt", "")
-                .putValue("planExpiryDt", ""));
+        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", ""));
     }
+
     public static void addToSegment(String TagName, Properties properties, String methodName) {
         long mySpace;
         mySpace = GlobalInitExoPlayer.getSpace();
@@ -2368,17 +2349,17 @@ public class BWSApplication extends Application {
         SharedPreferences shared1 = getContext().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
-        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount,"");
+        String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "");
         boolean isadm = false;
         if (!mainAccountId.isEmpty() || !mainAccountId.equalsIgnoreCase(""))
             properties.putValue("userGroupId", mainAccountId);
         if (!userId.isEmpty() || !userId.equalsIgnoreCase(""))
             properties.putValue("userId", userId);
-        if(isAdmin.equalsIgnoreCase("1"))
+        if (isAdmin.equalsIgnoreCase("1"))
             isadm = true;
         else
             isadm = false;
-        properties .putValue("isAdmin",isadm);
+        properties.putValue("isAdmin", isadm);
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel + " %");
         properties.putValue("batteryState", BatteryStatus);
@@ -2638,24 +2619,21 @@ public class BWSApplication extends Application {
     private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
         Activity act;
         Context ctx;
-        TextView tvSelectAll, tvUnSelectAll;
         Button btnNext;
-        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested,reminderId,created;
+        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested, reminderId, created;
         Dialog dialogOld;
         CheckBox cbCheck;
         FragmentActivity fragmentActivity;
         TextView timeDisplay;
         ProgressBar progressBar;
         FrameLayout progressBarHolder;
-        LinearLayout llSelectTime;
+        LinearLayout llSelectTime, llOptions;
         private final ReminderSelectionModel[] selectionModels;
 
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, TextView tvSelectAll, TextView tvUnSelectAll, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created) {
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created, LinearLayout llOptions) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
-            this.tvSelectAll = tvSelectAll;
-            this.tvUnSelectAll = tvUnSelectAll;
             this.btnNext = btnNext;
             this.userId = userId;
             this.PlaylistID = PlaylistID;
@@ -2672,6 +2650,7 @@ public class BWSApplication extends Application {
             this.isSuggested = isSuggested;
             this.reminderId = reminderId;
             this.created = created;
+            this.llOptions = llOptions;
         }
 
         @NotNull
@@ -2692,9 +2671,9 @@ public class BWSApplication extends Application {
                     cbCheck.setChecked(true);
                 }
                 if (remiderDays.size() == 0) {
-                    tvSelectAll.setText("Select All");
+                    cbCheck.setText(R.string.select_all);
                 } else {
-                    tvSelectAll.setText("Unselect All");
+                    cbCheck.setText(R.string.unselect_all);
                 }
             }
             if (RDay.contains(String.valueOf(position))) {
@@ -2887,6 +2866,7 @@ public class BWSApplication extends Application {
             tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
         }
     }
+
     public static boolean isNotificationEnabled() {
 
         AppOpsManager mAppOps = (AppOpsManager) getContext().getSystemService(Context.APP_OPS_SERVICE);
@@ -2904,9 +2884,9 @@ public class BWSApplication extends Application {
             Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
 
             Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-            int value = (int)opPostNotificationValue.get(Integer.class);
+            int value = (int) opPostNotificationValue.get(Integer.class);
 
-            return ((int)checkOpNoThrowMethod.invoke(mAppOps,value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+            return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -3018,7 +2998,7 @@ public class BWSApplication extends Application {
             editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-            editorxc.commit();
+            editorxc.apply();
             if (fileNameList.size() != 0) {
                 isDownloading = true;
                 DownloadMedia downloadMedia = new DownloadMedia(ctx, act);

@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
 import com.brainwellnessspa.BWSApplication
@@ -32,16 +33,16 @@ import java.util.*
 
 class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, PurchaseHistoryResponseListener, ConsumeResponseListener, AcknowledgePurchaseResponseListener {
     var binding: ActivityOrderSummaryBinding? = null
-    var TrialPeriod: String? = ""
+    var trialPeriod: String? = ""
     var comeFrom: String? = ""
-    var MainAccountId: String? = ""/* renewPlanFlag, renewPlanId, */
+    var mainAccountId: String? = ""/* renewPlanFlag, renewPlanId, */
 
     //    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
-    var UserID: String? = ""
-    var ComesTrue: String? = ""
-    var Promocode: String? = ""
-    var OldPromocode: String? = ""
+    var userId: String? = ""
+    var comesTrue: String? = ""
+    var promocode: String? = ""
+    var oldPromocode: String? = ""
     var listModelList: ArrayList<PlanlistInappModel.ResponseData.Plan>? = null
     var listModelList2: ArrayList<PlanListBillingModel.ResponseData.Plan>? = null
     var position = 0
@@ -70,15 +71,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        MainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@OrderSummaryActivity
         activity = this@OrderSummaryActivity
 
         setupBillingClient()
 
         if (intent != null) {
-            TrialPeriod = intent.getStringExtra("TrialPeriod") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
+            trialPeriod = intent.getStringExtra("TrialPeriod") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
             //            renewPlanId = getIntent().getStringExtra("renewPlanId");
             position = intent.getIntExtra("position", 0)
             if (intent.hasExtra("comeFrom")) {
@@ -91,10 +92,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             }
         }
         if (intent != null) {
-            ComesTrue = intent.getStringExtra("ComesTrue")
+            comesTrue = intent.getStringExtra("ComesTrue")
         }
         if (intent.extras != null) {
-            OldPromocode = intent.getStringExtra(CONSTANTS.Promocode)
+            oldPromocode = intent.getStringExtra(CONSTANTS.Promocode)
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
         val p = Properties()
@@ -111,8 +112,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             p.putValue("plan", gson.toJson(listModelList))
         }
         BWSApplication.addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
-        if (!OldPromocode.equals("", ignoreCase = true)) {
-            binding!!.edtCode.setText(OldPromocode)
+        if (!oldPromocode.equals("", ignoreCase = true)) {
+            binding!!.edtCode.setText(oldPromocode)
         }
         if (!comeFrom.equals("", ignoreCase = true)) {
             binding!!.tvPromoCode.visibility = View.GONE
@@ -132,10 +133,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 binding!!.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
                 binding!!.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
                 binding!!.tvTotalAmount.text = "$" + listModelList2!![position].planAmount
-                if (listModelList2!![position].planInterval.equals("Annualy")) {
-                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
+                sku = if (listModelList2!![position].planInterval.equals("Annualy")) {
+                    "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
                 } else {
-                    sku = listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) + "_" + listModelList!![position].profileCount!! + "_" + "profile"
+                    listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) + "_" + listModelList!![position].profileCount!! + "_" + "profile"
                 }
             } else {
                 binding!!.tvTrialPeriod.visibility = View.VISIBLE
@@ -159,10 +160,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        binding!!.llBack.setOnClickListener { view ->
+        binding!!.llBack.setOnClickListener {
             if (!comeFrom.equals("", ignoreCase = true)) {
                 val i = Intent(ctx, MembershipChangeActivity::class.java)
-                i.putExtra("ComeFrom", ComesTrue)
+                i.putExtra("ComeFrom", comesTrue)
                 startActivity(i)
                 finish()
             } else {
@@ -211,7 +212,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     override fun onBackPressed() {
         if (!comeFrom.equals("", ignoreCase = true)) {
             val i = Intent(ctx, MembershipChangeActivity::class.java)
-            i.putExtra("ComeFrom", ComesTrue)
+            i.putExtra("ComeFrom", comesTrue)
             startActivity(i)
             finish()
         } else {
@@ -225,10 +226,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             val number = binding!!.edtCode.text.toString().trim()
             if (number.isEmpty()) {
                 binding!!.btnApply.isEnabled = false
-                binding!!.btnApply.setTextColor(resources.getColor(R.color.gray))
+                binding!!.btnApply.setTextColor(ContextCompat.getColor(ctx,R.color.gray))
             } else {
                 binding!!.btnApply.isEnabled = true
-                binding!!.btnApply.setTextColor(resources.getColor(R.color.dark_yellow))
+                binding!!.btnApply.setTextColor(ContextCompat.getColor(ctx, R.color.dark_yellow))
             }
         }
 
@@ -276,10 +277,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         }
     }
 
-    private fun call_IAP_Api(purchaseToken: String) {
+    private fun callIAPApi(purchaseToken: String) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-            val listCall: Call<UpdatePlanPurchase> = APINewClient.client.getUpdatePlanPurchase(UserID, MainAccountId, purchaseToken, sku, "1")
+            val listCall: Call<UpdatePlanPurchase> = APINewClient.client.getUpdatePlanPurchase(userId, mainAccountId, purchaseToken, sku, "1")
             listCall.enqueue(object : Callback<UpdatePlanPurchase> {
                 override fun onResponse(call: Call<UpdatePlanPurchase>, response: Response<UpdatePlanPurchase>) {
                     try {
@@ -291,9 +292,9 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             i.putExtra("Code", "")
                             i.putExtra("MobileNo", "")
                             i.putExtra("PlanData", gson.toJson(listModelList))
-                            i.putExtra("TrialPeriod", TrialPeriod)
+                            i.putExtra("TrialPeriod", trialPeriod)
                             i.putExtra("position", position)
-                            i.putExtra("Promocode", Promocode)
+                            i.putExtra("Promocode", promocode)
                             startActivity(i)
                             finish()
 
@@ -309,7 +310,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                 gson = gsonBuilder.create()
                                 p.putValue("plan", gson.toJson(listModelList))
                             }
-                            BWSApplication.addToSegment("Checkout Completed",p,CONSTANTS.track)
+                            BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
                         }
 
                     } catch (e: Exception) {
@@ -329,7 +330,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     private fun acknowledgePurchase(purchaseToken: String, purchase: MutableList<Purchase>?) {
         val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchaseToken).build()
         billingClient.acknowledgePurchase(params, this)
-        billingClient.acknowledgePurchase(params) { billingResult ->
+        billingClient.acknowledgePurchase(params) {
             //            checkPurchases()
             val gson = Gson()
             val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
@@ -337,7 +338,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
             editor.putString(CONSTANTS.PREF_KEY_PurchaseToken, purchaseToken)
             editor.putString(CONSTANTS.PREF_KEY_PurchaseID, sku)
-            editor.commit()
+            editor.apply()
             Log.e("Purchase Token", purchaseToken)
             val p = Properties()
             if (!comeFrom.equals("", ignoreCase = true)) {
@@ -351,8 +352,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 gson = gsonBuilder.create()
                 p.putValue("plan", gson.toJson(listModelList))
             }
-            BWSApplication.addToSegment("Checkout Proceeded",p,CONSTANTS.track)
-            call_IAP_Api(purchaseToken)
+            BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
+            callIAPApi(purchaseToken)
         }
     }
 
@@ -424,8 +425,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         Log.e("consumes", consumeParams.purchaseToken)
         billingClient.consumeAsync(consumeParams, this)
 
-        val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(consumeParams.purchaseToken).build();
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams, this);
+        val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(consumeParams.purchaseToken).build()
+        billingClient.acknowledgePurchase(acknowledgePurchaseParams, this)
 
     }
 

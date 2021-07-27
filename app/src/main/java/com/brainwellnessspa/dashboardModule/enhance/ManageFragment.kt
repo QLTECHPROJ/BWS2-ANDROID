@@ -31,6 +31,7 @@ import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
@@ -112,6 +113,14 @@ class ManageFragment : Fragment() {
                 val i = Intent(ctx, AddAudioActivity::class.java)
                 i.putExtra("PlaylistID", "")
                 startActivity(i)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+        }
+        binding.llSleepTime.setOnClickListener {
+            if (isNetworkConnected(activity)) {
+                val intent = Intent(activity, SleepTimeActivity::class.java)
+                startActivity(intent)
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }

@@ -43,16 +43,38 @@
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="@string/create_pin"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_24sdp"
-                tools:ignore="SpUsage" />
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_24sdp"
+                tools:ignore="UseCompoundDrawables"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:text="@string/create_pin"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_24sdp"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:id="@+id/ivInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_white_info_icon"
+                    app:tint="@color/app_theme_color"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:contentDescription="@string/todo" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"

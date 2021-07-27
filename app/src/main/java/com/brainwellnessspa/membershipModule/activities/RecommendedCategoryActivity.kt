@@ -310,7 +310,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     //                                        catList.selectedCategoriesSort.add(pos, pos.toString())
                                     //                                    }
                                 } else {
-                                    showToast("You can choose maximum of three areas of focus. In case you wish to change your choices then simply unselect the ones you had selected earlier.", activity)
+                                    showToast("You can pick up to 3 areas of focus. They can be changed anytime.", activity)
                                 }
                             }
                         }

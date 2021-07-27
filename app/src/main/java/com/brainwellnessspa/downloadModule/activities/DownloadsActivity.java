@@ -63,6 +63,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
+
         comefromDownload = "1";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(new AppLifecycleCallback());
@@ -108,7 +109,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount(), UserID, binding.progressBarHolder, binding.progressBar);
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), binding.tabLayout.getTabCount(), UserID, binding.progressBarHolder, binding.progressBar);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
         if (ComeFrom_Playlist) {
@@ -305,9 +306,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                         audioList1.add(dad);
                         audioDownloadList = audioList1;
                     }
-                } else {
                 }
-            } else {
             }
             DB.taskDao().geAllDataz("", CoUserID).removeObserver(audioListx -> {
             });
@@ -335,9 +334,7 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
                         audioList1.add(detail);
                         playlistList = audioList1;
                     }
-                } else {
                 }
-            } else {
             }
         });
         super.onResume();
@@ -360,16 +357,14 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         super.onDestroy();
     }
 
-    public class TabAdapter extends FragmentStatePagerAdapter {
+    public static class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         String UserID;
         FrameLayout progressBarHolder;
         ProgressBar ImgV;
-        private Context myContext;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV) {
+        public TabAdapter(FragmentManager fm, int totalTabs, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV) {
             super(fm);
-            this.myContext = myContext;
             this.totalTabs = totalTabs;
             this.UserID = UserID;
             this.progressBarHolder = progressBarHolder;

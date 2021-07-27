@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:vumeter="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_64sdp"
@@ -33,14 +34,16 @@
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:contentDescription="@string/todo" />
 
                     <ImageView
                         android:id="@+id/ivBackgroundImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/disclaimer"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:contentDescription="@string/todo" />
 
                     <io.gresse.hugo.vumeterlibrary.VuMeterView
                         android:id="@+id/equalizerview"
@@ -78,7 +81,8 @@
                     android:gravity="start"
                     android:maxLines="1"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
 
                 <TextView
                     android:id="@+id/tvTime"
@@ -88,7 +92,8 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:textColor="@color/app_theme_color"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
             </LinearLayout>
         </LinearLayout>
 
@@ -118,7 +123,8 @@
                     android:indeterminateTint="@color/dark_yellow"
                     android:max="100"
                     android:progressDrawable="@drawable/circular_progress_barm"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:targetApi="lollipop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,7 +136,8 @@
                         android:layout_width="@dimen/_38sdp"
                         android:layout_height="@dimen/_38sdp"
                         android:padding="@dimen/_10sdp"
-                        android:src="@drawable/ic_download_icon" />
+                        android:src="@drawable/ic_download_icon"
+                        android:contentDescription="@string/todo" />
 
                 </LinearLayout>
             </RelativeLayout>
@@ -151,7 +158,8 @@
                     android:layout_height="@dimen/_38sdp"
                     android:padding="@dimen/_10sdp"
                     app:tint="@color/app_theme_color"
-                    android:src="@drawable/remove_icon" />
+                    android:src="@drawable/remove_icon"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -171,11 +179,10 @@
                     android:layout_height="@dimen/_38sdp"
                     android:padding="@dimen/_10sdp"
                     app:tint="@color/app_theme_color"
-                    android:src="@drawable/ic_sort_icon" />
+                    android:src="@drawable/ic_sort_icon"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 </layout>

@@ -95,7 +95,7 @@
                     android:layout_height="@dimen/_220sdp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_29sdp"
-                    android:background="@drawable/score_meter_bg"
+                    android:background="@drawable/ic_index_score_meter"
                     android:visibility="visible">
 
                     <ImageView

@@ -103,8 +103,8 @@ class SignInActivity : AppCompatActivity() {
             binding.tvCountry.text = "+$countryCode"
             binding.tvCountryShortName.text = "$countryShortName"
         } else {
-            binding.tvCountry.text = "+61"
-            binding.tvCountryShortName.text = "AU"
+            binding.tvCountry.text = getString(R.string.country_code_61)
+            binding.tvCountryShortName.text = getString(R.string.country_shortname_default)
         }
 
         binding.llBack.setOnClickListener {

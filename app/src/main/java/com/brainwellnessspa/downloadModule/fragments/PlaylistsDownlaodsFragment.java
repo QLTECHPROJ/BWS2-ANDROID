@@ -377,7 +377,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 String MyPlaylistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
                 if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
-                    BWSApplication.showToast("Unable to remove as this playlist is in player right now", ctx);
+                    BWSApplication.showToast("You can't delete a playlist while it's playing.", ctx);
                 } else {
                     final Dialog dialog = new Dialog(ctx);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

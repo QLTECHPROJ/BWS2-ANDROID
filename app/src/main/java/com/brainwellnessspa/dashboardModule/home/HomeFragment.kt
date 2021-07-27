@@ -42,13 +42,13 @@ import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -136,7 +136,7 @@ class HomeFragment : Fragment() {
         var areaOfFocus: String? = ""
 
         val p = Properties()
-        val gson=Gson()
+        val gson = Gson()
         if (!json5.equals(gson.toString(), ignoreCase = true)) areaOfFocus = json5
         /* Get sleep time from share pref*/
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -200,6 +200,15 @@ class HomeFragment : Fragment() {
         binding.rvAreaOfFocusCategory.layoutManager = layoutManager
         val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
+
+        binding.llSleepTime.setOnClickListener {
+            if (isNetworkConnected(activity)) {
+                val intent = Intent(activity, SleepTimeActivity::class.java)
+                startActivity(intent)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+        }
 
         /* check Index score banner click*/
         binding.llCheckIndexscore.setOnClickListener {
@@ -302,6 +311,7 @@ class HomeFragment : Fragment() {
         btn.setOnClickListener {
             p.putValue("isReminderSet", "Yes")
             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
+            dialog.hide()
             getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
         }
         tvGoBack.setOnClickListener {
@@ -316,7 +326,7 @@ class HomeFragment : Fragment() {
     /* network is available or not function for visible other layout of net is not available image display */
     private fun networkCheck() {
         val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
-        Log.e("areNotificationEnabled",areNotificationEnabled.toString())
+        Log.e("areNotificationEnabled", areNotificationEnabled.toString())
         if (isNetworkConnected(activity)) {
             binding.llSetReminder.visibility = View.VISIBLE
             binding.llIndexScore.visibility = View.VISIBLE
@@ -1189,8 +1199,7 @@ class HomeFragment : Fragment() {
                                                                 act.startActivity(intent)
                                                                 act.finish()
                                                             } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                                                val intent = Intent(activity, WalkScreenActivity::class.java)
-                                                                intent.putExtra(CONSTANTS.ScreenView, "2")
+                                                                val intent = Intent(activity, ProfileProgressActivity::class.java)
                                                                 act.startActivity(intent)
                                                                 act.finish()
                                                             } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {

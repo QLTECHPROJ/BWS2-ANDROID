@@ -15,7 +15,6 @@ import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -407,8 +406,7 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
-            val intent = Intent(this@AssProcessActivity, WalkScreenActivity::class.java)
-            intent.putExtra(CONSTANTS.ScreenView, "1")
+            val intent = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
             startActivity(intent)
             finish()
         }

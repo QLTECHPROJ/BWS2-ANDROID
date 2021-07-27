@@ -1,12 +1,21 @@
 package com.brainwellnessspa.userModule.coUserModule
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -79,6 +88,34 @@ class CouserSetupPinActivity : AppCompatActivity() {
         binding.btnDone.setOnClickListener {
             setupPin(activity)
         }
+
+        binding.ivInfo.setOnClickListener {
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.full_desc_layout)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+            val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+            val tvAction = dialog.findViewById<TextView>(R.id.tvAction)
+            val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
+            tvTitle.text = getString(R.string.popup_title)
+            tvDesc.text = getString(R.string.popup_subtitle)
+            tvAction.text = getString(R.string.ok)
+            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            tvClose.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+            dialog.setCancelable(true)
+        }
+
     }
 
     override fun onBackPressed() {

@@ -214,7 +214,7 @@ class AddAudioActivity : AppCompatActivity() {
                                 if (listModel.responseData!!.isEmpty()) {
                                     binding.rvSerachList.visibility = View.GONE
                                     binding.llError.visibility = View.VISIBLE
-                                    binding.tvFound.text = "Please use another term and try searching again"
+                                    binding.tvFound.text = "Please try again with another search term."
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
                                     /* set adapter data to search screen */

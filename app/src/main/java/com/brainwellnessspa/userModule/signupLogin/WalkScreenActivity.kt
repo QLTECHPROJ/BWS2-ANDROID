@@ -64,7 +64,6 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepThree.visibility = View.VISIBLE
                 binding.rlStepFour.visibility = View.GONE
             }
-
             screenView.equals("4", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
                 binding.rlStepOne.visibility = View.GONE
@@ -106,7 +105,6 @@ class WalkScreenActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
     }
 
     override fun onBackPressed() {

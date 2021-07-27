@@ -1344,7 +1344,7 @@ class MyPlayerActivity : AppCompatActivity() {
         if (downloadAudioDetailsList.contains(mainPlayModelList[position].name)) {
             disableDownload()
             saveMedia(100)
-            showToast("Downloading the audio right now", act)
+            showToast("Your audio is being downloaded!", act)
         } else {
             fileNameList = ArrayList()
             audioFile1 = ArrayList()
@@ -1383,7 +1383,7 @@ class MyPlayerActivity : AppCompatActivity() {
             GetMediaPer()
             disableDownload()
             saveMedia(0)
-            showToast("Your audio has been downloaded", act)
+            showToast("Yess! Download complete. Your wellness journey is ready!", act)
             val p = Properties()
             addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Download Started", CONSTANTS.track, downloadAudioDetailsList, p)
             // }

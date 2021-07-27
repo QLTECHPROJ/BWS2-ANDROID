@@ -54,6 +54,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
         val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+
         if (intent.extras != null) {
             id = intent.getStringExtra("id")
             title = intent.getStringExtra(CONSTANTS.title)
@@ -124,6 +125,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
             binding.tvTitle.text = title
             binding.tvCreator.text = author
             binding.tvSubTitle.text = description
@@ -132,6 +134,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
             binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(this).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.bitmapTransform(RoundedCorners(40))).priority(Priority.HIGH).skipMemoryCache(false).into(binding.ivRestaurantImage)
+
             binding.btnComplete.setOnClickListener {
                 if (linkOne.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
@@ -149,6 +152,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
                     BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track)
                 }
             }
+
             binding.ivAndroid.setOnClickListener {
                 if (linkOne.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
@@ -166,6 +170,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
                     BWSApplication.addToSegment("Resource External Link Clicked", p1, CONSTANTS.track)
                 }
             }
+
             binding.ivIos.setOnClickListener {
                 if (linkTwo.equals("", ignoreCase = true)) {
                     BWSApplication.showToast("Not Available", act)
@@ -184,10 +189,12 @@ class ResourceDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+
         binding.llBack.setOnClickListener {
             myBackPress = true
             finish()
         }
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }

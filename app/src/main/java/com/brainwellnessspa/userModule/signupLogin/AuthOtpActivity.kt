@@ -25,8 +25,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
@@ -296,8 +298,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         finish()
                                     } else {
                                         if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                            val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                                            intent.putExtra(CONSTANTS.ScreenView, "2")
+                                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         } else {

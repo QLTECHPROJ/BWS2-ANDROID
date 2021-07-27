@@ -34,11 +34,24 @@
                 android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_12sdp"
+                android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_11sdp"
+                tools:ignore="SpUsage" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTimeSlot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_28sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:nestedScrollingEnabled="true"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

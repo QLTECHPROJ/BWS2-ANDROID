@@ -321,6 +321,7 @@
                     android:visibility="gone">
 
                     <LinearLayout
+                        android:id="@+id/llSleepTime"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_62sdp"
                         android:background="@drawable/round_blue_border"

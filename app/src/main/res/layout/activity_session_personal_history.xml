@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".dashboardModule.session.SessionPersonalHistoryActivity">
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/llMainFirst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tvQus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="@string/personal_history"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp"
+                        tools:ignore="SpUsage" />
+
+                    <TextView
+                        android:id="@+id/tvSection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="Section 8 / 8"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
+                </LinearLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/lpIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:max="33"
+                    android:progress="0"
+                    app:indicatorColor="#8C7386"
+                    app:trackColor="#DDDDDD" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/_1_have_you_ever_experienced_a_sense_of_terror_in_your_mind_and_or_any_traumas_psychological_or_physical_if_so_do_you_recall_the_exact_moment_when_it_happened"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/for_example_being_terrified_of_the_boogeyman_as_a_child_bullying_in_school_relationship_breakdown_loss_of_a_loved_one_red_more"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    tools:ignore="SpUsage" />
+
+                <EditText
+                    android:id="@+id/edtFirstAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
+                    android:background="@drawable/edittext_background"
+                    android:cursorVisible="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="top"
+                    android:hint="@string/your_answer"
+                    android:inputType="textMultiLine|textVisiblePassword"
+                    android:overScrollMode="always"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_8sdp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textColor="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="visible"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/_2_are_you_aware_of_your_parents_grandparents_or_great_grandparents_ever_experiencing_a_trauma_psychological_or_physical_this_could_include_any_of_the_above_listed_examples_and_or_being_a_survivor_of_the_war"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <EditText
+                    android:id="@+id/edtSecondAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_marginHorizontal="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
+                    android:background="@drawable/edittext_background"
+                    android:cursorVisible="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="top"
+                    android:hint="@string/your_answer"
+                    android:inputType="textMultiLine|textVisiblePassword"
+                    android:overScrollMode="always"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_8sdp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textColor="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="visible"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvText1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/_3_have_you_ever_experienced_psychotic_episodes_in_the_past_and_been_hospitalised_for_them"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbYes"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/yes"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbNo"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/no"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="@string/_4_are_you_suffering_from_suicidal_thoughts_and_emotions"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbDrugYes"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/yes"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <CheckBox
+                    android:id="@+id/cbDrugNo"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/no"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/tvFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="@string/no_result_found"
+            android:textSize="@dimen/_16sdp"
+            android:visibility="gone"
+            tools:ignore="SpUsage" />
+
+    </RelativeLayout>
+</layout>

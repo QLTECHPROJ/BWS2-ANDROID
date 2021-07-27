@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/_50sdp"
-                    android:layout_marginTop="@dimen/_60sdp"
+                    android:layout_marginTop="@dimen/_49sdp"
                     android:layout_marginRight="@dimen/_50sdp"
                     android:layout_marginBottom="@dimen/_8sdp"
                     android:gravity="center"
@@ -105,7 +105,7 @@
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/_30sdp"
                         android:theme="@style/EditTextTheme"
-                        tools:ignore="SpUsage" />
+                        tools:ignore="SpUsage"/>
 
                     <EditText
                         android:id="@+id/edtOTP2"
