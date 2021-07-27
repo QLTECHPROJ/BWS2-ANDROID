@@ -309,16 +309,16 @@ class AppointmentDetailsFragment : Fragment() {
                                         i.data = Uri.parse(globalAppointmentDetailModel!!.responseData?.bookUrl)
                                         startActivity(i)
                                         BWSApplication.showToast("Complete the booklet", getActivity())
-                                        p = Properties()
-                                        p!!.putValue("sessionId", appointmentDetailModel.responseData?.id)
-                                        p!!.putValue("sessionName", appointmentDetailModel.responseData?.name)
-                                        p!!.putValue("bookletUrl", appointmentDetailModel.responseData?.bookUrl)
-                                        BWSApplication.addToSegment("Complete Booklet Clicked", p, CONSTANTS.track)
+//                                        p = Properties()
+//                                        p!!.putValue("sessionId", appointmentDetailModel.responseData?.id)
+//                                        p!!.putValue("sessionName", appointmentDetailModel.responseData?.name)
+//                                        p!!.putValue("bookletUrl", appointmentDetailModel.responseData?.bookUrl)
+//                                        BWSApplication.addToSegment("Complete Booklet Clicked", p, CONSTANTS.track)
                                     }
                                 } else {
                                     BWSApplication.showToast(appointmentDetailModel.responseMessage, getActivity())
                                 }
-                                p = Properties()
+                              /*  p = Properties()
                                 p!!.putValue("id", appointmentDetailModel.responseData?.id)
                                 p!!.putValue("name", appointmentDetailModel.responseData?.name)
                                 p!!.putValue("desc", appointmentDetailModel.responseData?.desc)
@@ -338,7 +338,7 @@ class AppointmentDetailsFragment : Fragment() {
                                     section!!.add(appointmentDetailModel.responseData?.audio!![i]?.audioDuration.toString())
                                 }
                                 p!!.putValue("sessionAudios", gson!!.toJson(section))
-                                BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen)
+                                BWSApplication.addToSegment("Appointment Session Details Viewed", p, CONSTANTS.screen)*/
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()

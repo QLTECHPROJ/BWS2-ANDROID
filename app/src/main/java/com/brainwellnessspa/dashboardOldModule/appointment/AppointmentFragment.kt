@@ -78,9 +78,9 @@ class AppointmentFragment : Fragment() {
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse("https://brainwellnessspa.com.au/bookings/services.php")
             startActivity(i)
-            p = Properties()
+           /* p = Properties()
             p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php")
-            BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track)
+            BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track)*/
         }
         return view
     }
@@ -265,7 +265,7 @@ class AppointmentFragment : Fragment() {
                                 binding.tvPreviousAppointments.setText(R.string.Previous_Appointments)
                                 val appointmentsAdapter = PreviousAppointmentsAdapter(listModel.responseData, getActivity())
                                 binding.rvPreviousData.adapter = appointmentsAdapter
-                                p = Properties()
+                              /*  p = Properties()
                                 if (nextSessionViewModel!!.responseData!!.response.equals("", ignoreCase = true)) {
                                     p.putValue("nextSession", "")
                                 } else {
@@ -285,7 +285,7 @@ class AppointmentFragment : Fragment() {
                                     previoussection!!.add(listModel.responseData!![i].catMenual)
                                 }
                                 p.putValue("previousAppointments", gson!!.toJson(previoussection))
-                                BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen)
+                                BWSApplication.addToSegment("Appointment Screen Viewed", p, CONSTANTS.screen)*/
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -324,11 +324,11 @@ class AppointmentFragment : Fragment() {
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx!!).load(listModel[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(12))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                p = Properties()
+              /*  p = Properties()
 
                 p.putValue("appointmentName", listModel[position].category)
                 p.putValue("appointmentCategory", listModel[position].catMenual)
-                BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track)
+                BWSApplication.addToSegment("Appointment Item Clicked", p, CONSTANTS.track)*/
                 val bundle = Bundle()
                 val sessionsFragment: Fragment = SessionsFragment()
                 bundle.putString("appointmentMainName", listModel[position].category)
