@@ -51,7 +51,7 @@ class ReferFriendActivity : AppCompatActivity() {
         p = Properties()
         p!!.putValue("referLink", ReferLink)
         p!!.putValue("userReferCode", UserPromocode)
-        BWSApplication.addToSegment("Refer A Friend Screen Viewed", p, CONSTANTS.screen)
+//        BWSApplication.addToSegment("Refer A Friend Screen Viewed", p, CONSTANTS.screen)
         binding.tvTitle.text = getString(R.string.refer_title)
         binding.tvDesc.text = getString(R.string.refer_desc)
         binding.tvInviteTitle.text = getString(R.string.refer_invite_title)
@@ -134,7 +134,7 @@ class ReferFriendActivity : AppCompatActivity() {
             startActivity(i)
             p = Properties()
             p!!.putValue("invitationRuleUrl", "")
-            BWSApplication.addToSegment("Invitation Rules Viewed", p, CONSTANTS.screen)
+//            BWSApplication.addToSegment("Invitation Rules Viewed", p, CONSTANTS.screen)
         }
         binding.llShare.setOnClickListener {
             if (ReferLink.equals("", ignoreCase = true)) {
@@ -155,7 +155,7 @@ class ReferFriendActivity : AppCompatActivity() {
      Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial
      $ReferLink
      """.trimIndent())
-                BWSApplication.addToSegment("Share Clicked", p, CONSTANTS.track)
+//                BWSApplication.addToSegment("Share Clicked", p, CONSTANTS.track)
             }
         }
     }

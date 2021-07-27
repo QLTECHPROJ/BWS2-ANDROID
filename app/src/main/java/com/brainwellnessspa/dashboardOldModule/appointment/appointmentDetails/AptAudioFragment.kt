@@ -477,7 +477,7 @@ class AptAudioFragment : Fragment() {
                 } else if (listModelList[position].isLock.equals("2", ignoreCase = true)) {
                     BWSApplication.showToast(getString(R.string.reactive_plan), activity)
                 } else if (listModelList[position].isLock.equals("0", ignoreCase = true) || listModelList[position].isLock.equals("", ignoreCase = true)) {
-                    val p = Properties()
+                 /*   val p = Properties()
                     p.putValue("audioId", listModelList[position].iD)
                     p.putValue("audioName", listModelList[position].name)
                     p.putValue("audioDescription", "")
@@ -492,7 +492,7 @@ class AptAudioFragment : Fragment() {
                     p.putValue("audioService", BWSApplication.appStatus(ctx))
                     p.putValue("bitRate", "")
                     p.putValue("sound", BWSApplication.hundredVolume.toString())
-                    BWSApplication.addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
+                    BWSApplication.addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)*/
                     val i = Intent(ctx, AddPlaylistActivity::class.java)
                     i.putExtra("AudioId", listModelList[position].iD)
                     i.putExtra("ScreenView", "Appointment Audio Screen")
@@ -550,7 +550,7 @@ class AptAudioFragment : Fragment() {
             downloadAudioDetails.IsDownload = "pending"
             downloadAudioDetails.DownloadProgress = 0
             try {
-                p!!.putValue("audioId", downloadAudioDetails.ID)
+            /*    p!!.putValue("audioId", downloadAudioDetails.ID)
                 p!!.putValue("audioName", downloadAudioDetails.Name)
                 p!!.putValue("audioDescription", "")
                 p!!.putValue("directions", downloadAudioDetails.AudioDirection)
@@ -567,7 +567,7 @@ class AptAudioFragment : Fragment() {
                 p!!.putValue("source", GetSourceName(activity!!))
                 p!!.putValue("bitRate", "")
                 p!!.putValue("sound", hundredVolume.toString())
-                BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track)
+                BWSApplication.addToSegment("Audio Download Started", p, CONSTANTS.track)*/
             } catch (e: Exception) {
                 e.printStackTrace()
             }

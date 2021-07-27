@@ -60,8 +60,7 @@ class InvoiceActivity : AppCompatActivity() {
             comeFrom = intent.getStringExtra("ComeFrom")
         }
         val p = Properties()
-
-        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen)
+//        BWSApplication.addToSegment("Invoices Screen Viewed", p, CONSTANTS.screen)
         binding.llBack.setOnClickListener { callBack() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
@@ -149,7 +148,7 @@ class InvoiceActivity : AppCompatActivity() {
                                     } else if (tab.position == 1) {
                                         p!!.putValue("invoiceType", "Appointment")
                                     }
-                                    BWSApplication.addToSegment("Invoice Screen Viewed", p, CONSTANTS.screen)
+//                                    BWSApplication.addToSegment("Invoice Screen Viewed", p, CONSTANTS.screen)
                                 }
 
                                 override fun onTabUnselected(tab: TabLayout.Tab) {}

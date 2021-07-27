@@ -58,11 +58,11 @@ class AptDetailsFragment : Fragment() {
             i.data = Uri.parse(appointmentDetail!!.bookUrl)
             startActivity(i)
             BWSApplication.showToast("Book Now", activity)
-            p = Properties()
+          /*  p = Properties()
             p!!.putValue("sessionId", appointmentDetail!!.id)
             p!!.putValue("sessionName", appointmentDetail!!.name)
             p!!.putValue("sessionBookUrl", appointmentDetail!!.bookUrl)
-            BWSApplication.addToSegment("Session Book Clicked", p, CONSTANTS.track)
+            BWSApplication.addToSegment("Session Book Clicked", p, CONSTANTS.track)*/
         }
         return view
     }

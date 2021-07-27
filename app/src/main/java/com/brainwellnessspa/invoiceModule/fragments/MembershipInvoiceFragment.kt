@@ -270,7 +270,7 @@ class MembershipInvoiceFragment : Fragment() {
                 p.putValue("plan", "")
                 p.putValue("planStartDt", "")
                 p.putValue("planExpiryDt", "")
-                BWSApplication.addToSegment("Invoice Downloaded", p, CONSTANTS.track)
+//                BWSApplication.addToSegment("Invoice Downloaded", p, CONSTANTS.track)
             }
         }
 

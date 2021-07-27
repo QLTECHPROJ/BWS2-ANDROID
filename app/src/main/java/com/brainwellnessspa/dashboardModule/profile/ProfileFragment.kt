@@ -474,7 +474,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
             } else if (options[item] == getString(R.string.cancel)) {
                 val p = Properties()
-                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+//                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
             }
         }
@@ -582,7 +582,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     setProfilePic(profilePicPath)
                                     showToast(addProfileModel.responseMessage, requireActivity())
                                     val p = Properties()
-                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
+//                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
                                     profilePicPath = addProfileModel.responseData?.profileImage
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
@@ -638,7 +638,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                 profilePicPath = addProfileModel.responseData?.profileImage
                                 setProfilePic(profilePicPath)
                                 val p = Properties()
-                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
+//                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
                                 showToast(addProfileModel.responseMessage, activity)
                                 val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
@@ -670,7 +670,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
             val p = Properties()
-            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+//            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
             requireActivity().finish()
         }
     }
