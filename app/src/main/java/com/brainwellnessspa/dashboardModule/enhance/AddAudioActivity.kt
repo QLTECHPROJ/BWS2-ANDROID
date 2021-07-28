@@ -27,7 +27,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityAddAudioBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding

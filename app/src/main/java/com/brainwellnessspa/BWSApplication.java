@@ -78,7 +78,7 @@ import com.brainwellnessspa.dashboardModule.models.ReminderProceedModel;
 import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel;
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
