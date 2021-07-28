@@ -147,9 +147,9 @@ class SplashActivity : AppCompatActivity() {
                             when {
                                 versionModel.ResponseData.IsForce.equals("0", ignoreCase = true) -> {
                                     val builder = AlertDialog.Builder(this@SplashActivity)
-                                    builder.setTitle("Update Brain Wellness Spa")
+                                    builder.setTitle("Update Brain Wellness App")
                                     builder.setCancelable(false)
-                                    builder.setMessage("Brain Wellness Spa recommends that you update to the latest version").setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
+                                    builder.setMessage("Brain Wellness App recommends that you update to the latest version").setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
                                         this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                         dialog.cancel()
                                     }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
@@ -162,7 +162,7 @@ class SplashActivity : AppCompatActivity() {
                                     val builder = AlertDialog.Builder(this@SplashActivity)
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
-                                    builder.setMessage("To keep using Brain Wellness Spa, download the latest version").setCancelable(false).setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
+                                    builder.setMessage("To keep using Brain Wellness App, download the latest version").setCancelable(false).setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
                                         this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                     }
                                     builder.create().show()
