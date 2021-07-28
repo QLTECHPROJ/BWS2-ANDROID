@@ -6,12 +6,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityThankYouBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
-import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
+import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.utility.CONSTANTS
 
 class ThankYouActivity : AppCompatActivity() {
@@ -22,6 +21,7 @@ class ThankYouActivity : AppCompatActivity() {
     var isProfileCompleted: String? = null
     var isAssessmentCompleted: String? = null
     var avgSleepTime: String? = null
+    var coUserCount: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +34,7 @@ class ThankYouActivity : AppCompatActivity() {
         isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
         avgSleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        coUserCount = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
 
         binding.tvName.text = userName
 
@@ -47,10 +48,16 @@ class ThankYouActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                intent.putExtra("IsFirst", "1")
-                startActivity(intent)
-                finish()
+                if (coUserCount.toString() > "1") {
+                    val intent = Intent(applicationContext, UserListActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                    intent.putExtra("IsFirst", "1")
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
     }

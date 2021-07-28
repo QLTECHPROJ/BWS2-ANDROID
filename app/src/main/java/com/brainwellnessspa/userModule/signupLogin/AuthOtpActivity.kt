@@ -25,7 +25,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
@@ -41,7 +40,6 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -79,6 +77,12 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             email = intent.getStringExtra(CONSTANTS.email)
             countryShortName = intent.getStringExtra(CONSTANTS.countryShortName)
             countryName = intent.getStringExtra(CONSTANTS.countryName)
+        }
+
+        if (signupFlag.equals("1", ignoreCase = true)) {
+            binding.btnSendCode.text = getString(R.string.create_account)
+        } else {
+            binding.btnSendCode.text = getString(R.string.login)
         }
 
         binding.llBack.setOnClickListener {
@@ -292,7 +296,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    if (listModel.ResponseData.CoUserCount > "1") {
+                                    if (listModel.ResponseData.CoUserCount > "0") {
                                         val intent = Intent(activity, UserListActivity::class.java)
                                         startActivity(intent)
                                         finish()

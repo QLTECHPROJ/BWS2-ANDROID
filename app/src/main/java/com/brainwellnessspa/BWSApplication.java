@@ -202,8 +202,10 @@ public class BWSApplication extends Application {
     static int Chour, Cminute;
     public static String key = "";
     static TextView tvTime;
+    static CheckBox cbCheck;
     public static AudioDatabase DB;
     public static int isPlayPlaylist = 0;
+    public static int isSetLoginPin = 0;
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
 
@@ -1987,13 +1989,13 @@ public class BWSApplication extends Application {
         final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
         tvTime = dialog.findViewById(R.id.tvTime);
         final Button btnNext = dialog.findViewById(R.id.btnNext);
-        final CheckBox cbChecked = dialog.findViewById(R.id.cbChecked);
+        cbCheck = dialog.findViewById(R.id.cbChecked);
         final LinearLayout llSelectTime = dialog.findViewById(R.id.llSelectTime);
         final LinearLayout llOptions = dialog.findViewById(R.id.llOptions);
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
-        cbChecked.setText(R.string.select_all);
+        cbCheck.setText(ctx.getString(R.string.select_all));
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
@@ -2081,7 +2083,7 @@ public class BWSApplication extends Application {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
         rvSelectDay.setLayoutManager(manager);
         rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, cbChecked, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
+        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
         rvSelectDay.setAdapter(adapter);
 
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -2370,7 +2372,7 @@ public class BWSApplication extends Application {
         properties.putValue("deviceID", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
         if (analytics == null) {
             SplashActivity sp = new SplashActivity();
-            sp.setAnalytics(getContext().getString(R.string.segment_key_real));
+            sp.setAnalytics(getContext().getString(R.string.segment_key_real), getContext());
         }
         try {
             if (methodName.equalsIgnoreCase("track")) {
@@ -2576,9 +2578,22 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_UserId);
         edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER);
         edit.remove(CONSTANTS.PREFE_ACCESS_NAME);
+        edit.remove(CONSTANTS.PREFE_ACCESS_EMAIL);
+        edit.remove(CONSTANTS.PREFE_ACCESS_MOBILE);
+        edit.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
+        edit.remove(CONSTANTS.PREFE_ACCESS_INDEXSCORE);
+        edit.remove(CONSTANTS.PREFE_ACCESS_IMAGE);
+        edit.remove(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED);
+        edit.remove(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED);
+        edit.remove(CONSTANTS.PREFE_ACCESS_directLogin);
+        edit.remove(CONSTANTS.PREFE_ACCESS_SCORELEVEL);
         edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL);
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType);
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID);
+        edit.remove(CONSTANTS.PREFE_ACCESS_isPinSet);
+        edit.remove(CONSTANTS.PREFE_ACCESS_isSetLoginPin);
+        edit.remove(CONSTANTS.PREFE_ACCESS_isMainAccount);
+        edit.remove(CONSTANTS.PREFE_ACCESS_coUserCount);
         edit.clear();
         edit.apply();
         SharedPreferences preferred = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
@@ -2622,7 +2637,6 @@ public class BWSApplication extends Application {
         Button btnNext;
         String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested, reminderId, created;
         Dialog dialogOld;
-        CheckBox cbCheck;
         FragmentActivity fragmentActivity;
         TextView timeDisplay;
         ProgressBar progressBar;
@@ -2630,7 +2644,7 @@ public class BWSApplication extends Application {
         LinearLayout llSelectTime, llOptions;
         private final ReminderSelectionModel[] selectionModels;
 
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, CheckBox cbCheck, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created, LinearLayout llOptions) {
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created, LinearLayout llOptions) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -2640,7 +2654,6 @@ public class BWSApplication extends Application {
             this.PlaylistName = PlaylistName;
             this.dialogOld = dialogOld;
             this.fragmentActivity = fragmentActivity;
-            this.cbCheck = cbCheck;
             this.timeDisplay = timeDisplay;
             this.progressBarHolder = progressBarHolder;
             this.progressBar = progressBar;
@@ -2670,12 +2683,14 @@ public class BWSApplication extends Application {
                 if (remiderDays.size() == selectionModels.length) {
                     cbCheck.setChecked(true);
                 }
+
                 if (remiderDays.size() == 0) {
-                    cbCheck.setText(R.string.select_all);
+                    cbCheck.setText(ctx.getString(R.string.select_all));
                 } else {
-                    cbCheck.setText(R.string.unselect_all);
+                    cbCheck.setText(ctx.getString(R.string.unselect_all));
                 }
             }
+
             if (RDay.contains(String.valueOf(position))) {
                 remiderDays.add(String.valueOf(position));
                 holder.binding.cbChecked.setChecked(true);

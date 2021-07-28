@@ -1230,6 +1230,7 @@ class HomeFragment : Fragment() {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                         editor.apply()
                                                         val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                                         val edited = sharded.edit()
@@ -1248,7 +1249,7 @@ class HomeFragment : Fragment() {
                                                         prepareHomeData()
 
                                                         val activity = SplashActivity()
-                                                        activity.setAnalytics(activity.getString(R.string.segment_key_real))
+                                                        activity.setAnalytics(activity.getString(R.string.segment_key_real), act)
 
                                                         //    showToast(listModel.responseMessage,act)
                                                         callIdentify(ctx)

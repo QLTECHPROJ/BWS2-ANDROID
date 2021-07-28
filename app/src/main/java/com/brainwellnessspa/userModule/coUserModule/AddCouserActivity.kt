@@ -44,7 +44,7 @@ class AddCouserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_couser)
-
+        activity = this@AddCouserActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val p = Properties()

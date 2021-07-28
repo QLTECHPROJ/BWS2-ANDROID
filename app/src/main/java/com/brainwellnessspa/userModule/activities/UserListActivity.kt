@@ -10,7 +10,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -44,7 +43,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -174,7 +172,7 @@ class UserListActivity : AppCompatActivity() {
                     coEmail = coUsersModel!![position].email.toString()
                 } else if (coUsersModel!![position].isPinSet.equals("0", ignoreCase = true) || coUsersModel!![position].isPinSet.equals("", ignoreCase = true)) {
                     val i = Intent(activity, CouserSetupPinActivity::class.java)
-                    i.putExtra("subUserId",coUsersModel!![position].userID)
+                    i.putExtra("subUserId", coUsersModel!![position].userID)
                     activity.startActivity(i)
                 }
             }
@@ -253,6 +251,7 @@ class UserListActivity : AppCompatActivity() {
                                                         try {
                                                             val authOtpModel: AuthOtpModel = response.body()!!
                                                             if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                                Log.e("isSetLoginPin", isSetLoginPin.toString())
                                                                 if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
                                                                     /*if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                     val intent = Intent(activity, AssProcessActivity::class.java)
@@ -296,6 +295,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(authOtpModel.ResponseData.AreaOfFocus))
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                                 editor.apply()
                                                                 val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                                                 val edited = sharded.edit()
@@ -311,7 +311,7 @@ class UserListActivity : AppCompatActivity() {
                                                                 edited.apply()
 
                                                                 val activity = SplashActivity()
-                                                                activity.setAnalytics(activity.getString(R.string.segment_key_real))
+                                                                activity.setAnalytics(activity.getString(R.string.segment_key_real), ctx)
                                                                 callIdentify(ctx)
                                                                 /*   val p1 = Properties()
                                                                p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
@@ -575,7 +575,7 @@ class UserListActivity : AppCompatActivity() {
                             p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
                             p.putValue("UserList", gson.toJson(section))
                             addToSegment("Couser List Viewed", p, CONSTANTS.screen)
-                        } else if(listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)){
+                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                             deleteCall(activity)
                             val i = Intent(activity, SignInActivity::class.java)
                             i.putExtra("mobileNo", "")
@@ -585,7 +585,7 @@ class UserListActivity : AppCompatActivity() {
                             i.putExtra("countryShortName", "")
                             startActivity(i)
                             finish()
-                        }else {
+                        } else {
                             showToast(listModel.responseMessage, activity)
                         }
 

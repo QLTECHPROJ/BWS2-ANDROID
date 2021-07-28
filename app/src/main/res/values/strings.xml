@@ -419,6 +419,7 @@
     <string name="new_sign_in">Log In</string>
     <string name="please_provide_a_email_address">Please provide a email address</string>
     <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
     <string name="i_found_it_hard_to_wind_down">I found it hard to wind down.</string>
     <string name="add_one_user">Add One User</string>
     <string name="with_same_mobile_number">With Same Mobile Number</string>
