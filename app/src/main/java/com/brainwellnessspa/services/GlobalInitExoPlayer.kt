@@ -27,7 +27,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.roomDataBase.AudioDatabase

@@ -37,7 +37,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel;
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;

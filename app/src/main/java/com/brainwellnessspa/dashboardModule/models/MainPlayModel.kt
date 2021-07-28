@@ -1,4 +1,4 @@
-package com.brainwellnessspa.dashboardOldModule.transParentPlayer.models
+package com.brainwellnessspa.dashboardModule.models
 
 class MainPlayModel {
     var id: String = ""

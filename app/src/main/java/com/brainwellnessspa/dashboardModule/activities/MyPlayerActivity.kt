@@ -20,7 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.dashboardOldModule.transParentPlayer.models.MainPlayModel
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
