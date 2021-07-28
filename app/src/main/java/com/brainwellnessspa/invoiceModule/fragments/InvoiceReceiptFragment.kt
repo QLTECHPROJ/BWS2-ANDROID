@@ -103,7 +103,7 @@ class InvoiceReceiptFragment : DialogFragment() {
                                         p.putValue("plan", "")
                                         p.putValue("planStartDt", "")
                                         p.putValue("planExpiryDt", "")
-                                        BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track)
+//                                        BWSApplication.addToSegment("Invoice Clicked", p, CONSTANTS.track)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }

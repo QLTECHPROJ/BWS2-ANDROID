@@ -116,6 +116,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.4.1'
 // TODO  Segment Dependency
     implementation 'com.segment.analytics.android:analytics:4.7.1'
+    implementation 'com.segment.analytics.android.integrations:firebase:+@aar'
 // TODO  Stripe Payment Gateway
     implementation 'com.stripe:stripe-android:2.0.2'
 // TODO Check Debug Database

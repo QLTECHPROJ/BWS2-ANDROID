@@ -32,6 +32,7 @@ import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
+import com.segment.analytics.android.integrations.firebase.FirebaseIntegration
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -399,7 +400,7 @@ class SplashActivity : AppCompatActivity() {
     fun setAnalytics(segmentKey: String, context: Context) {
         try { //     TODO : Live segment key
             //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
-            analytics = Analytics.Builder(context, segmentKey).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
+            analytics = Analytics.Builder(context, segmentKey).use(FirebaseIntegration.FACTORY).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
             Analytics.setSingletonInstance(analytics)
         } catch (e: java.lang.Exception) { //            catch = true;
             //            Log.e("in Catch", "True");

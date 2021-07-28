@@ -57,8 +57,8 @@ class ForgotPswdActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
-        val p = Properties()
-        BWSApplication.addToSegment("Forgot Password Screen Viewed", p, CONSTANTS.screen)
+//        val p = Properties()
+//        BWSApplication.addToSegment("Forgot Password Screen Viewed", p, CONSTANTS.screen)
 
         binding.etEmail.addTextChangedListener(userTextWatcher)
 
@@ -106,8 +106,8 @@ class ForgotPswdActivity : AppCompatActivity() {
                                     finish()
                                 }
                                 val p = Properties()
-                                p.putValue("email", binding.etEmail.text.toString())
-                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
+//                                p.putValue("email", binding.etEmail.text.toString())
+//                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
                                 dialog.show()
                                 dialog.setCancelable(false)
 

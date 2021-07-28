@@ -235,7 +235,7 @@ class SessionsFragment : Fragment() {
                                     section!!.add(listModel.responseData!![i].status)
                                 }
                                 p!!.putValue("appointmentSessions", gson!!.toJson(section))
-                                BWSApplication.addToSegment("Appointment Session Listing Viewed", p, CONSTANTS.screen)
+//                                BWSApplication.addToSegment("Appointment Session Listing Viewed", p, CONSTANTS.screen)
                             } else {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             }
@@ -306,7 +306,7 @@ class SessionsFragment : Fragment() {
                 p = Properties()
                 p!!.putValue("sessionId", listModel.id)
                 p!!.putValue("sessionName", listModel.name)
-                BWSApplication.addToSegment("Session List Item Clicked", p, CONSTANTS.track)
+//                BWSApplication.addToSegment("Session List Item Clicked", p, CONSTANTS.track)
             }
         }
 
