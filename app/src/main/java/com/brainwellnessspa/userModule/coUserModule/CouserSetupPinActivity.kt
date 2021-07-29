@@ -22,6 +22,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCouserSetupPinBinding
+import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.SetLoginPinModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
@@ -75,7 +76,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
         BWSApplication.addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
-        if (intent.extras != null){
+        if (intent.extras != null) {
             subUserId = intent.getStringExtra("subUserId")
         }
         binding.llBack.setOnClickListener {
@@ -150,10 +151,10 @@ class CouserSetupPinActivity : AppCompatActivity() {
             if (BWSApplication.isNetworkConnected(this)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 var mainUserId = ""
-                if (subUserId.equals("")){
-                    mainUserId = userId.toString()
-                }else {
-                    mainUserId = subUserId.toString()
+                mainUserId = if (subUserId.equals("")) {
+                    userId.toString()
+                } else {
+                    subUserId.toString()
                 }
                 val listCall: Call<SetLoginPinModel> = APINewClient.client.getSetLoginPin(mainUserId, binding.etConfirmPIN.text.toString())
 
@@ -167,10 +168,16 @@ class CouserSetupPinActivity : AppCompatActivity() {
                             if (listModel != null) {
                                 if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
-                                    val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                                    intent.putExtra(CONSTANTS.ScreenView, "4")
-                                    startActivity(intent)
-                                    finish()
+                                    if (mainAccountID == listModel.responseData?.userId) {
+                                        val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                                        intent.putExtra(CONSTANTS.ScreenView, "4")
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        val intent = Intent(applicationContext, UserListActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
                                 } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(listModel.responseMessage, activity)
@@ -182,7 +189,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     i.putExtra("countryShortName", "")
                                     startActivity(i)
                                     finish()
-                                }  else {
+                                } else {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
                             }

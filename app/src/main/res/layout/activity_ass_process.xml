@@ -81,11 +81,11 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvScreenTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="@string/Your_Assessment_Result"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     tools:ignore="SpUsage" />
@@ -372,15 +372,14 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:id="@+id/tvWellnessTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_18sdp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_10sdp"
-                    android:text="@string/your_index_score_is"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
 

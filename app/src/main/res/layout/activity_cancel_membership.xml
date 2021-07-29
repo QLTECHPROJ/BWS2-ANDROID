@@ -73,7 +73,6 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -283,6 +282,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
                             android:paddingStart="@dimen/_12sdp"
+                            android:paddingRight="@dimen/_0sdp"
                             android:text="@string/Feeling_better"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
@@ -299,6 +299,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
                             android:paddingStart="@dimen/_12sdp"
+                            android:paddingRight="@dimen/_0sdp"
                             android:text="@string/Condition_worse"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
@@ -315,6 +316,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
                             android:paddingStart="@dimen/_12sdp"
+                            android:paddingRight="@dimen/_0sdp"
                             android:text="@string/Pricing"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
@@ -331,6 +333,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
                             android:paddingStart="@dimen/_12sdp"
+                            android:paddingRight="@dimen/_0sdp"
                             android:text="@string/Other_reason"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
@@ -344,7 +347,7 @@
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginTop="@dimen/_22sdp"
                             android:layout_marginRight="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_16sdp"
+                            android:layout_marginBottom="@dimen/_80sdp"
                             android:background="@drawable/edittext_background"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"

@@ -1987,6 +1987,7 @@ public class BWSApplication extends Application {
         final ImageView ivBack = dialog.findViewById(R.id.ivBack);
         final RecyclerView rvSelectDay = dialog.findViewById(R.id.rvSelectDay);
         final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
+        final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
         tvTime = dialog.findViewById(R.id.tvTime);
         final Button btnNext = dialog.findViewById(R.id.btnNext);
         cbCheck = dialog.findViewById(R.id.cbChecked);
@@ -2010,6 +2011,19 @@ public class BWSApplication extends Application {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            switch (created) {
+                case "1":
+                    tvTitle.setVisibility(View.GONE);
+                    break;
+                case "0":
+                    tvTitle.setVisibility(View.GONE);
+                    break;
+                case "2":
+                    tvTitle.setVisibility(View.VISIBLE);
+                    break;
+            }
+
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
             Properties p = new Properties();
@@ -2031,12 +2045,15 @@ public class BWSApplication extends Application {
             switch (created) {
                 case "1":
                     p.putValue("playlistType", "Created");
+                    tvTitle.setVisibility(View.GONE);
                     break;
                 case "0":
                     p.putValue("playlistType", "Default");
+                    tvTitle.setVisibility(View.GONE);
                     break;
                 case "2":
                     p.putValue("playlistType", "Suggested");
+                    tvTitle.setVisibility(View.VISIBLE);
                     break;
             }
             switch (isReminder) {
@@ -2677,6 +2694,13 @@ public class BWSApplication extends Application {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             holder.binding.cbChecked.setText(selectionModels[position].getDay());
 
+            if (RDay.contains(String.valueOf(position))) {
+                remiderDays.add(String.valueOf(position));
+                holder.binding.cbChecked.setChecked(true);
+            } else {
+                holder.binding.cbChecked.setChecked(false);
+            }
+
             if (position == 0) {
                 Log.e("Reminder RDay", RDay);
 
@@ -2689,13 +2713,6 @@ public class BWSApplication extends Application {
                 } else {
                     cbCheck.setText(ctx.getString(R.string.unselect_all));
                 }
-            }
-
-            if (RDay.contains(String.valueOf(position))) {
-                remiderDays.add(String.valueOf(position));
-                holder.binding.cbChecked.setChecked(true);
-            } else {
-                holder.binding.cbChecked.setChecked(false);
             }
 
             holder.binding.cbChecked.setOnClickListener(v -> {
@@ -2721,6 +2738,7 @@ public class BWSApplication extends Application {
                 if (cbCheck.isChecked()) {
                     RDay = "0, 1, 2, 3, 4, 5, 6";
                 }
+
                 Log.e("remiderDays R cb ch", RDay);
                 notifyDataSetChanged();
             });

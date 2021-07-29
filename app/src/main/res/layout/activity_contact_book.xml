@@ -25,7 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_close_dark_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
 
             <TextView
@@ -36,8 +37,8 @@
                 android:gravity="center"
                 android:text="@string/Invite_Friends"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
-
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -50,7 +51,6 @@
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginRight="@dimen/_16sdp"
-            android:layout_weight="2"
             android:background="@drawable/rounded_extra_gray_corner"
             android:visibility="visible">
 
@@ -59,9 +59,10 @@
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_14sdp"
+                android:layout_marginStart="@dimen/_14sdp"
                 android:src="@drawable/ic_search_icon"
-                app:tint="@color/dark_blue_gray" />
+                app:tint="@color/dark_blue_gray"
+                android:contentDescription="@string/todo" />
 
 
             <androidx.appcompat.widget.SearchView
@@ -69,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/button1"
+                android:layout_toEndOf="@id/button1"
                 android:iconifiedByDefault="false"
                 android:singleLine="true"
                 android:theme="@style/WallSearchView"
@@ -94,7 +95,6 @@
                     android:id="@+id/tvFavorites"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_bold"
@@ -102,7 +102,8 @@
                     android:text="@string/Favourites"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvFavContactList"
@@ -129,7 +130,6 @@
                     android:id="@+id/llError"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:layout_centerInParent="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -138,18 +138,16 @@
                         android:id="@+id/tvFound"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
                         android:layout_marginHorizontal="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
-                        android:text="No result found"
+                        android:text="@string/no_result_found"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
-
             </LinearLayout>
-
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
@@ -164,7 +162,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

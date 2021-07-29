@@ -26,7 +26,6 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.dashboardOldModule.models.AppointmentDetailModel
 import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils
@@ -1186,7 +1185,8 @@ class GlobalInitExoPlayer : Service() {
                         editor.apply()
                         editor.commit()
                     }
-                } else if (AudioFlag.equals("AppointmentDetailList", ignoreCase = true)) {
+                }
+                /*else if (AudioFlag.equals("AppointmentDetailList", ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<AppointmentDetailModel.Audio?>?>() {}.type
                     val arrayList = gson.fromJson<ArrayList<AppointmentDetailModel.Audio>>(json, type)
                     val arrayList2 = ArrayList<AppointmentDetailModel.Audio>()
@@ -1230,7 +1230,7 @@ class GlobalInitExoPlayer : Service() {
                         editor.apply()
                         editor.commit()
                     }
-                }
+                }*/
                 if (arrayList1.size == 0) {
                     removeSharepref(ctx)
                 }

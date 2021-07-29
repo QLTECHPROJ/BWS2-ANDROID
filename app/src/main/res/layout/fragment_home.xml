@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#eeeeee"
-            android:visibility="gone"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_10sdp"
+            android:visibility="gone"
             android:weightSum="1">
 
             <LinearLayout
@@ -89,8 +89,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:paddingStart="@dimen/_12sdp"
                             android:maxLength="16"
+                            android:paddingStart="@dimen/_12sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_16sdp"
                             tools:ignore="RtlSymmetry,SpUsage" />
@@ -137,28 +137,28 @@
             android:id="@+id/llNoInternet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:gravity="center">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_310sdp"
                 android:layout_marginHorizontal="36dp"
-                android:scaleType="fitXY"
                 android:layout_marginTop="-20dp"
-                android:src="@drawable/ic_no_active_internet_bg"
-                android:contentDescription="@string/todo" />
+                android:contentDescription="@string/todo"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_no_active_internet_bg" />
 
             <TextView
                 android:id="@+id/tvNoInterNet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="@string/whoooops_nno_active_internet"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:textColor="@color/app_theme_color"
                 android:textSize="@dimen/_20sdp"
                 tools:ignore="RtlSymmetry,SpUsage" />
@@ -168,7 +168,8 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/llUser">
+            android:layout_below="@id/llUser"
+            android:overScrollMode="never">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -180,9 +181,9 @@
                     android:id="@+id/ivLightBg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:background="@drawable/manage_bg_banner"
-                    android:contentDescription="@string/todo" />
+                    android:contentDescription="@string/todo"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/llPlayer"

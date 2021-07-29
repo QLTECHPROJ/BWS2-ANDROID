@@ -7,40 +7,6 @@
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/_10sdp">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/ivBanner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|start"
-                android:src="@drawable/ic_green_label_icon"
-                android:paddingStart="@dimen/_12sdp"
-                android:visibility="gone"
-                android:paddingEnd="@dimen/_12sdp"
-                tools:ignore="RtlSymmetry,SpUsage"
-                android:contentDescription="@string/todo" />
-
-            <TextView
-                android:id="@+id/tvLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="@dimen/_8sdp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:fontFamily="@font/montserrat_regular"
-                android:textColor="@color/white"
-                android:text="@string/request_sent"
-                android:textSize="@dimen/_9sdp"
-                tools:ignore="SpUsage" />
-
-        </RelativeLayout>
-
         <LinearLayout
             android:id="@+id/llMainLayout"
             android:layout_width="match_parent"
@@ -56,9 +22,9 @@
                 android:id="@+id/tvName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:layout_marginStart="@dimen/_14sdp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_weight="0.75"
                 android:fontFamily="@font/montserrat_regular"
                 android:paddingTop="@dimen/_3sdp"
                 android:textColor="@color/black"
@@ -69,41 +35,77 @@
                 android:id="@+id/llChecked"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_0sdp">
 
                 <ImageView
                     android:id="@+id/ivStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/_14sdp"
-                    android:paddingVertical="@dimen/_16sdp"
-                    android:gravity="center_vertical|start"
-                    android:src="@drawable/ic_uncheck_user_icon"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginEnd="@dimen/_12sdp"
+                    android:contentDescription="@string/todo"
+                    android:gravity="center_vertical|start"
+                    android:paddingHorizontal="@dimen/_14sdp"
+                    android:paddingVertical="@dimen/_16sdp"
+                    android:src="@drawable/ic_uncheck_user_icon"
                     android:visibility="visible"
-                    tools:ignore="RtlSymmetry,SpUsage"
-                    android:contentDescription="@string/todo" />
+                    tools:ignore="RtlSymmetry,SpUsage" />
 
                 <TextView
                     android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_14sdp"
                     android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/montserrat_regular"
                     android:layout_marginHorizontal="@dimen/_14sdp"
                     android:layout_marginVertical="@dimen/_16sdp"
+                    android:layout_marginStart="@dimen/_14sdp"
+                    android:fontFamily="@font/montserrat_regular"
                     android:text="@string/Cancel"
                     android:textColor="@color/black"
-                    android:visibility="gone"
                     android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
                     tools:ignore="SpUsage" />
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <!--green_label png-->
+            <ImageView
+                android:id="@+id/ivBanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/todo"
+                android:gravity="center_vertical|start"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:src="@drawable/ic_green_label_icon"
+                android:visibility="visible"
+                tools:ignore="RtlSymmetry,SpUsage" />
+
+            <TextView
+                android:id="@+id/tvLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_8sdp"
+                android:text="@string/request_sent"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </layout>

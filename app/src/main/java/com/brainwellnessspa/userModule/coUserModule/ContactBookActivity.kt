@@ -80,12 +80,14 @@ class ContactBookActivity : AppCompatActivity() {
         binding.rvContactList.layoutManager = mListLayoutManager
         binding.rvContactList.itemAnimator = DefaultItemAnimator()
         withoutSearch()
+
         binding.llBack.setOnClickListener {
             myBackPress = true
             val i = Intent(applicationContext, AddCouserActivity::class.java)
             startActivity(i)
             finish()
         }
+
         p = Properties()
         p!!.putValue("userId", userId)
         p!!.putValue("referLink", referLink)

@@ -291,7 +291,7 @@ class SignInActivity : AppCompatActivity() {
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result!!.token
+                    val newToken = task.result.token
                     Log.e("newToken", newToken)
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
                     editor.putString(CONSTANTS.Token, newToken) //Friend

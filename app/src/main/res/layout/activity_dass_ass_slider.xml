@@ -75,51 +75,52 @@
         <!--        </LinearLayout>  -->
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="vertical">
+
             <LinearLayout
+                android:id="@+id/llMainFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_25sdp"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
-                <LinearLayout
-                    android:id="@+id/llMainFirst"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvQus"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvQus"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="start"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp"
-                        tools:ignore="SpUsage" />
-                </LinearLayout>
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/lpIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:max="33"
+                android:progress="0"
+                app:indicatorColor="#F1646A"
+                app:trackColor="#DDDDDD" />
 
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/lpIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:max="33"
-                    android:progress="0"
-                    app:indicatorColor="#F1646A"
-                    app:trackColor="#DDDDDD" />
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never">
 
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never">
                 <RelativeLayout
                     android:id="@+id/llFirst"
                     android:layout_width="match_parent"
@@ -178,8 +179,8 @@
                         tools:targetApi="lollipop" />
 
                 </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
-            </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/btnPrev"
@@ -189,11 +190,11 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_25sdp"
             android:clickable="true"
+            android:contentDescription="@string/todo"
             android:focusable="true"
             android:rotation="180"
             android:src="@drawable/ic_back_black_icon"
-            app:tint="@color/black"
-            android:contentDescription="@string/todo" />
+            app:tint="@color/black" />
 
         <ImageView
             android:id="@+id/btnNext"

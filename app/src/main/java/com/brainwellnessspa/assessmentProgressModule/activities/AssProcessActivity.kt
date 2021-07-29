@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -449,6 +450,9 @@ class AssProcessActivity : AppCompatActivity() {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
                                     binding.assesmentContent.text = listModel.responseData?.assesmentContent
+                                    binding.tvScreenTitle.text = listModel.responseData?.mainTitle
+                                    binding.tvWellnessTitle.text = listModel.responseData?.subTitle
+                                    binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                     BWSApplication.deleteCall(activity)

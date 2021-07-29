@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityUserListBinding
@@ -253,14 +254,12 @@ class UserListActivity : AppCompatActivity() {
                                                             if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                                                 Log.e("isSetLoginPin", isSetLoginPin.toString())
                                                                 if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                                                    /*if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                                                    val intent = Intent(activity, AssProcessActivity::class.java)
-                                                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                                                    activity.startActivity(intent)
-                                                                    activity.finish()
-                                                                } else */
-
-                                                                    if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                                    if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                                        val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                        activity.startActivity(intent)
+                                                                        activity.finish()
+                                                                    } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                                                         val intent = Intent(activity, ProfileProgressActivity::class.java)
                                                                         activity.startActivity(intent)
                                                                         activity.finish()
@@ -553,40 +552,44 @@ class UserListActivity : AppCompatActivity() {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AddedUserListModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            binding.rvUserList.layoutManager = LinearLayoutManager(activity)
-                            adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString(), isMainAccount.toString(), isProfileCompleted.toString(), avgSleepTime.toString(), isAssessmentCompleted.toString())
-                            binding.rvUserList.adapter = adapter
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                binding.rvUserList.layoutManager = LinearLayoutManager(activity)
+                                adapter = UserListAdapter(listModel.responseData!!, activity, ctx, binding, userId.toString(), coUserId.toString(), coEmail.toString(), isMainAccount.toString(), isProfileCompleted.toString(), avgSleepTime.toString(), isAssessmentCompleted.toString())
+                                binding.rvUserList.adapter = adapter
 
-                            val section = ArrayList<SegmentUserList>()
-                            for (i in listModel.responseData!!.userList!!.indices) {
-                                val e = SegmentUserList()
-                                e.userId = listModel.responseData!!.userList!![i].userID
-                                e.name = listModel.responseData!!.userList!![i].name
-                                e.mobile = listModel.responseData!!.userList!![i].mobile
-                                e.email = listModel.responseData!!.userList!![i].email
-                                e.image = listModel.responseData!!.userList!![i].image
-                                e.dob = listModel.responseData!!.userList!![i].dob
-                                section.add(e)
+                                val section = ArrayList<SegmentUserList>()
+                                for (i in listModel.responseData!!.userList!!.indices) {
+                                    val e = SegmentUserList()
+                                    e.userId = listModel.responseData!!.userList!![i].userID
+                                    e.name = listModel.responseData!!.userList!![i].name
+                                    e.mobile = listModel.responseData!!.userList!![i].mobile
+                                    e.email = listModel.responseData!!.userList!![i].email
+                                    e.image = listModel.responseData!!.userList!![i].image
+                                    e.dob = listModel.responseData!!.userList!![i].dob
+                                    section.add(e)
+                                }
+                                val p = Properties()
+                                val gson = Gson()
+
+                                p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
+                                p.putValue("UserList", gson.toJson(section))
+                                addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                             }
-                            val p = Properties()
-                            val gson = Gson()
-
-                            p.putValue("maxuseradd", listModel.responseData!!.maxuseradd)
-                            p.putValue("UserList", gson.toJson(section))
-                            addToSegment("Couser List Viewed", p, CONSTANTS.screen)
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            showToast(listModel.responseMessage, activity)
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
+                            }
                         }
 
                     } catch (e: Exception) {

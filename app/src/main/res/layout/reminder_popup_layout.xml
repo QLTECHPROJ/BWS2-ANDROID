@@ -50,49 +50,27 @@
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="@string/long_lorem"
+            android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score_you_will_get_a_reminder_notification_for_that"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp"
             tools:ignore="SpUsage" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/Btn"
+            android:layout_width="160dp"
+            android:layout_height="@dimen/_46sdp"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_28sdp"
             android:layout_marginBottom="@dimen/_26sdp"
+            android:background="@drawable/ripple_bg"
+            android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
-            android:orientation="vertical">
+            android:text="@string/Proceed"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            tools:ignore="SpUsage" />
 
-            <Button
-                android:id="@+id/Btn"
-                android:layout_width="160dp"
-                android:layout_height="@dimen/_46sdp"
-                android:layout_gravity="center"
-                android:background="@drawable/ripple_bg"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="@string/Proceed"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_16sdp"
-                tools:ignore="SpUsage" />
-
-            <TextView
-                android:id="@+id/tvGoBack"
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="center"
-                android:text="@string/Close"
-                android:textAllCaps="true"
-                android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_14sdp"
-                android:visibility="gone"
-                tools:ignore="SpUsage" />
-
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

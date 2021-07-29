@@ -29,6 +29,18 @@ class AssesmentGetDetailsModel {
         @Expose
         var scoreLevel: String? = null
 
+        @SerializedName("MainTitle")
+        @Expose
+        var mainTitle: String? = null
+
+        @SerializedName("SubTitle")
+        @Expose
+        var subTitle: String? = null
+
+        @SerializedName("colorcode")
+        @Expose
+        var colorcode: String? = null
+
         @SerializedName("AssesmentTitle")
         @Expose
         var assesmentTitle: String? = null

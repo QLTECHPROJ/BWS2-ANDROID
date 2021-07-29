@@ -79,27 +79,31 @@ class ManageUserActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ManageUserListModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val p = Properties()
-                            p.putValue("totalUsers", listModel.responseData!!.userList!!.size)
-                            BWSApplication.addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
-                            listModel.responseData?.let {
-                                enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
-                                binding.rvUserList.adapter = enhanceUserListAdapter
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val p = Properties()
+                                p.putValue("totalUsers", listModel.responseData!!.userList!!.size)
+                                BWSApplication.addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
+                                listModel.responseData?.let {
+                                    enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
+                                    binding.rvUserList.adapter = enhanceUserListAdapter
+                                }
                             }
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            BWSApplication.deleteCall(activity)
-                            BWSApplication.showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
                         }
 
                     } catch (e: Exception) {
@@ -134,6 +138,12 @@ class ManageUserActivity : AppCompatActivity() {
                     binding.llAddNewUser.visibility = View.VISIBLE
                 } else {
                     binding.llAddNewUser.visibility = View.GONE
+                }
+
+                if (mainAccountID == list[position].userId) {
+                    holder.binding.llChecked.visibility = View.INVISIBLE
+                } else {
+                    holder.binding.llChecked.visibility = View.VISIBLE
                 }
 
                 binding.llAddNewUser.setOnClickListener {
@@ -192,22 +202,26 @@ class ManageUserActivity : AppCompatActivity() {
                                         try {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: CancelInviteUserModel = response.body()!!
-                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                prepareEnhanceUserList(activity)
-                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                                BWSApplication.deleteCall(activity)
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                val i = Intent(activity, SignInActivity::class.java)
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                startActivity(i)
-                                                finish()
-                                            } else {
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                            when {
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    prepareEnhanceUserList(activity)
+                                                }
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                                    BWSApplication.deleteCall(activity)
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    val i = Intent(activity, SignInActivity::class.java)
+                                                    i.putExtra("mobileNo", "")
+                                                    i.putExtra("countryCode", "")
+                                                    i.putExtra("name", "")
+                                                    i.putExtra("email", "")
+                                                    i.putExtra("countryShortName", "")
+                                                    startActivity(i)
+                                                    finish()
+                                                }
+                                                else -> {
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                }
                                             }
 
                                         } catch (e: Exception) {
@@ -243,22 +257,26 @@ class ManageUserActivity : AppCompatActivity() {
                                         try {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: SetInviteUserModel = response.body()!!
-                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                prepareEnhanceUserList(activity)
-                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                                BWSApplication.deleteCall(activity)
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                val i = Intent(activity, SignInActivity::class.java)
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                startActivity(i)
-                                                finish()
-                                            } else {
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                            when {
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    prepareEnhanceUserList(activity)
+                                                }
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                                    BWSApplication.deleteCall(activity)
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    val i = Intent(activity, SignInActivity::class.java)
+                                                    i.putExtra("mobileNo", "")
+                                                    i.putExtra("countryCode", "")
+                                                    i.putExtra("name", "")
+                                                    i.putExtra("email", "")
+                                                    i.putExtra("countryShortName", "")
+                                                    startActivity(i)
+                                                    finish()
+                                                }
+                                                else -> {
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                }
                                             }
 
                                         } catch (e: Exception) {
@@ -306,27 +324,31 @@ class ManageUserActivity : AppCompatActivity() {
                                         try {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: RemoveInviteUserModel = response.body()!!
-                                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                val p = Properties()
-                                                p.putValue("removedUserId", list[selectedItem].userId)
-                                                BWSApplication.addToSegment("User Removed", p, CONSTANTS.track)
-                                                prepareEnhanceUserList(activity)
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                dialog!!.hide()
-                                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                                dialog!!.hide()
-                                                BWSApplication.deleteCall(activity)
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                                val i = Intent(activity, SignInActivity::class.java)
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                startActivity(i)
-                                                finish()
-                                            } else {
-                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                            when {
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                    val p = Properties()
+                                                    p.putValue("removedUserId", list[selectedItem].userId)
+                                                    BWSApplication.addToSegment("User Removed", p, CONSTANTS.track)
+                                                    prepareEnhanceUserList(activity)
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    dialog!!.hide()
+                                                }
+                                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                                    dialog!!.hide()
+                                                    BWSApplication.deleteCall(activity)
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    val i = Intent(activity, SignInActivity::class.java)
+                                                    i.putExtra("mobileNo", "")
+                                                    i.putExtra("countryCode", "")
+                                                    i.putExtra("name", "")
+                                                    i.putExtra("email", "")
+                                                    i.putExtra("countryShortName", "")
+                                                    startActivity(i)
+                                                    finish()
+                                                }
+                                                else -> {
+                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                }
                                             }
                                         } catch (e: Exception) {
                                             e.printStackTrace()

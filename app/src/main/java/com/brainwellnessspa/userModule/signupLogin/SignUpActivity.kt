@@ -432,6 +432,7 @@ class SignUpActivity : AppCompatActivity() {
                             i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
                             i.putExtra(CONSTANTS.countryName, countryFullName)
                             startActivity(i)
+                            finish()
                         }
                         BWSApplication.showToast(listModel.ResponseMessage, activity)
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -9,16 +11,17 @@
             style="@android:style/Widget.CompoundButton.RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_18sdp"
             android:background="@android:color/transparent"
             android:button="@drawable/radio_btn_background"
             android:gravity="center"
             android:overScrollMode="never"
-            android:paddingLeft="@dimen/_10sdp"
+            android:paddingStart="@dimen/_10sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_15sdp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
 
     </LinearLayout>
 </layout>

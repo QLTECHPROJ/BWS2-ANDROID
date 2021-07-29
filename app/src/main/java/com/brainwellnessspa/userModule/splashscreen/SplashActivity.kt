@@ -339,6 +339,24 @@ class SplashActivity : AppCompatActivity() {
                                 val intent = Intent(activity, UserListActivity::class.java)
                                 startActivity(intent)
                                 finish()
+                            } else if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                startActivity(intent)
+                                finish()
+                            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                                val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                intent.putExtra("IsFirst", "0")
+                                startActivity(intent)
+                                finish()
                             }
                         }
                     }

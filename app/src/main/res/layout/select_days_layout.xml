@@ -25,21 +25,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:ellipsize="end"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             tools:ignore="SpUsage" />
 
     </RelativeLayout>
 
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlLayout"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="start"
+        android:visibility="gone"
+        android:lineSpacingExtra="@dimen/_4sdp"
+        android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13sdp"
+        tools:ignore="SpUsage" />
+
     <TextView
         android:id="@+id/tvText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rlLayout"
+        android:layout_below="@id/tvTitle"
         android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_13sdp"
         android:fontFamily="@font/montserrat_bold"
         android:gravity="start"
         android:text="@string/choose_the_day_amp_time"
