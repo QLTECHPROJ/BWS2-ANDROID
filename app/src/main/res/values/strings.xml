@@ -555,5 +555,14 @@
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
+    <string name="invite_people">Invite People</string>
+    <string name="what_is_your_date_of_birth">What is your Date of Birth</string>
+    <string name="which_gender_do_you_identify_as">Which Gender do you identify as?</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender_x">Gender X</string>
+    <string name="what_gender_do_you_currently_nidentify_with">What gender do you currently \nidentify with?</string>
+    <string name="prev_drug_use">Prev drug use</string>
+    <string name="any_medication_is_going_on">Any Medication is going on?</string>
 </resources>
 

@@ -26,7 +26,6 @@ import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.*
-import com.brainwellnessspa.membershipModule.models.SegmentAreaOfFocus
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -138,35 +137,39 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: RecommendedCategoryModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            binding.searchView.clearFocus()
-                            searchEditText.setText("")
-                            binding.searchView.setQuery("", false)
-                            binding.rvPerantCat.layoutManager = LinearLayoutManager(ctx) //                            if(listModel.responseData!!.size > 3) {
-                            //                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()
-                            //                                for(i in 0..2){
-                            //                                    listModelNew.add(listModel.responseData!![i])
-                            //                                }
-                            //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
-                            //                                binding.rvPerantCat.adapter = adapter1
-                            //                            }else{
-                            binding.llError.visibility = View.GONE
-                            binding.rvPerantCat.visibility = View.VISIBLE
-                            adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!, activity)
-                            binding.rvPerantCat.adapter = adapter1 //                            }
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            showToast(listModel.responseMessage, activity)
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                binding.searchView.clearFocus()
+                                searchEditText.setText("")
+                                binding.searchView.setQuery("", false)
+                                binding.rvPerantCat.layoutManager = LinearLayoutManager(ctx) //                            if(listModel.responseData!!.size > 3) {
+                                //                                val listModelNew = arrayListOf<RecommendedCategoryModel.ResponseData>()
+                                //                                for(i in 0..2){
+                                //                                    listModelNew.add(listModel.responseData!![i])
+                                //                                }
+                                //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
+                                //                                binding.rvPerantCat.adapter = adapter1
+                                //                            }else{
+                                binding.llError.visibility = View.GONE
+                                binding.rvPerantCat.visibility = View.VISIBLE
+                                adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!, activity)
+                                binding.rvPerantCat.adapter = adapter1 //                            }
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -601,53 +604,57 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SaveRecommendedCatModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                            val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
-                            val selectedCategoriesId = arrayListOf<String>()
-                            val selectedCategoriesTitle = arrayListOf<String>()
-                            val selectedCategoriesName = arrayListOf<String>()
-                            val gsons = Gson()
-                            for (i in listModel.responseData!!.areaOfFocus!!) {
-                                selectedCategoriesId.add(i.catId!!)
-                                selectedCategoriesTitle.add(i.mainCat!!)
-                                selectedCategoriesName.add(i.recommendedCat!!)
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                val editor = shared.edit()
+                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
+                                val selectedCategoriesId = arrayListOf<String>()
+                                val selectedCategoriesTitle = arrayListOf<String>()
+                                val selectedCategoriesName = arrayListOf<String>()
+                                val gsons = Gson()
+                                for (i in listModel.responseData!!.areaOfFocus!!) {
+                                    selectedCategoriesId.add(i.catId!!)
+                                    selectedCategoriesTitle.add(i.mainCat!!)
+                                    selectedCategoriesName.add(i.recommendedCat!!)
+                                }
+                                editor.putString(CONSTANTS.selectedCategoriesTitle, gsons.toJson(selectedCategoriesTitle)) //Friend
+                                editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
+                                editor.apply()
+
+                                val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                val editor1 = shared1.edit()
+                                editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
+                                editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
+                                editor1.apply()
+
+                                callIdentify(ctx)
+
+                                val p = Properties()
+                                p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
+                                p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
+                                addToSegment("Area of Focus Saved", p, CONSTANTS.track)
+
+                                val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
+                                i.putExtra("BackClick", intent.getStringExtra("BackClick"))
+                                startActivity(i)
+                                finish()
                             }
-                            editor.putString(CONSTANTS.selectedCategoriesTitle, gsons.toJson(selectedCategoriesTitle)) //Friend
-                            editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
-                            editor.apply()
-
-                            val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                            val editor1 = shared1.edit()
-                            editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME,  listModel.responseData!!.avgSleepTime)
-                            editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
-                            editor1.apply()
-
-                            callIdentify(ctx)
-
-                            val p = Properties()
-                            p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
-                            p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
-                            addToSegment("Area of Focus Saved", p, CONSTANTS.track)
-
-                            val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
-                            i.putExtra("BackClick", intent.getStringExtra("BackClick"))
-                            startActivity(i)
-                            finish()
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            showToast(listModel.responseMessage, activity)
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

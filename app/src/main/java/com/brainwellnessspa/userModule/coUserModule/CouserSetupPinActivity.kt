@@ -37,7 +37,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
     lateinit var binding: ActivityCouserSetupPinBinding
     var mainAccountID: String? = ""
     var userId: String? = ""
-    var subUserId: String? = ""
+    private var subUserId: String? = ""
     lateinit var activity: Activity
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {

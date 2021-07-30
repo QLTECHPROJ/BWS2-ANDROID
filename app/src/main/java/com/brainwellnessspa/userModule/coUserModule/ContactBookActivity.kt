@@ -125,6 +125,8 @@ class ContactBookActivity : AppCompatActivity() {
             binding.searchView.clearFocus()
             searchEditText.setText("")
             binding.searchView.setQuery("", false)
+            binding.llError.visibility = View.GONE
+            binding.rvContactList.visibility = View.VISIBLE
         }
     }
 
@@ -196,7 +198,7 @@ class ContactBookActivity : AppCompatActivity() {
                     }
                     cur!!.close()
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                }, (2 * 800).toLong())
+                }, (2 * 1000).toLong())
             }
         }
     }
@@ -327,11 +329,11 @@ class ContactBookActivity : AppCompatActivity() {
             number = number.substring(2, number.length)
         }else*/
 
-        if (number.length > 10 && firstTwoChars.equals("91", ignoreCase = true)) {
-            number = number.substring(2, number.length)
+        number = if (number.length > 10 && firstTwoChars.equals("91", ignoreCase = true)) {
+            number.substring(2, number.length)
         } else if (number.length > 9 && firstTwoChars.equals("61", ignoreCase = true)) {
-            number = number.substring(2, number.length)
-        } else number = number
+            number.substring(2, number.length)
+        } else number
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, contactName, number)
@@ -340,43 +342,47 @@ class ContactBookActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SetInviteUserModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            if (BtnInvite != null) {
-                                if (isFav.equals("0", ignoreCase = true)) {
-                                    BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
-                                    BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
-                                    BtnInvite.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                if (BtnInvite != null) {
+                                    if (isFav.equals("0", ignoreCase = true)) {
+                                        BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
+                                        BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
+                                        BtnInvite.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                                    }
                                 }
-                            }
-                            val referLink = listModel.responseData?.inviteLink
-                            val uri = Uri.parse("smsto:$number")
-                            val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
-                            // smsIntent.setData(uri);
-                            smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
-                            startActivity(smsIntent)
-                            finish()
+                                val referLink = listModel.responseData?.inviteLink
+                                val uri = Uri.parse("smsto:$number")
+                                val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
+                                // smsIntent.setData(uri);
+                                smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
+                                startActivity(smsIntent)
+                                finish()
 
-                            Log.e("contactNumber", number)
-                            p = Properties()
-                            p!!.putValue("userId", userId)
-                            p!!.putValue("referLink", referLink)
-                            p!!.putValue("userReferCode", userPromoCode)
-                            p!!.putValue("contactName", contactName)
-                            p!!.putValue("contactNumber", number)
-                            BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            BWSApplication.deleteCall(activity)
-                            BWSApplication.showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                Log.e("contactNumber", number)
+                                p = Properties()
+                                p!!.putValue("userId", userId)
+                                p!!.putValue("referLink", referLink)
+                                p!!.putValue("userReferCode", userPromoCode)
+                                p!!.putValue("contactName", contactName)
+                                p!!.putValue("contactNumber", number)
+                                BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
                         }
 
                     } catch (e: Exception) {

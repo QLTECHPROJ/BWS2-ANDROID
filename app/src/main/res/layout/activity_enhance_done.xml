@@ -90,7 +90,7 @@
                     android:background="@drawable/light_green_rounded_unfilled"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingVertical="@dimen/_2sdp"
-                    android:text="@string/add_one_user"
+                    android:text="@string/invite_people"
                     android:textColor="@color/app_theme_color"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="SpUsage" />

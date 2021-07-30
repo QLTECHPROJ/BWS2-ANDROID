@@ -34,7 +34,7 @@ class AssProcessActivity : AppCompatActivity() {
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
     var avgSleepTime: String? = ""
-    var assesmentContent: String? = ""
+    private var assesmentContent: String? = ""
     lateinit var activity: Activity
 
     /* This is the first lunched function */

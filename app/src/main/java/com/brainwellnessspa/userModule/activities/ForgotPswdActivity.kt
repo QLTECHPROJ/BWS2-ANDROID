@@ -21,8 +21,6 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityForgotPswdBinding
 import com.brainwellnessspa.userModule.models.ForgotPasswordModel
 import com.brainwellnessspa.utility.APINewClient
-import com.brainwellnessspa.utility.CONSTANTS
-import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -105,7 +103,7 @@ class ForgotPswdActivity : AppCompatActivity() {
                                     dialog.dismiss()
                                     finish()
                                 }
-                                val p = Properties()
+//                                val p = Properties()
 //                                p.putValue("email", binding.etEmail.text.toString())
 //                                BWSApplication.addToSegment("Forgot Password Clicked", p, CONSTANTS.track)
                                 dialog.show()

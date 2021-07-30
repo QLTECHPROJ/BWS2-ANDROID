@@ -3,7 +3,6 @@ package com.brainwellnessspa.billingOrderModule.activities
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -29,7 +28,7 @@ import com.segment.analytics.Properties
 /* This is the old BWA billing order activity */
 class BillingOrderActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingOrderBinding
-    var payment = 0
+    private var payment = 0
     var userId: String? = ""
     var coUserId: String? = ""
     private var numStarted = 0
@@ -85,7 +84,7 @@ class BillingOrderActivity : AppCompatActivity() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
         if (BWSApplication.isNetworkConnected(this)) {
-            val adapter = TabAdapter(supportFragmentManager, this, binding.tabLayout.tabCount)
+            val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
         } else {
@@ -118,7 +117,7 @@ class BillingOrderActivity : AppCompatActivity() {
     }
 
     /* This class is the handling tab layout */
-    inner class TabAdapter(fm: FragmentManager?, var myContext: Context, var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
+    inner class TabAdapter(fm: FragmentManager?, private var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             val bundle: Bundle
             return when (position) {

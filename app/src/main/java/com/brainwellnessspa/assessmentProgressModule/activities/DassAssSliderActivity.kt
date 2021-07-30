@@ -20,12 +20,10 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
-import com.brainwellnessspa.assessmentProgressModule.models.PostAssAns
 import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel
-import com.brainwellnessspa.userModule.models.OptionsDataListModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -45,7 +43,6 @@ class DassAssSliderActivity : AppCompatActivity() {
     var assQus = arrayListOf<String>()
     var assAns = arrayListOf<String>()
     var assSort = arrayListOf<String>()
-    private var postAssAns = arrayListOf<PostAssAns>()
     lateinit var listModel1: AssessmentQusModel
     lateinit var activity: Activity
     var myPos: Int = 0
@@ -55,7 +52,6 @@ class DassAssSliderActivity : AppCompatActivity() {
     var email: String? = ""
     var gson: Gson = Gson()
     lateinit var editor: SharedPreferences.Editor
-    private val dataListModel = ArrayList<OptionsDataListModel>()
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -236,7 +232,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -272,7 +268,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the second options box input layout */
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
@@ -424,8 +420,8 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 edited1.remove(CONSTANTS.AssSort)
                                 edited1.clear()
                                 edited1.apply()
-                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                val editor = shared.edit()
+                                val shareded = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                val editor = shareded.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData?.indexScore)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.responseData?.scoreLevel)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, CONSTANTS.FLAG_ONE)

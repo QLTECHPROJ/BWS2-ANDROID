@@ -8,7 +8,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +17,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.addToSegment
@@ -89,7 +90,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlCancelPlan.visibility = View.GONE
                 binding.tvTilte.text = getString(R.string.delete_account)
                 val p = Properties()
-                BWSApplication.addToSegment("Delete Account Screen Viewed", p, CONSTANTS.screen)
+                addToSegment("Delete Account Screen Viewed", p, CONSTANTS.screen)
                 binding.llBack.setOnClickListener {
                     finish()
                 }
@@ -167,7 +168,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                             when (event.action) {
                                 MotionEvent.ACTION_DOWN -> {
                                     val views = view1 as Button
-                                    views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+                                    views.background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(0x77000000, BlendModeCompat.SRC_ATOP)
                                     view1.invalidate()
                                 }
                                 MotionEvent.ACTION_UP -> {
@@ -178,51 +179,55 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                 try {
                                                     val listModel = response.body()
                                                     if (listModel != null) {
-                                                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                            BWSApplication.showToast(listModel.responseMessage, activity)
-                                                            val p = Properties()
-                                                            when {
-                                                                deleteId.equals("1") -> {
-                                                                    p.putValue("reason",binding.cbOneAc.text.toString())
-                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                        when {
+                                                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                                val properties = Properties()
+                                                                when (deleteId) {
+                                                                    "1" -> {
+                                                                        properties.putValue("reason", binding.cbOneAc.text.toString())
+                                                                        properties.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                    }
+                                                                    "2" -> {
+                                                                        properties.putValue("reason", binding.cbTwoAc.text.toString())
+                                                                        properties.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                    }
+                                                                    "3" -> {
+                                                                        properties.putValue("reason", binding.cbThreeAc.text.toString())
+                                                                        properties.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                    }
+                                                                    "4" -> {
+                                                                        properties.putValue("reason", binding.cbFourAc.text.toString())
+                                                                        properties.putValue("comments", binding.edtCancelBoxAc.text.toString())
+                                                                    }
                                                                 }
-                                                                deleteId.equals("2") -> {
-                                                                    p.putValue("reason",binding.cbTwoAc.text.toString())
-                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
-                                                                }
-                                                                deleteId.equals("3") -> {
-                                                                    p.putValue("reason",binding.cbThreeAc.text.toString())
-                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
-                                                                }
-                                                                deleteId.equals("4") -> {
-                                                                    p.putValue("reason",binding.cbFourAc.text.toString())
-                                                                    p.putValue("comments", binding.edtCancelBoxAc.text.toString())
-                                                                }
+                                                                addToSegment("Account Deleted", properties, CONSTANTS.track)
+                                                                dialog.dismiss()
+                                                                BWSApplication.deleteCall(activity)
+                                                                val i = Intent(activity, SignInActivity::class.java)
+                                                                i.putExtra("mobileNo", "")
+                                                                i.putExtra("countryCode", "")
+                                                                i.putExtra("name", "")
+                                                                i.putExtra("email", "")
+                                                                i.putExtra("countryShortName", "")
+                                                                startActivity(i)
+                                                                finish()
                                                             }
-                                                            BWSApplication.addToSegment("Account Deleted", p, CONSTANTS.track)
-                                                            dialog.dismiss()
-                                                            BWSApplication.deleteCall(activity)
-                                                            val i = Intent(activity, SignInActivity::class.java)
-                                                            i.putExtra("mobileNo", "")
-                                                            i.putExtra("countryCode", "")
-                                                            i.putExtra("name", "")
-                                                            i.putExtra("email", "")
-                                                            i.putExtra("countryShortName", "")
-                                                            startActivity(i)
-                                                            finish()
-                                                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                                            BWSApplication.deleteCall(activity)
-                                                            BWSApplication.showToast(listModel.responseMessage, activity)
-                                                            val i = Intent(activity, SignInActivity::class.java)
-                                                            i.putExtra("mobileNo", "")
-                                                            i.putExtra("countryCode", "")
-                                                            i.putExtra("name", "")
-                                                            i.putExtra("email", "")
-                                                            i.putExtra("countryShortName", "")
-                                                            startActivity(i)
-                                                            finish()
-                                                        } else {
-                                                            BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                                                BWSApplication.deleteCall(activity)
+                                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                                val i = Intent(activity, SignInActivity::class.java)
+                                                                i.putExtra("mobileNo", "")
+                                                                i.putExtra("countryCode", "")
+                                                                i.putExtra("name", "")
+                                                                i.putExtra("email", "")
+                                                                i.putExtra("countryShortName", "")
+                                                                startActivity(i)
+                                                                finish()
+                                                            }
+                                                            else -> {
+                                                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                                            }
                                                         }
                                                     }
                                                 } catch (e: Exception) {
@@ -286,7 +291,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 p.putValue("planStartDt", "")
                 p.putValue("planExpiryDt", "")
                 p.putValue("planAmount", "")
-                BWSApplication.addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
+                addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
 
                 /*This condition is to audio playing or not  */
                 if (BWSApplication.player != null) {
@@ -376,41 +381,39 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                             when (event.action) {
                                 MotionEvent.ACTION_DOWN -> {
                                     val views = view1 as Button
-                                    views.background.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+                                    views.background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(0x77000000, BlendModeCompat.SRC_ATOP)
+
                                     view1.invalidate()
                                 }
                                 MotionEvent.ACTION_UP -> {
                                     if (BWSApplication.isNetworkConnected(ctx)) {
-                                        val listCall = APINewClient.client.getCancelPlan(mainAccountId, cancelId, binding.edtCancelBox.text.toString())
-                                        if (listCall != null) {
-                                            listCall.enqueue(object : Callback<CancelPlanModel?> {
-                                                override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
-                                                    try {
-                                                        val model = response.body()
-                                                        BWSApplication.showToast(model!!.responseMessage, activity)
-                                                        dialog.dismiss()
+                                        APINewClient.client.getCancelPlan(mainAccountId, cancelId, binding.edtCancelBox.text.toString())?.enqueue(object : Callback<CancelPlanModel?> {
+                                            override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
+                                                try {
+                                                    val model = response.body()
+                                                    BWSApplication.showToast(model!!.responseMessage, activity)
+                                                    dialog.dismiss()
 
-                                                        //                                            Properties p = new Properties();
-                                                        //                                            p.putValue("cancelId", cancelId);
-                                                        //                                            p.putValue("cancelReason", CancelReason);
-                                                        //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+                                                    //                                            Properties p = new Properties();
+                                                    //                                            p.putValue("cancelId", cancelId);
+                                                    //                                            p.putValue("cancelReason", CancelReason);
+                                                    //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
 
-                                                        if (BWSApplication.player != null) {
-                                                            if (BWSApplication.player.playWhenReady) {
-                                                                BWSApplication.player.playWhenReady = false
-                                                                audioPause = true
-                                                            }
+                                                    if (BWSApplication.player != null) {
+                                                        if (BWSApplication.player.playWhenReady) {
+                                                            BWSApplication.player.playWhenReady = false
+                                                            audioPause = true
                                                         }
-                                                        finish()
-                                                    } catch (e: Exception) {
-                                                        e.printStackTrace()
                                                     }
+                                                    finish()
+                                                } catch (e: Exception) {
+                                                    e.printStackTrace()
                                                 }
+                                            }
 
-                                                override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
-                                                }
-                                            })
-                                        }
+                                            override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
+                                            }
+                                        })
                                     } else {
                                         BWSApplication.showToast(getString(R.string.no_server_found), activity)
                                     }
@@ -462,9 +465,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
 
     /* This fuction is youtube video sucessfully playing */
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, wasRestored: Boolean) {
-        if (screenView.equals("0")) {
-
-        } else {
+        if (!screenView.equals("0")) {
             if (!wasRestored) {
                 youTubePlayer.loadVideo(VIDEO_ID)
                 youTubePlayer.setShowFullscreenButton(true)
@@ -474,9 +475,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
 
     /* This fuction is youtube video can't play and generating error  */
     override fun onInitializationFailure(provider: YouTubePlayer.Provider, errorReason: YouTubeInitializationResult) {
-        if (screenView.equals("0")) {
-
-        } else {
+        if (!screenView.equals("0")) {
             if (errorReason.isUserRecoverableError) {
                 errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
             } else {
@@ -488,9 +487,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
 
     /* This is the initialize youtube player view */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (screenView.equals("0")) {
-
-        } else {
+        if (!screenView.equals("0")) {
             if (requestCode == RECOVERY_DIALOG_REQUEST) {
                 youTubePlayerProvider.initialize(API_KEY, this)
             }

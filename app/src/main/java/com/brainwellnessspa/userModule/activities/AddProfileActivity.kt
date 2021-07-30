@@ -33,7 +33,7 @@ class AddProfileActivity : AppCompatActivity() {
     var coEMAIL: String? = ""
     var coName: String? = ""
     var coNumber: String? = ""
-    var addProfile: String? = ""
+    private var addProfile: String? = ""
     private lateinit var binding: ActivityAddProfileBinding
     lateinit var activity: Activity
 
@@ -44,27 +44,17 @@ class AddProfileActivity : AppCompatActivity() {
             val mobileNumber: String = binding.etMobileNumber.text.toString().trim()
             val email: String = binding.etEmail.text.toString().trim()
             if (user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
-                binding.btnSendPin.isEnabled = false
-                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
                 binding.ivCheckNumber.visibility = View.GONE
                 binding.ivCheckEmail.visibility = View.GONE
             } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
-                binding.btnSendPin.isEnabled = false
-                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else if (!user.equals("", ignoreCase = true) && mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
-                binding.btnSendPin.isEnabled = false
-                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else if (user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
-                binding.btnSendPin.isEnabled = false
-                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else if (!user.equals("", ignoreCase = true) && !mobileNumber.equals("", ignoreCase = true) && !email.equals("", ignoreCase = true)) {
-                binding.btnSendPin.isEnabled = true
-                binding.btnSendPin.setTextColor(ContextCompat.getColor(activity, R.color.white))
-                binding.btnSendPin.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                checkBtnStatus(1)
             }
 
             if (mobileNumber.equals("", ignoreCase = true)) {
@@ -199,27 +189,31 @@ class AddProfileActivity : AppCompatActivity() {
                                 binding.flEmail.error = ""
                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listModel: AddUserModel = response.body()!!
-                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    showToast(listModel.responseMessage, activity)
-                                    val p = Properties()
-                                    p.putValue("name", listModel.responseData!!.name)
-                                    p.putValue("mobileNo", binding.etMobileNumber.text.toString())
-                                    p.putValue("email", listModel.responseData!!.email)
-                                    addToSegment("Couser Added", p, CONSTANTS.track)
-                                    finish()
-                                } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                    deleteCall(activity)
-                                    showToast(listModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
-                                } else {
-                                    showToast(listModel.responseMessage, activity)
+                                when {
+                                    listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                        showToast(listModel.responseMessage, activity)
+                                        val p = Properties()
+                                        p.putValue("name", listModel.responseData!!.name)
+                                        p.putValue("mobileNo", binding.etMobileNumber.text.toString())
+                                        p.putValue("email", listModel.responseData!!.email)
+                                        addToSegment("Couser Added", p, CONSTANTS.track)
+                                        finish()
+                                    }
+                                    listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                        deleteCall(activity)
+                                        showToast(listModel.responseMessage, activity)
+                                        val i = Intent(activity, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        startActivity(i)
+                                        finish()
+                                    }
+                                    else -> {
+                                        showToast(listModel.responseMessage, activity)
+                                    }
                                 }
 
                             } catch (e: Exception) {
@@ -287,6 +281,18 @@ class AddProfileActivity : AppCompatActivity() {
             val i = Intent(activity, UserListActivity::class.java)
             startActivity(i)
             finish()
+        }
+    }
+
+    private fun checkBtnStatus(check: Int) {
+        if (check == 0) {
+            binding.btnSendPin.isEnabled = false
+            binding.btnSendPin.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnSendPin.setBackgroundResource(R.drawable.gray_round_cornor)
+        } else if (check == 1) {
+            binding.btnSendPin.isEnabled = true
+            binding.btnSendPin.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnSendPin.setBackgroundResource(R.drawable.light_green_rounded_filled)
         }
     }
 }

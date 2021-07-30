@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -23,9 +23,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Profile"
+                android:text="@string/profile"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_18sdp"
+                tools:ignore="SpUsage" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/llIndicate"
@@ -33,9 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:max="4"
-                app:trackColor="#DDDDDD"
+                android:progress="0"
                 app:indicatorColor="#6C63FF"
-                android:progress="0" />
+                app:trackColor="#DDDDDD" />
         </LinearLayout>
 
 
@@ -43,93 +44,96 @@
             android:id="@+id/btnPrev"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
-            android:layout_marginBottom="@dimen/_25sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:rotation="180"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
             android:clickable="true"
-            app:tint="@color/black"
-            android:src="@drawable/ic_back_black_icon" />
+            android:contentDescription="@string/todo"
+            android:focusable="true"
+            android:rotation="180"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/black" />
 
 
         <ImageView
             android:id="@+id/btnNext"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
-            android:layout_marginBottom="@dimen/_25sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
             android:clickable="false"
-            app:tint="@color/gray"
-            android:src="@drawable/ic_back_black_icon" />
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/gray" />
 
 
         <Button
             android:id="@+id/btnContinue"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:background="@drawable/gray_round_cornor"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="Continue"
             android:enabled="false"
-            android:visibility="gone"
-            android:textColor="@color/white" />
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/Continue"
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
 
-   <!--     <RelativeLayout
-            android:id="@+id/llFirst"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/llMainLayout"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:layout_marginBottom="@dimen/_25sdp"
-            android:orientation="vertical"
-            android:visibility="visible">
+        <!--     <RelativeLayout
+                 android:id="@+id/llFirst"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@id/llMainLayout"
+                 android:layout_marginHorizontal="@dimen/_16sdp"
+                 android:layout_marginTop="@dimen/_30sdp"
+                 android:layout_marginBottom="@dimen/_25sdp"
+                 android:orientation="vertical"
+                 android:visibility="visible">
 
-            <TextView
-                android:id="@+id/tvFirst"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="start"
-                android:text="Who is it for?"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                 <TextView
+                     android:id="@+id/tvFirst"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:fontFamily="@font/montserrat_bold"
+                     android:gravity="start"
+                     android:text="Who is it for?"
+                     android:textColor="@color/black"
+                     android:textSize="@dimen/_15sdp" />
 
-            <Button
-                android:id="@+id/btnMySelf"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_64sdp"
-                android:layout_below="@id/tvFirst"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_25sdp"
-                android:background="@drawable/light_blue_rounded_unfilled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Myself"
-                android:textAllCaps="false"
-                android:textColor="@color/light_blue_theme" />
+                 <Button
+                     android:id="@+id/btnMySelf"
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/_64sdp"
+                     android:layout_below="@id/tvFirst"
+                     android:layout_marginTop="@dimen/_20sdp"
+                     android:layout_marginBottom="@dimen/_25sdp"
+                     android:background="@drawable/light_blue_rounded_unfilled"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:text="Myself"
+                     android:textAllCaps="false"
+                     android:textColor="@color/light_blue_theme" />
 
-            <Button
-                android:id="@+id/btnOthers"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_64sdp"
-                android:layout_below="@id/btnMySelf"
-                android:layout_marginBottom="@dimen/_25sdp"
-                android:background="@drawable/light_gray_rounded_unfilled"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Others"
-                android:textAllCaps="false"
-                android:textColor="@color/light_black" />
+                 <Button
+                     android:id="@+id/btnOthers"
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/_64sdp"
+                     android:layout_below="@id/btnMySelf"
+                     android:layout_marginBottom="@dimen/_25sdp"
+                     android:background="@drawable/light_gray_rounded_unfilled"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:text="Others"
+                     android:textAllCaps="false"
+                     android:textColor="@color/light_black" />
 
-        </RelativeLayout>-->
+             </RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/llSecond"
@@ -148,9 +152,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
-                android:text="Which Gender do you identify as?"
+                android:text="@string/which_gender_do_you_identify_as"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnMale"
@@ -161,7 +166,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_blue_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Male"
+                android:text="@string/male"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue_theme" />
 
@@ -173,7 +178,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Female"
+                android:text="@string/female"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -185,7 +190,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Gender X"
+                android:text="@string/gender_x"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -211,7 +216,7 @@
                 android:layout_marginBottom="@dimen/_33sdp"
                 android:background="@drawable/light_blue_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Gender X"
+                android:text="@string/gender_x"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue_theme" />
 
@@ -223,9 +228,10 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="What gender do you currently \nidentify with?"
+                android:text="@string/what_gender_do_you_currently_nidentify_with"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnMaleGX"
@@ -236,7 +242,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Male"
+                android:text="@string/male"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -248,7 +254,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Female"
+                android:text="@string/female"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -271,20 +277,23 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
-                android:text="What is your Date of Birth"
+                android:text="@string/what_is_your_date_of_birth"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
+
             <TextView
                 android:id="@+id/tvForth1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tvForth"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:layout_below="@+id/tvForth"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+                android:text="@string/long_lorem"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnOpn1"
@@ -318,9 +327,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
-                android:text="Prev drug use"
+                android:text="@string/prev_drug_use"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvFifthSubTitle"
@@ -333,7 +343,8 @@
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="@string/drug_quotes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnYes"
@@ -344,7 +355,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_blue_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Yes"
+                android:text="@string/yes"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue_theme" />
 
@@ -357,7 +368,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="No"
+                android:text="@string/no"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -380,9 +391,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
-                android:text="Any Medication is going on?"
+                android:text="@string/any_medication_is_going_on"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvSixthSubTitle"
@@ -392,11 +404,12 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:visibility="gone"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore."
+                android:text="@string/long_lorem"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                android:visibility="gone"
+                tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnSixYes"
@@ -407,7 +420,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_blue_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Yes"
+                android:text="@string/yes"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue_theme" />
 
@@ -420,7 +433,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_gray_rounded_unfilled"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="No"
+                android:text="@string/no"
                 android:textAllCaps="false"
                 android:textColor="@color/light_black" />
 
@@ -438,7 +451,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

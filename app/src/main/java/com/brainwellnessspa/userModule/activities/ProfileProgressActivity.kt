@@ -381,30 +381,34 @@ class ProfileProgressActivity : AppCompatActivity() {
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "1")
                         editor.apply()
                         callIdentify(ctx)
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            val p = Properties()
-                            p.putValue("gender", gender)
-                            p.putValue("genderX", genderX)
-                            p.putValue("dob", age)
-                            p.putValue("prevDrugUse", prevDrugUse)
-                            p.putValue("medication", medication)
-                            BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
-                            val i = Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
-                            startActivity(i)
-                            finish()
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            BWSApplication.deleteCall(activity)
-                            BWSApplication.showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            BWSApplication.showToast(listModel.responseMessage, activity)
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val p = Properties()
+                                p.putValue("gender", gender)
+                                p.putValue("genderX", genderX)
+                                p.putValue("dob", age)
+                                p.putValue("prevDrugUse", prevDrugUse)
+                                p.putValue("medication", medication)
+                                BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
+                                val i = Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
+                                startActivity(i)
+                                finish()
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                BWSApplication.deleteCall(activity)
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
+                            }
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, activity)
+                            }
                         }
 
                     } catch (e: Exception) {

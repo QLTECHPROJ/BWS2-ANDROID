@@ -34,21 +34,13 @@ class UserDetailActivity : AppCompatActivity() {
             val name: String = binding.etName.text.toString().trim()
             val email: String = binding.etEmail.text.toString().trim()
             if (name.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
-                binding.btnProceed.isEnabled = false
-                binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                binding.btnProceed.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else if (name.equals("", ignoreCase = true)) {
-                binding.btnProceed.isEnabled = false
-                binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                binding.btnProceed.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else if (email.equals("", ignoreCase = true)) {
-                binding.btnProceed.isEnabled = false
-                binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                binding.btnProceed.setBackgroundResource(R.drawable.gray_round_cornor)
+                checkBtnStatus(0)
             } else {
-                binding.btnProceed.isEnabled = true
-                binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                binding.btnProceed.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                checkBtnStatus(1)
             }
         }
 
@@ -105,28 +97,32 @@ class UserDetailActivity : AppCompatActivity() {
                             binding.txtNameError.visibility = View.GONE
                             binding.txtEmailError.visibility = View.GONE
                             val listModel: AddUserModel = response.body()!!
-                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                if (BWSApplication.addCouserBackStatus == 1) {
-                                    finish()
-                                } else {
-                                    val intent = Intent(applicationContext, UserListActivity::class.java)
-                                    startActivity(intent)
+                            when {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    if (BWSApplication.addCouserBackStatus == 1) {
+                                        finish()
+                                    } else {
+                                        val intent = Intent(applicationContext, UserListActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
                                     finish()
                                 }
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                            } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
-                            } else {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                else -> {
+                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                }
                             }
 
                         } catch (e: Exception) {
@@ -144,8 +140,19 @@ class UserDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun String.isEmailValid(): Boolean {
+    private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
+    private fun checkBtnStatus(check: Int) {
+        if (check == 0) {
+            binding.btnProceed.isEnabled = false
+            binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnProceed.setBackgroundResource(R.drawable.gray_round_cornor)
+        } else if (check == 1) {
+            binding.btnProceed.isEnabled = true
+            binding.btnProceed.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnProceed.setBackgroundResource(R.drawable.light_green_rounded_filled)
+        }
+    }
 }

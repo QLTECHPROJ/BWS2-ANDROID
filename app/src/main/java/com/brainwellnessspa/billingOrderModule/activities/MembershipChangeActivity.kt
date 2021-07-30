@@ -233,6 +233,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
 
         inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(binding.root)
+
     }
 
     /* This class is check about application in background or foreground */

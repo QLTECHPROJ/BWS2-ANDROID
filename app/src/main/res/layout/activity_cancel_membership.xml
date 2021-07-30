@@ -333,7 +333,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center_vertical|start"
                             android:paddingStart="@dimen/_12sdp"
-                            android:paddingRight="@dimen/_0sdp"
+                            android:paddingEnd="@dimen/_0sdp"
                             android:text="@string/Other_reason"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"

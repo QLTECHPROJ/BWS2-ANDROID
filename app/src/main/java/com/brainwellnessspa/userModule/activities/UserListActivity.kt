@@ -98,12 +98,11 @@ class UserListActivity : AppCompatActivity() {
         finishAffinity()
     }
 
-    class UserListAdapter(listModel: AddedUserListModel.ResponseData, private var activity: Activity, private var ctx: Context, var binding: ActivityUserListBinding, var userId: String, var coUserId: String, var coEmail: String, var isMainAccount: String, var isProfileCompleted: String, var avgSleepTime: String, var isAssessmentCompleted: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    class UserListAdapter(listModel: AddedUserListModel.ResponseData, private var activity: Activity, private var ctx: Context, var binding: ActivityUserListBinding, var userId: String, var coUserId: String, private var coEmail: String, private var isMainAccount: String, var isProfileCompleted: String, var avgSleepTime: String, var isAssessmentCompleted: String) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var userList = UserListActivity()
         private var selectedItem = -1
         private var coUsersModel: List<AddedUserListModel.ResponseData.CoUser>? = listModel.userList
         private var model: AddedUserListModel.ResponseData = listModel
-        lateinit var txtError: TextView
 
         inner class MyViewHolder(var bindingAdapter: ScreenUserListLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -245,8 +244,8 @@ class UserListActivity : AppCompatActivity() {
                                                 Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
                                                 Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
                                                 logout = false
-                                                val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(listModel.ResponseData.UserId)
-                                                listCall.enqueue(object : Callback<AuthOtpModel> {
+                                                val listCalled: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(listModel.ResponseData.UserId)
+                                                listCalled.enqueue(object : Callback<AuthOtpModel> {
                                                     @SuppressLint("HardwareIds")
                                                     override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                                         try {
@@ -462,7 +461,7 @@ class UserListActivity : AppCompatActivity() {
         }
     }
 
-    class PinTextWatcher internal constructor(val activity: Activity, private val currentIndex: Int, private var editTexts: Array<EditText>, val btnDone: Button, val edtOTP1: EditText, val edtOTP2: EditText, val edtOTP3: EditText, val edtOTP4: EditText, private var tvSendOTPbool: Boolean) : TextWatcher {
+    class PinTextWatcher internal constructor(val activity: Activity, private val currentIndex: Int, private var editTexts: Array<EditText>, val btnDone: Button, private val edtOTP1: EditText, private val edtOTP2: EditText, private val edtOTP3: EditText, private val edtOTP4: EditText, private var tvSendOTPbool: Boolean) : TextWatcher {
         private var isFirst = false
         private var isLast = false
         private var newTypedString = ""

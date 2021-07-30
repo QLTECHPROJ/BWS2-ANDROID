@@ -64,7 +64,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     lateinit var activity: Activity
     var coUserId: String? = ""
     var userId: String? = ""
-    var ScreenView: String? = ""
+    var screenView: String? = ""
     var myCreated: String? = ""
     var new: String? = ""
     var playlistId: String? = ""
@@ -190,9 +190,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             playlistName = intent.getStringExtra("PlaylistName")
             myDownloads = intent.getStringExtra("MyDownloads")
             if (intent != null) {
-                ScreenView = intent.getStringExtra("ScreenView")
-                if (ScreenView == null) {
-                    ScreenView = ""
+                screenView = intent.getStringExtra("ScreenView")
+                if (screenView == null) {
+                    screenView = ""
                 }
             }
         }
@@ -314,145 +314,153 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         val listModel = response.body()!!
 
                         listMOdelGloble = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
 
-                            try { //                            if (listModel.responseData.getIsReminder().equals("0", ignoreCase = true) ||
-                                //                                    listModel.responseData.getIsReminder().equals("", ignoreCase = true)) {
-                                //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.white), PorterDuff.Mode.SRC_IN)
-                                //                            } else if (listModel.responseData.getIsReminder().equals("1", ignoreCase = true)) {
-                                //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
-                                //                            }
-                            } catch (e: java.lang.Exception) {
-                                e.printStackTrace()
-                            }
+                                try { //                            if (listModel.responseData.getIsReminder().equals("0", ignoreCase = true) ||
+                                    //                                    listModel.responseData.getIsReminder().equals("", ignoreCase = true)) {
+                                    //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.white), PorterDuff.Mode.SRC_IN)
+                                    //                            } else if (listModel.responseData.getIsReminder().equals("1", ignoreCase = true)) {
+                                    //                                binding.ivReminder.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), PorterDuff.Mode.SRC_IN)
+                                    //                            }
+                                } catch (e: java.lang.Exception) {
+                                    e.printStackTrace()
+                                }
 
-                            var p = Properties()
-                            p.putValue("playlistId", listModel.responseData!!.playlistID)
-                            p.putValue("playlistName", listModel.responseData.playlistName)
-                            p.putValue("playlistDescription", listModel.responseData.playlistDesc)
-                            if (listModel.responseData.created.equals("1", ignoreCase = true)) {
-                                p.putValue("playlistType", "Created")
-                            } else if (listModel.responseData.created.equals("0")) {
-                                p.putValue("playlistType", "Default")
-                            } else if (listModel.responseData.created == "2") {
-                                p.putValue("playlistType", "Suggested")
-                            }
+                                var p = Properties()
+                                p.putValue("playlistId", listModel.responseData!!.playlistID)
+                                p.putValue("playlistName", listModel.responseData.playlistName)
+                                p.putValue("playlistDescription", listModel.responseData.playlistDesc)
+                                if (listModel.responseData.created.equals("1", ignoreCase = true)) {
+                                    p.putValue("playlistType", "Created")
+                                } else if (listModel.responseData.created.equals("0")) {
+                                    p.putValue("playlistType", "Default")
+                                } else if (listModel.responseData.created == "2") {
+                                    p.putValue("playlistType", "Suggested")
+                                }
 
-                            if (listModel.responseData.totalhour == "") {
-                                p.putValue("playlistDuration", "0h " + listModel.responseData.totalminute + "m")
-                            } else if (listModel.responseData.totalminute == "") {
-                                p.putValue("playlistDuration", listModel.responseData.totalhour + "h 0m")
-                            } else {
-                                p.putValue("playlistDuration", listModel.responseData.totalhour + "h " + listModel.responseData.totalminute + "m")
-                            }
-                            p.putValue("audioCount", listModel.responseData.totalAudio)
-                            p.putValue("source", ScreenView)
-                            addToSegment("Playlist Viewed", p, CONSTANTS.screen)
-                            binding.tvTag.visibility = View.VISIBLE
-                            binding.tvTag.setText(R.string.Audios_in_Playlist)
+                                if (listModel.responseData.totalhour == "") {
+                                    p.putValue("playlistDuration", "0h " + listModel.responseData.totalminute + "m")
+                                } else if (listModel.responseData.totalminute == "") {
+                                    p.putValue("playlistDuration", listModel.responseData.totalhour + "h 0m")
+                                } else {
+                                    p.putValue("playlistDuration", listModel.responseData.totalhour + "h " + listModel.responseData.totalminute + "m")
+                                }
+                                p.putValue("audioCount", listModel.responseData.totalAudio)
+                                p.putValue("source", screenView)
+                                addToSegment("Playlist Viewed", p, CONSTANTS.screen)
+                                binding.tvTag.visibility = View.VISIBLE
+                                binding.tvTag.setText(R.string.Audios_in_Playlist)
 
-                            getDownloadData(ctx, DB)
-                            callObserveMethodGetAllMedia(ctx, DB)
-                            downloadPlaylistDetailsList = getPlaylistDetail(listModel.responseData.playlistSongs!!.size, ctx, DB)
+                                getDownloadData(ctx, DB)
+                                callObserveMethodGetAllMedia(ctx, DB)
+                                downloadPlaylistDetailsList = getPlaylistDetail(listModel.responseData.playlistSongs!!.size, ctx, DB)
 
-                            if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
-                                binding.tvReminder.text = ctx.getText(R.string.set_reminder)
-                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                            } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
-                                binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                            } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
-                                binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                            }
+                                if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
+                                    binding.tvReminder.text = ctx.getText(R.string.set_reminder)
+                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
+                                    binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
+                                    binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                    binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                }
 
-                            binding.llReminder.setOnClickListener {
-                                if (isNetworkConnected(ctx)) {
-                                    p = Properties()
-                                    p.putValue("playlistId", listModel.responseData.playlistID)
-                                    p.putValue("playlistName", listModel.responseData.playlistName)
-                                    p.putValue("playlistDescription", listModel.responseData.playlistDesc)
-                                    if (listModel.responseData.created == "1") {
-                                        p.putValue("playlistType", "Created")
-                                    } else if (listModel.responseData.created == "0") {
-                                        p.putValue("playlistType", "Default")
-                                    } else if (listModel.responseData.created == "2") {
-                                        p.putValue("playlistType", "suggested")
-                                    }
-                                    if (listModel.responseData.totalhour.equals("")) {
-                                        p.putValue("playlistDuration", "0h " + listModel.responseData.totalminute + "m")
-                                    } else if (listModel.responseData.totalminute.equals("")) {
-                                        p.putValue("playlistDuration", listModel.responseData.totalhour + "h 0m")
+                                binding.llReminder.setOnClickListener {
+                                    if (isNetworkConnected(ctx)) {
+                                        p = Properties()
+                                        p.putValue("playlistId", listModel.responseData.playlistID)
+                                        p.putValue("playlistName", listModel.responseData.playlistName)
+                                        p.putValue("playlistDescription", listModel.responseData.playlistDesc)
+                                        when (listModel.responseData.created) {
+                                            "1" -> {
+                                                p.putValue("playlistType", "Created")
+                                            }
+                                            "0" -> {
+                                                p.putValue("playlistType", "Default")
+                                            }
+                                            "2" -> {
+                                                p.putValue("playlistType", "suggested")
+                                            }
+                                        }
+                                        when {
+                                            listModel.responseData.totalhour.equals("") -> {
+                                                p.putValue("playlistDuration", "0h " + listModel.responseData.totalminute + "m")
+                                            }
+                                            listModel.responseData.totalminute.equals("") -> {
+                                                p.putValue("playlistDuration", listModel.responseData.totalhour + "h 0m")
+                                            }
+                                            else -> {
+                                                p.putValue("playlistDuration", listModel.responseData.totalhour + "h " + listModel.responseData.totalminute + "m")
+                                            }
+                                        }
+                                        p.putValue("audioCount", listModel.responseData.totalAudio)
+                                        p.putValue("source", screenView)
+                                        p.putValue("playerType", "Mini")
+                                        addToSegment("Playlist Reminder Clicked", p, CONSTANTS.track)
+                                        if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
+                                            binding.tvReminder.text = ctx.getText(R.string.set_reminder)
+                                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
+                                            binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                        } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
+                                            binding.tvReminder.text = ctx.getText(R.string.update_reminder)
+                                            binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        }
+                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0", listModel.responseData.reminderId, listModel.responseData.isReminder,listModel.responseData.created)
                                     } else {
-                                        p.putValue("playlistDuration", listModel.responseData.totalhour + "h " + listModel.responseData.totalminute + "m")
+                                        showToast(getString(R.string.no_server_found), activity)
                                     }
-                                    p.putValue("audioCount", listModel.responseData.totalAudio)
-                                    p.putValue("source", ScreenView)
-                                    p.putValue("playerType", "Mini")
-                                    addToSegment("Playlist Reminder Clicked", p, CONSTANTS.track)
-                                    if (listModel.responseData.isReminder.equals("0", ignoreCase = true) || listModel.responseData.isReminder.equals("", ignoreCase = true)) {
-                                        binding.tvReminder.text = ctx.getText(R.string.set_reminder)
-                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    } else if (listModel.responseData.isReminder.equals("1", ignoreCase = true)) {
-                                        binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                    } else if (listModel.responseData.isReminder.equals("2", ignoreCase = true)) {
-                                        binding.tvReminder.text = ctx.getText(R.string.update_reminder)
-                                        binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                }
+
+                                //                            getMedia();
+                                //                            getMediaByPer(PlaylistId, SongListSize);
+                                binding.rlSearch.visibility = View.VISIBLE
+                                binding.llMore.visibility = View.VISIBLE
+                                binding.llReminder.visibility = View.VISIBLE
+                                binding.llMore.setOnClickListener {
+                                    if (isNetworkConnected(ctx)) { //            handler2.removeCallbacks(UpdateSongTime2);
+                                        val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
+
+                                        callPlaylistDetails(ctx, activity, coUserId, playlistId, playlistName, fragmentManager1, screenView)
+                                    } else {
+                                        showToast(getString(R.string.no_server_found), activity)
                                     }
-                                    getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID,
-                                        listModel.responseData.playlistName, activity as FragmentActivity?,
-                                        listModel.responseData.reminderTime, listModel.responseData.reminderDay,
-                                        "0", listModel.responseData.reminderId,
-                                        listModel.responseData.isReminder,listModel.responseData.created)
-                                } else {
-                                    showToast(getString(R.string.no_server_found), activity)
                                 }
+                                downloadPlaylistDetails = DownloadPlaylistDetails()
+                                downloadPlaylistDetails.PlaylistID = listModel.responseData.playlistID
+                                downloadPlaylistDetails.PlaylistName = listModel.responseData.playlistName
+                                downloadPlaylistDetails.PlaylistDesc = listModel.responseData.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
+                                downloadPlaylistDetails.PlaylistMastercat = listModel.responseData.playlistMastercat
+                                downloadPlaylistDetails.PlaylistSubcat = listModel.responseData.playlistSubcat
+                                downloadPlaylistDetails.PlaylistImage = listModel.responseData.playlistImage
+                                downloadPlaylistDetails.PlaylistImageDetails = listModel.responseData.playlistImageDetail
+                                downloadPlaylistDetails.TotalAudio = listModel.responseData.totalAudio
+                                downloadPlaylistDetails.TotalDuration = listModel.responseData.totalDuration
+                                downloadPlaylistDetails.Totalhour = listModel.responseData.totalhour
+                                downloadPlaylistDetails.Totalminute = listModel.responseData.totalminute
+                                downloadPlaylistDetails.Created = listModel.responseData.created
+
+                                setData(listModel.responseData)
                             }
-
-                            //                            getMedia();
-                            //                            getMediaByPer(PlaylistId, SongListSize);
-                            binding.rlSearch.visibility = View.VISIBLE
-                            binding.llMore.visibility = View.VISIBLE
-                            binding.llReminder.visibility = View.VISIBLE
-                            binding.llMore.setOnClickListener {
-                                if (isNetworkConnected(ctx)) { //            handler2.removeCallbacks(UpdateSongTime2);
-                                    val fragmentManager1: FragmentManager = (ctx as FragmentActivity).supportFragmentManager
-
-                                    callPlaylistDetails(ctx, activity, coUserId, playlistId, playlistName, fragmentManager1, ScreenView)
-                                } else {
-                                    showToast(getString(R.string.no_server_found), activity)
-                                }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                finish()
                             }
-                            downloadPlaylistDetails = DownloadPlaylistDetails()
-                            downloadPlaylistDetails.PlaylistID = listModel.responseData.playlistID
-                            downloadPlaylistDetails.PlaylistName = listModel.responseData.playlistName
-                            downloadPlaylistDetails.PlaylistDesc = listModel.responseData.playlistDesc //                    downloadPlaylistDetails.isReminder = listModel.responseData!!.gsReminder
-                            downloadPlaylistDetails.PlaylistMastercat = listModel.responseData.playlistMastercat
-                            downloadPlaylistDetails.PlaylistSubcat = listModel.responseData.playlistSubcat
-                            downloadPlaylistDetails.PlaylistImage = listModel.responseData.playlistImage
-                            downloadPlaylistDetails.PlaylistImageDetails = listModel.responseData.playlistImageDetail
-                            downloadPlaylistDetails.TotalAudio = listModel.responseData.totalAudio
-                            downloadPlaylistDetails.TotalDuration = listModel.responseData.totalDuration
-                            downloadPlaylistDetails.Totalhour = listModel.responseData.totalhour
-                            downloadPlaylistDetails.Totalminute = listModel.responseData.totalminute
-                            downloadPlaylistDetails.Created = listModel.responseData.created
-
-                            setData(listModel.responseData)
-                        } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
-                        } else {
-                            showToast(listModel.responseMessage, activity)
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
+                            }
                         }
                     }
 
@@ -903,15 +911,21 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             p.putValue("bitRate", "")
                             p.putValue("playlistId", listModel[position].playlistID)
                             p.putValue("playlistName", PlaylistName)
-                            if (created.equals("1")) p.putValue("playlistType", "Created")
-                            else if (created.equals("0")) p.putValue("playlistType", "Default")
-                            else if (created.equals("2")) p.putValue("playlistType", "Suggested")
-                            if (listModelMain.totalhour == "") {
-                                p.putValue("playlistDuration", "0h " + listModelMain.totalminute + "m")
-                            } else if (listModelMain.totalminute == "") {
-                                p.putValue("playlistDuration", listModelMain.totalhour + "h 0m")
-                            } else {
-                                p.putValue("playlistDuration", listModelMain.totalhour + "h " + listModelMain.totalminute + "m")
+                            when {
+                                created.equals("1") -> p.putValue("playlistType", "Created")
+                                created.equals("0") -> p.putValue("playlistType", "Default")
+                                created.equals("2") -> p.putValue("playlistType", "Suggested")
+                            }
+                            when {
+                                listModelMain.totalhour == "" -> {
+                                    p.putValue("playlistDuration", "0h " + listModelMain.totalminute + "m")
+                                }
+                                listModelMain.totalminute == "" -> {
+                                    p.putValue("playlistDuration", listModelMain.totalhour + "h 0m")
+                                }
+                                else -> {
+                                    p.putValue("playlistDuration", listModelMain.totalhour + "h " + listModelMain.totalminute + "m")
+                                }
                             }
                             p.putValue("playlistDuration", "")
                             p.putValue("sound", hundredVolume.toString())
@@ -1047,19 +1061,26 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             p.putValue("playlistId", PlaylistID)
             p.putValue("playlistName", PlaylistName)
             p.putValue("playlistDescription", "")
-            if (listModel1.created == "1") {
-                p.putValue("playlistType", "Created")
-            } else if (listModel1.created == "0") {
-                p.putValue("playlistType", "Default")
-            } else if (listModel1.created == "2")
-                            p.putValue("playlistType", "Suggested")
+            when (listModel1.created) {
+                "1" -> {
+                    p.putValue("playlistType", "Created")
+                }
+                "0" -> {
+                    p.putValue("playlistType", "Default")
+                }
+                "2" -> p.putValue("playlistType", "Suggested")
+            }
 
-            if (listModel1.totalhour.equals("", ignoreCase = true)) {
-                p.putValue("playlistDuration", "0h " + listModel1.totalminute + "m")
-            } else if (listModel1.totalminute.equals("", ignoreCase = true)) {
-                p.putValue("playlistDuration", listModel1.totalhour + "h 0m")
-            } else {
-                p.putValue("playlistDuration", listModel1.totalhour + "h " + listModel1.totalminute + "m")
+            when {
+                listModel1.totalhour.equals("", ignoreCase = true) -> {
+                    p.putValue("playlistDuration", "0h " + listModel1.totalminute + "m")
+                }
+                listModel1.totalminute.equals("", ignoreCase = true) -> {
+                    p.putValue("playlistDuration", listModel1.totalhour + "h 0m")
+                }
+                else -> {
+                    p.putValue("playlistDuration", listModel1.totalhour + "h " + listModel1.totalminute + "m")
+                }
             }
             p.putValue("audioCount", listModel1.totalAudio)
             p.putValue("source", "Your Created")
@@ -1152,19 +1173,23 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                             val listModel: SucessModel? = response.body()
                             if (listModel != null) {
-                                if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                } else if (listModel.responseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                    deleteCall(activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    activity.startActivity(i)
-                                    activity.finish()
-                                } else {
-                                    //                                showToast(listModel.responseMessage, activity)
+                                when {
+                                    listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    }
+                                    listModel.responseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                        deleteCall(activity)
+                                        val i = Intent(activity, SignInActivity::class.java)
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        activity.startActivity(i)
+                                        activity.finish()
+                                    }
+                                    else -> {
+                                        //                                showToast(listModel.responseMessage, activity)
+                                    }
                                 }
                             }
                         }
@@ -1350,20 +1375,28 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         val p = Properties()
                         p.putValue("playlistId", listModel1.playlistID)
                         p.putValue("playlistName", listModel1.playlistName)
-                        if (listModel1.created.equals("1", ignoreCase = true)) {
-                            p.putValue("playlistType", "Created")
-                        } else if (listModel1.created.equals("0", ignoreCase = true)) {
-                            p.putValue("playlistType", "Default")
-                        } else if (listModel1.created == "2") p.putValue("playlistType", "Suggested")
+                        when {
+                            listModel1.created.equals("1", ignoreCase = true) -> {
+                                p.putValue("playlistType", "Created")
+                            }
+                            listModel1.created.equals("0", ignoreCase = true) -> {
+                                p.putValue("playlistType", "Default")
+                            }
+                            listModel1.created == "2" -> p.putValue("playlistType", "Suggested")
+                        }
 
                         p.putValue("audioCount", listModel1.totalAudio)
                         p.putValue("playlistDescription", listModel1.playlistDesc)
-                        if (listModel1.totalhour.equals("", ignoreCase = true)) {
-                            p.putValue("playlistDuration", "0h " + listModel1.totalminute + "m")
-                        } else if (listModel1.totalminute.equals("", ignoreCase = true)) {
-                            p.putValue("playlistDuration", listModel1.totalhour + "h 0m")
-                        } else {
-                            p.putValue("playlistDuration", listModel1.totalhour + "h " + listModel1.totalminute + "m")
+                        when {
+                            listModel1.totalhour.equals("", ignoreCase = true) -> {
+                                p.putValue("playlistDuration", "0h " + listModel1.totalminute + "m")
+                            }
+                            listModel1.totalminute.equals("", ignoreCase = true) -> {
+                                p.putValue("playlistDuration", listModel1.totalhour + "h 0m")
+                            }
+                            else -> {
+                                p.putValue("playlistDuration", listModel1.totalhour + "h " + listModel1.totalminute + "m")
+                            }
                         }
                         p.putValue("source", "Downloaded Playlists")
                         addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track)
@@ -1668,28 +1701,36 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_Totalhour, listMOdelGloble.responseData!!.totalhour)
                 editor.putString(CONSTANTS.PREF_KEY_Totalminute, listMOdelGloble.responseData!!.totalminute)
                 editor.putString(CONSTANTS.PREF_KEY_TotalAudio, listMOdelGloble.responseData!!.totalAudio)
-                editor.putString(CONSTANTS.PREF_KEY_ScreenView, ScreenView)
-                editor.commit()
+                editor.putString(CONSTANTS.PREF_KEY_ScreenView, screenView)
+                editor.apply()
                 val p = Properties()
                 p.putValue("playlistId", listMOdelGloble.responseData!!.playlistID)
                 p.putValue("playlistName", listMOdelGloble.responseData!!.playlistName)
                 p.putValue("playlistDescription", listMOdelGloble.responseData!!.playlistDesc)
-                if (listMOdelGloble.responseData!!.created.equals("1", ignoreCase = true)) {
-                    p.putValue("playlistType", "Created")
-                } else if (listMOdelGloble.responseData!!.created.equals("0", ignoreCase = true)) {
-                    p.putValue("playlistType", "Default")
-                } else if (listMOdelGloble.responseData!!.created.equals("2", ignoreCase = true)) {
-                    p.putValue("playlistType", "Suggested")
+                when {
+                    listMOdelGloble.responseData!!.created.equals("1", ignoreCase = true) -> {
+                        p.putValue("playlistType", "Created")
+                    }
+                    listMOdelGloble.responseData!!.created.equals("0", ignoreCase = true) -> {
+                        p.putValue("playlistType", "Default")
+                    }
+                    listMOdelGloble.responseData!!.created.equals("2", ignoreCase = true) -> {
+                        p.putValue("playlistType", "Suggested")
+                    }
                 }
-                if (listMOdelGloble.responseData!!.totalhour.equals("", ignoreCase = true)) {
-                    p.putValue("playlistDuration", "0h " + listMOdelGloble.responseData!!.totalminute + "m")
-                } else if (listMOdelGloble.responseData!!.totalminute.equals("", ignoreCase = true)) {
-                    p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h 0m")
-                } else {
-                    p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h " + listMOdelGloble.responseData!!.totalminute + "m")
+                when {
+                    listMOdelGloble.responseData!!.totalhour.equals("", ignoreCase = true) -> {
+                        p.putValue("playlistDuration", "0h " + listMOdelGloble.responseData!!.totalminute + "m")
+                    }
+                    listMOdelGloble.responseData!!.totalminute.equals("", ignoreCase = true) -> {
+                        p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h 0m")
+                    }
+                    else -> {
+                        p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h " + listMOdelGloble.responseData!!.totalminute + "m")
+                    }
                 }
                 p.putValue("audioCount", listMOdelGloble.responseData!!.totalAudio)
-                p.putValue("source", ScreenView)
+                p.putValue("source", screenView)
                 p.putValue("playerType", "Mini")
                 p.putValue("audioService", appStatus(ctx))
                 p.putValue("sound", hundredVolume.toString())
@@ -2074,22 +2115,30 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
            p.putValue("playlistId", downloadPlaylistDetails.PlaylistID)
            p.putValue("playlistName", downloadPlaylistDetails.PlaylistName)
            p.putValue("playlistDescription", downloadPlaylistDetails.PlaylistDesc)
-           if (downloadPlaylistDetails.Created.equals("1", ignoreCase = true)) {
-               p.putValue("playlistType", "Created")
-           } else if (downloadPlaylistDetails.Created.equals("0", ignoreCase = true)) {
-               p.putValue("playlistType", "Default")
-           }else if (downloadPlaylistDetails.Created.equals("0", ignoreCase = true)) {
-               p.putValue("playlistType", "Suggested")
-           }
-           if (downloadPlaylistDetails.Totalhour.equals("", ignoreCase = true)) {
-               p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.Totalminute + "m")
-           } else if (downloadPlaylistDetails.Totalminute.equals("", ignoreCase = true)) {
-               p.putValue("playlistDuration", downloadPlaylistDetails.Totalhour + "h 0m")
-           } else {
-               p.putValue("playlistDuration", downloadPlaylistDetails.Totalhour + "h " + downloadPlaylistDetails.Totalminute + "m")
-           }
+        when {
+            downloadPlaylistDetails.Created.equals("1", ignoreCase = true) -> {
+                p.putValue("playlistType", "Created")
+            }
+            downloadPlaylistDetails.Created.equals("0", ignoreCase = true) -> {
+                p.putValue("playlistType", "Default")
+            }
+            downloadPlaylistDetails.Created.equals("0", ignoreCase = true) -> {
+                p.putValue("playlistType", "Suggested")
+            }
+        }
+        when {
+            downloadPlaylistDetails.Totalhour.equals("", ignoreCase = true) -> {
+                p.putValue("playlistDuration", "0h " + downloadPlaylistDetails.Totalminute + "m")
+            }
+            downloadPlaylistDetails.Totalminute.equals("", ignoreCase = true) -> {
+                p.putValue("playlistDuration", downloadPlaylistDetails.Totalhour + "h 0m")
+            }
+            else -> {
+                p.putValue("playlistDuration", downloadPlaylistDetails.Totalhour + "h " + downloadPlaylistDetails.Totalminute + "m")
+            }
+        }
            p.putValue("audioCount", downloadPlaylistDetails.TotalAudio)
-           p.putValue("source", ScreenView)
+           p.putValue("source", screenView)
            p.putValue("audioService", appStatus(ctx))
            p.putValue("sound", hundredVolume.toString())
             addToSegment("Playlist Download Started", p, CONSTANTS.track)

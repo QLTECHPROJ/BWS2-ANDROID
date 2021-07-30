@@ -23,7 +23,7 @@ class EnhanceDoneActivity : AppCompatActivity() {
     private var emailUser: String? = ""
     var isProfileCompleted: String? = ""
     var isAssessmentCompleted: String? = ""
-    var coUserCount: String? = ""
+    private var coUserCount: String? = ""
     var indexScore: String? = ""
     var avgSleepTime: String? = ""
 

@@ -72,16 +72,16 @@ import java.util.*
 class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
     private var mLastClickTime: Long = 0
-    var logoutDialog: Dialog? = null
+    private var logoutDialog: Dialog? = null
     lateinit var image: File
     private var mRequestPermissionHandler: RequestPermissionHandler? = null
     private lateinit var options: Array<CharSequence>
     var userId: String? = null
     var coUserId: String? = null
-    var userEmail: String? = null
+    private var userEmail: String? = null
     private var userImage: String? = null
-    var deviceId: String? = null
-    var deviceType: String? = null
+    private var deviceId: String? = null
+    private var deviceType: String? = null
     var userName: String? = null
     var profilePicPath: String? = ""
     var userMobile: String? = null
@@ -473,7 +473,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     })
                 }
             } else if (options[item] == getString(R.string.cancel)) {
-                val p = Properties()
+//                val p = Properties()
 //                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
             }
@@ -502,54 +502,95 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     try {
                         val viewModel = response.body()
                         if (viewModel != null) {
-                            if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
-                                    binding.tvName.setText(R.string.Guest)
-                                } else {
-                                    binding.tvName.text = viewModel.ResponseData.Name
-                                }
-
-                                if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
-                                    binding.llManageUser.visibility = View.VISIBLE
-                                    binding.llPlan.visibility = View.VISIBLE
-                                    binding.viewManage.visibility = View.VISIBLE
-                                } else {
-                                    binding.llManageUser.visibility = View.GONE
-                                    binding.llPlan.visibility = View.GONE
-                                    binding.viewManage.visibility = View.GONE
-                                }
-
-                                val name: String
-                                profilePicPath = viewModel.ResponseData.Image
-                                if (profilePicPath.equals("", ignoreCase = true)) {
-                                    binding.civProfile.visibility = View.GONE
-                                    name = if (viewModel.ResponseData.Name.equals("", ignoreCase = true)) {
-                                        "Guest"
+                            when {
+                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                    if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
+                                        binding.tvName.setText(R.string.Guest)
                                     } else {
-                                        viewModel.ResponseData.Name
+                                        binding.tvName.text = viewModel.ResponseData.Name
                                     }
-                                    val letter = name.substring(0, 1)
-                                    binding.rlLetter.visibility = View.VISIBLE
-                                    binding.tvLetter.text = letter
-                                } else {
-                                    binding.civProfile.visibility = View.VISIBLE
-                                    binding.rlLetter.visibility = View.GONE
-                                    setProfilePic(profilePicPath)
+
+                                    if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
+                                        binding.llManageUser.visibility = View.VISIBLE
+                                        binding.llPlan.visibility = View.VISIBLE
+                                        binding.viewManage.visibility = View.VISIBLE
+                                    } else {
+                                        binding.llManageUser.visibility = View.GONE
+                                        binding.llPlan.visibility = View.GONE
+                                        binding.viewManage.visibility = View.GONE
+                                    }
+
+                                    val name: String
+                                    profilePicPath = viewModel.ResponseData.Image
+                                    if (profilePicPath.equals("", ignoreCase = true)) {
+                                        binding.civProfile.visibility = View.GONE
+                                        name = if (viewModel.ResponseData.Name.equals("", ignoreCase = true)) {
+                                            "Guest"
+                                        } else {
+                                            viewModel.ResponseData.Name
+                                        }
+                                        val letter = name.substring(0, 1)
+                                        binding.rlLetter.visibility = View.VISIBLE
+                                        binding.tvLetter.text = letter
+                                    } else {
+                                        binding.civProfile.visibility = View.VISIBLE
+                                        binding.rlLetter.visibility = View.GONE
+                                        setProfilePic(profilePicPath)
+                                    }
+
+                                    val shared = activity?.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val editor = shared?.edit()
+                                    if (editor != null) {
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, viewModel.ResponseData.Image)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, viewModel.ResponseData.isProfileCompleted)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
+                                        editor.apply()
+                                    }
+
+                                    val sharded = activity?.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    val edited = sharded?.edit()
+                                    if (edited != null) {
+                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
+                                        val selectedCategoriesTitle = arrayListOf<String>()
+                                        val selectedCategoriesName = arrayListOf<String>()
+                                        val gson = Gson()
+                                        for (i in viewModel.ResponseData.AreaOfFocus) {
+                                            selectedCategoriesTitle.add(i.MainCat)
+                                            selectedCategoriesName.add(i.RecommendedCat)
+                                        }
+                                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                        edited.apply()
+                                    }
                                 }
-                            } else if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(viewModel.ResponseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                activity?.startActivity(i)
-                                activity?.finish()
-                            } else {
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    deleteCall(activity)
+                                    showToast(viewModel.ResponseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    activity?.startActivity(i)
+                                    activity?.finish()
+                                }
+                                else -> {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                }
                             }
                         }
                     } catch (e: Exception) {
@@ -581,7 +622,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                                     setProfilePic(profilePicPath)
                                     showToast(addProfileModel.responseMessage, requireActivity())
-                                    val p = Properties()
+//                                    val p = Properties()
 //                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
                                     profilePicPath = addProfileModel.responseData?.profileImage
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -637,7 +678,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 profilePicPath = addProfileModel.responseData?.profileImage
                                 setProfilePic(profilePicPath)
-                                val p = Properties()
+//                                val p = Properties()
 //                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
                                 showToast(addProfileModel.responseMessage, activity)
                                 val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -669,7 +710,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
-            val p = Properties()
+//            val p = Properties()
 //            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
             requireActivity().finish()
         }
@@ -737,7 +778,6 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 val editor = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
                 editor.putString(CONSTANTS.Token, newToken) // Friend
                 editor.apply()
-                editor.commit()
             }
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         }
