@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
@@ -28,7 +27,6 @@ import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
-import com.segment.analytics.Traits
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -286,15 +284,25 @@ class EditProfileActivity : AppCompatActivity() {
                                 }
                                 userName = viewModel.ResponseData.Name
                                 userCalendar = viewModel.ResponseData.DOB
+                                var spf = SimpleDateFormat()
+                                var newDate = Date()
+                                try {
+                                    newDate = spf.parse(userCalendar)
+                                } catch (e: ParseException) {
+                                    e.printStackTrace()
+                                }
+                                spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+                                userCalendar = spf.format(newDate)
                                 userMobileNumber = viewModel.ResponseData.Mobile
                                 userEmail = viewModel.ResponseData.Email
                                 binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
                                 binding.etEmail.setText(viewModel.ResponseData.Email)
-                                binding.etCalendar.setText(viewModel.ResponseData.DOB)
+                                spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
+                                binding.etCalendar.setText(spf.format(viewModel.ResponseData.DOB))
                                 val p = Properties()
                                 p.putValue("name", userName)
                                 p.putValue("dob", userCalendar)
-                                p.putValue("mobileNo",userMobileNumber)
+                                p.putValue("mobileNo", userMobileNumber)
                                 p.putValue("email", userEmail)
                                 BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
 
@@ -334,7 +342,16 @@ class EditProfileActivity : AppCompatActivity() {
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
         } else {
-            val ageArray = userCalendar!!.split("-")
+            var spf = SimpleDateFormat()
+            var newDate = Date()
+            try {
+                newDate = spf.parse(userCalendar)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+            var dob = spf.format(newDate)
+            val ageArray = dob.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
             mDay = Integer.parseInt(ageArray[2])
