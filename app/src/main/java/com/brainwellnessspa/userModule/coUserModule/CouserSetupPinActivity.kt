@@ -19,7 +19,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCouserSetupPinBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
@@ -75,7 +75,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()
-        BWSApplication.addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Set Up Pin Screen Viewed", p, CONSTANTS.screen)
         if (intent.extras != null) {
             subUserId = intent.getStringExtra("subUserId")
         }
@@ -148,8 +148,8 @@ class CouserSetupPinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
 
-            if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            if (isNetworkConnected(this)) {
+                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 var mainUserId = ""
                 mainUserId = if (subUserId.equals("")) {
                     userId.toString()
@@ -163,11 +163,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
                         try {
                             binding.txtNewPINError.visibility = View.GONE
                             binding.txtConfirmPINError.visibility = View.GONE
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: SetLoginPinModel? = response.body()
                             if (listModel != null) {
                                 if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                     if (mainAccountID == listModel.responseData?.userId) {
                                         val intent = Intent(applicationContext, WalkScreenActivity::class.java)
                                         intent.putExtra(CONSTANTS.ScreenView, "4")
@@ -179,8 +179,8 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                         finish()
                                     }
                                 } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    deleteCall(activity)
+                                    showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
@@ -190,7 +190,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     startActivity(i)
                                     finish()
                                 } else {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                 }
                             }
 
@@ -200,11 +200,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<SetLoginPinModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
     }

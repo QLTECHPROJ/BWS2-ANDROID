@@ -11,7 +11,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityUserDetailBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
@@ -87,30 +87,30 @@ class UserDetailActivity : AppCompatActivity() {
         } else {
             binding.txtNameError.visibility = View.GONE
             binding.txtEmailError.visibility = View.GONE
-            if (BWSApplication.isNetworkConnected(this)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            if (isNetworkConnected(this)) {
+                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall: Call<AddUserModel> = APINewClient.client.getAddUser(mainAccountID, binding.etName.text.toString(), binding.etEmail.text.toString())
                 listCall.enqueue(object : Callback<AddUserModel> {
                     override fun onResponse(call: Call<AddUserModel>, response: Response<AddUserModel>) {
                         try {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             binding.txtNameError.visibility = View.GONE
                             binding.txtEmailError.visibility = View.GONE
                             val listModel: AddUserModel = response.body()!!
                             when {
                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                    if (BWSApplication.addCouserBackStatus == 1) {
+                                    if (addCouserBackStatus == 1) {
                                         finish()
                                     } else {
                                         val intent = Intent(applicationContext, UserListActivity::class.java)
                                         startActivity(intent)
                                         finish()
                                     }
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    deleteCall(activity)
+                                    showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
@@ -121,7 +121,7 @@ class UserDetailActivity : AppCompatActivity() {
                                     finish()
                                 }
                                 else -> {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                 }
                             }
 
@@ -131,11 +131,11 @@ class UserDetailActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<AddUserModel>, t: Throwable) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
     }

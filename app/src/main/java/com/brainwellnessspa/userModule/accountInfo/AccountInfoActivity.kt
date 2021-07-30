@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.databinding.ActivityAccountInfoBinding
@@ -30,7 +30,7 @@ class AccountInfoActivity : AppCompatActivity() {
         }
 
         val p = Properties()
-        BWSApplication.addToSegment("Account Info Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Account Info Screen Viewed", p, CONSTANTS.screen)
 
         if (isPinSet.equals("1", ignoreCase = true)) {
             binding.llChangePin.visibility = View.VISIBLE
@@ -39,33 +39,33 @@ class AccountInfoActivity : AppCompatActivity() {
         }
 
         binding.llEtProfile.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 val i = Intent(this, EditProfileActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+                showToast(getString(R.string.no_server_found), this)
             }
         }
 
         binding.llDeleteAc.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 val i = Intent(this, CancelMembershipActivity::class.java)
                 i.putExtra("screenView", "0")
                 startActivity(i)
                 finish()
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+                showToast(getString(R.string.no_server_found), this)
             }
         }
 
         binding.llChangePin.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 val i = Intent(this, ChangePinActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+                showToast(getString(R.string.no_server_found), this)
             }
         }
     }

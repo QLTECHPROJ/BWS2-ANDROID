@@ -16,7 +16,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
@@ -47,7 +47,7 @@ class AddCouserActivity : AppCompatActivity() {
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val p = Properties()
-        BWSApplication.addToSegment("Add User Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Add User Screen Viewed", p, CONSTANTS.screen)
         binding.ivInfo.setOnClickListener {
             val dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -76,8 +76,8 @@ class AddCouserActivity : AppCompatActivity() {
         }
 
         binding.btnSameMobileNo.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(this)) {
-                if (BWSApplication.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
+                if (isNetworkConnected(this)) {
                     val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(mainAccountID)
                     listCall.enqueue(object : Callback<AuthOtpModel> {
                         override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
@@ -117,8 +117,8 @@ class AddCouserActivity : AppCompatActivity() {
                                 }
                                 finish()
                             } else if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(authOtpModel.ResponseMessage, activity)
+                                deleteCall(activity)
+                                showToast(authOtpModel.ResponseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -134,10 +134,10 @@ class AddCouserActivity : AppCompatActivity() {
                         }
                     })
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), applicationContext as Activity?)
+                    showToast(getString(R.string.no_server_found), applicationContext as Activity?)
                 }
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), this)
+                showToast(getString(R.string.no_server_found), this)
             }
         }
 
@@ -157,13 +157,13 @@ class AddCouserActivity : AppCompatActivity() {
             }
 
             mainLayout.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(this)) {
+                if (isNetworkConnected(this)) {
                     val i = Intent(applicationContext, ContactBookActivity::class.java)
                     startActivity(i)
                     finish()
                     dialog.dismiss()
                 } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), this)
+                    showToast(getString(R.string.no_server_found), this)
                 }
             }
 
