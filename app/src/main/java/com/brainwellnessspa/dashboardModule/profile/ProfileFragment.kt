@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
     private var logoutDialog: Dialog? = null
     lateinit var image: File
     private var mRequestPermissionHandler: RequestPermissionHandler? = null
-    private lateinit var options: Array<CharSequence>
+    private lateinit var options: Array<String>
     var userId: String? = null
     var coUserId: String? = null
     private var userEmail: String? = null

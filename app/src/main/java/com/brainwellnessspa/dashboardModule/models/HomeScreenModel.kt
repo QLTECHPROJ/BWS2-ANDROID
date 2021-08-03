@@ -134,6 +134,10 @@ class HomeScreenModel {
             @Expose
             var playlistMastercat: String? = null
 
+            @SerializedName("playlistDirection")
+            @Expose
+            var playlistDirection: String? = null
+
             @SerializedName("PlaylistSubcat")
             @Expose
             var playlistSubcat: String? = null

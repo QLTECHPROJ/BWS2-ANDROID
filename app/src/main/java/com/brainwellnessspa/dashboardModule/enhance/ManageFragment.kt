@@ -607,6 +607,7 @@ class ManageFragment : Fragment() {
                         binding.llPlayer.visibility = View.VISIBLE
                         binding.llUser.visibility = View.VISIBLE
                         binding.tvPlaylistName.text = listModel.responseData!!.suggestedPlaylist!!.playlistName
+                        binding.tvSleepTimeTitle.text = listModel.responseData!!.suggestedPlaylist!!.playlistDirection
                         binding.tvTime.text = listModel.responseData!!.suggestedPlaylist!!.totalhour + ":" + listModel.responseData!!.suggestedPlaylist!!.totalminute
                         val section = java.util.ArrayList<String>()
                         for (i in listModel.responseData!!.audio.indices) {
@@ -1108,7 +1109,7 @@ class ManageFragment : Fragment() {
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
-        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
+        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested")
         if (myDownloads.equals("1", ignoreCase = true)) {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")
         } else {

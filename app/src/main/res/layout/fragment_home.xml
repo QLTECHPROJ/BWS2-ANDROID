@@ -342,12 +342,12 @@
                                         android:weightSum="10">
 
                                         <TextView
+                                            android:id="@+id/tvSleepTimeTitle"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="7"
                                             android:fontFamily="@font/montserrat_regular"
                                             android:gravity="start"
-                                            android:text="@string/sleep_start_in_your_brain"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_13sdp"
                                             tools:ignore="SpUsage" />

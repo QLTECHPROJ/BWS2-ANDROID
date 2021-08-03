@@ -557,4 +557,12 @@ interface APINewInterface {
         cancelId: String?,
         @Field("CancelReason")
         cancelReason: String?): Call<CancelPlanModel?>?
+
+    @POST("useraudiotracking")
+    @FormUrlEncoded
+    fun getUserAudioTracking(
+        @Field("UserID")
+        userID: String?,
+        @Field("TrackingData")
+        trackingData: String?): Call<UserAudioTrackingModel?>?
 }

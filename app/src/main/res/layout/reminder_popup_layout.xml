@@ -50,7 +50,7 @@
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/_4sdp"
-            android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score_you_will_get_a_reminder_notification_for_that"
+            android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp"
             tools:ignore="SpUsage" />

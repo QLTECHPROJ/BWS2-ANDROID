@@ -110,6 +110,8 @@ object CONSTANTS {
     const val PREF_KEY_Splash = "Splash"
     const val PREF_KEY_SplashKey = "SplashKey"
     const val PREF_KEY_PLAYER = "Player"
+    const val PREF_KEY_USER_ACTIVITY = "UserActivity"
+    const val PREF_KEY_USER_TRACK_ARRAY = "UserTrackArray"
     const val PREF_KEY_MainAudioList = "MainAudioList"
     const val PREF_KEY_PlayerAudioList = "PlayerAudioList"
     const val PREF_KEY_AudioPlayerFlag = "AudioPlayerFlag"

@@ -67,7 +67,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="center"
-                                android:text="@string/add_user_quotes"
+                                android:text="@string/invite_people"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_20sdp"
                                 tools:ignore="SpUsage" />

@@ -1,5 +1,9 @@
 package com.brainwellnessspa;
 
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -55,7 +59,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -73,16 +76,14 @@ import com.brainwellnessspa.dashboardModule.adapters.DirectionAdapter;
 import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
+import com.brainwellnessspa.dashboardModule.models.MainPlayModel;
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel;
 import com.brainwellnessspa.dashboardModule.models.ReminderProceedModel;
 import com.brainwellnessspa.dashboardModule.models.RenameNewPlaylistModel;
 import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
-import com.brainwellnessspa.dashboardModule.models.MainPlayModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
-import com.brainwellnessspa.databinding.ReminderTimelistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.reminderModule.models.ReminderMinutesListModel;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
@@ -97,6 +98,7 @@ import com.brainwellnessspa.utility.AppSignatureHashHelper;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.CryptLib;
 import com.brainwellnessspa.utility.MeasureRatio;
+import com.brainwellnessspa.utility.MyValueFormatter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -109,12 +111,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -132,7 +130,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -150,10 +147,6 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
@@ -198,10 +191,10 @@ public class BWSApplication extends Application {
     static List<String> remiderDays = new ArrayList<>();
     static Context mContext;
     static BWSApplication BWSApplication;
-    static String currantTime = "", am_pm, hourString, minuteSting;
-    static int Chour, Cminute;
+    public static String currantTime = "", am_pm, hourString, minuteSting;
+    public static int Chour, Cminute;
     public static String key = "";
-    static TextView tvTime;
+    public static TextView tvTime;
     static CheckBox cbCheck;
     public static AudioDatabase DB;
     public static int isPlayPlaylist = 0;
@@ -243,8 +236,8 @@ public class BWSApplication extends Application {
 
     private static void CallObserverMethodGetAllMedia(Context ctx) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
-        String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
+        String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        String coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao().geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
             playlistDownloadAudioDetailsList = audioList;
@@ -1736,19 +1729,6 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static class MyValueFormatter extends ValueFormatter implements IValueFormatter {
-        private final DecimalFormat mFormat;
-
-        public MyValueFormatter() {
-            mFormat = new DecimalFormat("###,###,##0.00");
-        }
-
-        @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return mFormat.format(value);
-        }
-    }
-
     private static void callDownload(String comeFrom, List<DownloadAudioDetails> mDataDownload, List<ViewAllAudioListModel.ResponseData.Detail> mDataViewAll, List<PlaylistDetailsModel.ResponseData.PlaylistSong> mDataPlaylist, List<MainPlayModel> mDataPlayer, int position, Context ctx, ImageView ivDownloads, Activity act, LinearLayout llDownload) {
         List<String> fileNameList = new ArrayList<>();
         List<String> audioFile1;
@@ -1839,7 +1819,7 @@ public class BWSApplication extends Application {
                         editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
                         editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                         editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                        editor.commit();
+                        editor.apply();
                     }
                     //        fileNast = url1;
                     if (!isDownloading) {
@@ -1964,7 +1944,7 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio");
-            editor.commit();
+            editor.apply();
             if (!arrayList2.get(PlayerPosition).getAudioFile().equals("")) {
                 List<String> downloadAudioDetailsList = new ArrayList<>();
                 GlobalInitExoPlayer ge = new GlobalInitExoPlayer();
@@ -2107,106 +2087,6 @@ public class BWSApplication extends Application {
         dialog.show();
         dialog.setCancelable(false);
     }
-
-/*
-    public static void getReminderTime(Context ctx, Activity act, String coUSERID, String playlistID, String playlistName, Dialog dialogOld) {
-        final Dialog dialog = new Dialog(ctx);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.select_timeslot_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent)));
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final LinearLayout llBack = dialog.findViewById(R.id.llBack);
-        final Button btnSave = dialog.findViewById(R.id.btnSave);
-        final TextView tvPlaylistName = dialog.findViewById(R.id.tvPlaylistName);
-        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-        final TextView tvTime = dialog.findViewById(R.id.tvTime);
-        final RecyclerView rvSelectMinutesTimeSlot = dialog.findViewById(R.id.rvSelectMinutesTimeSlot);
-        final RecyclerView rvSelectHoursTimeSlot = dialog.findViewById(R.id.rvSelectHoursTimeSlot);
-        final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
-        final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-        final TimePicker timePicker = dialog.findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(true);
-        tvPlaylistName.setText(playlistName);
-        llBack.setOnClickListener(view12 -> {
-            dialogOld.dismiss();
-            localIntent.putExtra("MyReminder", "update");
-            localBroadcastManager.sendBroadcast(localIntent);
-            dialog.dismiss();
-        });
-
-        ReminderMinutesListModel[] minutesListModels = new ReminderMinutesListModel[]{
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel("00"),
-                new ReminderMinutesListModel("05"),
-                new ReminderMinutesListModel("10"),
-                new ReminderMinutesListModel("15"),
-                new ReminderMinutesListModel("20"),
-                new ReminderMinutesListModel("25"),
-                new ReminderMinutesListModel("30"),
-                new ReminderMinutesListModel("35"),
-                new ReminderMinutesListModel("40"),
-                new ReminderMinutesListModel("45"),
-                new ReminderMinutesListModel("50"),
-                new ReminderMinutesListModel("55"),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-        };
-
-        ReminderMinutesListModel[] hoursListModels = new ReminderMinutesListModel[]{
-                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""), new ReminderMinutesListModel("00"),
-                new ReminderMinutesListModel("01"), new ReminderMinutesListModel("02"),
-                new ReminderMinutesListModel("03"), new ReminderMinutesListModel("04"), new ReminderMinutesListModel("05"),
-                new ReminderMinutesListModel("06"), new ReminderMinutesListModel("07"), new ReminderMinutesListModel("08"),
-                new ReminderMinutesListModel("09"), new ReminderMinutesListModel("10"), new ReminderMinutesListModel("11"),
-                new ReminderMinutesListModel("12"), new ReminderMinutesListModel("13"), new ReminderMinutesListModel("14"),
-                new ReminderMinutesListModel("15"), new ReminderMinutesListModel("16"), new ReminderMinutesListModel("17"),
-                new ReminderMinutesListModel("18"), new ReminderMinutesListModel("19"), new ReminderMinutesListModel("20"),
-                new ReminderMinutesListModel("21"), new ReminderMinutesListModel("22"), new ReminderMinutesListModel("23"),
-                new ReminderMinutesListModel(""), new ReminderMinutesListModel(""), new ReminderMinutesListModel(""),
-                new ReminderMinutesListModel(""),
-        };
-
-        dialog.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dialogOld.dismiss();
-                localIntent.putExtra("MyReminder", "update");
-                localBroadcastManager.sendBroadcast(localIntent);
-                dialog.dismiss();
-                return true;
-            }
-            return false;
-        });
-
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
-        rvSelectMinutesTimeSlot.setLayoutManager(manager);
-        rvSelectMinutesTimeSlot.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(ctx);
-        rvSelectHoursTimeSlot.setLayoutManager(manager1);
-        rvSelectHoursTimeSlot.setItemAnimator(new DefaultItemAnimator());
-
-        ReminderMinutesListAdapter adapter = new ReminderMinutesListAdapter(minutesListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
-        rvSelectMinutesTimeSlot.setAdapter(adapter);
-        rvSelectMinutesTimeSlot.scrollToPosition(10);
-
-        ReminderHoursListAdapter adapter1 = new ReminderHoursListAdapter(hoursListModels, act, ctx, coUSERID, playlistID, playlistName, dialog);
-        rvSelectHoursTimeSlot.setAdapter(adapter1);
-        rvSelectHoursTimeSlot.scrollToPosition(10);
-
-        btnSave.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        tvGoBack.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
-        dialog.setCancelable(false);
-    }
-*/
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -2408,7 +2288,7 @@ public class BWSApplication extends Application {
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
-        editor.commit();
+        editor.apply();
         return key;
     }
 
@@ -2588,8 +2468,8 @@ public class BWSApplication extends Application {
         BWSApplication = this;
     }
 
-    public static void deleteCall(Activity activity) {
-        SharedPreferences preferences = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+    public static void deleteCall(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID);
         edit.remove(CONSTANTS.PREFE_ACCESS_UserId);
@@ -2613,14 +2493,14 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_coUserCount);
         edit.clear();
         edit.apply();
-        SharedPreferences preferred = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
+        SharedPreferences preferred = context.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited = preferred.edit();
         edited.remove(CONSTANTS.selectedCategoriesTitle);
         edited.remove(CONSTANTS.selectedCategoriesName);
         edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
         edited.clear();
         edited.apply();
-        SharedPreferences preferred1 = activity.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
+        SharedPreferences preferred1 = context.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited1 = preferred1.edit();
         edited1.remove(CONSTANTS.AssQus);
         edited1.remove(CONSTANTS.AssAns);
@@ -2632,7 +2512,7 @@ public class BWSApplication extends Application {
            editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
            editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
            editorcv.apply()*/
-        SharedPreferences preferred2 = activity.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+        SharedPreferences preferred2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited2 = preferred2.edit();
         edited2.remove(CONSTANTS.PREF_KEY_MainAudioList);
         edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList);
@@ -2645,7 +2525,7 @@ public class BWSApplication extends Application {
         edited2.clear();
         edited2.apply();
         logout = true;
-        deleteCache(activity);
+        deleteCache(context);
     }
 
     private static class ReminderSelectionListAdapter extends RecyclerView.Adapter<ReminderSelectionListAdapter.MyViewHolder> {
@@ -2718,13 +2598,11 @@ public class BWSApplication extends Application {
             holder.binding.cbChecked.setOnClickListener(v -> {
                 if (holder.binding.cbChecked.isChecked()) {
                     remiderDays.add(String.valueOf(position));
-                    RDay = "";
-                    RDay = TextUtils.join(",", remiderDays);
                 } else {
                     remiderDays.remove(String.valueOf(position));
-                    RDay = "";
-                    RDay = TextUtils.join(",", remiderDays);
                 }
+                RDay = "";
+                RDay = TextUtils.join(",", remiderDays);
                 if (remiderDays.size() == 0) {
                     Log.e("remiderDays", "no data");
                 } else {
@@ -2860,7 +2738,6 @@ public class BWSApplication extends Application {
     }
 
     public static class TimePickerThemeclass extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-
         @NotNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -2933,75 +2810,6 @@ public class BWSApplication extends Application {
             e.printStackTrace();
         }
         return false;
-    }
-
-    private static class ReminderHoursListAdapter extends RecyclerView.Adapter<ReminderHoursListAdapter.MyViewHolder> {
-        Activity act;
-        Context ctx;
-        String CoUSERID, PlaylistID, PlaylistName;
-        Dialog dialogOld;
-        private final ReminderMinutesListModel[] minutesListModels;
-
-        public ReminderHoursListAdapter(ReminderMinutesListModel[] minutesListModels, Activity act, Context ctx, String CoUSERID, String PlaylistID, String PlaylistName, Dialog dialogOld) {
-            this.minutesListModels = minutesListModels;
-            this.act = act;
-            this.ctx = ctx;
-            this.CoUSERID = CoUSERID;
-            this.PlaylistID = PlaylistID;
-            this.PlaylistName = PlaylistName;
-            this.dialogOld = dialogOld;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ReminderTimelistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.reminder_timelist_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-            holder.binding.tvDay.setText(minutesListModels[position].getMinutes());
-        }
-
-        @Override
-        public int getItemCount() {
-            return minutesListModels.length;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public static class MyViewHolder extends RecyclerView.ViewHolder {
-            ReminderTimelistLayoutBinding binding;
-
-            public MyViewHolder(ReminderTimelistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (hasFocus){
-                                mselectedItem = getAdapterPosition();
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-                }
-*/
-            }
-        }
     }
 
     public static void callObserve2(Context ctx, Activity act) {

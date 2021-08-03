@@ -2,6 +2,7 @@ package com.brainwellnessspa.utility
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.downloader.PRDownloader
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
 class MyNetworkReceiver : BroadcastReceiver() {
 
@@ -22,11 +24,22 @@ class MyNetworkReceiver : BroadcastReceiver() {
         if (!status) {
             if (DownloadMedia.isDownloading) {
                 PRDownloader.pause(DownloadMedia.downloadIdOne)
-                DownloadMedia.isDownloading =
-                    false //                BWSApplication.showToast(String.valueOf(status)+Status.valueOf(PRDownloader.getStatus(downloadIdOne).name()),context);
+                DownloadMedia.isDownloading = false //                BWSApplication.showToast(String.valueOf(status)+Status.valueOf(PRDownloader.getStatus(downloadIdOne).name()),context);
             }
         } else {
-
+            val shareded = context.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Service.MODE_PRIVATE)
+            val gson = Gson()
+            val json = shareded.getString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toString())
+            var userActivityTrackModel = ArrayList<UserActivityTrackModel>()
+            if (!json.equals(gson.toString(), ignoreCase = true)) {
+                val type = object : TypeToken<ArrayList<UserActivityTrackModel?>?>() {}.type
+                userActivityTrackModel = gson.fromJson(json, type)
+                if (userActivityTrackModel.size != 0) {
+                    val global = GlobalInitExoPlayer()
+                    global.getUserActivityCall(context, "", "", "")
+                }
+            }
+// TODO check shared pref and aema jo value hoy to get karine api call karvani
             // do some thing
             GlobalInitExoPlayer.callResumePlayer(context)
             if (!DownloadMedia.isDownloading) {
@@ -38,8 +51,7 @@ class MyNetworkReceiver : BroadcastReceiver() {
                     val gson = Gson()
                     val json = shared.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
                     val json1 = shared.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
-                    val json2 =
-                        shared.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
+                    val json2 = shared.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, gson.toString())
                     if (!json1.equals(gson.toString(), ignoreCase = true)) {
                         val type = object : TypeToken<List<String?>?>() {}.type
                         fileNameList = gson.fromJson(json, type)
@@ -59,8 +71,7 @@ class MyNetworkReceiver : BroadcastReceiver() {
                     editor.commit();*/
                         if (fileNameList.isNotEmpty()) {
                             DownloadMedia.isDownloading = true
-                            val downloadMedia =
-                                DownloadMedia(context.applicationContext, context as Activity)
+                            val downloadMedia = DownloadMedia(context.applicationContext, context as Activity)
                             downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId /*, playlistSongs*/)
                         }
                     }

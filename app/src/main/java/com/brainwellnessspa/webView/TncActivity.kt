@@ -12,7 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityTncBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -24,7 +24,7 @@ class TncActivity : AppCompatActivity() {
     private var web: String? = null
     var activity: Activity? = null
     private var tnc = AppUtils.tncs_url
-    var privacyPolicy = AppUtils.privacy_policy_url
+    private var privacyPolicy = AppUtils.privacy_policy_url
     private var howReferWorks = AppUtils.how_refer_works_url
     private var numStarted = 0
     var stackStatus = 0
@@ -138,7 +138,7 @@ class TncActivity : AppCompatActivity() {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destroyed")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(BWSApplication.notificationId)
+                notificationManager.cancel(notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

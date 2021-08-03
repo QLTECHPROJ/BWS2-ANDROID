@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
@@ -59,7 +59,7 @@ class AssProcessActivity : AppCompatActivity() {
         /* This condition is string access */
         if (assProcess.equals("0", ignoreCase = true)) {
             val p = Properties()
-            BWSApplication.addToSegment(CONSTANTS.Assessment_Start_Screen_Viewed, p, CONSTANTS.screen)
+            addToSegment(CONSTANTS.Assessment_Start_Screen_Viewed, p, CONSTANTS.screen)
             binding.rlDoAss.visibility = View.VISIBLE
             binding.rlDoneAss.visibility = View.GONE
         } else if (assProcess.equals("1", ignoreCase = true)) {
@@ -75,7 +75,7 @@ class AssProcessActivity : AppCompatActivity() {
             val p = Properties()
             p.putValue("WellnessScore", indexScore)
             p.putValue("scoreLevel", scoreLevel)
-            BWSApplication.addToSegment(CONSTANTS.Wellness_Score_Screen_Viewed, p, CONSTANTS.screen)
+            addToSegment(CONSTANTS.Wellness_Score_Screen_Viewed, p, CONSTANTS.screen)
 
             /* This condition is indexscore result */
             when {
@@ -436,8 +436,8 @@ class AssProcessActivity : AppCompatActivity() {
     }
 
     private fun prepareData(userID: String?) {
-        if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(activity)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getAssesmentGetDetails(userID) /*Flag = 0 Staging Flag = 1 Live*/
             listCall.enqueue(object : Callback<AssesmentGetDetailsModel?> {
                 @SuppressLint("SetTextI18n")
@@ -447,7 +447,7 @@ class AssProcessActivity : AppCompatActivity() {
                         if (listModel != null) {
                             when {
                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
                                     binding.assesmentContent.text = listModel.responseData?.assesmentContent
                                     binding.tvScreenTitle.text = listModel.responseData?.mainTitle
@@ -455,8 +455,8 @@ class AssProcessActivity : AppCompatActivity() {
                                     binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    deleteCall(activity)
+                                    showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
@@ -467,7 +467,7 @@ class AssProcessActivity : AppCompatActivity() {
                                     finish()
                                 }
                                 else -> {
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, activity)
                                 }
                             }
                         }
@@ -477,11 +477,11 @@ class AssProcessActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssesmentGetDetailsModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 

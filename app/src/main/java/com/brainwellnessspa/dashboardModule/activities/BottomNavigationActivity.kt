@@ -3,46 +3,37 @@ package com.brainwellnessspa.dashboardModule.activities
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.NotificationManager
+import android.app.Service
 import android.app.UiModeManager
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.PowerManager
+import android.os.*
 import android.provider.Settings
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityBottomNavigationBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MyBatteryReceiver
 import com.brainwellnessspa.utility.MyNetworkReceiver
+import com.brainwellnessspa.utility.UserActivityTrackModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ir.drax.netwatch.NetWatch
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
+import java.util.ArrayList
 
 class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator {
-
     /* main dashboard bottom activity for all menu */
     lateinit var binding: ActivityBottomNavigationBinding
     var doubleBackToExitPressedOnce = false
@@ -62,7 +53,8 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     private var myNetworkReceiver: MyNetworkReceiver? = null
     private var myBatteryReceiver: MyBatteryReceiver? = null
 
-    @SuppressLint("BatteryLife") override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("BatteryLife")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation)
         // Passing each menu ID as a set of Ids because each
@@ -83,10 +75,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             isFirst = intent.getStringExtra("IsFirst")
         }
         if (isFirst.equals("1", ignoreCase = true)) {
-            BWSApplication.showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
-        } else {
-            //            nothing
+            showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
         }
+
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
         if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
             uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -136,6 +127,18 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             override fun onConnected(source: Int) {
                 // do some thing
                 GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
+                val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Service.MODE_PRIVATE)
+                val gson = Gson()
+                val json = shareded.getString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toString())
+                var userActivityTrackModel = ArrayList<UserActivityTrackModel>()
+                if (!json.equals(gson.toString(), ignoreCase = true)) {
+                    val type = object : TypeToken<ArrayList<UserActivityTrackModel?>?>() {}.type
+                    userActivityTrackModel = gson.fromJson(json, type)
+                    if (userActivityTrackModel.size != 0){
+                        val global = GlobalInitExoPlayer()
+                        global.getUserActivityCall(this@BottomNavigationActivity, "","","")
+                    }
+                }
             }
 
             override fun onDisconnected(): View? {
@@ -149,10 +152,10 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     override fun onDestroy() {
         NetWatch.unregister(this)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(BWSApplication.notificationId)
+        notificationManager.cancel(notificationId)
         GlobalInitExoPlayer.relesePlayer(this@BottomNavigationActivity)
         //        unregisterReceiver(myNetworkReceiver);
-        BWSApplication.deleteCache(this@BottomNavigationActivity)
+        deleteCache(this@BottomNavigationActivity)
         super.onDestroy()
     }
 
@@ -173,16 +176,14 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                 return
             }
             doubleBackToExitPressedOnce = true
-            BWSApplication.showToast("Press again to exit", this@BottomNavigationActivity)
-            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+            showToast("Press again to exit", this@BottomNavigationActivity)
+            Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         } else {
             super.onBackPressed()
         }
     }
 
     companion object {
-        var miniPlayer = 0
         var audioClick = false
-        var tutorial = false
     }
 }

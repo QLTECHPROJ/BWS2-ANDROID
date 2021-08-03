@@ -47,7 +47,7 @@
         android:gravity="start"
         android:visibility="gone"
         android:lineSpacingExtra="@dimen/_4sdp"
-        android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score"
+        android:text="@string/ensure_you_never_miss_a_chance_to_improve_your_wellness_score_you_will_get_a_reminder_notification_for_that"
         android:textColor="@color/white"
         android:textSize="@dimen/_13sdp"
         tools:ignore="SpUsage" />

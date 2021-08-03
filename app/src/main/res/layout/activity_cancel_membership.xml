@@ -251,6 +251,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_96sdp"
                     android:orientation="vertical">
 
                     <TextView
@@ -347,7 +348,7 @@
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginTop="@dimen/_22sdp"
                             android:layout_marginRight="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_80sdp"
+                            android:layout_marginBottom="@dimen/_40sdp"
                             android:background="@drawable/edittext_background"
                             android:cursorVisible="true"
                             android:fontFamily="@font/montserrat_regular"
@@ -364,7 +365,7 @@
                             android:textColor="@color/gray"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_14sdp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             tools:ignore="SpUsage" />
 
                     </LinearLayout>

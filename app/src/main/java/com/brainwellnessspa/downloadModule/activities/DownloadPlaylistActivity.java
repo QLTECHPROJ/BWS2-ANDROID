@@ -580,9 +580,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName);
-        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+        if(Created.equals("2")){
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested");
+        }else {
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "");
+        }
         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist");
-        editor.commit();
+        editor.apply();
         callAddTranFrag();
     }
 

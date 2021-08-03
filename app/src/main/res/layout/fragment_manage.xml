@@ -41,7 +41,7 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="Whoooops!\nNo active internet :("
+                    android:text="@string/whoooops_nno_active_internet"
                     android:textColor="@color/app_theme_color"
                     android:textSize="@dimen/_20sdp"
                     tools:ignore="RtlSymmetry,SpUsage" />
@@ -107,7 +107,7 @@
                                         android:text="@string/Enhance"
                                         android:textColor="@color/dark_blue_gray"
                                         android:textSize="@dimen/_18sdp"
-                                        tools:ignore="RtlSymmetry,SpUsage" />
+                                        tools:ignore="RtlSymmetry,SpUsage,TooDeepLayout" />
 
                                 </LinearLayout>
                             </LinearLayout>
@@ -248,7 +248,7 @@
                                             android:id="@+id/llPlayerView2"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_gravity="right"
+                                            android:layout_gravity="end"
                                             android:layout_weight="1.2"
                                             android:orientation="horizontal" />
                                     </LinearLayout>
@@ -288,13 +288,12 @@
                                             android:weightSum="10">
 
                                             <TextView
+                                                android:id="@+id/tvSleepTimeTitle"
                                                 android:layout_width="0dp"
                                                 android:layout_height="wrap_content"
-                                                android:layout_centerVertical="true"
                                                 android:layout_weight="7"
                                                 android:fontFamily="@font/montserrat_regular"
                                                 android:gravity="start"
-                                                android:text="Sleep start in your brain"
                                                 android:textColor="@color/white"
                                                 android:textSize="@dimen/_13sdp"
                                                 tools:ignore="SpUsage" />
@@ -339,7 +338,8 @@
                             android:layout_marginLeft="@dimen/_17sdp"
                             android:layout_marginTop="@dimen/_4sdp"
                             android:layout_marginRight="@dimen/_17sdp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            tools:ignore="UseCompoundDrawables">
 
                             <ImageView
                                 android:layout_width="@dimen/_50sdp"
@@ -387,7 +387,7 @@
                                 android:layout_weight="0.7"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="Playlist"
+                                android:text="@string/Playlist"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_16sdp"
                                 android:visibility="visible"
@@ -423,7 +423,7 @@
                                 android:scrollbars="none">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
 

@@ -60,6 +60,10 @@ class HomeDataModel {
             @Expose
             var playlistImage: String? = ""
 
+            @SerializedName("playlistDirection")
+            @Expose
+            var playlistDirection: String? = null
+
             @SerializedName("PlaylistImageDetail")
             @Expose
             var playlistImageDetail: String? = ""

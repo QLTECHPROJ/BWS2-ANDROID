@@ -1,7 +1,7 @@
 package com.brainwellnessspa.dashboardModule.models
 
 class sendRecommndedData {
-    var View:String=""
-    var ProblemName:String=""
+    var View: String = ""
+    var ProblemName: String = ""
 
 }

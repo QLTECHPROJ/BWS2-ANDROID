@@ -1770,7 +1770,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
-        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
+        if(created.equals("2"))
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested")
+        else
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
         editor.apply()
         audioClick = audioc
         callMyPlayer(ctx, act)
