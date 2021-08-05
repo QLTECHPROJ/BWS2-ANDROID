@@ -507,6 +507,7 @@ class GlobalInitExoPlayer : Service() {
                     //                        isprogressbar = false;
                 } else if (state == ExoPlayer.STATE_BUFFERING) {
                 } else if (state == ExoPlayer.STATE_ENDED) {
+                    Log.e("STATE_ENDED Global onPlaybackStateChanged","Done")
                     try {
                         /*if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                             if (playFrom.equals("Suggested", ignoreCase = true)) {
