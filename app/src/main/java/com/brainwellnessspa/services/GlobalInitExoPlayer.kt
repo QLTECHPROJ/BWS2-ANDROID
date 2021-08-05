@@ -369,7 +369,7 @@ class GlobalInitExoPlayer : Service() {
         PlayerINIT = true
         player.addListener(object : Player.EventListener {
             override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                Log.v("TAG", "Listener-onTracksChanged... Main PLAYER")
+                Log.v("TAG", "Listener-onTracksChanged... global PLAYER")
                 oldSongPos = 0
                 val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val gson = Gson()
@@ -494,7 +494,7 @@ class GlobalInitExoPlayer : Service() {
             }
 
             override fun onPlaybackStateChanged(state: Int) {
-                Log.v("TAG", "Listener-onPlaybackStateChanged... Main PLAYER")
+                Log.v("TAG", "Listener-onPlaybackStateChanged... global PLAYER")
                 if (state == ExoPlayer.STATE_READY) {
                     if (player.playWhenReady) {
                         localIntent!!.putExtra("MyData", "play")
@@ -507,7 +507,7 @@ class GlobalInitExoPlayer : Service() {
                     //                        isprogressbar = false;
                 } else if (state == ExoPlayer.STATE_BUFFERING) {
                 } else if (state == ExoPlayer.STATE_ENDED) {
-                    Log.e("STATE_ENDED Global onPlaybackStateChanged","Done")
+                    Log.e("STATE_ENDED"," Global onPlaybackStateChanged Done")
                     try {
                         /*if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                             if (playFrom.equals("Suggested", ignoreCase = true)) {

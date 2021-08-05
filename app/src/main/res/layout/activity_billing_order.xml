@@ -140,10 +140,11 @@
                         android:paddingBottom="@dimen/_20sdp">
 
                         <TextView
+                            android:id="@+id/tvTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
-                            android:text="One month Subscription, Standard Licensewith Access Intro Session."
+                            android:text="One month Subscription, Standard License with Access Intro Session."
                             android:textColor="@color/white"
                             android:textSize="@dimen/_17sdp"
                             android:visibility="visible" />

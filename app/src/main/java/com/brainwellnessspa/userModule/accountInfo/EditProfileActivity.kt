@@ -275,6 +275,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     userCalendar = viewModel.ResponseData.DOB
                                     Log.e("old Date", userCalendar.toString())
 
+                                    binding.etCalendar.setText(userCalendar.toString())
                                     if(userCalendar!="") {
                                         val parser = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
                                         val formatter = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)

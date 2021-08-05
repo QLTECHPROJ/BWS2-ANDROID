@@ -3,6 +3,7 @@ package com.brainwellnessspa.utility
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
+import com.brainwellnessspa.billingOrderModule.models.PlanDetails
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
@@ -479,6 +480,12 @@ interface APINewInterface {
     fun getPlanlistInapp(
         @Field("UserId")
         UserId: String?): Call<PlanlistInappModel>
+
+    @POST("plandetails")
+    @FormUrlEncoded
+    fun getPlanDetails(
+        @Field("UserId")
+        UserId: String?): Call<PlanDetails>
 
     @POST("planpurchase")
     @FormUrlEncoded

@@ -3,6 +3,7 @@ package com.brainwellnessspa.billingOrderModule.activities
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,14 +17,21 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment
+import com.brainwellnessspa.billingOrderModule.models.PlanDetails
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
 import com.segment.analytics.Properties
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 /* This is the old BWA billing order activity */
 class BillingOrderActivity : AppCompatActivity() {
@@ -34,6 +42,7 @@ class BillingOrderActivity : AppCompatActivity() {
     private var numStarted = 0
     var stackStatus = 0
     lateinit var activity: Activity
+    lateinit var ctx: Context
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +52,7 @@ class BillingOrderActivity : AppCompatActivity() {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         activity = this@BillingOrderActivity
+        ctx = this@BillingOrderActivity
 
         /* This is the screen back button click */
         binding.llBack.setOnClickListener {
@@ -50,7 +60,6 @@ class BillingOrderActivity : AppCompatActivity() {
             AudioDownloadsFragment.comefromDownload = "0"
             finish()
         }
-
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
@@ -107,6 +116,54 @@ class BillingOrderActivity : AppCompatActivity() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+    }
+
+    override fun onResume() {
+        getPlanDetails()
+        super.onResume()
+    }
+
+    private fun getPlanDetails() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall: Call<PlanDetails> = APINewClient.client.getPlanDetails(coUserId)
+            listCall.enqueue(object : Callback<PlanDetails> {
+                override fun onResponse(call: Call<PlanDetails>, response: Response<PlanDetails>) {
+                    try {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val listModel: PlanDetails = response.body()!!
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                            binding.tvTitle.text = listModel.responseData!!.planName + "Standard License with Access Intro Session."
+                            binding.tvPlan.text = listModel.responseData!!.planName
+                            binding.tvPrice.text = "$" + listModel.responseData!!.price + listModel.responseData!!.intervalTime
+                            val c: Calendar = Calendar.getInstance()
+                            c.setTimeInMillis(listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L)
+                            val d: Date = c.getTime()
+                            val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+                            binding.tvActive.text =  sdf.format(d)
+
+                            val c1: Calendar = Calendar.getInstance()
+                            c1.setTimeInMillis(listModel.responseData!!.planExpireDate!!.toInt() * 1000L)
+                            val d1: Date = c1.getTime()
+                            val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+                            binding.tvStatusRenew.text =  sdf1.format(d1)
+
+                            binding.tvStatus.text = listModel.responseData!!.planStatus
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<PlanDetails>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+        }
     }
 
     /* This is the device back button click */
