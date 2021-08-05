@@ -24,11 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.AddToPlaylistModel
-import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
-import com.brainwellnessspa.dashboardModule.models.CreatePlaylistingModel
-import com.brainwellnessspa.dashboardModule.models.SubPlayListModel
-import com.brainwellnessspa.dashboardModule.models.MainPlayModel
+import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding
 import com.brainwellnessspa.databinding.AddPlayListLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -54,7 +50,7 @@ class AddPlaylistActivity : AppCompatActivity() {
     var coUserId: String? = null
     var userId: String? = null
     var audioId: String? = ""
-    var fromPlaylistID: String? = ""
+    private var fromPlaylistID: String? = ""
     var playlistName: String? = ""
     var screenView: String? = ""
     var playlistImage: String? = ""
@@ -149,11 +145,11 @@ class AddPlaylistActivity : AppCompatActivity() {
                                                 dialog.dismiss()
                                                 prepareData(ctx, "0")
                                                 val playlistID = listsModel.responseData!!.playlistID
-                                                val p = Properties()
-                                                p.putValue("source", "Add to Playlist Screen")
-                                                p.putValue("playlistId", listsModel.responseData!!.playlistID)
-                                                p.putValue("playlistName",listsModel.responseData!!.playlistName)
-                                                addToSegment(" Playlist Created", p, CONSTANTS.track)
+                                                val properties = Properties()
+                                                properties.putValue("source", "Add to Playlist Screen")
+                                                properties.putValue("playlistId", listsModel.responseData!!.playlistID)
+                                                properties.putValue("playlistName", listsModel.responseData!!.playlistName)
+                                                addToSegment(" Playlist Created", properties, CONSTANTS.track)
                                                 val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                                                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                                                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
@@ -235,10 +231,10 @@ class AddPlaylistActivity : AppCompatActivity() {
                         val model = response.body()
                         if (model != null) {
                             if (model.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                if (comes.equals("0")) {
+                                if (comes == "0") {
                                     val p = Properties()
-                                    p.putValue("source",screenView)
-                                    p.putValue("playlists",model!!.responseData)
+                                    p.putValue("source", screenView)
+                                    p.putValue("playlists", model.responseData)
                                     addToSegment("Add to Playlist Screen Viewed", p, CONSTANTS.screen)
                                 }
                                 if (model.responseData!!.isEmpty()) {
@@ -422,7 +418,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 intent.putExtra("PlaylistID", PlaylistID)
                                 intent.putExtra("PlaylistName", name)
                                 intent.putExtra("MyDownloads", "0")
-                                intent.putExtra("ScreenView","Add to Playlist Screen")
+                                intent.putExtra("ScreenView", "Add to Playlist Screen")
                                 startActivity(intent)
                                 finish()
                                 overridePendingTransition(0, 0)

@@ -442,7 +442,7 @@
                         android:id="@+id/tvSignUp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
+                        android:layout_marginStart="@dimen/_8sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="top|center"
@@ -450,7 +450,8 @@
                         android:paddingTop="@dimen/_12sdp"
                         android:text="@string/new_sign_up"
                         android:textColor="@color/app_theme_color"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 

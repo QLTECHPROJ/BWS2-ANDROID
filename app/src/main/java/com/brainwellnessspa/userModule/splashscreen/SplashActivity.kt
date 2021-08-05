@@ -401,6 +401,11 @@ class SplashActivity : AppCompatActivity() {
                                     val intent = Intent(activity, UserListActivity::class.java)
                                     startActivity(intent)
                                     finish()
+                                }else {
+                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    intent.putExtra("IsFirst", "0")
+                                    startActivity(intent)
+                                    finish()
                                 }
                             }
                         }

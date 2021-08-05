@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityResourceBinding
 import com.brainwellnessspa.databinding.FilterListLayoutBinding
@@ -51,18 +51,17 @@ import java.util.*
 class ResourceActivity : AppCompatActivity() {
     lateinit var binding: ActivityResourceBinding
     var userId: String? = ""
-    var category: String? = ""
     var tabFlag = "1"
     var coUserId: String? = ""
     lateinit var activity: Activity
     var currentTab = 0
-    private var dialogBox: Dialog? = null
-    private var mLastClickTime: Long = 0
+    var dialogBox: Dialog? = null
+    var mLastClickTime: Long = 0
     lateinit var rvFilterList: RecyclerView
     var ivFilter: ImageView? = null
     lateinit var tvAll: TextView
-    private lateinit var li: LayoutInflater
-    private lateinit var promptsView: View
+    lateinit var li: LayoutInflater
+    lateinit var promptsView: View
     var p: Properties? = null
     var p4: Properties? = null
     var section: ArrayList<String?>? = null
@@ -70,7 +69,7 @@ class ResourceActivity : AppCompatActivity() {
     var gson: Gson? = null
     var ctx: Context? = null
     var resourceListModel: ResourceListModel? = null
-    private var numStarted = 0
+    var numStarted = 0
     var stackStatus = 0
     var myBackPress = false
 
@@ -161,10 +160,10 @@ class ResourceActivity : AppCompatActivity() {
                                     section1.add(e)
                                 }
                                 p!!.putValue("resources", gsons.toJson(section1))
-                                BWSApplication.addToSegment("Resources Screen Viewed", p, CONSTANTS.screen)
+                                addToSegment("Resources Screen Viewed", p, CONSTANTS.screen)
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -174,7 +173,7 @@ class ResourceActivity : AppCompatActivity() {
                                 startActivity(i)
                                 finish()
                             } else {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, activity)
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -218,7 +217,7 @@ class ResourceActivity : AppCompatActivity() {
         rvFilterList.layoutManager = mLayoutManager
         rvFilterList.itemAnimator = DefaultItemAnimator()
         binding.ivFilter.setOnClickListener {
-            if (BWSApplication.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@setOnClickListener
                 }
@@ -231,7 +230,7 @@ class ResourceActivity : AppCompatActivity() {
                 }
                 dialogBox!!.show()
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                showToast(getString(R.string.no_server_found), activity)
             }
         }
     }
@@ -248,19 +247,19 @@ class ResourceActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        if (BWSApplication.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
             binding.viewPager.currentItem = currentTab
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
     fun prepareData(rvFilterList: RecyclerView?, dialogBox: Dialog?, tvAll: TextView?, ivFilter: ImageView?) {
         try {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+            if (isNetworkConnected(ctx)) {
                 val listCall = APINewClient.client.getResourceCatList(coUserId)
                 listCall.enqueue(object : Callback<ResourceFilterModel?> {
                     override fun onResponse(call: Call<ResourceFilterModel?>, response: Response<ResourceFilterModel?>) {
@@ -275,8 +274,8 @@ class ResourceActivity : AppCompatActivity() {
                                 p4!!.putValue("allMasterCategory", gson!!.toJson(section))
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -313,7 +312,7 @@ class ResourceActivity : AppCompatActivity() {
                 setAdapter()
                 dialogBox!!.dismiss()
                 p4!!.putValue("masterCategory", listModel[position].categoryName)
-                BWSApplication.addToSegment("Resources Filter Clicked", p4, CONSTANTS.screen)
+                addToSegment("Resources Filter Clicked", p4, CONSTANTS.screen)
             }
             if (listModel[position].categoryName.equals(category, ignoreCase = true)) {
                 ivFilter!!.visibility = View.INVISIBLE
@@ -341,7 +340,6 @@ class ResourceActivity : AppCompatActivity() {
                     val audioBooksFragment = AudioBooksFragment()
                     val bundle = Bundle()
                     bundle.putString("audio_books", "audio_books")
-                    bundle.putString("Category", act.category)
                     audioBooksFragment.arguments = bundle
                     audioBooksFragment
                 }
@@ -349,7 +347,6 @@ class ResourceActivity : AppCompatActivity() {
                     val podcastsFragment = PodcastsFragment()
                     val bundle = Bundle()
                     bundle.putString("podcasts", "podcasts")
-                    bundle.putString("Category", act.category)
                     podcastsFragment.arguments = bundle
                     podcastsFragment
                 }
@@ -357,7 +354,6 @@ class ResourceActivity : AppCompatActivity() {
                     val appsFragment = AppsFragment()
                     val bundle = Bundle()
                     bundle.putString("apps", "apps")
-                    bundle.putString("Category", act.category)
                     appsFragment.arguments = bundle
                     appsFragment
                 }
@@ -365,7 +361,6 @@ class ResourceActivity : AppCompatActivity() {
                     val websiteFragment = WebsiteFragment()
                     val bundle = Bundle()
                     bundle.putString("website", "website")
-                    bundle.putString("Category", act.category)
                     websiteFragment.arguments = bundle
                     websiteFragment
                 }
@@ -373,7 +368,6 @@ class ResourceActivity : AppCompatActivity() {
                     val documentariesFragment = DocumentariesFragment()
                     val bundle = Bundle()
                     bundle.putString("documentaries", "documentaries")
-                    bundle.putString("Category", act.category)
                     documentariesFragment.arguments = bundle
                     documentariesFragment
                 }
@@ -418,7 +412,7 @@ class ResourceActivity : AppCompatActivity() {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destroyed")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(BWSApplication.notificationId)
+                notificationManager.cancel(notificationId)
                 GlobalInitExoPlayer.relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

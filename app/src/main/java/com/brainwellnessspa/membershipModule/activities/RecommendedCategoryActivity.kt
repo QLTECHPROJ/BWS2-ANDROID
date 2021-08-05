@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.enhance.PlaylistDoneActivity
+import com.brainwellnessspa.dashboardModule.enhance.PreparePlaylistActivity
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
@@ -635,8 +635,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
                                 addToSegment("Area of Focus Saved", p, CONSTANTS.track)
 
-                                val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
-                                i.putExtra("BackClick", intent.getStringExtra("BackClick"))
+                                val i = Intent(applicationContext, PreparePlaylistActivity::class.java)
+                                i.putExtra("BackClick", backClick)
                                 startActivity(i)
                                 finish()
                             }

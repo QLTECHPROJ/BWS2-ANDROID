@@ -254,7 +254,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
                     editor.putString(CONSTANTS.Token, newToken) //Friend
                     editor.apply()
-                    editor.commit()
                 }
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!

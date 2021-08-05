@@ -128,6 +128,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
+                        android:visibility="gone"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -343,8 +344,10 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/viewBillingOrder"
                         android:layout_width="match_parent"
                         android:layout_height="1.5dp"
+                        android:visibility="gone"
                         android:background="@color/dim_light_gray" />
 
                     <LinearLayout
@@ -353,6 +356,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1">
 
@@ -390,6 +394,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1.5dp"
+                        android:visibility="gone"
                         android:background="@color/dim_light_gray" />
 
                     <LinearLayout
@@ -399,6 +404,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
+                        android:visibility="gone"
                         android:weightSum="1">
 
                         <ImageView

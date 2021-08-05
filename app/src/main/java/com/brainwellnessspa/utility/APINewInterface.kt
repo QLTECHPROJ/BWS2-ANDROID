@@ -561,8 +561,6 @@ interface APINewInterface {
     @POST("useraudiotracking")
     @FormUrlEncoded
     fun getUserAudioTracking(
-        @Field("UserID")
-        userID: String?,
         @Field("TrackingData")
         trackingData: String?): Call<UserAudioTrackingModel?>?
 }

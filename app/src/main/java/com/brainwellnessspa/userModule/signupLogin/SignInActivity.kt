@@ -45,7 +45,7 @@ import java.util.*
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
-    var fcmId: String = ""
+    private var fcmId: String = ""
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
     lateinit var activity: Activity
@@ -253,7 +253,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
+    private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             val listCall: Call<CountryListModel> = APINewClient.client.countryLists
@@ -296,7 +296,6 @@ class SignInActivity : AppCompatActivity() {
                     val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
                     editor.putString(CONSTANTS.Token, newToken) //Friend
                     editor.apply()
-                    editor.commit()
                 }
                 val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!

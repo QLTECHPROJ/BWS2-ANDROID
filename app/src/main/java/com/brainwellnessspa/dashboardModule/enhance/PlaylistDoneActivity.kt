@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.enhance
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,13 +17,14 @@ class PlaylistDoneActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlaylistDoneBinding
     private var backClick: String? = ""
     var coUserId: String? = ""
+    lateinit var activity: Activity
     var userId: String? = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_done)
-
+        activity = this@PlaylistDoneActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -38,7 +40,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
                 backClick = intent.getStringExtra("BackClick")
             }
             if (backClick.equals("0", true)) {
-                val intent = Intent(this@PlaylistDoneActivity, BottomNavigationActivity::class.java)
+                val intent = Intent(activity, BottomNavigationActivity::class.java)
                 intent.putExtra("IsFirst", "1")
                 startActivity(intent)
                 finish()

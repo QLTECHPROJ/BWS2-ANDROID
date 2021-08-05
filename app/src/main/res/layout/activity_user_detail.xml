@@ -94,7 +94,7 @@
                         android:cursorVisible="true"
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/Name"
-                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@id/etEmail"
                         android:maxLength="16"
                         android:maxLines="1"
                         android:singleLine="true"

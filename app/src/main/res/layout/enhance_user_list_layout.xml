@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/_14sdp"
-                android:layout_weight="0.75"
+                android:layout_weight="0.72"
                 android:fontFamily="@font/montserrat_regular"
                 android:paddingTop="@dimen/_3sdp"
                 android:textColor="@color/black"
@@ -36,7 +36,7 @@
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.25"
+                android:layout_weight="0.28"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_0sdp">
 
@@ -44,15 +44,14 @@
                     android:id="@+id/ivStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:paddingStart="@dimen/_42sdp"
                     android:contentDescription="@string/todo"
                     android:gravity="center_vertical|start"
-                    android:paddingHorizontal="@dimen/_14sdp"
+                    android:paddingEnd="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_16sdp"
                     android:src="@drawable/ic_uncheck_user_icon"
                     android:visibility="visible"
-                    tools:ignore="RtlSymmetry,SpUsage" />
+                    tools:ignore="SpUsage" />
 
                 <TextView
                     android:id="@+id/tvStatus"

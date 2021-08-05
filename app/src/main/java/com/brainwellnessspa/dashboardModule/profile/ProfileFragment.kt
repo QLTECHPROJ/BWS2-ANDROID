@@ -91,6 +91,7 @@ class ProfileFragment : Fragment() {
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
     var areaOfFocus: String? = ""
+
     //    areaOfFocus
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -407,9 +408,9 @@ Tap Setting > permission, and turn "Files and media" on.""")
 
     private fun callProfilePathSet() {
         options = if (profilePicPath == "") {
-            arrayOf(arrayOf(getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.cancel)).toString())
+            arrayOf(getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.cancel))
         } else {
-            arrayOf(arrayOf(getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel)).toString())
+            arrayOf(getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel))
         }
         val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(R.string.addPhoto)
@@ -513,12 +514,16 @@ Tap Setting > permission, and turn "Files and media" on.""")
 
                                     if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
                                         binding.llManageUser.visibility = View.VISIBLE
+                                        binding.llBillingOrder.visibility = View.VISIBLE
                                         binding.llPlan.visibility = View.VISIBLE
                                         binding.viewManage.visibility = View.VISIBLE
+                                        binding.viewBillingOrder.visibility = View.VISIBLE
                                     } else {
                                         binding.llManageUser.visibility = View.GONE
+                                        binding.llBillingOrder.visibility = View.GONE
                                         binding.llPlan.visibility = View.GONE
                                         binding.viewManage.visibility = View.GONE
+                                        binding.viewBillingOrder.visibility = View.GONE
                                     }
 
                                     val name: String
@@ -792,21 +797,21 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 mLastClickTime = SystemClock.elapsedRealtime()
                 if (sucessModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                     val p1 = Properties()
-                   /* var isProf = false
-                    var isAss = false
-                    isProf = isProfileCompleted.equals("1", ignoreCase = true)
-                    isAss = isAssessmentCompleted.equals("1", ignoreCase = true)*/
+                    /* var isProf = false
+                     var isAss = false
+                     isProf = isProfileCompleted.equals("1", ignoreCase = true)
+                     isAss = isAssessmentCompleted.equals("1", ignoreCase = true)*/
 
-                   /* p1.putValue("deviceId", deviceId)
-                    p1.putValue("deviceType", "Android")
-                    p1.putValue("phone", userMobile)
-                    p1.putValue("email", userEmail)
-                    p1.putValue("isProfileCompleted", isProf)
-                    p1.putValue("isAssessmentCompleted", isAss)
-                    p1.putValue("WellnessScore", indexScore)
-                    p1.putValue("scoreLevel", scoreLevel)
-                    p1.putValue("avgSleepTime", avgSleepTime)
-                    p1.putValue("areaOfFocus", areaOfFocus)*/
+                    /* p1.putValue("deviceId", deviceId)
+                     p1.putValue("deviceType", "Android")
+                     p1.putValue("phone", userMobile)
+                     p1.putValue("email", userEmail)
+                     p1.putValue("isProfileCompleted", isProf)
+                     p1.putValue("isAssessmentCompleted", isAss)
+                     p1.putValue("WellnessScore", indexScore)
+                     p1.putValue("scoreLevel", scoreLevel)
+                     p1.putValue("avgSleepTime", avgSleepTime)
+                     p1.putValue("areaOfFocus", areaOfFocus)*/
                     addToSegment("User Logout", p1, CONSTANTS.track)
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     hideProgressBar(progressBar, progressBarHolder, activity)

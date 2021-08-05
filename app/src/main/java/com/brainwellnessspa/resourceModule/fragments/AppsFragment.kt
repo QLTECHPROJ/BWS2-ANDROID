@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.AppsListLayoutBinding
 import com.brainwellnessspa.databinding.FragmentAppsBinding
@@ -35,9 +35,8 @@ import retrofit2.Response
 class AppsFragment : Fragment() {
     lateinit var binding: FragmentAppsBinding
     var apps: String? = ""
-    var USERID: String? = ""
-    var CoUserID: String? = ""
-    var Category: String? = ""
+    var mainAccountID: String? = ""
+    var userId: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apps, container, false)
@@ -45,11 +44,10 @@ class AppsFragment : Fragment() {
         val bundle = this.arguments
         if (bundle != null) {
             apps = bundle.getString("apps")
-            Category = bundle.getString("Category")
         }
         val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val manager = GridLayoutManager(activity, 2)
         binding.rvAppsList.layoutManager = manager
         binding.rvAppsList.itemAnimator = DefaultItemAnimator()
@@ -62,14 +60,14 @@ class AppsFragment : Fragment() {
     }
 
     fun prepareData() {
-        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall = APINewClient.client.getResourceList(CoUserID, CONSTANTS.FLAG_FIVE, Category)
+        showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        val listCall = APINewClient.client.getResourceList(userId, CONSTANTS.FLAG_FIVE, category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
             override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {
                     val listModel = response.body()
                     if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val adapter = AppsAdapter(listModel.responseData, activity, apps)
                         binding.rvAppsList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
@@ -80,8 +78,8 @@ class AppsFragment : Fragment() {
                             binding.rvAppsList.visibility = View.GONE
                         }
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                        BWSApplication.deleteCall(activity)
-                        BWSApplication.showToast(listModel.responseMessage, activity)
+                        deleteCall(activity)
+                        showToast(listModel.responseMessage, activity)
                         val i = Intent(activity, SignInActivity::class.java)
                         i.putExtra("mobileNo", "")
                         i.putExtra("countryCode", "")
@@ -91,7 +89,7 @@ class AppsFragment : Fragment() {
                         startActivity(i)
                         activity!!.finish()
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -99,7 +97,7 @@ class AppsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ResourceListModel?>, t: Throwable) {
-                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             }
         })
     }
@@ -112,7 +110,7 @@ class AppsFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.binding.tvTitle.text = listModelList!![position].title
-            val measureRatio = BWSApplication.measureRatio(ctx, 0f, 1f, 1f, 0.42f, 0f)
+            val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.42f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY

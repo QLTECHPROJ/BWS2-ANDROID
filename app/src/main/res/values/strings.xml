@@ -565,5 +565,7 @@
     <string name="prev_drug_use">Prev drug use</string>
     <string name="any_medication_is_going_on">Any Medication is going on?</string>
     <string name="start_time">00:00</string>
+    <string name="this_page_is_under_construction">This page is under construction</string>
+    <string name="we_re_working_on_it">we\'re working on it</string>
 </resources>
 

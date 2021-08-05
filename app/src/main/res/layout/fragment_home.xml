@@ -102,6 +102,7 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="@dimen/_12sdp"
                             android:contentDescription="@string/todo"
+                            android:visibility="gone"
                             android:src="@drawable/ic_down_arrow"
                             app:tint="@color/gray" />
 

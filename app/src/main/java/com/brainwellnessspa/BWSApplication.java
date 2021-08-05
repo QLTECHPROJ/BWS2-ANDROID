@@ -192,6 +192,7 @@ public class BWSApplication extends Application {
     static Context mContext;
     static BWSApplication BWSApplication;
     public static String currantTime = "", am_pm, hourString, minuteSting;
+    public static String category = "";
     public static int Chour, Cminute;
     public static String key = "";
     public static TextView tvTime;

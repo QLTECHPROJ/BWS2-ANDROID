@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.FragmentPodcastsBinding
 import com.brainwellnessspa.databinding.PodcastsListLayoutBinding
@@ -35,9 +35,8 @@ import retrofit2.Response
 class PodcastsFragment : Fragment() {
     lateinit var binding: FragmentPodcastsBinding
     var podcasts: String? = ""
-    var USERID: String? = ""
-    var CoUserID: String? = ""
-    var Category: String? = ""
+    var mainAccountID: String? = ""
+    var userId: String? = ""
     private var mLastClickTime: Long = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcasts, container, false)
@@ -45,11 +44,10 @@ class PodcastsFragment : Fragment() {
         val bundle = this.arguments
         if (bundle != null) {
             podcasts = bundle.getString("podcasts")
-            Category = bundle.getString("Category")
         }
         val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        USERID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-        CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity)
         binding.rvPodcastsList.layoutManager = mLayoutManager
         binding.rvPodcastsList.itemAnimator = DefaultItemAnimator()
@@ -62,14 +60,14 @@ class PodcastsFragment : Fragment() {
     }
 
     fun prepareData() {
-        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-        val listCall = APINewClient.client.getResourceList(CoUserID, CONSTANTS.FLAG_THREE, Category)
+        showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        val listCall = APINewClient.client.getResourceList(userId, CONSTANTS.FLAG_THREE, category)
         listCall.enqueue(object : Callback<ResourceListModel?> {
             override fun onResponse(call: Call<ResourceListModel?>, response: Response<ResourceListModel?>) {
                 try {
                     val listModel = response.body()
                     if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val adapter = PodcastsAdapter(listModel.responseData, activity, podcasts)
                         binding.rvPodcastsList.adapter = adapter
                         if (listModel.responseData!!.isNotEmpty()) {
@@ -80,8 +78,8 @@ class PodcastsFragment : Fragment() {
                             binding.rvPodcastsList.visibility = View.GONE
                         }
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                        BWSApplication.deleteCall(activity)
-                        BWSApplication.showToast(listModel.responseMessage, activity)
+                        deleteCall(activity)
+                        showToast(listModel.responseMessage, activity)
                         val i = Intent(activity, SignInActivity::class.java)
                         i.putExtra("mobileNo", "")
                         i.putExtra("countryCode", "")
@@ -91,7 +89,7 @@ class PodcastsFragment : Fragment() {
                         startActivity(i)
                         activity!!.finish()
                     } else if (listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -99,12 +97,12 @@ class PodcastsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ResourceListModel?>, t: Throwable) {
-                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             }
         })
     }
 
-    inner class PodcastsAdapter(private val listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, var podcasts: String?) : RecyclerView.Adapter<PodcastsAdapter.MyViewHolder>() {
+    inner class PodcastsAdapter(private val listModelList: List<ResourceListModel.ResponseData>?, var ctx: Context?, private var podcasts: String?) : RecyclerView.Adapter<PodcastsAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PodcastsListLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.podcasts_list_layout, parent, false)
             return MyViewHolder(v)

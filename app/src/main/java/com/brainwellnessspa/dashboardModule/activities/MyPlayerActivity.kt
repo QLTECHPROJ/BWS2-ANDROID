@@ -504,6 +504,10 @@ class MyPlayerActivity : AppCompatActivity() {
                                 exoBinding.llPause.visibility = View.GONE
                                 exoBinding.progressBar.visibility = View.GONE
                             }
+
+                            if(player.playbackState == ExoPlayer.STATE_ENDED){
+                                Log.e("STATE_ENDED My player","Done")
+                            }
                             exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
                             exoBinding.exoProgress.setPosition(player.currentPosition)
                             exoBinding.exoProgress.setDuration(player.duration)
@@ -910,7 +914,6 @@ class MyPlayerActivity : AppCompatActivity() {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "start")
-                            Log.e("User Track ", "Start Done")
                         }
                     }
                     getDownloadData()

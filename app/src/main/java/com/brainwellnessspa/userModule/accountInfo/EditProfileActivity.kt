@@ -36,7 +36,6 @@ import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
     lateinit var binding: ActivityEditProfileBinding
-    lateinit var profileUpdate: String
     var userId: String? = ""
     var coUserId: String? = ""
     var userName: String? = ""
@@ -47,8 +46,8 @@ class EditProfileActivity : AppCompatActivity() {
     private var mMonth: Int = 0
     private var mDay: Int = 0
     private var birthYear = 0
-    var ageYear: Int = 0
-    var ageMonth: Int = 0
+    private var ageYear: Int = 0
+    private var ageMonth: Int = 0
     var ageDate: Int = 0
     lateinit var activity: Activity
 
@@ -61,34 +60,22 @@ class EditProfileActivity : AppCompatActivity() {
             val ckEmail: String = binding.etEmail.text.toString().trim()
             when {
                 ckName.equals(userName, ignoreCase = true) && ckCalendar.equals(userCalendar, ignoreCase = true) && ckNumber.equals(userMobileNumber, ignoreCase = true) && ckEmail.equals(userEmail, ignoreCase = true) -> {
-                    binding.btnSave.isEnabled = false
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                    checkBtnStatus(0)
                 }
                 ckName.equals("", ignoreCase = true) -> {
-                    binding.btnSave.isEnabled = false
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                    checkBtnStatus(0)
                 }
                 ckCalendar.equals("", ignoreCase = true) -> {
-                    binding.btnSave.isEnabled = false
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                    checkBtnStatus(0)
                 }
                 ckNumber.equals("", ignoreCase = true) -> {
-                    binding.btnSave.isEnabled = false
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                    checkBtnStatus(0)
                 }
                 ckEmail.equals("", ignoreCase = true) -> {
-                    binding.btnSave.isEnabled = false
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+                    checkBtnStatus(0)
                 }
                 else -> {
-                    binding.btnSave.isEnabled = true
-                    binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                    binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+                    checkBtnStatus(1)
                 }
             }
 
@@ -235,7 +222,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     BWSApplication.addToSegment("Profile Changes Saved", p, CONSTANTS.track)
                                     finish()
                                 }
-                                viewModel!!.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                viewModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(viewModel.responseMessage, activity)
@@ -275,51 +262,66 @@ class EditProfileActivity : AppCompatActivity() {
                     try {
                         val viewModel = response.body()
                         if (viewModel != null) {
-                            if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
-                                    binding.etUser.setText(R.string.Guest)
-                                } else {
-                                    binding.etUser.setText(viewModel.ResponseData.Name)
-                                }
-                                userName = viewModel.ResponseData.Name
-                                userCalendar = viewModel.ResponseData.DOB
-                                var spf = SimpleDateFormat()
-                                var newDate = Date()
-                                try {
-                                    newDate = spf.parse(userCalendar)
-                                } catch (e: ParseException) {
-                                    e.printStackTrace()
-                                }
-                                spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-                                userCalendar = spf.format(newDate)
-                                userMobileNumber = viewModel.ResponseData.Mobile
-                                userEmail = viewModel.ResponseData.Email
-                                binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
-                                binding.etEmail.setText(viewModel.ResponseData.Email)
-                                spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
-                               val s  = spf.format(newDate)
-                                binding.etCalendar.setText(s)
-                                val p = Properties()
-                                p.putValue("name", userName)
-                                p.putValue("dob", userCalendar)
-                                p.putValue("mobileNo", userMobileNumber)
-                                p.putValue("email", userEmail)
-                                BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
+                            when {
+                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
+                                        binding.etUser.setText(R.string.Guest)
+                                    } else {
+                                        binding.etUser.setText(viewModel.ResponseData.Name)
+                                    }
 
-                            } else if (viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(viewModel.ResponseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                activity.startActivity(i)
-                                activity.finish()
-                            } else {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    userName = viewModel.ResponseData.Name
+                                    userCalendar = viewModel.ResponseData.DOB
+                                    var spf = SimpleDateFormat()
+                                    var newDate = Date()
+                                    try {
+                                        newDate = spf.parse(userCalendar)
+                                    } catch (e: ParseException) {
+                                        e.printStackTrace()
+                                    }
+                                    spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+                                    userCalendar = spf.format(newDate)
+                                    userMobileNumber = viewModel.ResponseData.Mobile
+                                    userEmail = viewModel.ResponseData.Email
+                                    binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
+                                    binding.etEmail.setText(viewModel.ResponseData.Email)
+
+                                    if (viewModel.ResponseData.Mobile == "") {
+                                        binding.etMobileNumber.isEnabled = true
+                                        binding.etMobileNumber.isClickable = true
+                                    } else {
+                                        binding.etMobileNumber.isEnabled = false
+                                        binding.etMobileNumber.isClickable = false
+                                        binding.etMobileNumber.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
+                                    }
+
+                                    spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
+                                    val s = spf.format(newDate)
+                                    binding.etCalendar.setText(s)
+                                    val p = Properties()
+                                    p.putValue("name", userName)
+                                    p.putValue("dob", userCalendar)
+                                    p.putValue("mobileNo", userMobileNumber)
+                                    p.putValue("email", userEmail)
+                                    BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
+
+                                }
+                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.deleteCall(activity)
+                                    BWSApplication.showToast(viewModel.ResponseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    activity.startActivity(i)
+                                    activity.finish()
+                                }
+                                else -> {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                }
                             }
                         }
                     } catch (e: Exception) {
@@ -351,7 +353,7 @@ class EditProfileActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-            var dob = spf.format(newDate)
+            val dob = spf.format(newDate)
             val ageArray = dob.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
@@ -404,4 +406,17 @@ class EditProfileActivity : AppCompatActivity() {
         startActivity(i)
         finish()
     }
+
+    private fun checkBtnStatus(check: Int) {
+        if (check == 0) {
+            binding.btnSave.isEnabled = false
+            binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
+        } else if (check == 1) {
+            binding.btnSave.isEnabled = true
+            binding.btnSave.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+            binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+        }
+    }
+
 }

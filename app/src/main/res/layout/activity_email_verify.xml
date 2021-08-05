@@ -107,7 +107,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="Continue"
+            android:text="@string/Continue"
             android:textColor="@color/white" />
 
     </RelativeLayout>

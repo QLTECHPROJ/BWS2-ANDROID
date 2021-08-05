@@ -16,7 +16,7 @@ import com.segment.analytics.Properties
 
 class EmailVerifyActivity : AppCompatActivity() {
     lateinit var binding: ActivityEmailVerifyBinding
-    var MainAccountId: String? = ""
+    var mainAccountId: String? = ""
     var userId: String? = ""
     private var emailUser: String? = ""
     var isProfileCompleted: String? = ""
@@ -29,7 +29,7 @@ class EmailVerifyActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_email_verify)
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        MainAccountId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        mainAccountId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         isProfileCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")

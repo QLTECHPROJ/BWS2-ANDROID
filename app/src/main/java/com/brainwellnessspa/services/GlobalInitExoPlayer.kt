@@ -18,7 +18,6 @@ import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -384,12 +383,12 @@ class GlobalInitExoPlayer : Service() {
                 //                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                 PlayerAudioId = mainPlayModelList1x[player.currentWindowIndex].id
 
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
-                    if (playFrom.equals("Suggested", ignoreCase = true)) {
-                        getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "start")
-                        Log.e("User Track ", "Start Done")
-                    }
-                }
+//                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+//                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+//                        getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "start")
+//                        Log.e("User Track ", "Start Global Done")
+//                    }
+//                }
             }
 
             override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -401,6 +400,9 @@ class GlobalInitExoPlayer : Service() {
                 } else if (!isPlaying) {
                     localIntent!!.putExtra("MyData", "pause")
                     localBroadcastManager!!.sendBroadcast(localIntent!!)
+                }
+                if(player.playbackState == ExoPlayer.STATE_ENDED){
+                    Log.e("STATE_ENDED Global","Done")
                 }
             }
 
@@ -466,7 +468,7 @@ class GlobalInitExoPlayer : Service() {
                             override fun onResponse(call: Call<AudioInterruptionModel?>, response: Response<AudioInterruptionModel?>) {
                                 val listModel = response.body()
                                 if (listModel != null) {
-                                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                         deleteCall(ctx as Activity?)
                                         showToast(listModel.responseMessage, ctx as Activity?)
@@ -506,66 +508,12 @@ class GlobalInitExoPlayer : Service() {
                 } else if (state == ExoPlayer.STATE_BUFFERING) {
                 } else if (state == ExoPlayer.STATE_ENDED) {
                     try {
-                        val timeString = getCurruntTime()
-                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                        val gson = Gson()
-                        val json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
-                        var mainPlayModelList1x = ArrayList<MainPlayModel>()
-                        if (!json.equals(gson.toString(), ignoreCase = true)) {
-                            val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
-                            mainPlayModelList1x = gson.fromJson(json, type)
-                        }
-                        if (mainPlayModelList1x[player.currentWindowIndex].id.equals(mainPlayModelList1x[mainPlayModelList1x.size - 1].id, ignoreCase = true)) {
-                            player.playWhenReady = false
-                            localIntent!!.putExtra("MyData", "pause")
-                            localBroadcastManager!!.sendBroadcast(localIntent!!)
-                        }
-
-                        if (selectedAudioId.size == 0) {
-                            selectedAudioId.add(mainPlayModelList1x[player.currentWindowIndex].id)
-                            selectedPlaylistId.add(mainPlayModelList1x[player.currentWindowIndex].playlistID)
-                            selectedUserId.add(CoUserID.toString())
-                            selectedStartTime.add("1627887973")
-                            selectedCompletedTime.add("")
-                            selectedVolume.add(hundredVolume.toString())
-                        } else {
-                            if (!selectedAudioId.contains(mainPlayModelList1x[player.currentWindowIndex].id)) {
-                                selectedAudioId.add(mainPlayModelList1x[player.currentWindowIndex].id)
-                                selectedPlaylistId.add(mainPlayModelList1x[player.currentWindowIndex].playlistID)
-                                selectedUserId.add(CoUserID.toString())
-                                selectedStartTime.add("1627887973")
-                                selectedCompletedTime.add("")
-                                selectedVolume.add(hundredVolume.toString())
-                            }
-                        }
-
-                        Log.e("selectedAudioId", selectedAudioId.toString())
-                        Log.e("selectedPlaylistId", selectedPlaylistId.toString())
-                        Log.e("selectedUserId", selectedUserId.toString())
-                        Log.e("selectedStartTime", selectedStartTime.toString())
-                        Log.e("selectedCompletedTime", selectedCompletedTime.toString())
-                        Log.e("selectedVolume", selectedVolume.toString())
-                        val share = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
-                        val editor = share.edit()
-                        val array = arrayListOf<UserActivityTrackModel>()
-                        for (i in 0 until selectedUserId.size) {
-                            val sendR = UserActivityTrackModel()
-                            sendR.AudioId = (selectedAudioId[i])
-                            sendR.PlaylistId = (selectedPlaylistId[i])
-                            sendR.UserId = (selectedUserId[i])
-                            sendR.StartTime = ("")
-                            sendR.CompletedTime = (selectedCompletedTime[i])
-                            sendR.Volume = (selectedVolume[i])
-                            array.add(sendR)
-                        }
-                        editor.apply()
-
-                        if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        /*if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                             if (playFrom.equals("Suggested", ignoreCase = true)) {
-                                getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "complete")
-                                Log.e("User Track ", "End Done")
+                                getUserActivityCall(ctx, mainPlayModelList1[player.currentWindowIndex].id, mainPlayModelList1[player.currentWindowIndex].playlistID, "complete")
+                                Log.e("User Track ", "End Global Done")
                             }
-                        }
+                        }*/
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                         Log.e("End State: ", e.message!!)
@@ -598,7 +546,7 @@ class GlobalInitExoPlayer : Service() {
         calendar.timeZone = TimeZone.getTimeZone("UTC")
         calendar.time = Date()
         val s = calendar.timeInMillis
-        Log.e("dateAsString",s.toString())
+        Log.e("dateAsString", s.toString())
         TimeZone.setDefault(tm)
         return s.toString()
     }
@@ -1001,7 +949,13 @@ class GlobalInitExoPlayer : Service() {
                     builder.putString(MediaMetadata.METADATA_KEY_ARTIST, "The audio shall start playing after the disclaimer")
                     builder.putString(MediaMetadata.METADATA_KEY_TITLE, "Disclaimer")
                 }
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon).toString())
+
+                try {
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon).toString())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "0")
 
                 //                if (duration > 0) {
@@ -1131,7 +1085,6 @@ class GlobalInitExoPlayer : Service() {
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
                         editor.apply()
-                        editor.commit()
                     }
                 } else if (AudioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>?>() {}.type
@@ -1175,7 +1128,6 @@ class GlobalInitExoPlayer : Service() {
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
                         editor.apply()
-                        editor.commit()
                     }
                 } else if (AudioFlag.equals("SearchModelAudio", ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<SearchBothModel.ResponseData?>?>() {}.type
@@ -1219,7 +1171,6 @@ class GlobalInitExoPlayer : Service() {
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
                         editor.apply()
-                        editor.commit()
                     }
                 } else if (AudioFlag.equals("SearchAudio", ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<SuggestedModel.ResponseData?>?>() {}.type
@@ -1263,7 +1214,6 @@ class GlobalInitExoPlayer : Service() {
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
                         editor.apply()
-                        editor.commit()
                     }
                 }
                 /*else if (AudioFlag.equals("AppointmentDetailList", ignoreCase = true)) {
@@ -1487,7 +1437,7 @@ class GlobalInitExoPlayer : Service() {
             userActivityTrackModel = gson.fromJson(json, type)
         }
 
-        if (audioId == "" && playlistId == "" && audioType == "") {
+        if (audioId != "" && playlistId != "" && audioType != "") {
             val sendR = UserActivityTrackModel()
             sendR.AudioId = (audioId)
             sendR.PlaylistId = (playlistId)
@@ -1503,29 +1453,34 @@ class GlobalInitExoPlayer : Service() {
             userActivityTrackModel.add(sendR)
         }
 
+        Log.e("Issue", gson.toJson(userActivityTrackModel))
+
         val share = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
         val editor = share.edit()
         editor.putString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toJson(userActivityTrackModel))
         editor.apply()
 
+//        if (userActivityTrackModel.size != 0) {
         if (isNetworkConnected(ctx)) {
-            APINewClient.client.getUserAudioTracking(userId, gson.toJson(userActivityTrackModel))?.enqueue(object : Callback<UserAudioTrackingModel?> {
+            APINewClient.client.getUserAudioTracking(gson.toJson(userActivityTrackModel))?.enqueue(object : Callback<UserAudioTrackingModel?> {
                 override fun onResponse(call: Call<UserAudioTrackingModel?>, response: Response<UserAudioTrackingModel?>) {
                     try {
                         val listModel: UserAudioTrackingModel? = response.body()!!
                         if (listModel != null) {
                             when {
-                                listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
 //                                  TODO   pref json clear
-                                    val preferences: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+                                    val preferences: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
                                     val edit = preferences.edit()
                                     edit.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)
                                     edit.clear()
                                     edit.apply()
+                                    userActivityTrackModel = ArrayList<UserActivityTrackModel>()
+                                    Log.e("Issue Done", gson.toJson(userActivityTrackModel))
                                 }
-                                listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                     deleteCall(ctx)
-                                    showToast(listModel.ResponseMessage, ctx as Activity?)
+                                    showToast(listModel.responseMessage, ctx as Activity?)
                                     val i = Intent(ctx, SignInActivity::class.java)
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
@@ -1536,7 +1491,7 @@ class GlobalInitExoPlayer : Service() {
                                     ctx.finish()
                                 }
                                 else -> {
-                                    showToast(listModel.ResponseMessage, ctx as Activity?)
+                                    showToast(listModel.responseMessage, ctx as Activity?)
                                 }
                             }
                         }
@@ -1551,8 +1506,9 @@ class GlobalInitExoPlayer : Service() {
                 }
             })
         }
-    }
+//        }
 
+    }
 
     /* @Override
     public void onDestroy() {

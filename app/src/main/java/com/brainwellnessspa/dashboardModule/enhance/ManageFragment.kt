@@ -196,7 +196,7 @@ class ManageFragment : Fragment() {
                                             p.putValue("playlistId", listModel.responseData!!.playlistID)
                                             p.putValue("playlistName",listModel.responseData!!.playlistName)
                                             addToSegment(" Playlist Created", p, CONSTANTS.track)
-                                            callMyPlaylistActivity("1",listModel.responseData!!.playlistID, listModel.responseData!!.playlistName)
+                                            callMyPlaylistActivity("1",listModel.responseData!!.playlistID, listModel.responseData!!.playlistName,act)
                                             act.overridePendingTransition(0, 0)
                                             dialog.dismiss() //                                        } catch (e: Exception) {
                                             //                                            e.printStackTrace()
@@ -237,8 +237,8 @@ class ManageFragment : Fragment() {
         return view
     }
 
-    private fun callMyPlaylistActivity(new1: String, playlistID: String?, playlistName: String?) {
-        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+    private fun callMyPlaylistActivity(new1: String, playlistID: String?, playlistName: String?, act:Activity) {
+        val i = Intent(act, MyPlaylistListingActivity::class.java)
         i.putExtra("New", new1)
         i.putExtra("PlaylistID", playlistID)
         i.putExtra("PlaylistName", playlistName)
@@ -246,7 +246,7 @@ class ManageFragment : Fragment() {
         i.putExtra("MyDownloads", "0")
         i.putExtra("ScreenView", "Enhance Screen")
         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-        ctx.startActivity(i)
+        act.startActivity(i)
     }
 
     override fun onResume() {
@@ -740,7 +740,7 @@ class ManageFragment : Fragment() {
                     if (isNetworkConnected(activity)) {
                         try {
                             callMyPlaylistActivity("0",homelistModel.responseData!!.suggestedPlaylist!!.playlistID
-                                , homelistModel.responseData!!.suggestedPlaylist!!.playlistName)
+                                , homelistModel.responseData!!.suggestedPlaylist!!.playlistName,act)
                             act.overridePendingTransition(0, 0)
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -1335,13 +1335,9 @@ class ManageFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnClickListener {
                 if (isNetworkConnected(ctx)) {
-                    try {
                         ManageFragment().callMyPlaylistActivity("0",listModel.details!![position].playlistID
-                            , listModel.details!![position].playlistName)
+                            , listModel.details!![position].playlistName,act)
                         act.overridePendingTransition(0, 0)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
                 } else {
                     showToast(ctx.getString(R.string.no_server_found), act)
                 }
