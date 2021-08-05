@@ -418,7 +418,9 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
                     mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
                     mainPlayModel.imageFile = arrayList[i]!!.imageFile
-                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration
+
+                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.substring(3)
+
                     mainPlayModelList.add(mainPlayModel)
                 }
                 val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -505,9 +507,6 @@ class MyPlayerActivity : AppCompatActivity() {
                                 exoBinding.progressBar.visibility = View.GONE
                             }
 
-                            if(player.playbackState == ExoPlayer.STATE_ENDED){
-                                Log.e("STATE_ENDED My player","Done")
-                            }
                             exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
                             exoBinding.exoProgress.setPosition(player.currentPosition)
                             exoBinding.exoProgress.setDuration(player.duration)
@@ -939,6 +938,9 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.llPause.visibility = View.GONE
                         exoBinding.progressBar.visibility = View.GONE
                     }
+                    if(player.playbackState == ExoPlayer.STATE_ENDED){
+                        Log.e("STATE_ENDED My player","Done")
+                    }
                     exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
                     exoBinding.exoProgress.setPosition(player.currentPosition)
                     val globalInitExoPlayer = GlobalInitExoPlayer()
@@ -977,6 +979,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         val p = Properties()
                         addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Buffer Started", CONSTANTS.track, downloadAudioDetailsList, p)
                     } else if (state == ExoPlayer.STATE_ENDED) {
+                        Log.e("STATE_ENDED My Player onPlaybackStateChanged","Done")
                         try {
                             if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                                 if (playFrom.equals("Suggested", ignoreCase = true)) {

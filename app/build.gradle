@@ -137,12 +137,12 @@ dependencies {
 //  TODO GIF Drawable Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.23'
 // TODO Exoplayer Dependency
-    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.13.3'
-    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.13.3'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.13.3'
-    implementation "com.google.android.exoplayer:extension-ima:2.13.3"
+    implementation 'com.google.android.exoplayer:exoplayer:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.2'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.14.2'
+    implementation "com.google.android.exoplayer:extension-ima:2.14.2"
 // TODO Retrofit Development Dependency
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'//2.6.4
