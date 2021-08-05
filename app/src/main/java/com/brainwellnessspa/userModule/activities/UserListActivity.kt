@@ -251,6 +251,51 @@ class UserListActivity : AppCompatActivity() {
                                                         try {
                                                             val authOtpModel: AuthOtpModel = response.body()!!
                                                             if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                                                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                                val editor = shared.edit()
+                                                                val gson = Gson()
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, authOtpModel.ResponseData.MainAccountID)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_UserId, authOtpModel.ResponseData.UserId)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, authOtpModel.ResponseData.Email)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, authOtpModel.ResponseData.Name)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, authOtpModel.ResponseData.directLogin)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, authOtpModel.ResponseData.isPinSet)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
+                                                                if(authOtpModel.ResponseData.planDetails.isNotEmpty()) {
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, authOtpModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, authOtpModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, authOtpModel.ResponseData.planDetails[0].TransactionId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, authOtpModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, authOtpModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
+                                                                }
+                                                                editor.apply()
+                                                                val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                                val edited = sharded.edit()
+                                                                edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                                val selectedCategoriesTitle = arrayListOf<String>()
+                                                                val selectedCategoriesName = arrayListOf<String>()
+                                                                for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                                                                    selectedCategoriesTitle.add(i.MainCat)
+                                                                    selectedCategoriesName.add(i.RecommendedCat)
+                                                                }
+                                                                edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                                edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                                edited.apply()
+
+                                                                val splashActivity = SplashActivity()
+                                                                splashActivity.setAnalytics(ctx.resources.getString(R.string.segment_key_real), ctx)
+                                                                callIdentify(ctx)
                                                                 Log.e("isSetLoginPin", isSetLoginPin.toString())
                                                                 if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
                                                                     if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
@@ -267,7 +312,7 @@ class UserListActivity : AppCompatActivity() {
                                                                         activity.startActivity(intent)
                                                                         activity.finish()
                                                                     } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                                                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                        val intent = Intent(ctx, BottomNavigationActivity::class.java)
                                                                         intent.putExtra("IsFirst", "0")
                                                                         activity.startActivity(intent)
                                                                         activity.finish()
@@ -278,43 +323,6 @@ class UserListActivity : AppCompatActivity() {
                                                                     activity.finish()
                                                                 }
 
-                                                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                                                val editor = shared.edit()
-                                                                val gson = Gson()
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(authOtpModel.ResponseData.AreaOfFocus))
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
-                                                                editor.apply()
-                                                                val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                                                val edited = sharded.edit()
-                                                                edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                                                                val selectedCategoriesTitle = arrayListOf<String>()
-                                                                val selectedCategoriesName = arrayListOf<String>()
-                                                                for (i in authOtpModel.ResponseData.AreaOfFocus) {
-                                                                    selectedCategoriesTitle.add(i.MainCat)
-                                                                    selectedCategoriesName.add(i.RecommendedCat)
-                                                                }
-                                                                edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                                                edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                                                edited.apply()
-
-                                                                val activity = SplashActivity()
-                                                                activity.setAnalytics(activity.getString(R.string.segment_key_real), ctx)
-                                                                callIdentify(ctx)
                                                                 /*   val p1 = Properties()
                                                                p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
                                                                p1.putValue("deviceType", "Android")

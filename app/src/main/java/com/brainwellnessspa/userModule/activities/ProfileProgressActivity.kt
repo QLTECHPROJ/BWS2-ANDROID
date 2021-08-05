@@ -684,7 +684,10 @@ class ProfileProgressActivity : AppCompatActivity() {
                 callSecondNextElseBlock()
             } else {
                 age = sdf.format(date)
-                binding.btnOpn1.text = age
+                val parser = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+                val formatter= SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+                val userCalendar = formatter.format(parser.parse(age))
+                binding.btnOpn1.text = userCalendar
                 callFourthNext()
             }
         }, mYear, mMonth, mDay)

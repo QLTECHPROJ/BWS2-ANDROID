@@ -4,6 +4,7 @@ import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloadi
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -59,6 +60,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -1956,6 +1960,7 @@ public class BWSApplication extends Application {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public static void getReminderDay(Context ctx, Activity act, String userId, String playlistID, String playlistName, FragmentActivity fragmentActivity, String Time, String RDay, String isSuggested, String reminderID, String isReminder, String created) {
         ReminderSelectionModel[] reminderSelectionModel = new ReminderSelectionModel[]{new ReminderSelectionModel("Sunday"), new ReminderSelectionModel("Monday"), new ReminderSelectionModel("Tuesday"), new ReminderSelectionModel("Wednesday"), new ReminderSelectionModel("Thursday"), new ReminderSelectionModel("Friday"), new ReminderSelectionModel("Saturday"),};
         localIntent = new Intent("Reminder");
@@ -1993,20 +1998,12 @@ public class BWSApplication extends Application {
                 e.printStackTrace();
             }
 
-            switch (created) {
-                case "1":
-                    tvTitle.setVisibility(View.GONE);
-                    break;
-                case "0":
-                    tvTitle.setVisibility(View.GONE);
-                    break;
-                case "2":
-                    tvTitle.setVisibility(View.VISIBLE);
-                    break;
-            }
-
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
+            if(created.equals("2"))
+                tvTitle.setVisibility(View.VISIBLE);
+            else
+                tvTitle.setVisibility(View.GONE);
             Properties p = new Properties();
             p.putValue("reminderId ", "");
             p.putValue("playlistId ", "");
@@ -2052,41 +2049,75 @@ public class BWSApplication extends Application {
             p.putValue("reminderDay", RDay);
             addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         }
-        String[] time = currantTime.split(":");
-        String[] min = time[1].split(" ");
-        Chour = Integer.parseInt(time[0]);
-        //            mHour = c.get(Calendar.HOUR_OF_DAY);
-        Cminute = Integer.parseInt(min[0]);
-        String displayAmPm = min[1];
-        if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
-            if (Chour != 12)
-                Chour = Chour + 12;
-        }
-
-        tvPlaylistName.setText(playlistName);
-        ivBack.setOnClickListener(view12 -> dialog.dismiss());
-        remiderDays.clear();
-        dialog.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dialog.dismiss();
-                return true;
+        boolean areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled();
+        Log.e("areNotificationEnabled", String.valueOf(areNotificationEnabled));
+        if (!areNotificationEnabled) {
+            Dialog dialogNotification = new Dialog(ctx);
+            dialogNotification.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogNotification.setContentView(R.layout.custom_popup_layout);
+            dialogNotification.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.transparent_white)));
+            dialogNotification.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final TextView tvGoBack = dialogNotification.findViewById(R.id.tvGoBack);
+            final TextView tvHeader = dialogNotification.findViewById(R.id.tvHeader);
+            final TextView tvTitle1 = dialogNotification.findViewById(R.id.tvTitle);
+            final Button btn = dialogNotification.findViewById(R.id.Btn);
+            tvTitle1.setText(ctx.getString(R.string.unable_to_use_notification_title));
+            tvHeader.setText(ctx.getString(R.string.unable_to_use_notification_content));
+            btn.setText("Settings");
+            tvGoBack.setText("Cancel");
+            dialogNotification.setOnKeyListener((dialog1, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialogNotification.dismiss();
+                }
+                return false;
+            });
+            btn.setOnClickListener(v -> {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + ctx.getPackageName()));
+                ctx.startActivity(intent);
+                dialogNotification.dismiss();
+            });
+            tvGoBack.setOnClickListener(v -> {
+                dialogNotification.dismiss();
+            });
+            dialogNotification.show();
+            dialogNotification.setCancelable(false);
+        } else {
+            String[] time = currantTime.split(":");
+            String[] min = time[1].split(" ");
+            Chour = Integer.parseInt(time[0]);
+            //            mHour = c.get(Calendar.HOUR_OF_DAY);
+            Cminute = Integer.parseInt(min[0]);
+            String displayAmPm = min[1];
+            if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
+                if (Chour != 12) Chour = Chour + 12;
             }
-            return false;
-        });
-        llSelectTime.setOnClickListener(v -> {
-            TimePickerThemeclass dialogfragment = new TimePickerThemeclass();
-            dialogfragment.show(fragmentActivity.getSupportFragmentManager(), "Time Picker with Theme 4");
-        });
 
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
-        rvSelectDay.setLayoutManager(manager);
-        rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-        ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
-        rvSelectDay.setAdapter(adapter);
+            tvPlaylistName.setText(playlistName);
+            ivBack.setOnClickListener(view12 -> dialog.dismiss());
+            remiderDays.clear();
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+            llSelectTime.setOnClickListener(v -> {
+                TimePickerThemeclass dialogfragment = new TimePickerThemeclass();
+                dialogfragment.show(fragmentActivity.getSupportFragmentManager(), "Time Picker with Theme 4");
+            });
 
-        Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        dialog.show();
-        dialog.setCancelable(false);
+            RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
+            rvSelectDay.setLayoutManager(manager);
+            rvSelectDay.setItemAnimator(new DefaultItemAnimator());
+            ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
+            rvSelectDay.setAdapter(adapter);
+
+            Log.e("remiderDays", TextUtils.join(",", remiderDays));
+            dialog.show();
+            dialog.setCancelable(false);
+        }
     }
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
@@ -2198,6 +2229,15 @@ public class BWSApplication extends Application {
         String isAssCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "");
         String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "");
         String userCounnt = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "");
+        String planId = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanId,"");
+        String planPurchaseDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate,"");
+        String planExpDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate,"");
+        String transactionId = shared1.getString(CONSTANTS.PREFE_ACCESS_TransactionId,"");
+        String trialPeriodStart = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart,"");
+        String trialperiodEnd = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd,"");
+        String planStatus = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanStatus,"");
+
+
         Gson gson = new Gson();
         String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString());
         String areaOfFocus = "";
@@ -2221,7 +2261,7 @@ public class BWSApplication extends Application {
         else
             isadm = false;
 
-        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", "").putValue("planStatus", "").putValue("planStartDt", "").putValue("planExpiryDt", ""));
+        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {

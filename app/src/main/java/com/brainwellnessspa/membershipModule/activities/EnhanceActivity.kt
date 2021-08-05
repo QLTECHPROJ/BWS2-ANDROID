@@ -56,6 +56,7 @@ class EnhanceActivity : AppCompatActivity() {
     var planFlag: String = ""
     var planId: String = ""
     var price: String = ""
+    var intentflag:String = ""
     var listModelList = arrayListOf<PlanlistInappModel.ResponseData.Plan>()
     lateinit var ctx: Context
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +68,10 @@ class EnhanceActivity : AppCompatActivity() {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@EnhanceActivity
 
+        if(intent!=null){
+            intentflag = intent.getStringExtra("plan").toString()
+        }
+
         val p = Properties()
         BWSApplication.addToSegment("Enhance Plan Screen Viewed", p, CONSTANTS.screen)
 
@@ -77,6 +82,7 @@ class EnhanceActivity : AppCompatActivity() {
         }
 
         binding.btnFreeJoin.setOnClickListener {
+            i.putExtra("plan",intentflag)
             startActivity(i)
         }
 

@@ -348,6 +348,7 @@
     <string name="lorem_ipsum_dolor_sit_amet_consetetur">Lorem ipsum dolor sit amet, consetetur</string>
     <string name="change_card">Change Card</string>
     <string name="upgrade_plan">Upgrade Plan</string>
+    <string name="purchase_plan">Purchase Plan</string>
     <string name="add_users_in_manage">Add Users in manage</string>
     <string name="set_reminder">Set reminder</string>
     <string name="update_reminder">Update reminder</string>
@@ -567,5 +568,7 @@
     <string name="start_time">00:00</string>
     <string name="this_page_is_under_construction">This page is under construction</string>
     <string name="we_re_working_on_it">we\'re working on it</string>
+    <string name="unable_to_use_notification_title">Unable to use notifications</string>
+    <string name="unable_to_use_notification_content">To enable notifications, go to Settings and enable notifications for this app.</string>
 </resources>
 

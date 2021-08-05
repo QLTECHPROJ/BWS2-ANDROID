@@ -8,17 +8,17 @@ import android.app.Dialog
 import android.app.NotificationManager
 import android.content.*
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.widget.CompoundButton
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
@@ -164,11 +164,11 @@ class ReminderListsActivity : AppCompatActivity() {
                                         e.reminderId = listModel.responseData!![i]!!.reminderId
                                         e.playlistId = listModel.responseData!![i]!!.playlistId
                                         e.playlistName = listModel.responseData!![i]!!.playlistName
-                                        if( listModel.responseData!![i]!!.created.equals("1")){
+                                        if (listModel.responseData!![i]!!.created.equals("1")) {
                                             e.playlistType = "created"
-                                        } else if( listModel.responseData!![i]!!.created.equals("0")){
+                                        } else if (listModel.responseData!![i]!!.created.equals("0")) {
                                             e.playlistType = "Default"
-                                        } else if( listModel.responseData!![i]!!.created.equals("2")){
+                                        } else if (listModel.responseData!![i]!!.created.equals("2")) {
                                             e.playlistType = "Suggested"
                                         }
                                         if (listModel.responseData!![i]!!.isCheck.equals("1", ignoreCase = true)) {
@@ -417,7 +417,39 @@ class ReminderListsActivity : AppCompatActivity() {
             holder.bind.llSwitchStatus.isEnabled = false
             holder.bind.switchStatus.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
                 if (checked) {
-                    prepareSwitchStatus("1", model[position]!!.playlistId, model[position]!!)
+                    val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+                    Log.e("areNotificationEnabled", areNotificationEnabled.toString())
+                    if (!areNotificationEnabled) {
+                        val dialogNotification = Dialog(ctx)
+                        dialogNotification.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialogNotification.setContentView(R.layout.custom_popup_layout)
+                        dialogNotification.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                        dialogNotification.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        val tvGoBack = dialogNotification.findViewById<TextView>(R.id.tvGoBack)
+                        val tvHeader = dialogNotification.findViewById<TextView>(R.id.tvHeader)
+                        val tvTitle1 = dialogNotification.findViewById<TextView>(R.id.tvTitle)
+                        val btn = dialogNotification.findViewById<Button>(R.id.Btn)
+                        tvTitle1.text = ctx.getString(R.string.unable_to_use_notification_title)
+                        tvHeader.text = ctx.getString(R.string.unable_to_use_notification_content)
+                        btn.text = "Settings"
+                        tvGoBack.text = "Cancel"
+                        dialogNotification.setOnKeyListener { dialog1: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialogNotification.dismiss()
+                            }
+                            false
+                        }
+                        btn.setOnClickListener { v: View? ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            intent.data = Uri.parse("package:" + ctx.packageName)
+                            ctx.startActivity(intent)
+                            dialogNotification.dismiss()
+                        }
+                        tvGoBack.setOnClickListener { v: View? -> dialogNotification.dismiss() }
+                        dialogNotification.show()
+                        dialogNotification.setCancelable(false)
+                    }else
+                        prepareSwitchStatus("1", model[position]!!.playlistId, model[position]!!)
                 } else {
                     prepareSwitchStatus("0", model[position]!!.playlistId, model[position]!!)
                 }
@@ -426,10 +458,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 if (BWSApplication.isNetworkConnected(activity)) {
                     notificationStatus = true
                     myBackPress = false
-                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName,
-                        activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay,
-                        "0", model[position]!!.reminderId,
-                    model[position]!!.isCheck,model[position]!!.created)
+                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay, "0", model[position]!!.reminderId, model[position]!!.isCheck, model[position]!!.created)
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), activity)
                 }
@@ -454,7 +483,7 @@ class ReminderListsActivity : AppCompatActivity() {
                         val listModel = response.body()
                         if (listModel != null) {
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                              /*  p = Properties()
+                                /*  p = Properties()
                                 p!!.putValue("reminderId ", model.reminderId)
                                 p!!.putValue("playlistId ", model.reminderId)
                                 p!!.putValue("playlistName ", model.reminderId)

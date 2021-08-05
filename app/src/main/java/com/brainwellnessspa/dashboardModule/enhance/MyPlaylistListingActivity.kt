@@ -277,6 +277,22 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     override fun onResume() {
+            val shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        val json = shared1.getString(CONSTANTS.selectedCategoriesName, gson.toString())
+        if (!json.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : com.google.common.reflect.TypeToken<java.util.ArrayList<String?>?>() {}.type
+            selectedCategoriesName = gson.fromJson(json, type1)
+        }
+        binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
+        val layoutManager = FlexboxLayoutManager(ctx)
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.alignItems = AlignItems.STRETCH
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
+        binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+        val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+        binding.rvAreaOfFocusCategory.adapter = adapter
         binding.searchView.clearFocus()
         searchEditText.setText("")
         binding.searchView.setQuery("", false)

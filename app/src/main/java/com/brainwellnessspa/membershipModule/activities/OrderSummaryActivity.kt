@@ -7,12 +7,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
@@ -20,6 +23,9 @@ import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
+import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -50,6 +56,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     lateinit var ctx: Context
     var json = ""
     var sku = ""
+    var intentflag: String = ""
     lateinit var billingClient: BillingClient
     lateinit var params: SkuDetailsParams
     val gson = Gson()
@@ -90,6 +97,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 val type = object : TypeToken<ArrayList<PlanlistInappModel.ResponseData.Plan?>?>() {}.type
                 listModelList = gson.fromJson(json, type)
             }
+            intentflag = intent.getStringExtra("plan").toString()
         }
         if (intent != null) {
             comesTrue = intent.getStringExtra("ComesTrue")
@@ -178,7 +186,11 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { // The BillingClient is setup
                     Log.e("Setup Billing Done", "") //                    checkPurchases()
-                    loadAllSKUs()
+                    val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                    val token = shared1.getString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                    val oldsku = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+                    if (intentflag == "1") loadAllSKUsUpdate(oldsku!!,token!!)
+                    else loadAllSKUs()
                 }
             }
 
@@ -226,7 +238,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             val number = binding!!.edtCode.text.toString().trim()
             if (number.isEmpty()) {
                 binding!!.btnApply.isEnabled = false
-                binding!!.btnApply.setTextColor(ContextCompat.getColor(ctx,R.color.gray))
+                binding!!.btnApply.setTextColor(ContextCompat.getColor(ctx, R.color.gray))
             } else {
                 binding!!.btnApply.isEnabled = true
                 binding!!.btnApply.setTextColor(ContextCompat.getColor(ctx, R.color.dark_yellow))
@@ -268,6 +280,26 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+            val editor = shared.edit()
+            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, sku)
+            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, purchases[0].purchaseToken)
+            editor.apply()
+            Log.e("Purchase Token", purchases[0].purchaseToken)
+            val p = Properties()
+            if (!comeFrom.equals("", ignoreCase = true)) {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList2))
+            } else {
+                val gson: Gson
+                val gsonBuilder = GsonBuilder()
+                gson = gsonBuilder.create()
+                p.putValue("plan", gson.toJson(listModelList))
+            }
+            BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
+            callIAPApi(purchases[0].purchaseToken)
             for (purchase in purchases) {
                 acknowledgePurchase(purchase.purchaseToken, purchases)
             }
@@ -287,6 +319,74 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                         BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
                         val listModel: UpdatePlanPurchase = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(userId)
+                                listCall.enqueue(object : Callback<AuthOtpModel> {
+                                    override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                        try {
+                                            val authOtpModel: AuthOtpModel = response.body()!!
+                                            if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                val editor = shared.edit()
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, authOtpModel.ResponseData.MainAccountID)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_UserId, authOtpModel.ResponseData.UserId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, authOtpModel.ResponseData.Email)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, authOtpModel.ResponseData.Name)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, authOtpModel.ResponseData.directLogin)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, authOtpModel.ResponseData.isPinSet)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
+                                                if(authOtpModel.ResponseData.planDetails.isNotEmpty()) {
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, authOtpModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, authOtpModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, authOtpModel.ResponseData.planDetails[0].TransactionId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, authOtpModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, authOtpModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
+                                                }
+                                                editor.apply()
+                                                val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                val edited = shred.edit()
+                                                edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                                                val selectedCategoriesTitle = arrayListOf<String>()
+                                                val selectedCategoriesName = arrayListOf<String>()
+                                                val gson = Gson()
+                                                for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                                                    selectedCategoriesTitle.add(i.MainCat)
+                                                    selectedCategoriesName.add(i.RecommendedCat)
+                                                }
+                                                edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
+                                                edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
+                                                edited.apply()
+                                            } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                BWSApplication.deleteCall(activity)
+                                                BWSApplication.showToast(authOtpModel.ResponseMessage, activity)
+                                                val i = Intent(activity, SignInActivity::class.java)
+                                                i.putExtra("mobileNo", "")
+                                                i.putExtra("countryCode", "")
+                                                i.putExtra("name", "")
+                                                i.putExtra("email", "")
+                                                i.putExtra("countryShortName", "")
+                                                startActivity(i)
+                                                finish()
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                    }
+                                })
+                            }
                             val i = Intent(ctx, EnhanceDoneActivity::class.java)
                             i.putExtra("Name", "")
                             i.putExtra("Code", "")
@@ -332,85 +432,64 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         billingClient.acknowledgePurchase(params, this)
         billingClient.acknowledgePurchase(params) {
             //            checkPurchases()
-            val gson = Gson()
-            val shared = ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
-            val editor = shared.edit()
-            editor.putString(CONSTANTS.PREF_KEY_Purchase, gson.toJson(purchase))
-            editor.putString(CONSTANTS.PREF_KEY_PurchaseToken, purchaseToken)
-            editor.putString(CONSTANTS.PREF_KEY_PurchaseID, sku)
-            editor.apply()
-            Log.e("Purchase Token", purchaseToken)
-            val p = Properties()
-            if (!comeFrom.equals("", ignoreCase = true)) {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList2))
-            } else {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList))
-            }
-            BWSApplication.addToSegment("Checkout Proceeded", p, CONSTANTS.track)
-            callIAPApi(purchaseToken)
+
         }
     }
 
-    /*  private fun checkPurchases() {
-          val client = BillingClient.newBuilder(application).enablePendingPurchases().setListener { billingResult, list -> }.build()
-          client.startConnection(object : BillingClientStateListener {
-              override fun onBillingSetupFinished(@NonNull billingResult: BillingResult) {
-                  if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                      client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
-                          if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { //                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)
-                              //                            consumePurchases(list!![0].purchaseToken)
-                              val gson = Gson()
-                              val dateString: String = DateFormat.format("MM/dd/yyyy", Date(list!![0].purchaseTime)).toString()
-                              Log.e("purchase list", dateString)
-                              val params = SkuDetailsParams.newBuilder()
-                              params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
-                              billingClient.querySkuDetailsAsync(params.build(), object : SkuDetailsResponseListener {
-                                  fun onSkuDetailsResponse(responseCode: Int, skuDetailsList: List<SkuDetails>?) {
-                                      if (skuDetailsList == null) {
-                                          return
-                                      }
-                                      for (skuDetail in skuDetailsList) {
-                                          if (skuDetail.sku == list[0].skus[0]) {
-                                              val period = skuDetail.subscriptionPeriod // boolean expired = purchaseTime + period < now
-                                              Log.e("purchase list", period)
+    private fun checkPurchases() {
+        val client = BillingClient.newBuilder(application).enablePendingPurchases().setListener { billingResult, list -> }.build()
+        client.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(@NonNull billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { //                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)
+                            //                            consumePurchases(list!![0].purchaseToken)
+                            val gson = Gson()
+                            val dateString: String = DateFormat.format("MM/dd/yyyy", Date(list!![0].purchaseTime)).toString()
+                            Log.e("purchase list", dateString)
+                            val params = SkuDetailsParams.newBuilder()
+                            params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
+                            billingClient.querySkuDetailsAsync(params.build(), object : SkuDetailsResponseListener {
+                                fun onSkuDetailsResponse(responseCode: Int, skuDetailsList: List<SkuDetails>?) {
+                                    if (skuDetailsList == null) {
+                                        return
+                                    }
+                                    for (skuDetail in skuDetailsList) {
+                                        if (skuDetail.sku == list[0].skus[0]) {
+                                            val period = skuDetail.subscriptionPeriod // boolean expired = purchaseTime + period < now
+                                            Log.e("purchase list", period)
 
-                                          }
-                                      }
-                                  }
+                                        }
+                                    }
+                                }
 
-                                  override fun onSkuDetailsResponse(p0: BillingResult, p1: MutableList<SkuDetails>?) {
-                                      TODO("Not yet implemented")
-                                  }
-                              })
-                          }
-                      }
-                  }
-              }
+                                override fun onSkuDetailsResponse(p0: BillingResult, p1: MutableList<SkuDetails>?) {
+                                    TODO("Not yet implemented")
+                                }
+                            })
+                        }
+                    }
+                }
+            }
 
-              override fun onBillingServiceDisconnected() {}
-          })
-      }
+            override fun onBillingServiceDisconnected() {}
+        })
+    }
 
-      private fun loadAllSKUsUpdate(oldsku: String, token: String) = if (billingClient.isReady) {
-          val params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
-          billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList -> // Process the result.
+    private fun loadAllSKUsUpdate(oldsku: String, token: String) = if (billingClient.isReady) {
+        val params1 = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
+        billingClient.querySkuDetailsAsync(params1) { billingResult, skuDetailsList -> // Process the result.
 
-              if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
-                  for (skuDetails in skuDetailsList) {
-                      if (skuDetails.sku == sku) binding!!.btnCheckout.setOnClickListener { // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync()
-                          val flowParams = BillingFlowParams.newBuilder().setSubscriptionUpdateParams(BillingFlowParams.SubscriptionUpdateParams.newBuilder().setOldSkuPurchaseToken(token).setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION).build()).setSkuDetails(skuDetails).build()
-                          billingClient.launchBillingFlow(activity, flowParams)*//*      val billingFlowParams = BillingFlowParams
-                                            .newBuilder()
-                                            .setSkuDetails(skuDetails)
-                                            .setOldSku(oldsku, sku)
-                                            .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
-                                            .build()*//* //                                    billingClient.launchBillingFlow(this, billingFlowParams)
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
+                for (skuDetails in skuDetailsList) {
+                    if (skuDetails.sku == sku) binding!!.btnCheckout.setOnClickListener { // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync()
+                        val flowParams = BillingFlowParams.newBuilder()
+                            .setSubscriptionUpdateParams(BillingFlowParams.SubscriptionUpdateParams.newBuilder()
+                                .setOldSkuPurchaseToken(token)
+                                .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION).build())
+                            .setSkuDetails(skuDetails).build()
+
+                        billingClient.launchBillingFlow(this, flowParams)
                     }
                 }
             }
@@ -419,7 +498,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     } else {
         println("Billing Client not ready")
     }
-*/
     private fun consumePurchases(purchaseToken: String) {
         val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build()
         Log.e("consumes", consumeParams.purchaseToken)

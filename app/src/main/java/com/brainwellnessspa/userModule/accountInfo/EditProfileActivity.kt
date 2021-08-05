@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
@@ -144,7 +145,7 @@ class EditProfileActivity : AppCompatActivity() {
                 var dob = ""
                 if (binding.etCalendar.text.toString().isNotEmpty()) {
                     dob = binding.etCalendar.text.toString()
-                    var spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
+                    var spf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
                     var newDate = Date()
                     try {
                         newDate = spf.parse(dob)
@@ -270,23 +271,17 @@ class EditProfileActivity : AppCompatActivity() {
                                     } else {
                                         binding.etUser.setText(viewModel.ResponseData.Name)
                                     }
-
                                     userName = viewModel.ResponseData.Name
                                     userCalendar = viewModel.ResponseData.DOB
-                                    var spf = SimpleDateFormat()
-                                    var newDate = Date()
-                                    try {
-                                        newDate = spf.parse(userCalendar)
-                                    } catch (e: ParseException) {
-                                        e.printStackTrace()
+                                    Log.e("old Date", userCalendar.toString())
+
+                                    if(userCalendar!="") {
+                                        val parser = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+                                        val formatter = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+                                        userCalendar = formatter.format(parser.parse(userCalendar))
                                     }
-                                    spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-                                    userCalendar = spf.format(newDate)
                                     userMobileNumber = viewModel.ResponseData.Mobile
                                     userEmail = viewModel.ResponseData.Email
-                                    binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
-                                    binding.etEmail.setText(viewModel.ResponseData.Email)
-
                                     if (viewModel.ResponseData.Mobile == "") {
                                         binding.etMobileNumber.isEnabled = true
                                         binding.etMobileNumber.isClickable = true
@@ -295,17 +290,42 @@ class EditProfileActivity : AppCompatActivity() {
                                         binding.etMobileNumber.isClickable = false
                                         binding.etMobileNumber.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
                                     }
+                                    binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
+                                    binding.etEmail.setText(viewModel.ResponseData.Email)
 
-                                    spf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
-                                    val s = spf.format(newDate)
-                                    binding.etCalendar.setText(s)
+                                    val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val editor = shared.edit()
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, viewModel.ResponseData.Image)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, viewModel.ResponseData.isProfileCompleted)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
+                                    if (viewModel.ResponseData.planDetails.isNotEmpty()) {
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
+                                    }
+                                    editor.apply()
                                     val p = Properties()
                                     p.putValue("name", userName)
                                     p.putValue("dob", userCalendar)
                                     p.putValue("mobileNo", userMobileNumber)
                                     p.putValue("email", userEmail)
                                     BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
-
                                 }
                                 viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                     BWSApplication.deleteCall(activity)
@@ -345,7 +365,7 @@ class EditProfileActivity : AppCompatActivity() {
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
         } else {
-            var spf = SimpleDateFormat()
+           /* var spf = SimpleDateFormat()
             var newDate = Date()
             try {
                 newDate = spf.parse(userCalendar)
@@ -353,8 +373,8 @@ class EditProfileActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-            val dob = spf.format(newDate)
-            val ageArray = dob.split("-")
+            var dob = spf.format(newDate)*/
+            val ageArray = userCalendar!!.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
             mDay = Integer.parseInt(ageArray[2])
@@ -365,7 +385,7 @@ class EditProfileActivity : AppCompatActivity() {
             cal.timeInMillis
             cal[year, monthOfYear] = dayOfMonth
             val date = cal.time
-            val sdf = SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT)
+            val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
             val strDate = sdf.format(date)
             ageYear = year
             ageMonth = monthOfYear

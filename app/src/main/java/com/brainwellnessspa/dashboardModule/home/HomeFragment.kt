@@ -138,6 +138,7 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
+
         p.putValue("WellnessScore", indexScore)
         p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
@@ -285,6 +286,21 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
+        val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
+        if (!json.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
+            selectedCategoriesName = gson.fromJson(json, type1)
+        }
+        val layoutManager = FlexboxLayoutManager(requireActivity())
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.alignItems = AlignItems.STRETCH
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
+        binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+        val adapter = AreaOfFocusAdapter(binding, requireActivity(), selectedCategoriesName)
+        binding.rvAreaOfFocusCategory.adapter = adapter
         networkCheck()
 //        profileViewData(activity)
         super.onResume()
@@ -1232,6 +1248,16 @@ class HomeFragment : Fragment() {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                                        if(listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                        }
                                                         editor.apply()
                                                         val sharded = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                                         val edited = sharded.edit()
@@ -1385,85 +1411,6 @@ class HomeFragment : Fragment() {
         }
 
         inner class MyViewHolder(var bind: MultipleProfileChangeLayoutBinding) : RecyclerView.ViewHolder(bind.root)
-    }
-
-    fun profileViewData(ctx: Context?) {
-        if (isNetworkConnected(ctx)) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-            val listCall = APINewClient.client.getCoUserDetails(userId)
-            listCall.enqueue(object : Callback<AuthOtpModel?> {
-                override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
-                    try {
-                        val viewModel = response.body()
-                        if (viewModel != null) {
-                            when {
-                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-
-                                    val shared = activity?.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                                    val editor = shared?.edit()
-                                    if (editor != null) {
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, viewModel.ResponseData.Image)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, viewModel.ResponseData.isProfileCompleted)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
-                                        editor.apply()
-                                    }
-
-                                    val sharded = activity?.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                    val edited = sharded?.edit()
-                                    if (edited != null) {
-                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
-                                        val selectedCategoriesTitle = arrayListOf<String>()
-                                        val selectedCategoriesName = arrayListOf<String>()
-                                        val gson = Gson()
-                                        for (i in viewModel.ResponseData.AreaOfFocus) {
-                                            selectedCategoriesTitle.add(i.MainCat)
-                                            selectedCategoriesName.add(i.RecommendedCat)
-                                        }
-                                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                        edited.apply()
-                                    }
-                                }
-                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    deleteCall(activity)
-                                    showToast(viewModel.ResponseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    activity?.startActivity(i)
-                                    activity?.finish()
-                                }
-                                else -> {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<AuthOtpModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                }
-            })
-        }
     }
 
     /* Pin Watcher class for set pin in new user*/
