@@ -658,6 +658,7 @@
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="center"
+                                    android:maxLength="5"
                                     android:textColor="@color/green_dark_s"
                                     android:textSize="@dimen/_20sdp"
                                     tools:ignore="SpUsage" />

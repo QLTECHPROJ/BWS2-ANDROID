@@ -93,6 +93,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                 playlistModel = intent.getParcelableArrayListExtra("PlaylistModel")
             }
         }
+
         binding.llBack.setOnClickListener {
             myBackPress = true
             val i = Intent(ctx, AddAudioActivity::class.java)

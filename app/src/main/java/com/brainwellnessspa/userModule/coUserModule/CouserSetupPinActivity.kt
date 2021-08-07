@@ -80,7 +80,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
             subUserId = intent.getStringExtra("subUserId")
         }
         binding.llBack.setOnClickListener {
-            finish()
+            if (IsFirstClick.equals("1", ignoreCase = true)) {
+                finishAffinity()
+            } else {
+                finish()
+            }
         }
 
         binding.etNewPIN.addTextChangedListener(userTextWatcher)
@@ -120,7 +124,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        if (IsFirstClick.equals("1", ignoreCase = true)) {
+            finishAffinity()
+        } else {
+            finish()
+        }
     }
 
     private fun setupPin(activity: Activity) {

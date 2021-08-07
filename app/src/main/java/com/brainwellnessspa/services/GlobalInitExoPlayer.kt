@@ -536,10 +536,12 @@ class GlobalInitExoPlayer : Service() {
         calendar.timeZone = TimeZone.getTimeZone("UTC")
         calendar.time = Date()
         val s = calendar.timeInMillis
-        Log.e("dateAsString", s.toString())
         Log.e("dateAsString time", calendar.time.toString())
         TimeZone.setDefault(tm)
-        return s.toString()
+        val time = s.toString()
+        Log.e("dateAsString", s.toString())
+        Log.e("dateAsStringdropLast", time.dropLast(3))
+        return time.dropLast(3)
     }
 
     fun GlobleInItDisclaimer(ctx: Context, mainPlayModelList: ArrayList<MainPlayModel>, pos: Int) {

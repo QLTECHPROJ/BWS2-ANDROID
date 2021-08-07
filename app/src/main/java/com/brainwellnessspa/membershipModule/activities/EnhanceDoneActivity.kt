@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityEnhanceDoneBinding
@@ -39,13 +39,13 @@ class EnhanceDoneActivity : AppCompatActivity() {
         coUserCount = shared.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-        val measureRatio = BWSApplication.measureRatio(applicationContext, 0f, 5f, 6f, 0.4f, 0f)
+        val measureRatio = measureRatio(applicationContext, 0f, 5f, 6f, 0.4f, 0f)
         binding.ivLogo.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.ivLogo.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivLogo.scaleType = ImageView.ScaleType.FIT_XY
         binding.ivLogo.setImageResource(R.drawable.ic_thank_you_bg_two)
         p = Properties()
-        BWSApplication.addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen)
         binding.btnExplore.setOnClickListener {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
@@ -56,7 +56,7 @@ class EnhanceDoneActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
-                BWSApplication.addToSegment("Explore App Clicked", p, CONSTANTS.track)
+                addToSegment("Explore App Clicked", p, CONSTANTS.track)
                 val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
                 intent.putExtra("IsFirst", "0")
                 startActivity(intent)
@@ -65,7 +65,9 @@ class EnhanceDoneActivity : AppCompatActivity() {
         }
 
         binding.btnAddCouser.setOnClickListener {
+            IsFirstClick = "1"
             val i = Intent(applicationContext, AddCouserActivity::class.java)
+            i.putExtra("IsFirstClick","1")
             startActivity(i)
             finish()
         }

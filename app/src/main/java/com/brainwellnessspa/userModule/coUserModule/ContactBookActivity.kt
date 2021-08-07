@@ -29,7 +29,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityContactBookBinding
 import com.brainwellnessspa.databinding.ContactListLayoutBinding
@@ -82,6 +82,7 @@ class ContactBookActivity : AppCompatActivity() {
         withoutSearch()
 
         binding.llBack.setOnClickListener {
+            IsFirstClick = "0"
             myBackPress = true
             val i = Intent(applicationContext, AddCouserActivity::class.java)
             startActivity(i)
@@ -92,7 +93,7 @@ class ContactBookActivity : AppCompatActivity() {
         p!!.putValue("userId", userId)
         p!!.putValue("referLink", referLink)
         p!!.putValue("userReferCode", userPromoCode)
-        BWSApplication.addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen)
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
         searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
@@ -111,7 +112,7 @@ class ContactBookActivity : AppCompatActivity() {
                     p = Properties()
                     p!!.putValue("userId", userId)
                     p!!.putValue("searchKeyword", search)
-                    BWSApplication.addToSegment("Contact Searched", p, CONSTANTS.track)
+                    addToSegment("Contact Searched", p, CONSTANTS.track)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -138,6 +139,7 @@ class ContactBookActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        IsFirstClick = "0"
         myBackPress = true
         val i = Intent(applicationContext, AddCouserActivity::class.java)
         startActivity(i)
@@ -149,7 +151,7 @@ class ContactBookActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS), MY_PERMISSIONS_REQUEST_READ_CONTACTS)
             } else {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 Handler(Looper.getMainLooper()).postDelayed({
                     val projection = arrayOf(ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER /*, ContactsContract.CommonDataKinds.Phone.PHOTO_URI*/)
                     val phones = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC")
@@ -197,7 +199,7 @@ class ContactBookActivity : AppCompatActivity() {
                         binding.rvFavContactList.adapter = favContactListAdapter
                     }
                     cur!!.close()
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }, (2 * 1000).toLong())
             }
         }
@@ -334,13 +336,13 @@ class ContactBookActivity : AppCompatActivity() {
         } else if (number.length > 9 && firstTwoChars.equals("61", ignoreCase = true)) {
             number.substring(2, number.length)
         } else number
-        if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(activity)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, contactName, number)
             listCall.enqueue(object : Callback<SetInviteUserModel> {
                 override fun onResponse(call: Call<SetInviteUserModel>, response: Response<SetInviteUserModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SetInviteUserModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
@@ -366,11 +368,11 @@ class ContactBookActivity : AppCompatActivity() {
                                 p!!.putValue("userReferCode", userPromoCode)
                                 p!!.putValue("contactName", contactName)
                                 p!!.putValue("contactNumber", number)
-                                BWSApplication.addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
+                                addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -381,7 +383,7 @@ class ContactBookActivity : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, activity)
                             }
                         }
 
@@ -391,11 +393,11 @@ class ContactBookActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SetInviteUserModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
 
     }
@@ -434,7 +436,7 @@ class ContactBookActivity : AppCompatActivity() {
             if (numStarted == 0 && stackStatus == 2) {
                 Log.e("Destroy", "Activity Destroyed")
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(BWSApplication.notificationId)
+                notificationManager.cancel(notificationId)
                 relesePlayer(applicationContext)
             } else {
                 Log.e("Destroy", "Activity go in main activity")

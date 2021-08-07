@@ -88,13 +88,13 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.ivCheckNumber.visibility = View.VISIBLE
             }
 
-            if (ckEmail.equals("", ignoreCase = true)) {
+        /*    if (ckEmail.equals("", ignoreCase = true)) {
                 binding.ivCheckEmail.visibility = View.GONE
             } else if (!ckEmail.equals("", ignoreCase = true) && !ckEmail.isEmailValid()) {
                 binding.ivCheckEmail.visibility = View.GONE
             } else {
                 binding.ivCheckEmail.visibility = View.VISIBLE
-            }
+            }*/
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -111,7 +111,7 @@ class EditProfileActivity : AppCompatActivity() {
         BWSApplication.addToSegment("Edit Profile Screen View", p, CONSTANTS.screen)
 
         binding.ivCheckNumber.visibility = View.VISIBLE
-        binding.ivCheckEmail.visibility = View.VISIBLE
+//        binding.ivCheckEmail.visibility = View.VISIBLE
         binding.etUser.addTextChangedListener(userTextWatcher)
         binding.etCalendar.addTextChangedListener(userTextWatcher)
         binding.etMobileNumber.addTextChangedListener(userTextWatcher)
@@ -276,11 +276,18 @@ class EditProfileActivity : AppCompatActivity() {
                                     Log.e("old Date", userCalendar.toString())
 
                                     binding.etCalendar.setText(userCalendar.toString())
-                                    if(userCalendar!="") {
+                                    if (userCalendar != "") {
                                         val parser = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
                                         val formatter = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
                                         userCalendar = formatter.format(parser.parse(userCalendar))
                                     }
+
+                                    if (viewModel.ResponseData.isEmailVerified.equals("1", ignoreCase = true)) {
+                                        binding.ivCheckEmail.visibility = View.VISIBLE
+                                    } else {
+                                        binding.ivCheckEmail.visibility = View.GONE
+                                    }
+
                                     userMobileNumber = viewModel.ResponseData.Mobile
                                     userEmail = viewModel.ResponseData.Email
                                     if (viewModel.ResponseData.Mobile == "") {
@@ -309,6 +316,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
                                     if (viewModel.ResponseData.planDetails.isNotEmpty()) {
@@ -366,15 +374,15 @@ class EditProfileActivity : AppCompatActivity() {
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
         } else {
-           /* var spf = SimpleDateFormat()
-            var newDate = Date()
-            try {
-                newDate = spf.parse(userCalendar)
-            } catch (e: ParseException) {
-                e.printStackTrace()
-            }
-            spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-            var dob = spf.format(newDate)*/
+            /* var spf = SimpleDateFormat()
+             var newDate = Date()
+             try {
+                 newDate = spf.parse(userCalendar)
+             } catch (e: ParseException) {
+                 e.printStackTrace()
+             }
+             spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+             var dob = spf.format(newDate)*/
             val ageArray = userCalendar!!.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1

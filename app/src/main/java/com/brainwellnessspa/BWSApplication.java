@@ -60,9 +60,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -177,7 +175,7 @@ public class BWSApplication extends Application {
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public static String PlayerAudioId = "", PlayerStatus = "";
+    public static String PlayerAudioId = "", PlayerStatus = "", IsFirstClick = "0";
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
@@ -195,7 +193,7 @@ public class BWSApplication extends Application {
     static List<String> remiderDays = new ArrayList<>();
     static Context mContext;
     static BWSApplication BWSApplication;
-    public static String currantTime = "", am_pm, hourString, minuteSting;
+    public static String currantTime = "", am_pm = "", hourString = "", minuteSting = "";
     public static String category = "";
     public static int Chour, Cminute;
     public static String key = "";
@@ -2000,7 +1998,7 @@ public class BWSApplication extends Application {
 
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
-            if(created.equals("2"))
+            if (created.equals("2"))
                 tvTitle.setVisibility(View.VISIBLE);
             else
                 tvTitle.setVisibility(View.GONE);
@@ -2090,7 +2088,8 @@ public class BWSApplication extends Application {
             Cminute = Integer.parseInt(min[0]);
             String displayAmPm = min[1];
             if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
-                if (Chour != 12) Chour = Chour + 12;
+                if (Chour != 12)
+                    Chour = Chour + 12;
             }
 
             tvPlaylistName.setText(playlistName);
@@ -2229,14 +2228,13 @@ public class BWSApplication extends Application {
         String isAssCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "");
         String isAdmin = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "");
         String userCounnt = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "");
-        String planId = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanId,"");
-        String planPurchaseDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate,"");
-        String planExpDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate,"");
-        String transactionId = shared1.getString(CONSTANTS.PREFE_ACCESS_TransactionId,"");
-        String trialPeriodStart = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart,"");
-        String trialperiodEnd = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd,"");
-        String planStatus = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanStatus,"");
-
+        String planId = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanId, "");
+        String planPurchaseDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, "");
+        String planExpDate = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "");
+        String transactionId = shared1.getString(CONSTANTS.PREFE_ACCESS_TransactionId, "");
+        String trialPeriodStart = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "");
+        String trialperiodEnd = shared1.getString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "");
+        String planStatus = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanStatus, "");
 
         Gson gson = new Gson();
         String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString());
@@ -2510,6 +2508,13 @@ public class BWSApplication extends Application {
     }
 
     public static void deleteCall(Context context) {
+        addCouserBackStatus = 0;
+        IsFirstClick = "0";
+        currantTime = "";
+        am_pm = "";
+        hourString = "";
+        minuteSting = "";
+        category = "";
         SharedPreferences preferences = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID);
@@ -2531,6 +2536,7 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_isPinSet);
         edit.remove(CONSTANTS.PREFE_ACCESS_isSetLoginPin);
         edit.remove(CONSTANTS.PREFE_ACCESS_isMainAccount);
+        edit.remove(CONSTANTS.PREFE_ACCESS_isEmailVerified);
         edit.remove(CONSTANTS.PREFE_ACCESS_coUserCount);
         edit.clear();
         edit.apply();

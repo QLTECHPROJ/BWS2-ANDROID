@@ -90,7 +90,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     var percent: Int = 0
     lateinit var searchEditText: EditText
     var touchHelper: ItemTouchHelper? = null
-    var listMOdelGloble: PlaylistDetailsModel = PlaylistDetailsModel()
+    var listModelGlobal: PlaylistDetailsModel = PlaylistDetailsModel()
     var sleepTime: String? = ""
     var gson = Gson()
     var selectedCategoriesName = arrayListOf<String>()
@@ -203,7 +203,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.tvSearch.setOnClickListener {
             val i = Intent(ctx, AddAudioActivity::class.java)
-            i.putExtra("PlaylistID", listMOdelGloble.responseData!!.playlistID)
+            i.putExtra("PlaylistID", listModelGlobal.responseData!!.playlistID)
             startActivity(i)
         }
         val shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -242,7 +242,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         binding.llDownloads.setOnClickListener {
             callObserveMethodGetAllMedia(ctx, DB)
-            callDownload("", "", "", listMOdelGloble.responseData!!.playlistSongs!!, 0, binding.llDownloads, binding.ivDownloads, ctx, activity, DB)
+            callDownload("", "", "", listModelGlobal.responseData!!.playlistSongs!!, 0, binding.llDownloads, binding.ivDownloads, ctx, activity, DB)
         }
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -329,7 +329,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel = response.body()!!
 
-                        listMOdelGloble = response.body()!!
+                        listModelGlobal = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                 LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
@@ -912,6 +912,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             ////                            handler2.removeCallbacks(UpdateSongTime2);
                             //                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder,activity)
                             val listModel1: SucessModel = response.body()!!
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val p = Properties()
                             p.putValue("audioId", listModel[position].id)
                             p.putValue("audioName", listModel[position].name)
@@ -1710,42 +1711,42 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             try {
                 val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
                 val editor = shared.edit()
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistID, listMOdelGloble.responseData!!.playlistID)
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistName, listMOdelGloble.responseData!!.playlistName)
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistDescription, listMOdelGloble.responseData!!.playlistDesc)
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistType, listMOdelGloble.responseData!!.created)
-                editor.putString(CONSTANTS.PREF_KEY_Totalhour, listMOdelGloble.responseData!!.totalhour)
-                editor.putString(CONSTANTS.PREF_KEY_Totalminute, listMOdelGloble.responseData!!.totalminute)
-                editor.putString(CONSTANTS.PREF_KEY_TotalAudio, listMOdelGloble.responseData!!.totalAudio)
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistID, listModelGlobal.responseData!!.playlistID)
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistName, listModelGlobal.responseData!!.playlistName)
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistDescription, listModelGlobal.responseData!!.playlistDesc)
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistType, listModelGlobal.responseData!!.created)
+                editor.putString(CONSTANTS.PREF_KEY_Totalhour, listModelGlobal.responseData!!.totalhour)
+                editor.putString(CONSTANTS.PREF_KEY_Totalminute, listModelGlobal.responseData!!.totalminute)
+                editor.putString(CONSTANTS.PREF_KEY_TotalAudio, listModelGlobal.responseData!!.totalAudio)
                 editor.putString(CONSTANTS.PREF_KEY_ScreenView, screenView)
                 editor.apply()
                 val p = Properties()
-                p.putValue("playlistId", listMOdelGloble.responseData!!.playlistID)
-                p.putValue("playlistName", listMOdelGloble.responseData!!.playlistName)
-                p.putValue("playlistDescription", listMOdelGloble.responseData!!.playlistDesc)
+                p.putValue("playlistId", listModelGlobal.responseData!!.playlistID)
+                p.putValue("playlistName", listModelGlobal.responseData!!.playlistName)
+                p.putValue("playlistDescription", listModelGlobal.responseData!!.playlistDesc)
                 when {
-                    listMOdelGloble.responseData!!.created.equals("1", ignoreCase = true) -> {
+                    listModelGlobal.responseData!!.created.equals("1", ignoreCase = true) -> {
                         p.putValue("playlistType", "Created")
                     }
-                    listMOdelGloble.responseData!!.created.equals("0", ignoreCase = true) -> {
+                    listModelGlobal.responseData!!.created.equals("0", ignoreCase = true) -> {
                         p.putValue("playlistType", "Default")
                     }
-                    listMOdelGloble.responseData!!.created.equals("2", ignoreCase = true) -> {
+                    listModelGlobal.responseData!!.created.equals("2", ignoreCase = true) -> {
                         p.putValue("playlistType", "Suggested")
                     }
                 }
                 when {
-                    listMOdelGloble.responseData!!.totalhour.equals("", ignoreCase = true) -> {
-                        p.putValue("playlistDuration", "0h " + listMOdelGloble.responseData!!.totalminute + "m")
+                    listModelGlobal.responseData!!.totalhour.equals("", ignoreCase = true) -> {
+                        p.putValue("playlistDuration", "0h " + listModelGlobal.responseData!!.totalminute + "m")
                     }
-                    listMOdelGloble.responseData!!.totalminute.equals("", ignoreCase = true) -> {
-                        p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h 0m")
+                    listModelGlobal.responseData!!.totalminute.equals("", ignoreCase = true) -> {
+                        p.putValue("playlistDuration", listModelGlobal.responseData!!.totalhour + "h 0m")
                     }
                     else -> {
-                        p.putValue("playlistDuration", listMOdelGloble.responseData!!.totalhour + "h " + listMOdelGloble.responseData!!.totalminute + "m")
+                        p.putValue("playlistDuration", listModelGlobal.responseData!!.totalhour + "h " + listModelGlobal.responseData!!.totalminute + "m")
                     }
                 }
-                p.putValue("audioCount", listMOdelGloble.responseData!!.totalAudio)
+                p.putValue("audioCount", listModelGlobal.responseData!!.totalAudio)
                 p.putValue("source", screenView)
                 p.putValue("playerType", "Mini")
                 p.putValue("audioService", appStatus(ctx))
@@ -2349,23 +2350,28 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             } else {
                 val listModelList2 = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>()
                 var view = ""
-                for (i in listMOdelGloble.responseData!!.playlistSongs!!.indices) {
-                    if (downloadAudioDetailsList.contains(listMOdelGloble.responseData!!.playlistSongs!![i].name)) {
-                        listModelList2.add(listMOdelGloble.responseData!!.playlistSongs!![i])
-                    }
+                val listModel = listModelGlobal.responseData
+                if (listModel != null) {
+                for (i in listModel.playlistSongs!!.indices) {
+                        if (downloadAudioDetailsList.contains(listModel.playlistSongs!![i].name)) {
+                            listModelList2.add(listModel.playlistSongs!![i])
+                        }
                 }
+            }
                 if (position != positionSaved) {
-                    if (downloadAudioDetailsList.contains(listMOdelGloble.responseData!!.playlistSongs!![position].name)) {
+                    val listmodel = listModelGlobal.responseData
+                    if (listmodel != null) {
+                    if (downloadAudioDetailsList.contains(listmodel.playlistSongs!![position].name)) {
                         positionSaved = position
-                        PlayerAudioId = listMOdelGloble.responseData!!.playlistSongs!![position].id
+                        PlayerAudioId = listmodel.playlistSongs!![position].id
                         if (listModelList2.size != 0) {
-                            view = if (listMOdelGloble.responseData!!.created == "1") {
+                            view = if (listmodel.created == "1") {
                                 "Created"
                             } else {
                                 ""
                             }
 
-                            callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listMOdelGloble.responseData!!.created, true, myDownloads)
+                            callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listmodel.created, true, myDownloads)
 
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), activity)
@@ -2373,6 +2379,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     } else { //                                pos = 0;
                         showToast(ctx.getString(R.string.no_server_found), activity)
                     }
+                }
                 } else {
                     callMyPlayer(ctx, activity)
                 }
@@ -2380,12 +2387,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
         } else {
             val listModelList2 = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>()
-            for (i in listMOdelGloble.responseData!!.playlistSongs!!.indices) {
-                if (downloadAudioDetailsList.contains(listMOdelGloble.responseData!!.playlistSongs!![i].name)) {
-                    listModelList2.add(listMOdelGloble.responseData!!.playlistSongs!![i])
+            for (i in listModelGlobal.responseData!!.playlistSongs!!.indices) {
+                if (downloadAudioDetailsList.contains(listModelGlobal.responseData!!.playlistSongs!![i].name)) {
+                    listModelList2.add(listModelGlobal.responseData!!.playlistSongs!![i])
                 }
             }
-            if (downloadAudioDetailsList.contains(listMOdelGloble.responseData!!.playlistSongs!![position].name)) {
+            if (downloadAudioDetailsList.contains(listModelGlobal.responseData!!.playlistSongs!![position].name)) {
                 pos = position
                 val gson = Gson()
                 val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
@@ -2424,22 +2431,22 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 if (listModelList2.size != 0) {
                     if (listModelList2[pos].id != "0") {
                         if (listModelList2.size != 0) {
-                            view = if (listMOdelGloble.responseData!!.created == "1") {
+                            view = if (listModelGlobal.responseData!!.created == "1") {
                                 "Created"
                             } else {
                                 ""
                             }
-                            callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listMOdelGloble.responseData!!.created, audioc, myDownloads)
+                            callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listModelGlobal.responseData!!.created, audioc, myDownloads)
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), activity)
                         }
                     } else if (listModelList2[pos].id == "0" && listModelList2.size > 1) {
-                        view = if (listMOdelGloble.responseData!!.created == "1") {
+                        view = if (listModelGlobal.responseData!!.created == "1") {
                             "Created"
                         } else {
                             ""
                         }
-                        callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listMOdelGloble.responseData!!.created, audioc, myDownloads)
+                        callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listModelGlobal.responseData!!.created, audioc, myDownloads)
                     } else {
                         showToast(ctx.getString(R.string.no_server_found), activity)
                     }

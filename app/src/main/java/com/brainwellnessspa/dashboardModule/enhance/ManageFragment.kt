@@ -35,7 +35,6 @@ import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
-import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetSourceName
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -599,8 +598,8 @@ class ManageFragment : Fragment() {
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
-                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                        getDownloadedList(ctx, DB)
+                    if (listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        getDownloadedList(requireActivity(), DB)
                         Log.e("download audio", downloadAudioDetailsList.toString())
                         binding.llMainLayout.visibility = View.VISIBLE
                         binding.llSpace.visibility = View.VISIBLE
@@ -715,12 +714,12 @@ class ManageFragment : Fragment() {
                                     }
                                 }
                             } else {
-                                showToast(getString(R.string.no_server_found), activity)
+                                showToast(requireActivity().getString(R.string.no_server_found), activity)
                             }
                         }
 
                         callObserverMethod(listModel.responseData!!.audio, act, DB)
-                    } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                    } else if (listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                         deleteCall(act)
                         showToast(listModel.responseMessage, act)
                         val i = Intent(act, SignInActivity::class.java)
@@ -746,7 +745,7 @@ class ManageFragment : Fragment() {
                             e.printStackTrace()
                         }
                     } else {
-                        showToast(getString(R.string.no_server_found), activity)
+                        showToast(requireActivity().getString(R.string.no_server_found), activity)
                     }
                 }
 
@@ -853,10 +852,10 @@ class ManageFragment : Fragment() {
                             if (listModelList2.size != 0) {
                                 callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, true)
                             } else {
-                                showToast(ctx.getString(R.string.no_server_found), act)
+                                showToast(requireActivity().getString(R.string.no_server_found), act)
                             }
                         } else { //                                pos = 0;
-                            showToast(ctx.getString(R.string.no_server_found), act)
+                            showToast(requireActivity().getString(R.string.no_server_found), act)
                         }
                     } //                SegmentTag()
                 }
@@ -907,18 +906,18 @@ class ManageFragment : Fragment() {
                             if (listModelList2.size != 0) {
                                 callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, audioc)
                             } else {
-                                showToast(ctx.getString(R.string.no_server_found), act)
+                                showToast(requireActivity().getString(R.string.no_server_found), act)
                             }
                         } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, audioc)
                         } else {
-                            showToast(ctx.getString(R.string.no_server_found), act)
+                            showToast(requireActivity().getString(R.string.no_server_found), act)
                         }
                     } else {
-                        showToast(ctx.getString(R.string.no_server_found), act)
+                        showToast(requireActivity().getString(R.string.no_server_found), act)
                     }
                 } else {
-                    showToast(ctx.getString(R.string.no_server_found), act)
+                    showToast(requireActivity().getString(R.string.no_server_found), act)
                 } //            SegmentTag()
             }
         })

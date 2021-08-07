@@ -217,7 +217,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivSecond.visibility = View.INVISIBLE
                     binding.ivThird.visibility = View.INVISIBLE
                     binding.ivForth.visibility = View.INVISIBLE
-                    binding.ivFifth.visibility = View.VISIBLE
+                    binding.ivFifth.visibility = View.INVISIBLE
                     binding.ivSixth.visibility = View.INVISIBLE
                     binding.ivSeventh.visibility = View.INVISIBLE
                     binding.ivEighth.visibility = View.INVISIBLE

@@ -128,6 +128,7 @@ class UserListActivity : AppCompatActivity() {
                     if (coUsersModel!!.size == model.maxuseradd!!.toInt()) {
                         showToast("Please upgrade your plan", activity)
                     } else {
+                        IsFirstClick = "0"
                         val i = Intent(activity, AddCouserActivity::class.java)
                         activity.startActivity(i)
                     }
@@ -269,6 +270,8 @@ class UserListActivity : AppCompatActivity() {
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, authOtpModel.ResponseData.directLogin)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, authOtpModel.ResponseData.isPinSet)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
                                                                 if(authOtpModel.ResponseData.planDetails.isNotEmpty()) {
                                                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)
@@ -318,6 +321,7 @@ class UserListActivity : AppCompatActivity() {
                                                                         activity.finish()
                                                                     }
                                                                 } else if (authOtpModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || authOtpModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                                    IsFirstClick = "0"
                                                                     val intent = Intent(activity, AddCouserActivity::class.java)
                                                                     activity.startActivity(intent)
                                                                     activity.finish()
@@ -408,6 +412,7 @@ class UserListActivity : AppCompatActivity() {
                 }
 
                 tvForgotPin.setOnClickListener {
+                    userList.dialog.dismiss()
                     val dialog = Dialog(activity)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.add_couser_continue_layout)

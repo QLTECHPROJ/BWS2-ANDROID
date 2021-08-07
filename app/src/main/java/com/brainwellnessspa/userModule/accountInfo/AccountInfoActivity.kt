@@ -18,6 +18,7 @@ class AccountInfoActivity : AppCompatActivity() {
     var userId: String? = ""
     var coUserId: String? = ""
     var isPinSet: String? = ""
+    var isMainAccount: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_account_info)
@@ -25,6 +26,7 @@ class AccountInfoActivity : AppCompatActivity() {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         isPinSet = shared1.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
+        isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         binding.llBack.setOnClickListener {
             finish()
         }
@@ -37,6 +39,7 @@ class AccountInfoActivity : AppCompatActivity() {
         } else {
             binding.llChangePin.visibility = View.GONE
         }
+
 
         binding.llEtProfile.setOnClickListener {
             if (isNetworkConnected(this)) {

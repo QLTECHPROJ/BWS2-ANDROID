@@ -152,6 +152,7 @@ class ManageUserActivity : AppCompatActivity() {
                         if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
                             BWSApplication.showToast("Please upgrade your plan", activity)
                         } else {
+                            BWSApplication.IsFirstClick = "0"
                             addCouserBackStatus = 1
                             val intent = Intent(applicationContext, AddCouserActivity::class.java)
                             startActivity(intent)

@@ -154,11 +154,11 @@ class HomeFragment : Fragment() {
         binding.tvName.text = userName
         val name: String?
 
-        if (isMainAccount.equals("1")){
+        if (isMainAccount.equals("1")) {
             binding.ivClickDown.visibility = View.VISIBLE
             binding.llBottomView.isEnabled = true
             binding.llBottomView.isClickable = true
-        }else {
+        } else {
             binding.ivClickDown.visibility = View.GONE
             binding.llBottomView.isEnabled = false
             binding.llBottomView.isClickable = false
@@ -226,11 +226,13 @@ class HomeFragment : Fragment() {
             if (isNetworkConnected(requireActivity())) {
                 val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(requireActivity()), R.layout.user_list_custom_layout, null, false)
                 mBottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BaseBottomSheetDialog)
-                mBottomSheetDialog?.setContentView(layoutBinding.root)
+
+                mBottomSheetDialog!!.setContentView(layoutBinding.root)
                 mBottomSheetBehavior = BottomSheetBehavior<View>()
-                mBottomSheetBehavior?.isHideable = true
-                mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-                mBottomSheetDialog?.show()
+                mBottomSheetBehavior!!.isHideable = true
+                mBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+                mBottomSheetDialog!!.show()
+
                 val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
                 layoutBinding.rvUserList.layoutManager = mLayoutManager
                 layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
@@ -431,60 +433,37 @@ class HomeFragment : Fragment() {
             showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
             APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
-//                    try {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                    val listModel = response.body()!!
-                    val gson = Gson()
-                    homelistModel = listModel
-                    when {
-                        listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                            val response = listModel.responseData
-                            if (response != null) {
-                                val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
-                                val editor = shared.edit()
-                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, response.shouldPlayDisclaimer)
-                                editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
-                                editor.apply()
+                    try {
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                        val listModel = response.body()!!
+                        val gson = Gson()
+                        homelistModel = listModel
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val response = listModel.responseData
+                                if (response != null) {
+                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
+                                    val editor = shared.edit()
+                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, response.shouldPlayDisclaimer)
+                                    editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
+                                    editor.apply()
 
-                                binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
-                                binding.tvSevere.text = response.indexScore.toString()
-                                binding.tvSevereTxt.text = scoreLevel
-                                binding.llIndicate.progress = response.indexScore!!.toInt()
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
+                                    binding.tvSevere.text = response.indexScore.toString()
+                                    binding.tvSevereTxt.text = scoreLevel
+                                    binding.llIndicate.progress = response.indexScore!!.toInt()
 
-                                binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
-                                binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
-                                binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
+                                    binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
+                                    binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
+                                    binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
 
 
-                                if (response.shouldCheckIndexScore.equals("0", true)) {
-                                    binding.llCheckIndexscore.visibility = View.GONE
-                                } else if (response.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
-                                    binding.llCheckIndexscore.visibility = View.VISIBLE
-                                }
+                                    if (response.shouldCheckIndexScore.equals("0", true)) {
+                                        binding.llCheckIndexscore.visibility = View.GONE
+                                    } else if (response.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                                        binding.llCheckIndexscore.visibility = View.VISIBLE
+                                    }
 
-                                if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
-                                    binding.tvReminder.text = getString(R.string.set_reminder)
-                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
-                                    binding.tvReminder.text = getString(R.string.update_reminder)
-                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
-                                    binding.tvReminder.text = getString(R.string.update_reminder)
-                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                }
-
-                                /* Get downloaded Playlist detail*/
-                                getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
-
-                                /* Get Past Index Score graph function */
-                                getPastIndexScore(response, binding.barChart, requireActivity())
-
-                                if (response.isFirst.equals("1", ignoreCase = true)) {
-                                    getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
-                                }
-
-                                /* reminder button click */
-                                binding.tvReminder.setOnClickListener {
                                     if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
                                         binding.tvReminder.text = getString(R.string.set_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -495,114 +474,142 @@ class HomeFragment : Fragment() {
                                         binding.tvReminder.text = getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
-                                    getReminderDay(requireActivity(), requireActivity(), userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
-                                }
 
-                                val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+                                    /* Get downloaded Playlist detail*/
+                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
 
-                                if (sleepTime.equals("", true)) {
-                                    binding.llSleepTime.visibility = View.GONE
-                                } else {
-                                    binding.llSleepTime.visibility = View.VISIBLE
-                                }
-                                binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
+                                    /* Get Past Index Score graph function */
+                                    getPastIndexScore(response, binding.barChart, requireActivity())
 
-                                when {
-                                    response.scoreIncDec.equals("", ignoreCase = true) -> {
-                                        binding.llCheckPercent.visibility = View.INVISIBLE
-                                    }
-                                    response.scoreIncDec.equals("Increase", ignoreCase = true) -> {
-                                        binding.llCheckPercent.visibility = View.VISIBLE
-                                        binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
-                                        binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
-                                    }
-                                    response.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
-                                        binding.llCheckPercent.visibility = View.VISIBLE
-                                        binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
-                                        binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
-                                    }
-                                }
-
-
-                                /* click for Go to Playlist listing detail page */
-                                binding.llPlayerView1.setOnClickListener {
-                                    callPlaylistDetailsClick()
-                                }
-                                binding.llPlayerView2.setOnClickListener {
-                                    callPlaylistDetailsClick()
-                                }
-                                binding.llPlaylistDetails.setOnClickListener {
-                                    callPlaylistDetailsClick()
-                                }
-
-                                setPlayPauseIcon()
-                                binding.llPlayPause.setOnClickListener {
-                                    if (isNetworkConnected(activity)) {
-                                        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                                        val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                        when (isPlayPlaylist) {
-                                            1 -> {
-                                                player.playWhenReady = false
-                                                isPlayPlaylist = 2
-                                                binding.llPlay.visibility = View.VISIBLE
-                                                binding.llPause.visibility = View.GONE
-                                            }
-                                            2 -> {
-                                                if (player != null) {
-                                                    val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
-                                                    if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                                        val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                                                        val editor = sharedd.edit()
-                                                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                                        editor.apply()
-                                                        player.seekTo(0, 0)
-                                                        PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![0].id
-                                                        player.playWhenReady = true
-                                                    } else {
-                                                        player.playWhenReady = true
-                                                    }
-                                                }
-                                                isPlayPlaylist = 1
-                                                binding.llPlay.visibility = View.GONE
-                                                binding.llPause.visibility = View.VISIBLE
-                                            }
-                                            else -> {
-                                                PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                                                callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
-                                                binding.llPlay.visibility = View.GONE
-                                                binding.llPause.visibility = View.VISIBLE
-                                            }
+                                    try {
+                                        if (response.isFirst.equals("1", ignoreCase = true)) {
+                                            getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
+                                        } else {
+                                            dialog.dismiss()
                                         }
-                                    } else {
-                                        showToast(getString(R.string.no_server_found), activity)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
-                                }
-                                /* register reciver fro get play pause action update and reminder update */
-                                LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
-                                LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
 
+                                    /* reminder button click */
+                                    binding.tvReminder.setOnClickListener {
+                                        if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.set_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.update_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                        } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.update_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        }
+                                        getReminderDay(requireActivity(), requireActivity(), userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
+                                    }
+
+                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+                                    if (sleepTime.equals("", true)) {
+                                        binding.llSleepTime.visibility = View.GONE
+                                    } else {
+                                        binding.llSleepTime.visibility = View.VISIBLE
+                                    }
+                                    binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
+
+                                    when {
+                                        response.scoreIncDec.equals("", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.INVISIBLE
+                                        }
+                                        response.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.VISIBLE
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
+                                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
+                                        }
+                                        response.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.VISIBLE
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
+                                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
+                                        }
+                                    }
+
+                                    /* click for Go to Playlist listing detail page */
+                                    binding.llPlayerView1.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+                                    binding.llPlayerView2.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+                                    binding.llPlaylistDetails.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+
+                                    setPlayPauseIcon()
+                                    binding.llPlayPause.setOnClickListener {
+                                        if (isNetworkConnected(activity)) {
+                                            val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                            val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                            when (isPlayPlaylist) {
+                                                1 -> {
+                                                    player.playWhenReady = false
+                                                    isPlayPlaylist = 2
+                                                    binding.llPlay.visibility = View.VISIBLE
+                                                    binding.llPause.visibility = View.GONE
+                                                }
+                                                2 -> {
+                                                    if (player != null) {
+                                                        val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
+                                                        if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                                            val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                                            val editor = sharedd.edit()
+                                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                                            editor.apply()
+                                                            player.seekTo(0, 0)
+                                                            PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![0].id
+                                                            player.playWhenReady = true
+                                                        } else {
+                                                            player.playWhenReady = true
+                                                        }
+                                                    }
+                                                    isPlayPlaylist = 1
+                                                    binding.llPlay.visibility = View.GONE
+                                                    binding.llPause.visibility = View.VISIBLE
+                                                }
+                                                else -> {
+                                                    PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
+                                                    callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
+                                                    binding.llPlay.visibility = View.GONE
+                                                    binding.llPause.visibility = View.VISIBLE
+                                                }
+                                            }
+                                        } else {
+                                            showToast(getString(R.string.no_server_found), activity)
+                                        }
+                                    }
+                                    /* register reciver fro get play pause action update and reminder update */
+                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
+
+                                }
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                requireActivity().finish()
+                            }
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
                             }
                         }
-                        listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            requireActivity().finish()
-                        }
-                        else -> {
-                            showToast(listModel.responseMessage, activity)
-                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                    }
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
@@ -1083,6 +1090,7 @@ class HomeFragment : Fragment() {
                         showToast("Please upgrade your plan", activity)
                     } else {
                         /* Add new user button click */
+                        IsFirstClick = "0"
                         addCouserBackStatus = 1
                         val i = Intent(requireActivity(), AddCouserActivity::class.java)
                         startActivity(i)
@@ -1150,7 +1158,7 @@ class HomeFragment : Fragment() {
                         val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
                         val edtOTP4 = dialog.findViewById<EditText>(R.id.edtOTP4)
                         val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-                        tvTitle.text = "Unlock"
+                        tvTitle.text = "Unlock the app"
                         editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
                         edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
                         edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
@@ -1227,6 +1235,7 @@ class HomeFragment : Fragment() {
                                                                 requireActivity().finish()
                                                             }
                                                         } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                            IsFirstClick = "0"
                                                             val intent = Intent(activity, AddCouserActivity::class.java)
                                                             requireActivity().startActivity(intent)
                                                             requireActivity().finish()
@@ -1247,9 +1256,10 @@ class HomeFragment : Fragment() {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
-                                                        if(listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                        if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
@@ -1341,6 +1351,7 @@ class HomeFragment : Fragment() {
                         }
 
                         tvForgotPin.setOnClickListener {
+                            dialog.dismiss()
                             val dialog = Dialog(requireActivity())
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                             dialog.setContentView(R.layout.add_couser_continue_layout)

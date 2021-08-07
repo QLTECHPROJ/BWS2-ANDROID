@@ -497,8 +497,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
     fun profileViewData(ctx: Context?) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-            val listCall = APINewClient.client.getCoUserDetails(coUserId)
-            listCall.enqueue(object : Callback<AuthOtpModel?> {
+            APINewClient.client.getCoUserDetails(coUserId).enqueue(object : Callback<AuthOtpModel?> {
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
                     try {
                         val viewModel = response.body()
@@ -560,6 +559,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
                                         editor.apply()
@@ -665,54 +665,59 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 Log.e("Permission", e.message!!)
             }
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                val selectedImageUri = data.data
-                //                Glide.with(this).load(selectedImageUri).dontAnimate()
-                //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
-                //                        .into(binding.civProfile);
-                setProfilePic(selectedImageUri.toString())
-                if (isNetworkConnected(activity)) {
-                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                    val map = HashMap<String, String?>()
-                    map[CONSTANTS.PREF_KEY_UserID] = coUserId
-                    val file = File(Objects.requireNonNull(getPath(selectedImageUri!!, requireActivity())))
-                    val typedFile = TypedFile(CONSTANTS.MULTIPART_FORMAT, file)
-                    apiService!!.getAddProfiles(coUserId, typedFile, object : retrofit.Callback<AddProfileModel> {
-                        override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
-                            if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                profilePicPath = addProfileModel.responseData?.profileImage
-                                setProfilePic(profilePicPath)
+            try {
+                if (data != null) {
+                    val selectedImageUri = data.data
+                    //                Glide.with(this).load(selectedImageUri).dontAnimate()
+                    //                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(126)))
+                    //                        .into(binding.civProfile);
+                    setProfilePic(selectedImageUri.toString())
+                    if (isNetworkConnected(activity)) {
+                        showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        val map = HashMap<String, String?>()
+                        map[CONSTANTS.PREF_KEY_UserID] = coUserId
+                        val file = File(Objects.requireNonNull(getPath(selectedImageUri!!, requireActivity())))
+                        val typedFile = TypedFile(CONSTANTS.MULTIPART_FORMAT, file)
+                        apiService!!.getAddProfiles(coUserId, typedFile, object : retrofit.Callback<AddProfileModel> {
+                            override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
+                                if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    profilePicPath = addProfileModel.responseData?.profileImage
+                                    setProfilePic(profilePicPath)
 //                                val p = Properties()
 //                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
-                                showToast(addProfileModel.responseMessage, activity)
-                                val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                val editor = shared.edit()
-                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
-                                editor.apply()
-                                profileViewData(activity)
-                            } else if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(addProfileModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                activity?.finish()
+                                    showToast(addProfileModel.responseMessage, activity)
+                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                    val editor = shared.edit()
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
+                                    editor.apply()
+                                    profileViewData(activity)
+                                } else if (addProfileModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                    deleteCall(activity)
+                                    showToast(addProfileModel.responseMessage, activity)
+                                    val i = Intent(activity, SignInActivity::class.java)
+                                    i.putExtra("mobileNo", "")
+                                    i.putExtra("countryCode", "")
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", "")
+                                    startActivity(i)
+                                    activity?.finish()
+                                }
                             }
-                        }
 
-                        override fun failure(e: RetrofitError) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            showToast(e.message, activity)
-                        }
-                    })
-                } else {
-                    showToast(getString(R.string.no_server_found), activity)
+                            override fun failure(e: RetrofitError) {
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                showToast(e.message, activity)
+                            }
+                        })
+                    } else {
+                        showToast(getString(R.string.no_server_found), activity)
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("Permission", e.message!!)
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
 //            val p = Properties()
@@ -786,8 +791,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         }
-        val listCall = APINewClient.client.getLogout(userId, fcmId, CONSTANTS.FLAG_ONE)
-        listCall.enqueue(object : Callback<SucessModel?> {
+
+        APINewClient.client.getLogout(userId, fcmId, CONSTANTS.FLAG_ONE).enqueue(object : Callback<SucessModel?> {
             override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                 val sucessModel = response.body()
                 //                try {
