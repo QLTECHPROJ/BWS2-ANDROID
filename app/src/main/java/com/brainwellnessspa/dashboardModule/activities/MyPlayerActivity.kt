@@ -74,7 +74,6 @@ class MyPlayerActivity : AppCompatActivity() {
     var oldSeekPosition: Long = 0
     private var downloadClick = false
     var downloadAudioDetailsList = arrayListOf<String>()
-
     //    var downloadAudioDetailsListGlobal = arrayListOf<String>()
 //    var filesDownloaded: List<File>? = null
     var fileNameList = arrayListOf<String>()
@@ -838,6 +837,8 @@ class MyPlayerActivity : AppCompatActivity() {
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         playerControlView!!.player = player
         playerControlView!!.setProgressUpdateListener { positionx: Long, bufferedPosition: Long ->
+            val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
             exoBinding.exoProgress.setPosition(positionx)
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition)
             //            myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
@@ -848,7 +849,83 @@ class MyPlayerActivity : AppCompatActivity() {
                     oldSongPos = positionx
                     callHeartbeat()
                 }
+                if((String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx), TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx)))) == (String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.duration), TimeUnit.MILLISECONDS.toSeconds(player.duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.duration))))){
+                    Log.e("STATE_ENDED ","My Player onPlaybackStateChanged Done")
+                    //                        try {
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        if (playFrom.equals("Suggested", ignoreCase = true)) {
+                            val global = GlobalInitExoPlayer()
+                            global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
+                        }
+                    }
+
+                    val p = Properties()
+                    addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Completed", CONSTANTS.track, downloadAudioDetailsList, p)
+
+                    if (mainPlayModelList[player.currentWindowIndex].id.equals(mainPlayModelList[mainPlayModelList.size - 1].id, ignoreCase = true)) {
+                        exoBinding.llPlay.visibility = View.VISIBLE
+                        exoBinding.llPause.visibility = View.GONE
+                        exoBinding.progressBar.visibility = View.GONE
+                        player.playWhenReady = false
+                        localIntent.putExtra("MyData", "pause")
+                        localBroadcastManager.sendBroadcast(localIntent)
+                        val p = Properties()
+                        val source = GetSourceName(ctx)
+                        if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
+                            addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
+                        }
+                        if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
+                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
+                            val playlistId = shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, "")
+                            val playlistName = shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, "")
+                            val playlistDescription = shared1.getString(CONSTANTS.PREF_KEY_PlaylistDescription, "")
+                            val playlistType = shared1.getString(CONSTANTS.PREF_KEY_PlaylistType, "")
+                            val totalhour = shared1.getString(CONSTANTS.PREF_KEY_Totalhour, "")
+                            val totalminute = shared1.getString(CONSTANTS.PREF_KEY_Totalminute, "")
+                            val totalAudio = shared1.getString(CONSTANTS.PREF_KEY_TotalAudio, "")
+                            val screenView = shared1.getString(CONSTANTS.PREF_KEY_ScreenView, "")
+                            val p = Properties()
+                            p.putValue("playlistId", playlistId)
+                            p.putValue("playlistName", playlistName)
+                            p.putValue("playlistDescription", playlistDescription)
+                            when {
+                                playlistType.equals("1", ignoreCase = true) -> {
+                                    p.putValue("playlistType", "Created")
+                                }
+                                playlistType.equals("0", ignoreCase = true) -> {
+                                    p.putValue("playlistType", "Default")
+                                }
+                                playlistType.equals("2") -> p.putValue("playlistType", "Suggested")
+                            }
+                            when {
+                                totalhour.equals("", ignoreCase = true) -> {
+                                    p.putValue("playlistDuration", "0h " + totalminute + "m")
+                                }
+                                totalminute.equals("", ignoreCase = true) -> {
+                                    p.putValue("playlistDuration", totalhour + "h 0m")
+                                }
+                                else -> {
+                                    p.putValue("playlistDuration", totalhour + "h " + totalminute + "m")
+                                }
+                            }
+                            p.putValue("audioCount", totalAudio)
+                            p.putValue("source", screenView)
+                            p.putValue("playerType", "Mini")
+                            p.putValue("audioService", appStatus(ctx))
+                            p.putValue("sound", hundredVolume.toString())
+                            addToSegment("Playlist Completed", p, CONSTANTS.track)
+                            Log.e("Last audio End", mainPlayModelList[position].name)
+                        } else {
+                            Log.e("Curr audio End", mainPlayModelList[position].name)
+                        }
+                    }
+                    /*  } catch (e: java.lang.Exception) {
+                          e.printStackTrace()
+                          Log.e("End State: ", e.message!!)
+                      }*/
+                }
             }
+
         }
         try {
             getMediaBitmap(ctx, mainPlayModelList[position].imageFile)
@@ -885,7 +962,7 @@ class MyPlayerActivity : AppCompatActivity() {
             /* player add listener */
             player.addListener(object : Player.EventListener {
                 override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                    Log.e("TAG", "Listener-onTracksChanged... Main Activity")
+                    Log.e("TAG", "Listener-onTracksChanged... Main Activity  :..." + player.currentWindowIndex.toString())
                     oldSongPos = 0
                     val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                     val gson = Gson()
@@ -980,7 +1057,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Buffer Started", CONSTANTS.track, downloadAudioDetailsList, p)
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         Log.e("STATE_ENDED ","My Player onPlaybackStateChanged Done")
-//                        try {
+                        try {
                             if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                                 if (playFrom.equals("Suggested", ignoreCase = true)) {
                                     val global = GlobalInitExoPlayer()
@@ -1047,14 +1124,11 @@ class MyPlayerActivity : AppCompatActivity() {
                                 } else {
                                     Log.e("Curr audio End", mainPlayModelList[position].name)
                                 }
-                                /*new Handler().postDelayed(() -> {
-                            playerNotificationManager.setPlayer(null);
-                        }, 2 * 1000);*/
                             }
-                      /*  } catch (e: java.lang.Exception) {
+                        } catch (e: java.lang.Exception) {
                             e.printStackTrace()
                             Log.e("End State: ", e.message!!)
-                        }*/
+                        }
                     } else if (state == ExoPlayer.STATE_IDLE) {
                         if (AudioInterrupted) {
                             Log.e("Exo Player state", "ExoPlayer.STATE_IDLE")

@@ -108,7 +108,7 @@ class GlobalInitExoPlayer : Service() {
             val stat = StatFs(Environment.getExternalStorageDirectory().path)
             var bytesAvailable: Long = 0
             bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong / (1024 * 1024)
-            Log.e("My Space", "Available MB : $bytesAvailable")
+//            Log.e("My Space", "Available MB : $bytesAvailable")
             return bytesAvailable
         }
 
@@ -287,18 +287,7 @@ class GlobalInitExoPlayer : Service() {
     fun GlobleInItPlayer(ctx: Context, position: Int, downloadAudioDetailsList: List<String?>, mainPlayModelList: ArrayList<MainPlayModel>, playerType: String?) {
         //        relesePlayer();
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        val UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        val shareded = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-        val audioPlayerFlag = shareded.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        val playFrom = shareded.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-        var gsonTrack: Gson = Gson()
-        val selectedAudioId = arrayListOf<String>()
-        val selectedPlaylistId = arrayListOf<String>()
-        val selectedUserId = arrayListOf<String>()
-        val selectedStartTime = arrayListOf<String>()
-        val selectedCompletedTime = arrayListOf<String>()
-        val selectedVolume = arrayListOf<String>()
 
         audioManager = ctx.getSystemService(AUDIO_SERVICE) as AudioManager
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
@@ -548,6 +537,7 @@ class GlobalInitExoPlayer : Service() {
         calendar.time = Date()
         val s = calendar.timeInMillis
         Log.e("dateAsString", s.toString())
+        Log.e("dateAsString time", calendar.time.toString())
         TimeZone.setDefault(tm)
         return s.toString()
     }

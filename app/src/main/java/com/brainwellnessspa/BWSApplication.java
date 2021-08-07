@@ -2155,10 +2155,10 @@ public class BWSApplication extends Application {
         isInBackground = myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
         if (isInBackground) {
             myappStatus = ctx.getString(R.string.Background);
-            Log.e("myappStatus", ctx.getString(R.string.Background));
+//            Log.e("myappStatus", ctx.getString(R.string.Background));
         } else {
             myappStatus = ctx.getString(R.string.Foreground);
-            Log.e("myappStatus", ctx.getString(R.string.Foreground));
+//            Log.e("myappStatus", ctx.getString(R.string.Foreground));
         }
         return myappStatus;
     }

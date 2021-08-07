@@ -134,9 +134,9 @@ class BillingOrderActivity : AppCompatActivity() {
                         val listModel: PlanDetails = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
 
-                            binding.tvTitle.text = listModel.responseData!!.planName + "Standard License with Access Intro Session."
+                            binding.tvTitle.text = listModel.responseData!!.planName + " Standard License with Access Intro Session."
                             binding.tvPlan.text = listModel.responseData!!.planName
-                            binding.tvPrice.text = "$" + listModel.responseData!!.price + listModel.responseData!!.intervalTime
+                            binding.tvPrice.text = "$" + listModel.responseData!!.price +" "+ listModel.responseData!!.intervalTime
                             val c: Calendar = Calendar.getInstance()
                             c.setTimeInMillis(listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L)
                             val d: Date = c.getTime()
