@@ -73,6 +73,10 @@ class PlanDetails {
         @Expose
         var intervalTime: String? = ""
 
+        @SerializedName("PlanDescription")
+        @Expose
+        var planDescription: String? = ""
+
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = ""

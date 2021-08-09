@@ -46,6 +46,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     //    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
     var userId: String? = ""
+    var displayPrice: String? = ""
     var comesTrue: String? = ""
     var promocode: String? = ""
     var oldPromocode: String? = ""
@@ -87,6 +88,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
 
         if (intent != null) {
             trialPeriod = intent.getStringExtra("TrialPeriod") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
+            displayPrice = intent.getStringExtra("displayPrice") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
             //            renewPlanId = getIntent().getStringExtra("renewPlanId");
             position = intent.getIntExtra("position", 0)
             if (intent.hasExtra("comeFrom")) {
@@ -138,9 +140,12 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 binding!!.tvPlanNextRenewal.text = listModelList2!![position].planNextRenewal
                 binding!!.tvSubName.text = listModelList2!![position].subName
                 binding!!.tvSubName1.text = listModelList2!![position].subName
-                binding!!.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
+               /* binding!!.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
                 binding!!.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
-                binding!!.tvTotalAmount.text = "$" + listModelList2!![position].planAmount
+                binding!!.tvTotalAmount.text = "$" + listModelList2!![position].planAmount*/
+                binding!!.tvPlanAmount.text = displayPrice
+                binding!!.tvPlanAmount1.text =displayPrice
+                binding!!.tvTotalAmount.text =displayPrice
                 sku = if (listModelList2!![position].planInterval.equals("Annualy")) {
                     "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
                 } else {
@@ -154,10 +159,12 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                 binding!!.tvSubName.text = listModelList!![position].subName
                 binding!!.tvSubName1.text = listModelList!![position].subName
                 binding!!.tvTrialPeriod.text = listModelList!![position].freeTrial
-                binding!!.tvPlanAmount.text = "$" + listModelList!![position].planAmount
+                /*binding!!.tvPlanAmount.text = "$" + listModelList!![position].planAmount
                 binding!!.tvPlanAmount1.text = "$" + listModelList!![position].planAmount
-                binding!!.tvTotalAmount.text = "$" + listModelList!![position].planAmount
-
+                binding!!.tvTotalAmount.text = "$" + listModelList!![position].planAmount*/
+                binding!!.tvPlanAmount.text = displayPrice
+                binding!!.tvPlanAmount1.text =displayPrice
+                binding!!.tvTotalAmount.text =displayPrice
                 //                if (listModelList!![position].planInterval.equals("Annualy")) {
                 //                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
                 //                } else {

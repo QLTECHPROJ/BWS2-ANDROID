@@ -117,7 +117,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     /* TODO function for battery permission result  */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
                 val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -130,7 +130,7 @@ class SplashActivity : AppCompatActivity() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
-    }
+    }*/
 
     /* TODO function for check app version  */
     private fun checkAppVersion() {
@@ -153,7 +153,8 @@ class SplashActivity : AppCompatActivity() {
                                         this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                         dialog.cancel()
                                     }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
-                                        askBattyPermission()
+//                                        askBattyPermission()
+                                        callDashboard()
                                         dialog.dismiss()
                                     }
                                     builder.create().show()
@@ -168,7 +169,8 @@ class SplashActivity : AppCompatActivity() {
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce.equals("", ignoreCase = true) -> {
-                                    askBattyPermission()
+//                                    askBattyPermission()
+                                    callDashboard()
                                 }
                             }
                         } catch (e: java.lang.Exception) {
@@ -266,13 +268,14 @@ class SplashActivity : AppCompatActivity() {
             })
         } else {
             setAnalytics(getString(R.string.segment_key_real), context)
-            askBattyPermission()
+//            askBattyPermission()
+            callDashboard()
             BWSApplication.showToast(getString(R.string.no_server_found), this@SplashActivity)
         }
     }
 
     /* TODO function for battery permission  */
-    @SuppressLint("BatteryLife")
+   /* @SuppressLint("BatteryLife")
     private fun askBattyPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val packageName = packageName
@@ -289,7 +292,7 @@ class SplashActivity : AppCompatActivity() {
         } else {
             callDashboard()
         }
-    }
+    }*/
 
     private fun callDashboard() {
         Handler(Looper.getMainLooper()).postDelayed({

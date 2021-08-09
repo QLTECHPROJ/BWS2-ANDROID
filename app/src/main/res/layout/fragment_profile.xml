@@ -128,7 +128,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -147,7 +147,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="@string/upgrade_plan"
+                            android:text="@string/purchase_plan"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
@@ -160,6 +160,46 @@
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
                     </LinearLayout>
+                    <!--<LinearLayout
+                        android:id="@+id/llPlan1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_16sdp"
+                        android:weightSum="1"
+                        android:visibility="gone"
+                        tools:ignore="UselessParent">
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_upgrade_plan_icon"
+                            android:contentDescription="@string/todo" />
+
+                        <TextView
+                            android:id="@+id/tvPlan1"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_18sdp"
+                            android:layout_weight="0.8"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/upgrade_plan"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_right_arrow_ac_icon"
+                            android:contentDescription="@string/todo" />
+                    </LinearLayout>-->
                 </LinearLayout>
 
                 <LinearLayout

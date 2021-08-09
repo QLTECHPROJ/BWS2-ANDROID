@@ -62,15 +62,15 @@ class BillingOrderActivity : AppCompatActivity() {
         }
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
-            val i = Intent(activity, UpgradePlanActivity::class.java)
-            startActivity(i)
+//            val i = Intent(activity, UpgradePlanActivity::class.java)
+//            startActivity(i)
         }
 
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
-            val i = Intent(activity, CancelMembershipActivity::class.java)
-            i.putExtra("screenView", "1")
-            startActivity(i)
+//            val i = Intent(activity, CancelMembershipActivity::class.java)
+//            i.putExtra("screenView", "1")
+//            startActivity(i)
         }
 
         /* This condition is check about application in background or foreground */
@@ -88,17 +88,17 @@ class BillingOrderActivity : AppCompatActivity() {
         BWSApplication.addToSegment(CONSTANTS.Billing_Order_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the tab layout showing code */
-        binding.viewPager.offscreenPageLimit = 2
+/*        binding.viewPager.offscreenPageLimit = 2
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan")) //        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"))
-        binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-        if (BWSApplication.isNetworkConnected(this)) {
+        binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL*/
+       /* if (BWSApplication.isNetworkConnected(this)) {
             val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this)
-        }
+        }*/
 
         if (intent.hasExtra("payment")) {
             payment = intent.getIntExtra("payment", 0)
@@ -108,14 +108,14 @@ class BillingOrderActivity : AppCompatActivity() {
         } else {
             binding.viewPager.currentItem = 0
         }
-        binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+     /*   binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 binding.viewPager.currentItem = tab.position
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
+        })*/
     }
 
     override fun onResume() {
@@ -134,20 +134,20 @@ class BillingOrderActivity : AppCompatActivity() {
                         val listModel: PlanDetails = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
 
-                            binding.tvTitle.text = listModel.responseData!!.planName + " Standard License with Access Intro Session."
+                            binding.tvTitle.text = listModel.responseData!!.planDescription
                             binding.tvPlan.text = listModel.responseData!!.planName
                             binding.tvPrice.text = "$" + listModel.responseData!!.price +" "+ listModel.responseData!!.intervalTime
                             val c: Calendar = Calendar.getInstance()
                             c.setTimeInMillis(listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L)
                             val d: Date = c.getTime()
-                            val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+                            val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
                             binding.tvActive.text =  sdf.format(d)
 
                             val c1: Calendar = Calendar.getInstance()
                             c1.setTimeInMillis(listModel.responseData!!.planExpireDate!!.toInt() * 1000L)
                             val d1: Date = c1.getTime()
-                            val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
-                            binding.tvStatusRenew.text =  sdf1.format(d1)
+                            val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+                            binding.tvStatusRenew.text =  "(Renew " + sdf1.format(d1) + ")"
 
                             binding.tvStatus.text = listModel.responseData!!.planStatus
 
@@ -174,7 +174,7 @@ class BillingOrderActivity : AppCompatActivity() {
     }
 
     /* This class is the handling tab layout */
-    inner class TabAdapter(fm: FragmentManager?, private var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
+  /*  inner class TabAdapter(fm: FragmentManager?, private var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             val bundle: Bundle
             return when (position) {
@@ -197,7 +197,7 @@ class BillingOrderActivity : AppCompatActivity() {
         override fun getCount(): Int {
             return totalTabs
         }
-    }
+    }*/
 
     /* This class is check about application in background or foreground */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {

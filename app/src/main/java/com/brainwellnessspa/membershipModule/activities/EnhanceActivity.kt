@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.billingclient.api.*
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
@@ -39,8 +40,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
-class EnhanceActivity : AppCompatActivity() {
+class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
     lateinit var binding: ActivityEnhanceBinding
     lateinit var adapter: MembershipFaqAdapter
     lateinit var subscriptionAdapter: SubscriptionAdapter
@@ -56,7 +58,11 @@ class EnhanceActivity : AppCompatActivity() {
     var planFlag: String = ""
     var planId: String = ""
     var price: String = ""
+    val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
+    lateinit var billingClient: BillingClient
+    lateinit var params: SkuDetailsParams
     var intentflag:String = ""
+    var skuDetailList = arrayListOf<SkuDetails>()
     var listModelList = arrayListOf<PlanlistInappModel.ResponseData.Plan>()
     lateinit var ctx: Context
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +81,7 @@ class EnhanceActivity : AppCompatActivity() {
         val p = Properties()
         BWSApplication.addToSegment("Enhance Plan Screen Viewed", p, CONSTANTS.screen)
 
+        setupBillingClient()
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)
         binding.llBack.setOnClickListener {
@@ -134,7 +141,7 @@ class EnhanceActivity : AppCompatActivity() {
                             listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
-                    planListAdapter = PlanListAdapter(listModelList, ctx, i)
+                    planListAdapter = PlanListAdapter(listModelList, ctx, i, skuDetailList,binding)
                     binding.rvPlanList.adapter = planListAdapter //                    planListAdapter.filter.filter(value.toString())
                 } else {
                     binding.simpleSeekbar.progress = 1
@@ -147,7 +154,7 @@ class EnhanceActivity : AppCompatActivity() {
                             listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
-                    planListAdapter = PlanListAdapter(listModelList, ctx, i)
+                    planListAdapter = PlanListAdapter(listModelList, ctx, i, skuDetailList, binding)
                     binding.rvPlanList.adapter = planListAdapter
                 }
             }
@@ -159,6 +166,33 @@ class EnhanceActivity : AppCompatActivity() {
         prepareUserData()
     }
 
+    private fun setupBillingClient() {
+        billingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build()
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { // The BillingClient is setup
+                     loadAllSKUs()
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                Log.e("Failed", "")
+
+            }
+        })
+    }
+    private fun loadAllSKUs() = if (billingClient.isReady) {
+        params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
+        billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList -> // Process the result.
+
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
+                skuDetailList = skuDetailsList as ArrayList<SkuDetails>
+            }
+        }
+
+    } else {
+        println("Billing Client not ready")
+    }
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -183,7 +217,7 @@ class EnhanceActivity : AppCompatActivity() {
                                 }
                             }
 
-                            planListAdapter = PlanListAdapter(listModelList, ctx, i)
+                            planListAdapter = PlanListAdapter(listModelList, ctx, i, skuDetailList, binding)
                             binding.rvPlanList.adapter = planListAdapter
                             binding.tvTitle.text = listModel.responseData!!.title
                             binding.tvDesc.text = listModel.responseData!!.desc
@@ -248,9 +282,10 @@ class EnhanceActivity : AppCompatActivity() {
         inner class MyViewHolder(var bind: VideoSeriesBoxLayoutBinding) : RecyclerView.ViewHolder(bind.root)
     }
 
-    class PlanListAdapter(var listModelList: List<PlanlistInappModel.ResponseData.Plan>, var ctx: Context, var i: Intent) : RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
+    class PlanListAdapter(var listModelList: List<PlanlistInappModel.ResponseData.Plan>, var ctx: Context, var i: Intent, var skuDetailList: ArrayList<SkuDetails>, var binding1: ActivityEnhanceBinding) : RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
         private var rowIndex: Int = -1
         private var pos: Int = 0
+        var ip = -1
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.plan_list_filtered_layout, parent, false)
             return MyViewHolder(v)
@@ -265,7 +300,13 @@ class EnhanceActivity : AppCompatActivity() {
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
             holder.binding.tvContent.text = listModelList[position].subName
-            holder.binding.tvAmount.text = "$" + listModelList[position].planAmount
+//            holder.binding.tvAmount.text = "$" + listModelList[position].planAmount
+            for(i in 0 until skuDetailList.size) {
+                if (listModelList[position].androidplanId!! == skuDetailList[i].sku) {
+                    holder.binding.tvAmount.text = skuDetailList[i].price
+                    break
+                }
+            }
 
             if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true)) {
                 holder.binding.rlMostPopular.visibility = View.VISIBLE
@@ -299,58 +340,17 @@ class EnhanceActivity : AppCompatActivity() {
             holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             val gson = Gson()
+            binding1.btnFreeJoin.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[0]
             i.putExtra("PlanData", gson.toJson(listModelList))
             i.putExtra("TrialPeriod", "")
             i.putExtra("position", position)
             i.putExtra("Promocode", "")
+            i.putExtra("displayPrice", holder.binding.tvAmount.text.toString())
         }
 
         override fun getItemCount(): Int {
             return listModelList.size
         }
-
-        /*     override fun getFilter(): Filter {
-                 return object : Filter() {
-                     override fun performFiltering(charSequence: CharSequence): FilterResults {
-                         val filterResults = FilterResults()
-                         val charString = charSequence.toString()
-                         if (charString.isEmpty()) {
-                             listFilterData = listData
-                         } else {
-                             val filteredList: MutableList<PlanlistInappModel.ResponseData.Plan> =
-                                 ArrayList()
-                             for (row in listData) {
-                                 if (row.profileCount!!.toLowerCase(Locale.getDefault())
-                                         .contains(charString.toLowerCase(Locale.getDefault()))
-                                 ) {
-                                     filteredList.add(row)
-                                 }
-                             }
-                             listFilterData = filteredList
-                         }
-                         filterResults.values = listFilterData
-                         return filterResults
-                     }
-
-                     override fun publishResults(
-                             charSequence: CharSequence,
-                             filterResults: FilterResults
-                     ) {
-                         if (listFilterData.size == 0) {
-     //                        binding.tvFound.setVisibility(View.VISIBLE)
-     //                        binding.tvFound.setText("Couldn't find $searchFilter. Try searching again")
-     //                        binding.rvCountryList.setVisibility(View.GONE)
-                         } else {
-     //                        binding.tvFound.setVisibility(View.GONE)
-     //                        binding.rvCountryList.setVisibility(View.VISIBLE)
-                             listFilterData =
-                                 filterResults.values as List<PlanlistInappModel.ResponseData.Plan>
-                             notifyDataSetChanged()
-                         }
-                     }
-                 }
-             }*/
-
         inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
@@ -405,5 +405,9 @@ class EnhanceActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {
+
     }
 }

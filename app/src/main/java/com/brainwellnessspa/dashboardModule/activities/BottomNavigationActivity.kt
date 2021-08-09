@@ -78,6 +78,26 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
         }
 
+    }
+
+    /* on Activity Result method use for battery optimization permission allow or deny*/
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (requestCode == 15695) {
+                val pm = getSystemService(POWER_SERVICE) as PowerManager
+                var isIgnoringBatteryOptimizations = false
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
+                } else {
+                    // Not ignoring battery optimization
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onResume() {
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
         if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
             uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -102,26 +122,6 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         }
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         val wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "com.brainwellnessspa::MyWakelockTag")
-    }
-
-    /* on Activity Result method use for battery optimization permission allow or deny*/
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (requestCode == 15695) {
-                val pm = getSystemService(POWER_SERVICE) as PowerManager
-                var isIgnoringBatteryOptimizations = false
-                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
-                if (isIgnoringBatteryOptimizations) {
-                    // Ignoring battery optimization
-                } else {
-                    // Not ignoring battery optimization
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onResume() {
         /* Net Watcher for resume player when data connection again fetch after gone*/
         NetWatch.builder(this).setCallBack(object : NetworkChangeReceiver_navigator {
             override fun onConnected(source: Int) {

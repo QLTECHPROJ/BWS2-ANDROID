@@ -1680,6 +1680,15 @@ public class BWSApplication extends Application {
             for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
                 xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
             }
+            /*    for (int i = indexData.getPastIndexScore().size(); i >0; i--) {
+                float val = Float.parseFloat(indexData.getPastIndexScore().get(i).getIndexScore());
+                yAxisValues.add(new BarEntry(i * spaceForBar, val));
+            }
+
+            final ArrayList<String> xAxisValues = new ArrayList<>();
+            for (int i = indexData.getPastIndexScore().size(); i >0; i--) {
+                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+            }*/
 
             BarDataSet barDataSet;
             barDataSet = new BarDataSet(yAxisValues, "Past wellness Score");

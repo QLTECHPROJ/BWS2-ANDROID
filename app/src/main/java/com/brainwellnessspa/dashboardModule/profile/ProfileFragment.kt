@@ -257,12 +257,28 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(activity)) {
                 val i = Intent(activity, EnhanceActivity::class.java)
+                i.putExtra("plan","0")
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
+      /*  binding.llPlan1.setOnClickListener {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
+            if (isNetworkConnected(activity)) {
+                val i = Intent(activity, EnhanceActivity::class.java)
+                i.putExtra("plan","1")
+                startActivity(i)
+                requireActivity().overridePendingTransition(0, 0)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+        }*/
 
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -562,6 +578,15 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
+                                        if(viewModel.ResponseData.planDetails.isNotEmpty()) {
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
+                                        }
                                         editor.apply()
                                     }
 
