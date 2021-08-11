@@ -139,61 +139,6 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
-                                        binding.tvTodayFeq.text = response.dayFrequency
-                                    } else {
-                                        binding.tvTodayFeq.text = "0"
-                                    }
-
-                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
-                                        binding.tvTodayTotalTime.text = response.dayTotalTime
-                                    } else {
-                                        binding.tvTodayTotalTime.text = "00:00:00"
-                                    }
-
-                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
-                                        binding.tvTodayRegularity.text = response.dayRegularity
-                                    } else {
-                                        binding.tvTodayRegularity.text = "0%"
-                                    }
-
-
-                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
-                                        binding.tvMonthFeq.text = response.monthFrequency
-                                    } else {
-                                        binding.tvMonthFeq.text = "0"
-                                    }
-
-                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
-                                        binding.tvMonthTotalTime.text = response.monthTotalTime
-                                    } else {
-                                        binding.tvMonthTotalTime.text = "00:00:00"
-                                    }
-
-                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
-                                        binding.tvMonthRegularity.text = response.monthRegularity
-                                    } else {
-                                        binding.tvMonthRegularity.text = "0%"
-                                    }
-
-                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
-                                        binding.tvYearFeq.text = response.yearFrequency
-                                    } else {
-                                        binding.tvYearFeq.text = "0"
-                                    }
-
-                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
-                                        binding.tvYearTotalTime.text = response.yearTotalTime
-                                    } else {
-                                        binding.tvYearTotalTime.text = "00:00:00"
-                                    }
-
-                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
-                                        binding.tvYearRegularity.text = response.yearRegularity
-                                    } else {
-                                        binding.tvYearRegularity.text = "0%"
-                                    }
-
         p.putValue("WellnessScore", indexScore)
         p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
@@ -567,6 +512,61 @@ class HomeFragment : Fragment() {
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
 
+
+                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvTodayFeq.text = response.dayFrequency
+                                    } else {
+                                        binding.tvTodayFeq.text = "0"
+                                    }
+
+                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvTodayTotalTime.text = response.dayTotalTime
+                                    } else {
+                                        binding.tvTodayTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvTodayRegularity.text = response.dayRegularity
+                                    } else {
+                                        binding.tvTodayRegularity.text = "0%"
+                                    }
+
+
+                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvMonthFeq.text = response.monthFrequency
+                                    } else {
+                                        binding.tvMonthFeq.text = "0"
+                                    }
+
+                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvMonthTotalTime.text = response.monthTotalTime
+                                    } else {
+                                        binding.tvMonthTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvMonthRegularity.text = response.monthRegularity
+                                    } else {
+                                        binding.tvMonthRegularity.text = "0%"
+                                    }
+
+                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvYearFeq.text = response.yearFrequency
+                                    } else {
+                                        binding.tvYearFeq.text = "0"
+                                    }
+
+                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvYearTotalTime.text = response.yearTotalTime
+                                    } else {
+                                        binding.tvYearTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvYearRegularity.text = response.yearRegularity
+                                    } else {
+                                        binding.tvYearRegularity.text = "0%"
+                                    }
                                     /* Get downloaded Playlist detail*/
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
 
