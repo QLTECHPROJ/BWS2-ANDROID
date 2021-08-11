@@ -23,7 +23,7 @@ class HomeDataModel {
     var responseStatus: String? = ""
 
     class ResponseData {
-        @SerializedName("IsLock")
+        @SerializedName("Islock")
         @Expose
         var IsLock: String? = null
 

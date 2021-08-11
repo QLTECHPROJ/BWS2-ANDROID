@@ -25,7 +25,7 @@ class HomeScreenModel {
         @Expose
         var indexScore: String? = null
         
-        @SerializedName("IsLock")
+        @SerializedName("Islock")
         @Expose
         var IsLock: String? = null
 
