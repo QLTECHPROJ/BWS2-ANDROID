@@ -561,7 +561,7 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 holder.binding.llMainLayoutForPlayer.setOnClickListener {
                     if (listModel[position].isPlay.equals("0")) {
-                        callEnhanceActivity(ctx)
+                        callEnhanceActivity(ctx,activity)
                     } else {
                         callMainTransFrag(position)
                     }
@@ -569,7 +569,7 @@ class AddAudioActivity : AppCompatActivity() {
 
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx)
+                        callEnhanceActivity(ctx,activity)
                     } else if (IsLock.equals("0")) {
                         val audioID = listModel[position].iD
                         if (playlistId.equals("", ignoreCase = true)) {
@@ -619,7 +619,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
                 holder.binding.llMainLayout.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx)
+                        callEnhanceActivity(ctx,activity)
                     } else if (IsLock.equals("0")) {
                         AudioDownloadsFragment.comefromDownload = "0"
                         addToSearch = true
@@ -630,7 +630,7 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx)
+                        callEnhanceActivity(ctx,activity)
                     } else if (IsLock.equals("0")) {
                         val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -821,14 +821,14 @@ class AddAudioActivity : AppCompatActivity() {
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
                  if (listModel[position]!!.isPlay.equals("0")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else {
                      callMainTransFrag(position)
                  }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else if (IsLock.equals("0")) {
                     if (playlistId.equals("", ignoreCase = true)) {
                         val p = Properties()

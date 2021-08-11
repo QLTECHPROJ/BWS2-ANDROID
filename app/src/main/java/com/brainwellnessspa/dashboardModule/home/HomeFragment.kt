@@ -209,7 +209,7 @@ class HomeFragment : Fragment() {
 
         binding.llSleepTime.setOnClickListener {
             if(IsLock.equals("1")){
-                callEnhanceActivity(ctx)
+              callEnhanceActivity(ctx,act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val intent = Intent(activity, SleepTimeActivity::class.java)
@@ -219,11 +219,83 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        binding.tvReminder.setOnClickListener {
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx,act)
+            } else if (IsLock.equals("0")) {
+                if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                    binding.tvReminder.text = getString(R.string.set_reminder)
+                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                    binding.tvReminder.text = getString(R.string.update_reminder)
+                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                    binding.tvReminder.text = getString(R.string.update_reminder)
+                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                }
+                getReminderDay(requireActivity(), requireActivity(), userId, homelistModel.responseData!!.suggestedPlaylist?.playlistID, homelistModel.responseData!!.suggestedPlaylist?.playlistName, requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.reminderTime, homelistModel.responseData!!.suggestedPlaylist?.reminderDay, "0", homelistModel.responseData!!.suggestedPlaylist?.reminderId, homelistModel.responseData!!.suggestedPlaylist?.isReminder, "2")
+            }
+        }
+        /* click for Go to Playlist listing detail page */
+        binding.llPlayerView1.setOnClickListener {
+            callPlaylistDetailsClick()
+        }
+        binding.llPlayerView2.setOnClickListener {
+            callPlaylistDetailsClick()
+        }
+        binding.llPlaylistDetails.setOnClickListener {
+            callPlaylistDetailsClick()
+        }
 
+        binding.llPlayPause.setOnClickListener {
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(activity)) {
+                    val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                    val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                    when (isPlayPlaylist) {
+                        1 -> {
+                            player.playWhenReady = false
+                            isPlayPlaylist = 2
+                            binding.llPlay.visibility = View.VISIBLE
+                            binding.llPause.visibility = View.GONE
+                        }
+                        2 -> {
+                            if (player != null) {
+                                val lastIndexID = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!.size - 1].id
+                                if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                    val editor = sharedd.edit()
+                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                    editor.apply()
+                                    player.seekTo(0, 0)
+                                    PlayerAudioId = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![0].id
+                                    player.playWhenReady = true
+                                } else {
+                                    player.playWhenReady = true
+                                }
+                            }
+                            isPlayPlaylist = 1
+                            binding.llPlay.visibility = View.GONE
+                            binding.llPause.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            PlayerAudioId = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![playerPosition].id
+                            callMainPlayerSuggested(0, "", homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.playlistID.toString(), homelistModel.responseData!!.suggestedPlaylist?.playlistName.toString())
+                            binding.llPlay.visibility = View.GONE
+                            binding.llPause.visibility = View.VISIBLE
+                        }
+                    }
+                } else {
+                    showToast(getString(R.string.no_server_found), activity)
+                }
+            }
+        }
         /* check Index score banner click*/
         binding.llCheckIndexscore.setOnClickListener {
             if(IsLock.equals("1")){
-                callEnhanceActivity(ctx)
+              callEnhanceActivity(ctx,act)
             }else if(IsLock.equals("0")) {
                 val intent = Intent(activity, AssProcessActivity::class.java)
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
@@ -296,7 +368,7 @@ class HomeFragment : Fragment() {
         /* Edit area of focus category icon click */
         binding.ivEditCategory.setOnClickListener {
             if(IsLock.equals("1")){
-                callEnhanceActivity(ctx)
+              callEnhanceActivity(ctx,act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val i = Intent(requireActivity(), RecommendedCategoryActivity::class.java)
@@ -311,7 +383,7 @@ class HomeFragment : Fragment() {
         /* Notification ball icon click */
         binding.llNotification.setOnClickListener {
             if(IsLock.equals("1")){
-                callEnhanceActivity(ctx)
+              callEnhanceActivity(ctx,act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val i = Intent(requireActivity(), NotificationListActivity::class.java)
@@ -585,19 +657,7 @@ class HomeFragment : Fragment() {
                                     }
 
                                     /* reminder button click */
-                                    binding.tvReminder.setOnClickListener {
-                                        if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
-                                            binding.tvReminder.text = getString(R.string.set_reminder)
-                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                        } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
-                                            binding.tvReminder.text = getString(R.string.update_reminder)
-                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                        } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
-                                            binding.tvReminder.text = getString(R.string.update_reminder)
-                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                        }
-                                        getReminderDay(requireActivity(), requireActivity(), userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
-                                    }
+                                    setPlayPauseIcon()
 
                                     val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -625,59 +685,7 @@ class HomeFragment : Fragment() {
                                         }
                                     }
 
-                                    /* click for Go to Playlist listing detail page */
-                                    binding.llPlayerView1.setOnClickListener {
-                                        callPlaylistDetailsClick()
-                                    }
-                                    binding.llPlayerView2.setOnClickListener {
-                                        callPlaylistDetailsClick()
-                                    }
-                                    binding.llPlaylistDetails.setOnClickListener {
-                                        callPlaylistDetailsClick()
-                                    }
 
-                                    setPlayPauseIcon()
-                                    binding.llPlayPause.setOnClickListener {
-                                        if (isNetworkConnected(activity)) {
-                                            val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                                            val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                            when (isPlayPlaylist) {
-                                                1 -> {
-                                                    player.playWhenReady = false
-                                                    isPlayPlaylist = 2
-                                                    binding.llPlay.visibility = View.VISIBLE
-                                                    binding.llPause.visibility = View.GONE
-                                                }
-                                                2 -> {
-                                                    if (player != null) {
-                                                        val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
-                                                        if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                                            val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                                                            val editor = sharedd.edit()
-                                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                                            editor.apply()
-                                                            player.seekTo(0, 0)
-                                                            PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![0].id
-                                                            player.playWhenReady = true
-                                                        } else {
-                                                            player.playWhenReady = true
-                                                        }
-                                                    }
-                                                    isPlayPlaylist = 1
-                                                    binding.llPlay.visibility = View.GONE
-                                                    binding.llPause.visibility = View.VISIBLE
-                                                }
-                                                else -> {
-                                                    PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                                                    callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
-                                                    binding.llPlay.visibility = View.GONE
-                                                    binding.llPause.visibility = View.VISIBLE
-                                                }
-                                            }
-                                        } else {
-                                            showToast(getString(R.string.no_server_found), activity)
-                                        }
-                                    }
                                     /* register reciver fro get play pause action update and reminder update */
                                     LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                     LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
@@ -735,6 +743,7 @@ class HomeFragment : Fragment() {
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
                                     editor.apply()
 
+                                    IsLock = response.IsLock
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
@@ -832,7 +841,7 @@ class HomeFragment : Fragment() {
                                     /* reminder button click */
                                     binding.tvReminder.setOnClickListener {
                                         if (IsLock.equals("1")) {
-                                            callEnhanceActivity(ctx)
+                                          callEnhanceActivity(ctx,act)
                                         } else if (IsLock.equals("0")) {
                                             if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
                                                 binding.tvReminder.text = getString(R.string.set_reminder)
@@ -888,7 +897,7 @@ class HomeFragment : Fragment() {
                                     setPlayPauseIcon()
                                     binding.llPlayPause.setOnClickListener {
                                         if(IsLock.equals("1")){
-                                            callEnhanceActivity(ctx)
+                                          callEnhanceActivity(ctx,act)
                                         }else if(IsLock.equals("0")) {
                                             if (isNetworkConnected(activity)) {
                                                 val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -968,7 +977,7 @@ class HomeFragment : Fragment() {
     /* click for Go to Playlist listing detail page */
     private fun callPlaylistDetailsClick() {
         if(IsLock.equals("1")){
-            callEnhanceActivity(ctx)
+          callEnhanceActivity(ctx,act)
         }else if(IsLock.equals("0")) {
             val response = homelistModel.responseData
             if (isNetworkConnected(activity)) {
@@ -1435,7 +1444,7 @@ class HomeFragment : Fragment() {
 
             llAddNewUser.setOnClickListener {
                 if(IsLock.equals("1")){
-                    callEnhanceActivity(ctx)
+                  callEnhanceActivity(ctx,act)
                 }else if(IsLock.equals("0")) {
                     if (isMainAccount.equals("1", ignoreCase = true)) {
                         llAddNewUser.visibility = View.VISIBLE
@@ -1496,7 +1505,7 @@ class HomeFragment : Fragment() {
 
             holder.bind.llAddNewCard.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                  callEnhanceActivity(ctx,act)
                 } else if (IsLock.equals("0")) {
                     if (modelList[position].isPinSet.equals("1", ignoreCase = true)) {
                         if (userId!! == modelList[position].userID) {

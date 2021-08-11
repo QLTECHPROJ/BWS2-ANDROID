@@ -400,7 +400,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 holder.bind.llSwitchStatus.isClickable = true
                 holder.bind.llSwitchStatus.isEnabled = true
                 holder.bind.llSwitchStatus.setOnClickListener {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 }
             } else if (IsLock.equals("0")) {
                 holder.bind.switchStatus.isClickable = true
@@ -447,7 +447,7 @@ class ReminderListsActivity : AppCompatActivity() {
                 }
                 holder.bind.llMainLayout.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx)
+                        callEnhanceActivity(ctx,activity)
                     } else if (IsLock.equals("0")) {
                         if (BWSApplication.isNetworkConnected(activity)) {
                             notificationStatus = true

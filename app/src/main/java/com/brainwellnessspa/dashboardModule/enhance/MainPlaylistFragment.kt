@@ -418,7 +418,7 @@ class MainPlaylistFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,act)
                 } else if (IsLock.equals("0")) {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -460,7 +460,7 @@ class MainPlaylistFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,act)
                 } else if (IsLock.equals("0")) {
                     if (MyDownloads.equals("1", ignoreCase = true)) {
                         MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, "Downloaded Playlists", act, ctx)

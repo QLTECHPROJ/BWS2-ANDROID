@@ -183,7 +183,7 @@ class MyPlayerActivity : AppCompatActivity() {
         /* info button click */
         binding.llInfo.setOnClickListener {
              if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,act)
                 } else if (IsLock.equals("0")) {
                  if (isNetworkConnected(ctx)) {
                      val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)

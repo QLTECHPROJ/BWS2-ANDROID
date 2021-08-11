@@ -439,7 +439,7 @@ public class AudioDownloadsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 comefromDownload = "1";
                 if (IsLock.equalsIgnoreCase("1")) {
-                    callEnhanceActivity(ctx);
+                    callEnhanceActivity(ctx,getActivity());
                 } else if (IsLock.equalsIgnoreCase("0")) {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);
@@ -525,7 +525,7 @@ public class AudioDownloadsFragment extends Fragment {
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
-                    callEnhanceActivity(ctx);
+                    callEnhanceActivity(ctx,getActivity());
                 } else if (IsLock.equalsIgnoreCase("0")) {
                     try {
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {

@@ -247,7 +247,7 @@ class ViewAllAudioFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (listModelList[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -283,7 +283,7 @@ class ViewAllAudioFragment : Fragment() {
             }
             holder.binding.rlMainLayout.setOnClickListener {
                 if (listModelList[position].isPlay.equals("0")) {
-                callEnhanceActivity(ctx)
+                callEnhanceActivity(ctx,activity)
             } else {
                 callMainTransFrag(position)
             }

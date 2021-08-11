@@ -385,14 +385,14 @@ class  ViewSuggestedActivity : AppCompatActivity() {
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
                  if (listModel[position].isPlay.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else if (listModel[position].isPlay.equals("0")) {
                      callMainTransFrag(position)
                  }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else if (IsLock.equals("0")) {
                     val p = Properties()
                     p.putValue("audioId", listModel[position].iD)

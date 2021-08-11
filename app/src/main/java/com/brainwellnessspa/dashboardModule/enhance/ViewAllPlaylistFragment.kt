@@ -340,7 +340,7 @@ class ViewAllPlaylistFragment : Fragment() {
             }
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx)
+                    callEnhanceActivity(ctx,activity)
                 } else if (IsLock.equals("0")) {
                     if (myDownloads.equals("1", ignoreCase = true)) {
                         //                            getMedia(listModelList.get(position).getPlaylistID());

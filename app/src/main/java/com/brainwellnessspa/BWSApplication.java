@@ -248,9 +248,8 @@ public class BWSApplication extends Application {
 
         });
     }
-    public static void callEnhanceActivity(Context ctx){
-        Intent i = new Intent(ctx, EnhanceActivity.class);
-        ctx.startActivity(i);
+    public static void callEnhanceActivity(Context ctx, Activity act){
+        showToast("Please Reactivate Your Plan", act);
     }
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
