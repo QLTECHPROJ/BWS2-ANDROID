@@ -73,7 +73,7 @@
         android:layout_below="@id/tvText"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:background="@drawable/transparent_bg"
         android:gravity="center"
         android:orientation="horizontal"

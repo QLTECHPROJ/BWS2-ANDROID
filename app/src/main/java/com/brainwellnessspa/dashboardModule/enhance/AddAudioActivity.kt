@@ -27,7 +27,6 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
-import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityAddAudioBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding
@@ -121,6 +120,21 @@ class AddAudioActivity : AppCompatActivity() {
         val closeButton = binding.searchView.findViewById<ImageView>(R.id.search_close_btn)
         binding.searchView.clearFocus()
 
+             /* Back Icon Click */
+        binding.llBack.setOnClickListener { callback() }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            registerActivityLifecycleCallbacks(AppLifecycleCallback())
+        }
+        val manager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvSuggestedList.layoutManager = manager
+        binding.rvSuggestedList.itemAnimator = DefaultItemAnimator()
+        val layoutSerach: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvSerachList.layoutManager = layoutSerach
+        binding.rvSerachList.itemAnimator = DefaultItemAnimator()
+        val layoutPlay: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        binding.rvPlayList.layoutManager = layoutPlay
+        binding.rvPlayList.itemAnimator = DefaultItemAnimator()
+
         /* close button click of search view */
         closeButton.setOnClickListener {
             binding.searchView.clearFocus()
@@ -150,23 +164,11 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 p!!.putValue("searchKeyword", search)
                 addToSegment("Audio Searched", p, CONSTANTS.track)
+//                showToast("onQueryTextChange", activity)
                 return false
             }
+
         })
-        /* Back Icon Click */
-        binding.llBack.setOnClickListener { callback() }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            registerActivityLifecycleCallbacks(AppLifecycleCallback())
-        }
-        val manager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
-        binding.rvSuggestedList.layoutManager = manager
-        binding.rvSuggestedList.itemAnimator = DefaultItemAnimator()
-        val layoutSerach: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
-        binding.rvSerachList.layoutManager = layoutSerach
-        binding.rvSerachList.itemAnimator = DefaultItemAnimator()
-        val layoutPlay: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
-        binding.rvPlayList.layoutManager = layoutPlay
-        binding.rvPlayList.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onResume() {
@@ -204,7 +206,6 @@ class AddAudioActivity : AppCompatActivity() {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getSearchBoth(coUserId, search)
             listCall.enqueue(object : Callback<SearchBothModel?> {
-                @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call<SearchBothModel?>, response: Response<SearchBothModel?>) {
                     try {
                         val listModel = response.body()
@@ -215,8 +216,10 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.rvSerachList.visibility = View.GONE
                                     binding.llError.visibility = View.VISIBLE
                                     binding.tvFound.text = "Please try again with another search term."
+//                                    showToast("Please try again", activity)
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
+//                                    showToast("Not Please try again", activity)
                                     /* set adapter data to search screen */
                                     binding.llError.visibility = View.GONE
                                     binding.rvSerachList.visibility = View.VISIBLE
@@ -225,6 +228,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                 }
                             } else if (searchEditText.text.toString().equals("", ignoreCase = true)) {
+//                                showToast("adapter null", activity)
                                 binding.rvSerachList.adapter = null
                                 binding.rvSerachList.visibility = View.GONE
                                 binding.llError.visibility = View.GONE

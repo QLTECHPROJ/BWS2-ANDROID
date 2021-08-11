@@ -69,7 +69,7 @@
                             android:layout_gravity="center_vertical"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center_vertical"
-                            android:text="Add New User"
+                            android:text="Add New Person"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>

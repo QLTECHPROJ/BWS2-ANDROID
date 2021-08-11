@@ -14,6 +14,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +64,18 @@ class CouserSetupPinActivity : AppCompatActivity() {
                 binding.btnDone.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 binding.btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
+
+            if (binding.etNewPIN.length() == 4) {
+                binding.etConfirmPIN.isFocusable = true
+                binding.etConfirmPIN.requestFocus()
+            }
+
+            if (binding.etNewPIN.length() == 4 && binding.etConfirmPIN.length() == 4) {
+                if (currentFocus != null) {
+                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                }
+            }
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -104,9 +118,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvAction = dialog.findViewById<TextView>(R.id.tvAction)
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
-            tvTitle.text = getString(R.string.popup_title)
-            tvDesc.text = getString(R.string.popup_subtitle)
+            val llDiscalimer = dialog.findViewById<LinearLayout>(R.id.llDiscalimer)
+            tvTitle.text = "Why Set Up PIN ?"
+            tvDesc.text = "This PIN will help you log in to your personal profile."
             tvAction.text = getString(R.string.ok)
+            llDiscalimer.visibility = View.GONE
             dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss()
@@ -182,9 +198,13 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        val intent = Intent(applicationContext, UserListActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
+                                        if (comeHomeScreen.equals("1", ignoreCase = true)) {
+                                            finish()
+                                        } else {
+                                            val intent = Intent(applicationContext, UserListActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
                                     }
                                 } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                                     deleteCall(activity)

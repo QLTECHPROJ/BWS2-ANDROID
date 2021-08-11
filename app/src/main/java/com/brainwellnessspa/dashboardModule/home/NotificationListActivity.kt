@@ -57,7 +57,10 @@ class NotificationListActivity : AppCompatActivity() {
         val p = Properties()
         addToSegment("Notification List Viewed", p, CONSTANTS.screen)
         binding.llError.visibility = View.GONE
-        binding.tvFound.text = "Welcome $userName! Let's get your wellness journey going!"
+
+        val unicode = 0x1F917
+        val textIcon = String(Character.toChars(unicode))
+        binding.tvFound.text = "Welcome $userName! Let's get your wellness journey going! $textIcon"
         prepareNotiData()
     }
 

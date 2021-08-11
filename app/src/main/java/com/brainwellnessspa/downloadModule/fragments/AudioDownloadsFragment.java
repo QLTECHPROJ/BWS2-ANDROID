@@ -1,5 +1,19 @@
 package com.brainwellnessspa.downloadModule.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
+import static com.brainwellnessspa.BWSApplication.appStatus;
+import static com.brainwellnessspa.BWSApplication.audioClick;
+import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
+import static com.brainwellnessspa.BWSApplication.isDisclaimer;
+import static com.brainwellnessspa.BWSApplication.miniPlayer;
+import static com.brainwellnessspa.BWSApplication.player;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
+
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -58,20 +72,6 @@ import com.segment.analytics.Properties;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.brainwellnessspa.BWSApplication.DB;
-import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
-import static com.brainwellnessspa.BWSApplication.appStatus;
-import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
-import static com.brainwellnessspa.BWSApplication.audioClick;
-import static com.brainwellnessspa.BWSApplication.miniPlayer;
-import static com.brainwellnessspa.BWSApplication.isDisclaimer;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
-import static com.brainwellnessspa.BWSApplication.player;
 
 public class AudioDownloadsFragment extends Fragment {
     public static String comefromDownload = "0";
@@ -544,19 +544,23 @@ public class AudioDownloadsFragment extends Fragment {
                             arrayList.remove(0);
                         }
                         name = arrayList.get(0).getName();
+
+                        int unicode = 0x1F6AB;
+                        String textIcon = new String(Character.toChars(unicode));
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
                             } else {
                                 if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-                                    BWSApplication.showToast("You can't delete an audio while it's playing.", ctx);
+
+                                    BWSApplication.showToast("You can't delete an audio while it's playing." + textIcon, ctx);
                                 } else {
                                     deleteAudio(holder.getAdapterPosition());
                                 }
                             }
                         } else {
                             if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-                                BWSApplication.showToast("You can't delete an audio while it's playing.", ctx);
+                                BWSApplication.showToast("You can't delete an audio while it's playing." + textIcon, ctx);
                             } else {
                                 deleteAudio(holder.getAdapterPosition());
                             }

@@ -16,8 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.addCouserBackStatus
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEnhanceUserListBinding
 import com.brainwellnessspa.databinding.EnhanceUserListLayoutBinding
@@ -71,27 +70,27 @@ class ManageUserActivity : AppCompatActivity() {
     }
 
     fun prepareEnhanceUserList(activity: Activity) {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(this)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<ManageUserListModel> = APINewClient.client.getManageUserList(mainAccountID)
             listCall.enqueue(object : Callback<ManageUserListModel> {
                 override fun onResponse(call: Call<ManageUserListModel>, response: Response<ManageUserListModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ManageUserListModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                 val p = Properties()
                                 p.putValue("totalUsers", listModel.responseData!!.userList!!.size)
-                                BWSApplication.addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
+                                addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
                                 listModel.responseData?.let {
                                     enhanceUserListAdapter = EnhanceUserListAdapter(it, binding.llAddNewUser)
                                     binding.rvUserList.adapter = enhanceUserListAdapter
                                 }
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -102,7 +101,7 @@ class ManageUserActivity : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, activity)
                             }
                         }
 
@@ -112,11 +111,11 @@ class ManageUserActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ManageUserListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
 
     }
@@ -149,13 +148,17 @@ class ManageUserActivity : AppCompatActivity() {
                 binding.llAddNewUser.setOnClickListener {
                     if (isMainAccount.equals("1", ignoreCase = true)) {
                         binding.llAddNewUser.visibility = View.VISIBLE
-                        if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
-                            BWSApplication.showToast("Please upgrade your plan", activity)
+                        if (!manageUserListModel.maxuseradd.equals("", ignoreCase = true)) {
+                            if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
+                                showToast("Please upgrade your plan", activity)
+                            } else {
+                                IsFirstClick = "0"
+                                addCouserBackStatus = 1
+                                val intent = Intent(applicationContext, AddCouserActivity::class.java)
+                                startActivity(intent)
+                            }
                         } else {
-                            BWSApplication.IsFirstClick = "0"
-                            addCouserBackStatus = 1
-                            val intent = Intent(applicationContext, AddCouserActivity::class.java)
-                            startActivity(intent)
+                            showToast("Please purchase your plan", activity)
                         }
                     } else {
                         binding.llAddNewUser.visibility = View.GONE
@@ -195,22 +198,22 @@ class ManageUserActivity : AppCompatActivity() {
                         holder.binding.tvStatus.setTextColor(ContextCompat.getColor(activity, R.color.progressfilled))
 
                         holder.binding.tvStatus.setOnClickListener {
-                            if (BWSApplication.isNetworkConnected(activity)) {
-                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            if (isNetworkConnected(activity)) {
+                                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listCall: Call<CancelInviteUserModel> = APINewClient.client.getCancelInviteUser(userId, list[position].mobile)
                                 listCall.enqueue(object : Callback<CancelInviteUserModel> {
                                     override fun onResponse(call: Call<CancelInviteUserModel>, response: Response<CancelInviteUserModel>) {
                                         try {
-                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: CancelInviteUserModel = response.body()!!
                                             when {
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     prepareEnhanceUserList(activity)
                                                 }
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                                    BWSApplication.deleteCall(activity)
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    deleteCall(activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
@@ -221,7 +224,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     finish()
                                                 }
                                                 else -> {
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                 }
                                             }
 
@@ -231,11 +234,11 @@ class ManageUserActivity : AppCompatActivity() {
                                     }
 
                                     override fun onFailure(call: Call<CancelInviteUserModel>, t: Throwable) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     }
                                 })
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                showToast(getString(R.string.no_server_found), activity)
                             }
                         }
                     }
@@ -250,22 +253,22 @@ class ManageUserActivity : AppCompatActivity() {
                         holder.binding.tvStatus.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
 
                         holder.binding.tvStatus.setOnClickListener {
-                            if (BWSApplication.isNetworkConnected(activity)) {
-                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            if (isNetworkConnected(activity)) {
+                                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listCall: Call<SetInviteUserModel> = APINewClient.client.getSetInviteUser(userId, list[position].name, list[position].mobile)
                                 listCall.enqueue(object : Callback<SetInviteUserModel> {
                                     override fun onResponse(call: Call<SetInviteUserModel>, response: Response<SetInviteUserModel>) {
                                         try {
-                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: SetInviteUserModel = response.body()!!
                                             when {
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     prepareEnhanceUserList(activity)
                                                 }
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                                    BWSApplication.deleteCall(activity)
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    deleteCall(activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
@@ -276,7 +279,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     finish()
                                                 }
                                                 else -> {
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                 }
                                             }
 
@@ -286,11 +289,11 @@ class ManageUserActivity : AppCompatActivity() {
                                     }
 
                                     override fun onFailure(call: Call<SetInviteUserModel>, t: Throwable) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     }
                                 })
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                showToast(getString(R.string.no_server_found), activity)
                             }
                         }
                     }
@@ -298,7 +301,7 @@ class ManageUserActivity : AppCompatActivity() {
 
                 binding.btnRemove.setOnClickListener {
                     if (list[selectedItem].userId.equals(list[selectedItem].mainAccountID, ignoreCase = true)) {
-                        BWSApplication.showToast("You can't remove main user over here", activity)
+                        showToast("You can't remove main person over here", activity)
                     } else {
                         dialog = Dialog(activity)
                         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -317,27 +320,27 @@ class ManageUserActivity : AppCompatActivity() {
                         btnYes.setOnClickListener {
                             Log.e("userId", userId.toString())
                             Log.e("userId dynamic", list[position].userId.toString())
-                            if (BWSApplication.isNetworkConnected(activity)) {
-                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            if (isNetworkConnected(activity)) {
+                                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val listCall: Call<RemoveInviteUserModel> = APINewClient.client.getRemoveInviteUser(list[selectedItem].userId, list[selectedItem].mainAccountID)
                                 listCall.enqueue(object : Callback<RemoveInviteUserModel> {
                                     override fun onResponse(call: Call<RemoveInviteUserModel>, response: Response<RemoveInviteUserModel>) {
                                         try {
-                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             val listModel: RemoveInviteUserModel = response.body()!!
                                             when {
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                                     val p = Properties()
                                                     p.putValue("removedUserId", list[selectedItem].userId)
-                                                    BWSApplication.addToSegment("User Removed", p, CONSTANTS.track)
+                                                    addToSegment("User Removed", p, CONSTANTS.track)
                                                     prepareEnhanceUserList(activity)
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     dialog!!.hide()
                                                 }
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                                     dialog!!.hide()
-                                                    BWSApplication.deleteCall(activity)
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    deleteCall(activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
@@ -348,7 +351,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     finish()
                                                 }
                                                 else -> {
-                                                    BWSApplication.showToast(listModel.responseMessage, activity)
+                                                    showToast(listModel.responseMessage, activity)
                                                 }
                                             }
                                         } catch (e: Exception) {
@@ -357,11 +360,11 @@ class ManageUserActivity : AppCompatActivity() {
                                     }
 
                                     override fun onFailure(call: Call<RemoveInviteUserModel>, t: Throwable) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     }
                                 })
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                                showToast(getString(R.string.no_server_found), activity)
                             }
                         }
 

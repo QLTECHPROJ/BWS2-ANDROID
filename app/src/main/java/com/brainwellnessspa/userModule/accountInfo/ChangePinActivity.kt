@@ -2,11 +2,13 @@ package com.brainwellnessspa.userModule.accountInfo
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -54,6 +56,23 @@ class ChangePinActivity : AppCompatActivity() {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            }
+
+            if (binding.etCurrentPIN.length() == 4) {
+                binding.etNewPIN.isFocusable = true
+                binding.etNewPIN.requestFocus()
+            }
+
+            if (binding.etCurrentPIN.length() == 4 && binding.etNewPIN.length() == 4) {
+                binding.etConfirmPIN.isFocusable = true
+                binding.etConfirmPIN.requestFocus()
+            }
+
+            if (binding.etCurrentPIN.length() == 4 && binding.etNewPIN.length() == 4 && binding.etConfirmPIN.length() == 4) {
+                if (currentFocus != null) {
+                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                }
             }
         }
 
@@ -180,6 +199,5 @@ class ChangePinActivity : AppCompatActivity() {
         startActivity(i)
         finish()
     }
-
 
 }

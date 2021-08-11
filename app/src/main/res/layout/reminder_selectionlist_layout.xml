@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/_15sdp"
-        android:paddingLeft="@dimen/_12sdp">
+        android:paddingVertical="@dimen/_13sdp"
+        android:paddingStart="@dimen/_12sdp"
+        android:paddingEnd="@dimen/_0sdp">
 
         <CheckBox
             android:id="@+id/cbChecked"
@@ -15,22 +16,25 @@
             android:layout_gravity="center"
             android:background="@android:color/transparent"
             android:button="@drawable/checkbox_btn_background"
-            android:gravity="center"
             android:buttonTint="@color/white"
-            android:paddingLeft="@dimen/_16sdp"
             android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:overScrollMode="never"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_0sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
-            android:overScrollMode="never"
-            android:visibility="visible" />
+            android:visibility="visible"
+            tools:ignore="SpUsage"
+            tools:targetApi="lollipop" />
 
-<!--
-        <TextView
-            android:id="@+id/tvDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start" />
--->
+        <!--
+                <TextView
+                    android:id="@+id/tvDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start" />
+        -->
 
     </LinearLayout>
 </layout>

@@ -110,7 +110,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.full_desc_layout)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.window!!.setLayout(660, ViewGroup.LayoutParams.WRAP_CONTENT)
+            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)

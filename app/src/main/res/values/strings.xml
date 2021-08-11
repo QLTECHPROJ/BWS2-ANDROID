@@ -31,8 +31,8 @@
     <string name="resent_sms">Resend SMS</string>
     <string name="edit_phone_number">Edit mobile number</string>
     <string name="t_n_c">Terms &amp; Conditions</string>
-    <string name="thank_u">Thank You</string>
-    <string name="thank_u_quotes">Congratulations on joining the Brain Wellness App Audio Membership</string>
+    <string name="thank_u">Thank You!</string>
+    <string name="thank_u_quotes">Congratulations on joining the Brain Wellness App Family.</string>
     <string name="explore_app">Explore app</string>
     <string name="view_invoice"><u>View Invoice</u></string>
     <string name="downloads">Downloads</string>
@@ -80,7 +80,7 @@
     <string name="month_free">Join Now – Get 1 Month Free</string>
     <string name="Order_Summary">Order Summary</string>
     <string name="Proceed_to_checkout">Proceed to checkout</string>
-    <string name="disclaimer"><b>Disclaimer:</b> The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
+    <string name="disclaimer"><b>Disclaimer:</b> The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness App Method).\n\nThe Brain Wellness App Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="Checkout">Checkout</string>
     <string name="Next">Next</string>
     <string name="Complete_Payment">Complete Payment</string>
@@ -229,7 +229,7 @@
     <string name="disclaimers"><u>Disclaimer</u></string>
     <string name="playlist_or_audio_search">Add or search for audio</string>
     <string name="and">and</string>
-    <string name="Disclaimer_text">The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
+    <string name="Disclaimer_text">The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness App Method).\n\nThe Brain Wellness App Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="General">General</string>
     <string name="Favorites">Favorites</string>
     <string name="Refer_A_Friend">Refer A Friend</string>
@@ -258,7 +258,7 @@
     <string name="support_link">support@brainwellnessapp.com</string>
     <string name="toast_an_error_occurred">error</string>
     <string name="Create_Account">Create Account</string>
-    <string name="welcome_quotes"><![CDATA[Welcome to \nBrain Wellness App]]></string>
+    <string name="welcome_quotes">Welcome to \nBrain Wellness App</string>
     <string name="Name">Name</string>
     <string name="Mobile_number">Mobile number</string>
     <string name="Email_address">Email address</string>
@@ -273,13 +273,13 @@
     <string name="Password">Password</string>
     <string name="add_profile">Add Profile</string>
     <string name="manage">Manage</string>
-    <string name="User_Name">User Name</string>
+    <string name="User_Name">Person Name</string>
     <string name="step_one">Step 1</string>
     <string name="step_two">Step 2</string>
     <string name="step_three">Step 3</string>
     <string name="Unlock_the_app">Unlock the app</string>
     <string name="Your_Assessment_Result">Your Assessment Result</string>
-    <string name="ass_quotes">We\'re done with the first part.\n\nIn the next step, you will have to fill an assessment form which will help us assess your mental health. \n\nNow all you have to do is fill out an assessment for that will help us ascertain your current mental &amp; emotional state. Baseed on your answers we will recommend the audios, best suited to manage your mental &amp; emotional growth.</string>
+    <string name="ass_quotes">To get your Wellness Score, please answer a few questions about how you\'re feeling right now. It will only take a few minutes. It will also help us curate the perfect wellness playlist for you.</string>
     <string name="noti_title">Your Notifications</string>
     <string name="title_activity_bottom_navigation">MainActivity</string>
     <string name="title_home">Home</string>
@@ -365,7 +365,7 @@
     <string name="payment_plan">Payment plan</string>
     <string name="start_at_9_99_week">START AT $9.99 / Week</string>
     <string name="weekly">Weekly</string>
-    <string name="access_more_than_65_audio_programs">Access More Than 75 Audio Programs.</string>
+    <string name="access_more_than_65_audio_programs">Access 75+ Audio Programs</string>
     <string name="introductory_session">Introductory Session</string>
     <string name="see_real_testimonials_nfrom_real_customers">SEE REAL TESTIMONIALS \nFROM REAL CUSTOMERS</string>
     <string name="frequently_asked_questions">Frequently Asked Questions</string>
@@ -375,7 +375,7 @@
     <string name="thank_you_for_providing_us_with_the_information_we_are_preparing_personlalised_playlists_for_you">Thank you for providing us with the information, We are preparing personalised playlists for you.</string>
     <string name="preparing_your_personalised_playlist">Preparing your personalised playlist</string>
     <string name="your_mental_health_check_up">Your Mental health check up</string>
-    <string name="add_new_user">Add New User</string>
+    <string name="add_new_user">Add New Person</string>
     <string name="it_s_good_to_have_you_here">It\'s good to have you here…</string>
     <string name="tap_anywhere_to_continue">TAP anywhere to continue</string>
     <string name="confirm">Confirm</string>
@@ -416,7 +416,7 @@
     <string name="confirm_login_pin">Confirm Login PIN</string>
     <string name="did_not_arrive">Did Not Arrive</string>
     <string name="don_t_have_account">Don\'t have account?</string>
-    <string name="proceed_with_adding_new_user">Proceed with adding New User</string>
+    <string name="proceed_with_adding_new_user">Proceed with adding New Person</string>
     <string name="user_detail">User Detail</string>
     <string name="email_address">Email address</string>
     <string name="Proceed">Proceed</string>
@@ -501,8 +501,8 @@
     <string name="you_are_not_on_track_try_to_imprrove">You are not on track, try to imprrove!</string>
     <string name="what_is_wellness_score">What is Wellness Score ?</string>
     <string name="congrats">Congrats!</string>
-    <string name="otp_quotes">Please enter the OTP to begin your journey to better mental health.</string>
-    <string name="add_user_subtitle">New users can either use this device, or another one to access the app.</string>
+    <string name="otp_quotes">Please enter the OTP to begin your journey towards better mental health.</string>
+    <string name="add_user_subtitle">New persons can either use this device, or another one to access the app.</string>
     <string name="popup_title">For multiple users on the same device</string>
     <string name="popup_subtitle">With multiple users, we create separate access pins to ensure privacy. Each person’s details will remain inaccessible to others.</string>
     <string name="create_pin">Create Pin</string>
@@ -564,11 +564,15 @@
     <string name="gender_x">Gender X</string>
     <string name="what_gender_do_you_currently_nidentify_with">What gender do you currently \nidentify with?</string>
     <string name="prev_drug_use">Prev drug use</string>
-    <string name="any_medication_is_going_on">Any Medication is going on?</string>
+    <string name="any_medication_is_going_on">Are you taking medication?</string>
     <string name="start_time">00:00</string>
     <string name="this_page_is_under_construction">This page is under construction</string>
     <string name="we_re_working_on_it">we\'re working on it</string>
     <string name="unable_to_use_notification_title">Unable to use notifications</string>
     <string name="unable_to_use_notification_content">To enable notifications, go to Settings and enable notifications for this app.</string>
+    <string name="disclaimer_audio">Disclaimer Audio</string>
+    <string name="get_your_wellness_score">Get your Wellness Score!</string>
+    <string name="add_couser_popup_title">Invite a Friend or Family Member</string>
+    <string name="enter_name_and_email_of_a_person_being_added_a_separate_profile_of_person_will_be_created_person_will_receive_a_verification_mail">Enter name and Email of a person being added . A separate profile of person will be created. Person will receive a verification mail.</string>
 </resources>
 

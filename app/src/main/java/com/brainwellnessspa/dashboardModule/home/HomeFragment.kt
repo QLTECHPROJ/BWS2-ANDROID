@@ -46,6 +46,7 @@ import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
+import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
@@ -105,7 +106,7 @@ class HomeFragment : Fragment() {
     private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.hasExtra("MyReminder")) {
-                prepareHomeData()
+                prepareHomeDataReminder()
             }
         }
     }
@@ -138,6 +139,60 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
+                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvTodayFeq.text = response.dayFrequency
+                                    } else {
+                                        binding.tvTodayFeq.text = "0"
+                                    }
+
+                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvTodayTotalTime.text = response.dayTotalTime
+                                    } else {
+                                        binding.tvTodayTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvTodayRegularity.text = response.dayRegularity
+                                    } else {
+                                        binding.tvTodayRegularity.text = "0%"
+                                    }
+
+
+                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvMonthFeq.text = response.monthFrequency
+                                    } else {
+                                        binding.tvMonthFeq.text = "0"
+                                    }
+
+                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvMonthTotalTime.text = response.monthTotalTime
+                                    } else {
+                                        binding.tvMonthTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvMonthRegularity.text = response.monthRegularity
+                                    } else {
+                                        binding.tvMonthRegularity.text = "0%"
+                                    }
+
+                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvYearFeq.text = response.yearFrequency
+                                    } else {
+                                        binding.tvYearFeq.text = "0"
+                                    }
+
+                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvYearTotalTime.text = response.yearTotalTime
+                                    } else {
+                                        binding.tvYearTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvYearRegularity.text = response.yearRegularity
+                                    } else {
+                                        binding.tvYearRegularity.text = "0%"
+                                    }
 
         p.putValue("WellnessScore", indexScore)
         p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
@@ -163,7 +218,9 @@ class HomeFragment : Fragment() {
             binding.llBottomView.isEnabled = false
             binding.llBottomView.isClickable = false
         }
+
         prepareHomeData()
+
         /* Condition for get user Image*/
         if (isNetworkConnected(activity)) {
             if (userImage.equals("", ignoreCase = true)) {
@@ -245,6 +302,42 @@ class HomeFragment : Fragment() {
             }
         }
 
+        binding.llTodayClicked.setOnClickListener {
+            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.ivToday.visibility = View.VISIBLE
+            binding.ivMonth.visibility = View.INVISIBLE
+            binding.ivYear.visibility = View.INVISIBLE
+            binding.llToday.visibility = View.VISIBLE
+            binding.llMonth.visibility = View.GONE
+            binding.llYear.visibility = View.GONE
+        }
+
+        binding.llMonthClicked.setOnClickListener {
+            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
+            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.ivToday.visibility = View.INVISIBLE
+            binding.ivMonth.visibility = View.VISIBLE
+            binding.ivYear.visibility = View.INVISIBLE
+            binding.llToday.visibility = View.GONE
+            binding.llMonth.visibility = View.VISIBLE
+            binding.llYear.visibility = View.GONE
+        }
+
+        binding.llYearClicked.setOnClickListener {
+            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
+            binding.ivToday.visibility = View.INVISIBLE
+            binding.ivMonth.visibility = View.INVISIBLE
+            binding.ivYear.visibility = View.VISIBLE
+            binding.llToday.visibility = View.GONE
+            binding.llMonth.visibility = View.GONE
+            binding.llYear.visibility = View.VISIBLE
+        }
+
         /* Edit area of focus category icon click */
         binding.ivEditCategory.setOnClickListener {/* val shared1 =
                      ctx.getSharedPreferences(CONSTANTS.InAppPurchase, Context.MODE_PRIVATE)
@@ -283,7 +376,6 @@ class HomeFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
-
         return view
     }
 
@@ -479,7 +571,253 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(response, binding.barChart, requireActivity())
+                                    getPastIndexScore(homelistModel.responseData, binding.barChart, requireActivity())
+
+                                    getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, requireActivity())
+                                    try {
+                                        if (response.isFirst.equals("1", ignoreCase = true)) {
+                                            getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
+                                        } else {
+                                            dialog.dismiss()
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+
+                                    /* reminder button click */
+                                    binding.tvReminder.setOnClickListener {
+                                        if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.set_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.update_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                        } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                            binding.tvReminder.text = getString(R.string.update_reminder)
+                                            binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        }
+                                        getReminderDay(requireActivity(), requireActivity(), userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
+                                    }
+
+                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+                                    if (sleepTime.equals("", true)) {
+                                        binding.llSleepTime.visibility = View.GONE
+                                    } else {
+                                        binding.llSleepTime.visibility = View.VISIBLE
+                                    }
+                                    binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
+
+                                    when {
+                                        response.scoreIncDec.equals("", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.INVISIBLE
+                                        }
+                                        response.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.VISIBLE
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
+                                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
+                                        }
+                                        response.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                            binding.llCheckPercent.visibility = View.VISIBLE
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
+                                            binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
+                                        }
+                                    }
+
+                                    /* click for Go to Playlist listing detail page */
+                                    binding.llPlayerView1.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+                                    binding.llPlayerView2.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+                                    binding.llPlaylistDetails.setOnClickListener {
+                                        callPlaylistDetailsClick()
+                                    }
+
+                                    setPlayPauseIcon()
+                                    binding.llPlayPause.setOnClickListener {
+                                        if (isNetworkConnected(activity)) {
+                                            val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                            val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                            when (isPlayPlaylist) {
+                                                1 -> {
+                                                    player.playWhenReady = false
+                                                    isPlayPlaylist = 2
+                                                    binding.llPlay.visibility = View.VISIBLE
+                                                    binding.llPause.visibility = View.GONE
+                                                }
+                                                2 -> {
+                                                    if (player != null) {
+                                                        val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
+                                                        if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                                            val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                                            val editor = sharedd.edit()
+                                                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                                            editor.apply()
+                                                            player.seekTo(0, 0)
+                                                            PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![0].id
+                                                            player.playWhenReady = true
+                                                        } else {
+                                                            player.playWhenReady = true
+                                                        }
+                                                    }
+                                                    isPlayPlaylist = 1
+                                                    binding.llPlay.visibility = View.GONE
+                                                    binding.llPause.visibility = View.VISIBLE
+                                                }
+                                                else -> {
+                                                    PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
+                                                    callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
+                                                    binding.llPlay.visibility = View.GONE
+                                                    binding.llPause.visibility = View.VISIBLE
+                                                }
+                                            }
+                                        } else {
+                                            showToast(getString(R.string.no_server_found), activity)
+                                        }
+                                    }
+                                    /* register reciver fro get play pause action update and reminder update */
+                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
+
+                                }
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                deleteCall(activity)
+                                showToast(listModel.responseMessage, activity)
+                                val i = Intent(activity, SignInActivity::class.java)
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                startActivity(i)
+                                requireActivity().finish()
+                            }
+                            else -> {
+                                showToast(listModel.responseMessage, activity)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                }
+            })
+        }
+    }
+
+    fun prepareHomeDataReminder() {/* Get firebase token form share pref*/
+        Log.e("MainAccountId", mainAccountId.toString())
+        Log.e("UserId", userId.toString())
+
+        if (isNetworkConnected(requireActivity())) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+            APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
+                override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
+                    try {
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                        val listModel = response.body()!!
+                        val gson = Gson()
+                        homelistModel = listModel
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                val response = listModel.responseData
+                                if (response != null) {
+                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
+                                    val editor = shared.edit()
+                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, response.shouldPlayDisclaimer)
+                                    editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
+                                    editor.apply()
+
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
+                                    binding.tvSevere.text = response.indexScore.toString()
+                                    binding.tvSevereTxt.text = scoreLevel
+                                    binding.llIndicate.progress = response.indexScore!!.toInt()
+
+                                    binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
+                                    binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
+                                    binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
+
+                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvTodayFeq.text = response.dayFrequency
+                                    } else {
+                                        binding.tvTodayFeq.text = "0"
+                                    }
+
+                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvTodayTotalTime.text = response.dayTotalTime
+                                    } else {
+                                        binding.tvTodayTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvTodayRegularity.text = response.dayRegularity
+                                    } else {
+                                        binding.tvTodayRegularity.text = "0%"
+                                    }
+
+
+                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvMonthFeq.text = response.monthFrequency
+                                    } else {
+                                        binding.tvMonthFeq.text = "0"
+                                    }
+
+                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvMonthTotalTime.text = response.monthTotalTime
+                                    } else {
+                                        binding.tvMonthTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvMonthRegularity.text = response.monthRegularity
+                                    } else {
+                                        binding.tvMonthRegularity.text = "0%"
+                                    }
+
+                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
+                                        binding.tvYearFeq.text = response.yearFrequency
+                                    } else {
+                                        binding.tvYearFeq.text = "0"
+                                    }
+
+                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
+                                        binding.tvYearTotalTime.text = response.yearTotalTime
+                                    } else {
+                                        binding.tvYearTotalTime.text = "00:00:00"
+                                    }
+
+                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
+                                        binding.tvYearRegularity.text = response.yearRegularity
+                                    } else {
+                                        binding.tvYearRegularity.text = "0%"
+                                    }
+
+                                    if (response.shouldCheckIndexScore.equals("0", true)) {
+                                        binding.llCheckIndexscore.visibility = View.GONE
+                                    } else if (response.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                                        binding.llCheckIndexscore.visibility = View.VISIBLE
+                                    }
+
+                                    if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                        binding.tvReminder.text = getString(R.string.set_reminder)
+                                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                    }
+
+                                    /* Get downloaded Playlist detail*/
+                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
 
                                     try {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {
@@ -1086,15 +1424,19 @@ class HomeFragment : Fragment() {
             llAddNewUser.setOnClickListener {
                 if (isMainAccount.equals("1", ignoreCase = true)) {
                     llAddNewUser.visibility = View.VISIBLE
-                    if (modelList.size == model.maxuseradd!!.toInt()) {
-                        showToast("Please upgrade your plan", activity)
+                    if (!model.maxuseradd.equals("", ignoreCase = true)) {
+                        if (modelList.size == model.maxuseradd!!.toInt()) {
+                            showToast("Please upgrade your plan", activity)
+                        } else {
+                            /* Add new user button click */
+                            IsFirstClick = "0"
+                            addCouserBackStatus = 1
+                            val i = Intent(requireActivity(), AddCouserActivity::class.java)
+                            startActivity(i)
+                            mBottomSheetDialog?.hide()
+                        }
                     } else {
-                        /* Add new user button click */
-                        IsFirstClick = "0"
-                        addCouserBackStatus = 1
-                        val i = Intent(requireActivity(), AddCouserActivity::class.java)
-                        startActivity(i)
-                        mBottomSheetDialog?.hide()
+                        showToast("Please purchase your plan", activity)
                     }
                 } else {
                     llAddNewUser.visibility = View.GONE
@@ -1216,7 +1558,11 @@ class HomeFragment : Fragment() {
                                                         userId = listModel.ResponseData.UserId
                                                         IsLock = listModel.ResponseData.Islock
                                                         if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                                            if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                            if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
+                                                                val intent = Intent(activity, EmailVerifyActivity::class.java)
+                                                                requireActivity().startActivity(intent)
+                                                                requireActivity().finish()
+                                                            } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
                                                                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                                 requireActivity().startActivity(intent)
@@ -1411,9 +1757,11 @@ class HomeFragment : Fragment() {
                         dialog.setCancelable(true)
                     }
                 } else if (modelList[position].isPinSet.equals("0", ignoreCase = true) || modelList[position].isPinSet.equals("", ignoreCase = true)) {
+                    comeHomeScreen = "1"
                     val i = Intent(requireActivity(), CouserSetupPinActivity::class.java)
                     i.putExtra("subUserId", modelList[position].userID)
                     requireActivity().startActivity(i)
+                    mBottomSheetDialog?.hide()
                 }
             }
         }

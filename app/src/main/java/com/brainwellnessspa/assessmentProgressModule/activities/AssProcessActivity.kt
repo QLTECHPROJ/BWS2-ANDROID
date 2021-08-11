@@ -13,6 +13,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
@@ -331,7 +332,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivSecond.visibility = View.INVISIBLE
                     binding.ivThird.visibility = View.INVISIBLE
                     binding.ivForth.visibility = View.INVISIBLE
-                    binding.ivFifth.visibility = View.VISIBLE
+                    binding.ivFifth.visibility = View.INVISIBLE
                     binding.ivSixth.visibility = View.INVISIBLE
                     binding.ivSeventh.visibility = View.INVISIBLE
                     binding.ivEighth.visibility = View.INVISIBLE
@@ -415,13 +416,13 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
             if (mainAccountId.equals(userId, ignoreCase = true)) {
-                /* TODO when add plan in user flow comment open */
-                /*val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-                startActivity(i)
-                finish()*/
-                val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
+//                 TODO when add plan in user flow comment open
+                val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                 startActivity(i)
                 finish()
+                /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
+                startActivity(i)
+                finish()*/
             } else {
                 val intent = Intent(applicationContext, ThankYouActivity::class.java)
                 startActivity(intent)

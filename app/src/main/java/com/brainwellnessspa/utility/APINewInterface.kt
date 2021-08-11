@@ -113,7 +113,7 @@ interface APINewInterface {
         userID: String?,
         @Field("CancelId")
         cancelId: String?,
-        @Field("CancelReason")
+        @Field("Reason")
         cancelReason: String?): Call<DeleteInviteUserModel?>?
 
     @POST("removeuser")

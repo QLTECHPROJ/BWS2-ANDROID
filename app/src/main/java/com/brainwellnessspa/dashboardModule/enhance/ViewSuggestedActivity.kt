@@ -164,7 +164,9 @@ class  ViewSuggestedActivity : AppCompatActivity() {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(0, 8, 0, 20);
             binding.llSpace.setLayoutParams(params);
-        }*/binding.tvTitle.text = name
+        }*/
+
+        binding.tvTitle.text = name
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvMainAudio.layoutManager = layoutManager
         binding.rvMainAudio.itemAnimator = DefaultItemAnimator()

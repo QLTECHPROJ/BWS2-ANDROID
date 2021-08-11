@@ -725,9 +725,10 @@
                             android:layout_marginRight="@dimen/_10sdp"
                             android:background="@color/white"
                             android:minHeight="@dimen/_220sdp"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <LinearLayout
+
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -742,6 +743,7 @@
 
 
                                 <LinearLayout
+                                    android:id="@+id/llTodayClicked"
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -774,6 +776,7 @@
                                 </LinearLayout>
 
                                 <LinearLayout
+                                    android:id="@+id/llMonthClicked"
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -806,6 +809,7 @@
                                 </LinearLayout>
 
                                 <LinearLayout
+                                    android:id="@+id/llYearClicked"
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -840,6 +844,7 @@
 
 
                             <LinearLayout
+                                android:id="@+id/llToday"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_6sdp"
@@ -850,7 +855,6 @@
                                 android:paddingBottom="@dimen/_20sdp"
                                 android:weightSum="1">
 
-
                                 <LinearLayout
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
@@ -860,7 +864,6 @@
                                     android:orientation="vertical">
 
                                     <ImageView
-                                        android:id="@+id/ivFeq"
                                         android:layout_width="@dimen/_28sdp"
                                         android:layout_height="@dimen/_28sdp"
                                         android:layout_marginTop="@dimen/_6sdp"
@@ -868,7 +871,6 @@
                                         android:src="@drawable/ic_feq_icon" />
 
                                     <TextView
-                                        android:id="@+id/tvFeq"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_8sdp"
@@ -880,15 +882,14 @@
                                         tools:ignore="SpUsage" />
 
                                     <TextView
-                                        android:id="@+id/tvFeqNum"
+                                        android:id="@+id/tvTodayFeq"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="@string/_2"
                                         android:textColor="#005baa"
-                                        android:textSize="@dimen/_22sdp"
+                                        android:textSize="@dimen/_20sdp"
                                         tools:ignore="SpUsage" />
 
                                 </LinearLayout>
@@ -902,7 +903,6 @@
                                     android:orientation="vertical">
 
                                     <ImageView
-                                        android:id="@+id/ivTotalTime"
                                         android:layout_width="@dimen/_28sdp"
                                         android:layout_height="@dimen/_28sdp"
                                         android:layout_marginTop="@dimen/_6sdp"
@@ -910,7 +910,6 @@
                                         android:src="@drawable/ic_stopwatch_icon" />
 
                                     <TextView
-                                        android:id="@+id/tvTotalTime"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_8sdp"
@@ -922,15 +921,14 @@
                                         tools:ignore="SpUsage" />
 
                                     <TextView
-                                        android:id="@+id/tvTotalTimeNum"
+                                        android:id="@+id/tvTodayTotalTime"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="@string/_11_38_47"
                                         android:textColor="#005baa"
-                                        android:textSize="@dimen/_22sdp"
+                                        android:textSize="@dimen/_20sdp"
                                         tools:ignore="SpUsage" />
 
                                 </LinearLayout>
@@ -944,7 +942,6 @@
                                     android:orientation="vertical">
 
                                     <ImageView
-                                        android:id="@+id/ivRegularity"
                                         android:layout_width="@dimen/_28sdp"
                                         android:layout_height="@dimen/_28sdp"
                                         android:layout_marginTop="@dimen/_6sdp"
@@ -952,7 +949,6 @@
                                         android:src="@drawable/ic_bar_chart_icon" />
 
                                     <TextView
-                                        android:id="@+id/tvRegularity"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_4sdp"
@@ -964,15 +960,276 @@
                                         tools:ignore="SpUsage" />
 
                                     <TextView
-                                        android:id="@+id/tvRegularityNum"
+                                        android:id="@+id/tvTodayRegularity"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_20sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="@string/_60"
                                         android:textColor="#005baa"
-                                        android:textSize="@dimen/_22sdp"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llMonth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_6sdp"
+                                android:background="@drawable/account_gray_bg"
+                                android:baselineAligned="false"
+                                android:gravity="center"
+                                android:visibility="gone"
+                                android:paddingTop="@dimen/_20sdp"
+                                android:paddingBottom="@dimen/_20sdp"
+                                android:weightSum="1">
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.35"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_feq_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/frequency"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_12sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthFeq"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.3"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_stopwatch_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/total_time"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_12sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthTotalTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.35"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_bar_chart_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_4sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/regularity"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_14sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthRegularity"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llYear"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_6sdp"
+                                android:background="@drawable/account_gray_bg"
+                                android:baselineAligned="false"
+                                android:gravity="center"
+                                android:visibility="gone"
+                                android:paddingTop="@dimen/_20sdp"
+                                android:paddingBottom="@dimen/_20sdp"
+                                android:weightSum="1">
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.35"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_feq_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/frequency"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_12sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvYearFeq"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.3"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_stopwatch_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/total_time"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_12sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvYearTotalTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
+                                        tools:ignore="SpUsage" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="@dimen/_0sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.35"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_28sdp"
+                                        android:layout_height="@dimen/_28sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_bar_chart_icon" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_4sdp"
+                                        android:fontFamily="@font/montserrat_regular"
+                                        android:gravity="start"
+                                        android:text="@string/regularity"
+                                        android:textColor="@color/light_gray"
+                                        android:textSize="@dimen/_14sdp"
+                                        tools:ignore="SpUsage" />
+
+                                    <TextView
+                                        android:id="@+id/tvYearRegularity"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/_20sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:gravity="start"
+                                        android:textColor="#005baa"
+                                        android:textSize="@dimen/_20sdp"
                                         tools:ignore="SpUsage" />
 
                                 </LinearLayout>

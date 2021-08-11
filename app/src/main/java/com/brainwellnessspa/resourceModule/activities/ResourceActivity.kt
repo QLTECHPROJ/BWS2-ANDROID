@@ -80,6 +80,7 @@ class ResourceActivity : AppCompatActivity() {
         activity = this@ResourceActivity
         ctx = this@ResourceActivity
         binding.llBack.setOnClickListener {
+            category = ""
             myBackPress = true
             AudioDownloadsFragment.comefromDownload = "0"
             finish()
@@ -241,6 +242,7 @@ class ResourceActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        category = ""
         myBackPress = true
         AudioDownloadsFragment.comefromDownload = "0"
         finish()

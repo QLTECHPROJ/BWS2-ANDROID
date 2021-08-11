@@ -241,7 +241,7 @@ class ManageFragment : Fragment() {
         return view
     }
 
-    private fun callMyPlaylistActivity(new1: String, playlistID: String?, playlistName: String?, act:Activity) {
+    private fun callMyPlaylistActivity(new1: String, playlistID: String?, playlistName: String?, act: Activity) {
         val i = Intent(act, MyPlaylistListingActivity::class.java)
         i.putExtra("New", new1)
         i.putExtra("PlaylistID", playlistID)
@@ -603,7 +603,7 @@ class ManageFragment : Fragment() {
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
-                    if (listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                    if (listModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                         getDownloadedList(requireActivity(), DB)
                         Log.e("download audio", downloadAudioDetailsList.toString())
                         binding.llMainLayout.visibility = View.VISIBLE
@@ -671,13 +671,8 @@ class ManageFragment : Fragment() {
                             } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
                                 binding.tvReminder.text = "Update reminder"
                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                              }
-                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID,
-                                listModel.responseData!!.suggestedPlaylist!!.playlistName, activity,
-                                listModel.responseData!!.suggestedPlaylist!!.reminderTime,
-                                listModel.responseData!!.suggestedPlaylist!!.reminderDay,
-                                "0",listModel.responseData!!.suggestedPlaylist!!.reminderId
-                                ,listModel.responseData!!.suggestedPlaylist!!.isReminder,"2")
+                            }
+                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0", listModel.responseData!!.suggestedPlaylist!!.reminderId, listModel.responseData!!.suggestedPlaylist!!.isReminder, "2")
                         }
 
                         setPlayPauseIcon()
@@ -744,8 +739,7 @@ class ManageFragment : Fragment() {
                 private fun callPlaylistDetails() {
                     if (isNetworkConnected(activity)) {
                         try {
-                            callMyPlaylistActivity("0",homelistModel.responseData!!.suggestedPlaylist!!.playlistID
-                                , homelistModel.responseData!!.suggestedPlaylist!!.playlistName,act)
+                            callMyPlaylistActivity("0", homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName, act)
                             act.overridePendingTransition(0, 0)
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -1125,20 +1119,19 @@ class ManageFragment : Fragment() {
         callMyPlayer(ctx, act)
     }
 
-    private fun callAddToplaylistClick(event: String, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, listm: List<HomeDataModel.ResponseData.Play.Detail>?, position: Int) {
+    private fun callAddToplaylistClick(event: String, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, listm: List<HomeDataModel.ResponseData.Play.Detail>?, position: Int, ctx: Context) {
 
         val i = Intent(ctx, AddPlaylistActivity::class.java)
         val p = Properties()
-        if(event.equals("Playlist View All Screen")) {
+        if (event.equals("Playlist View All Screen")) {
             p.putValue("playlistId", listm!![position].playlistID)
             p.putValue("playlistName", listm[position].playlistName)
-            p.putValue("source",event)
+            p.putValue("source", event)
             if (listm[position].created.equals("1", ignoreCase = true)) {
                 p.putValue("playlistType", "Created")
             } else if (listm[position].created == "0") {
                 p.putValue("playlistType", "Default")
-            } else if (listm[position].created.equals("2"))
-                p.putValue("playlistType", "Suggested")
+            } else if (listm[position].created.equals("2")) p.putValue("playlistType", "Suggested")
 
             if (listm[position].totalhour == "") {
                 p.putValue("playlistDuration", "0h " + listm[position].totalhour + "m")
@@ -1149,21 +1142,21 @@ class ManageFragment : Fragment() {
             }
             i.putExtra("PlaylistID", listm[position].playlistID)
             i.putExtra("AudioId", "")
-        }else{
+        } else {
             p.putValue("audioId", listModel[position].id)
-            p.putValue("audioName",listModel[position].name)
+            p.putValue("audioName", listModel[position].name)
             p.putValue("audioDescription", "")
-            p.putValue("directions",listModel[position].audioDirection)
-            p.putValue("masterCategory",listModel[position].audiomastercat)
-            p.putValue("subCategory",listModel[position].audioSubCategory)
-            p.putValue("audioDuration",listModel[position].audioDuration)
+            p.putValue("directions", listModel[position].audioDirection)
+            p.putValue("masterCategory", listModel[position].audiomastercat)
+            p.putValue("subCategory", listModel[position].audioSubCategory)
+            p.putValue("audioDuration", listModel[position].audioDuration)
             p.putValue("position", GetCurrentAudioPosition())
             if (downloadAudioDetailsList.contains(listModel[position].name)) {
                 p.putValue("audioType", "Downloaded")
             } else {
                 p.putValue("audioType", "Streaming")
             }
-            p.putValue("source",event)
+            p.putValue("source", event)
             p.putValue("audioService", appStatus(ctx))
             p.putValue("bitRate", "")
             p.putValue("sound", hundredVolume.toString())
@@ -1178,6 +1171,7 @@ class ManageFragment : Fragment() {
         i.putExtra("Liked", "0")
         ctx.startActivity(i)
     }
+
     class AudioAdapter(private val listModel: List<HomeDataModel.ResponseData.Audio>, private val ctx: Context, var binding: FragmentManageBinding, val act: Activity, var fragmentManager1: FragmentManager, var DB: AudioDatabase) : RecyclerView.Adapter<AudioAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var binding: MainAudioLayoutBinding) : RecyclerView.ViewHolder(binding.root)
@@ -1344,7 +1338,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
-                ManageFragment().callAddToplaylistClick("Playlist View All Screen", listm, listModel.details, position)
+                ManageFragment().callAddToplaylistClick("Playlist View All Screen", listm, listModel.details, position, ctx)
             }
 
 
@@ -1416,7 +1410,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position)
+                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
             }
 
             holder.binding.llMainLayout.setOnClickListener {
@@ -1482,7 +1476,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position)
+                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
             }
 
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
@@ -1589,7 +1583,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position)
+                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
             }
 
             holder.binding.llMainLayout.setOnClickListener {
@@ -1655,7 +1649,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position)
+                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
             }
 
             holder.binding.llMainLayout.setOnClickListener {
@@ -1666,7 +1660,6 @@ class ManageFragment : Fragment() {
                 }
             }
         }
-
 
         override fun getItemCount(): Int {
             return if (4 > listModel.size) {

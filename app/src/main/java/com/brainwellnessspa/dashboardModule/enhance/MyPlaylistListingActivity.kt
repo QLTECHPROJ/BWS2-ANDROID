@@ -1363,7 +1363,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                 if (audioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
-                    showToast("You can't delete a playlist while it's playing.", activity)
+                    val unicode = 0x1F6AB
+                    val textIcons = String(Character.toChars(unicode))
+                    showToast("You can't delete a playlist while it's playing. $textIcons", activity)
                 } else {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -2005,7 +2007,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson)
                 editor.apply()
             }
-            showToast("Your playlist is being downloaded!", act)
+
+            val unicode = 0x1F44A
+            val textIcon = String(Character.toChars(unicode))
+            showToast("Your playlist is being downloaded! $textIcon", act)
             saveAllMedia(ctx, playlistSongs, DB)
         } else {
             var downloadOrNot = false
@@ -2063,10 +2068,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     fileNameList = name
                     playlistDownloadId = downloadPlaylistId
                 }
-                showToast("Yess! Download complete. Your wellness journey is ready!", act)
+                val unicode = 0x1F44C
+                val textIcon = String(Character.toChars(unicode))
+                showToast("Yess! Download complete. Your wellness journey is ready! $textIcon", act)
                 saveMedia(playlistSongs, position, llDownload, ivDownloads, 0, ctx, DB)
             } else {
-                showToast("Your audio is being downloaded!", act)
+                val unicode = 0x1F642
+                val textIcon4 = String(Character.toChars(unicode))
+                showToast("Your audio is being downloaded! $textIcon4", act)
                 saveMedia(playlistSongs, position, llDownload, ivDownloads, 100, ctx, DB)
             }
             val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)

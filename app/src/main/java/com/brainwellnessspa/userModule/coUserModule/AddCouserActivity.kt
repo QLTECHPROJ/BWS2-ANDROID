@@ -9,8 +9,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -53,9 +55,11 @@ class AddCouserActivity : AppCompatActivity() {
             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
             val tvAction = dialog.findViewById<TextView>(R.id.tvAction)
+            val llDiscalimer = dialog.findViewById<LinearLayout>(R.id.llDiscalimer)
+            llDiscalimer.visibility = View.GONE
             val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
-            tvTitle.text = getString(R.string.popup_title)
-            tvDesc.text = getString(R.string.popup_subtitle)
+            tvTitle.text = getString(R.string.add_couser_popup_title)
+            tvDesc.text = "Happiness is sweeter when shared. That's why we're eager for you to share your subscription with someone you care for.\nThe first person invited gets the same benefits as you at no additional cost."
             tvAction.text = getString(R.string.ok)
             dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -136,6 +140,7 @@ class AddCouserActivity : AppCompatActivity() {
                                         }
                                     }*/
                             } else if (authOtpModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || authOtpModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                comeHomeScreen = "0"
                                 val i = Intent(applicationContext, CouserSetupPinActivity::class.java)
                                 i.putExtra("subUserId", authOtpModel.ResponseData.UserId)
                                 startActivity(i)
@@ -195,6 +200,10 @@ class AddCouserActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finishAffinity()
+        if (IsFirstClick.equals("0")) {
+            finish()
+        } else {
+            finishAffinity()
+        }
     }
 }

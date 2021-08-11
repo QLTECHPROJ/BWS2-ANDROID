@@ -33,6 +33,42 @@ class HomeScreenModel {
         @Expose
         var isFirst: String? = ""
 
+        @SerializedName("DayRegularity")
+        @Expose
+        var dayRegularity: String? = null
+
+        @SerializedName("DayTotalTime")
+        @Expose
+        var dayTotalTime: String? = null
+
+        @SerializedName("DayFrequency")
+        @Expose
+        var dayFrequency: String? = null
+
+        @SerializedName("MonthRegularity")
+        @Expose
+        var monthRegularity: String? = null
+
+        @SerializedName("MonthTotalTime")
+        @Expose
+        var monthTotalTime: String? = null
+
+        @SerializedName("MonthFrequency")
+        @Expose
+        var monthFrequency: String? = null
+
+        @SerializedName("YearRegularity")
+        @Expose
+        var yearRegularity: String? = null
+
+        @SerializedName("YearTotalTime")
+        @Expose
+        var yearTotalTime: String? = null
+
+        @SerializedName("YearFrequency")
+        @Expose
+        var yearFrequency: String? = null
+
         @SerializedName("shouldCheckIndexScore")
         @Expose
         var shouldCheckIndexScore: String? = ""
@@ -60,6 +96,10 @@ class HomeScreenModel {
         @SerializedName("PastIndexScore")
         @Expose
         var pastIndexScore: List<PastIndexScore>? = null
+
+        @SerializedName("GraphAnalytics")
+        @Expose
+        var graphAnalytics: List<GraphAnalytics>? = null
 
         @SerializedName("SessionScore")
         @Expose
@@ -119,6 +159,16 @@ class HomeScreenModel {
             @SerializedName("IndexScore")
             @Expose
             var indexScore: String? = ""
+        }
+
+        class GraphAnalytics {
+            @SerializedName("Day")
+            @Expose
+            var day: String? = null
+
+            @SerializedName("Time")
+            @Expose
+            var time: String? = null
         }
 
         class SuggestedPlaylist {

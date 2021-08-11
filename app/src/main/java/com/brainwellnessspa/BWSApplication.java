@@ -172,11 +172,11 @@ public class BWSApplication extends Application {
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;
-    public static String addToRecentPlayId = "0";
+    public static String addToRecentPlayId = "0",comeHomeScreen = "";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public static String PlayerAudioId = "", PlayerStatus = "", IsFirstClick = "0";
+    public static String PlayerAudioId = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsFirstAddUserClick = "";
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
@@ -462,8 +462,9 @@ public class BWSApplication extends Application {
                                     dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                     final TextView tvDesc = dialog1.findViewById(R.id.tvDesc);
                                     final RelativeLayout tvClose = dialog1.findViewById(R.id.tvClose);
+                                    final LinearLayout llDiscalimer = dialog1.findViewById(R.id.llDiscalimer);
                                     tvDesc.setText(listModel.getResponseData().get(0).getAudioDescription());
-
+                                    llDiscalimer.setVisibility(View.VISIBLE);
                                     dialog1.setOnKeyListener((v3, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialog1.dismiss();
@@ -974,8 +975,9 @@ public class BWSApplication extends Application {
                                 dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                 final TextView tvDesc = dialog1.findViewById(R.id.tvDesc);
                                 final RelativeLayout tvClose = dialog1.findViewById(R.id.tvClose);
+                                final LinearLayout llDiscalimer = dialog1.findViewById(R.id.llDiscalimer);
                                 tvDesc.setText(listModel.getResponseData().getPlaylistDesc());
-
+                                llDiscalimer.setVisibility(View.GONE);
                                 dialog1.setOnKeyListener((v3, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog1.dismiss();
@@ -1067,7 +1069,9 @@ public class BWSApplication extends Application {
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0");
                                 if (AudioFlag.equalsIgnoreCase("playlist") && pID.equalsIgnoreCase(PlaylistId)) {
-                                    showToast("You can't delete a playlist while it's playing.", act);
+                                    int unicode = 0x1F6AB;
+                                    String textIcons = new String(Character.toChars(unicode));
+                                    showToast("You can't delete a playlist while it's playing." + textIcons, act);
                                 } else {
                                     final Dialog dialoged = new Dialog(ctx);
                                     dialoged.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1517,9 +1521,15 @@ public class BWSApplication extends Application {
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-            editor.commit();
+            editor.apply();
         }
-        showToast("Your playlist is being downloaded!", act);
+
+        int unicode = 0x1F44C;
+        String textIcon = new String(Character.toChars(unicode));
+
+        int unicode1 = 0x1F44A;
+        String textIcon1 = new String(Character.toChars(unicode));
+        showToast("Your playlist is being downloaded! " + textIcon1, act);
         savePlaylist(ctx, downloadPlaylistDetails);
         saveAllMedia(playlistSongsList, PlaylistID, CoUserId, ctx, downloadPlaylistDetails);
     }
@@ -1684,15 +1694,6 @@ public class BWSApplication extends Application {
             for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
                 xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
             }
-            /*    for (int i = indexData.getPastIndexScore().size(); i >0; i--) {
-                float val = Float.parseFloat(indexData.getPastIndexScore().get(i).getIndexScore());
-                yAxisValues.add(new BarEntry(i * spaceForBar, val));
-            }
-
-            final ArrayList<String> xAxisValues = new ArrayList<>();
-            for (int i = indexData.getPastIndexScore().size(); i >0; i--) {
-                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
-            }*/
 
             BarDataSet barDataSet;
             barDataSet = new BarDataSet(yAxisValues, "Past wellness Score");
@@ -1712,6 +1713,8 @@ public class BWSApplication extends Application {
             barChart.invalidate();
 
             XAxis xl = barChart.getXAxis();
+            xl.setDrawGridLines(true);
+            xl.setDrawAxisLine(true);
             xl.setGranularity(1f);
             xl.setLabelCount(7);
             xl.setLabelRotationAngle(0);
@@ -1725,7 +1728,88 @@ public class BWSApplication extends Application {
             });*/
             YAxis yl = barChart.getAxisLeft();
             yl.setDrawAxisLine(true);
-            yl.setDrawGridLines(false);
+            yl.setDrawGridLines(true);
+            yl.setGranularity(1f);
+            yl.setGranularityEnabled(true);
+            yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+            barChart.setVisibleXRangeMaximum(xAxisValues.size());
+            barChart.setDragEnabled(false);
+            barChart.setTouchEnabled(false);
+            barChart.getAxisRight().setEnabled(false);
+            barChart.setVisibleXRange(0, xAxisValues.size());
+            barChart.getBarData().setBarWidth(0.4f);
+            barChart.getXAxis().setDrawGridLines(false);
+            barChart.setFitBars(true);
+
+            Legend l = barChart.getLegend();
+            l.setEnabled(true);
+//                        l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+            l.setWordWrapEnabled(true);
+        }
+    }
+
+    public static void getUserActivity(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
+        if (indexData.getGraphAnalytics().size() == 0) {
+            barChart.clear();
+            barChart.setVisibility(View.GONE);
+        } else {
+            barChart.setVisibility(View.VISIBLE);
+            barChart.setDescription(null);
+            barChart.setPinchZoom(false);
+            barChart.setScaleEnabled(false);
+            barChart.setDrawBarShadow(false);
+            barChart.setDrawGridBackground(false);
+            barChart.getAxisLeft().setDrawGridLines(false);
+            barChart.getXAxis().setDrawGridLines(false);
+            barChart.setBackgroundColor(Color.TRANSPARENT); //set whatever color you prefer
+
+            //        float barWidth = 1f;
+            int spaceForBar = 1;
+            ArrayList<BarEntry> yAxisValues = new ArrayList<>();
+
+            for (int i = 0; i < indexData.getGraphAnalytics().size(); i++) {
+                float val = Float.parseFloat(indexData.getGraphAnalytics().get(i).getTime());
+                yAxisValues.add(new BarEntry(i * spaceForBar, val));
+            }
+
+            final ArrayList<String> xAxisValues = new ArrayList<>();
+            for (int i = 0; i < indexData.getGraphAnalytics().size(); i++) {
+                xAxisValues.add(indexData.getGraphAnalytics().get(i).getDay());
+            }
+
+            BarDataSet barDataSet;
+            barDataSet = new BarDataSet(yAxisValues, "Last 7 Days Time");
+            barDataSet.setDrawIcons(false);
+            barDataSet.setColor(act.getResources().getColor(R.color.blue));
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(barDataSet);
+
+            BarData barData = new BarData(dataSets);
+            barData.setBarWidth(4f);
+            barData.setValueFormatter(new MyValueFormatter());
+            barData.setValueTextSize(7f);
+
+            barChart.setData(barData);
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
+
+            XAxis xl = barChart.getXAxis();
+            xl.setGranularity(1f);
+            xl.setDrawGridLines(true);
+            xl.setLabelCount(7);
+            xl.setLabelRotationAngle(0);
+            xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xl.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+            /*xl.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return String.valueOf(xAxisValues.get((int) value));
+                }
+            });*/
+            YAxis yl = barChart.getAxisLeft();
+            yl.setDrawAxisLine(true);
+            yl.setDrawGridLines(true);
             yl.setGranularity(1f);
             yl.setGranularityEnabled(true);
             yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
@@ -1792,7 +1876,9 @@ public class BWSApplication extends Application {
                 llDownload.setClickable(false);
                 llDownload.setEnabled(false);
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                showToast("Your audio is being downloaded!", act);
+                int unicode = 0x1F642;
+                String textIcon4 = new String(Character.toChars(unicode));
+                showToast("Your audio is being downloaded!" +textIcon4, act);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -1848,7 +1934,9 @@ public class BWSApplication extends Application {
                     llDownload.setClickable(false);
                     llDownload.setEnabled(false);
                     SaveMedia(i, 0, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
-                    showToast("Yess! Download complete. Your wellness journey is ready!", act);
+                    int unicode = 0x1F44C;
+                    String textIcon = new String(Character.toChars(unicode));
+                    showToast("Yess! Download complete. Your wellness journey is ready!" + textIcon, act);
                 }
             }
         } catch (Exception e) {
@@ -2522,6 +2610,8 @@ public class BWSApplication extends Application {
 
     public static void deleteCall(Context context) {
         addCouserBackStatus = 0;
+        cancelId = "";
+        deleteId = "";
         IsFirstClick = "0";
         currantTime = "";
         am_pm = "";

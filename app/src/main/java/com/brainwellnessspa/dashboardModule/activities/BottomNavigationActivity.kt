@@ -31,7 +31,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ir.drax.netwatch.NetWatch
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
-import java.util.ArrayList
+import java.util.*
 
 class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator {
     /* main dashboard bottom activity for all menu */
@@ -42,7 +42,6 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     var userId: String? = ""
     var coUserId: String? = ""
     var userName: String? = ""
-    var goplaylist = ""
     var playlistID = ""
     var playlistName = ""
     var playlistImage = ""
@@ -74,6 +73,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         if (intent.extras != null) {
             isFirst = intent.getStringExtra("IsFirst")
         }
+        val unicode = 0x2B05
+        val textIcon = String(Character.toChars(unicode))
+
         if (isFirst.equals("1", ignoreCase = true)) {
             showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
         }
@@ -134,9 +136,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                 if (!json.equals(gson.toString(), ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<UserActivityTrackModel?>?>() {}.type
                     userActivityTrackModel = gson.fromJson(json, type)
-                    if (userActivityTrackModel.size != 0){
+                    if (userActivityTrackModel.size != 0) {
                         val global = GlobalInitExoPlayer()
-                        global.getUserActivityCall(this@BottomNavigationActivity, "","","")
+                        global.getUserActivityCall(this@BottomNavigationActivity, "", "", "")
                     }
                 }
             }
@@ -169,6 +171,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     /*  This function is use for  back press event handle */
     override fun onBackPressed() {
+        if (isFirst.equals("1", ignoreCase = true)) {
+            finishAffinity()
+        }
         if (binding.navView.selectedItemId == R.id.navigation_Home) {
             binding.navView.selectedItemId = R.id.navigation_Home
             if (doubleBackToExitPressedOnce) {

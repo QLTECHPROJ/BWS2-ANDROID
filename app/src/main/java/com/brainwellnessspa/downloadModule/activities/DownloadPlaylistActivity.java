@@ -343,7 +343,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             String PlayFrom1 = shared11.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition1 = shared11.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag1.equalsIgnoreCase("Downloadlist") && MyPlaylist1.equalsIgnoreCase(PlaylistID)) {
-                BWSApplication.showToast("You can't delete a playlist while it's playing.", activity);
+                int unicode = 0x1F6AB;
+                String textIcons = new String(Character.toChars(unicode));
+                BWSApplication.showToast("You can't delete a playlist while it's playing." +textIcons, activity);
             } else {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

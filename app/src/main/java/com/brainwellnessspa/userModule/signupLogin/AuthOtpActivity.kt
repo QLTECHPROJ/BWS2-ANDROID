@@ -107,7 +107,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             }
         }
 
-        binding.tvSendCodeText.text = "We sent an SMS with a 4-digit code to \n+$countryCode $mobileNo."
+        binding.tvSendCodeText.text = "We've sent an SMS with a 4-digit code to \n+$countryCode $mobileNo."
 
         editTexts = arrayOf(binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4)
         binding.edtOTP1.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 0, tvSendOTPbool))
@@ -291,27 +291,50 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 startActivity(i)
                                 finish()
                             } else {
-                                if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
-                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                    startActivity(intent)
-                                    finish()
-                                } else {
-                                    if (listModel.ResponseData.CoUserCount > "0") {
-                                        val intent = Intent(activity, UserListActivity::class.java)
+                                if (listModel.ResponseData.isMainAccount.equals("0", ignoreCase = true)) {
+                                    if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
+                                        val i = Intent(activity, EmailVerifyActivity::class.java)
+                                        startActivity(i)
+                                        finish()
+                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                        val intent = Intent(activity, AssProcessActivity::class.java)
+                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        startActivity(intent)
+                                        finish()
+                                    } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                        val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.putExtra("IsFirst", "1")
+                                        startActivity(intent)
+                                        finish()
+
+                                    }
+                                } else {
+                                    if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                        val intent = Intent(activity, AssProcessActivity::class.java)
+                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        if (listModel.ResponseData.CoUserCount > "0") {
+                                            val intent = Intent(activity, UserListActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         } else {
-                                            val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                            intent.putExtra("IsFirst", "1")
-                                            startActivity(intent)
-                                            finish()
+                                            if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                                startActivity(intent)
+                                                finish()
+                                            } else {
+                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                intent.putExtra("IsFirst", "1")
+                                                startActivity(intent)
+                                                finish()
 
+                                            }
                                         }
                                     }
                                 }
@@ -335,7 +358,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                             editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
                             editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
-                            if(listModel.ResponseData.planDetails.isNotEmpty()) {
+                            if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)

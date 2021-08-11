@@ -238,13 +238,17 @@ public class DownloadMedia implements OnDownloadListener {
                 p.putValue("bitRate", "");
                 p.putValue("sound", GlobalInitExoPlayer.GetDeviceVolume(ctx));
                 BWSApplication.addToSegment("Audio Download Completed", p, CONSTANTS.track);
-                showToast("Yess! Download complete. Your wellness journey is ready!", act);
+                int unicode = 0x1F44C;
+                String textIcon = new String(Character.toChars(unicode));
+                showToast("Yess! Download complete. Your wellness journey is ready!" + textIcon, act);
             } else if (!playlistDownloadId.get(0).equalsIgnoreCase("")) {
                 DB = getAudioDataBase(ctx);
                 DB = getAudioDataBase(ctx);
                 DB.taskDao().getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).observe((LifecycleOwner) ctx, audioList -> {
                     if (audioList.size() == 0) {
-                        showToast("Yess! Download complete. Your wellness journey is ready!", act);
+                        int unicode = 0x1F44C;
+                        String textIcon = new String(Character.toChars(unicode));
+                        showToast("Yess! Download complete. Your wellness journey is ready!" + textIcon, act);
                         p = new Properties();
                         p.putValue("playlistId", playlistDownloadId);
                         p.putValue("playerType", PlayerStatus);

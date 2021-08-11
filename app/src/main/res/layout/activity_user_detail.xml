@@ -60,7 +60,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:paddingTop="@dimen/_13sdp"
-                android:text="@string/lorem_ipsum_dolor_sit_amet_consetetur"
+                android:text="@string/enter_name_and_email_of_a_person_being_added_a_separate_profile_of_person_will_be_created_person_will_receive_a_verification_mail"
                 android:textColor="@color/light_black"
                 android:textSize="@dimen/_16sdp"
                 tools:ignore="SpUsage" />
