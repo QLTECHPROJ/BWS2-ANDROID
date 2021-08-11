@@ -452,7 +452,7 @@ public class AudioDownloadsFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
                 int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (isDisclaimer == 1) {
@@ -482,7 +482,7 @@ public class AudioDownloadsFragment extends Fragment {
                         DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                         Gson gson = new Gson();
                         SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
                         String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
                         Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
                         }.getType();
@@ -632,7 +632,7 @@ public class AudioDownloadsFragment extends Fragment {
                     pos = position;
                     Gson gson = new Gson();
                     SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                    String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
                     String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
                     Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
                     }.getType();

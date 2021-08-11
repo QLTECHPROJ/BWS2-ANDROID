@@ -86,6 +86,7 @@ import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
@@ -247,7 +248,10 @@ public class BWSApplication extends Application {
 
         });
     }
-
+    public static void callEnhanceActivity(Context ctx){
+        Intent i = new Intent(ctx, EnhanceActivity.class);
+        ctx.startActivity(i);
+    }
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");

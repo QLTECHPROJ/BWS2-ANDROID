@@ -984,7 +984,7 @@ class GlobalInitExoPlayer : Service() {
     fun UpdateMiniPlayer(ctx: Context, activity: Activity): String {
         var AudioFlag = "0"
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-        val expDate = shared1x.getString(CONSTANTS.PREF_KEY_ExpDate, "")
+        val expDate = shared1x.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
         //            expDate = "2020-09-29 06:34:10";
         Log.e("Exp Date !!!!", expDate!!)
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

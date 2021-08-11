@@ -233,36 +233,31 @@ class ViewAllAudioFragment : Fragment() {
             holder.binding.llMore.setOnClickListener {
                 callAudioDetails(listModelList?.get(position)?.iD, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
             }
-            /*            if (IsLock.equalsIgnoreCase("1")) {
-          if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-              holder.binding.ivLock.setVisibility(View.GONE);
-          } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                  || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-              holder.binding.ivLock.setVisibility(View.VISIBLE);
-          }
-      } else if (IsLock.equalsIgnoreCase("2")) {
-          if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-              holder.binding.ivLock.setVisibility(View.GONE);
-          } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                  || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-              holder.binding.ivLock.setVisibility(View.VISIBLE);
-          }
-      } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-          holder.binding.ivLock.setVisibility(View.GONE);
-      }
-      */if (index == position) {
+            if (listModelList!![position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
+
+            if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
+
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
+
             holder.binding.rlMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (listModelList[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 val p = Properties()
-                p.putValue("audioId", listModelList!![position].iD)
+                p.putValue("audioId", listModelList[position].iD)
                 p.putValue("audioName", listModelList[position].name)
                 p.putValue("audioDescription", "")
                 p.putValue("directions", listModelList[position].audioDirection)
@@ -287,7 +282,11 @@ class ViewAllAudioFragment : Fragment() {
                 startActivity(i)
             }
             holder.binding.rlMainLayout.setOnClickListener {
+                if (listModelList[position].isPlay.equals("0")) {
+                callEnhanceActivity(ctx)
+            } else {
                 callMainTransFrag(position)
+            }
             }
         }
 
@@ -335,7 +334,7 @@ class ViewAllAudioFragment : Fragment() {
                             }
                             val gson = Gson()
                             val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                            val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                            val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                             val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                             val type = object : TypeToken<DisclaimerAudio?>() {}.type
                             val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -410,7 +409,7 @@ class ViewAllAudioFragment : Fragment() {
                         }
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                         val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -481,7 +480,7 @@ class ViewAllAudioFragment : Fragment() {
                         }
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                         val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -573,7 +572,7 @@ class ViewAllAudioFragment : Fragment() {
                         pos = position
                         val gson = Gson()
                         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                         val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                         val type = object : TypeToken<DisclaimerAudio?>() {}.type
                         val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -686,14 +685,15 @@ class ViewAllAudioFragment : Fragment() {
         }
 
         inner class MyViewHolder(var binding: AudiolistCustomLayoutBinding) : RecyclerView.ViewHolder(binding.root)
-    } /*    private void callnewTrans(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
+    }
+/*    private void callnewTrans(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
           SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
           boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
           String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
           String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
           int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
           SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-          String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+          String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
           if (Name.equalsIgnoreCase("My Downloads")) {
               if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                   if (isDisclaimer == 1) {
@@ -923,7 +923,7 @@ class ViewAllAudioFragment : Fragment() {
                   String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
                   int positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                   SharedPreferences shared11 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                  String IsPlayDisclimer = (shared11.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                  String IsPlayDisclimer = (shared11.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
                   if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
                       if (isDisclaimer == 1) {
                           if (player != null) {
@@ -1025,7 +1025,7 @@ class ViewAllAudioFragment : Fragment() {
                   callNewPlayerRelease();
 
   //                SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-  //                String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+  //                String IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
   //                if(IsPlayDisclimer.equalsIgnoreCase("1")){
   //                    openOnlyFragment();
   //                }

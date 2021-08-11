@@ -527,6 +527,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         binding.tvName.text = viewModel.ResponseData.Name
                                     }
 
+                                    IsLock = viewModel.ResponseData.Islock
                                     if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
                                         binding.llManageUser.visibility = View.VISIBLE
                                         binding.llBillingOrder.visibility = View.VISIBLE

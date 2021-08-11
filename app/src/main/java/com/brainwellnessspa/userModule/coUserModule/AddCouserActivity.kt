@@ -80,6 +80,8 @@ class AddCouserActivity : AppCompatActivity() {
                         if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             isPinSet = authOtpModel.ResponseData.isPinSet
                             directLogin = authOtpModel.ResponseData.directLogin
+
+                            IsLock = authOtpModel.ResponseData.Islock
                             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, authOtpModel.ResponseData.MainAccountID)

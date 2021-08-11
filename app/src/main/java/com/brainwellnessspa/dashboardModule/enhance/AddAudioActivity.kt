@@ -690,7 +690,7 @@ class AddAudioActivity : AppCompatActivity() {
         private fun callMainTransFrag(position: Int) {
             try {
                 val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
@@ -716,7 +716,7 @@ class AddAudioActivity : AppCompatActivity() {
                     val listModelList2 = ArrayList<SearchBothModel.ResponseData>()
                     val gson = Gson()
                     val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                    val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                    val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -936,7 +936,7 @@ class AddAudioActivity : AppCompatActivity() {
         private fun callMainTransFrag(position: Int) {
             try {
                 val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -961,7 +961,7 @@ class AddAudioActivity : AppCompatActivity() {
                     val listModelList2 = ArrayList<SuggestedModel.ResponseData?>()
                     val gson = Gson()
                     val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                    val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                    val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)

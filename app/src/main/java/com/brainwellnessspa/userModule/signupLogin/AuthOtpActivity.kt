@@ -268,8 +268,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         binding.txtError.visibility = View.GONE
                         binding.txtError.text = ""
+
                         val listModel: AuthOtpModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
+                            IsLock = listModel.ResponseData.Islock
                             val p = Properties()
                             p.putValue("userId", listModel.ResponseData.UserId)
                             p.putValue("userGroupId", listModel.ResponseData.MainAccountID)

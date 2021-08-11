@@ -10,40 +10,44 @@ class HomeScreenModel {
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String? = null
+    var responseCode: String? = ""
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String? = null
+    var responseMessage: String? = ""
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String? = null
+    var responseStatus: String? = ""
 
     class ResponseData {
         @SerializedName("IndexScore")
         @Expose
-        var indexScore: String? = null
+        var indexScore: String? = ""
+        
+        @SerializedName("IsLock")
+        @Expose
+        var IsLock: String? = ""
 
         @SerializedName("IsFirst")
         @Expose
-        var isFirst: String? = null
+        var isFirst: String? = ""
 
         @SerializedName("shouldCheckIndexScore")
         @Expose
-        var shouldCheckIndexScore: String? = null
+        var shouldCheckIndexScore: String? = ""
 
         @SerializedName("IndexScoreDiff")
         @Expose
-        var indexScoreDiff: String? = null
+        var indexScoreDiff: String? = ""
 
         @SerializedName("ScoreIncDec")
         @Expose
-        var scoreIncDec: String? = null
+        var scoreIncDec: String? = ""
 
         @SerializedName("shouldPlayDisclaimer")
         @Expose
-        var shouldPlayDisclaimer: String? = null
+        var shouldPlayDisclaimer: String? = ""
 
         @SerializedName("disclaimerAudio")
         @Expose
@@ -68,87 +72,87 @@ class HomeScreenModel {
         class DisclaimerAudio {
             @SerializedName("ID")
             @Expose
-            var id: String? = null
+            var id: String? = ""
 
             @SerializedName("Name")
             @Expose
-            var name: String? = null
+            var name: String? = ""
 
             @SerializedName("ImageFile")
             @Expose
-            var imageFile: String? = null
+            var imageFile: String? = ""
 
             @SerializedName("AudioFile")
             @Expose
-            var audioFile: String? = null
+            var audioFile: String? = ""
 
             @SerializedName("Audiomastercat")
             @Expose
-            var audiomastercat: String? = null
+            var audiomastercat: String? = ""
 
             @SerializedName("AudioSubCategory")
             @Expose
-            var audioSubCategory: String? = null
+            var audioSubCategory: String? = ""
 
             @SerializedName("AudioDuration")
             @Expose
-            var audioDuration: String? = null
+            var audioDuration: String? = ""
 
             @SerializedName("AudioDirection")
             @Expose
-            var audioDirection: String? = null
+            var audioDirection: String? = ""
 
             @SerializedName("Bitrate")
             @Expose
-            var bitrate: String? = null
+            var bitrate: String? = ""
         }
 
         class PastIndexScore {
             @SerializedName("Month")
             @Expose
-            var month: String? = null
+            var month: String? = ""
 
             @SerializedName("MonthName")
             @Expose
-            var monthName: String? = null
+            var monthName: String? = ""
 
             @SerializedName("IndexScore")
             @Expose
-            var indexScore: String? = null
+            var indexScore: String? = ""
         }
 
         class SuggestedPlaylist {
             @SerializedName("PlaylistID")
             @Expose
-            var playlistID: String? = null
+            var playlistID: String? = ""
 
             @SerializedName("PlaylistName")
             @Expose
-            var playlistName: String? = null
+            var playlistName: String? = ""
 
             @SerializedName("PlaylistDesc")
             @Expose
-            var playlistDesc: String? = null
+            var playlistDesc: String? = ""
 
             @SerializedName("PlaylistMastercat")
             @Expose
-            var playlistMastercat: String? = null
+            var playlistMastercat: String? = ""
 
             @SerializedName("playlistDirection")
             @Expose
-            var playlistDirection: String? = null
+            var playlistDirection: String? = ""
 
             @SerializedName("PlaylistSubcat")
             @Expose
-            var playlistSubcat: String? = null
+            var playlistSubcat: String? = ""
 
             @SerializedName("PlaylistImage")
             @Expose
-            var playlistImage: String? = null
+            var playlistImage: String? = ""
 
             @SerializedName("PlaylistImageDetail")
             @Expose
-            var playlistImageDetail: String? = null
+            var playlistImageDetail: String? = ""
 
             @SerializedName("PlaylistSongs")
             @Expose
@@ -156,92 +160,92 @@ class HomeScreenModel {
 
             @SerializedName("Created")
             @Expose
-            var created: String? = null
+            var created: String? = ""
 
             @SerializedName("TotalAudio")
             @Expose
-            var totalAudio: String? = null
+            var totalAudio: String? = ""
 
             @SerializedName("TotalDuration")
             @Expose
-            var totalDuration: String? = null
+            var totalDuration: String? = ""
 
             @SerializedName("Totalhour")
             @Expose
-            var totalhour: String? = null
+            var totalhour: String? = ""
 
             @SerializedName("Totalminute")
             @Expose
-            var totalminute: String? = null
+            var totalminute: String? = ""
 
             @SerializedName("Totalsecond")
             @Expose
-            var totalsecond: String? = null
+            var totalsecond: String? = ""
 
             @SerializedName("ReminderId")
             @Expose
-            var reminderId: String? = null
+            var reminderId: String? = ""
 
             @SerializedName("IsReminder")
             @Expose
-            var isReminder: String? = null
+            var isReminder: String? = ""
 
             @SerializedName("ReminderDay")
             @Expose
-            var reminderDay: String? = null
+            var reminderDay: String? = ""
 
             @SerializedName("ReminderTime")
             @Expose
-            var reminderTime: String? = null
+            var reminderTime: String? = ""
 
             class PlaylistSong {
                 @SerializedName("ID")
                 @Expose
-                var id: String? = null
+                var id: String? = ""
 
                 @SerializedName("Name")
                 @Expose
-                var name: String? = null
+                var name: String? = ""
 
                 @SerializedName("ImageFile")
                 @Expose
-                var imageFile: String? = null
+                var imageFile: String? = ""
 
                 @SerializedName("PlaylistID")
                 @Expose
-                var playlistID: String? = null
+                var playlistID: String? = ""
 
                 @SerializedName("PSID")
                 @Expose
-                var psid: String? = null
+                var psid: String? = ""
 
                 @SerializedName("SortId")
                 @Expose
-                var sortId: String? = null
+                var sortId: String? = ""
 
                 @SerializedName("AudioFile")
                 @Expose
-                var audioFile: String? = null
+                var audioFile: String? = ""
 
                 @SerializedName("Audiomastercat")
                 @Expose
-                var audiomastercat: String? = null
+                var audiomastercat: String? = ""
 
                 @SerializedName("AudioSubCategory")
                 @Expose
-                var audioSubCategory: String? = null
+                var audioSubCategory: String? = ""
 
                 @SerializedName("AudioDuration")
                 @Expose
-                var audioDuration: String? = null
+                var audioDuration: String? = ""
 
                 @SerializedName("AudioDirection")
                 @Expose
-                var audioDirection: String? = null
+                var audioDirection: String? = ""
 
                 @SerializedName("Bitrate")
                 @Expose
-                var bitrate: String? = null
+                var bitrate: String? = ""
             }
         }
     }

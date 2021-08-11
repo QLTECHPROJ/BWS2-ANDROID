@@ -253,6 +253,7 @@ class UserListActivity : AppCompatActivity() {
                                                             val authOtpModel: AuthOtpModel = response.body()!!
                                                             if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
 
+                                                                IsLock = authOtpModel.ResponseData.Islock
                                                                 val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                                                 val editor = shared.edit()
                                                                 val gson = Gson()

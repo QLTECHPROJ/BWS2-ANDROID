@@ -31,6 +31,7 @@ import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -136,101 +137,105 @@ class ManageFragment : Fragment() {
         }
 
         binding.rlCreatePlaylist.setOnClickListener {
-            val p = Properties()
-            p.putValue("source", "Enhance Screen")
-            addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
-            val dialog = Dialog(ctx)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.create_palylist)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(act, R.color.blue_transparent)))
-            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
-            val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
-            val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
-            edtCreate.clearFocus()
-            val popupTextWatcher: TextWatcher = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                }
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx)
+            } else {
+                val p = Properties()
+                p.putValue("source", "Enhance Screen")
+                addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
+                val dialog = Dialog(ctx)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.create_palylist)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(act, R.color.blue_transparent)))
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
+                val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
+                val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
+                edtCreate.clearFocus()
+                val popupTextWatcher: TextWatcher = object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                    }
 
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    val number = edtCreate.text.toString().trim { it <= ' ' }
-                    if (number.isNotEmpty()) {
-                        btnSendCode.isEnabled = true
-                        btnSendCode.setTextColor(ContextCompat.getColor(act, R.color.black))
-                        btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                        val number = edtCreate.text.toString().trim { it <= ' ' }
+                        if (number.isNotEmpty()) {
+                            btnSendCode.isEnabled = true
+                            btnSendCode.setTextColor(ContextCompat.getColor(act, R.color.black))
+                            btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
+                        } else {
+                            btnSendCode.isEnabled = false
+                            btnSendCode.setTextColor(ContextCompat.getColor(act, R.color.white))
+                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
+                }
+                edtCreate.addTextChangedListener(popupTextWatcher)
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        return@setOnKeyListener true
+                    }
+                    false
+                }
+                btnSendCode.setOnClickListener {
+                    if (isNetworkConnected(ctx)) {
+                        showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        val listCall = APINewClient.client.getCreatePlaylist(coUserId, edtCreate.text.toString())
+                        listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
+                            override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
+                                try {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    val listModel = response.body()
+                                    if (listModel != null) {
+                                        if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                                showToast(listModel.responseMessage, act)
+                                                dialog.dismiss()
+                                            } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) { //                                        try {
+                                                val p = Properties()
+                                                p.putValue("source", "Enhance Screen")
+                                                p.putValue("playlistId", listModel.responseData!!.playlistID)
+                                                p.putValue("playlistName", listModel.responseData!!.playlistName)
+                                                addToSegment(" Playlist Created", p, CONSTANTS.track)
+                                                callMyPlaylistActivity("1", listModel.responseData!!.playlistID, listModel.responseData!!.playlistName, act)
+                                                act.overridePendingTransition(0, 0)
+                                                dialog.dismiss() //                                        } catch (e: Exception) {
+                                                //                                            e.printStackTrace()
+                                                //                                            dialog.dismiss()
+                                                //                                        }
+                                            }
+                                        } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                            deleteCall(act)
+                                            showToast(listModel.responseMessage, act)
+                                            val i = Intent(act, SignInActivity::class.java)
+                                            i.putExtra("mobileNo", "")
+                                            i.putExtra("countryCode", "")
+                                            i.putExtra("name", "")
+                                            i.putExtra("email", "")
+                                            i.putExtra("countryShortName", "")
+                                            act.startActivity(i)
+                                            act.finish()
+                                        }
+                                    }
+                                } catch (e: java.lang.Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            }
+                        })
                     } else {
-                        btnSendCode.isEnabled = false
-                        btnSendCode.setTextColor(ContextCompat.getColor(act, R.color.white))
-                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
-
-                override fun afterTextChanged(s: Editable) {}
+                tvCancel.setOnClickListener { dialog.dismiss() }
+                dialog.show()
+                dialog.setCancelable(false)
             }
-            edtCreate.addTextChangedListener(popupTextWatcher)
-            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss()
-                    return@setOnKeyListener true
-                }
-                false
-            }
-            btnSendCode.setOnClickListener {
-                if (isNetworkConnected(ctx)) {
-                    showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                    val listCall = APINewClient.client.getCreatePlaylist(coUserId, edtCreate.text.toString())
-                    listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
-                        override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
-                            try {
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                val listModel = response.body()
-                                if (listModel != null) {
-                                    if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                        if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                            showToast(listModel.responseMessage, act)
-                                            dialog.dismiss()
-                                        } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) { //                                        try {
-                                            val p = Properties()
-                                            p.putValue("source", "Enhance Screen")
-                                            p.putValue("playlistId", listModel.responseData!!.playlistID)
-                                            p.putValue("playlistName",listModel.responseData!!.playlistName)
-                                            addToSegment(" Playlist Created", p, CONSTANTS.track)
-                                            callMyPlaylistActivity("1",listModel.responseData!!.playlistID, listModel.responseData!!.playlistName,act)
-                                            act.overridePendingTransition(0, 0)
-                                            dialog.dismiss() //                                        } catch (e: Exception) {
-                                            //                                            e.printStackTrace()
-                                            //                                            dialog.dismiss()
-                                            //                                        }
-                                        }
-                                    } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                        deleteCall(act)
-                                        showToast(listModel.responseMessage, act)
-                                        val i = Intent(act, SignInActivity::class.java)
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        act.startActivity(i)
-                                        act.finish()
-                                    }
-                                }
-                            } catch (e: java.lang.Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        }
-                    })
-                } else {
-                    showToast(ctx.getString(R.string.no_server_found), act)
-                }
-            }
-            tvCancel.setOnClickListener { dialog.dismiss() }
-            dialog.show()
-            dialog.setCancelable(false)
         }
 
         return view
@@ -330,7 +335,7 @@ class ManageFragment : Fragment() {
         val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if ((audioPlayerFlag.equals("MainAudioList", ignoreCase = true) || audioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && playFrom.equals(views, ignoreCase = true)) {
             if (isNetworkConnected(ctx)) {
                 if (isDisclaimer == 1) {
@@ -478,7 +483,7 @@ class ManageFragment : Fragment() {
                 }
             } else {
                 val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 for (i in listModelList) {
                     if (downloadAudioDetailsList.contains(i.name)) {
@@ -625,6 +630,7 @@ class ManageFragment : Fragment() {
                         binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
                         Glide.with(act).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
 
+                        IsLock = listModel.responseData!!.IsLock
                         playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)
                         binding.rvMainPlayList.adapter = playlistAdapter
 
@@ -826,7 +832,7 @@ class ManageFragment : Fragment() {
             var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
             val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-            val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+            val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
             if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
@@ -930,7 +936,7 @@ class ManageFragment : Fragment() {
         val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
                 if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
@@ -1313,6 +1319,12 @@ class ManageFragment : Fragment() {
             holder.binding.tvPlaylistName.text = listModel.details!![position].playlistName
             Glide.with(ctx).load(listModel.details!![position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(34))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
+
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
@@ -1320,9 +1332,13 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.rlMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -1333,12 +1349,15 @@ class ManageFragment : Fragment() {
 
 
             holder.binding.rlMainLayout.setOnClickListener {
-                if (isNetworkConnected(ctx)) {
-                        ManageFragment().callMyPlaylistActivity("0",listModel.details!![position].playlistID
-                            , listModel.details!![position].playlistName,act)
-                        act.overridePendingTransition(0, 0)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
                 } else {
-                    showToast(ctx.getString(R.string.no_server_found), act)
+                    if (isNetworkConnected(ctx)) {
+                        ManageFragment().callMyPlaylistActivity("0", listModel.details!![position].playlistID, listModel.details!![position].playlistName, act)
+                        act.overridePendingTransition(0, 0)
+                    } else {
+                        showToast(ctx.getString(R.string.no_server_found), act)
+                    }
                 }
             }
         }
@@ -1371,6 +1390,12 @@ class ManageFragment : Fragment() {
 
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
+
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
@@ -1378,9 +1403,14 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.llMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -1390,7 +1420,11 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                if(listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                }else {
+                    ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                }
             }
         }
 
@@ -1423,6 +1457,12 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
 
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
+
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
@@ -1430,9 +1470,13 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.llMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -1444,7 +1488,11 @@ class ManageFragment : Fragment() {
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                }
             }
 
         }
@@ -1473,9 +1521,18 @@ class ManageFragment : Fragment() {
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                }
             }
         }
 
@@ -1507,6 +1564,11 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
 
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
@@ -1515,9 +1577,13 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.llMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -1527,7 +1593,11 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                }
             }
         }
 
@@ -1560,6 +1630,11 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
 
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
@@ -1568,9 +1643,13 @@ class ManageFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.llMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -1580,7 +1659,11 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
+                }
             }
         }
 
@@ -1607,18 +1690,28 @@ class ManageFragment : Fragment() {
             holder.binding.tvTitle.text = listModel[position].categoryName
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(ctx).load(listModel[position].catImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(124))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
 
             holder.binding.llMainLayout.setOnClickListener {
-                if (isNetworkConnected(ctx)) {
-                    val bundle = Bundle()
-                    bundle.putString("ID", homeView)
-                    bundle.putString("Name", viewString)
-                    bundle.putString("Category", listModel[position].categoryName)
-                    val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
-                    viewAllAudioFragment.arguments = bundle
-                    fragmentManager1.beginTransaction().replace(R.id.flContainer, viewAllAudioFragment).commit()
+
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
                 } else {
-                    showToast(ctx.getString(R.string.no_server_found), act)
+                    if (isNetworkConnected(ctx)) {
+                        val bundle = Bundle()
+                        bundle.putString("ID", homeView)
+                        bundle.putString("Name", viewString)
+                        bundle.putString("Category", listModel[position].categoryName)
+                        val viewAllAudioFragment: Fragment = ViewAllAudioFragment()
+                        viewAllAudioFragment.arguments = bundle
+                        fragmentManager1.beginTransaction().replace(R.id.flContainer, viewAllAudioFragment).commit()
+                    } else {
+                        showToast(ctx.getString(R.string.no_server_found), act)
+                    }
                 }
             }
         }

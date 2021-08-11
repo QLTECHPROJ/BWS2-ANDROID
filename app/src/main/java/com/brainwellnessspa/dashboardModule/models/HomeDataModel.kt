@@ -25,6 +25,10 @@ class HomeDataModel {
     class ResponseData {
         @SerializedName("SuggestedPlaylist")
         @Expose
+        var IsLock: String? = ""
+
+        @SerializedName("SuggestedPlaylist")
+        @Expose
         var suggestedPlaylist: SuggestedPlaylist? = null
 
         @SerializedName("Playlist")

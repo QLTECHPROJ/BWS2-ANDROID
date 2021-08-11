@@ -1559,7 +1559,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
                 if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
@@ -2335,7 +2335,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (audioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
             if (isDisclaimer == 1) {
                 if (player != null) {

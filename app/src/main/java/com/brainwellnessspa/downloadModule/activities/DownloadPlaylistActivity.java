@@ -551,7 +551,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         addDisclaimer = new DownloadAudioDetails();
         Gson gson = new Gson();
         SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
         String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
         Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
         }.getType();
@@ -734,7 +734,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             }
             binding.llPlayPause.setOnClickListener(view -> {
                 SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
                 if (isPlayPlaylist == 1) {
                     if (player != null) {
                         player.setPlayWhenReady(false);
@@ -835,7 +835,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1"));
+                IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
 
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {

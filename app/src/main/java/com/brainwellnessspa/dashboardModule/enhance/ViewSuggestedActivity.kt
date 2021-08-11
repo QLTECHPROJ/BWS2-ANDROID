@@ -42,7 +42,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ViewSuggestedActivity : AppCompatActivity() {
+class  ViewSuggestedActivity : AppCompatActivity() {
     lateinit var binding: ActivityViewSuggestedBinding
     lateinit var activity: Activity
     lateinit var ctx: Context
@@ -505,7 +505,7 @@ class ViewSuggestedActivity : AppCompatActivity() {
                     val listModelList2 = ArrayList<SuggestedModel.ResponseData>()
                     val gson = Gson()
                     val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-                    val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+                    val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)

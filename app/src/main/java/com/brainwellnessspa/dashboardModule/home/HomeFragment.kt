@@ -444,7 +444,7 @@ class HomeFragment : Fragment() {
                                 if (response != null) {
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
                                     val editor = shared.edit()
-                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, response.shouldPlayDisclaimer)
+                                    editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
                                     editor.apply()
 
@@ -456,7 +456,7 @@ class HomeFragment : Fragment() {
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
                                     binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
-
+                                    IsLock = response.IsLock
 
                                     if (response.shouldCheckIndexScore.equals("0", true)) {
                                         binding.llCheckIndexscore.visibility = View.GONE
@@ -710,7 +710,7 @@ class HomeFragment : Fragment() {
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
                 if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
@@ -856,7 +856,7 @@ class HomeFragment : Fragment() {
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
-        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
+        val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
             if (isDisclaimer == 1) {
                 if (player != null) {
@@ -1214,6 +1214,7 @@ class HomeFragment : Fragment() {
                                                         logout = false
                                                         mainAccountId = listModel.ResponseData.MainAccountID
                                                         userId = listModel.ResponseData.UserId
+                                                        IsLock = listModel.ResponseData.Islock
                                                         if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
                                                             if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)

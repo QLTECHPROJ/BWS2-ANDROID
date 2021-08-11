@@ -405,7 +405,11 @@ class MainPlaylistFragment : Fragment() {
             holder.binding.rlMainLayout.layoutParams.width = (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModel[position].playlistName
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
-
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
@@ -413,9 +417,13 @@ class MainPlaylistFragment : Fragment() {
             holder.binding.tvAddToPlaylist.text = "Add To Playlist"
 
             holder.binding.rlMainLayout.setOnLongClickListener {
-                holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
-                index = position
-                notifyDataSetChanged()
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                    holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
+                    index = position
+                    notifyDataSetChanged()
+                }
                 true
             }
 
@@ -451,10 +459,14 @@ class MainPlaylistFragment : Fragment() {
             }
 
             holder.binding.rlMainLayout.setOnClickListener {
-                if (MyDownloads.equals("1", ignoreCase = true)) {
-                    MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, "Downloaded Playlists", act, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
                 } else {
-                    MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, screenView, act, ctx)
+                    if (MyDownloads.equals("1", ignoreCase = true)) {
+                        MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, "Downloaded Playlists", act, ctx)
+                    } else {
+                        MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, screenView, act, ctx)
+                    }
                 }
             }
         }

@@ -196,6 +196,8 @@ class SplashActivity : AppCompatActivity() {
                     try {
                         val authOtpModel: AuthOtpModel = response.body()!!
                         if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                            BWSApplication.IsLock = authOtpModel.ResponseData.Islock
                             isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
                             isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
                             indexScore = authOtpModel.ResponseData.indexScore
