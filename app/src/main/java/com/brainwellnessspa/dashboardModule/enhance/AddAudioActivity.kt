@@ -818,6 +818,11 @@ class AddAudioActivity : AppCompatActivity() {
             Glide.with(ctx!!).load(listModel[position]!!.imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             Glide.with(ctx!!).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
+            if (listModel[position]!!.isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
             val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
@@ -845,45 +850,14 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
             }
 
-//
-//            if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-//                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-//                    holder.binding.ivLock.setVisibility(View.GONE);
-//                } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-//                        || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                }
-//            } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-//                    holder.binding.ivLock.setVisibility(View.GONE);
-//                } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-//                        || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                }
-//            } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
-//                    || listModel.get(position).isLock().equalsIgnoreCase("")) {
             holder.binding.ivLock.visibility = View.GONE
             //            }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
-//                if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-//                    if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-//                        callMainTransFrag(position);
-//                    } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-//                            || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                        i.putExtra("ComeFrom", "Plan");
-//                        startActivity(i);
-//                    }
-//                } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                    if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-//                        callMainTransFrag(position);
-//                    } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-//                            || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                    }
-//                } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
-//                        || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                callMainTransFrag(position)
+                 if (listModel[position]!!.isPlay.equals("0")) {
+                    callEnhanceActivity(ctx)
+                } else {
+                     callMainTransFrag(position)
+                 }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
 //                if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
