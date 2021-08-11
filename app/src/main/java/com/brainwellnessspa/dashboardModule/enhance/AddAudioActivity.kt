@@ -354,7 +354,7 @@ class AddAudioActivity : AppCompatActivity() {
         binding.tvSuggestedPlaylist.visibility = View.GONE
         binding.rvPlayList.visibility = View.GONE
         binding.tvSPViewAll.visibility = View.GONE
-        /*  if (BWSApplication.isNetworkConnected(ctx)) {
+         /*  if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SearchPlaylistModel> listCall = APINewClient.getClient().getSuggestedPlayLists(CoUSERID);
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
@@ -517,7 +517,7 @@ class AddAudioActivity : AppCompatActivity() {
     }
 
     /* Search Audio data set in to adapter */
-    inner class SerachListAdpater(private val modelList: List<SearchBothModel.ResponseData>?, var ctx: Context?, var rvSerachList: RecyclerView, var UserID: String?) : RecyclerView.Adapter<SerachListAdpater.MyViewHolder>() {
+    inner class SerachListAdpater(private val listModel: List<SearchBothModel.ResponseData>?, var ctx: Context?, var rvSerachList: RecyclerView, var UserID: String?) : RecyclerView.Adapter<SerachListAdpater.MyViewHolder>() {
         var songId: String? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: GlobalSearchLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.global_search_layout, parent, false)
@@ -525,18 +525,21 @@ class AddAudioActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.binding.tvTitle.text = modelList!![position].name
-            if (modelList[position].iscategory.equals("1", ignoreCase = true)) {
-                holder.binding.tvPart.text = modelList[position].audioDuration
+            holder.binding.tvTitle.text = listModel!![position].name
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
+            }
+            if (listModel[position].iscategory.equals("1", ignoreCase = true)) {
+                holder.binding.tvPart.text = listModel[position].audioDuration
                 holder.binding.llRemoveAudio.visibility = View.VISIBLE
                 holder.binding.ivLock.visibility = View.GONE
                 val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                val playFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                val playerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
-                    if (PlayerAudioId.equals(modelList[position].iD, ignoreCase = true)) {
+                    if (PlayerAudioId.equals(listModel[position].iD, ignoreCase = true)) {
                         songId = PlayerAudioId
                         if (player != null) {
                             if (!player.playWhenReady) {
@@ -557,123 +560,90 @@ class AddAudioActivity : AppCompatActivity() {
                     holder.binding.ivBackgroundImage.visibility = View.GONE
                 }
                 holder.binding.llMainLayoutForPlayer.setOnClickListener {
-//                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                        if (modelList.get(position).isPlay().equalsIgnoreCase("1")) {
-//                            callMainTransFrag(position);
-//                        } else if (modelList.get(position).isPlay().equalsIgnoreCase("0")
-//                                || modelList.get(position).isPlay().equalsIgnoreCase("")) {
-//                            Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                            i.putExtra("ComeFrom", "Plan");
-//                            startActivity(i);
-//                        }
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("2")) {
-//                        if (modelList.get(position).isPlay().equalsIgnoreCase("1")) {
-//                            callMainTransFrag(position);
-//                        } else if (modelList.get(position).isPlay().equalsIgnoreCase("0")
-//                                || modelList.get(position).isPlay().equalsIgnoreCase("")) {
-//                            BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                        }
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
-                    callMainTransFrag(position)
+                    if (listModel[position].isPlay.equals("0")) {
+                        callEnhanceActivity(ctx)
+                    } else {
+                        callMainTransFrag(position)
+                    }
                 }
 
                 holder.binding.llRemoveAudio.setOnClickListener {
-//                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                        i.putExtra("ComeFrom", "Plan");
-//                        startActivity(i);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("2")) {
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
-                    val audioID = modelList[position].iD
-                    if (playlistId.equals("", ignoreCase = true)) {
-                        val p = Properties()
-                        p.putValue("audioId", modelList[position].iD)
-                        p.putValue("audioName", modelList[position].name)
-                        p.putValue("audioDescription", "")
-                        p.putValue("directions", modelList[position].audioDirection)
-                        p.putValue("masterCategory", modelList[position].audiomastercat)
-                        p.putValue("subCategory", modelList[position].audioSubCategory)
-                        p.putValue("audioDuration", modelList[position].audioDuration)
-                        p.putValue("position", GetCurrentAudioPosition())
-                        p.putValue("audioType", "Streaming")
-                        p.putValue("source", "Add Audio Screen")
-                        p.putValue("audioService", appStatus(ctx))
-                        p.putValue("bitRate", "")
-                        p.putValue("sound", hundredVolume.toString())
-                        addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
-                        val i = Intent(ctx, AddPlaylistActivity::class.java)
-                        i.putExtra("AudioId", audioID)
-                        i.putExtra("ScreenView", "Audio Details Screen")
-                        i.putExtra("PlaylistID", "")
-                        i.putExtra("PlaylistName", "")
-                        i.putExtra("PlaylistImage", "")
-                        i.putExtra("PlaylistType", "")
-                        i.putExtra("Liked", "0")
-                        startActivity(i)
-                    } else {
-                        if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                            if (isDisclaimer == 1) {
-                                showToast("The audio shall add after playing the disclaimer", activity)
+                    if (IsLock.equals("1")) {
+                        callEnhanceActivity(ctx)
+                    } else if (IsLock.equals("0")) {
+                        val audioID = listModel[position].iD
+                        if (playlistId.equals("", ignoreCase = true)) {
+                            val p = Properties()
+                            p.putValue("audioId", listModel[position].iD)
+                            p.putValue("audioName", listModel[position].name)
+                            p.putValue("audioDescription", "")
+                            p.putValue("directions", listModel[position].audioDirection)
+                            p.putValue("masterCategory", listModel[position].audiomastercat)
+                            p.putValue("subCategory", listModel[position].audioSubCategory)
+                            p.putValue("audioDuration", listModel[position].audioDuration)
+                            p.putValue("position", GetCurrentAudioPosition())
+                            p.putValue("audioType", "Streaming")
+                            p.putValue("source", "Add Audio Screen")
+                            p.putValue("audioService", appStatus(ctx))
+                            p.putValue("bitRate", "")
+                            p.putValue("sound", hundredVolume.toString())
+                            addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
+                            val i = Intent(ctx, AddPlaylistActivity::class.java)
+                            i.putExtra("AudioId", audioID)
+                            i.putExtra("ScreenView", "Audio Details Screen")
+                            i.putExtra("PlaylistID", "")
+                            i.putExtra("PlaylistName", "")
+                            i.putExtra("PlaylistImage", "")
+                            i.putExtra("PlaylistType", "")
+                            i.putExtra("Liked", "0")
+                            startActivity(i)
+                        } else {
+                            if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
+                                if (isDisclaimer == 1) {
+                                    showToast("The audio shall add after playing the disclaimer", activity)
+                                } else {
+                                    callAddSearchAudio(audioID, "0", "")
+                                }
                             } else {
                                 callAddSearchAudio(audioID, "0", "")
                             }
-                        } else {
-                            callAddSearchAudio(audioID, "0", "")
                         }
                     }
                 }
-            } else if (modelList[position].iscategory.equals("0", ignoreCase = true)) {
+            } else if (listModel[position].iscategory.equals("0", ignoreCase = true)) {
                 holder.binding.tvPart.setText(R.string.Playlist)
                 holder.binding.tvPart.visibility = View.GONE
                 holder.binding.equalizerview.visibility = View.GONE
                 holder.binding.llRemoveAudio.visibility = View.GONE
                 holder.binding.llMainLayout.visibility = View.GONE
-                //                if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                } else if (modelList.get(position).isLock().equalsIgnoreCase("2")) {
-//                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-//                } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
-                holder.binding.ivLock.visibility = View.GONE
-                //                }
                 holder.binding.llMainLayout.setOnClickListener {
-//                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                        i.putExtra("ComeFrom", "Plan");
-//                        startActivity(i);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
-                    AudioDownloadsFragment.comefromDownload = "0"
-                    addToSearch = true
-                    MyPlaylistIds = modelList[position].iD
-                    PlaylistIDMS = playlistId
-                    finish()
+                    if (IsLock.equals("1")) {
+                        callEnhanceActivity(ctx)
+                    } else if (IsLock.equals("0")) {
+                        AudioDownloadsFragment.comefromDownload = "0"
+                        addToSearch = true
+                        MyPlaylistIds = listModel[position].iD
+                        PlaylistIDMS = playlistId
+                        finish()
+                    }
                 }
                 holder.binding.llRemoveAudio.setOnClickListener {
-//                    if (modelList.get(position).isLock().equalsIgnoreCase("1")) {
-//                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                        i.putExtra("ComeFrom", "Plan");
-//                        startActivity(i);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("2")) {
-//                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                    } else if (modelList.get(position).isLock().equalsIgnoreCase("0") || modelList.get(position).isLock().equalsIgnoreCase("")) {
-                    val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                    val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                    val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                    val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                    if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                        if (isDisclaimer == 1) {
-                            showToast("The audio shall add after playing the disclaimer", activity)
+                    if (IsLock.equals("1")) {
+                        callEnhanceActivity(ctx)
+                    } else if (IsLock.equals("0")) {
+                        val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                        val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                        if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
+                            if (isDisclaimer == 1) {
+                                showToast("The audio shall add after playing the disclaimer", activity)
+                            } else {
+                                callAddSearchAudio("", "1", listModel[position].iD)
+                            }
                         } else {
-                            callAddSearchAudio("", "1", modelList[position].iD)
+                            callAddSearchAudio("", "1", listModel[position].iD)
                         }
-                    } else {
-                        callAddSearchAudio("", "1", modelList[position].iD)
                     }
                 }
             }
@@ -686,7 +656,7 @@ class AddAudioActivity : AppCompatActivity() {
             holder.binding.ivBackgroundImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivBackgroundImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivBackgroundImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx!!).load(modelList[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx!!).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             Glide.with(ctx!!).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
         }
@@ -697,9 +667,7 @@ class AddAudioActivity : AppCompatActivity() {
                 IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("SearchModelAudio", ignoreCase = true) && playFrom.equals("Search Audio", ignoreCase = true)) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -713,7 +681,7 @@ class AddAudioActivity : AppCompatActivity() {
                         showToast("The audio shall start playing after the disclaimer", activity)
                     } else {
                         val listModelList2 = ArrayList<SearchBothModel.ResponseData>()
-                        listModelList2.add(modelList!![position])
+                        listModelList2.add(listModel!![position])
                         callPlayer(0, listModelList2, true)
                     }
                 } else {
@@ -753,7 +721,7 @@ class AddAudioActivity : AppCompatActivity() {
                             listModelList2.add(mainPlayModel)
                         }
                     }
-                    listModelList2.add(modelList!![position])
+                    listModelList2.add(listModel!![position])
                     callPlayer(0, listModelList2, audioc)
                 }
                 val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -792,8 +760,8 @@ class AddAudioActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            listSize = modelList!!.size
-            return modelList.size
+            listSize = listModel!!.size
+            return listModel.size
         }
 
         inner class MyViewHolder(var binding: GlobalSearchLayoutBinding) : RecyclerView.ViewHolder(binding.root)
@@ -830,8 +798,6 @@ class AddAudioActivity : AppCompatActivity() {
             val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-            val playFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-            val playerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
                 if (PlayerAudioId.equals(listModel[position]!!.iD, ignoreCase = true)) {
                     songId = PlayerAudioId
@@ -853,9 +819,6 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white)
                 holder.binding.ivBackgroundImage.visibility = View.GONE
             }
-
-            holder.binding.ivLock.visibility = View.GONE
-            //            }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
                  if (listModel[position]!!.isPlay.equals("0")) {
                     callEnhanceActivity(ctx)
@@ -864,48 +827,45 @@ class AddAudioActivity : AppCompatActivity() {
                  }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
-//                if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-//                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-//                    i.putExtra("ComeFrom", "Plan");
-//                    startActivity(i);
-//                } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-//                } else if (listModel.get(position).isLock().equalsIgnoreCase("0") || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                if (playlistId.equals("", ignoreCase = true)) {
-                    val p = Properties()
-                    p.putValue("audioId", listModel[position]!!.iD)
-                    p.putValue("audioName", listModel[position]!!.name)
-                    p.putValue("audioDescription", "")
-                    p.putValue("directions", listModel[position]!!.audioDirection)
-                    p.putValue("masterCategory", listModel[position]!!.audiomastercat)
-                    p.putValue("subCategory", listModel[position]!!.audioSubCategory)
-                    p.putValue("audioDuration", listModel[position]!!.audioDuration)
-                    p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
-                    p.putValue("audioType", "Streaming")
-                    p.putValue("source", "Add Audio Screen")
-                    p.putValue("playerType", "Main")
-                    p.putValue("audioService", appStatus(ctx))
-                    p.putValue("bitRate", "")
-                    p.putValue("sound", hundredVolume.toString())
-                    addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
-                    val i = Intent(ctx, AddPlaylistActivity::class.java)
-                    i.putExtra("AudioId", listModel[position]!!.iD)
-                    i.putExtra("ScreenView", "Audio Details Screen")
-                    i.putExtra("PlaylistID", "")
-                    i.putExtra("PlaylistName", "")
-                    i.putExtra("PlaylistImage", "")
-                    i.putExtra("PlaylistType", "")
-                    i.putExtra("Liked", "0")
-                    startActivity(i)
-                } else {
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                        if (isDisclaimer == 1) {
-                            showToast("The audio shall add after playing the disclaimer", activity)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    if (playlistId.equals("", ignoreCase = true)) {
+                        val p = Properties()
+                        p.putValue("audioId", listModel[position]!!.iD)
+                        p.putValue("audioName", listModel[position]!!.name)
+                        p.putValue("audioDescription", "")
+                        p.putValue("directions", listModel[position]!!.audioDirection)
+                        p.putValue("masterCategory", listModel[position]!!.audiomastercat)
+                        p.putValue("subCategory", listModel[position]!!.audioSubCategory)
+                        p.putValue("audioDuration", listModel[position]!!.audioDuration)
+                        p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
+                        p.putValue("audioType", "Streaming")
+                        p.putValue("source", "Add Audio Screen")
+                        p.putValue("playerType", "Main")
+                        p.putValue("audioService", appStatus(ctx))
+                        p.putValue("bitRate", "")
+                        p.putValue("sound", hundredVolume.toString())
+                        addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
+                        val i = Intent(ctx, AddPlaylistActivity::class.java)
+                        i.putExtra("AudioId", listModel[position]!!.iD)
+                        i.putExtra("ScreenView", "Audio Details Screen")
+                        i.putExtra("PlaylistID", "")
+                        i.putExtra("PlaylistName", "")
+                        i.putExtra("PlaylistImage", "")
+                        i.putExtra("PlaylistType", "")
+                        i.putExtra("Liked", "0")
+                        startActivity(i)
+                    } else {
+                        if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
+                            if (isDisclaimer == 1) {
+                                showToast("The audio shall add after playing the disclaimer", activity)
+                            } else {
+                                callAddSearchAudio(listModel[position]!!.iD, "0", "")
+                            }
                         } else {
                             callAddSearchAudio(listModel[position]!!.iD, "0", "")
                         }
-                    } else {
-                        callAddSearchAudio(listModel[position]!!.iD, "0", "")
                     }
                 }
             }
@@ -918,7 +878,6 @@ class AddAudioActivity : AppCompatActivity() {
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("SearchAudio", ignoreCase = true) && playFrom.equals("Recommended Search", ignoreCase = true)) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -1051,16 +1010,7 @@ class AddAudioActivity : AppCompatActivity() {
             Glide.with(ctx).load(PlaylistModel[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
-            //            if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
-            holder.binding.ivBackgroundImage.visibility = View.GONE
-            holder.binding.ivLock.visibility = View.GONE
-            //            }
+
             holder.binding.llMainLayout.setOnClickListener {
 //                if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
 //                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

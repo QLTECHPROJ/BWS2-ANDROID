@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.IsLock
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
@@ -301,7 +302,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
                                     binding.etEmail.setText(viewModel.ResponseData.Email)
 
-                                    BWSApplication.IsLock = viewModel.ResponseData.Islock
+                                    IsLock = viewModel.ResponseData.Islock
                                     val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)

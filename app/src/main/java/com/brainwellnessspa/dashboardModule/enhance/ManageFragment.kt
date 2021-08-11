@@ -118,12 +118,16 @@ class ManageFragment : Fragment() {
             }
         }
         binding.llSleepTime.setOnClickListener {
-            if (isNetworkConnected(activity)) {
-                val intent = Intent(activity, SleepTimeActivity::class.java)
-                startActivity(intent)
-            } else {
-                showToast(getString(R.string.no_server_found), activity)
-            }
+             if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                 if (isNetworkConnected(activity)) {
+                     val intent = Intent(activity, SleepTimeActivity::class.java)
+                     startActivity(intent)
+                 } else {
+                     showToast(getString(R.string.no_server_found), activity)
+                 }
+             }
         }
 
         binding.tvViewAll.setOnClickListener {
@@ -139,7 +143,7 @@ class ManageFragment : Fragment() {
         binding.rlCreatePlaylist.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx)
-            } else {
+            } else if (IsLock.equals("0")) {
                 val p = Properties()
                 p.putValue("source", "Enhance Screen")
                 addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
@@ -662,60 +666,68 @@ class ManageFragment : Fragment() {
                         }
 
                         binding.tvReminder.setOnClickListener {
-                            if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
-                                binding.tvReminder.text = "Set reminder"
-                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
-                                binding.tvReminder.text = "Update reminder"
-                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                            } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
-                                binding.tvReminder.text = "Update reminder"
-                                binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                            if (IsLock.equals("1")) {
+                                callEnhanceActivity(ctx)
+                            } else if (IsLock.equals("0")) {
+                                if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
+                                    binding.tvReminder.text = "Set reminder"
+                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("1", ignoreCase = true)) {
+                                    binding.tvReminder.text = "Update reminder"
+                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
+                                } else if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("2", ignoreCase = true)) {
+                                    binding.tvReminder.text = "Update reminder"
+                                    binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                }
+                                getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0", listModel.responseData!!.suggestedPlaylist!!.reminderId, listModel.responseData!!.suggestedPlaylist!!.isReminder, "2")
                             }
-                            getReminderDay(ctx, act, coUserId, listModel.responseData!!.suggestedPlaylist!!.playlistID, listModel.responseData!!.suggestedPlaylist!!.playlistName, activity, listModel.responseData!!.suggestedPlaylist!!.reminderTime, listModel.responseData!!.suggestedPlaylist!!.reminderDay, "0", listModel.responseData!!.suggestedPlaylist!!.reminderId, listModel.responseData!!.suggestedPlaylist!!.isReminder, "2")
                         }
 
                         setPlayPauseIcon()
                         LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                         binding.llPlayPause.setOnClickListener {
-                            if (isNetworkConnected(activity)) {
-                                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
-                                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                when (isPlayPlaylist) {
-                                    1 -> {
-                                        player.playWhenReady = false
-                                        isPlayPlaylist = 2
-                                        binding.llPlay.visibility = View.VISIBLE
-                                        binding.llPause.visibility = View.GONE
-                                    }
-                                    2 -> {
-                                        if (player != null) {
-                                            val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
-                                            if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                                                val editor = shared.edit()
-                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                                                editor.apply()
-                                                player.seekTo(0, 0)
-                                                PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
-                                                player.playWhenReady = true
-                                            } else {
-                                                player.playWhenReady = true
-                                            }
+                            if (IsLock.equals("1")) {
+                                callEnhanceActivity(ctx)
+                            } else if (IsLock.equals("0")) {
+                                if (isNetworkConnected(activity)) {
+                                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+                                    val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                    when (isPlayPlaylist) {
+                                        1 -> {
+                                            player.playWhenReady = false
+                                            isPlayPlaylist = 2
+                                            binding.llPlay.visibility = View.VISIBLE
+                                            binding.llPause.visibility = View.GONE
                                         }
-                                        isPlayPlaylist = 1
-                                        binding.llPlay.visibility = View.GONE
-                                        binding.llPause.visibility = View.VISIBLE
+                                        2 -> {
+                                            if (player != null) {
+                                                val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
+                                                if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                                    val editor = shared.edit()
+                                                    editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                                                    editor.apply()
+                                                    player.seekTo(0, 0)
+                                                    PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![0].id
+                                                    player.playWhenReady = true
+                                                } else {
+                                                    player.playWhenReady = true
+                                                }
+                                            }
+                                            isPlayPlaylist = 1
+                                            binding.llPlay.visibility = View.GONE
+                                            binding.llPause.visibility = View.VISIBLE
+                                        }
+                                        else -> {
+                                            PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![playerPosition].id
+                                            callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, act, listModel.responseData!!.suggestedPlaylist!!.playlistID!!, listModel.responseData!!.suggestedPlaylist!!.playlistName!!)
+                                            binding.llPlay.visibility = View.GONE
+                                            binding.llPause.visibility = View.VISIBLE
+                                        }
                                     }
-                                    else -> {
-                                        PlayerAudioId = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![playerPosition].id
-                                        callMainPlayerSuggested(0, "", listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!, ctx, act, listModel.responseData!!.suggestedPlaylist!!.playlistID!!, listModel.responseData!!.suggestedPlaylist!!.playlistName!!)
-                                        binding.llPlay.visibility = View.GONE
-                                        binding.llPause.visibility = View.VISIBLE
-                                    }
+                                } else {
+                                    showToast(requireActivity().getString(R.string.no_server_found), activity)
                                 }
-                            } else {
-                                showToast(requireActivity().getString(R.string.no_server_found), activity)
                             }
                         }
 
@@ -737,15 +749,19 @@ class ManageFragment : Fragment() {
                 }
 
                 private fun callPlaylistDetails() {
-                    if (isNetworkConnected(activity)) {
-                        try {
-                            callMyPlaylistActivity("0", homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName, act)
-                            act.overridePendingTransition(0, 0)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                    if(IsLock.equals("1")){
+                        callEnhanceActivity(ctx)
+                    }else if(IsLock.equals("0")) {
+                        if (isNetworkConnected(activity)) {
+                            try {
+                                callMyPlaylistActivity("0", homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName, act)
+                                act.overridePendingTransition(0, 0)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        } else {
+                            showToast(requireActivity().getString(R.string.no_server_found), activity)
                         }
-                    } else {
-                        showToast(requireActivity().getString(R.string.no_server_found), activity)
                     }
                 }
 
@@ -1328,7 +1344,7 @@ class ManageFragment : Fragment() {
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx)
-                } else {
+                } else if (IsLock.equals("0")) {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
                     notifyDataSetChanged()
@@ -1337,15 +1353,19 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx)
+            } else if (IsLock.equals("0")) {
                 val listm = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 ManageFragment().callAddToplaylistClick("Playlist View All Screen", listm, listModel.details, position, ctx)
             }
+        }
 
 
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx)
-                } else {
+                } else if (IsLock.equals("0")) {
                     if (isNetworkConnected(ctx)) {
                         ManageFragment().callMyPlaylistActivity("0", listModel.details!![position].playlistID, listModel.details!![position].playlistName, act)
                         act.overridePendingTransition(0, 0)
@@ -1409,8 +1429,12 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
-                val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
+                    ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                }
             }
 
             holder.binding.llMainLayout.setOnClickListener {
@@ -1475,8 +1499,12 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
-                val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
+                    ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                }
             }
 
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
@@ -1524,7 +1552,7 @@ class ManageFragment : Fragment() {
             holder.binding.llMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx)
-                } else {
+                } else if (IsLock.equals("0")) {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
             }
@@ -1582,8 +1610,12 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
-                val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
+                    ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                }
             }
 
             holder.binding.llMainLayout.setOnClickListener {
@@ -1648,8 +1680,12 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
-                val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
-                ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
+                    ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
+                }
             }
 
             holder.binding.llMainLayout.setOnClickListener {

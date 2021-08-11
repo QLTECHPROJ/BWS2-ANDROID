@@ -339,130 +339,96 @@ class  ViewSuggestedActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.binds.tvTitle.text = listModel!![position].name
-            holder.binds.tvTime.text = listModel[position].audioDuration
-            holder.binds.pbProgress.visibility = View.GONE
-            holder.binds.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
+            holder.binding.tvTitle.text = listModel!![position].name
+            holder.binding.tvTime.text = listModel[position].audioDuration
+            holder.binding.pbProgress.visibility = View.GONE
+            holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
             val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.12f, 0f)
-            holder.binds.cvImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binds.cvImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-            holder.binds.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binds.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-            holder.binds.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
-            holder.binds.ivBackgroundImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-            holder.binds.ivBackgroundImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-            holder.binds.ivBackgroundImage.scaleType = ImageView.ScaleType.FIT_XY
-            Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivRestaurantImage)
-            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivBackgroundImage)
+            holder.binding.cvImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.cvImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
+            holder.binding.ivBackgroundImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+            holder.binding.ivBackgroundImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+            holder.binding.ivBackgroundImage.scaleType = ImageView.ScaleType.FIT_XY
+            Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
+            Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-            val playFrom = sharedzw.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-            val playerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
                 if (PlayerAudioId.equals(listModel[position].iD, ignoreCase = true)) {
                     songId = PlayerAudioId
                     if (player != null) {
                         if (!player.playWhenReady) {
-                            holder.binds.equalizerview.pause()
-                        } else holder.binds.equalizerview.resume(true)
-                    } else holder.binds.equalizerview.stop(true)
-                    holder.binds.equalizerview.visibility = View.VISIBLE
-                    holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background)
-                    holder.binds.ivBackgroundImage.visibility = View.VISIBLE
+                            holder.binding.equalizerview.pause()
+                        } else holder.binding.equalizerview.resume(true)
+                    } else holder.binding.equalizerview.stop(true)
+                    holder.binding.equalizerview.visibility = View.VISIBLE
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background)
+                    holder.binding.ivBackgroundImage.visibility = View.VISIBLE
                 } else {
-                    holder.binds.equalizerview.visibility = View.GONE
-                    holder.binds.llMainLayout.setBackgroundResource(R.color.white)
-                    holder.binds.ivBackgroundImage.visibility = View.GONE
+                    holder.binding.equalizerview.visibility = View.GONE
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white)
+                    holder.binding.ivBackgroundImage.visibility = View.GONE
                 }
             } else {
-                holder.binds.equalizerview.visibility = View.GONE
-                holder.binds.llMainLayout.setBackgroundResource(R.color.white)
-                holder.binds.ivBackgroundImage.visibility = View.GONE
+                holder.binding.equalizerview.visibility = View.GONE
+                holder.binding.llMainLayout.setBackgroundResource(R.color.white)
+                holder.binding.ivBackgroundImage.visibility = View.GONE
             }
-
-            //            if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-            //                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-            //                    holder.binds.ivLock.setVisibility(View.GONE);
-            //                } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-            //                        || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-            //                    holder.binds.ivLock.setVisibility(View.VISIBLE);
-            //                }
-            //            } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-            //                if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-            //                    holder.binds.ivLock.setVisibility(View.GONE);
-            //                } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-            //                        || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-            //                    holder.binds.ivLock.setVisibility(View.VISIBLE);
-            //                }
-            //            } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
-            //                    || listModel.get(position).isLock().equalsIgnoreCase("")) {
-            holder.binds.ivLock.visibility = View.GONE
-            //            }
-            holder.binds.llMainLayoutForPlayer.setOnClickListener {
-                //                if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-                //                    if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                //                        callMainTransFrag(position);
-                //                    } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-                //                            || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-                //                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                //                        i.putExtra("ComeFrom", "Plan");
-                //                        startActivity(i);
-                //                    }
-                //                } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-                //                    if (listModel.get(position).isPlay().equalsIgnoreCase("1")) {
-                //                        callMainTransFrag(position);
-                //                    } else if (listModel.get(position).isPlay().equalsIgnoreCase("0")
-                //                            || listModel.get(position).isPlay().equalsIgnoreCase("")) {
-                //                        BWSApplication.showToast(getString(R.string.reactive_plan), activity);
-                //                    }
-                //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
-                //                        || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                callMainTransFrag(position)
+            if (listModel[position].isPlay.equals("0")) {
+                holder.binding.ivLock.visibility = View.VISIBLE
+            } else {
+                holder.binding.ivLock.visibility = View.GONE
             }
-            holder.binds.llRemoveAudio.setOnClickListener {
-                //                if (listModel.get(position).isLock().equalsIgnoreCase("1")) {
-                //                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                //                    i.putExtra("ComeFrom", "Plan");
-                //                    startActivity(i);
-                //                } else if (listModel.get(position).isLock().equalsIgnoreCase("2")) {
-                //                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
-                //                } else if (listModel.get(position).isLock().equalsIgnoreCase("0")
-                //                        || listModel.get(position).isLock().equalsIgnoreCase("")) {
-                val p = Properties()
-                p.putValue("audioId", listModel[position].iD)
-                p.putValue("audioName", listModel[position].name)
-                p.putValue("audioDescription", "")
-                p.putValue("directions", listModel[position].audioDirection)
-                p.putValue("masterCategory", listModel[position].audiomastercat)
-                p.putValue("subCategory", listModel[position].audioSubCategory)
-                p.putValue("audioDuration", listModel[position].audioDuration)
-                p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
-                p.putValue("audioType", "Streaming")
-                p.putValue("source","Add Audio Screen")
-                p.putValue("audioService", appStatus(ctx))
-                p.putValue("bitRate", "")
-                p.putValue("sound", hundredVolume.toString())
-                addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
-                if (playlistId.equals("", ignoreCase = true)) {
-                    val i = Intent(ctx, AddPlaylistActivity::class.java)
-                    i.putExtra("AudioId", listModel[position].iD)
-                    i.putExtra("ScreenView", "Audio Details Screen")
-                    i.putExtra("PlaylistID", "")
-                    i.putExtra("PlaylistName", "")
-                    i.putExtra("PlaylistImage", "")
-                    i.putExtra("PlaylistType", "")
-                    i.putExtra("Liked", "0")
-                    startActivity(i)
-                } else {
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
-                        if (isDisclaimer == 1) {
-                            showToast("The audio shall add after playing the disclaimer", activity)
+            holder.binding.llMainLayoutForPlayer.setOnClickListener {
+                 if (listModel[position].isPlay.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (listModel[position].isPlay.equals("0")) {
+                     callMainTransFrag(position)
+                 }
+            }
+            holder.binding.llRemoveAudio.setOnClickListener {
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    val p = Properties()
+                    p.putValue("audioId", listModel[position].iD)
+                    p.putValue("audioName", listModel[position].name)
+                    p.putValue("audioDescription", "")
+                    p.putValue("directions", listModel[position].audioDirection)
+                    p.putValue("masterCategory", listModel[position].audiomastercat)
+                    p.putValue("subCategory", listModel[position].audioSubCategory)
+                    p.putValue("audioDuration", listModel[position].audioDuration)
+                    p.putValue("position", GlobalInitExoPlayer.GetCurrentAudioPosition())
+                    p.putValue("audioType", "Streaming")
+                    p.putValue("source", "Add Audio Screen")
+                    p.putValue("audioService", appStatus(ctx))
+                    p.putValue("bitRate", "")
+                    p.putValue("sound", hundredVolume.toString())
+                    addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
+                    if (playlistId.equals("", ignoreCase = true)) {
+                        val i = Intent(ctx, AddPlaylistActivity::class.java)
+                        i.putExtra("AudioId", listModel[position].iD)
+                        i.putExtra("ScreenView", "Audio Details Screen")
+                        i.putExtra("PlaylistID", "")
+                        i.putExtra("PlaylistName", "")
+                        i.putExtra("PlaylistImage", "")
+                        i.putExtra("PlaylistType", "")
+                        i.putExtra("Liked", "0")
+                        startActivity(i)
+                    } else {
+                        if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
+                            if (isDisclaimer == 1) {
+                                showToast("The audio shall add after playing the disclaimer", activity)
+                            } else {
+                                callAddAudioToPlaylist(listModel[position].iD, "", "0")
+                            }
                         } else {
                             callAddAudioToPlaylist(listModel[position].iD, "", "0")
                         }
-                    } else {
-                        callAddAudioToPlaylist(listModel[position].iD, "", "0")
                     }
                 }
             }
@@ -578,7 +544,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
             return listModel!!.size
         }
 
-        inner class MyViewHolder(var binds: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binds.root)
+        inner class MyViewHolder(var binding: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     /* public class SuggestionPlayListsAdpater extends RecyclerView.Adapter<SuggestionPlayListsAdpater.MyViewHolder> {
@@ -634,14 +600,6 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
                 holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon);
                 holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            if (PlaylistModel.get(position).isLock().equalsIgnoreCase("1")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("2")) {
-//                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-//                holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            } else if (PlaylistModel.get(position).isLock().equalsIgnoreCase("0") || PlaylistModel.get(position).isLock().equalsIgnoreCase("")) {
-
                 holder.binding.ivLock.setVisibility(View.GONE);
 //            }
 

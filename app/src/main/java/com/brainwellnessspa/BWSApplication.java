@@ -168,7 +168,7 @@ public class BWSApplication extends Application {
     };
     public static int miniPlayer = 0;
     public static int addCouserBackStatus = 0;
-    public static String BatteryStatus = "", IsLock;
+    public static String BatteryStatus = "", IsLock = "0";
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;

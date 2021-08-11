@@ -61,7 +61,7 @@ open class MainAudioModel protected constructor(`in`: Parcel) : Parcelable {
 
         @SerializedName("IsLock")
         @Expose
-        var isLock: String? = null
+        var isLock: String? = ""
 
         @SerializedName("expireDate")
         @Expose

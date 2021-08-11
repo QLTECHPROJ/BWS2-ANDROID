@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.IsLock
+import com.brainwellnessspa.BWSApplication.callEnhanceActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityReminderDetailsBinding
 import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding
@@ -392,75 +394,69 @@ class ReminderListsActivity : AppCompatActivity() {
             }
             holder.bind.switchStatus.isChecked = model[position]!!.isCheck.equals("1", ignoreCase = true)
 
-            //            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
-            //                holder.bind.switchStatus.setClickable(false);
-            //                holder.bind.switchStatus.setEnabled(false);
-            //                holder.bind.llSwitchStatus.setClickable(true);
-            //                holder.bind.llSwitchStatus.setEnabled(true);
-            //                holder.bind.llSwitchStatus.setOnClickListener(view -> {
-            //                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-            //                    i.putExtra("ComeFrom", "Plan");
-            //                    startActivity(i);
-            //                });
-            //            } else if (model.get(position).getIsLock().equalsIgnoreCase("2")) {
-            //                holder.bind.switchStatus.setClickable(false);
-            //                holder.bind.switchStatus.setEnabled(false);
-            //                holder.bind.llSwitchStatus.setClickable(true);
-            //                holder.bind.llSwitchStatus.setEnabled(true);
-            //                holder.bind.llSwitchStatus.setOnClickListener(view -> {
-            //                    BWSApplication.showToast(getString(R.string.reactive_plan), activity);
-            //                });
-            //            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
-            holder.bind.switchStatus.isClickable = true
-            holder.bind.switchStatus.isEnabled = true
-            holder.bind.llSwitchStatus.isClickable = false
-            holder.bind.llSwitchStatus.isEnabled = false
-            holder.bind.switchStatus.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
-                if (checked) {
-                    val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
-                    Log.e("areNotificationEnabled", areNotificationEnabled.toString())
-                    if (!areNotificationEnabled) {
-                        val dialogNotification = Dialog(ctx)
-                        dialogNotification.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                        dialogNotification.setContentView(R.layout.custom_popup_layout)
-                        dialogNotification.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
-                        dialogNotification.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                        val tvGoBack = dialogNotification.findViewById<TextView>(R.id.tvGoBack)
-                        val tvHeader = dialogNotification.findViewById<TextView>(R.id.tvHeader)
-                        val tvTitle1 = dialogNotification.findViewById<TextView>(R.id.tvTitle)
-                        val btn = dialogNotification.findViewById<Button>(R.id.Btn)
-                        tvTitle1.text = ctx.getString(R.string.unable_to_use_notification_title)
-                        tvHeader.text = ctx.getString(R.string.unable_to_use_notification_content)
-                        btn.text = "Settings"
-                        tvGoBack.text = "Cancel"
-                        dialogNotification.setOnKeyListener { dialog1: DialogInterface?, keyCode: Int, event: KeyEvent? ->
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (IsLock.equals("1")) {
+                holder.bind.switchStatus.isClickable = false
+                holder.bind.switchStatus.isEnabled = false
+                holder.bind.llSwitchStatus.isClickable = true
+                holder.bind.llSwitchStatus.isEnabled = true
+                holder.bind.llSwitchStatus.setOnClickListener {
+                    callEnhanceActivity(ctx)
+                }
+            } else if (IsLock.equals("0")) {
+                holder.bind.switchStatus.isClickable = true
+                holder.bind.switchStatus.isEnabled = true
+                holder.bind.llSwitchStatus.isClickable = false
+                holder.bind.llSwitchStatus.isEnabled = false
+                holder.bind.switchStatus.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
+                    if (checked) {
+                        val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+                        Log.e("areNotificationEnabled", areNotificationEnabled.toString())
+                        if (!areNotificationEnabled) {
+                            val dialogNotification = Dialog(ctx)
+                            dialogNotification.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialogNotification.setContentView(R.layout.custom_popup_layout)
+                            dialogNotification.window!!.setBackgroundDrawable(ColorDrawable(ctx.resources.getColor(R.color.dark_blue_gray)))
+                            dialogNotification.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val tvGoBack = dialogNotification.findViewById<TextView>(R.id.tvGoBack)
+                            val tvHeader = dialogNotification.findViewById<TextView>(R.id.tvHeader)
+                            val tvTitle1 = dialogNotification.findViewById<TextView>(R.id.tvTitle)
+                            val btn = dialogNotification.findViewById<Button>(R.id.Btn)
+                            tvTitle1.text = ctx.getString(R.string.unable_to_use_notification_title)
+                            tvHeader.text = ctx.getString(R.string.unable_to_use_notification_content)
+                            btn.text = "Settings"
+                            tvGoBack.text = "Cancel"
+                            dialogNotification.setOnKeyListener { dialog1: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialogNotification.dismiss()
+                                }
+                                false
+                            }
+                            btn.setOnClickListener { v: View? ->
+                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                intent.data = Uri.parse("package:" + ctx.packageName)
+                                ctx.startActivity(intent)
                                 dialogNotification.dismiss()
                             }
-                            false
-                        }
-                        btn.setOnClickListener { v: View? ->
-                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            intent.data = Uri.parse("package:" + ctx.packageName)
-                            ctx.startActivity(intent)
-                            dialogNotification.dismiss()
-                        }
-                        tvGoBack.setOnClickListener { v: View? -> dialogNotification.dismiss() }
-                        dialogNotification.show()
-                        dialogNotification.setCancelable(false)
-                    }else
-                        prepareSwitchStatus("1", model[position]!!.playlistId, model[position]!!)
-                } else {
-                    prepareSwitchStatus("0", model[position]!!.playlistId, model[position]!!)
+                            tvGoBack.setOnClickListener { v: View? -> dialogNotification.dismiss() }
+                            dialogNotification.show()
+                            dialogNotification.setCancelable(false)
+                        } else prepareSwitchStatus("1", model[position]!!.playlistId, model[position]!!)
+                    } else {
+                        prepareSwitchStatus("0", model[position]!!.playlistId, model[position]!!)
+                    }
                 }
-            } //            }
-            holder.bind.llMainLayout.setOnClickListener {
-                if (BWSApplication.isNetworkConnected(activity)) {
-                    notificationStatus = true
-                    myBackPress = false
-                    BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay, "0", model[position]!!.reminderId, model[position]!!.isCheck, model[position]!!.created)
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                holder.bind.llMainLayout.setOnClickListener {
+                    if (IsLock.equals("1")) {
+                        callEnhanceActivity(ctx)
+                    } else if (IsLock.equals("0")) {
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            notificationStatus = true
+                            myBackPress = false
+                            BWSApplication.getReminderDay(ctx, activity, coUserId, model[position]!!.playlistId, model[position]!!.playlistName, activity as FragmentActivity?, model[position]!!.reminderTime, model[position]!!.rDay, "0", model[position]!!.reminderId, model[position]!!.isCheck, model[position]!!.created)
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+                        }
+                    }
                 }
             }
         }

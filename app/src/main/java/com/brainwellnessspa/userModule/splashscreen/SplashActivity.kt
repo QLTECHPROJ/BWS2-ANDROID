@@ -13,8 +13,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.analytics
-import com.brainwellnessspa.BWSApplication.key
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
@@ -197,7 +196,7 @@ class SplashActivity : AppCompatActivity() {
                         val authOtpModel: AuthOtpModel = response.body()!!
                         if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
 
-                            BWSApplication.IsLock = authOtpModel.ResponseData.Islock
+                            IsLock = authOtpModel.ResponseData.Islock
                             isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
                             isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
                             indexScore = authOtpModel.ResponseData.indexScore

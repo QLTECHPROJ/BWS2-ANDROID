@@ -182,14 +182,17 @@ class MyPlayerActivity : AppCompatActivity() {
 
         /* info button click */
         binding.llInfo.setOnClickListener {
-            if (isNetworkConnected(ctx)) {
-                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-                val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
-                audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                callAudioDetails(mainPlayModelList[position].id, ctx, act, coUserId, "audioPlayer", arrayListOf<DownloadAudioDetails>(), arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(), arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(), mainPlayModelList, position)
-            } else {
-                showToast(getString(R.string.no_server_found), act)
-            }
+             if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                 if (isNetworkConnected(ctx)) {
+                     val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                     audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                     callAudioDetails(mainPlayModelList[position].id, ctx, act, coUserId, "audioPlayer", arrayListOf<DownloadAudioDetails>(), arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(), arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(), mainPlayModelList, position)
+                 } else {
+                     showToast(getString(R.string.no_server_found), act)
+                 }
+             }
         }
 
         /* back button click */
@@ -757,18 +760,13 @@ class MyPlayerActivity : AppCompatActivity() {
         //        simpleSeekbar.setMax(100);
         /*download button click*/
         binding.llDownload.setOnClickListener {
-            if (isNetworkConnected(ctx)) {
-                //                if (AudioFragment.IsLock.equals("1", ignoreCase = true)) {
-                //                    val i = Intent(ctx, MembershipChangeActivity::class.java)
-                //                    i.putExtra("ComeFrom", "Plan")
-                //                    ctx.startActivity(i)
-                //                } else if (AudioFragment.IsLock.equals("2", ignoreCase = true)) {
-                //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx)
-                //                } else {
-                if (mainPlayModelList[position].id != "0") callDownload()
-                //                }
-            } else {
-                showToast(getString(R.string.no_server_found), act)
+            if (IsLock.equals("1")) {
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(ctx)) {
+                    if (mainPlayModelList[position].id != "0") callDownload()
+                } else {
+                    showToast(getString(R.string.no_server_found), act)
+                }
             }
         }
         val gson = Gson()

@@ -41,6 +41,7 @@ class ViewAllPlaylistFragment : Fragment() {
     lateinit var binding: FragmentViewAllPlaylistBinding
     var getLibraryId: String? = null
     var name: String? = null
+    lateinit var ctx:Context
     var coUserId: String? = null
     var userId: String? = null
     var userName: String? = null
@@ -55,6 +56,7 @@ class ViewAllPlaylistFragment : Fragment() {
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
         val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        ctx = requireActivity()
         DB = getAudioDataBase(activity)
         if (arguments != null) {
             getLibraryId = requireArguments().getString("GetLibraryID")
@@ -290,13 +292,11 @@ class ViewAllPlaylistFragment : Fragment() {
             holder.binding.rlMainLayout.layoutParams.width = (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             Glide.with(requireActivity()).load(listModelList[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
-            //            if (IsLock.equalsIgnoreCase("1")) {
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("2")) {
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivLock.visibility = View.GONE
-            //            }
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equals("0")) {
+                holder.binding.ivLock.visibility = View.GONE
+            }
             if (index == position) {
                 holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
             } else holder.binding.tvAddToPlaylist.visibility = View.GONE
@@ -319,7 +319,6 @@ class ViewAllPlaylistFragment : Fragment() {
                 } else if (listModelList[position].created.equals("2"))
                     p.putValue("playlistType", "Suggested")
 
-
                 if (listModelList[position].totalhour == "") {
                     p.putValue("playlistDuration", "0h " + listModelList[position].totalhour  + "m")
                 } else if (listModelList[position].totalminute == "") {
@@ -340,44 +339,35 @@ class ViewAllPlaylistFragment : Fragment() {
                 startActivity(i)
             }
             holder.binding.rlMainLayout.setOnClickListener {
-                //                if (IsLock.equalsIgnoreCase("1")) {
-                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                //                    Intent i = new Intent(getActivity(),
-                // MembershipChangeActivity.class);
-                //                    i.putExtra("ComeFrom", "Plan");
-                //                    startActivity(i);
-                //                } else if (IsLock.equalsIgnoreCase("2")) {
-                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                //                    BWSApplication.showToast(getString(R.string.reactive_plan),
-                // getActivity());
-                //                } else if (IsLock.equalsIgnoreCase("0") ||
-                // IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.visibility = View.GONE
-                if (myDownloads.equals("1", ignoreCase = true)) {
-                    //                            getMedia(listModelList.get(position).getPlaylistID());
-                    val i = Intent(activity, DownloadPlaylistActivity::class.java)
-                    i.putExtra("New", "0")
-                    i.putExtra("PlaylistID", listModelList[position].playlistID)
-                    i.putExtra("PlaylistName", listModelList[position].playlistName)
-                    i.putExtra("PlaylistImage", listModelList[position].playlistImage)
-                    i.putExtra("PlaylistImageDetails", "")
-                    i.putExtra("TotalAudio", listModelList[position].totalAudio)
-                    i.putExtra("Totalhour", listModelList[position].totalhour)
-                    i.putExtra("Totalminute", listModelList[position].totalminute)
-                    i.putExtra("MyDownloads", "1")
-                    requireActivity().startActivity(i)
-                } else {
-                    GetPlaylistLibraryID = getLibraryId
-                    val i = Intent(activity, MyPlaylistListingActivity::class.java)
-                    i.putExtra("New", "0")
-                    i.putExtra("PlaylistID", listModelList[position].playlistID)
-                    i.putExtra("PlaylistName", listModelList[position].playlistName)
-                    i.putExtra("PlaylistImage", listModelList[position].playlistImage)
-                    i.putExtra("MyDownloads", myDownloads)
-                    i.putExtra("ScreenView", screenView)
-                    i.putExtra("PlaylistType", listModelList[position].created)
-                    i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    startActivity(i)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx)
+                } else if (IsLock.equals("0")) {
+                    if (myDownloads.equals("1", ignoreCase = true)) {
+                        //                            getMedia(listModelList.get(position).getPlaylistID());
+                        val i = Intent(activity, DownloadPlaylistActivity::class.java)
+                        i.putExtra("New", "0")
+                        i.putExtra("PlaylistID", listModelList[position].playlistID)
+                        i.putExtra("PlaylistName", listModelList[position].playlistName)
+                        i.putExtra("PlaylistImage", listModelList[position].playlistImage)
+                        i.putExtra("PlaylistImageDetails", "")
+                        i.putExtra("TotalAudio", listModelList[position].totalAudio)
+                        i.putExtra("Totalhour", listModelList[position].totalhour)
+                        i.putExtra("Totalminute", listModelList[position].totalminute)
+                        i.putExtra("MyDownloads", "1")
+                        requireActivity().startActivity(i)
+                    } else {
+                        GetPlaylistLibraryID = getLibraryId
+                        val i = Intent(activity, MyPlaylistListingActivity::class.java)
+                        i.putExtra("New", "0")
+                        i.putExtra("PlaylistID", listModelList[position].playlistID)
+                        i.putExtra("PlaylistName", listModelList[position].playlistName)
+                        i.putExtra("PlaylistImage", listModelList[position].playlistImage)
+                        i.putExtra("MyDownloads", myDownloads)
+                        i.putExtra("ScreenView", screenView)
+                        i.putExtra("PlaylistType", listModelList[position].created)
+                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        startActivity(i)
+                    }
                 }
             }
         }

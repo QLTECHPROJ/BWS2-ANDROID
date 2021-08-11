@@ -2,9 +2,11 @@ package com.brainwellnessspa.downloadModule.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.audioClick;
+import static com.brainwellnessspa.BWSApplication.callEnhanceActivity;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.isDisclaimer;
 import static com.brainwellnessspa.BWSApplication.miniPlayer;
@@ -402,14 +404,11 @@ public class AudioDownloadsFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             comefromDownload = "1";
-            //            if (IsLock.equalsIgnoreCase("1")) {
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("2")) {
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivLock.setVisibility(View.GONE);
-            //            }
-
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0") ) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 
@@ -439,68 +438,69 @@ public class AudioDownloadsFragment extends Fragment {
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 comefromDownload = "1";
-                //                if (IsLock.equalsIgnoreCase("1")) {
-                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                //                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                //                    i.putExtra("ComeFrom", "Plan");
-                //                    ctx.startActivity(i);
-                //                } else if (IsLock.equalsIgnoreCase("2")) {
-                //                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                //                    BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                //                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                comefromDownload = "1";
-                holder.binding.ivLock.setVisibility(View.GONE);
-                int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
-                        if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            if (player != null) {
-                                if (position != PlayerPosition) {
-                                    int i = player.getMediaItemCount();
-                                    if (i < listModelList.size()) {
-                                        callTransFrag(position, listModelList, true);
+                if (IsLock.equalsIgnoreCase("1")) {
+                    callEnhanceActivity(ctx);
+                } else if (IsLock.equalsIgnoreCase("0")) {
+                    comefromDownload = "1";
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                    IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                if (player != null) {
+                                    if (position != PlayerPosition) {
+                                        int i = player.getMediaItemCount();
+                                        if (i < listModelList.size()) {
+                                            callTransFrag(position, listModelList, true);
+                                        } else {
+                                            player.seekTo(position, 0);
+                                            player.setPlayWhenReady(true);
+                                            callTransFrag(position, listModelList, false);
+                                            callAddTransFrag();
+                                        }
                                     } else {
-                                        player.seekTo(position, 0);
-                                        player.setPlayWhenReady(true);
-                                        callTransFrag(position, listModelList, false);
                                         callAddTransFrag();
                                     }
                                 } else {
-                                    callAddTransFrag();
+                                    callTransFrag(position, listModelList, true);
                                 }
-                            } else {
-                                callTransFrag(position, listModelList, true);
                             }
-                        }
-                    } else {
-                        List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                        listModelList2.addAll(listModelList);
-                        DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                        Gson gson = new Gson();
-                        SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                        String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
-                        String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
-                        Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
-                        }.getType();
-                        HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
-                        mainPlayModel.setID(arrayList.getId());
-                        mainPlayModel.setName(arrayList.getName());
-                        mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                        mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                        mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                        mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                        mainPlayModel.setImageFile(arrayList.getImageFile());
-                        mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                        boolean audioc = true;
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                player.setPlayWhenReady(true);
-                                audioc = false;
-                                listModelList2.add(position, mainPlayModel);
+                        } else {
+                            List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                            listModelList2.addAll(listModelList);
+                            DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                            Gson gson = new Gson();
+                            SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                            String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
+                            String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
+                            Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
+                            }.getType();
+                            HomeScreenModel.ResponseData.DisclaimerAudio arrayList = gson.fromJson(DisclimerJson, type);
+                            mainPlayModel.setID(arrayList.getId());
+                            mainPlayModel.setName(arrayList.getName());
+                            mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                            mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                            mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                            mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                            mainPlayModel.setImageFile(arrayList.getImageFile());
+                            mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                            boolean audioc = true;
+                            if (isDisclaimer == 1) {
+                                if (player != null) {
+                                    player.setPlayWhenReady(true);
+                                    audioc = false;
+                                    listModelList2.add(position, mainPlayModel);
+                                } else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(position, mainPlayModel);
+                                    }
+                                }
                             } else {
                                 isDisclaimer = 0;
                                 if (IsPlayDisclimer.equalsIgnoreCase("1")) {
@@ -508,68 +508,66 @@ public class AudioDownloadsFragment extends Fragment {
                                     listModelList2.add(position, mainPlayModel);
                                 }
                             }
-                        } else {
-                            isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
-                                listModelList2.add(position, mainPlayModel);
-                            }
+                            callTransFrag(position, listModelList2, audioc);
                         }
-                        callTransFrag(position, listModelList2, audioc);
+                    } else {
+                        getMedia(AudioPlayerFlag, position);
                     }
-                } else {
-                    getMedia(AudioPlayerFlag, position);
+                    Properties p = new Properties();
+                    p.putValue("audioId", listModelList.get(position).getID());
+                    p.putValue("audioName", listModelList.get(position).getName());
+                    BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
+                    //                }
+                    //            handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();
                 }
-                Properties p = new Properties();
-                p.putValue("audioId", listModelList.get(position).getID());
-                p.putValue("audioName", listModelList.get(position).getName());
-                BWSApplication.addToSegment("Downloaded Audio Clicked", p, CONSTANTS.track);
-                //                }
-                //            handler3.postDelayed(UpdateSongTime3, 500);
-                notifyDataSetChanged();
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                try {
-                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
-                        String name = "";
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
-                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                        }.getType();
-                        ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
-
-                        if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                            arrayList.remove(0);
-                        }
-                        name = arrayList.get(0).getName();
-
-                        int unicode = 0x1F6AB;
-                        String textIcon = new String(Character.toChars(unicode));
+                if (IsLock.equalsIgnoreCase("1")) {
+                    callEnhanceActivity(ctx);
+                } else if (IsLock.equalsIgnoreCase("0")) {
+                    try {
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                            String name = "";
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                            Gson gson = new Gson();
+                            String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
+
+                            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                                arrayList.remove(0);
+                            }
+                            name = arrayList.get(0).getName();
+
+                            int unicode = 0x1F6AB;
+                            String textIcon = new String(Character.toChars(unicode));
+                            if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
+                                if (isDisclaimer == 1) {
+                                    BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                                } else {
+                                    if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
+
+                                        BWSApplication.showToast("You can't delete an audio while it's playing." + textIcon, ctx);
+                                    } else {
+                                        deleteAudio(holder.getAdapterPosition());
+                                    }
+                                }
                             } else {
                                 if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-
                                     BWSApplication.showToast("You can't delete an audio while it's playing." + textIcon, ctx);
                                 } else {
                                     deleteAudio(holder.getAdapterPosition());
                                 }
                             }
                         } else {
-                            if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio") && listModelList.size() == 1) {
-                                BWSApplication.showToast("You can't delete an audio while it's playing." + textIcon, ctx);
-                            } else {
-                                deleteAudio(holder.getAdapterPosition());
-                            }
+                            deleteAudio(holder.getAdapterPosition());
                         }
-                    } else {
-                        deleteAudio(holder.getAdapterPosition());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             });
         }
