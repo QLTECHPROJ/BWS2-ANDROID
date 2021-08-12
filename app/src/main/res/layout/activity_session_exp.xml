@@ -68,7 +68,6 @@
                 android:layout_marginTop="@dimen/_29sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
                 android:textColor="#707070"
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage" />
@@ -90,7 +89,6 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt."
                 android:textColor="#707070"
                 android:textSize="@dimen/_15sdp" />
 

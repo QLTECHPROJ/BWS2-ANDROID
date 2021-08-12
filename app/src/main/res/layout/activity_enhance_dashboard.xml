@@ -379,7 +379,6 @@
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="@string/lorem_ipsum"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_18sdp" />
                         </LinearLayout>
@@ -609,7 +608,6 @@
                                     android:fontFamily="@font/montserrat_regular"
                                     android:gravity="start"
                                     android:maxLines="2"
-                                    android:text="Lorem ipsum dolor sit amet, consetetur"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_12sdp" />
 

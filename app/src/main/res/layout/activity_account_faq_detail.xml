@@ -37,7 +37,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="Lorem ipsum dolor"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage" />
@@ -58,7 +58,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr?"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
@@ -71,7 +71,6 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage"

@@ -59,7 +59,6 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:text="@string/lorem_ipsum"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
@@ -72,7 +71,6 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="@string/long_lorem"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 tools:ignore="SpUsage"
