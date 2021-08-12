@@ -8,19 +8,40 @@
         android:layout_height="match_parent"
         tools:context=".membershipModule.activities.SleepTimeActivity">
 
-
-        <LinearLayout
-            android:id="@+id/rlstep2"
+        <RelativeLayout
+            android:id="@+id/rlFirst"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="-10dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/sleep_time_banner" />
+                android:src="@drawable/sleep_time_banner"
+                android:contentDescription="@string/todo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:paddingTop="@dimen/_12sdp"
+                android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/rlstep2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlFirst"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -34,18 +55,6 @@
                 android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:paddingTop="@dimen/_12sdp"
-                android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
-                android:textColor="@color/light_black"
-                android:textSize="@dimen/_11sdp"
-                tools:ignore="SpUsage" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTimeSlot"
