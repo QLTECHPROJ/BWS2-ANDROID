@@ -418,6 +418,7 @@ class AssProcessActivity : AppCompatActivity() {
             if (mainAccountId.equals(userId, ignoreCase = true)) {
 //                 TODO when add plan in user flow comment open
                 val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                i.putExtra("plan","0")
                 startActivity(i)
                 finish()
                 /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)

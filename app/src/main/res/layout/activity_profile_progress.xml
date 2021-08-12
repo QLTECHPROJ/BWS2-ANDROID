@@ -290,16 +290,16 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="@string/long_lorem"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
+                android:visibility="gone"
                 tools:ignore="SpUsage" />
 
             <Button
                 android:id="@+id/btnOpn1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_64sdp"
-                android:layout_below="@+id/tvForth1"
+                android:layout_below="@+id/tvForth"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:background="@drawable/light_blue_rounded_unfilled"
@@ -405,7 +405,6 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="@string/long_lorem"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 android:visibility="gone"

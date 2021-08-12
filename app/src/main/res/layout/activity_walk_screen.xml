@@ -363,7 +363,6 @@
                 android:gravity="center"
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15sdp"
                 app:layout_constraintTop_toTopOf="parent"
