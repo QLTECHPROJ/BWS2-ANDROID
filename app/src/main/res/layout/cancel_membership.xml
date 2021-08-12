@@ -45,6 +45,7 @@
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
+                android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="@string/cancel_program_quotes"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />

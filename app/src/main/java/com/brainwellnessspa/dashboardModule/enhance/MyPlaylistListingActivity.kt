@@ -228,9 +228,38 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
 
         binding.llSleepTime.setOnClickListener {
-            if (isNetworkConnected(activity)) {
-                val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                startActivity(intent)
+            if (isNetworkConnected(applicationContext)) {
+                val dialog = Dialog(ctx)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.cancel_membership)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(applicationContext, R.color.transparent_white)))
+                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                val btn = dialog.findViewById<Button>(R.id.Btn)
+                tvTitle.text = "Change Sleep Time"
+                tvSubTitle.text = "Changing Sleep Time will make you reselect Area of Focus as well. Would you like to proceed ?"
+                tvGoBack.text = "No"
+                btn.text = "Yes"
+                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        return@setOnKeyListener true
+                    }
+                    false
+                }
+                btn.setOnClickListener {
+                    val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                    startActivity(intent)
+                }
+                /* This click event is called when not cancelling subscription */
+                tvGoBack.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
+                dialog.setCancelable(false)
+
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }

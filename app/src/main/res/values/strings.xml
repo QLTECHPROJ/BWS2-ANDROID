@@ -502,7 +502,7 @@
     <string name="what_is_wellness_score">What is Wellness Score ?</string>
     <string name="congrats">Congrats!</string>
     <string name="otp_quotes">Please enter the OTP to begin your journey towards better mental health.</string>
-    <string name="add_user_subtitle">New persons can either use this device, or another one to access the app.</string>
+    <string name="add_user_subtitle">New person can either use this device, or another one to access the app.</string>
     <string name="popup_title">For multiple users on the same device</string>
     <string name="popup_subtitle">With multiple users, we create separate access pins to ensure privacy. Each person’s details will remain inaccessible to others.</string>
     <string name="create_pin">Create Pin</string>
