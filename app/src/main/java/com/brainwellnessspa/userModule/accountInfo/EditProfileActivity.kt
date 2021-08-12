@@ -42,6 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
     var coUserId: String? = ""
     var userName: String? = ""
     var userCalendar: String? = ""
+    var copyUserCalendar: String? = ""
     var userMobileNumber: String? = ""
     var userEmail: String? = ""
     private var mYear: Int = 0
@@ -274,6 +275,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     }
                                     userName = viewModel.ResponseData.Name
                                     userCalendar = viewModel.ResponseData.DOB
+                                    copyUserCalendar = viewModel.ResponseData.DOB
                                     Log.e("old Date", userCalendar.toString())
 
                                     binding.etCalendar.setText(userCalendar.toString())
@@ -385,6 +387,7 @@ class EditProfileActivity : AppCompatActivity() {
              }
              spf = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
              var dob = spf.format(newDate)*/
+
             val ageArray = userCalendar!!.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
