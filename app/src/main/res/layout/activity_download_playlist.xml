@@ -208,7 +208,6 @@
                                             android:maxLines="3"
                                             android:paddingLeft="@dimen/_10sdp"
                                             android:paddingRight="@dimen/_10sdp"
-                                            android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_10sdp"
                                             tools:ignore="SpUsage" />
