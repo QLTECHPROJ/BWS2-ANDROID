@@ -417,6 +417,7 @@ class AssProcessActivity : AppCompatActivity() {
         binding.btnDoneAss.setOnClickListener {
             if (mainAccountId.equals(userId, ignoreCase = true)) {
 //                 TODO when add plan in user flow comment open
+                IsBackFromEnhance = "1"
                 val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                 i.putExtra("plan","0")
                 startActivity(i)

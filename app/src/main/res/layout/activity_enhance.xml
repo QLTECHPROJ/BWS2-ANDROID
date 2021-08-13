@@ -648,9 +648,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_31sdp"
-                            android:fontFamily="@font/montserrat_medium"
+                            android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
-                            android:text="@string/privacy_policy_t_n_c"
+                            android:text="@string/by_clicking_on_register_or_sign_up_you"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
@@ -664,11 +664,22 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:paddingTop="@dimen/_2sdp"
+                                android:text="@string/agree_to_our"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+                            <TextView
                                 android:id="@+id/tvtncs"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
+                                android:layout_marginStart="@dimen/_4sdp"
                                 android:paddingTop="@dimen/_2sdp"
                                 android:text="@string/t_n_csm"
                                 android:textColor="@color/dark_blue_gray"

@@ -102,8 +102,8 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="@dimen/_12sdp"
                             android:contentDescription="@string/todo"
-                            android:visibility="gone"
                             android:src="@drawable/ic_down_arrow"
+                            android:visibility="gone"
                             app:tint="@color/gray" />
 
                     </LinearLayout>
@@ -221,7 +221,7 @@
                                 android:orientation="vertical"
                                 android:weightSum="1">
 
-                                <LinearLayout
+                                <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="0.2">
@@ -251,7 +251,22 @@
                                             tools:ignore="SpUsage" />
 
                                     </LinearLayout>
-                                </LinearLayout>
+
+                                    <ImageView
+                                        android:id="@+id/ivLock"
+                                        android:layout_width="@dimen/_24sdp"
+                                        android:layout_height="@dimen/_24sdp"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_gravity="end"
+                                        android:layout_marginStart="@dimen/_8sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:layout_marginEnd="@dimen/_13sdp"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_lock_icon"
+                                        android:visibility="gone"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </RelativeLayout>
 
                                 <LinearLayout
                                     android:id="@+id/llPlayerView"
@@ -981,9 +996,9 @@
                                 android:background="@drawable/account_gray_bg"
                                 android:baselineAligned="false"
                                 android:gravity="center"
-                                android:visibility="gone"
                                 android:paddingTop="@dimen/_20sdp"
                                 android:paddingBottom="@dimen/_20sdp"
+                                android:visibility="gone"
                                 android:weightSum="1">
 
                                 <LinearLayout
@@ -1112,9 +1127,9 @@
                                 android:background="@drawable/account_gray_bg"
                                 android:baselineAligned="false"
                                 android:gravity="center"
-                                android:visibility="gone"
                                 android:paddingTop="@dimen/_20sdp"
                                 android:paddingBottom="@dimen/_20sdp"
+                                android:visibility="gone"
                                 android:weightSum="1">
 
                                 <LinearLayout

@@ -119,13 +119,14 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/_51sdp"
                 android:overScrollMode="never">
 
                 <RelativeLayout
                     android:id="@+id/llFirst"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:orientation="vertical"
                     android:visibility="visible">
@@ -184,12 +185,13 @@
 
         <ImageView
             android:id="@+id/btnPrev"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
             android:clickable="true"
+            android:layout_marginStart="@dimen/_8sdp"
             android:contentDescription="@string/todo"
             android:focusable="true"
             android:rotation="180"
@@ -198,12 +200,13 @@
 
         <ImageView
             android:id="@+id/btnNext"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
             android:clickable="false"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_back_black_icon"
             app:tint="@color/gray" />

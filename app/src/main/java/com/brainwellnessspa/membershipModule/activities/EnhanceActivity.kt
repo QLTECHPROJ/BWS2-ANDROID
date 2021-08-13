@@ -40,9 +40,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
 
-class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
+class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
     lateinit var binding: ActivityEnhanceBinding
     lateinit var adapter: MembershipFaqAdapter
     lateinit var subscriptionAdapter: SubscriptionAdapter
@@ -61,7 +60,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
     val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
     lateinit var billingClient: BillingClient
     lateinit var params: SkuDetailsParams
-    var intentflag:String = ""
+    var intentflag: String = ""
     var skuDetailList = arrayListOf<SkuDetails>()
     var listModelList = arrayListOf<PlanlistInappModel.ResponseData.Plan>()
     lateinit var ctx: Context
@@ -74,7 +73,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@EnhanceActivity
 
-        if(intent!=null){
+        if (intent != null) {
             intentflag = intent.getStringExtra("plan").toString()
         }
 
@@ -85,11 +84,15 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)
         binding.llBack.setOnClickListener {
-            finish()
+            if (BWSApplication.IsBackFromEnhance.equals("1")) {
+                finishAffinity()
+            } else {
+                finish()
+            }
         }
 
         binding.btnFreeJoin.setOnClickListener {
-            i.putExtra("plan",intentflag)
+            i.putExtra("plan", intentflag)
             startActivity(i)
         }
 
@@ -141,7 +144,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
                             listModelList.add(listModelGlobal!!.responseData!!.plan!![i1])
                         }
                     }
-                    planListAdapter = PlanListAdapter(listModelList, ctx, i, skuDetailList,binding)
+                    planListAdapter = PlanListAdapter(listModelList, ctx, i, skuDetailList, binding)
                     binding.rvPlanList.adapter = planListAdapter //                    planListAdapter.filter.filter(value.toString())
                 } else {
                     binding.simpleSeekbar.progress = 1
@@ -171,7 +174,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { // The BillingClient is setup
-                     loadAllSKUs()
+                    loadAllSKUs()
                 }
             }
 
@@ -181,6 +184,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
             }
         })
     }
+
     private fun loadAllSKUs() = if (billingClient.isReady) {
         params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(BillingClient.SkuType.SUBS).build()
         billingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList -> // Process the result.
@@ -193,6 +197,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
     } else {
         println("Billing Client not ready")
     }
+
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -301,7 +306,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
             holder.binding.tvTilte.text = listModelList[position].planInterval
             holder.binding.tvContent.text = listModelList[position].subName
 //            holder.binding.tvAmount.text = "$" + listModelList[position].planAmount
-            for(i in 0 until skuDetailList.size) {
+            for (i in 0 until skuDetailList.size) {
                 if (listModelList[position].androidplanId!! == skuDetailList[i].sku) {
                     holder.binding.tvAmount.text = skuDetailList[i].price
                     break
@@ -351,6 +356,7 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
         override fun getItemCount(): Int {
             return listModelList.size
         }
+
         inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
@@ -404,7 +410,11 @@ class EnhanceActivity : AppCompatActivity() , PurchasesUpdatedListener {
     }
 
     override fun onBackPressed() {
-        finish()
+        if (BWSApplication.IsBackFromEnhance.equals("1")) {
+            finishAffinity()
+        } else {
+            finish()
+        }
     }
 
     override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {

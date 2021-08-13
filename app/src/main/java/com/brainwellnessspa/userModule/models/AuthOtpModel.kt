@@ -6,4 +6,4 @@ data class AuthOtpResponseData(val AreaOfFocus: List<AreaOfFocus>, val AvgSleepT
 
 data class AreaOfFocus(val CatId: String, val MainCat: String, val RecommendedCat: String)
 
-data class planDetails(val UserId: String, val UserGroupId: String, val PlanId: String, val PlanPurchaseDate: String, val PlanExpireDate: String, val OriginalTransactionId: String, val TransactionId: String, val TrialPeriodStart: String, val TrialPeriodEnd: String, val PlanStatus: String)
+data class planDetails(val UserId: String, val UserGroupId: String, val PlanId: String, val PlanPurchaseDate: String, val PlanExpireDate: String, val OriginalTransactionId: String, val TransactionId: String, val TrialPeriodStart: String, val TrialPeriodEnd: String, val PlanStatus: String, val PlanContent: String)

@@ -574,5 +574,12 @@
     <string name="get_your_wellness_score">Get your Wellness Score!</string>
     <string name="add_couser_popup_title">Invite a Friend or Family Member</string>
     <string name="enter_name_and_email_of_a_person_being_added_a_separate_profile_of_person_will_be_created_person_will_receive_a_verification_mail">Enter name and Email of a person being added . A separate profile of person will be created. Person will receive a verification mail.</string>
+    <string name="m">M</string>
+    <string name="enhance_program">Enhance Program</string>
+    <string name="plan_renewal">Plan renewal</string>
+    <string name="first_renewal">First renewal</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="by_clicking_on_register_or_sign_up_you">By clicking on Register or Sign up you</string>
+    <string name="agree_to_our">agree to our</string>
 </resources>
 

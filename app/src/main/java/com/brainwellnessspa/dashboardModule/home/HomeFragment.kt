@@ -596,6 +596,12 @@ class HomeFragment : Fragment() {
 
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
+                                    if (response.IsLock.equals("1",ignoreCase = true)){
+                                        binding.ivLock.visibility = View.VISIBLE
+                                    }else {
+                                        binding.ivLock.visibility = View.GONE
+                                    }
+
                                     binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
 
                                     if (response.shouldCheckIndexScore.equals("0", true)) {
@@ -1009,8 +1015,10 @@ class HomeFragment : Fragment() {
     /* click for Go to Playlist listing detail page */
     private fun callPlaylistDetailsClick() {
         if(IsLock.equals("1")){
+            binding.ivLock.visibility = View.VISIBLE
           callEnhanceActivity(ctx,act)
         }else if(IsLock.equals("0")) {
+            binding.ivLock.visibility = View.GONE
             val response = homelistModel.responseData
             if (isNetworkConnected(activity)) {
                 try {
@@ -1481,7 +1489,7 @@ class HomeFragment : Fragment() {
                     if (isMainAccount.equals("1", ignoreCase = true)) {
                         llAddNewUser.visibility = View.VISIBLE
                         if (!model.maxuseradd.equals("", ignoreCase = true)) {
-                            if (modelList.size == model.maxuseradd!!.toInt()) {
+                            if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
                                 showToast("Please upgrade your plan", activity)
                             } else {
                                 /* Add new user button click */
@@ -1675,6 +1683,7 @@ class HomeFragment : Fragment() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                                                         }
                                                         editor.apply()
                                                         val sharded = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)

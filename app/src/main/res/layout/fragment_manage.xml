@@ -170,7 +170,7 @@
                                     android:orientation="vertical"
                                     android:weightSum="1">
 
-                                    <LinearLayout
+                                    <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="0dp"
                                         android:layout_weight="0.2">
@@ -198,7 +198,23 @@
                                                 android:textSize="@dimen/_12sdp"
                                                 tools:ignore="SpUsage" />
                                         </LinearLayout>
-                                    </LinearLayout>
+
+                                        <ImageView
+                                            android:id="@+id/ivLock"
+                                            android:layout_width="@dimen/_24sdp"
+                                            android:layout_height="@dimen/_24sdp"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_gravity="end"
+                                            android:layout_marginStart="@dimen/_8sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+                                            android:layout_marginEnd="@dimen/_13sdp"
+                                            android:contentDescription="@string/todo"
+                                            android:src="@drawable/ic_lock_icon"
+                                            android:visibility="gone"
+                                            app:layout_constraintLeft_toLeftOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                    </RelativeLayout>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -446,6 +462,21 @@
                                                 android:layout_height="wrap_content"
                                                 android:src="@drawable/ic_create_playlist"
                                                 android:contentDescription="@string/todo" />
+
+                                            <ImageView
+                                                android:id="@+id/ivLockCreate"
+                                                android:layout_width="@dimen/_24sdp"
+                                                android:layout_height="@dimen/_24sdp"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_gravity="end"
+                                                android:layout_marginStart="@dimen/_8sdp"
+                                                android:layout_marginTop="@dimen/_10sdp"
+                                                android:layout_marginEnd="@dimen/_13sdp"
+                                                android:contentDescription="@string/todo"
+                                                android:src="@drawable/ic_lock_icon"
+                                                android:visibility="gone"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"

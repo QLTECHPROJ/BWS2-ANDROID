@@ -67,7 +67,7 @@ class EnhanceDoneActivity : AppCompatActivity() {
         binding.btnAddCouser.setOnClickListener {
             IsFirstClick = "1"
             val i = Intent(applicationContext, AddCouserActivity::class.java)
-            i.putExtra("IsFirstClick","1")
+            i.putExtra("IsFirstClick", "1")
             startActivity(i)
             finish()
         }

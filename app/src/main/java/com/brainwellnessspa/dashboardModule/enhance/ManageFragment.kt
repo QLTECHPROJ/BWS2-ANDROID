@@ -31,7 +31,6 @@ import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
@@ -118,45 +117,45 @@ class ManageFragment : Fragment() {
             }
         }
         binding.llSleepTime.setOnClickListener {
-             if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
-                } else if (IsLock.equals("0")) {
-                 if (isNetworkConnected(activity)) {
-                     val dialog = Dialog(ctx)
-                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                     dialog.setContentView(R.layout.cancel_membership)
-                     dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity!!, R.color.transparent_white)))
-                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                     val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
-                     val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                     val btn = dialog.findViewById<Button>(R.id.Btn)
-                     tvTitle.text = "Change Sleep Time"
-                     tvSubTitle.text = "Changing Sleep Time will make you reselect Area of Focus as well. Would you like to proceed ?"
-                     tvGoBack.text = "No"
-                     btn.text = "Yes"
-                     dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                         if (keyCode == KeyEvent.KEYCODE_BACK) {
-                             dialog.dismiss()
-                             return@setOnKeyListener true
-                         }
-                         false
-                     }
-                     btn.setOnClickListener {
-                         val intent = Intent(activity, SleepTimeActivity::class.java)
-                         startActivity(intent)
-                     }
-                     /* This click event is called when not cancelling subscription */
-                     tvGoBack.setOnClickListener {
-                         dialog.dismiss()
-                     }
-                     dialog.show()
-                     dialog.setCancelable(false)
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(activity)) {
+                    val dialog = Dialog(ctx)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.cancel_membership)
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                    val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                    val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                    val btn = dialog.findViewById<Button>(R.id.Btn)
+                    tvTitle.text = "Change Sleep Time"
+                    tvSubTitle.text = "Changing Sleep Time will make you reselect Area of Focus as well. Would you like to proceed ?"
+                    tvGoBack.text = "No"
+                    btn.text = "Yes"
+                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+                            return@setOnKeyListener true
+                        }
+                        false
+                    }
+                    btn.setOnClickListener {
+                        val intent = Intent(activity, SleepTimeActivity::class.java)
+                        startActivity(intent)
+                    }
+                    /* This click event is called when not cancelling subscription */
+                    tvGoBack.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                    dialog.setCancelable(false)
 
-                 } else {
-                     showToast(getString(R.string.no_server_found), activity)
-                 }
-             }
+                } else {
+                    showToast(getString(R.string.no_server_found), activity)
+                }
+            }
         }
 
         binding.tvViewAll.setOnClickListener {
@@ -171,7 +170,7 @@ class ManageFragment : Fragment() {
 
         binding.rlCreatePlaylist.setOnClickListener {
             if (IsLock.equals("1")) {
-                callEnhanceActivity(ctx,act)
+                callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
                 val p = Properties()
                 p.putValue("source", "Enhance Screen")
@@ -696,7 +695,7 @@ class ManageFragment : Fragment() {
 
                         binding.tvReminder.setOnClickListener {
                             if (IsLock.equals("1")) {
-                                callEnhanceActivity(ctx,act)
+                                callEnhanceActivity(ctx, act)
                             } else if (IsLock.equals("0")) {
                                 if (listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("0", ignoreCase = true) || listModel.responseData!!.suggestedPlaylist!!.isReminder.equals("", ignoreCase = true)) {
                                     binding.tvReminder.text = "Set reminder"
@@ -716,7 +715,7 @@ class ManageFragment : Fragment() {
                         LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                         binding.llPlayPause.setOnClickListener {
                             if (IsLock.equals("1")) {
-                                callEnhanceActivity(ctx,act)
+                                callEnhanceActivity(ctx, act)
                             } else if (IsLock.equals("0")) {
                                 if (isNetworkConnected(activity)) {
                                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
@@ -778,9 +777,11 @@ class ManageFragment : Fragment() {
                 }
 
                 private fun callPlaylistDetails() {
-                    if(IsLock.equals("1")){
-                        callEnhanceActivity(ctx,act)
-                    }else if(IsLock.equals("0")) {
+                    if (IsLock.equals("1")) {
+                        binding.ivLock.visibility = View.VISIBLE
+                        callEnhanceActivity(ctx, act)
+                    } else if (IsLock.equals("0")) {
+                        binding.ivLock.visibility = View.GONE
                         if (isNetworkConnected(activity)) {
                             try {
                                 callMyPlaylistActivity("0", homelistModel.responseData!!.suggestedPlaylist!!.playlistID, homelistModel.responseData!!.suggestedPlaylist!!.playlistName, act)
@@ -1360,8 +1361,12 @@ class ManageFragment : Fragment() {
 
             if (IsLock.equals("1")) {
                 holder.binding.ivLock.visibility = View.VISIBLE
+                binding.ivLock.visibility = View.VISIBLE
+                binding.ivLockCreate.visibility = View.VISIBLE
             } else {
                 holder.binding.ivLock.visibility = View.GONE
+                binding.ivLock.visibility = View.GONE
+                binding.ivLockCreate.visibility = View.GONE
             }
 
             if (index == position) {
@@ -1372,7 +1377,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -1382,18 +1387,18 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
-            if (IsLock.equals("1")) {
-                callEnhanceActivity(ctx,act)
-            } else if (IsLock.equals("0")) {
-                val listm = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
-                ManageFragment().callAddToplaylistClick("Playlist View All Screen", listm, listModel.details, position, ctx)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, act)
+                } else if (IsLock.equals("0")) {
+                    val listm = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
+                    ManageFragment().callAddToplaylistClick("Playlist View All Screen", listm, listModel.details, position, ctx)
+                }
             }
-        }
 
 
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     if (isNetworkConnected(ctx)) {
                         ManageFragment().callMyPlaylistActivity("0", listModel.details!![position].playlistID, listModel.details!![position].playlistName, act)
@@ -1448,7 +1453,7 @@ class ManageFragment : Fragment() {
             holder.binding.llMainLayout.setOnLongClickListener {
 
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -1459,7 +1464,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
                     ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
@@ -1467,9 +1472,9 @@ class ManageFragment : Fragment() {
             }
 
             holder.binding.llMainLayout.setOnClickListener {
-                if(listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
-                }else {
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx, act)
+                } else {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
             }
@@ -1518,7 +1523,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnLongClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -1529,7 +1534,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
                     ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
@@ -1540,7 +1545,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
@@ -1580,7 +1585,7 @@ class ManageFragment : Fragment() {
             Glide.with(ctx).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
@@ -1629,7 +1634,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnLongClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -1640,7 +1645,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
                     ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
@@ -1649,7 +1654,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
@@ -1699,7 +1704,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnLongClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -1710,7 +1715,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.tvAddToPlaylist.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     val listm = arrayListOf<HomeDataModel.ResponseData.Play.Detail>()
                     ManageFragment().callAddToplaylistClick("Audio View All Screen", listModel, listm, position, ctx)
@@ -1719,7 +1724,7 @@ class ManageFragment : Fragment() {
 
             holder.binding.llMainLayout.setOnClickListener {
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     ManageFragment().callMainPlayer(position, view, listModel, ctx, act, DB)
                 }
@@ -1757,7 +1762,7 @@ class ManageFragment : Fragment() {
             holder.binding.llMainLayout.setOnClickListener {
 
                 if (listModel[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else {
                     if (isNetworkConnected(ctx)) {
                         val bundle = Bundle()

@@ -22,6 +22,7 @@ class ThankYouActivity : AppCompatActivity() {
     var isAssessmentCompleted: String? = null
     var avgSleepTime: String? = null
     var coUserCount: String? = null
+    var planContent: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +36,10 @@ class ThankYouActivity : AppCompatActivity() {
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
         avgSleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         coUserCount = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
+        planContent = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanContent, "")
 
         binding.tvName.text = userName
-
+        binding.tvSubTitle.text = planContent
         binding.btnExplore.setOnClickListener {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)

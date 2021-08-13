@@ -112,6 +112,7 @@ object CONSTANTS {
     const val PREFE_ACCESS_TrialPeriodStart = "TrialPeriodStart"
     const val PREFE_ACCESS_TrialPeriodEnd = "TrialPeriodEnd"
     const val PREFE_ACCESS_PlanStatus = "PlanStatus"
+    const val PREFE_ACCESS_PlanContent = "PlanContent"
     const val PREFE_ACCESS_SCORELEVEL = "scoreLevel"
     const val PREFE_ACCESS_EMAIL = "Email"
     const val PREFE_ACCESS_MOBILE = "mobile"

@@ -112,7 +112,6 @@ class UserListActivity : AppCompatActivity() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
@@ -127,7 +126,7 @@ class UserListActivity : AppCompatActivity() {
                 if (isMainAccount.equals("1", ignoreCase = true)) {
                     binding.llAddNewUser.visibility = View.VISIBLE
                     if (!model.maxuseradd.equals("", ignoreCase = true)) {
-                        if (coUsersModel!!.size == model.maxuseradd!!.toInt()) {
+                        if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
                             showToast("Please upgrade your plan", activity)
                         } else {
                             IsFirstClick = "0"
@@ -278,6 +277,7 @@ class UserListActivity : AppCompatActivity() {
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                                                 }
                                                 editor.apply()
                                                 val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)

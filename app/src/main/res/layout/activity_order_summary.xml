@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -22,6 +23,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/ic_left_arrow_icon"
                     app:tint="@color/black" />
 
@@ -35,7 +37,8 @@
                 android:gravity="center"
                 android:text="@string/Order_Summary"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -56,34 +59,37 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:background="@drawable/light_sky_round_cornors"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingStart="@dimen/_10sdp"
                     android:paddingTop="@dimen/_16sdp"
-                    android:paddingRight="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_0sdp"
                     android:paddingBottom="@dimen/_16sdp"
                     android:weightSum="1">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.15"
+                        android:layout_weight="0.13"
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="@dimen/_40sdp"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
                             android:background="@color/dark_blue_gray"
-                            android:gravity="center"
-                            android:text="M"
                             android:backgroundTint="#008892"
+                            android:gravity="center"
+                            android:text="@string/m"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_20sdp" />
+                            android:textSize="@dimen/_20sdp"
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.50"
                         android:orientation="vertical">
 
@@ -93,7 +99,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:id="@+id/tvTrialPeriod"
@@ -102,15 +109,16 @@
                             android:layout_marginTop="@dimen/_2sdp"
                             android:fontFamily="@font/montserrat_light"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_10sdp"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.31"
-                        android:gravity="right"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:gravity="end"
                         android:orientation="vertical">
 
                         <TextView
@@ -118,9 +126,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semi_bold"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_17sdp"
+                            android:textSize="@dimen/_15sdp"
                             tools:ignore="SpUsage" />
 
                         <TextView
@@ -128,10 +136,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_light"
-                            android:gravity="right"
-                            android:text="Per Month"
+                            android:gravity="end"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_9sdp"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -148,16 +156,17 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.60"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Enhance Program"
+                        android:text="@string/enhance_program"
                         android:textColor="@color/light_gray"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
                         android:layout_weight="0.40"
-                        android:gravity="right"
-                        android:layout_gravity="right"
+                        android:gravity="end"
                         android:orientation="vertical">
 
                         <TextView
@@ -165,19 +174,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semi_bold"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_17sdp" />
+                            android:textSize="@dimen/_17sdp"
+                            tools:ignore="SpUsage" />
 
                         <TextView
                             android:id="@+id/tvSubName1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_light"
-                            android:gravity="right"
-                            android:text="Per Month"
+                            android:gravity="end"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
 
@@ -188,6 +198,7 @@
                     android:layout_height="1.5dp"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:background="#DDDDDD" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -200,9 +211,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Plan renewal"
+                        android:text="@string/plan_renewal"
                         android:textColor="@color/light_gray"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvPlanTenure"
@@ -210,9 +222,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -228,9 +241,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="First renewal"
+                        android:text="@string/first_renewal"
                         android:textColor="@color/light_gray"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvPlanNextRenewal"
@@ -238,9 +252,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -262,9 +277,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Total Amount"
+                        android:text="@string/total_amount"
                         android:textColor="@color/light_gray"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvTotalAmount"
@@ -272,9 +288,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:textColor="@color/dark_blue_gray"
-                        android:textSize="@dimen/_17sdp" />
+                        android:textSize="@dimen/_17sdp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -285,23 +302,24 @@
                     android:layout_marginTop="@dimen/_56sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
-                    android:visibility="gone"
                     android:text="@string/Promo_Code"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="gone"
+                    tools:ignore="SpUsage" />
 
                 <LinearLayout
                     android:id="@+id/llPromoCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
-                    android:visibility="gone"
                     android:background="@drawable/round_gray_cornor"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingStart="@dimen/_16sdp"
                     android:paddingTop="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
                     android:paddingBottom="@dimen/_10sdp"
+                    android:visibility="gone"
                     android:weightSum="1">
 
                     <LinearLayout
@@ -319,12 +337,16 @@
                             android:backgroundTint="@color/dim_light_gray"
                             android:fontFamily="@font/montserrat_medium"
                             android:hint="@string/Enter_promo_code_here"
+                            android:inputType="text|number"
                             android:paddingVertical="@dimen/_12sdp"
                             android:textColor="@color/dark_blue_gray"
                             android:textColorHint="@color/dark_blue_gray"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/_13sdp"
-                            app:hintTextColor="@color/dark_blue_gray" />
+                            app:hintTextColor="@color/dark_blue_gray"
+                            tools:ignore="SpUsage"
+                            tools:targetApi="lollipop"
+                            android:importantForAutofill="no" />
 
                     </LinearLayout>
 
@@ -332,17 +354,18 @@
                         android:id="@+id/btnApply"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_weight="0.3"
                         android:background="@null"
                         android:clickable="false"
                         android:enabled="false"
                         android:fontFamily="@font/montserrat_bold"
-                        android:gravity="center_vertical|right"
+                        android:gravity="center_vertical|end"
                         android:orientation="vertical"
                         android:text="@string/Apply"
                         android:textColor="@color/gray"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        tools:ignore="SpUsage" />
 
 
                 </LinearLayout>
@@ -364,7 +387,8 @@
             android:paddingVertical="@dimen/_4sdp"
             android:text="@string/Proceed_to_checkout"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="SpUsage" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -378,7 +402,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

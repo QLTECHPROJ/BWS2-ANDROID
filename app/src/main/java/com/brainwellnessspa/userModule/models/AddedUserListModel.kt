@@ -25,6 +25,10 @@ class AddedUserListModel {
         @Expose
         var maxuseradd: String? = ""
 
+        @SerializedName("totalUserCount")
+        @Expose
+        var totalUserCount: String? = ""
+
         @SerializedName("UserList")
         @Expose
         var userList: List<CoUser>? = null

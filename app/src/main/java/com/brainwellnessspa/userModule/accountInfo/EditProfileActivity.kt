@@ -331,6 +331,7 @@ class EditProfileActivity : AppCompatActivity() {
                                         editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
                                     }
                                     editor.apply()
                                     val p = Properties()

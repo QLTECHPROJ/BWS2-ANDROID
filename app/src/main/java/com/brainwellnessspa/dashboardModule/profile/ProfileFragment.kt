@@ -256,6 +256,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
+                IsBackFromEnhance = "0"
                 val i = Intent(requireActivity(), EnhanceActivity::class.java)
                 i.putExtra("plan","0")
                 startActivity(i)
@@ -587,6 +588,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                             editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
                                         }
                                         editor.apply()
                                     }

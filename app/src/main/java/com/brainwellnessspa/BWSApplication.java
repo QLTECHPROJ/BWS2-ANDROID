@@ -168,7 +168,7 @@ public class BWSApplication extends Application {
     };
     public static int miniPlayer = 0;
     public static int addCouserBackStatus = 0;
-    public static String BatteryStatus = "", IsLock = "0";
+    public static String BatteryStatus = "", IsLock = "0", IsBackFromEnhance = "0";
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;
@@ -1703,7 +1703,7 @@ public class BWSApplication extends Application {
             dataSets.add(barDataSet);
 
             BarData barData = new BarData(dataSets);
-            barData.setBarWidth(4f);
+            barData.setBarWidth(0.5f);
             barData.setValueFormatter(new MyValueFormatter());
             barData.setValueTextSize(7f);
 
@@ -1767,7 +1767,7 @@ public class BWSApplication extends Application {
             ArrayList<BarEntry> yAxisValues = new ArrayList<>();
 
             for (int i = 0; i < indexData.getGraphAnalytics().size(); i++) {
-                float val = Float.parseFloat(indexData.getGraphAnalytics().get(i).getTime());
+                float val = Float.valueOf(indexData.getGraphAnalytics().get(i).getTime());
                 yAxisValues.add(new BarEntry(i * spaceForBar, val));
             }
 
@@ -1785,7 +1785,7 @@ public class BWSApplication extends Application {
             dataSets.add(barDataSet);
 
             BarData barData = new BarData(dataSets);
-            barData.setBarWidth(4f);
+            barData.setBarWidth(0.5f);
             barData.setValueFormatter(new MyValueFormatter());
             barData.setValueTextSize(7f);
 
@@ -2617,6 +2617,7 @@ public class BWSApplication extends Application {
         hourString = "";
         minuteSting = "";
         category = "";
+        IsBackFromEnhance = "0";
         SharedPreferences preferences = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID);
