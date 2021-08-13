@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
     var homelistModel: HomeScreenModel = HomeScreenModel()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     private var mBottomSheetDialog: BottomSheetDialog? = null
-    lateinit var dialog: Dialog
+    private var dialog: Dialog? = null
 
     /* This listener is use for get play or pause button status when user play pause from music notifiction bar */
     private val listener: BroadcastReceiver = object : BroadcastReceiver() {
@@ -215,7 +215,7 @@ class HomeFragment : Fragment() {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.cancel_membership)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity!!, R.color.transparent_white)))
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                     val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
@@ -312,7 +312,7 @@ class HomeFragment : Fragment() {
                         }
                         else -> {
                             PlayerAudioId = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                            callMainPlayerSuggested(0, "", homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.playlistID.toString(), homelistModel.responseData!!.suggestedPlaylist?.playlistName.toString())
+                            callMainPlayerSuggested(0, "", homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!, requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.playlistID.toString(), homelistModel.responseData!!.suggestedPlaylist?.playlistName.toString())
                             binding.llPlay.visibility = View.GONE
                             binding.llPause.visibility = View.VISIBLE
                         }
@@ -449,19 +449,19 @@ class HomeFragment : Fragment() {
 
     private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String, isReminder: String, reminderId: String) {
         dialog = Dialog(requireActivity())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.reminder_popup_layout)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
-        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        val btn = dialog.findViewById<Button>(R.id.Btn)
+        dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog!!.setContentView(R.layout.reminder_popup_layout)
+        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+        dialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val btn = dialog!!.findViewById<Button>(R.id.Btn)
         val p = Properties()
         p.putValue("reminderId ", reminderId)
         p.putValue("playlistId ", playlistID)
         p.putValue("playlistName ", playlistName)
         p.putValue("playlistType", "Suggested")
-        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+        dialog!!.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dialog.hide()
+                dialog!!.hide()
                 return@setOnKeyListener true
             }
             false
@@ -469,7 +469,7 @@ class HomeFragment : Fragment() {
         btn.setOnClickListener {
             p.putValue("isReminderSet", "Yes")
             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
-            dialog.hide()
+            dialog!!.hide()
             getReminderDay(requireActivity(), requireActivity(), userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
         }
         /* tvGoBack.setOnClickListener {
@@ -477,8 +477,8 @@ class HomeFragment : Fragment() {
              addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
              dialog.hide()
          }*/
-        dialog.show()
-        dialog.setCancelable(false)
+        dialog!!.show()
+        dialog!!.setCancelable(false)
     }
 
     /* network is available or not function for visible other layout of net is not available image display */
@@ -677,11 +677,12 @@ class HomeFragment : Fragment() {
                                     getPastIndexScore(homelistModel.responseData, binding.barChart, requireActivity())
 
                                     getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, requireActivity())
+
                                     try {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog.dismiss()
+                                            dialog!!.dismiss()
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -863,7 +864,7 @@ class HomeFragment : Fragment() {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog.dismiss()
+                                            dialog?.dismiss()
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -961,7 +962,7 @@ class HomeFragment : Fragment() {
                                                     }
                                                     else -> {
                                                         PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                                                        callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
+                                                        callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
                                                         binding.llPlay.visibility = View.GONE
                                                         binding.llPause.visibility = View.VISIBLE
                                                     }
@@ -1094,7 +1095,7 @@ class HomeFragment : Fragment() {
     }
 
     /* function for play suggested playlist */
-    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity?, playlistID: String, playlistName: String) {
+    private fun callMainPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, playlistID: String, playlistName: String) {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -1112,7 +1113,7 @@ class HomeFragment : Fragment() {
                         } else {
                             audioClick = true
                         }
-                        callMyPlayer(ctx, requireActivity())
+                        callMyPlayer(ctx)
                         showToast("The audio shall start playing after the disclaimer", requireActivity())
                     } else {
                         if (player != null) {
@@ -1124,9 +1125,9 @@ class HomeFragment : Fragment() {
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                                 editor.apply()
                             }
-                            callMyPlayer(ctx, requireActivity())
+                            callMyPlayer(ctx)
                         } else {
-                            callPlayerSuggested(position, view, listModel, ctx, requireActivity(), playlistID, playlistName, true)
+                            callPlayerSuggested(position, listModel, ctx, playlistID, playlistName, true)
                         }
                     }
                 } else {
@@ -1164,10 +1165,10 @@ class HomeFragment : Fragment() {
                             listModelList2.add(position, mainPlayModel)
                         }
                     }
-                    callPlayerSuggested(position, view, listModelList2, ctx, requireActivity(), playlistID, playlistName, audioc)
+                    callPlayerSuggested(position, listModelList2, ctx, playlistID, playlistName, audioc)
                 }
             } else {
-                getAllCompletedMedia(audioPlayerFlag, playlistID, playlistName, position, listModel, ctx, requireActivity(), DB)
+                getAllCompletedMedia(audioPlayerFlag, playlistID, playlistName, position, listModel, ctx, DB)
             }
         } else {
             if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
@@ -1179,7 +1180,7 @@ class HomeFragment : Fragment() {
                     } else {
                         audioClick = true
                     }
-                    callMyPlayer(ctx, requireActivity())
+                    callMyPlayer(ctx)
                     showToast("The audio shall start playing after the disclaimer", requireActivity())
                 } else {
                     if (player != null) {
@@ -1191,9 +1192,9 @@ class HomeFragment : Fragment() {
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
                         }
-                        callMyPlayer(ctx, requireActivity())
+                        callMyPlayer(ctx)
                     } else {
-                        callPlayerSuggested(position, view, listModel, ctx, requireActivity(), playlistID, playlistName, true)
+                        callPlayerSuggested(position, listModel, ctx, playlistID, playlistName, true)
                     }
                 }
             } else {
@@ -1231,13 +1232,13 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     }
                 }
-                callPlayerSuggested(position, view, listModelList2, ctx, requireActivity(), playlistID, playlistName, audioc)
+                callPlayerSuggested(position, listModelList2, ctx, playlistID, playlistName, audioc)
             }
         }
     }
 
     /* Get Downloaded Media for offline play and play that media  */
-    private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, DB: AudioDatabase) {
+    private fun getAllCompletedMedia(audioFlag: String?, pID: String, pName: String, position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, DB: AudioDatabase) {
         AudioDatabase.databaseWriteExecutor.execute {
             downloadAudioDetailsList = DB.taskDao()?.geAllDataBYDownloaded("Complete", userId) as ArrayList<String>
         }
@@ -1256,7 +1257,7 @@ class HomeFragment : Fragment() {
                 } else {
                     audioClick = true
                 }
-                callMyPlayer(ctx, requireActivity())
+                callMyPlayer(ctx)
                 showToast("The audio shall start playing after the disclaimer", requireActivity())
             } else {
                 val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
@@ -1270,7 +1271,7 @@ class HomeFragment : Fragment() {
                         positionSaved = position
                         PlayerAudioId = listModel[position].id
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, requireActivity(), pID, pName, true)
+                            callPlayerSuggested(pos, listModelList2, ctx, pID, pName, true)
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), requireActivity())
                         }
@@ -1324,12 +1325,12 @@ class HomeFragment : Fragment() {
                 if (listModelList2.size != 0) {
                     if (!listModelList2[pos].id.equals("0")) {
                         if (listModelList2.size != 0) {
-                            callPlayerSuggested(pos, "", listModelList2, ctx, requireActivity(), pID, pName, audioc)
+                            callPlayerSuggested(pos, listModelList2, ctx, pID, pName, audioc)
                         } else {
                             showToast(ctx.getString(R.string.no_server_found), requireActivity())
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayerSuggested(pos, "", listModelList2, requireActivity(), requireActivity(), pID, pName, audioc)
+                        callPlayerSuggested(pos, listModelList2, requireActivity(), pID, pName, audioc)
                     } else {
                         showToast(ctx.getString(R.string.no_server_found), requireActivity())
                     }
@@ -1358,7 +1359,7 @@ class HomeFragment : Fragment() {
     }
 
     /* player is Ready for play function*/
-    private fun callPlayerSuggested(position: Int, view: String?, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, playlistName: String, audioc: Boolean) {
+    private fun callPlayerSuggested(position: Int, listModel: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, playlistID: String, playlistName: String, audioc: Boolean) {
         if (audioc) {
             GlobalInitExoPlayer.callNewPlayerRelease()
         }
@@ -1392,11 +1393,11 @@ class HomeFragment : Fragment() {
         }
         editor.apply()
         audioClick = audioc
-        callMyPlayer(requireActivity(), requireActivity())
+        callMyPlayer(requireActivity())
     }
 
     /* Open Player function */
-    private fun callMyPlayer(ctx: Context, act: Activity) {
+    private fun callMyPlayer(ctx: Context) {
         val i = Intent(ctx, MyPlayerActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
         requireActivity().startActivity(i)
