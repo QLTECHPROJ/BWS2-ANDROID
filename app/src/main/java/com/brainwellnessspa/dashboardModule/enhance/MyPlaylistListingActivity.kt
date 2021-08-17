@@ -1418,7 +1418,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
                     btn.setOnClickListener {
                         getDeleteDownloadData(ctx)
-                        getPlaylistMedia(playlistId!!, ctx, DB, coUserId)
+                        GetPlaylistMedia(playlistId!!,coUserId,ctx)
 
                         val p = Properties()
                         p.putValue("playlistId", listModel1.playlistID)
@@ -1500,46 +1500,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
                 }
             }
-        }
-
-        private fun getPlaylistMedia(playlistId: String, ctx: Context, DB: AudioDatabase, coUserId: String?) {
-            DB.taskDao()?.getAllAudioByPlaylist1(playlistId, coUserId)?.observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails?>? ->
-                deleteDownloadFile(ctx, playlistId, DB, coUserId)
-                if (audioList!!.isNotEmpty()) {
-                    getSingleMedia(audioList[0]!!.AudioFile, ctx, playlistId, audioList as List<DownloadAudioDetails>, 0, DB, coUserId)
-                }
-            })
-        }
-
-        private fun deleteDownloadFile(ctx: Context, PlaylistId: String, DB: AudioDatabase, coUserId: String?) {
-            AudioDatabase.databaseWriteExecutor.execute {
-                DB.taskDao()?.deleteByPlaylistId(PlaylistId, coUserId)
-            }
-            deletePlaylist(PlaylistId, DB, coUserId)
-        }
-
-        private fun deletePlaylist(playlistId: String, DB: AudioDatabase, coUserId: String?) {
-            AudioDatabase.databaseWriteExecutor.execute {
-                DB.taskDao()?.deletePlaylist(playlistId, coUserId)
-            }
-        }
-
-        fun getSingleMedia(AudioFile: String?, ctx: Context, playlistID: String?, audioList: List<DownloadAudioDetails?>?, i: Int, DB: AudioDatabase, CoUserID: String?) {
-            DB.taskDao()?.getLastIdByuId1(AudioFile, coUserId)?.observe(ctx as (LifecycleOwner), { audioList1: List<DownloadAudioDetails?>? ->
-                try {
-                    if (audioList1!!.isNotEmpty()) {
-                        if (audioList1.size == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, audioList1[0]!!.Name.toString())
-                        }
-                    }
-                    if (i < audioList!!.size - 1) {
-                        getSingleMedia(audioList[i + 1]!!.AudioFile, ctx.applicationContext, playlistID, audioList, i + 1, DB, CoUserID)
-                        Log.e("DownloadMedia Call", (i + 1).toString())
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-            })
         }
 
         override fun getItemCount(): Int {

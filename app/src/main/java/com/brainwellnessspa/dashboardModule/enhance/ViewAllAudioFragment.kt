@@ -20,6 +20,7 @@ import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
@@ -634,10 +635,11 @@ class ViewAllAudioFragment : Fragment() {
             activity.overridePendingTransition(0, 0)
         }
 
-        private fun callPlayer(position: Int, listModel: ArrayList<ViewAllAudioListModel.ResponseData.Detail>, audioc: Boolean) {
+        private fun callPlayer(position1: Int, listModel: ArrayList<ViewAllAudioListModel.ResponseData.Detail>, audioc: Boolean) {
             if (audioc) {
                 GlobalInitExoPlayer.callNewPlayerRelease()
             }
+            var position = position1
             val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val editor = shared.edit()
             val gson = Gson()
@@ -661,13 +663,68 @@ class ViewAllAudioFragment : Fragment() {
                     json = gson.toJson(downloadAudioDetails)
                 }
                 name.equals(getString(R.string.top_categories), ignoreCase = true) -> {
-                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, getString(R.string.top_categories))
-                    editor.putString(CONSTANTS.PREF_KEY_Cat_Name, category)
-                    json = gson.toJson(listModel)
+
+                    if(IsLock == "1") {
+                        val listDetail = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
+                        for (i in listModel.indices) {
+                            if(listModel[i].isPlay.equals("1")) {
+                                val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
+                                mainPlayModel.iD= listModel[i].iD!!
+                                mainPlayModel.name = listModel[i].name!!
+                                mainPlayModel.audioFile = listModel[i].audioFile!!
+                                mainPlayModel.isPlay = listModel[i].isPlay!!
+                                mainPlayModel.audioDirection = listModel[i].audioDirection!!
+                                mainPlayModel.audiomastercat = listModel[i].audiomastercat!!
+                                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory!!
+                                mainPlayModel.imageFile = listModel[i].imageFile!!
+                                mainPlayModel.audioDuration = listModel[i].audioDuration!!
+                                listDetail.add(mainPlayModel)
+                            }
+                        }
+                        position = if (position < listDetail.size) {
+                            position
+                        } else {
+                            0
+                        }
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, getString(R.string.top_categories))
+                        editor.putString(CONSTANTS.PREF_KEY_Cat_Name, category)
+                        json = gson.toJson(listDetail)
+                    }else{
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, getString(R.string.top_categories))
+                        editor.putString(CONSTANTS.PREF_KEY_Cat_Name, category)
+                        json = gson.toJson(listModel)
+                    }
                 }
                 else -> {
-                    editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "ViewAllAudioList")
-                    json = gson.toJson(listModel)
+
+                    if(IsLock == "1") {
+                        val listDetail = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
+                        for (i in listModel.indices) {
+                            if(listModel[i].isPlay.equals("1")) {
+                                val mainPlayModel = ViewAllAudioListModel.ResponseData.Detail()
+                                mainPlayModel.iD= listModel[i].iD!!
+                                mainPlayModel.name = listModel[i].name!!
+                                mainPlayModel.audioFile = listModel[i].audioFile!!
+                                mainPlayModel.isPlay = listModel[i].isPlay!!
+                                mainPlayModel.audioDirection = listModel[i].audioDirection!!
+                                mainPlayModel.audiomastercat = listModel[i].audiomastercat!!
+                                mainPlayModel.audioSubCategory = listModel[i].audioSubCategory!!
+                                mainPlayModel.imageFile = listModel[i].imageFile!!
+                                mainPlayModel.audioDuration = listModel[i].audioDuration!!
+                                listDetail.add(mainPlayModel)
+                            }
+                        }
+                        position = if (position < listDetail.size) {
+                            position
+                        } else {
+                            0
+                        }
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "ViewAllAudioList")
+                        json = gson.toJson(listDetail)
+                    }else{
+                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "ViewAllAudioList")
+                        json = gson.toJson(listModel)
+                    }
                 }
             }
             editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)

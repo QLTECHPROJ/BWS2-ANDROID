@@ -80,7 +80,6 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         val p = Properties()
         BWSApplication.addToSegment("Enhance Plan Screen Viewed", p, CONSTANTS.screen)
 
-        setupBillingClient()
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)
         binding.llBack.setOnClickListener {
@@ -169,6 +168,11 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         prepareUserData()
     }
 
+    override fun onResume() {
+        setupBillingClient()
+        super.onResume()
+    }
+
     private fun setupBillingClient() {
         billingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build()
         billingClient.startConnection(object : BillingClientStateListener {
@@ -191,6 +195,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList!!.isNotEmpty()) {
                 skuDetailList = skuDetailsList as ArrayList<SkuDetails>
+                prepareUserData()
             }
         }
 

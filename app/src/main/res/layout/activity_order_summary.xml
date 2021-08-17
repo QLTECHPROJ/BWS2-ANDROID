@@ -234,6 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_4sdp"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:visibility="gone"
                     android:weightSum="1">
 
                     <TextView

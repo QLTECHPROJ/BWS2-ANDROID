@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
@@ -26,9 +27,16 @@ import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils.deleteDownloadedFile
+import com.brainwellnessspa.roomDataBase.AudioDatabase
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
+import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
+import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.downloader.PRDownloader
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -57,6 +65,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var gson: Gson = Gson()
     lateinit var searchEditText: EditText
     lateinit var editor: SharedPreferences.Editor
+    var  PlaylistID:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,8 +133,45 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 sendR.ProblemName = (selectedCategoriesName[i])
                 array.add(sendR)
             }
+            val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+            val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+            if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                if (playFrom.equals("Suggested", ignoreCase = true)) {
+                    GlobalInitExoPlayer.callNewPlayerRelease()
+                    val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                    val edited2 = preferred2.edit()
+                    edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                    edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                    edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                    edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                    edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                    edited2.clear()
+                    edited2.apply()
+                }
+            }
             sendCategoryData(gson.toJson(array))
         }
+    }
+
+    private fun getPlaylistIDByCreated() {
+        DB = getAudioDataBase(ctx)
+
+        DB.taskDao().getPlaylistIDByCreated("2",coUserId).observe(this, { playlistID :String ->
+            if (playlistID!= "") {
+                PlaylistID = playlistID
+                deleteSuggestedPlaylist()
+            }
+        })
+
+    }
+
+    private fun deleteSuggestedPlaylist() {
+        getDownloadData(ctx,PlaylistID)
+        GetPlaylistMedia(PlaylistID,coUserId!!,ctx)
     }
 
     private fun prepareRecommnedData() {
@@ -297,11 +343,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                             mSelectedItem = -1
                                             notifyItemChanged(posItem)
                                             notifyItemChanged(mSelectedItem)
-                                        } else {
-                                            catList.selectedCategoriesName.removeAt(i)
-                                            catList.selectedCategoriesName.add(i, listModel[pos].details!![layoutPosition].problemName.toString())
                                         }
                                     }
+                                }
+                                if(catList.selectedCategoriesTitle.size<3){
+                                    catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
+                                    catList.selectedCategoriesName.add(listModel[pos].details!![layoutPosition].problemName.toString())
+                                }else{
+                                    showToast("You can pick up to 3 areas of focus. They can be changed anytime.", activity)
                                 }
                             } else {
                                 if (catList.selectedCategoriesTitle.size < 3) { //                                    if (pos > catList.selectedCategoriesTitle.size) {
@@ -606,6 +655,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                getPlaylistIDByCreated()
                                 val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)

@@ -540,7 +540,7 @@ class AddAudioActivity : AppCompatActivity() {
             if (listModel[position].iscategory.equals("1", ignoreCase = true)) {
                 holder.binding.tvPart.text = listModel[position].audioDuration
                 holder.binding.llRemoveAudio.visibility = View.VISIBLE
-                holder.binding.ivLock.visibility = View.GONE
+//                holder.binding.ivLock.visibility = View.GONE
                 val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                 val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")

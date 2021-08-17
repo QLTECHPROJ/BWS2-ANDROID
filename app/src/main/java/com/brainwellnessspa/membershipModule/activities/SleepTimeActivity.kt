@@ -85,6 +85,13 @@ class SleepTimeActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvhours.text = listModel[position].name
             holder.bindingAdapter.llHourSlots.setOnClickListener {
+                val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                val edited = preferred.edit()
+                edited.remove(CONSTANTS.selectedCategoriesTitle)
+                edited.remove(CONSTANTS.selectedCategoriesName)
+                edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
+                edited.clear()
+                edited.apply()
                 val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                 val editor = shared.edit()
                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel[position].name)

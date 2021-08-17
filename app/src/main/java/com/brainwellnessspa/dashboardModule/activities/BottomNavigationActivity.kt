@@ -83,21 +83,6 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     }
 
     /* on Activity Result method use for battery optimization permission allow or deny*/
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (requestCode == 15695) {
-                val pm = getSystemService(POWER_SERVICE) as PowerManager
-                var isIgnoringBatteryOptimizations = false
-                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
-                if (isIgnoringBatteryOptimizations) {
-                    // Ignoring battery optimization
-                } else {
-                    // Not ignoring battery optimization
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     override fun onResume() {
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
@@ -111,17 +96,6 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         registerReceiver(MyNetworkReceiver().also { myNetworkReceiver = it }, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         /* This condition use for battery optimization permission*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val packageName = packageName
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
-            if (!isIgnoringBatteryOptimizations) {
-                val intent = Intent()
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivityForResult(intent, 15695)
-            }
-        }
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         val wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "com.brainwellnessspa::MyWakelockTag")
         /* Net Watcher for resume player when data connection again fetch after gone*/

@@ -1,19 +1,25 @@
 package com.brainwellnessspa.dashboardModule.activities
 
+import android.Manifest
 import android.app.Activity
 import android.app.UiModeManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -79,6 +85,8 @@ class MyPlayerActivity : AppCompatActivity() {
     var fileNameList = arrayListOf<String>()
     var audioFile1 = arrayListOf<String>()
     var playlistDownloadId = arrayListOf<String>()
+    var localBroadcastManager: LocalBroadcastManager? = null
+    var localIntent: Intent? = null
 
     /* This listener is for get download Progress Percent  */
     private val listener: BroadcastReceiver = object : BroadcastReceiver() {
@@ -101,6 +109,9 @@ class MyPlayerActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        localIntent = Intent("play_pause_Action")
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
+
         LocalBroadcastManager.getInstance(act).registerReceiver(listener, IntentFilter("DownloadProgress"))
         super.onResume()
     }
@@ -183,7 +194,7 @@ class MyPlayerActivity : AppCompatActivity() {
         /* info button click */
         binding.llInfo.setOnClickListener {
              if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                  if (isNetworkConnected(ctx)) {
                      val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
@@ -248,6 +259,7 @@ class MyPlayerActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
         audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+        val playerPlaylistID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
         var mainPlayModel: MainPlayModel
         mainPlayModelList = ArrayList()
         position = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -415,7 +427,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.id = arrayList[i]!!.id
                     mainPlayModel.name = arrayList[i]!!.name
                     mainPlayModel.audioFile = arrayList[i]!!.audioFile
-                    mainPlayModel.playlistID = arrayList[i]!!.playlistID
+                    mainPlayModel.playlistID = playerPlaylistID!!
                     mainPlayModel.audioDirection = arrayList[i]!!.audioDirection
                     mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat
                     mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory
@@ -441,8 +453,54 @@ class MyPlayerActivity : AppCompatActivity() {
         getDownloadData()
         if (!audioClick) getPrepareShowData()
         else callButtonText(position)
-    }
 
+//        private fun askBatteryOptimizations() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val packageName = ctx.packageName
+                val pm = ctx.getSystemService(POWER_SERVICE) as PowerManager
+                val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
+                if (!isIgnoringBatteryOptimizations) {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    intent.data = Uri.parse("package:$packageName")
+                    //                registerForActivityResult(00)
+                    startActivityForResult(intent, 15695)
+                    //                ctx.startActivity(intent)
+//                    ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS), 15695)
+                }
+            }
+//        }
+
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (requestCode == 15695) {
+                val pm = getSystemService(POWER_SERVICE) as PowerManager
+                var isIgnoringBatteryOptimizations = false
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
+                } else {
+                    // Not ignoring battery optimization
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            15695 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                }
+                return
+            }
+        }
+    }
     /* initialize Player Disclaimer function when uset play disclaimer */
     private fun initializePlayerDisclaimer() {
         //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
@@ -806,6 +864,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 audioClick = true
                 getAllMedia(DB)
             }
+            localIntent!!.putExtra("MyData", "play")
+            localBroadcastManager!!.sendBroadcast(localIntent!!)
         }
         if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
             binding.tvPlaylistName.visibility = View.VISIBLE
@@ -848,7 +908,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     callHeartbeat()
                 }
                 if((String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx), TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx)))) == (String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.duration), TimeUnit.MILLISECONDS.toSeconds(player.duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.duration))))){
-                    Log.e("STATE_ENDED ","My Player onPlaybackStateChanged Done")
+                    Log.e("STATE_ENDED ", "My Player onPlaybackStateChanged Done")
                     //                        try {
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
@@ -865,8 +925,8 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.llPause.visibility = View.GONE
                         exoBinding.progressBar.visibility = View.GONE
                         player.playWhenReady = false
-                        localIntent.putExtra("MyData", "pause")
-                        localBroadcastManager.sendBroadcast(localIntent)
+                        localIntent!!.putExtra("MyData", "pause")
+                        localBroadcastManager!!.sendBroadcast(localIntent!!)
                         val p = Properties()
                         val source = GetSourceName(ctx)
                         if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
@@ -994,7 +1054,8 @@ class MyPlayerActivity : AppCompatActivity() {
                     setPlayerCtrView()
                     GetMediaPer()
                     callButtonText(position)
-
+                    localIntent!!.putExtra("MyData", "play")
+                    localBroadcastManager!!.sendBroadcast(localIntent!!)
                     val p = Properties()
                     addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Started", CONSTANTS.track, downloadAudioDetailsList, p)
                 }
@@ -1008,13 +1069,17 @@ class MyPlayerActivity : AppCompatActivity() {
                         exoBinding.llPlay.visibility = View.GONE
                         exoBinding.llPause.visibility = View.VISIBLE
                         exoBinding.progressBar.visibility = View.GONE
+                        localIntent!!.putExtra("MyData", "play")
+                        localBroadcastManager!!.sendBroadcast(localIntent!!)
                     } else if (!isPlaying) {
                         exoBinding.llPlay.visibility = View.VISIBLE
                         exoBinding.llPause.visibility = View.GONE
                         exoBinding.progressBar.visibility = View.GONE
+                        localIntent!!.putExtra("MyData", "pause")
+                        localBroadcastManager!!.sendBroadcast(localIntent!!)
                     }
-                    if(player.playbackState == ExoPlayer.STATE_ENDED){
-                        Log.e("STATE_ENDED My player","Done")
+                    if (player.playbackState == ExoPlayer.STATE_ENDED) {
+                        Log.e("STATE_ENDED My player", "Done")
                     }
                     exoBinding.exoProgress.setBufferedPosition(player.bufferedPosition)
                     exoBinding.exoProgress.setPosition(player.currentPosition)
@@ -1040,11 +1105,15 @@ class MyPlayerActivity : AppCompatActivity() {
                             exoBinding.llPlay.visibility = View.GONE
                             exoBinding.llPause.visibility = View.VISIBLE
                             exoBinding.progressBar.visibility = View.GONE
+                            localIntent!!.putExtra("MyData", "play")
+                            localBroadcastManager!!.sendBroadcast(localIntent!!)
                             callHeartbeat()
                         } else if (!player.playWhenReady) {
                             exoBinding.llPlay.visibility = View.VISIBLE
                             exoBinding.llPause.visibility = View.GONE
                             exoBinding.progressBar.visibility = View.GONE
+                            localIntent!!.putExtra("MyData", "pause")
+                            localBroadcastManager!!.sendBroadcast(localIntent!!)
                         }
                         //                        isprogressbar = false;
                     } else if (state == ExoPlayer.STATE_BUFFERING) {
@@ -1054,7 +1123,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         val p = Properties()
                         addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Buffer Started", CONSTANTS.track, downloadAudioDetailsList, p)
                     } else if (state == ExoPlayer.STATE_ENDED) {
-                        Log.e("STATE_ENDED ","My Player onPlaybackStateChanged Done")
+                        Log.e("STATE_ENDED ", "My Player onPlaybackStateChanged Done")
                         try {
                             if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                                 if (playFrom.equals("Suggested", ignoreCase = true)) {
@@ -1071,8 +1140,8 @@ class MyPlayerActivity : AppCompatActivity() {
                                 exoBinding.llPause.visibility = View.GONE
                                 exoBinding.progressBar.visibility = View.GONE
                                 player.playWhenReady = false
-                                localIntent.putExtra("MyData", "pause")
-                                localBroadcastManager.sendBroadcast(localIntent)
+                                localIntent!!.putExtra("MyData", "pause")
+                                localBroadcastManager!!.sendBroadcast(localIntent!!)
                                 val p = Properties()
                                 val source = GetSourceName(ctx)
                                 if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
@@ -1281,6 +1350,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 exoBinding.llPlay.visibility = View.GONE
                 exoBinding.llPause.visibility = View.VISIBLE
                 exoBinding.progressBar.visibility = View.GONE
+                localIntent!!.putExtra("MyData", "play")
+                localBroadcastManager!!.sendBroadcast(localIntent!!)
             } else if (!player.playWhenReady) {
                 exoBinding.llPlay.visibility = View.VISIBLE
                 exoBinding.llPause.visibility = View.GONE
@@ -1329,6 +1400,8 @@ class MyPlayerActivity : AppCompatActivity() {
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }
+                localIntent!!.putExtra("MyData", "pause")
+                localBroadcastManager!!.sendBroadcast(localIntent!!)
             }
             /* 30 sec forword click */
             exoBinding.llForwardSec.setOnClickListener {

@@ -68,9 +68,11 @@ import ir.drax.netwatch.NetWatch;
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.GetPlaylistMedia;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
+import static com.brainwellnessspa.BWSApplication.getDownloadData;
 import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
 import static com.brainwellnessspa.BWSApplication.audioClick;
 import static com.brainwellnessspa.BWSApplication.miniPlayer;
@@ -368,8 +370,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 });
 
                 Btn.setOnClickListener(v -> {
-                    getDownloadData();
-                    GetPlaylistMedia(PlaylistID);
+                    getDownloadData(ctx,PlaylistID);
+                    GetPlaylistMedia(PlaylistID,CoUserID,ctx);
                     Properties p = new Properties();
                     p.putValue("playlistId", PlaylistID);
                     p.putValue("playlistName", PlaylistName);
@@ -442,57 +444,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         //        binding.tvPlaylist.setText("Playlist");
     }
 
-    private void getDownloadData() {
-        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
-        try {
-            SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-            Gson gson = new Gson();
-            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                fileNameList = gson.fromJson(jsony, type);
-                fileNameList1 = gson.fromJson(jsony, type);
-                audioFile = gson.fromJson(json1, type);
-                playlistDownloadId = gson.fromJson(jsonq, type);
-
-                if (playlistDownloadId.size() != 0) {
-                    if (playlistDownloadId.contains(PlaylistID)) {
-                        Log.e("cancel", String.valueOf(playlistDownloadId.size()));
-                        for (int i = 1; i < fileNameList1.size() - 1; i++) {
-                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                                Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
-                                fileNameList.remove(i);
-                                audioFile.remove(i);
-                                playlistDownloadId.remove(i);
-                                Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
-                            }
-                        }
-
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        String nameJson = gson.toJson(fileNameList);
-                        String urlJson = gson.toJson(audioFile);
-                        String playlistIdJson = gson.toJson(playlistDownloadId);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                        editor.commit();
-                        if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                            PRDownloader.cancel(downloadIdOne);
-                            filename = "";
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            //            getDownloadData();
-            e.printStackTrace();
-            Log.e("Download Playlist ", "Download Playlist remove issue" + e.getMessage());
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -507,46 +458,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvPlayLists.setAdapter(adpater);
         });
-    }
-
-    public void GetPlaylistMedia(String playlistID) {
-        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, audioList -> {
-            deleteDownloadFile(getApplicationContext(), playlistID);
-            if (audioList.size() != 0) {
-                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, 0);
-            }
-        });
-    }
-
-    private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
-
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
-        deletePlaylist(PlaylistID);
-
-    }
-
-    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
-        DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe(this, audioList1 -> {
-            try {
-                if (audioList1.size() != 0) {
-                    if (audioList1.size() == 1) {
-                        FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
-                    }
-                }
-
-                if (i < audioList.size() - 1) {
-                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1);
-                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        });
-    }
-
-    private void deletePlaylist(String playlistId) {
-        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
     }
 
     private void addDisclaimer() {

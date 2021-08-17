@@ -5,7 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -452,7 +454,12 @@ class AssProcessActivity : AppCompatActivity() {
                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
-                                    binding.assesmentContent.text = listModel.responseData?.assesmentContent
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        binding.assesmentContent.text = Html.fromHtml(listModel.responseData?.assesmentContent, Html.FROM_HTML_MODE_COMPACT);
+                                    } else {
+                                        binding.assesmentContent.text = Html.fromHtml(listModel.responseData?.assesmentContent);
+                                    }
+//                                    binding.assesmentContent.text = listModel.responseData?.assesmentContent
                                     binding.tvScreenTitle.text = listModel.responseData?.mainTitle
                                     binding.tvWellnessTitle.text = listModel.responseData?.subTitle
                                     binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))

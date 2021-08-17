@@ -286,6 +286,9 @@ class ManageFragment : Fragment() {
     }
 
     override fun onResume() {
+        var gb = GlobalInitExoPlayer()
+        gb.UpdateMiniPlayer(ctx, act)
+        gb.UpdateNotificationAudioPLayer(ctx)
         val p = Properties()
         addToSegment("Enhance Screen Viewed", p, CONSTANTS.screen)
         networkCheck()
@@ -587,7 +590,7 @@ class ManageFragment : Fragment() {
         act.overridePendingTransition(0, 0)
     }
 
-    private fun callPlayer(position: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity, audioc: Boolean) {
+    private fun callPlayer(position1: Int, view: String?, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, ctx: Context, act: Activity, audioc: Boolean) {
         if (audioc) {
             GlobalInitExoPlayer.callNewPlayerRelease()
         }
@@ -595,6 +598,7 @@ class ManageFragment : Fragment() {
         val editor = shared.edit()
         val gson = Gson()
         var json = ""
+        var position = position1
         if (view.equals("My Downloads", true)) {
             val downloadAudioDetails = ArrayList<DownloadAudioDetails>()
             for (i in listModel.indices) {
@@ -612,8 +616,34 @@ class ManageFragment : Fragment() {
             json = gson.toJson(downloadAudioDetails)
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "DownloadListAudio")
         } else {
-            json = gson.toJson(listModel)
-            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
+            if(IsLock == "1") {
+                val listDetail = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
+                for (i in listModel.indices) {
+                    if(listModel[i].isPlay.equals("1")) {
+                        val mainPlayModel = HomeDataModel.ResponseData.Audio.Detail()
+                        mainPlayModel.id = listModel[i].id!!
+                        mainPlayModel.name = listModel[i].name!!
+                        mainPlayModel.audioFile = listModel[i].audioFile!!
+                        mainPlayModel.isPlay = listModel[i].isPlay!!
+                        mainPlayModel.audioDirection = listModel[i].audioDirection!!
+                        mainPlayModel.audiomastercat = listModel[i].audiomastercat!!
+                        mainPlayModel.audioSubCategory = listModel[i].audioSubCategory!!
+                        mainPlayModel.imageFile = listModel[i].imageFile!!
+                        mainPlayModel.audioDuration = listModel[i].audioDuration!!
+                        listDetail.add(mainPlayModel)
+                    }
+                }
+                position = if (position < listDetail.size) {
+                    position
+                } else {
+                    0
+                }
+                json = gson.toJson(listDetail)
+                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
+            }else{
+                json = gson.toJson(listModel)
+                editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "MainAudioList")
+            }
         }
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
@@ -623,6 +653,71 @@ class ManageFragment : Fragment() {
         editor.apply()
         audioClick = audioc
         callMyPlayer(ctx, act)
+    }
+
+    private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
+        val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        DB = getAudioDataBase(ctx);
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
+            if (audioList.size == playlistSongs.size) {
+                for (i in audioList) {
+                    var found = false
+                    for (j in playlistSongs) {
+                        if (i!!.ID == j.id) {
+                            found = true
+                        }
+                    }
+                    if (!found) {
+                        audiolistDiff.add(i!!)
+                    }
+                }
+                if (audiolistDiff.isNotEmpty()) {
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                    val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        if (playFrom.equals("Suggested", ignoreCase = true)) {
+                            GlobalInitExoPlayer.callNewPlayerRelease()
+                            val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val edited2 = preferred2.edit()
+                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                            edited2.clear()
+                            edited2.apply()
+                        }
+                    }
+                    GetPlaylistMedia(PlaylistID, userId!!, ctx)
+                }
+            } else {
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                        GlobalInitExoPlayer.callNewPlayerRelease()
+                        val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                        val edited2 = preferred2.edit()
+                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                        edited2.clear()
+                        edited2.apply()
+                    }
+                }
+                GetPlaylistMedia(PlaylistID, userId!!, ctx)
+            }
+        })
     }
 
     private fun prepareData() {
@@ -671,7 +766,7 @@ class ManageFragment : Fragment() {
                         } else {
                             binding.tvViewAll.visibility = View.GONE
                         }
-                        getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, DB)
+                        getPlaylistDetail(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, DB, listModel.responseData!!.suggestedPlaylist!!.playlistSongs)
                         LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
                         binding.llPlayerView1.setOnClickListener {
                             callPlaylistDetails()
@@ -1114,13 +1209,15 @@ class ManageFragment : Fragment() {
         }
     }
 
-    private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
+    private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase, playlistSongs: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>?) {
         try {
             DB.taskDao()?.getPlaylist1(PlaylistID, coUserId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
-                myDownloads = if (audioList.isNotEmpty()) {
-                    "1"
+                if (audioList.isNotEmpty()) {
+                    myDownloads = "1"
+                    getPlaylistAudio(PlaylistID, userId!!, playlistSongs!!)
+
                 } else {
-                    "0"
+                    myDownloads = "0"
                 }
             })
         } catch (e: java.lang.Exception) {

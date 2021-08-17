@@ -83,6 +83,10 @@ interface AudioDetailsDao {
     @Query("SELECT * FROM playlist_table WHERE PlaylistID =:PlaylistId And UserID=:UserID ORDER BY uid DESC")
     fun getPlaylist1(PlaylistId: String?, UserID: String?): LiveData<List<DownloadPlaylistDetails?>>
 
+    @Query("SELECT PlaylistID FROM playlist_table WHERE Created =:Created And UserID=:UserID ORDER BY uid DESC")
+    fun getPlaylistIDByCreated(Created: String?, UserID: String?): LiveData<String>
+
+
     //    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
     //    List<DownloadPlaylistDetails> getAllPlaylist();
     @Query("UPDATE audio_table SET IsDownload =:IsDownload WHERE Name =:Name and PlaylistId =:PlaylistId And UserID=:UserID")

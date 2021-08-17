@@ -1,12 +1,17 @@
 package com.brainwellnessspa.dashboardModule.home
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,8 +19,10 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -38,10 +45,12 @@ import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
+import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
+import com.brainwellnessspa.userModule.coUserModule.ContactBookActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -92,7 +101,7 @@ class HomeFragment : Fragment() {
     var homelistModel: HomeScreenModel = HomeScreenModel()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
     private var mBottomSheetDialog: BottomSheetDialog? = null
-    private var dialog: Dialog? = null
+    lateinit var dialog: Dialog
 
     /* This listener is use for get play or pause button status when user play pause from music notifiction bar */
     private val listener: BroadcastReceiver = object : BroadcastReceiver() {
@@ -167,7 +176,6 @@ class HomeFragment : Fragment() {
         }
 
         prepareHomeData()
-
         /* Condition for get user Image*/
         if (isNetworkConnected(activity)) {
             if (userImage.equals("", ignoreCase = true)) {
@@ -209,7 +217,7 @@ class HomeFragment : Fragment() {
 
         binding.llSleepTime.setOnClickListener {
             if(IsLock.equals("1")){
-              callEnhanceActivity(ctx,act)
+              callEnhanceActivity(ctx, act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val dialog = Dialog(ctx)
@@ -251,7 +259,7 @@ class HomeFragment : Fragment() {
         }
         binding.tvReminder.setOnClickListener {
             if (IsLock.equals("1")) {
-                callEnhanceActivity(ctx,act)
+                callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
                 if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
                     binding.tvReminder.text = getString(R.string.set_reminder)
@@ -325,7 +333,7 @@ class HomeFragment : Fragment() {
         /* check Index score banner click*/
         binding.llCheckIndexscore.setOnClickListener {
             if(IsLock.equals("1")){
-              callEnhanceActivity(ctx,act)
+              callEnhanceActivity(ctx, act)
             }else if(IsLock.equals("0")) {
                 val intent = Intent(activity, AssProcessActivity::class.java)
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
@@ -398,7 +406,7 @@ class HomeFragment : Fragment() {
         /* Edit area of focus category icon click */
         binding.ivEditCategory.setOnClickListener {
             if(IsLock.equals("1")){
-              callEnhanceActivity(ctx,act)
+              callEnhanceActivity(ctx, act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val i = Intent(requireActivity(), RecommendedCategoryActivity::class.java)
@@ -413,7 +421,7 @@ class HomeFragment : Fragment() {
         /* Notification ball icon click */
         binding.llNotification.setOnClickListener {
             if(IsLock.equals("1")){
-              callEnhanceActivity(ctx,act)
+              callEnhanceActivity(ctx, act)
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val i = Intent(requireActivity(), NotificationListActivity::class.java)
@@ -424,6 +432,21 @@ class HomeFragment : Fragment() {
             }
         }
         return view
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (requestCode == 15695) {
+                val pm = ctx.getSystemService(POWER_SERVICE) as PowerManager
+                var isIgnoringBatteryOptimizations = false
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(ctx.packageName)
+                if (isIgnoringBatteryOptimizations) {
+                    // Ignoring battery optimization
+                } else {
+                    // Not ignoring battery optimization
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
@@ -443,25 +466,29 @@ class HomeFragment : Fragment() {
         val adapter = AreaOfFocusAdapter(binding, requireActivity(), selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
         networkCheck()
+        var gb = GlobalInitExoPlayer()
+        gb.UpdateMiniPlayer(ctx,act)
+        gb.UpdateNotificationAudioPLayer(ctx)
 //        profileViewData(activity)
         super.onResume()
     }
 
     private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String, isReminder: String, reminderId: String) {
         dialog = Dialog(requireActivity())
-        dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog!!.setContentView(R.layout.reminder_popup_layout)
-        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
-        dialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        val btn = dialog!!.findViewById<Button>(R.id.Btn)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.reminder_popup_layout)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val btn = dialog.findViewById<Button>(R.id.Btn)
         val p = Properties()
         p.putValue("reminderId ", reminderId)
         p.putValue("playlistId ", playlistID)
         p.putValue("playlistName ", playlistName)
         p.putValue("playlistType", "Suggested")
-        dialog!!.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dialog!!.hide()
+                dialog.hide()
+                // askBatteryOptimizations()
                 return@setOnKeyListener true
             }
             false
@@ -469,7 +496,7 @@ class HomeFragment : Fragment() {
         btn.setOnClickListener {
             p.putValue("isReminderSet", "Yes")
             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
-            dialog!!.hide()
+            dialog.hide()
             getReminderDay(requireActivity(), requireActivity(), userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
         }
         /* tvGoBack.setOnClickListener {
@@ -477,8 +504,8 @@ class HomeFragment : Fragment() {
              addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
              dialog.hide()
          }*/
-        dialog!!.show()
-        dialog!!.setCancelable(false)
+        dialog.show()
+        dialog.setCancelable(false)
     }
 
     /* network is available or not function for visible other layout of net is not available image display */
@@ -677,7 +704,7 @@ class HomeFragment : Fragment() {
                                         binding.tvYearRegularity.text = "0%"
                                     }
                                     /* Get downloaded Playlist detail*/
-                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
+                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
                                     getPastIndexScore(homelistModel.responseData, binding.barChart, requireActivity())
@@ -688,7 +715,13 @@ class HomeFragment : Fragment() {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog!!.dismiss()
+                                            dialog = Dialog(requireActivity())
+                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                            dialog.setContentView(R.layout.reminder_popup_layout)
+                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                            dialog.dismiss()
+                                            // askBatteryOptimizations()
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -864,13 +897,18 @@ class HomeFragment : Fragment() {
                                     }
 
                                     /* Get downloaded Playlist detail*/
-                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB)
-
+                                    getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
+                                    // askBatteryOptimizations()
                                     try {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog?.dismiss()
+                                            dialog = Dialog(requireActivity())
+                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                            dialog.setContentView(R.layout.reminder_popup_layout)
+                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                            dialog.dismiss()
                                         }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -879,7 +917,7 @@ class HomeFragment : Fragment() {
                                     /* reminder button click */
                                     binding.tvReminder.setOnClickListener {
                                         if (IsLock.equals("1")) {
-                                          callEnhanceActivity(ctx,act)
+                                            callEnhanceActivity(ctx, act)
                                         } else if (IsLock.equals("0")) {
                                             if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
                                                 binding.tvReminder.text = getString(R.string.set_reminder)
@@ -934,9 +972,9 @@ class HomeFragment : Fragment() {
 
                                     setPlayPauseIcon()
                                     binding.llPlayPause.setOnClickListener {
-                                        if(IsLock.equals("1")){
-                                          callEnhanceActivity(ctx,act)
-                                        }else if(IsLock.equals("0")) {
+                                        if (IsLock.equals("1")) {
+                                            callEnhanceActivity(ctx, act)
+                                        } else if (IsLock.equals("0")) {
                                             if (isNetworkConnected(activity)) {
                                                 val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -1352,18 +1390,84 @@ class HomeFragment : Fragment() {
     }
 
     /* Get Playlist is downloaded or not */
-    private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase) {
+    private fun getPlaylistDetail(PlaylistID: String, DB: AudioDatabase, playlistSongs: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
         try {
             DB.taskDao()?.getPlaylist1(PlaylistID, userId)?.observe(this, { audioList: List<DownloadPlaylistDetails?> ->
-                myDownloads = if (audioList.isNotEmpty()) {
-                    "1"
+                if (audioList.isNotEmpty()) {
+                    myDownloads = "1"
+                    getPlaylistAudio(PlaylistID, userId!!, playlistSongs)
                 } else {
-                    "0"
+                    myDownloads = "0"
                 }
             })
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
+        val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        DB = getAudioDataBase(ctx);
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
+            if (audioList.size == playlistSongs.size) {
+                for (i in audioList) {
+                    var found = false
+                    for (j in playlistSongs) {
+                        if (i!!.ID == j.id) {
+                            found = true
+                        }
+                    }
+                    if (!found) {
+                        audiolistDiff.add(i!!)
+                    }
+                }
+                if(audiolistDiff.isNotEmpty()){
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                    val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        if (playFrom.equals("Suggested", ignoreCase = true)) {
+                            GlobalInitExoPlayer.callNewPlayerRelease()
+                            val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val edited2 = preferred2.edit()
+                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                            edited2.clear()
+                            edited2.apply()
+                        }
+                    }
+                    GetPlaylistMedia(PlaylistID, userId!!, ctx)
+                }
+            } else {
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                        GlobalInitExoPlayer.callNewPlayerRelease()
+                        val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                        val edited2 = preferred2.edit()
+                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                        edited2.clear()
+                        edited2.apply()
+                    }
+                }
+                GetPlaylistMedia(PlaylistID, userId!!, ctx)
+            }
+        })
     }
 
     /* player is Ready for play function*/
@@ -1484,7 +1588,7 @@ class HomeFragment : Fragment() {
 
             llAddNewUser.setOnClickListener {
                 if(IsLock.equals("1")){
-                  callEnhanceActivity(ctx,act)
+                  callEnhanceActivity(ctx, act)
                 }else if(IsLock.equals("0")) {
                     if (isMainAccount.equals("1", ignoreCase = true)) {
                         llAddNewUser.visibility = View.VISIBLE
@@ -1545,7 +1649,7 @@ class HomeFragment : Fragment() {
 
             holder.bind.llAddNewCard.setOnClickListener {
                 if (IsLock.equals("1")) {
-                  callEnhanceActivity(ctx,act)
+                  callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     if (modelList[position].isPinSet.equals("1", ignoreCase = true)) {
                         if (userId!! == modelList[position].userID) {

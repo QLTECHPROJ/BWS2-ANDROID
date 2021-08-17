@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.brainwellnessspa.BWSApplication.DB;
+import static com.brainwellnessspa.BWSApplication.GetPlaylistMedia;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment.comefromDownload;
@@ -409,7 +410,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
                         });
                         getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
-                        GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                        GetPlaylistMedia(listModelList.get(position).getPlaylistID(),CoUserID,ctx);
                         Properties p = new Properties();
                         p.putValue("playlistId", listModelList.get(position).getPlaylistID());
                         p.putValue("playlistName", listModelList.get(position).getPlaylistName());
@@ -445,7 +446,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         private void getDownloadDataForDelete(String playlistID) {
-            List<String> fileNameList = new ArrayList<>(), fileNameList1 = new ArrayList<>(), audioFile = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
+            List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
@@ -515,65 +516,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         DB.taskDao().getCountDownloadProgress1("Complete", playlistID, CoUserID).removeObserver(audioListx -> {
                         });
                     }
-                }
-            });
-        }
-
-  /*  void getDownloadData() {
-        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-            fileNameList = gson.fromJson(json, type);
-            for (int i = 0; i < fileNameList.size(); i++) {
-                if (playlistDownloadId.get(i).equalsIgnoreCase(listModelList.get(i).getPlaylistID())) {
-                    remainAudio.add(playlistDownloadId.get(i));
-                }
-            }
-        } else {
-            fileNameList = new ArrayList<>();
-            playlistDownloadId = new ArrayList<>();
-            remainAudio = new ArrayList<>();
-        }
-    }*/
-
-        public void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i) {
-            DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe(getActivity(), audioList1 -> {
-                try {
-                    if (audioList1.size() != 0) {
-                        if (audioList1.size() == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
-                        }
-                    }
-
-                    if (i < audioList.size() - 1) {
-                        GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1);
-                        Log.e("DownloadMedia Call", String.valueOf(i + 1));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            });
-        }
-
-        private void deleteDownloadFile(String PlaylistId) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
-            deletePlaylist(PlaylistId);
-        }
-
-        private void deletePlaylist(String playlistId) {
-            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
-            GetAllMedia(ctx);
-        }
-
-        public void GetPlaylistMedia(String playlistID) {
-            DB.taskDao().getAllAudioByPlaylist1(playlistID, CoUserID).observe(this.ctx, audioList -> {
-                deleteDownloadFile(playlistID);
-                if (audioList.size() != 0) {
-                    GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, 0);
                 }
             });
         }

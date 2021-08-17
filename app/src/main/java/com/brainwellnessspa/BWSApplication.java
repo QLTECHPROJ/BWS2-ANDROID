@@ -1,5 +1,7 @@
 package com.brainwellnessspa;
 
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
@@ -86,6 +88,7 @@ import com.brainwellnessspa.dashboardModule.models.SucessModel;
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
@@ -107,6 +110,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.downloader.PRDownloader;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -1679,7 +1683,6 @@ public class BWSApplication extends Application {
             barChart.getAxisLeft().setDrawGridLines(false);
             barChart.getXAxis().setDrawGridLines(false);
             barChart.setBackgroundColor(Color.TRANSPARENT); //set whatever color you prefer
-
             //        float barWidth = 1f;
             int spaceForBar = 1;
             ArrayList<BarEntry> yAxisValues = new ArrayList<>();
@@ -2996,6 +2999,96 @@ public class BWSApplication extends Application {
                 downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
             }
         });
+    }
+    public static void getDownloadData(Context ctx,String PlaylistID) {
+        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
+        try {
+            SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                fileNameList1 = gson.fromJson(jsony, type);
+                audioFile = gson.fromJson(json1, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+
+                if (playlistDownloadId.size() != 0) {
+                    if (playlistDownloadId.contains(PlaylistID)) {
+                        Log.e("cancel", String.valueOf(playlistDownloadId.size()));
+                        for (int i = 1; i < fileNameList1.size() - 1; i++) {
+                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                                Log.e("cancel name id", "My id " + i + fileNameList1.get(i));
+                                fileNameList.remove(i);
+                                audioFile.remove(i);
+                                playlistDownloadId.remove(i);
+                                Log.e("cancel id", "My id " + playlistDownloadId.size() + i);
+                            }
+                        }
+
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        String nameJson = gson.toJson(fileNameList);
+                        String urlJson = gson.toJson(audioFile);
+                        String playlistIdJson = gson.toJson(playlistDownloadId);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                        editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                        editor.commit();
+                        if (playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                            PRDownloader.cancel(downloadIdOne);
+                            filename = "";
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            //            getDownloadData();
+            e.printStackTrace();
+            Log.e("Download Playlist ", "Download Playlist remove issue" + e.getMessage());
+        }
+    }
+
+    public static void GetPlaylistMedia(String PlaylistID,String CoUserID,Context ctx) {
+        DB = getAudioDataBase(ctx);
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+            deleteDownloadFile(PlaylistID,CoUserID);
+            if (audioList.size() != 0) {
+                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), PlaylistID, audioList, 0,CoUserID);
+            }
+        });
+    }
+
+    public static void deleteDownloadFile(String PlaylistId,String CoUserID) {
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
+        deletePlaylist(PlaylistId, CoUserID);
+    }
+
+    public static void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i,String CoUserID) {
+        DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe((LifecycleOwner) ctx, audioList1 -> {
+            try {
+                if (audioList1.size() != 0) {
+                    if (audioList1.size() == 1) {
+                        FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
+                    }
+                }
+
+                if (i < audioList.size() - 1) {
+                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1,CoUserID);
+                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+    public static void deletePlaylist(String playlistId,String CoUserID) {
+        AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
     }
 
  /*   public static void callObserve1(Context ctx) {
