@@ -1,6 +1,5 @@
 package com.brainwellnessspa.userModule.activities
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -294,7 +293,7 @@ class UserListActivity : AppCompatActivity() {
                                                 edited.apply()
 
                                                 val splashActivity = SplashActivity()
-                                                splashActivity.setAnalytics(ctx.resources.getString(R.string.segment_key_real), ctx)
+                                                splashActivity.setAnalytics(ctx.resources.getString(R.string.segment_key_real_2_staging), ctx)
                                                 callIdentify(ctx)
                                                 Log.e("isSetLoginPin", isSetLoginPin.toString())
                                                 if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {

@@ -1,14 +1,11 @@
 package com.brainwellnessspa.dashboardModule.home
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.*
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -19,10 +16,8 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -50,7 +45,6 @@ import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
-import com.brainwellnessspa.userModule.coUserModule.ContactBookActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -1807,7 +1801,7 @@ class HomeFragment : Fragment() {
                                                             prepareHomeData()
 
                                                             val activity = SplashActivity()
-                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real), requireActivity())
+                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real_2_staging), requireActivity())
 
                                                             //    showToast(listModel.responseMessage,requireActivity())
                                                             callIdentify(requireActivity())

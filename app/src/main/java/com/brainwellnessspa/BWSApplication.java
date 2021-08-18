@@ -122,6 +122,8 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
@@ -2399,7 +2401,23 @@ public class BWSApplication extends Application {
             isadm = true;
         else
             isadm = false;
+
+        SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+        String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
+        if (TextUtils.isEmpty(fcmId)) {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(task -> {
+                String newToken = task.getResult().getToken();
+                Log.e("newToken", newToken);
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                editor.putString(CONSTANTS.Token, newToken); //Friend
+                editor.apply();
+            });
+            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "");
+        }
+
         properties.putValue("isAdmin", isadm);
+        properties.putValue("deviceToken", fcmId);
         properties.putValue("deviceSpace", mySpace + " MB");
         properties.putValue("batteryLevel", batLevel + " %");
         properties.putValue("batteryState", BatteryStatus);
@@ -2410,7 +2428,7 @@ public class BWSApplication extends Application {
         properties.putValue("deviceID", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
         if (analytics == null) {
             SplashActivity sp = new SplashActivity();
-            sp.setAnalytics(getContext().getString(R.string.segment_key_real), getContext());
+            sp.setAnalytics(getContext().getString(R.string.segment_key_real_2_staging), getContext());
         }
         try {
             if (methodName.equalsIgnoreCase("track")) {

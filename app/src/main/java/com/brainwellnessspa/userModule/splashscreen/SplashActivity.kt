@@ -273,7 +273,7 @@ class SplashActivity : AppCompatActivity() {
                 }
             })
         } else {
-            setAnalytics(getString(R.string.segment_key_real), context)
+            setAnalytics(getString(R.string.segment_key_real_2_staging), context)
 //            askBattyPermission()
             callDashboard()
             showToast(getString(R.string.no_server_found), this@SplashActivity)
