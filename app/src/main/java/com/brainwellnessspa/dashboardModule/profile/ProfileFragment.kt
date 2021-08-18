@@ -580,15 +580,19 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
-                                        if (viewModel.ResponseData.planDetails.isNotEmpty()) {
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
+                                        try {
+                                            if (viewModel.ResponseData.planDetails.isNotEmpty()) {
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
+                                            }
+                                        }catch (e:Exception){
+                                            e.printStackTrace()
                                         }
                                         editor.apply()
                                     }

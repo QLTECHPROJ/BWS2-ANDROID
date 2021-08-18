@@ -450,9 +450,7 @@ class MyPlayerActivity : AppCompatActivity() {
         //        } else {
         //            initializePlayer();
         //        }
-        getDownloadData()
-        if (!audioClick) getPrepareShowData()
-        else callButtonText(position)
+
 
 //        private fun askBatteryOptimizations() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -463,7 +461,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     val intent = Intent()
                     intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                     intent.data = Uri.parse("package:$packageName")
-                    //                registerForActivityResult(00)
+//                                    registerForActivityResult()
                     startActivityForResult(intent, 15695)
                     //                ctx.startActivity(intent)
 //                    ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS), 15695)

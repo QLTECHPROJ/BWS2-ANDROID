@@ -263,101 +263,101 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
             val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
-                override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
-                    try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        binding.txtError.visibility = View.GONE
-                        binding.txtError.text = ""
+                override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) = try {
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    binding.txtError.visibility = View.GONE
+                    binding.txtError.text = ""
 
-                        val listModel: AuthOtpModel = response.body()!!
-                        if (listModel.ResponseCode == "200") {
-                            IsLock = listModel.ResponseData.Islock
-                            val p = Properties()
-                            p.putValue("userId", listModel.ResponseData.UserId)
-                            p.putValue("userGroupId", listModel.ResponseData.MainAccountID)
-                            p.putValue("name", name)
-                            p.putValue("mobileNo", listModel.ResponseData.Mobile)
-                            p.putValue("countryCode", countryCode)
-                            p.putValue("countryName", countryName)
-                            p.putValue("countryShortName", countryShortName)
-                            p.putValue("email", email)
-                            if (signupFlag.equals("1")) {
-                                addToSegment(CONSTANTS.User_Sign_up, p, CONSTANTS.track)
-                            } else {
-                                addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
-                            }
-                            if (signupFlag.equals("1", ignoreCase = true)) {
-                                val i = Intent(activity, EmailVerifyActivity::class.java)
-                                startActivity(i)
-                                finish()
-                            } else {
-                                if (listModel.ResponseData.isMainAccount.equals("0", ignoreCase = true)) {
-                                    if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
-                                        val i = Intent(activity, EmailVerifyActivity::class.java)
-                                        startActivity(i)
-                                        finish()
-                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                        val intent = Intent(activity, AssProcessActivity::class.java)
-                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        startActivity(intent)
-                                        finish()
-                                    } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                        val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-                                    } else {
-                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                        intent.putExtra("IsFirst", "1")
-                                        startActivity(intent)
-                                        finish()
-
-                                    }
+                    val listModel: AuthOtpModel = response.body()!!
+                    if (listModel.ResponseCode == "200") {
+                        IsLock = listModel.ResponseData.Islock
+                        val p = Properties()
+                        p.putValue("userId", listModel.ResponseData.UserId)
+                        p.putValue("userGroupId", listModel.ResponseData.MainAccountID)
+                        p.putValue("name", name)
+                        p.putValue("mobileNo", listModel.ResponseData.Mobile)
+                        p.putValue("countryCode", countryCode)
+                        p.putValue("countryName", countryName)
+                        p.putValue("countryShortName", countryShortName)
+                        p.putValue("email", email)
+                        if (signupFlag.equals("1")) {
+                            addToSegment(CONSTANTS.User_Sign_up, p, CONSTANTS.track)
+                        } else {
+                            addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
+                        }
+                        if (signupFlag.equals("1", ignoreCase = true)) {
+                            val i = Intent(activity, EmailVerifyActivity::class.java)
+                            startActivity(i)
+                            finish()
+                        } else {
+                            if (listModel.ResponseData.isMainAccount.equals("0", ignoreCase = true)) {
+                                if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
+                                    val i = Intent(activity, EmailVerifyActivity::class.java)
+                                    startActivity(i)
+                                    finish()
+                                } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                    startActivity(intent)
+                                    finish()
+                                } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                    val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
                                 } else {
-                                    if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
-                                        val intent = Intent(activity, AssProcessActivity::class.java)
-                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    intent.putExtra("IsFirst", "1")
+                                    startActivity(intent)
+                                    finish()
+
+                                }
+                            } else {
+                                if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                    startActivity(intent)
+                                    finish()
+                                } else {
+                                    if (listModel.ResponseData.CoUserCount > "0") {
+                                        val intent = Intent(activity, UserListActivity::class.java)
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        if (listModel.ResponseData.CoUserCount > "0") {
-                                            val intent = Intent(activity, UserListActivity::class.java)
+                                        if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         } else {
-                                            if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
-                                                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                                startActivity(intent)
-                                                finish()
-                                            } else {
-                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                                intent.putExtra("IsFirst", "1")
-                                                startActivity(intent)
-                                                finish()
+                                            val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                            intent.putExtra("IsFirst", "1")
+                                            startActivity(intent)
+                                            finish()
 
-                                            }
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
-                            val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                        val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                        val editor = shared.edit()
+                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                        try {
                             if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
@@ -368,30 +368,31 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                             }
-                            editor.apply()
-
-                            callIdentify(ctx)
-                            val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                            val edited = sharded.edit()
-                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                            val selectedCategoriesTitle = arrayListOf<String>()
-                            val selectedCategoriesName = arrayListOf<String>()
-                            val gson = Gson()
-                            for (i in listModel.ResponseData.AreaOfFocus) {
-                                selectedCategoriesTitle.add(i.MainCat)
-                                selectedCategoriesName.add(i.RecommendedCat)
-                            }
-                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                            edited.apply()
-//                            showToast(listModel.ResponseMessage, activity)
-                        } else {
-                            binding.txtError.visibility = View.VISIBLE
-                            binding.txtError.text = listModel.ResponseMessage
+                        }catch (e:Exception){
+                            Log.e("errr", e.printStackTrace().toString())
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                        editor.apply()
+                        callIdentify(ctx)
+                        val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val edited = sharded.edit()
+                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                        val selectedCategoriesTitle = arrayListOf<String>()
+                        val selectedCategoriesName = arrayListOf<String>()
+                        val gson = Gson()
+                        for (i in listModel.ResponseData.AreaOfFocus) {
+                            selectedCategoriesTitle.add(i.MainCat)
+                            selectedCategoriesName.add(i.RecommendedCat)
+                        }
+                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                        edited.apply()
+//                            showToast(listModel.ResponseMessage, activity)
+                    } else {
+                        binding.txtError.visibility = View.VISIBLE
+                        binding.txtError.text = listModel.ResponseMessage
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
