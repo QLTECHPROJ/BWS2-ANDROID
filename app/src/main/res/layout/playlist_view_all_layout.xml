@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rlMainLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_11sdp"
-        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginStart="@dimen/_11sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:gravity="center_horizontal">
 
@@ -42,7 +42,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvAddToPlaylist"
@@ -55,16 +56,16 @@
                 android:gravity="center|bottom"
                 android:paddingBottom="@dimen/_13sdp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="SpUsage" />
 
             <ImageView
                 android:id="@+id/ivLock"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:layout_marginLeft="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/ic_lock_icon"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"

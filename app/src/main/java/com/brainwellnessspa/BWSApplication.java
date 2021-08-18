@@ -89,7 +89,6 @@ import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel;
 import com.brainwellnessspa.databinding.ReminderSelectionlistLayoutBinding;
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity;
 import com.brainwellnessspa.reminderModule.models.ReminderSelectionModel;
 import com.brainwellnessspa.reminderModule.models.SetReminderOldModel;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
@@ -2611,6 +2610,10 @@ public class BWSApplication extends Application {
     }
 
     public static void deleteCall(Context context) {
+        String userId,coUserId;
+        SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         addCouserBackStatus = 0;
         cancelId = "";
         deleteId = "";
@@ -2621,6 +2624,9 @@ public class BWSApplication extends Application {
         minuteSting = "";
         category = "";
         IsBackFromEnhance = "0";
+        comeHomeScreen = "";
+        IsLock = "0";
+        addToRecentPlayId = "0";
         SharedPreferences preferences = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID);
@@ -2644,8 +2650,21 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_isMainAccount);
         edit.remove(CONSTANTS.PREFE_ACCESS_isEmailVerified);
         edit.remove(CONSTANTS.PREFE_ACCESS_coUserCount);
+        edit.remove(CONSTANTS.PREFE_ACCESS_DOB);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanId);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanExpireDate);
+        edit.remove(CONSTANTS.PREFE_ACCESS_TransactionId);
+        edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodStart);
+        edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanStatus);
+        edit.remove(CONSTANTS.PREFE_ACCESS_AreaOfFocus);
+        edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent);
+        edit.remove(CONSTANTS.PREF_KEY_UnLockAudiList);
         edit.clear();
         edit.apply();
+
         SharedPreferences preferred = context.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited = preferred.edit();
         edited.remove(CONSTANTS.selectedCategoriesTitle);
@@ -2653,6 +2672,7 @@ public class BWSApplication extends Application {
         edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME);
         edited.clear();
         edited.apply();
+
         SharedPreferences preferred1 = context.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited1 = preferred1.edit();
         edited1.remove(CONSTANTS.AssQus);
@@ -2660,11 +2680,25 @@ public class BWSApplication extends Application {
         edited1.remove(CONSTANTS.AssSort);
         edited1.clear();
         edited1.apply();
-        /*   val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
-           val editorcv = shared.edit()
-           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
-           editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
-           editorcv.apply()*/
+
+        SharedPreferences preferreed = context.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editeed = preferreed.edit();
+        editeed.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY);
+        editeed.clear();
+        editeed.apply();
+
+        SharedPreferences pref = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editt = pref.edit();
+        editt.remove(CONSTANTS.PREF_KEY_IsDisclimer);
+        editt.clear();
+        editt.apply();
+
+        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId);
+        editor.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId);
+        editor.apply();
+
         SharedPreferences preferred2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited2 = preferred2.edit();
         edited2.remove(CONSTANTS.PREF_KEY_MainAudioList);

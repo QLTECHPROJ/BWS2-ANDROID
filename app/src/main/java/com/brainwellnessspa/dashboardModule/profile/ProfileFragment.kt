@@ -258,7 +258,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(requireActivity())) {
                 IsBackFromEnhance = "0"
                 val i = Intent(requireActivity(), EnhanceActivity::class.java)
-                i.putExtra("plan","0")
+                i.putExtra("plan", "0")
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -266,20 +266,20 @@ class ProfileFragment : Fragment() {
             }
         }
 
-      /*  binding.llPlan1.setOnClickListener {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return@setOnClickListener
-            }
-            mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(activity)) {
-                val i = Intent(activity, EnhanceActivity::class.java)
-                i.putExtra("plan","1")
-                startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
-            } else {
-                showToast(getString(R.string.no_server_found), activity)
-            }
-        }*/
+        /*  binding.llPlan1.setOnClickListener {
+              if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                  return@setOnClickListener
+              }
+              mLastClickTime = SystemClock.elapsedRealtime()
+              if (isNetworkConnected(activity)) {
+                  val i = Intent(activity, EnhanceActivity::class.java)
+                  i.putExtra("plan","1")
+                  startActivity(i)
+                  requireActivity().overridePendingTransition(0, 0)
+              } else {
+                  showToast(getString(R.string.no_server_found), activity)
+              }
+          }*/
 
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -580,7 +580,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
-                                        if(viewModel.ResponseData.planDetails.isNotEmpty()) {
+                                        if (viewModel.ResponseData.planDetails.isNotEmpty()) {
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
@@ -767,9 +767,35 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_UserId)
         edit.remove(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER)
         edit.remove(CONSTANTS.PREFE_ACCESS_NAME)
+        edit.remove(CONSTANTS.PREFE_ACCESS_EMAIL)
+        edit.remove(CONSTANTS.PREFE_ACCESS_MOBILE)
+        edit.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
+        edit.remove(CONSTANTS.PREFE_ACCESS_INDEXSCORE)
+        edit.remove(CONSTANTS.PREFE_ACCESS_IMAGE)
+        edit.remove(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED)
+        edit.remove(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED)
+        edit.remove(CONSTANTS.PREFE_ACCESS_directLogin)
+        edit.remove(CONSTANTS.PREFE_ACCESS_SCORELEVEL)
         edit.remove(CONSTANTS.PREFE_ACCESS_USEREMAIL)
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceType)
         edit.remove(CONSTANTS.PREFE_ACCESS_DeviceID)
+        edit.remove(CONSTANTS.PREFE_ACCESS_isPinSet)
+        edit.remove(CONSTANTS.PREFE_ACCESS_isSetLoginPin)
+        edit.remove(CONSTANTS.PREFE_ACCESS_isMainAccount)
+        edit.remove(CONSTANTS.PREFE_ACCESS_isEmailVerified)
+        edit.remove(CONSTANTS.PREFE_ACCESS_coUserCount)
+        edit.remove(CONSTANTS.PREFE_ACCESS_DOB)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanId)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanExpireDate)
+        edit.remove(CONSTANTS.PREFE_ACCESS_TransactionId)
+        edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodStart)
+        edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanStatus)
+        edit.remove(CONSTANTS.PREFE_ACCESS_AreaOfFocus)
+        edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent)
+        edit.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
         edit.clear()
         edit.apply()
         val preferred = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -779,6 +805,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited.remove(CONSTANTS.PREFE_ACCESS_SLEEPTIME)
         edited.clear()
         edited.apply()
+
         val preferred1 = requireActivity().getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
         val edited1 = preferred1.edit()
         edited1.remove(CONSTANTS.AssQus)
@@ -786,11 +813,25 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited1.remove(CONSTANTS.AssSort)
         edited1.clear()
         edited1.apply()
+
         val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
         val editorcv = shared.edit()
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
         editorcv.apply()
+
+        val preferreed = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+        val editeed = preferreed.edit()
+        editeed.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)
+        editeed.clear()
+        editeed.apply()
+
+        val pref = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val editt = pref.edit()
+        editt.remove(CONSTANTS.PREF_KEY_IsDisclimer)
+        editt.clear()
+        editt.apply()
+
         val preferred2 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val edited2 = preferred2.edit()
         edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)

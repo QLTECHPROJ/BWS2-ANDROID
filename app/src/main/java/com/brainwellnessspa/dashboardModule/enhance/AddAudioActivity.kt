@@ -1,6 +1,5 @@
 package com.brainwellnessspa.dashboardModule.enhance
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
@@ -120,7 +119,7 @@ class AddAudioActivity : AppCompatActivity() {
         val closeButton = binding.searchView.findViewById<ImageView>(R.id.search_close_btn)
         binding.searchView.clearFocus()
 
-             /* Back Icon Click */
+        /* Back Icon Click */
         binding.llBack.setOnClickListener { callback() }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
@@ -152,10 +151,7 @@ class AddAudioActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(search: String): Boolean {
-                if (searchEditText.text.toString().equals("", ignoreCase = true)) {
-                } else {
-                    prepareSearchData(search, searchEditText)
-                }
+                prepareSearchData(search, searchEditText)
                 p = Properties()
                 if (playlistId.equals("", ignoreCase = true)) {
                     p!!.putValue("source", "Manage Search Screen")
@@ -222,10 +218,10 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.rvSerachList.visibility = View.GONE
                                     binding.llError.visibility = View.VISIBLE
                                     binding.tvFound.text = "Please try again with another search term."
-//                                    showToast("Please try again", activity)
+                                    showToast("Please try again", activity)
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
-//                                    showToast("Not Please try again", activity)
+                                    showToast("Not Please try again", activity)
                                     /* set adapter data to search screen */
                                     binding.llError.visibility = View.GONE
                                     binding.rvSerachList.visibility = View.VISIBLE
@@ -234,7 +230,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                 }
                             } else if (searchEditText.text.toString().equals("", ignoreCase = true)) {
-//                                showToast("adapter null", activity)
+                                showToast("adapter null", activity)
                                 binding.rvSerachList.adapter = null
                                 binding.rvSerachList.visibility = View.GONE
                                 binding.llError.visibility = View.GONE
@@ -360,48 +356,48 @@ class AddAudioActivity : AppCompatActivity() {
         binding.tvSuggestedPlaylist.visibility = View.GONE
         binding.rvPlayList.visibility = View.GONE
         binding.tvSPViewAll.visibility = View.GONE
-         /*  if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<SearchPlaylistModel> listCall = APINewClient.getClient().getSuggestedPlayLists(CoUSERID);
-            listCall.enqueue(new Callback<SearchPlaylistModel>() {
-                @Override
-                public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            SearchPlaylistModel listModel = response.body();
-                            binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
+        /*  if (BWSApplication.isNetworkConnected(ctx)) {
+           BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+           Call<SearchPlaylistModel> listCall = APINewClient.getClient().getSuggestedPlayLists(CoUSERID);
+           listCall.enqueue(new Callback<SearchPlaylistModel>() {
+               @Override
+               public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
+                   try {
+                       if (response.isSuccessful()) {
+                           BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                           SearchPlaylistModel listModel = response.body();
+                           binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
 
-                            p = new Properties();
-                            p.putValue("source", "Add Audio Screen");
-                            BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
+                           p = new Properties();
+                           p.putValue("source", "Add Audio Screen");
+                           BWSApplication.addToSegment("Recommended Playlists List Viewed", p, CONSTANTS.screen);
 
-                            SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
-                            binding.rvPlayList.setAdapter(suggestedAdpater);
+                           SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
+                           binding.rvPlayList.setAdapter(suggestedAdpater);
 
-                            binding.tvSPViewAll.setOnClickListener(view -> {
-                                notificationStatus = true;
-                                Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                                i.putExtra("Name", "Suggested Playlist");
-                                i.putExtra("PlaylistID", PlaylistID);
-                                i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
-                                startActivity(i);
-                                finish();
-                            });
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                           binding.tvSPViewAll.setOnClickListener(view -> {
+                               notificationStatus = true;
+                               Intent i = new Intent(ctx, ViewSuggestedActivity.class);
+                               i.putExtra("Name", "Suggested Playlist");
+                               i.putExtra("PlaylistID", PlaylistID);
+                               i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
+                               startActivity(i);
+                               finish();
+                           });
+                       }
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               }
 
-                @Override
-                public void onFailure(Call<SearchPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity);
-        }*/
+               @Override
+               public void onFailure(Call<SearchPlaylistModel> call, Throwable t) {
+                   BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+               }
+           });
+       } else {
+           BWSApplication.showToast(getString(R.string.no_server_found), activity);
+       }*/
     }
 
     override fun onBackPressed() {
@@ -567,7 +563,7 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 holder.binding.llMainLayoutForPlayer.setOnClickListener {
                     if (listModel[position].isPlay.equals("0")) {
-                        callEnhanceActivity(ctx,activity)
+                        callEnhanceActivity(ctx, activity)
                     } else {
                         callMainTransFrag(position)
                     }
@@ -575,7 +571,7 @@ class AddAudioActivity : AppCompatActivity() {
 
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx,activity)
+                        callEnhanceActivity(ctx, activity)
                     } else if (IsLock.equals("0")) {
                         val audioID = listModel[position].iD
                         if (playlistId.equals("", ignoreCase = true)) {
@@ -625,7 +621,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
                 holder.binding.llMainLayout.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx,activity)
+                        callEnhanceActivity(ctx, activity)
                     } else if (IsLock.equals("0")) {
                         AudioDownloadsFragment.comefromDownload = "0"
                         addToSearch = true
@@ -636,7 +632,7 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
-                        callEnhanceActivity(ctx,activity)
+                        callEnhanceActivity(ctx, activity)
                     } else if (IsLock.equals("0")) {
                         val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
                         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -826,15 +822,15 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
-                 if (listModel[position]!!.isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,activity)
+                if (listModel[position]!!.isPlay.equals("0")) {
+                    callEnhanceActivity(ctx, activity)
                 } else {
-                     callMainTransFrag(position)
-                 }
+                    callMainTransFrag(position)
+                }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,activity)
+                    callEnhanceActivity(ctx, activity)
                 } else if (IsLock.equals("0")) {
                     if (playlistId.equals("", ignoreCase = true)) {
                         val p = Properties()

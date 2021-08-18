@@ -88,10 +88,11 @@ class SplashActivity : AppCompatActivity() {
         directLogin = shared.getString(CONSTANTS.PREFE_ACCESS_directLogin, "")
         isSetLoginPin = shared.getString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "")
         isPinSet = shared.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
+        planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-        planId = sharpened.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+
 
 //        BWSApplication.showToast("Notify Me "+ ("\ud83d\ude01")+("\ud83d\udc34"),this)
     }

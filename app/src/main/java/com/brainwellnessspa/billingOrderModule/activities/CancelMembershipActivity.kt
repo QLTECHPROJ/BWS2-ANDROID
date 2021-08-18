@@ -5,10 +5,12 @@ import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.Dialog
 import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -181,6 +183,8 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                     if (listModel != null) {
                                                         when {
                                                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                                dialog.dismiss()
+                                                                deleteCall(activity)
                                                                 showToast(listModel.responseMessage, activity)
                                                                 val properties = Properties()
                                                                 when (deleteId) {
@@ -202,8 +206,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                                     }
                                                                 }
                                                                 addToSegment("Account Deleted", properties, CONSTANTS.track)
-                                                                dialog.dismiss()
-                                                                deleteCall(activity)
                                                                 val i = Intent(activity, SignInActivity::class.java)
                                                                 i.putExtra("mobileNo", "")
                                                                 i.putExtra("countryCode", "")
@@ -387,11 +389,17 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                 }
                                 MotionEvent.ACTION_UP -> {
                                     if (isNetworkConnected(ctx)) {
-                                        APINewClient.client.getCancelPlan(mainAccountId, cancelId, binding.edtCancelBox.text.toString())?.enqueue(object : Callback<CancelPlanModel?> {
+                                        APINewClient.client.getCancelPlan(userId, cancelId, binding.edtCancelBox.text.toString())?.enqueue(object : Callback<CancelPlanModel?> {
                                             override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
                                                 try {
                                                     val model = response.body()
                                                     showToast(model!!.responseMessage, activity)
+                                                    try {
+                                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions")))
+                                                    } catch (e: ActivityNotFoundException) {
+                                                        showToast("Cant open the browser",activity)
+                                                        e.printStackTrace()
+                                                    }
                                                     dialog.dismiss()
 
                                                     //                                            Properties p = new Properties();

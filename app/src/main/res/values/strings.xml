@@ -581,5 +581,10 @@
     <string name="total_amount">Total Amount</string>
     <string name="by_clicking_on_register_or_sign_up_you">By clicking on Register or Sign up you</string>
     <string name="agree_to_our">agree to our</string>
+    <string name="create_new_playlist">Create \nNew Playlist</string>
+    <string name="status">Status</string>
+    <string name="active_since">Active Since</string>
+    <string name="price">Price</string>
+    <string name="plan">Plan</string>
 </resources>
 

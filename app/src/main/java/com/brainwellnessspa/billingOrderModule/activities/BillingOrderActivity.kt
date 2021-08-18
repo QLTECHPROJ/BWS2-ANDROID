@@ -70,9 +70,9 @@ class BillingOrderActivity : AppCompatActivity() {
 
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
-//            val i = Intent(activity, CancelMembershipActivity::class.java)
-//            i.putExtra("screenView", "1")
-//            startActivity(i)
+            val i = Intent(activity, CancelMembershipActivity::class.java)
+            i.putExtra("screenView", "1")
+            startActivity(i)
         }
 
         /* This condition is check about application in background or foreground */

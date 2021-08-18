@@ -486,7 +486,7 @@
                                                 android:fontFamily="@font/montserrat_semi_bold"
                                                 android:gravity="start|bottom"
                                                 android:paddingBottom="@dimen/_8sdp"
-                                                android:text="Create \nNew Playlist"
+                                                android:text="@string/create_new_playlist"
                                                 android:textColor="@color/white"
                                                 android:textSize="@dimen/_12sdp"
                                                 tools:ignore="SpUsage" />

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -23,7 +24,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -35,7 +37,8 @@
                 android:gravity="center"
                 android:text="@string/billing_and_order"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 
@@ -61,7 +64,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_left_arrow_icon"
-                        app:tint="@color/black" />
+                        app:tint="@color/black"
+                        android:contentDescription="@string/todo" />
 
                 </LinearLayout>
 
@@ -73,7 +77,8 @@
                     android:gravity="center"
                     android:text="@string/Billing_and_Order"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="SpUsage" />
 
             </RelativeLayout>
 
@@ -84,7 +89,8 @@
                 android:layout_below="@+id/rlLayouts"
                 android:elevation="@dimen/_2sdp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                tools:targetApi="lollipop">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
@@ -128,14 +134,16 @@
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:background="@drawable/rounded_light_gray"
                     android:backgroundTint="#227681"
-                    tools:targetApi="lollipop">
+                    tools:targetApi="lollipop"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_14sdp"
+                        android:paddingEnd="@dimen/_0sdp"
                         android:paddingTop="@dimen/_18sdp"
                         android:paddingBottom="@dimen/_20sdp">
 
@@ -147,13 +155,15 @@
                             android:text=""
                             android:textColor="@color/white"
                             android:textSize="@dimen/_17sdp"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            tools:ignore="SpUsage" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_20sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            tools:ignore="DisableBaselineAlignment">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -167,14 +177,15 @@
                                     android:layout_height="@dimen/_20sdp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_plan_icon"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/white"
+                                    android:contentDescription="@string/todo" />
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginStart="@dimen/_8sdp"
                                 android:layout_weight="0.8"
                                 android:orientation="vertical">
 
@@ -187,9 +198,10 @@
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
                                     android:maxLines="1"
-                                    android:text="Plan"
+                                    android:text="@string/plan"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvPlan"
@@ -200,7 +212,8 @@
                                     android:gravity="start"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -208,7 +221,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_16sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            android:baselineAligned="false">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -222,15 +236,15 @@
                                     android:layout_height="@dimen/_20sdp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_price_icon"
-                                    app:tint="@color/white" />
-
+                                    app:tint="@color/white"
+                                    android:contentDescription="@string/todo" />
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginStart="@dimen/_8sdp"
                                 android:layout_weight="0.8"
                                 android:orientation="vertical">
 
@@ -243,9 +257,10 @@
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
                                     android:maxLines="1"
-                                    android:text="Price"
+                                    android:text="@string/price"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvPrice"
@@ -256,7 +271,8 @@
                                     android:gravity="start"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -264,7 +280,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_16sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            tools:ignore="DisableBaselineAlignment">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -278,14 +295,15 @@
                                     android:layout_height="@dimen/_20sdp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_active_since_icon"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/white"
+                                    android:contentDescription="@string/todo" />
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginStart="@dimen/_8sdp"
                                 android:layout_weight="0.8"
                                 android:orientation="vertical">
 
@@ -298,9 +316,10 @@
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
                                     android:maxLines="1"
-                                    android:text="Active Since"
+                                    android:text="@string/active_since"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvActive"
@@ -311,7 +330,8 @@
                                     android:gravity="start"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -319,7 +339,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_16sdp"
-                            android:weightSum="1">
+                            android:weightSum="1"
+                            android:baselineAligned="false">
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
@@ -333,14 +354,15 @@
                                     android:layout_height="@dimen/_20sdp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_status_icon"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/white"
+                                    android:contentDescription="@string/todo" />
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginStart="@dimen/_8sdp"
                                 android:layout_weight="0.8"
                                 android:orientation="vertical">
 
@@ -353,9 +375,10 @@
                                     android:fontFamily="@font/montserrat_bold"
                                     android:gravity="start"
                                     android:maxLines="1"
-                                    android:text="Status"
+                                    android:text="@string/status"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvStatus"
@@ -366,7 +389,8 @@
                                     android:gravity="start"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_14sdp"
+                                    tools:ignore="SpUsage" />
 
                                 <TextView
                                     android:id="@+id/tvStatusRenew"
@@ -377,7 +401,8 @@
                                     android:gravity="start"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_12sdp" />
+                                    android:textSize="@dimen/_12sdp"
+                                    tools:ignore="SpUsage" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -388,7 +413,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.1"
                         android:paddingTop="@dimen/_24sdp"
-                        android:paddingRight="@dimen/_16sdp">
+                        android:paddingStart="@dimen/_0sdp"
+                        android:paddingEnd="@dimen/_16sdp">
 
                         <CheckBox
                             android:id="@+id/cbChecked"
@@ -399,12 +425,13 @@
                             android:button="@drawable/radio_btn_background"
                             android:buttonTint="@color/white"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center_vertical|left"
+                            android:gravity="center_vertical|start"
                             android:layoutDirection="rtl"
                             android:overScrollMode="never"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            tools:ignore="SpUsage" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -430,7 +457,8 @@
                 android:layout_height="@dimen/_50sdp"
                 android:indeterminateTint="@color/blue"
                 android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 
@@ -468,12 +496,14 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/_6sdp"
+                android:paddingStart="@dimen/_6sdp"
+                android:paddingEnd="@dimen/_0sdp"
                 android:paddingBottom="@dimen/_18sdp"
                 android:text="@string/cancel"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/_13sdp"
-                android:visibility="visible" />
+                android:textSize="@dimen/_18sdp"
+                android:visibility="visible"
+                tools:ignore="SpUsage" />
         </LinearLayout>
     </RelativeLayout>
 
