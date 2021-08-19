@@ -141,16 +141,16 @@ class MyPlayerActivity : AppCompatActivity() {
         ctx = this@MyPlayerActivity
         act = this@MyPlayerActivity
         /* get user id from share pref*/
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         DB = getAudioDataBase(ctx)
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         /* get intent data when click on music notification bar */
         if (intent.hasExtra("notification")) {
-            val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+            val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
             val userId = sharedd.getString(CONSTANTS.PREF_KEY_UserID, "")
-            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val xposition = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val gson = Gson()
             var mainPlayModelList2 = java.util.ArrayList<MainPlayModel>()
@@ -197,7 +197,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                  if (isNetworkConnected(ctx)) {
-                     val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                     val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                      audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                      callAudioDetails(mainPlayModelList[position].id, ctx, act, coUserId, "audioPlayer", arrayListOf<DownloadAudioDetails>(), arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(), arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(), mainPlayModelList, position)
                  } else {
@@ -256,7 +256,7 @@ class MyPlayerActivity : AppCompatActivity() {
 
     /* main make array function for get player array data */
     private fun makePlayerArray() {
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
         audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val playerPlaylistID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
@@ -281,7 +281,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -303,7 +303,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -325,7 +325,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -347,7 +347,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -369,7 +369,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.audioDuration.toString()
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -391,7 +391,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.AudioDuration!!
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -413,7 +413,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.audioDuration = arrayList[i]!!.AudioDuration!!
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -437,7 +437,7 @@ class MyPlayerActivity : AppCompatActivity() {
 
                     mainPlayModelList.add(mainPlayModel)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
@@ -518,7 +518,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             //player back ended
                             audioClick = true
                             isDisclaimer = 0
-                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                             editor.apply()
@@ -626,7 +626,7 @@ class MyPlayerActivity : AppCompatActivity() {
         callNewPlayerRelease()
         //        }
         isDisclaimer = 0
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
         val json1 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
         audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -642,7 +642,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -658,7 +658,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -674,7 +674,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -690,7 +690,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -706,7 +706,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -722,7 +722,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -738,7 +738,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -754,7 +754,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     arrayList.removeAt(position)
                     mainPlayModelList.removeAt(position)
                 }
-                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedz.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
@@ -798,7 +798,7 @@ class MyPlayerActivity : AppCompatActivity() {
             fileNameList = new ArrayList<>();
             audioFile1 = new ArrayList<>();
             playlistDownloadId = new ArrayList<>();
-            SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson1 = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
             String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -826,7 +826,7 @@ class MyPlayerActivity : AppCompatActivity() {
             }
         }
         val gson = Gson()
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
         val playlistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         val audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -893,7 +893,7 @@ class MyPlayerActivity : AppCompatActivity() {
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         playerControlView!!.player = player
         playerControlView!!.setProgressUpdateListener { positionx: Long, bufferedPosition: Long ->
-            val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
             exoBinding.exoProgress.setPosition(positionx)
             exoBinding.exoProgress.setBufferedPosition(bufferedPosition)
@@ -931,7 +931,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                         }
                         if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
+                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
                             val playlistId = shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, "")
                             val playlistName = shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, "")
                             val playlistDescription = shared1.getString(CONSTANTS.PREF_KEY_PlaylistDescription, "")
@@ -1020,7 +1020,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
                     Log.e("TAG", "Listener-onTracksChanged... Main Activity  :..." + player.currentWindowIndex.toString())
                     oldSongPos = 0
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val gson = Gson()
                     val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -1031,7 +1031,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     position = player.currentWindowIndex
                     val globalInitExoPlayer = GlobalInitExoPlayer()
                     globalInitExoPlayer.InitNotificationAudioPLayer(ctx, mainPlayModelList)
-                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val editor = shared.edit()
                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                     editor.apply()
@@ -1092,7 +1092,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 }
 
                 override fun onPlaybackStateChanged(state: Int) {
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     Log.v("TAG", "Listener-onPlaybackStateChanged... Main Activity")
                     //                        myBitmap = getMediaBitmap(ctx, mainPlayModelList.get(position).getImageFile());
@@ -1146,7 +1146,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                     addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                                 }
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
+                                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
                                     val playlistId = shared1.getString(CONSTANTS.PREF_KEY_PlaylistID, "")
                                     val playlistName = shared1.getString(CONSTANTS.PREF_KEY_PlaylistName, "")
                                     val playlistDescription = shared1.getString(CONSTANTS.PREF_KEY_PlaylistDescription, "")
@@ -1522,7 +1522,7 @@ class MyPlayerActivity : AppCompatActivity() {
             fileNameList = ArrayList()
             audioFile1 = ArrayList()
             playlistDownloadId = ArrayList()
-            val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson1 = Gson()
             val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson1.toString())
             val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson1.toString())
@@ -1536,7 +1536,7 @@ class MyPlayerActivity : AppCompatActivity() {
             audioFile1.add(mainPlayModelList[position].audioFile)
             fileNameList.add(mainPlayModelList[position].name)
             playlistDownloadId.add("")
-            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val editor = shared.edit()
             val gson = Gson()
             val nameJson = gson.toJson(fileNameList)
@@ -1719,7 +1719,7 @@ class MyPlayerActivity : AppCompatActivity() {
     /* get download function added data from Share Preference */
     private fun getDownloadData() {
         try {
-            val sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson = Gson()
             val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
             val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())

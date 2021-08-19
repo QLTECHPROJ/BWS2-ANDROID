@@ -65,7 +65,7 @@ class SplashActivity : AppCompatActivity() {
         activity = this@SplashActivity
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         key = appSignatureHashHelper.appSignatures[0]
-        val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE)
+        val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
         val editor = sharedx.edit()
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures[0])
         editor.apply()
@@ -73,7 +73,7 @@ class SplashActivity : AppCompatActivity() {
             key = getKey(this)
         }
 
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")

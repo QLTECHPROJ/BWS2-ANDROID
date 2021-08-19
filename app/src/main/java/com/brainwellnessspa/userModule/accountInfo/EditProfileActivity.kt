@@ -105,7 +105,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile)
-        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         activity = this@EditProfileActivity
@@ -208,7 +208,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     BWSApplication.showToast(viewModel.responseMessage, activity)
                                     profileViewData(applicationContext)
-                                    val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_DOB, viewModel.responseData!!.dob)
@@ -223,7 +223,13 @@ class EditProfileActivity : AppCompatActivity() {
                                     p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
                                     p.putValue("email", viewModel.responseData!!.email)
                                     BWSApplication.addToSegment("Profile Changes Saved", p, CONSTANTS.track)
-                                    finish()
+                                    if(viewModel.responseData!!.ageSlabChange.equals("0")) {
+                                        finish()
+                                    }else if(viewModel.responseData!!.ageSlabChange.equals("1")) {
+                                        // show popup and redirect to sleep time screen
+                                    }else{
+                                        finish()
+                                    }
                                 }
                                 viewModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -305,7 +311,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     binding.etEmail.setText(viewModel.ResponseData.Email)
 
                                     IsLock = viewModel.ResponseData.Islock
-                                    val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)

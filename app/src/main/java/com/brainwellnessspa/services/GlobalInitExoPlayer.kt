@@ -89,7 +89,7 @@ class GlobalInitExoPlayer : Service() {
                     player.playWhenReady = true
                     player.seekTo(player.currentWindowIndex, player.currentPosition)
                     player.prepare()
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val gson = Gson()
                     val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                     if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -172,7 +172,7 @@ class GlobalInitExoPlayer : Service() {
         fun relesePlayer(context: Context) {
             val p = Properties()
             p.putValue("Screen", "Dashboard")
-            addToSegment("Application Killed", p, CONSTANTS.track)
+//            addToSegment("Application Killed", p, CONSTANTS.track)
             if (player != null) {
                 try {
                     mediaSession.release()
@@ -211,7 +211,7 @@ class GlobalInitExoPlayer : Service() {
         fun GetSourceName(ctx: Context): String? {
             var myFlagType: String? = ""
             try {
-                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioFlag.equals("MainAudioList", ignoreCase = true) || audioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
@@ -286,7 +286,7 @@ class GlobalInitExoPlayer : Service() {
 
     fun GlobleInItPlayer(ctx: Context, position: Int, downloadAudioDetailsList: List<String?>, mainPlayModelList: ArrayList<MainPlayModel>, playerType: String?) {
         //        relesePlayer();
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         audioManager = ctx.getSystemService(AUDIO_SERVICE) as AudioManager
@@ -360,7 +360,7 @@ class GlobalInitExoPlayer : Service() {
             override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
                 Log.v("TAG", "Listener-onTracksChanged... global PLAYER")
                 oldSongPos = 0
-                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val gson = Gson()
                 val json = sharedd.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                 var mainPlayModelList1x = ArrayList<MainPlayModel>()
@@ -371,15 +371,15 @@ class GlobalInitExoPlayer : Service() {
 
                 //                        myBitmap = getMediaBitmap(getActivity(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                 PlayerAudioId = mainPlayModelList1x[player.currentWindowIndex].id
-                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+              /*  if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "start")
                         Log.e("User Track ", "Start Global Done")
                     }
-                }
+                }*/
             }
 
             override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -696,7 +696,7 @@ class GlobalInitExoPlayer : Service() {
 
     fun InitNotificationAudioPLayer(ctx: Context, mainPlayModelList2: ArrayList<MainPlayModel>?) {
         var position = 0
-        val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
         if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -705,7 +705,7 @@ class GlobalInitExoPlayer : Service() {
         }
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(ctx, "10001", (R.string.playback_channel_name), 0, notificationId, object : PlayerNotificationManager.MediaDescriptionAdapter {
             override fun getCurrentContentTitle(players: Player): String {
-                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val gson = Gson()
                 val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                 if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -716,7 +716,7 @@ class GlobalInitExoPlayer : Service() {
                 ps = if (player != null) {
                     player.currentWindowIndex
                 } else {
-                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 return mainPlayModelList1[ps].name
@@ -730,7 +730,7 @@ class GlobalInitExoPlayer : Service() {
             }
 
             override fun getCurrentContentText(players: Player): String {
-                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val gson = Gson()
                 val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                 if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -741,7 +741,7 @@ class GlobalInitExoPlayer : Service() {
                 ps = if (player != null) {
                     player.currentWindowIndex
                 } else {
-                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 return mainPlayModelList1[ps].audioDirection
@@ -814,7 +814,7 @@ class GlobalInitExoPlayer : Service() {
     }*/position = if (player != null) {
             player.currentWindowIndex
         } else {
-            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         }
         if (position == mainPlayModelList1.size - 1) {
@@ -831,7 +831,7 @@ class GlobalInitExoPlayer : Service() {
             mediaSessionConnector.setPlayer(player)
             mediaSessionConnector.setMediaMetadataProvider {
                 val duration: Long = if (player.duration < 0) player.currentPosition else player.duration
-                val sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsaxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val jsonxx = sharedsaxx.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                 if (!jsonxx.equals(gson.toString(), ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
@@ -842,7 +842,7 @@ class GlobalInitExoPlayer : Service() {
                 ps = if (player != null) {
                     player.currentWindowIndex
                 } else {
-                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -985,7 +985,7 @@ class GlobalInitExoPlayer : Service() {
 
     fun UpdateMiniPlayer(ctx: Context, activity: Activity): String {
         var AudioFlag = "0"
-        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val expDate = shared1x.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
         //            expDate = "2020-09-29 06:34:10";
         Log.e("Exp Date !!!!", expDate!!)
@@ -1024,19 +1024,19 @@ class GlobalInitExoPlayer : Service() {
             }
         }
         try {
-            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")!!
-            val shared2 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+            val shared2 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
 //            val UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "")
             val gson1 = Gson()
             val type1 = object : TypeToken<List<String?>?>() {}.type
 //            val UnlockAudioList = gson1.fromJson<List<String?>>(UnlockAudioLists, type1)
             if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true) || AudioFlag.equals("SearchAudio", ignoreCase = true) || AudioFlag.equals("SearchModelAudio", ignoreCase = true))) {
-                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val gson = Gson()
                 val arrayList1 = ArrayList<MainPlayModel>()
                 val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
-                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedd.edit()
                 if (AudioFlag.equals("MainAudioList", ignoreCase = true)) {
                     val type = object : TypeToken<ArrayList<HomeDataModel.ResponseData.Audio.Detail?>?>() {}.type
@@ -1236,7 +1236,7 @@ class GlobalInitExoPlayer : Service() {
             (notDownloadedData as ArrayList<DownloadAudioDetails?>).addAll(audioList!!)
             if (notDownloadedData.isNotEmpty() && !DownloadMedia.isDownloading) {
                 if (isNetworkConnected(ctx)) {
-                    val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                    val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                     val gson = Gson()
                     val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
                     val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -1254,7 +1254,7 @@ class GlobalInitExoPlayer : Service() {
                             }
                         }
                     }
-                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                     val editor = shared1.edit()
                     val nameJson = gson.toJson(fileNameList)
                     val urlJson = gson.toJson(audioFile)
@@ -1274,7 +1274,7 @@ class GlobalInitExoPlayer : Service() {
     }
 
     private fun removeSharepref(ctx: Context) {
-        val sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val sharedm = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editorr = sharedm.edit()
         editorr.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
         editorr.remove(CONSTANTS.PREF_KEY_MainAudioList)
@@ -1289,7 +1289,7 @@ class GlobalInitExoPlayer : Service() {
     }
 
     fun UpdateNotificationAudioPLayer(ctx: Context) {
-        val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
         if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -1312,7 +1312,7 @@ class GlobalInitExoPlayer : Service() {
                     val duration: Long
                     duration = if (player.duration < 0) player.currentPosition else player.duration
                     val builder = MediaMetadataCompat.Builder()
-                    val sharedsa1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val json1 = sharedsa1.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                     if (!json1.equals(gson.toString(), ignoreCase = true)) {
                         val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
@@ -1322,7 +1322,7 @@ class GlobalInitExoPlayer : Service() {
                     ps = if (player != null) {
                         player.currentWindowIndex
                     } else {
-                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                         shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -1379,7 +1379,7 @@ class GlobalInitExoPlayer : Service() {
         val timeString = getCurruntTime()
         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val userId: String? = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        val shareded = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+        val shareded = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
         val gson = Gson()
         val json = shareded.getString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toString())
         var userActivityTrackModel = ArrayList<UserActivityTrackModel>()
@@ -1406,7 +1406,7 @@ class GlobalInitExoPlayer : Service() {
 
         Log.e("Issue", gson.toJson(userActivityTrackModel))
 
-        val share = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+        val share = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
         val editor = share.edit()
         editor.putString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toJson(userActivityTrackModel))
         editor.apply()
@@ -1421,7 +1421,7 @@ class GlobalInitExoPlayer : Service() {
                             when {
                                 listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
 //                                  TODO   pref json clear
-                                    val preferences: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+                                    val preferences: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
                                     val edit = preferences.edit()
                                     edit.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)
                                     edit.clear()

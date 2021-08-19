@@ -245,17 +245,17 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.txtError.visibility = View.GONE
         binding.txtError.text = ""
         if (isNetworkConnected(this)) {
-            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
                 FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
                     val newToken = task.result.token
                     Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+                    val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
                     editor.putString(CONSTANTS.Token, newToken) //Friend
                     editor.apply()
                 }
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE)
+                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
 
@@ -339,7 +339,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             }
                         }
 
-                        val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                        val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
                         editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)

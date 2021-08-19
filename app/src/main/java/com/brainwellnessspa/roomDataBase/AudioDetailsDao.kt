@@ -84,7 +84,7 @@ interface AudioDetailsDao {
     fun getPlaylist1(PlaylistId: String?, UserID: String?): LiveData<List<DownloadPlaylistDetails?>>
 
     @Query("SELECT PlaylistID FROM playlist_table WHERE Created =:Created And UserID=:UserID ORDER BY uid DESC")
-    fun getPlaylistIDByCreated(Created: String?, UserID: String?): LiveData<String>
+    fun getPlaylistIDByCreated(Created: String?, UserID: String?): String
 
 
     //    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")

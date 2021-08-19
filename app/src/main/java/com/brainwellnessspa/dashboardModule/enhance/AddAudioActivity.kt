@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
 import android.content.*
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -76,7 +77,7 @@ class AddAudioActivity : AppCompatActivity() {
             if (intent.hasExtra("MyData")) {
                 val data = intent.getStringExtra("MyData")
                 Log.d("play_pause_Action", data!!)
-                val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 if (!audioFlag.equals("Downloadlist", ignoreCase = true) && !audioFlag.equals("playlist", ignoreCase = true) && !audioFlag.equals("TopCategories", ignoreCase = true)) {
                     if (player != null) {
@@ -100,7 +101,7 @@ class AddAudioActivity : AppCompatActivity() {
             playlistId = intent.getStringExtra(CONSTANTS.PlaylistID)
         }
         /* Get User ID and MAin Account ID*/
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -160,7 +161,7 @@ class AddAudioActivity : AppCompatActivity() {
                 }
                 p!!.putValue("searchKeyword", search)
                 addToSegment("Audio Searched", p, CONSTANTS.track)
-//                showToast("onQueryTextChange", activity)
+                //                showToast("onQueryTextChange", activity)
                 return false
             }
 
@@ -192,7 +193,7 @@ class AddAudioActivity : AppCompatActivity() {
     /* main Api function for search audio */
     private fun prepareSearchData(search: String, searchEditText: EditText?) {
         val gson = Gson()
-        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val playerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
@@ -206,7 +207,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.client.getSearchBoth(coUserId, search)
+            val listCall = APINewClient.client.getSearchBoth(coUserId, playlistId, search)
             listCall.enqueue(object : Callback<SearchBothModel?> {
                 override fun onResponse(call: Call<SearchBothModel?>, response: Response<SearchBothModel?>) {
                     try {
@@ -266,7 +267,7 @@ class AddAudioActivity : AppCompatActivity() {
     /* suggested serch audio api function */
     private fun prepareSuggestedData() {
         val gson = Gson()
-        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val playerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
@@ -280,7 +281,7 @@ class AddAudioActivity : AppCompatActivity() {
         }
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.client.getSuggestedLists(coUserId)
+            val listCall = APINewClient.client.getSuggestedLists(coUserId, playlistId)
             listCall.enqueue(object : Callback<SuggestedModel?> {
                 override fun onResponse(call: Call<SuggestedModel?>, response: Response<SuggestedModel?>) {
                     try {
@@ -416,7 +417,7 @@ class AddAudioActivity : AppCompatActivity() {
                         val listModels = response.body()
                         if (listModels!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             showToast(listModels.responseMessage, activity)
-                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                             val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
@@ -466,7 +467,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     }
                                 }
                                 /* add audio to player */
-                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = sharedd.edit()
                                 val gson = Gson()
                                 val jsonx = gson.toJson(mainPlayModelList)
@@ -537,7 +538,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.tvPart.text = listModel[position].audioDuration
                 holder.binding.llRemoveAudio.visibility = View.VISIBLE
 //                holder.binding.ivLock.visibility = View.GONE
-                val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                 if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
@@ -604,9 +605,17 @@ class AddAudioActivity : AppCompatActivity() {
                                 if (isDisclaimer == 1) {
                                     showToast("The audio shall add after playing the disclaimer", activity)
                                 } else {
+                                    holder.binding.llRemoveAudio.isClickable = false
+                                    holder.binding.llRemoveAudio.isEnabled = false
+                                    listModel[position].disableAudio = "1"
+                                    notifyItemChanged(position)
                                     callAddSearchAudio(audioID, "0", "")
                                 }
                             } else {
+                                holder.binding.llRemoveAudio.isClickable = false
+                                holder.binding.llRemoveAudio.isEnabled = false
+                                listModel[position].disableAudio = "1"
+                                notifyItemChanged(position)
                                 callAddSearchAudio(audioID, "0", "")
                             }
                         }
@@ -634,16 +643,24 @@ class AddAudioActivity : AppCompatActivity() {
                     if (IsLock.equals("1")) {
                         callEnhanceActivity(ctx, activity)
                     } else if (IsLock.equals("0")) {
-                        val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                         if (audioPlayerFlag.equals("playList", ignoreCase = true) && myPlaylist.equals(playlistId, ignoreCase = true)) {
                             if (isDisclaimer == 1) {
                                 showToast("The audio shall add after playing the disclaimer", activity)
                             } else {
+                                holder.binding.llRemoveAudio.isClickable = false
+                                holder.binding.llRemoveAudio.isEnabled = false
+                                listModel[position].disableAudio = "1"
+                                notifyItemChanged(position)
                                 callAddSearchAudio("", "1", listModel[position].iD)
                             }
                         } else {
+                            holder.binding.llRemoveAudio.isClickable = false
+                            holder.binding.llRemoveAudio.isEnabled = false
+                            listModel[position].disableAudio = "1"
+                            notifyItemChanged(position)
                             callAddSearchAudio("", "1", listModel[position].iD)
                         }
                     }
@@ -661,13 +678,21 @@ class AddAudioActivity : AppCompatActivity() {
             Glide.with(ctx!!).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             Glide.with(ctx!!).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
+            if(listModel[position].disableAudio.equals("0")){
+                holder.binding.llRemoveAudio.isClickable = true
+                holder.binding.llRemoveAudio.isEnabled = true
+            }else if(listModel[position].disableAudio.equals("1")){
+                holder.binding.ivIcon.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
+                holder.binding.llRemoveAudio.isClickable = false
+                holder.binding.llRemoveAudio.isEnabled = false
+            }
         }
 
         private fun callMainTransFrag(position: Int) {
             try {
-                val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                 IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
-                val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("SearchModelAudio", ignoreCase = true) && playFrom.equals("Search Audio", ignoreCase = true)) {
@@ -689,7 +714,7 @@ class AddAudioActivity : AppCompatActivity() {
                 } else {
                     val listModelList2 = ArrayList<SearchBothModel.ResponseData>()
                     val gson = Gson()
-                    val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                    val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                     val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
@@ -746,7 +771,7 @@ class AddAudioActivity : AppCompatActivity() {
             if (audioc) {
                 GlobalInitExoPlayer.callNewPlayerRelease()
             }
-            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val editor = shared.edit()
             val gson = Gson()
             val json = gson.toJson(listModel)
@@ -797,7 +822,15 @@ class AddAudioActivity : AppCompatActivity() {
             } else {
                 holder.binding.ivLock.visibility = View.GONE
             }
-            val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            if(listModel[position]!!.disableAudio.equals("0")){
+                holder.binding.llRemoveAudio.isClickable = true
+                holder.binding.llRemoveAudio.isEnabled = true
+            }else if(listModel[position]!!.disableAudio.equals("1")){
+                holder.binding.ivIcon.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
+                holder.binding.llRemoveAudio.isClickable = false
+                holder.binding.llRemoveAudio.isEnabled = false
+            }
+            val sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val audioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = sharedzw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
             if (!audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && !audioPlayerFlag.equals("SubPlayList", ignoreCase = true) && !audioPlayerFlag.equals("TopCategories", ignoreCase = true)) {
@@ -863,9 +896,17 @@ class AddAudioActivity : AppCompatActivity() {
                             if (isDisclaimer == 1) {
                                 showToast("The audio shall add after playing the disclaimer", activity)
                             } else {
+                                holder.binding.llRemoveAudio.isClickable = false
+                                holder.binding.llRemoveAudio.isEnabled = false
+                                listModel[position]!!.disableAudio = "1"
+                                notifyItemChanged(position)
                                 callAddSearchAudio(listModel[position]!!.iD, "0", "")
                             }
                         } else {
+                            holder.binding.llRemoveAudio.isClickable = false
+                            holder.binding.llRemoveAudio.isEnabled = false
+                            listModel[position]!!.disableAudio = "1"
+                            notifyItemChanged(position)
                             callAddSearchAudio(listModel[position]!!.iD, "0", "")
                         }
                     }
@@ -875,9 +916,9 @@ class AddAudioActivity : AppCompatActivity() {
 
         private fun callMainTransFrag(position: Int) {
             try {
-                val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                 IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
-                val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("SearchAudio", ignoreCase = true) && playFrom.equals("Recommended Search", ignoreCase = true)) {
@@ -899,7 +940,7 @@ class AddAudioActivity : AppCompatActivity() {
                 } else {
                     val listModelList2 = ArrayList<SuggestedModel.ResponseData?>()
                     val gson = Gson()
-                    val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                    val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                     val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
@@ -953,7 +994,7 @@ class AddAudioActivity : AppCompatActivity() {
             if (audioc) {
                 GlobalInitExoPlayer.callNewPlayerRelease()
             }
-            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val editor = shared.edit()
             val gson = Gson()
             val json = gson.toJson(listModel)
@@ -1048,7 +1089,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.ivBackgroundImage.visibility = View.GONE
                 holder.binding.ivLock.visibility = View.GONE
                 AudioDownloadsFragment.comefromDownload = "0"
-                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                 if (audioFlag.equals("SubPlayList", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {

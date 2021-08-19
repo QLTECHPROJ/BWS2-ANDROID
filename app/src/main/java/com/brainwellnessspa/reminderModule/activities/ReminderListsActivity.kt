@@ -85,7 +85,7 @@ class ReminderListsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details)
         ctx = this@ReminderListsActivity
         activity = this@ReminderListsActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
@@ -278,7 +278,7 @@ class ReminderListsActivity : AppCompatActivity() {
     }
 
     private fun showTooltips() {
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         reminderFirstLogin = shared1.getString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
         if (reminderFirstLogin.equals("1", ignoreCase = true)) {
             val enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top)
@@ -313,7 +313,7 @@ class ReminderListsActivity : AppCompatActivity() {
                     anim.repeatMode = ValueAnimator.REVERSE
                     anim.start()
                     rlDone.setOnClickListener {
-                        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREF_KEY_ReminderFirstLogin, "0")
                         editor.apply()

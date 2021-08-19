@@ -63,7 +63,7 @@ class ProfileProgressActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_progress)
         ctx = this@ProfileProgressActivity
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
@@ -375,7 +375,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ProfileSaveDataModel = response.body()!!
-                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_DOB, age)
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "1")

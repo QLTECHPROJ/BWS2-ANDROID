@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.NotificationManager
 import android.app.Service
 import android.app.UiModeManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -66,7 +67,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
         /* get user id and main account id*/
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")

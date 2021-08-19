@@ -93,7 +93,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             token = FirebaseInstanceId.getInstance().token!!
         }
         FirebaseMessaging.getInstance().subscribeToTopic("all")
-        val editor1 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+        val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
         editor1.commit()
@@ -102,7 +102,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        val editor1 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit()
+        val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
         editor1.commit()

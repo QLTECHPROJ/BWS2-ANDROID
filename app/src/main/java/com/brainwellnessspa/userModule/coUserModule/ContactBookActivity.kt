@@ -69,7 +69,7 @@ class ContactBookActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contact_book)
         ctx = this@ContactBookActivity
         activity = this@ContactBookActivity
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)

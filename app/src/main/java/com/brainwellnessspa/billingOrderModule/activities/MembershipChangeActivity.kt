@@ -56,7 +56,7 @@ class MembershipChangeActivity : AppCompatActivity() {
         activity = this@MembershipChangeActivity
 
         /* This is the get string userId */
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         binding.llBack.setOnClickListener { callback() }
         notificationStatus = false

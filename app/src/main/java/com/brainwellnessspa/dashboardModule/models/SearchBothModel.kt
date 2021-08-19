@@ -37,6 +37,10 @@ class SearchBothModel {
         @Expose
         var isLock: String? = ""
 
+        @SerializedName("disableAudio")
+        @Expose
+        var disableAudio: String? = ""
+
         @SerializedName("IsPlay")
         @Expose
         var isPlay: String? = ""

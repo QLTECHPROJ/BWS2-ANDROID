@@ -1492,7 +1492,7 @@ public class BWSApplication extends Application {
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
         ivDownloads.setColorFilter(act.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
         String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -1628,7 +1628,7 @@ public class BWSApplication extends Application {
             List<String> fileNameList = new ArrayList<>();
             List<String> audioFile1 = new ArrayList<>();
             List<String> playlistDownloadId = new ArrayList<>();
-            SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson1 = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
             String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -1886,7 +1886,7 @@ public class BWSApplication extends Application {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
                 List<String> downloadPlaylistId = new ArrayList<>();
-                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson1 = new Gson();
                 String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
                 String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
@@ -2402,17 +2402,17 @@ public class BWSApplication extends Application {
         else
             isadm = false;
 
-        SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(task -> {
                 String newToken = task.getResult().getToken();
                 Log.e("newToken", newToken);
-                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                 editor.putString(CONSTANTS.Token, newToken); //Friend
                 editor.apply();
             });
-            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
             fcmId = sharedPreferences3.getString(CONSTANTS.Token, "");
         }
 
@@ -3055,7 +3055,7 @@ public class BWSApplication extends Application {
     public static void getDownloadData(Context ctx,String PlaylistID) {
         List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
-            SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));

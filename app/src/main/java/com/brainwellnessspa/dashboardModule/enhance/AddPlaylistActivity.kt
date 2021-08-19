@@ -68,7 +68,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist)
         ctx = this@AddPlaylistActivity
         activity = this@AddPlaylistActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -150,7 +150,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                                 properties.putValue("playlistId", listsModel.responseData!!.playlistID)
                                                 properties.putValue("playlistName", listsModel.responseData!!.playlistName)
                                                 addToSegment(" Playlist Created", properties, CONSTANTS.track)
-                                                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                                                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                                                 if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {
@@ -299,7 +299,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                         val listModels = response.body()
                         if (listModels!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity) //                                BWSApplication.showToast(listModels.getResponseMessage(), activity);
-                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                             val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
@@ -344,7 +344,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                         break
                                     }
                                 }
-                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = sharedd.edit()
                                 val gson = Gson()
                                 val jsonx = gson.toJson(mainPlayModelList)
@@ -475,7 +475,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             Glide.with(ctx).load(listModel[position].image).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(32))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMainLayout.setOnClickListener {
                 val playlistID = listModel[position].id
-                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "0")
                 if (audioFlag.equals("playlist", ignoreCase = true) && pID.equals(playlistID, ignoreCase = true)) {

@@ -51,7 +51,7 @@ class ResourceDetailsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource_details)
         ctx = this@ResourceDetailsActivity
         act = this@ResourceDetailsActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 

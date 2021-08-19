@@ -1283,10 +1283,10 @@ class HomeFragment : Fragment() {
             downloadAudioDetailsList = DB.taskDao()?.geAllDataBYDownloaded("Complete", userId) as ArrayList<String>
         }
         var pos = 0
-        val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
             if (isDisclaimer == 1) {
@@ -1416,7 +1416,7 @@ class HomeFragment : Fragment() {
                     }
                 }
                 if(audiolistDiff.isNotEmpty()){
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
@@ -1439,7 +1439,7 @@ class HomeFragment : Fragment() {
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
                 }
             } else {
-                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
@@ -1754,7 +1754,7 @@ class HomeFragment : Fragment() {
                                                             requireActivity().startActivity(intent)
                                                             requireActivity().finish()
                                                         }
-                                                        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                                         val editor = shared.edit()
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)

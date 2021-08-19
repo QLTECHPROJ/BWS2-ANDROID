@@ -61,7 +61,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
 
         /* This is the get string mainAccountID, UserId & email */
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
@@ -155,7 +155,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
     /* This function is save assessment result */
     private fun getAssSaveData() {
-        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
         val json3 = shared.getString(CONSTANTS.AssAns, gson.toString())
         val json4 = shared.getString(CONSTANTS.AssSort, gson.toString())
@@ -314,7 +314,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                     Log.e("Ans", dass.assAns.toString())
                     Log.e("Sort Pos", dass.assSort.toString())
                     visibleGoneNext()
-                    dass.editor = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE).edit()
+                    dass.editor = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE).edit()
                     dass.editor.putString(CONSTANTS.AssQus, dass.gson.toJson(dass.assQus)) //Friend
                     dass.editor.putString(CONSTANTS.AssAns, dass.gson.toJson(dass.assAns)) //Friend
                     dass.editor.putString(CONSTANTS.AssSort, dass.gson.toJson(dass.assSort)) //Friend
@@ -352,7 +352,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
         /* This function is set que, ans & arranging assessment data */
         private fun setData() {
-            val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+            val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.AssQus, dass.gson.toString())
             val json3 = shared.getString(CONSTANTS.AssAns, dass.gson.toString())
             val json4 = shared.getString(CONSTANTS.AssSort, dass.gson.toString())
@@ -392,7 +392,7 @@ class DassAssSliderActivity : AppCompatActivity() {
 
     /* This function is send assessment data */
     private fun sendAssessmentData() {
-        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
         val json3 = shared.getString(CONSTANTS.AssAns, gson.toString())
         val json4 = shared.getString(CONSTANTS.AssSort, gson.toString())
@@ -413,14 +413,14 @@ class DassAssSliderActivity : AppCompatActivity() {
                         val listModel: AssessmentSaveDataModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, MODE_PRIVATE)
+                                val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
                                 val edited1 = preferencesd1.edit()
                                 edited1.remove(CONSTANTS.AssQus)
                                 edited1.remove(CONSTANTS.AssAns)
                                 edited1.remove(CONSTANTS.AssSort)
                                 edited1.clear()
                                 edited1.apply()
-                                val shareded = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                val shareded = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor = shareded.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData?.indexScore)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.responseData?.scoreLevel)
@@ -430,6 +430,20 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 p.putValue("ans", gson.toJson(assAns).toString())
                                 p.putValue("WellnessScore", listModel.responseData?.indexScore)
                                 p.putValue("scoreLevel", listModel.responseData?.scoreLevel)
+                                p.putValue("totalAssessmentsTaken", listModel.responseData?.totalAssesment)
+                                p.putValue("numberOfDaysFromLastAssessmentsTaken", listModel.responseData?.daysfromLastAssesment)
+                                p.putValue("status", "")
+                                when {
+                                    listModel.responseData?.scoreIncDec.equals("", ignoreCase = true) -> {
+                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% ")
+                                    }
+                                    listModel.responseData?.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff + "% " + listModel.responseData?.scoreIncDec)
+                                    }
+                                    listModel.responseData?.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% " + listModel.responseData?.scoreIncDec)
+                                    }
+                                }
                                 BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
                                 callIdentify(ctx)
                                 val i = Intent(activity, AssProcessActivity::class.java)

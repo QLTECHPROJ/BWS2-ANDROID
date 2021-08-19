@@ -1,18 +1,17 @@
 package com.brainwellnessspa.membershipModule.activities
 
 import android.app.Activity
+import android.app.Dialog
+import android.app.NotificationManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.ImageView
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.enhance.PreparePlaylistActivity
+import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.RecommendedCategoryModel
 import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
@@ -77,7 +77,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             backClick = intent.getStringExtra("BackClick")
         }
 
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
@@ -133,45 +133,74 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 sendR.ProblemName = (selectedCategoriesName[i])
                 array.add(sendR)
             }
-            val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-            val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
-            val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-            if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
-                if (playFrom.equals("Suggested", ignoreCase = true)) {
-                    GlobalInitExoPlayer.callNewPlayerRelease()
-                    val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                    val edited2 = preferred2.edit()
-                    edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                    edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                    edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                    edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                    edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                    edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                    edited2.clear()
-                    edited2.apply()
-                }
-            }
             sendCategoryData(gson.toJson(array))
         }
     }
 
-    private fun getPlaylistIDByCreated() {
-        DB = getAudioDataBase(ctx)
-
-        DB.taskDao().getPlaylistIDByCreated("2",coUserId).observe(this, { playlistID :String ->
-            if (playlistID!= "") {
-                PlaylistID = playlistID
-                deleteSuggestedPlaylist()
+    private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<SaveRecommendedCatModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
+        val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        DB = getAudioDataBase(ctx);
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
+        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).removeObserver {}
+            if (audioList.size == playlistSongs.size) {
+                for (i in audioList) {
+                    var found = false
+                    for (j in playlistSongs) {
+                        if (i!!.ID == j.id) {
+                            found = true
+                        }
+                    }
+                    if (!found) {
+                        audiolistDiff.add(i!!)
+                    }
+                }
+                if (audiolistDiff.isNotEmpty()) {
+                    val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                    val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                    val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        if (playFrom.equals("Suggested", ignoreCase = true)) {
+                            GlobalInitExoPlayer.callNewPlayerRelease()
+                            val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                            val edited2 = preferred2.edit()
+                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                            edited2.clear()
+                            edited2.apply()
+                        }
+                    }
+                    GetPlaylistMedia(PlaylistID, userId!!, ctx)
+                }
+            } else {
+                val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                        GlobalInitExoPlayer.callNewPlayerRelease()
+                        val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                        val edited2 = preferred2.edit()
+                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+                        edited2.clear()
+                        edited2.apply()
+                    }
+                }
+                GetPlaylistMedia(PlaylistID, userId!!, ctx)
             }
         })
-
-    }
-
-    private fun deleteSuggestedPlaylist() {
-        getDownloadData(ctx,PlaylistID)
-        GetPlaylistMedia(PlaylistID,coUserId!!,ctx)
     }
 
     private fun prepareRecommnedData() {
@@ -368,7 +397,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         }
                     }
 
-                    catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE).edit()
+                    catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE).edit()
                     catList.editor.putString(CONSTANTS.selectedCategoriesTitle, catList.gson.toJson(catList.selectedCategoriesTitle)) //Friend
                     catList.editor.putString(CONSTANTS.selectedCategoriesName, catList.gson.toJson(catList.selectedCategoriesName)) //Friend
                     catList.editor.apply()
@@ -408,7 +437,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             if (catList.selectedCategoriesName[i] == listModel[pos].details!![layoutPosition].problemName) {
                                 catList.selectedCategoriesTitle.removeAt(i)
                                 catList.selectedCategoriesName.removeAt(i)
-                                catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE).edit()
+                                catList.editor = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE).edit()
                                 catList.editor.putString(CONSTANTS.selectedCategoriesTitle, catList.gson.toJson(catList.selectedCategoriesTitle)) //Friend
                                 catList.editor.putString(CONSTANTS.selectedCategoriesName, catList.gson.toJson(catList.selectedCategoriesName)) //Friend
                                 catList.editor.apply()
@@ -542,7 +571,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         }
 
         private fun setData() {
-            val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
+            val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
             val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
             catList.sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -568,7 +597,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     }
 
     private fun getCatSaveData() {
-        val shared = ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
+        val shared = ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -655,7 +684,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                getPlaylistIDByCreated()
+                                getPlaylistAudio(listModel.responseData!!.suggestedPlaylist!!.playlistID!!,coUserId!!, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!)
                                 val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
@@ -672,7 +701,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
                                 editor.apply()
 
-                                val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor1 = shared1.edit()
                                 editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
                                 editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
@@ -683,6 +712,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 val p = Properties()
                                 p.putValue("avgSleepTime", listModel.responseData!!.avgSleepTime)
                                 p.putValue("areaOfFocus", gson.toJson(listModel.responseData!!.areaOfFocus))
+                                p.putValue("numberOfUpdation", listModel.responseData!!.noUpdation)
                                 addToSegment("Area of Focus Saved", p, CONSTANTS.track)
 
                                 val i = Intent(applicationContext, PreparePlaylistActivity::class.java)
@@ -701,6 +731,43 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 i.putExtra("countryShortName", "")
                                 startActivity(i)
                                 finish()
+                            }
+                            listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                if(listModel.responseData!!.showAlert.equals("1")){
+                                    //show alert popup
+                                    val dialog = Dialog(ctx!!)
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                    dialog.setContentView(R.layout.logout_layout)
+                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx!!, R.color.dark_blue_gray)))
+                                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                    val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                                    val btn = dialog.findViewById<Button>(R.id.Btn)
+                                    val tvHeader = dialog.findViewById<TextView>(R.id.tvHeader)
+                                    val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                                    tvTitle.visibility = View.GONE
+                                    tvHeader.text = listModel.responseData!!.popupContent
+                                    btn.text = "Edit Sleep Time"
+                                    tvGoBack.text = "Edit Area of Focus"
+
+                                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.hide()
+                                            return@setOnKeyListener true
+                                        }
+                                        false
+                                    }
+                                    btn.setOnClickListener {
+                                        val i = Intent(ctx, SleepTimeActivity::class.java)
+                                        i.putExtra("SleepTime", sleepTime)
+                                        startActivity(i)
+                                        finish()
+                                    }
+                                    tvGoBack.setOnClickListener {dialog.hide() }
+                                    dialog.show()
+                                    dialog.setCancelable(false)
+                                }else if(listModel.responseData!!.showAlert.equals("0")){
+                                    showToast(listModel.responseMessage, activity)
+                                }
                             }
                             else -> {
                                 showToast(listModel.responseMessage, activity)

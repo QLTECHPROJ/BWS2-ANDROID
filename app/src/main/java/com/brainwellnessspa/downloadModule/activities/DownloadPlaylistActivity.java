@@ -110,7 +110,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
                 String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
@@ -257,7 +257,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     @Override
     protected void onResume() {
         Gson gson = new Gson();
-        SharedPreferences shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        SharedPreferences shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
         int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
@@ -289,7 +289,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     public void PrepareData() {
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
         String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
         String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
@@ -338,7 +338,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         });
 
         binding.llDelete.setOnClickListener(view -> {
-            SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag1 = shared11.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist1 = shared11.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             String MyPlaylistName1 = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
@@ -463,7 +463,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     private void addDisclaimer() {
         addDisclaimer = new DownloadAudioDetails();
         Gson gson = new Gson();
-        SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
         String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
         Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
@@ -515,7 +515,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     }
 
     public void SegmentTag() {
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_PlaylistID, PlaylistID);
         editor.putString(CONSTANTS.PREF_KEY_PlaylistName, PlaylistName);
@@ -609,7 +609,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
-            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
@@ -848,7 +848,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
         private void getAllCompletedMedia(int position) {
 
-            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
             String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");

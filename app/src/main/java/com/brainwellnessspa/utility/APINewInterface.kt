@@ -273,7 +273,9 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getSuggestedLists(
         @Field("UserId")
-        UserId: String?): Call<SuggestedModel>
+        UserId: String?,
+        @Field("playlistId")
+        playlistId: String?): Call<SuggestedModel>
 
     @POST("suggestedplaylist")
     @FormUrlEncoded
@@ -298,6 +300,8 @@ interface APINewInterface {
     fun getSearchBoth(
         @Field("UserId")
         UserId: String?,
+        @Field("playlistId")
+        playlistId: String?,
         @Field("SuggestedName")
         suggestedName: String?): Call<SearchBothModel>
 

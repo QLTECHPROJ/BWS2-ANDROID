@@ -101,7 +101,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 try {
                     val data = intent.getStringExtra("MyData")
                     Log.d("play_pause_Action", data!!)
-                    val sharedw: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedw: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                     val pID = sharedw.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                     if (myDownloads.equals("1", ignoreCase = true)) {
@@ -198,7 +198,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         DB = getAudioDataBase(ctx)
         callObserveMethodGetAllMedia(ctx, DB)
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.tvSearch.setOnClickListener {
@@ -337,7 +337,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun prepareData() {
         val gson = Gson()
-        val shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val playerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
@@ -520,7 +520,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             getPlaylistDetail2(ctx, DB, coUserId!!, playlistId!!)
             showToast(getString(R.string.no_server_found), activity)
         }
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -818,7 +818,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg)
 
-            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
             if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true)) {
@@ -864,7 +864,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     2 -> {
                         if (player != null) {
                             if (PlayerAudioId.equals(listModel[listModel.size - 1].id, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                 editor.apply()
@@ -890,7 +890,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             //                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             try {
                 holder.binding.llRemove.setOnClickListener {
-                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                     val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true)) {
@@ -928,7 +928,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
         private fun callRemove(id: String, listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, position: Int, ctx: Context, activity: Activity, PlaylistID: String, listModelMain: PlaylistDetailsModel.ResponseData) {
             val coUserId: String?
-            val shared = this.ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+            val shared = this.ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
             if (isNetworkConnected(this.ctx)) {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, this.activity)
@@ -984,7 +984,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     e.printStackTrace()
                                 }
                             }
-                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                             val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -1044,7 +1044,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
 
                     private fun saveToPref(playerPosition: Int, listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>) {
-                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         val gson = Gson()
                         val json = gson.toJson(listModel)
@@ -1058,7 +1058,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
 
                     //                    private fun saveToPref(pos: Int, mData: ArrayList<playlistModel.ResponseData.PlaylistSong>) {
-                    //                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    //                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     //                        val editor = shareddd.edit()
                     //                        val gson = Gson()
                     //                        val json = gson.toJson(mData)
@@ -1140,7 +1140,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             p.putValue("audioSortPosition", fromPosition)
             p.putValue("audioSortPositionNew", toPosition)
             addToSegment("Playlist Audio Sorted", p, CONSTANTS.track)
-            val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             var pos = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             if (audioFlag.equals("playList", ignoreCase = true)) {
@@ -1191,7 +1191,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         mainPlayModel.audioDuration = listModel[i].audioDuration
                         mainPlayModelList.add(mainPlayModel)
                     }
-                    val shareddd: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val shareddd: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val editor = shareddd.edit()
                     val gson = Gson()
                     val json = gson.toJson(listModel)
@@ -1285,7 +1285,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
 
-            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
             if (myDownloads.equals("1", ignoreCase = true)) {
@@ -1360,7 +1360,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     2 -> {
                         if (player != null) {
                             if (PlayerAudioId.equals(mData[mData.size - 1].id, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                 editor.apply()
@@ -1388,7 +1388,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 notifyDataSetChanged()
             }
             binding.llDelete.setOnClickListener {
-                val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                 if (audioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
@@ -1464,7 +1464,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             val fileNameList1: List<String>
             val audioFile: List<String>
             val playlistDownloadId: List<String>
-            val sharedy: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val sharedy: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson = Gson()
             val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
             val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -1484,7 +1484,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 playlistDownloadId.drop(i)
                             }
                         }
-                        val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                        val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         val nameJson = gson.toJson(fileNameList)
                         val urlJson = gson.toJson(audioFile)
@@ -1545,11 +1545,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     fun callMainPlayer(position: Int, view: String?, listModel: List<PlaylistDetailsModel.ResponseData.PlaylistSong>, ctx: Context, act: Activity, playlistId: String, playlistName: String, created: String?, myDownloads: String?) {
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
@@ -1570,7 +1570,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 player.seekTo(position, 0)
                                 player.playWhenReady = true
                                 PlayerAudioId = listModel[position].id
-                                val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = sharedxx.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                                 editor.apply()
@@ -1638,7 +1638,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         if (position != playerPosition) {
                             player.seekTo(position, 0)
                             player.playWhenReady = true
-                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val editor = sharedxx.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
@@ -1700,7 +1700,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         if (audioc) {
             GlobalInitExoPlayer.callNewPlayerRelease()
             try {
-                val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, MODE_PRIVATE)
+                val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
                 val editor = shared.edit()
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistID, listModelGlobal.responseData!!.playlistID)
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistName, listModelGlobal.responseData!!.playlistName)
@@ -1748,7 +1748,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
         }
 
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
         val downloadAudioDetails = java.util.ArrayList<DownloadAudioDetails>()
@@ -1855,7 +1855,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun getDownloadData(ctx: Context, DB: AudioDatabase) {
         try {
-            val sharedy: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val sharedy: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson = Gson()
             val jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, gson.toString())
             val json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson.toString())
@@ -1961,7 +1961,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     downloadPlaylistId.add(playlistSongs2[x].playlistID)
                 }
             }
-            val sharedx: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+            val sharedx: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
             val gson1 = Gson()
             val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson1.toString())
             val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson1.toString())
@@ -1983,7 +1983,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val downloadMedia = DownloadMedia(ctx, act)
                     downloadMedia.encrypt1(url, name, downloadPlaylistId)
                 }
-                val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                 val editor = shared.edit()
                 val gson = Gson()
                 val urlJson = gson.toJson(url)
@@ -2019,7 +2019,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val url = arrayListOf<String>()
                 val name = arrayListOf<String>()
                 val downloadPlaylistId = arrayListOf<String>()
-                val sharedx: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                val sharedx: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                 val gson1 = Gson()
                 val json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, gson1.toString())
                 val json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, gson1.toString())
@@ -2044,7 +2044,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         val downloadMedia = DownloadMedia(ctx, act)
                         downloadMedia.encrypt1(url, name, downloadPlaylistId /*, playlistSongs*/)
                     }
-                    val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE)
+                    val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE)
                     val editor = shared.edit()
                     val gson = Gson()
                     val urlJson = gson.toJson(url)
@@ -2067,7 +2067,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 showToast("Your audio is being downloaded! $textIcon4", act)
                 saveMedia(playlistSongs, position, llDownload, ivDownloads, 100, ctx, DB)
             }
-            val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val audioPlayerFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val playerPosition: Int = sharedx.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val gsonx = Gson()
@@ -2105,7 +2105,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 mainPlayModel1.imageFile = playlistSongs[position].imageFile
                 mainPlayModel1.audioDuration = playlistSongs[position].audioDuration
                 arrayList2.add(mainPlayModel1)
-                val sharedd: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedd: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val editor = sharedd.edit()
                 val gson = Gson()
                 val jsonx = gson.toJson(arrayList2)
@@ -2330,9 +2330,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun getAllCompletedMedia(audioFlag: String, pID: String, position: Int, ctx: Context, playlistID: String, playlistName: String) {
         var pos = 0
-        val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared: SharedPreferences = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (audioFlag.equals("Downloadlist", ignoreCase = true) && pID.equals(playlistId, ignoreCase = true)) {
             if (isDisclaimer == 1) {

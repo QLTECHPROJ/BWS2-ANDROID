@@ -54,6 +54,10 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
         @Expose
         var imageFile: String? = ""
 
+        @SerializedName("disableAudio")
+        @Expose
+        var disableAudio: String? = ""
+
         @SerializedName("AudioDuration")
         @Expose
         var audioDuration: String? = ""
@@ -87,6 +91,7 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
             iD = `in`.readString()
             name = `in`.readString()
             isPlay = `in`.readString()
+            disableAudio = `in`.readString()
             imageFile = `in`.readString()
             audioFile = `in`.readString()
             audioDuration = `in`.readString()
@@ -102,6 +107,7 @@ class SuggestedModel protected constructor(`in`: Parcel) : Parcelable {
             dest.writeString(iD)
             dest.writeString(name)
             dest.writeString(isPlay)
+            dest.writeString(disableAudio)
             dest.writeString(imageFile)
             dest.writeString(audioFile)
             dest.writeString(audioDuration)

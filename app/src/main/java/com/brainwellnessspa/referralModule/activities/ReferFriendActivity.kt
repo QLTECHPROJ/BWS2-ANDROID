@@ -43,9 +43,9 @@ class ReferFriendActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_refer_friend)
         ctx = this@ReferFriendActivity
         activity = this@ReferFriendActivity
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         UserID = shared.getString(CONSTANTS.PREF_KEY_UserID, "")
-        val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, MODE_PRIVATE)
+        val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE)
         UserPromocode = shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, "")
         ReferLink = shareded.getString(CONSTANTS.PREF_KEY_ReferLink, "")
         p = Properties()

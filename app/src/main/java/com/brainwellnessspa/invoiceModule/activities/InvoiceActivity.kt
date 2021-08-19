@@ -54,7 +54,7 @@ class InvoiceActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice)
         context = this@InvoiceActivity
         activity = this@InvoiceActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
         if (intent != null) {
             comeFrom = intent.getStringExtra("ComeFrom")

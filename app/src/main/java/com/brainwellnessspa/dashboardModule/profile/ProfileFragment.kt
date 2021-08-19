@@ -74,6 +74,8 @@ class ProfileFragment : Fragment() {
     private var mLastClickTime: Long = 0
     private var logoutDialog: Dialog? = null
     lateinit var image: File
+    lateinit var ctx: Context
+    lateinit var act: Activity
     private var mRequestPermissionHandler: RequestPermissionHandler? = null
     private lateinit var options: Array<String>
     var userId: String? = null
@@ -97,6 +99,8 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         val view = binding.root
+        ctx= requireActivity()
+        act = requireActivity()
         val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -155,30 +159,38 @@ class ProfileFragment : Fragment() {
         }
         profileViewData()
         binding.llImageUpload.setOnClickListener {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return@setOnClickListener
-            }
-            mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                selectImage()
-            } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return@setOnClickListener
+                }
+                mLastClickTime = SystemClock.elapsedRealtime()
+                if (isNetworkConnected(requireActivity())) {
+                    selectImage()
+                } else {
+                    showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                }
             }
         }
         val p = Properties()
         addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
         binding.llAcInfo.setOnClickListener {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return@setOnClickListener
-            }
-            mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), AccountInfoActivity::class.java)
-                startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
-            } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
-            }
+             if(IsLock.equals("1")){
+              callEnhanceActivity(ctx, act)
+            }else if(IsLock.equals("0")) {
+                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                     return@setOnClickListener
+                 }
+                 mLastClickTime = SystemClock.elapsedRealtime()
+                 if (isNetworkConnected(requireActivity())) {
+                     val i = Intent(requireActivity(), AccountInfoActivity::class.java)
+                     startActivity(i)
+                     requireActivity().overridePendingTransition(0, 0)
+                 } else {
+                     showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                 }
+             }
         }
 
         binding.llDownloads.setOnClickListener {
@@ -561,7 +573,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         setProfilePic(profilePicPath)
                                     }
 
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared?.edit()
                                     if (editor != null) {
                                         editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
@@ -824,13 +836,13 @@ Tap Setting > permission, and turn "Files and media" on.""")
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
         editorcv.apply()
 
-        val preferreed = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, MODE_PRIVATE)
+        val preferreed = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
         val editeed = preferreed.edit()
         editeed.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)
         editeed.clear()
         editeed.apply()
 
-        val pref = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val pref = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val editt = pref.edit()
         editt.remove(CONSTANTS.PREF_KEY_IsDisclimer)
         editt.clear()

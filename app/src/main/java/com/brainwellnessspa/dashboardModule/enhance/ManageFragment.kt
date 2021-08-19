@@ -95,7 +95,7 @@ class ManageFragment : Fragment() {
 
         DB = getAudioDataBase(ctx)
         getDownloadedList(ctx, DB)
-        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, MODE_PRIVATE)
+        val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleeptime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
         if (sleeptime.equals("", true)) {
@@ -369,7 +369,7 @@ class ManageFragment : Fragment() {
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if ((audioPlayerFlag.equals("MainAudioList", ignoreCase = true) || audioPlayerFlag.equals("ViewAllAudioList", ignoreCase = true)) && playFrom.equals(views, ignoreCase = true)) {
             if (isNetworkConnected(ctx)) {
@@ -517,7 +517,7 @@ class ManageFragment : Fragment() {
                     }
                 }
             } else {
-                val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+                val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                 val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val listModelList2 = arrayListOf<HomeDataModel.ResponseData.Audio.Detail>()
                 for (i in listModelList) {
@@ -672,7 +672,7 @@ class ManageFragment : Fragment() {
                     }
                 }
                 if (audiolistDiff.isNotEmpty()) {
-                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                    val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
@@ -695,7 +695,7 @@ class ManageFragment : Fragment() {
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
                 }
             } else {
-                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
@@ -826,7 +826,7 @@ class ManageFragment : Fragment() {
                                             if (player != null) {
                                                 val lastIndexID = listModel.responseData!!.suggestedPlaylist!!.playlistSongs!![listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!.size - 1].id
                                                 if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
-                                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                                     val editor = shared.edit()
                                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                                     editor.apply()
@@ -963,10 +963,10 @@ class ManageFragment : Fragment() {
             downloadAudioDetailsList = audioList as ArrayList<String>
             Log.e("download audio in fun", downloadAudioDetailsList.toString())
             var pos = 0
-            val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val shared: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             var positionSaved = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-            val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+            val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
             val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
             if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
                 if (isDisclaimer == 1) {
@@ -1065,12 +1065,12 @@ class ManageFragment : Fragment() {
     }
 
     private fun callMainPlayerSuggested(position: Int, views: String?, listModel: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>, ctx: Context, act: Activity, playlistID: String, playlistName: String) {
-        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val myPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE)
+        val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
@@ -1090,7 +1090,7 @@ class ManageFragment : Fragment() {
                             if (position != playerPosition) {
                                 player.seekTo(position, 0)
                                 player.playWhenReady = true
-                                val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                                val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val editor = sharedxx.edit()
                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                                 editor.apply()
@@ -1158,7 +1158,7 @@ class ManageFragment : Fragment() {
                         if (position != playerPosition) {
                             player.seekTo(position, 0)
                             player.playWhenReady = true
-                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+                            val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val editor = sharedxx.edit()
                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
                             editor.apply()
@@ -1229,7 +1229,7 @@ class ManageFragment : Fragment() {
         if (audioc) {
             GlobalInitExoPlayer.callNewPlayerRelease()
         }
-        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val editor = shared.edit()
         val gson = Gson()
 

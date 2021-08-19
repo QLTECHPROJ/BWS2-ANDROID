@@ -338,6 +338,7 @@
                                 android:fontFamily="@font/montserrat_medium"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_8sdp"
+                                android:textAllCaps="true"
                                 tools:ignore="SpUsage" />
 
                         </RelativeLayout>

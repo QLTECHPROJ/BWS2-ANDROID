@@ -77,7 +77,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
-        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@OrderSummaryActivity
@@ -286,7 +286,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             val editor = shared.edit()
             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, sku)
             editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, purchases[0].purchaseToken)

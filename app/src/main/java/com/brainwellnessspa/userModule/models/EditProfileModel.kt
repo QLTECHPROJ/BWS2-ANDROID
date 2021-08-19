@@ -40,5 +40,9 @@ class EditProfileModel {
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = ""
+
+        @SerializedName("ageSlabChange")
+        @Expose
+        var ageSlabChange: String? = ""
     }
 }

@@ -70,7 +70,7 @@ class UserListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_list)
         activity = this@UserListActivity
         ctx = this@UserListActivity
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
@@ -236,7 +236,7 @@ class UserListActivity : AppCompatActivity() {
                                         val listModel: AuthOtpModel = response.body()!!
                                         when {
                                             listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, MODE_PRIVATE)
+                                                val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
                                                 val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
                                                 val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
                                                 IsLock = listModel.ResponseData.Islock
@@ -249,7 +249,7 @@ class UserListActivity : AppCompatActivity() {
                                                 Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
                                                 Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
                                                 logout = false
-                                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                                val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                                 val editor = shared.edit()
                                                 val gson = Gson()
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)

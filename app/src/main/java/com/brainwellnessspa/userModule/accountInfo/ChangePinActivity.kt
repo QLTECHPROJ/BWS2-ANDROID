@@ -83,7 +83,7 @@ class ChangePinActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_pin)
         activity = this@ChangePinActivity
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         val p = Properties()

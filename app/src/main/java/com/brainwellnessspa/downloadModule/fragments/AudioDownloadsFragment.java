@@ -94,7 +94,7 @@ public class AudioDownloadsFragment extends Fragment {
             if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                 int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
 
@@ -134,7 +134,7 @@ public class AudioDownloadsFragment extends Fragment {
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         UserID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         CoUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -194,7 +194,7 @@ public class AudioDownloadsFragment extends Fragment {
 
     private void getDownloadData() {
         try {
-            SharedPreferences sharedy = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            SharedPreferences sharedy = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
             String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
@@ -227,7 +227,7 @@ public class AudioDownloadsFragment extends Fragment {
     @Override
     public void onResume() {
         Gson gson = new Gson();
-        SharedPreferences shared1x = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+        SharedPreferences shared1x = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         String AudioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
         int PlayerPositionx = shared1x.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
         String json = shared1x.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString());
@@ -409,7 +409,7 @@ public class AudioDownloadsFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") ) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
 
             if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -444,7 +444,7 @@ public class AudioDownloadsFragment extends Fragment {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);
                     int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     IsPlayDisclimer = (shared1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -474,7 +474,7 @@ public class AudioDownloadsFragment extends Fragment {
                             listModelList2.addAll(listModelList);
                             DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                             Gson gson = new Gson();
-                            SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                            SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
                             String DisclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString());
                             Type type = new TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio>() {
@@ -530,7 +530,7 @@ public class AudioDownloadsFragment extends Fragment {
                     try {
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             String name = "";
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                             Gson gson = new Gson();
                             String json = shared.getString(CONSTANTS.PREF_KEY_PlayerAudioList, String.valueOf(gson));
                             Type type = new TypeToken<ArrayList<MainPlayModel>>() {
@@ -575,7 +575,7 @@ public class AudioDownloadsFragment extends Fragment {
         private void getMedia(String AudioFlag, int position) {
 
             int pos = 0;
-            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
@@ -698,7 +698,7 @@ public class AudioDownloadsFragment extends Fragment {
                 if (audioc) {
                     callNewPlayerRelease();
                 }
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(listModelList);
@@ -762,7 +762,7 @@ public class AudioDownloadsFragment extends Fragment {
                                         fileNameList.remove(i);
                                         playlistDownloadId.remove(i);
                                         audiofilelist.remove(i);
-                                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         Gson gson = new Gson();
                                         String urlJson = gson.toJson(audiofilelist);
@@ -779,7 +779,7 @@ public class AudioDownloadsFragment extends Fragment {
                     } catch (Exception e) {
                         Log.e("DownloadHangCrash", e.getMessage());
                     }
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                     String AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                     int pos = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
                     try {
@@ -865,7 +865,7 @@ public class AudioDownloadsFragment extends Fragment {
 
         private void callSaveToPref(int position, List<DownloadAudioDetails> listModelList) {
 
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = gson.toJson(listModelList);

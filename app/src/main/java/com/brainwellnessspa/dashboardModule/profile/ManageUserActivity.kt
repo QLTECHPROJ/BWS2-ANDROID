@@ -2,6 +2,7 @@ package com.brainwellnessspa.dashboardModule.profile
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -43,7 +44,7 @@ class ManageUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_enhance_user_list)
 
-        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
