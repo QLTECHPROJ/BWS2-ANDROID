@@ -20,6 +20,7 @@ class PlanDetails {
     @SerializedName("ResponseStatus")
     @Expose
     var responseStatus: String? = ""
+
     class ResponseData {
         @SerializedName("UserId")
         @Expose
@@ -80,5 +81,9 @@ class PlanDetails {
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = ""
+
+        @SerializedName("DeviceType")
+        @Expose
+        var deviceType: String? = ""
     }
 }

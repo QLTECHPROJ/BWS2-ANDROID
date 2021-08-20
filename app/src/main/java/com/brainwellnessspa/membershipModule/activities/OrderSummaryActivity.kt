@@ -109,7 +109,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
         val p = Properties()
 
-        if (!comeFrom.equals("", ignoreCase = true)) {
+        if (!comeFrom.equals("")) {
             val gson: Gson
             val gsonBuilder = GsonBuilder()
             gson = gsonBuilder.create()
@@ -121,10 +121,10 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             p.putValue("plan", gson.toJson(listModelList))
         }
         addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
-        if (!oldPromocode.equals("", ignoreCase = true)) {
+        if (!oldPromocode.equals("")) {
             binding!!.edtCode.setText(oldPromocode)
         }
-        if (!comeFrom.equals("", ignoreCase = true)) {
+        if (!comeFrom.equals("")) {
             binding!!.tvPromoCode.visibility = View.GONE
             binding!!.llPromoCode.visibility = View.GONE
         } else {
@@ -132,7 +132,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             binding!!.llPromoCode.visibility = View.GONE
         }
         try {
-            if (!comeFrom.equals("", ignoreCase = true)) {
+            if (!comeFrom.equals("")) {
                 binding!!.tvTrialPeriod.visibility = View.GONE
                 binding!!.tvPlanInterval.text = listModelList2!![position].planInterval + " Membership"
                 binding!!.tvPlanTenure.text = listModelList2!![position].planTenure
@@ -175,8 +175,9 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             e.printStackTrace()
         }
         binding!!.llBack.setOnClickListener {
-            if (!comeFrom.equals("", ignoreCase = true)) {
+            if (!comeFrom.equals("")) {
                 val i = Intent(ctx, MembershipChangeActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("ComeFrom", comesTrue)
                 startActivity(i)
                 finish()
@@ -228,8 +229,9 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     }
 
     override fun onBackPressed() {
-        if (!comeFrom.equals("", ignoreCase = true)) {
+        if (!comeFrom.equals("")) {
             val i = Intent(ctx, MembershipChangeActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("ComeFrom", comesTrue)
             startActivity(i)
             finish()
@@ -293,7 +295,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             editor.apply()
             Log.e("Purchase Token", purchases[0].purchaseToken)
             val p = Properties()
-            if (!comeFrom.equals("", ignoreCase = true)) {
+            if (!comeFrom.equals("")) {
                 val gson: Gson
                 val gsonBuilder = GsonBuilder()
                 gson = gsonBuilder.create()
@@ -324,14 +326,14 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                     try {
                         hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
                         val listModel: UpdatePlanPurchase = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                             if (isNetworkConnected(ctx)) {
                                 val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(userId)
                                 listCall.enqueue(object : Callback<AuthOtpModel> {
                                     override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                         try {
                                             val authOtpModel: AuthOtpModel = response.body()!!
-                                            if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess))) {
                                                 val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                                 val editor = shared.edit()
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, authOtpModel.ResponseData.MainAccountID)
@@ -361,7 +363,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, authOtpModel.ResponseData.planDetails[0].PlanContent)
                                                     }
-                                                }catch (e:Exception){
+                                                } catch (e: Exception) {
                                                     e.printStackTrace()
                                                 }
                                                 editor.apply()
@@ -378,10 +380,11 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                                 edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
                                                 edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                                                 edited.apply()
-                                            } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                            } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
                                                 deleteCall(activity)
                                                 showToast(authOtpModel.ResponseMessage, activity)
                                                 val i = Intent(activity, SignInActivity::class.java)
+                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                 i.putExtra("mobileNo", "")
                                                 i.putExtra("countryCode", "")
                                                 i.putExtra("name", "")
@@ -401,6 +404,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             }
 
                             val i = Intent(ctx, EnhanceDoneActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("Name", "")
                             i.putExtra("Code", "")
                             i.putExtra("MobileNo", "")
@@ -413,7 +417,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             finish()
 
                             val p = Properties()
-                            if (!comeFrom.equals("", ignoreCase = true)) {
+                            if (!comeFrom.equals("")) {
                                 val gson: Gson
                                 val gsonBuilder = GsonBuilder()
                                 gson = gsonBuilder.create()
@@ -479,7 +483,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                 }
 
                                 override fun onSkuDetailsResponse(p0: BillingResult, p1: MutableList<SkuDetails>?) {
-                                    TODO("Not yet implemented")
+//                                    TODO("Not yet implemented")
                                 }
                             })
                         }

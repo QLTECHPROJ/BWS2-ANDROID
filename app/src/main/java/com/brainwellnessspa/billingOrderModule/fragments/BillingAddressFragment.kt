@@ -1,6 +1,7 @@
 package com.brainwellnessspa.billingOrderModule.fragments
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,6 +28,7 @@ import retrofit2.Response
 class BillingAddressFragment : Fragment() {
     lateinit var binding: FragmentBillingAddressBinding
     var userId: String? = null
+    var coUserId: String? = null
     var userName: String? = null
     var userEmail: String? = null
     var userMobileNumber: String? = null
@@ -40,8 +42,9 @@ class BillingAddressFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_billing_address, container, false)
         val view = binding.root
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1: SharedPreferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.etName.addTextChangedListener(billingTextWatcher)
         binding.etEmail.addTextChangedListener(billingTextWatcher)
         binding.etMobileNumber.addTextChangedListener(billingTextWatcher)

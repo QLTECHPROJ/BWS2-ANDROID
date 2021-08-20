@@ -39,19 +39,19 @@ class ChangePasswordActivity : AppCompatActivity() {
             val currentPaswd: String = binding.etCurrentPswd.text.toString().trim()
             val newPswd: String = binding.etNewPswd.text.toString().trim()
             val confirmPswd: String = binding.etConfirmPswd.text.toString().trim()
-            if (currentPaswd.equals("", ignoreCase = true) && newPswd.equals("", ignoreCase = true) && confirmPswd.equals("", ignoreCase = true)) {
+            if (currentPaswd == "" && newPswd == "" && confirmPswd == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (currentPaswd.equals("", ignoreCase = true)) {
+            } else if (currentPaswd == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (newPswd.equals("", ignoreCase = true)) {
+            } else if (newPswd == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (confirmPswd.equals("", ignoreCase = true)) {
+            } else if (confirmPswd == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -61,7 +61,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)
             }
 
-            if (currentPaswd.equals("", ignoreCase = true)) {
+            if (currentPaswd == "") {
                 binding.ivCurrentPswdVisible.isClickable = false
                 binding.ivCurrentPswdVisible.isEnabled = false
                 binding.ivCurrentPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -76,7 +76,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 binding.ivCurrentPswdInVisible.isEnabled = true
             }
 
-            if (newPswd.equals("", ignoreCase = true)) {
+            if (newPswd == "") {
                 binding.ivNewPswdVisible.isClickable = false
                 binding.ivNewPswdVisible.isEnabled = false
                 binding.ivNewPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -90,7 +90,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 binding.ivNewPswdInVisible.isEnabled = true
             }
 
-            if (confirmPswd.equals("", ignoreCase = true)) {
+            if (confirmPswd == "") {
                 binding.ivConfirmPswdVisible.isClickable = false
                 binding.ivConfirmPswdVisible.isEnabled = false
                 binding.ivConfirmPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -132,7 +132,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.etNewPswd.addTextChangedListener(userTextWatcher)
         binding.etConfirmPswd.addTextChangedListener(userTextWatcher)
 
-        if (binding.etCurrentPswd.text.toString().trim().equals("", ignoreCase = true)) {
+        if (binding.etCurrentPswd.text.toString().trim() == "") {
             binding.ivCurrentPswdVisible.isClickable = false
             binding.ivCurrentPswdVisible.isEnabled = false
             binding.ivCurrentPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -140,7 +140,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.ivCurrentPswdInVisible.isEnabled = false
         }
 
-        if (binding.etNewPswd.text.toString().trim().equals("", ignoreCase = true)) {
+        if (binding.etNewPswd.text.toString().trim() == "") {
             binding.ivNewPswdVisible.isClickable = false
             binding.ivNewPswdVisible.isEnabled = false
             binding.ivNewPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -148,7 +148,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             binding.ivNewPswdInVisible.isEnabled = false
         }
 
-        if (binding.etConfirmPswd.text.toString().trim().equals("", ignoreCase = true)) {
+        if (binding.etConfirmPswd.text.toString().trim() == "") {
             binding.ivConfirmPswdVisible.isClickable = false
             binding.ivConfirmPswdVisible.isEnabled = false
             binding.ivConfirmPswdVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -159,6 +159,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         binding.llBack.setOnClickListener {
             val i = Intent(this, AccountInfoActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
             finish()
         }
@@ -207,7 +208,6 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("SetTextI18n")
     private fun changePassword() {
         if (binding.etCurrentPswd.text.toString() == "") {
             binding.txtCurrentPswdError.text = "Please provide the current password"
@@ -259,7 +259,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                             binding.txtConfirmPswdError.visibility = View.GONE
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePasswordActivity)
                             val listModel: ChangePinModel = response.body()!!
-                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                                 val p = Properties()
                                 BWSApplication.addToSegment("Password Changed", p, CONSTANTS.track)
                                 finish()
@@ -293,6 +293,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val i = Intent(this, AccountInfoActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(i)
         finish()
     }

@@ -244,6 +244,7 @@ class ViewAllPlaylistFragment : Fragment() {
                                 } else if(listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)){
                                     deleteCall(activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -329,6 +330,7 @@ class ViewAllPlaylistFragment : Fragment() {
                 addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 holder.binding.ivLock.visibility = View.GONE
                 val i = Intent(activity, AddPlaylistActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("AudioId", "")
                 i.putExtra("ScreenView", "Playlist View All Screen")
                 i.putExtra("PlaylistID", listModelList[position].playlistID)
@@ -345,6 +347,7 @@ class ViewAllPlaylistFragment : Fragment() {
                     if (myDownloads.equals("1", ignoreCase = true)) {
                         //                            getMedia(listModelList.get(position).getPlaylistID());
                         val i = Intent(activity, DownloadPlaylistActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", listModelList[position].playlistID)
                         i.putExtra("PlaylistName", listModelList[position].playlistName)
@@ -358,6 +361,7 @@ class ViewAllPlaylistFragment : Fragment() {
                     } else {
                         GetPlaylistLibraryID = getLibraryId
                         val i = Intent(activity, MyPlaylistListingActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", listModelList[position].playlistID)
                         i.putExtra("PlaylistName", listModelList[position].playlistName)

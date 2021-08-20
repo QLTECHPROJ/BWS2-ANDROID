@@ -94,6 +94,7 @@ class ChangePinActivity : AppCompatActivity() {
 
         binding.llBack.setOnClickListener {
             val i = Intent(this, AccountInfoActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
             finish()
         }
@@ -166,6 +167,7 @@ class ChangePinActivity : AppCompatActivity() {
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -196,6 +198,7 @@ class ChangePinActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val i = Intent(this, AccountInfoActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(i)
         finish()
     }

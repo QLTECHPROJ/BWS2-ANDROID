@@ -27,6 +27,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -287,25 +288,30 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         }
                         if (signupFlag.equals("1", ignoreCase = true)) {
                             val i = Intent(activity, EmailVerifyActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(i)
                             finish()
                         } else {
                             if (listModel.ResponseData.isMainAccount.equals("0", ignoreCase = true)) {
                                 if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
                                     val i = Intent(activity, EmailVerifyActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(i)
                                     finish()
                                 } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                     val intent = Intent(activity, AssProcessActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     startActivity(intent)
                                     finish()
                                 } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                     val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(intent)
                                     finish()
                                 } else {
                                     val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     intent.putExtra("IsFirst", "1")
                                     startActivity(intent)
                                     finish()
@@ -314,21 +320,31 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             } else {
                                 if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                     val intent = Intent(activity, AssProcessActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                    startActivity(intent)
+                                    finish()
+                                } else if (listModel.ResponseData.planDetails.isEmpty()) {
+                                    IsBackFromEnhance = "1"
+                                    val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(intent)
                                     finish()
                                 } else {
                                     if (listModel.ResponseData.CoUserCount > "0") {
                                         val intent = Intent(activity, UserListActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     } else {
                                         if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             startActivity(intent)
                                             finish()
                                         } else {
                                             val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             intent.putExtra("IsFirst", "1")
                                             startActivity(intent)
                                             finish()
@@ -368,7 +384,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                             }
-                        }catch (e:Exception){
+                        } catch (e: Exception) {
                             Log.e("errr", e.printStackTrace().toString())
                         }
                         editor.apply()

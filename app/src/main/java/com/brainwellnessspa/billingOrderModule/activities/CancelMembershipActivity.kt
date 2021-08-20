@@ -51,6 +51,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
     var stackStatus = 0
     var myBackPress = false
     var screenView: String? = ""
+    var planDeviceType: String? = ""
 
     /* This is the first lunched function */
     @SuppressLint("ClickableViewAccessibility")
@@ -64,6 +65,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        planDeviceType = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanDeviceType, "")
 
         if (intent.extras != null) {
             screenView = intent.getStringExtra("screenView")
@@ -207,6 +209,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                                 }
                                                                 addToSegment("Account Deleted", properties, CONSTANTS.track)
                                                                 val i = Intent(activity, SignInActivity::class.java)
+                                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 i.putExtra("mobileNo", "")
                                                                 i.putExtra("countryCode", "")
                                                                 i.putExtra("name", "")
@@ -219,6 +222,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                                 deleteCall(activity)
                                                                 showToast(listModel.responseMessage, activity)
                                                                 val i = Intent(activity, SignInActivity::class.java)
+                                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 i.putExtra("mobileNo", "")
                                                                 i.putExtra("countryCode", "")
                                                                 i.putExtra("name", "")
@@ -357,15 +361,93 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                     if (cancelId.equals("4", ignoreCase = true) && binding.edtCancelBox.text.toString().equals("", ignoreCase = true)) {
                         showToast("Cancellation reason is required", activity)
                     } else {/*This dialog is cancel membership  */
-                        val dialog = Dialog(ctx)
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                        dialog.setContentView(R.layout.cancel_membership)
-                        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
-                        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                        val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                        val btn = dialog.findViewById<Button>(R.id.Btn)
-                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        if (planDeviceType == "1") {
+                            val dialog = Dialog(ctx)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.cancel_membership)
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
+                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                            val btn = dialog.findViewById<Button>(R.id.Btn)
+                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss()
+                                    if (player != null) {
+                                        if (player.playWhenReady) {
+                                            player.playWhenReady = false
+                                            audioPause = true
+                                        }
+                                    }
+                                    return@setOnKeyListener true
+                                }
+                                false
+                            }
+
+                            /* This click event is called when cancelling subscription */
+                            btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                                when (event.action) {
+                                    MotionEvent.ACTION_DOWN -> {
+                                        val views = view1 as Button
+                                        views.background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(0x77000000, BlendModeCompat.SRC_ATOP)
+
+                                        view1.invalidate()
+                                    }
+                                    MotionEvent.ACTION_UP -> {
+                                        if (isNetworkConnected(ctx)) {
+                                            APINewClient.client.getCancelPlan(userId, cancelId, binding.edtCancelBox.text.toString())?.enqueue(object : Callback<CancelPlanModel?> {
+                                                override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
+                                                    try {
+                                                        val model = response.body()
+                                                        showToast(model!!.responseMessage, activity)
+                                                        try {
+                                                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions?sku=weekly_2_profile&package=com.brainwellnessspa")))
+//                                                        https://play.google.com/store/account/subscriptions
+                                                        } catch (e: ActivityNotFoundException) {
+                                                            showToast("Cant open the browser", activity)
+                                                            e.printStackTrace()
+                                                        }
+                                                        dialog.dismiss()
+                                                        finish()
+                                                        if (player != null) {
+                                                            if (player.playWhenReady) {
+                                                                player.playWhenReady = false
+                                                                audioPause = true
+                                                            }
+                                                        }
+
+                                                        //                                            Properties p = new Properties();
+                                                        //                                            p.putValue("cancelId", cancelId);
+                                                        //                                            p.putValue("cancelReason", CancelReason);
+                                                        //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
+
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
+                                                }
+                                            })
+                                        } else {
+                                            showToast(getString(R.string.no_server_found), activity)
+                                        }
+                                        run {
+                                            val views = view1 as Button
+                                            views.background.clearColorFilter()
+                                            views.invalidate()
+                                        }
+                                    }
+                                    MotionEvent.ACTION_CANCEL -> {
+                                        val views = view1 as Button
+                                        views.background.clearColorFilter()
+                                        views.invalidate()
+                                    }
+                                }
+                                true
+                            }
+
+                            /* This click event is called when not cancelling subscription */
+                            tvGoBack.setOnClickListener {
                                 dialog.dismiss()
                                 if (player != null) {
                                     if (player.playWhenReady) {
@@ -373,85 +455,65 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                         audioPause = true
                                     }
                                 }
-                                return@setOnKeyListener true
                             }
-                            false
-                        }
-
-                        /* This click event is called when cancelling subscription */
-                        btn.setOnTouchListener { view1: View, event: MotionEvent ->
-                            when (event.action) {
-                                MotionEvent.ACTION_DOWN -> {
-                                    val views = view1 as Button
-                                    views.background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(0x77000000, BlendModeCompat.SRC_ATOP)
-
-                                    view1.invalidate()
-                                }
-                                MotionEvent.ACTION_UP -> {
-                                    if (isNetworkConnected(ctx)) {
-                                        APINewClient.client.getCancelPlan(userId, cancelId, binding.edtCancelBox.text.toString())?.enqueue(object : Callback<CancelPlanModel?> {
-                                            override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
-                                                try {
-                                                    val model = response.body()
-                                                    showToast(model!!.responseMessage, activity)
-                                                    try {
-                                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions")))
-                                                    } catch (e: ActivityNotFoundException) {
-                                                        showToast("Cant open the browser",activity)
-                                                        e.printStackTrace()
-                                                    }
-                                                    dialog.dismiss()
-
-                                                    //                                            Properties p = new Properties();
-                                                    //                                            p.putValue("cancelId", cancelId);
-                                                    //                                            p.putValue("cancelReason", CancelReason);
-                                                    //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
-
-                                                    if (player != null) {
-                                                        if (player.playWhenReady) {
-                                                            player.playWhenReady = false
-                                                            audioPause = true
-                                                        }
-                                                    }
-                                                    finish()
-                                                } catch (e: Exception) {
-                                                    e.printStackTrace()
-                                                }
-                                            }
-
-                                            override fun onFailure(call: Call<CancelPlanModel?>, t: Throwable) {
-                                            }
-                                        })
-                                    } else {
-                                        showToast(getString(R.string.no_server_found), activity)
+                            dialog.show()
+                            dialog.setCancelable(false)
+                        }else {
+                            val dialog = Dialog(ctx)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.cancel_membership)
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(activity, R.color.transparent_white)))
+                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                            val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                            tvTitle.text = "You can cancel the plan in your ios account."
+                            tvSubTitle.text = getString(R.string.delete_account_popup_subtitle)
+                            val btn = dialog.findViewById<Button>(R.id.Btn)
+                            btn.text = getString(R.string.ok)
+                            tvGoBack.visibility = View.GONE
+                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss()
+                                    if (player != null) {
+                                        if (player.playWhenReady) {
+                                            player.playWhenReady = false
+                                            audioPause = true
+                                        }
                                     }
-                                    run {
+                                    return@setOnKeyListener true
+                                }
+                                false
+                            }
+
+                            /* This click event is called when cancelling subscription */
+                            btn.setOnTouchListener { view1: View, event: MotionEvent ->
+                                when (event.action) {
+                                    MotionEvent.ACTION_DOWN -> {
+                                        val views = view1 as Button
+                                        views.background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(0x77000000, BlendModeCompat.SRC_ATOP)
+                                        view1.invalidate()
+                                    }
+                                    MotionEvent.ACTION_UP -> {
+                                        dialog.dismiss()
+                                        run {
+                                            val views = view1 as Button
+                                            views.background.clearColorFilter()
+                                            views.invalidate()
+                                        }
+                                    }
+                                    MotionEvent.ACTION_CANCEL -> {
                                         val views = view1 as Button
                                         views.background.clearColorFilter()
                                         views.invalidate()
                                     }
                                 }
-                                MotionEvent.ACTION_CANCEL -> {
-                                    val views = view1 as Button
-                                    views.background.clearColorFilter()
-                                    views.invalidate()
-                                }
+                                true
                             }
-                            true
-                        }
 
-                        /* This click event is called when not cancelling subscription */
-                        tvGoBack.setOnClickListener {
-                            dialog.dismiss()
-                            if (player != null) {
-                                if (player.playWhenReady) {
-                                    player.playWhenReady = false
-                                    audioPause = true
-                                }
-                            }
+                            dialog.show()
+                            dialog.setCancelable(false)
                         }
-                        dialog.show()
-                        dialog.setCancelable(false)
                     }
                 }
             }

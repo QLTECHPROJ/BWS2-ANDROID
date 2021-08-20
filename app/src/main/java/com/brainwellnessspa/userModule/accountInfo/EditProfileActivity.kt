@@ -3,17 +3,25 @@ package com.brainwellnessspa.userModule.accountInfo
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
 import android.widget.DatePicker
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,6 +31,7 @@ import com.brainwellnessspa.BWSApplication.IsLock
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityEditProfileBinding
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.EditProfileModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
@@ -120,6 +129,7 @@ class EditProfileActivity : AppCompatActivity() {
         binding.etEmail.addTextChangedListener(userTextWatcher)
         binding.llBack.setOnClickListener {
             val i = Intent(this, AccountInfoActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
             finish()
         }
@@ -158,19 +168,19 @@ class EditProfileActivity : AppCompatActivity() {
                     dob = spf.format(newDate)
                 }
 
-                if (binding.etUser.text.toString().equals("", ignoreCase = true)) {
+                if (binding.etUser.text.toString().equals("")) {
                     binding.txtNameError.text = getString(R.string.pls_provide_a_name)
                     binding.txtNameError.visibility = View.VISIBLE
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.GONE
                     binding.txtEmailError.visibility = View.GONE
-                } else if (binding.etCalendar.text.toString().equals("", ignoreCase = true)) {
+                } else if (binding.etCalendar.text.toString().equals("")) {
                     binding.txtNameError.visibility = View.GONE
                     binding.txtDobError.visibility = View.VISIBLE
                     binding.txtDobError.text = "Please provide a dob"
                     binding.txtNumberError.visibility = View.GONE
                     binding.txtEmailError.visibility = View.GONE
-                } else if (binding.etMobileNumber.text.toString().equals("", ignoreCase = true)) {
+                } else if (binding.etMobileNumber.text.toString().equals("")) {
                     binding.txtNameError.visibility = View.GONE
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.VISIBLE
@@ -182,7 +192,7 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.txtNumberError.visibility = View.VISIBLE
                     binding.txtNumberError.text = getString(R.string.valid_mobile_number)
                     binding.txtEmailError.visibility = View.GONE
-                } else if (binding.etEmail.text.toString().equals("", ignoreCase = true)) {
+                } else if (binding.etEmail.text.toString().equals("")) {
                     binding.txtNameError.visibility = View.GONE
                     binding.txtDobError.visibility = View.GONE
                     binding.txtNumberError.visibility = View.GONE
@@ -206,29 +216,67 @@ class EditProfileActivity : AppCompatActivity() {
                             when {
                                 viewModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    BWSApplication.showToast(viewModel.responseMessage, activity)
-                                    profileViewData(applicationContext)
-                                    val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                    val editor = shared.edit()
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_DOB, viewModel.responseData!!.dob)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.responseData!!.email)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.responseData!!.phoneNumber)
-                                    editor.apply()
+                                    when {
+                                        viewModel.responseData!!.ageSlabChange.equals("0") -> {
+                                            BWSApplication.showToast(viewModel.responseMessage, activity)
+                                            profileViewData(this@EditProfileActivity)
+                                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                            val editor = shared.edit()
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.responseData!!.name)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_DOB, viewModel.responseData!!.dob)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.responseData!!.email)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.responseData!!.phoneNumber)
+                                            editor.apply()
 
-                                    callIdentify(applicationContext)
-                                    val p = Properties()
-                                    p.putValue("name", viewModel.responseData!!.name)
-                                    p.putValue("dob", viewModel.responseData!!.dob)
-                                    p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
-                                    p.putValue("email", viewModel.responseData!!.email)
-                                    BWSApplication.addToSegment("Profile Changes Saved", p, CONSTANTS.track)
-                                    if(viewModel.responseData!!.ageSlabChange.equals("0")) {
-                                        finish()
-                                    }else if(viewModel.responseData!!.ageSlabChange.equals("1")) {
-                                        // show popup and redirect to sleep time screen
-                                    }else{
-                                        finish()
+                                            callIdentify(applicationContext)
+                                            val p = Properties()
+                                            p.putValue("name", viewModel.responseData!!.name)
+                                            p.putValue("dob", viewModel.responseData!!.dob)
+                                            p.putValue("mobileNo", viewModel.responseData!!.phoneNumber)
+                                            p.putValue("email", viewModel.responseData!!.email)
+                                            BWSApplication.addToSegment("Profile Changes Saved", p, CONSTANTS.track)
+                                            activity.finish()
+                                        }
+                                        viewModel.responseData!!.ageSlabChange.equals("1") -> {
+                                            val dialog = Dialog(this@EditProfileActivity)
+                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                            dialog.setContentView(R.layout.cancel_membership)
+                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@EditProfileActivity, R.color.transparent_white)))
+                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                                            val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                                            val btn = dialog.findViewById<Button>(R.id.Btn)
+                                            tvTitle.text = ""
+                                            tvSubTitle.text = "Changing Date of Birth may cause change in your age category and if this happens, you will be redirected to select your sleep time and area of focus again. Do you wish to continue ?"
+                                            tvGoBack.text = "No"
+                                            tvTitle.visibility = View.GONE
+                                            tvGoBack.visibility = View.GONE
+                                            btn.text = "Ok"
+                                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                    dialog.dismiss()
+                                                    return@setOnKeyListener true
+                                                }
+                                                false
+                                            }
+
+                                            btn.setOnClickListener {
+                                                dialog.dismiss()
+                                                val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                activity.startActivity(intent)
+                                            }
+                                            /* This click event is called when not cancelling subscription */
+                                            tvGoBack.setOnClickListener {
+                                                dialog.dismiss()
+                                            }
+                                            dialog.show()
+                                            dialog.setCancelable(false)
+                                        }
+                                        else -> {
+                                            activity.finish()
+                                        }
                                     }
                                 }
                                 viewModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
@@ -448,6 +496,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val i = Intent(this, AccountInfoActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(i)
         finish()
     }

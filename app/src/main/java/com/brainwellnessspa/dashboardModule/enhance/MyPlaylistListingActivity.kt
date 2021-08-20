@@ -203,6 +203,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.tvSearch.setOnClickListener {
             val i = Intent(ctx, AddAudioActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlaylistID", listModelGlobal.responseData!!.playlistID)
             startActivity(i)
         }
@@ -250,7 +251,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     false
                 }
                 btn.setOnClickListener {
+                    dialog.dismiss()
                     val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(intent)
                 }
                 /* This click event is called when not cancelling subscription */
@@ -266,6 +269,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         binding.ivEditCategory.setOnClickListener {
             val i = Intent(activity, RecommendedCategoryActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("BackClick", "1")
             startActivity(i)
         }
@@ -495,6 +499,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -639,6 +644,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         binding.llDownloads.visibility = View.INVISIBLE
         binding.btnAddAudio.setOnClickListener {
             val i = Intent(ctx, AddAudioActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlaylistID", listModel.playlistID)
             startActivity(i)
         }

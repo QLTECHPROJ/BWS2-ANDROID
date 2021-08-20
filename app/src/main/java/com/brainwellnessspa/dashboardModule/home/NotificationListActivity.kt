@@ -73,7 +73,7 @@ class NotificationListActivity : AppCompatActivity() {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: NotificationlistModel = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                             binding.rvNotiList.layoutManager = LinearLayoutManager(this@NotificationListActivity)
                             if (listModel.responseData!!.isEmpty()) {
                                 binding.llError.visibility = View.VISIBLE
@@ -84,10 +84,11 @@ class NotificationListActivity : AppCompatActivity() {
                                 adapter = NotiListAdapter(listModel.responseData!!, activity)
                                 binding.rvNotiList.adapter = adapter
                             }
-                        } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                        } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted))) {
                             deleteCall(activity)
                             showToast(listModel.responseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")

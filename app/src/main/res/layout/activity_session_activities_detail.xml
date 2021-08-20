@@ -157,7 +157,7 @@
                     <ImageView
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
-                        android:src="@drawable/ic_music_icon"
+                        android:src="@drawable/default_audio_icon"
                         app:tint="@color/black"
                         android:layout_centerInParent="true"
                         android:padding="@dimen/_13sdp"

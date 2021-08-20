@@ -7,6 +7,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
@@ -43,6 +44,7 @@ class MembershipInvoiceFragment : Fragment() {
     private var downloadUrl = ""
     private val downloadFileName = "Invoice"
     private var userId: String? = ""
+    private var coUserId: String? = ""
     private val file_name_path = "BWS"
     private var progressDialog: ProgressDialog? = null
     var downloadIdInvoice = 0
@@ -59,8 +61,9 @@ class MembershipInvoiceFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false)
         val view = binding.root
         val shared1 =
-            requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (arguments != null) {
             memberShipList = requireArguments().getParcelableArrayList("membershipInvoiceFragment")
         }

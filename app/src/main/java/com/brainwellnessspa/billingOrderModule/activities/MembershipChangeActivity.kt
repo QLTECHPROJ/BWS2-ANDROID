@@ -6,6 +6,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -40,6 +41,7 @@ class MembershipChangeActivity : AppCompatActivity() {
     lateinit var binding: ActivityMembershipChangeBinding
     lateinit var ctx: Context
     var userId: String? = null
+    var coUserId: String? = null
     var comeFrom: String? = null
     lateinit var activity: Activity
     var membershipPlanAdapter: MembershipPlanAdapter? = null
@@ -56,8 +58,9 @@ class MembershipChangeActivity : AppCompatActivity() {
         activity = this@MembershipChangeActivity
 
         /* This is the get string userId */
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         binding.llBack.setOnClickListener { callback() }
         notificationStatus = false
 
@@ -95,11 +98,13 @@ class MembershipChangeActivity : AppCompatActivity() {
             }
             comeFrom.equals("", ignoreCase = true) -> {
                 val i = Intent(ctx, BillingOrderActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 finish()
             }
             else -> {
                 val i = Intent(ctx, BillingOrderActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 finish()
             }

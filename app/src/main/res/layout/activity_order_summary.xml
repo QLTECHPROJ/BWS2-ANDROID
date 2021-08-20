@@ -90,7 +90,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.50"
+                        android:layout_weight="0.45"
                         android:orientation="vertical">
 
                         <TextView
@@ -117,7 +117,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.33"
+                        android:layout_weight="0.38"
                         android:gravity="end"
                         android:orientation="vertical">
 
@@ -154,7 +154,7 @@
                     <TextView
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.60"
+                        android:layout_weight="0.50"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="@string/enhance_program"
                         android:textColor="@color/light_gray"
@@ -165,7 +165,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
-                        android:layout_weight="0.40"
+                        android:layout_weight="0.50"
                         android:gravity="end"
                         android:orientation="vertical">
 

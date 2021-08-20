@@ -33,7 +33,8 @@ class ReferFriendActivity : AppCompatActivity() {
     lateinit var activity: Activity
     private var UserPromocode: String? = ""
     private var ReferLink: String? = ""
-    var UserID: String? = ""
+    var userID: String? = ""
+    var coUserID: String? = ""
     var p: Properties? = null
     private var numStarted = 0
     var stackStatus = 0
@@ -43,11 +44,11 @@ class ReferFriendActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_refer_friend)
         ctx = this@ReferFriendActivity
         activity = this@ReferFriendActivity
-        val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        UserID = shared.getString(CONSTANTS.PREF_KEY_UserID, "")
-        val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_Referral, Context.MODE_PRIVATE)
-        UserPromocode = shareded.getString(CONSTANTS.PREF_KEY_UserPromocode, "")
-        ReferLink = shareded.getString(CONSTANTS.PREF_KEY_ReferLink, "")
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserID = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        UserPromocode = shared.getString(CONSTANTS.PREF_KEY_UserPromocode, "")
+        ReferLink = shared.getString(CONSTANTS.PREF_KEY_ReferLink, "")
         p = Properties()
         p!!.putValue("referLink", ReferLink)
         p!!.putValue("userReferCode", UserPromocode)

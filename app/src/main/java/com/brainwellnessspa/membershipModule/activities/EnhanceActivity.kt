@@ -82,8 +82,10 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, OrderSummaryActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         binding.llBack.setOnClickListener {
             if (BWSApplication.IsBackFromEnhance.equals("1")) {
+                BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
                 finishAffinity()
             } else {
                 finish()
@@ -97,12 +99,14 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         binding.tvtncs.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra(CONSTANTS.Web, "Tnc")
             startActivity(i)
         }
 
         binding.tvPrivacyPolicys.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
             startActivity(i)
         }
@@ -416,6 +420,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     override fun onBackPressed() {
         if (BWSApplication.IsBackFromEnhance.equals("1")) {
+            BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
             finishAffinity()
         } else {
             finish()

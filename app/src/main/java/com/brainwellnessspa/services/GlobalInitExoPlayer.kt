@@ -118,7 +118,7 @@ class GlobalInitExoPlayer : Service() {
             @Override
             protected Bitmap doInBackground(String... params) {
                 if (songImg.equalsIgnoreCase("") || !isNetworkConnected(ctx)) {
-                    myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
+                    myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.default_audio_icon);
                 } else {
                     try {
                         URL url = new URL(songImg);
@@ -129,7 +129,7 @@ class GlobalInitExoPlayer : Service() {
                         myBitmap = BitmapFactory.decodeStream(is);
                     } catch (IOException | OutOfMemoryError e) {
                         if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_music_icon);
+                            myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.default_audio_icon);
                         } else {
                             System.out.println(e);
                         }
@@ -146,7 +146,7 @@ class GlobalInitExoPlayer : Service() {
         }*/
             AudioDatabase.databaseWriteExecutor1.execute {
                 if (songImg.equals("", ignoreCase = true) || !isNetworkConnected(ctx)) {
-                    myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+                    myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon)
                 } else {
                     try {
                         val url = URL(songImg)
@@ -156,7 +156,7 @@ class GlobalInitExoPlayer : Service() {
                         myBitmap = BitmapFactory.decodeStream(`is`)
                     } catch (e: IOException) {
                         if (e.message.equals("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/", ignoreCase = true)) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+                            myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon)
                         } else {
                             println(e)
                         }
@@ -900,7 +900,7 @@ class GlobalInitExoPlayer : Service() {
             }
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                return BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+                return BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon)
             }
         }, object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
@@ -946,7 +946,7 @@ class GlobalInitExoPlayer : Service() {
                 }
 
                 try {
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon).toString())
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon).toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -958,7 +958,7 @@ class GlobalInitExoPlayer : Service() {
                 //                    builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,  -1);
                 //                }
                 try {
-                    val icon: Bitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.ic_music_icon)
+                    val icon: Bitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon)
                     builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon)
                 } catch (e: OutOfMemoryError) {
                     e.printStackTrace()

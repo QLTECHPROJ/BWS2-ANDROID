@@ -168,6 +168,7 @@ class ViewAllAudioFragment : Fragment() {
                                 deleteCall(act)
                                 showToast(listModel.responseMessage, act)
                                 val i = Intent(act, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -276,6 +277,7 @@ class ViewAllAudioFragment : Fragment() {
                 p.putValue("sound", hundredVolume.toString())
                 addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 val i = Intent(getActivity(), AddPlaylistActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("AudioId", listModelList[position].iD)
                 i.putExtra("ScreenView", "Audio View All Screen")
                 i.putExtra("PlaylistID", "")

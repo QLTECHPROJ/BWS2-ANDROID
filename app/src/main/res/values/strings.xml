@@ -588,5 +588,6 @@
     <string name="active_since">Active Since</string>
     <string name="price">Price</string>
     <string name="plan">Plan</string>
+    <string name="edit_sleep_time">Edit Sleep Time</string>
 </resources>
 

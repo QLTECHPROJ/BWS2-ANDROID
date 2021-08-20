@@ -52,12 +52,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
     lateinit var catListadapter: SelectedCategory
     var ctx: Context? = null
-    var userId: String? = ""
+    var userId: String? = null
     private var backClick: String? = ""
     lateinit var gsonBuilder: GsonBuilder
-    var sleepTime: String? = ""
-    var coUserId: String? = ""
-    var coEmail: String? = ""
+    var sleepTime: String? = null
+    var coUserId: String? = null
+    var coEmail: String? = null
     private lateinit var adapter1: AllCategory
     lateinit var activity: Activity
     var selectedCategoriesTitle = arrayListOf<String>()
@@ -234,6 +234,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -716,6 +717,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 addToSegment("Area of Focus Saved", p, CONSTANTS.track)
 
                                 val i = Intent(applicationContext, PreparePlaylistActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("BackClick", backClick)
                                 startActivity(i)
                                 finish()
@@ -724,6 +726,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -737,7 +740,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     //show alert popup
                                     val dialog = Dialog(ctx!!)
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                    dialog.setContentView(R.layout.logout_layout)
+                                    dialog.setContentView(R.layout.edit_sleep_layout)
                                     dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx!!, R.color.dark_blue_gray)))
                                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                     val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
@@ -758,6 +761,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     }
                                     btn.setOnClickListener {
                                         val i = Intent(ctx, SleepTimeActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("SleepTime", sleepTime)
                                         startActivity(i)
                                         finish()
@@ -791,6 +795,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         when {
             backClick.equals("0", ignoreCase = true) -> {
                 val i = Intent(ctx, SleepTimeActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("SleepTime", sleepTime)
                 startActivity(i)
                 finish()

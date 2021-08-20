@@ -47,17 +47,20 @@ class EnhanceDoneActivity : AppCompatActivity() {
         p = Properties()
         addToSegment("Thank You Screen Viewed", p, CONSTANTS.screen)
         binding.btnExplore.setOnClickListener {
-            if (isProfileCompleted.equals("0", ignoreCase = true)) {
+            if (isProfileCompleted.equals("0")) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
-            } else if (avgSleepTime.equals("", ignoreCase = true)) {
+            } else if (avgSleepTime.equals("")) {
                 val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
-            } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+            } else if (isProfileCompleted.equals("1") && isAssessmentCompleted.equals("1")) {
                 addToSegment("Explore App Clicked", p, CONSTANTS.track)
                 val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra("IsFirst", "0")
                 startActivity(intent)
                 finish()
@@ -67,6 +70,7 @@ class EnhanceDoneActivity : AppCompatActivity() {
         binding.btnAddCouser.setOnClickListener {
             IsFirstClick = "1"
             val i = Intent(applicationContext, AddCouserActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("IsFirstClick", "1")
             startActivity(i)
             finish()

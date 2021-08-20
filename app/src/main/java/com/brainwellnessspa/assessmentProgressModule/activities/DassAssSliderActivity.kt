@@ -451,6 +451,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
                                 callIdentify(ctx)
                                 val i = Intent(activity, AssProcessActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.ASSPROCESS, "1")
                                 i.putExtra(CONSTANTS.IndexScore, listModel.responseData?.indexScore)
                                 i.putExtra(CONSTANTS.ScoreLevel, listModel.responseData?.scoreLevel)
@@ -462,6 +463,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 BWSApplication.deleteCall(activity)
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")

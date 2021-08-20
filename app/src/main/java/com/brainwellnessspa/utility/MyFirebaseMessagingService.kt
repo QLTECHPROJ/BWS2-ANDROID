@@ -96,7 +96,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
-        editor1.commit()
         fcm_Tocken = token
         sendRegistrationToServer(token)
     }
@@ -105,7 +104,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
-        editor1.commit()
         Log.e(TAGs, "sendRegistrationToServer: $token")
     }
 

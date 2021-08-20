@@ -42,8 +42,8 @@ class FaqActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq)
         activity = this@FaqActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         modelList = ArrayList()
         section = ArrayList()
@@ -75,6 +75,7 @@ class FaqActivity : AppCompatActivity() {
                         }
                     }
                     val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("Flag", "Audio")
                     i.putParcelableArrayListExtra("faqListModel", modelList)
                     startActivity(i)
@@ -98,6 +99,7 @@ class FaqActivity : AppCompatActivity() {
                         }
                     }
                     val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("Flag", "General")
                     i.putExtra("faqListModel", modelList)
                     startActivity(i)
@@ -122,6 +124,7 @@ class FaqActivity : AppCompatActivity() {
                         }
                     }
                     val i = Intent(this@FaqActivity, AudioFaqActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("Flag", "Playlist")
                     i.putExtra("faqListModel", modelList)
                     startActivity(i)

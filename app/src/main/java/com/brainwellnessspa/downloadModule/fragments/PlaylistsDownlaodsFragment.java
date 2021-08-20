@@ -305,7 +305,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f).placeholder(R.drawable.default_audio_icon).error(R.drawable.default_audio_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             //            if (IsLock.equalsIgnoreCase("1")) {
             //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

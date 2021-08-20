@@ -391,6 +391,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                                 p.putValue("medication", medication)
                                 BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
                                 val i = Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 startActivity(i)
                                 finish()
                             }

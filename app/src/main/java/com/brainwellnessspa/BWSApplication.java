@@ -2680,6 +2680,10 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent);
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent);
         edit.remove(CONSTANTS.PREF_KEY_UnLockAudiList);
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanDeviceType);
+        edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin);
+        edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
+        edit.remove(CONSTANTS.PREF_KEY_ReferLink);
         edit.clear();
         edit.apply();
 
@@ -2705,9 +2709,36 @@ public class BWSApplication extends Application {
         editeed.clear();
         editeed.apply();
 
+        SharedPreferences preferrd = context.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editd = preferrd.edit();
+        editd.remove(CONSTANTS.PREF_KEY_SplashKey);
+        editd.clear();
+        editd.apply();
+
+      /*  SharedPreferences preferrer = context.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editerder = preferrer.edit();
+        editerder.remove(CONSTANTS.Token);
+        editerder.clear();
+        editerder.apply();*/
+
+        SharedPreferences preferrerd = context.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editerderd = preferrerd.edit();
+        editerderd.remove(CONSTANTS.PREF_KEY_PlaylistID);
+        editerderd.remove(CONSTANTS.PREF_KEY_PlaylistName);
+        editerderd.remove(CONSTANTS.PREF_KEY_PlaylistDescription);
+        editerderd.remove(CONSTANTS.PREF_KEY_PlaylistType);
+        editerderd.remove(CONSTANTS.PREF_KEY_Totalhour);
+        editerderd.remove(CONSTANTS.PREF_KEY_Totalminute);
+        editerderd.remove(CONSTANTS.PREF_KEY_TotalAudio);
+        editerderd.remove(CONSTANTS.PREF_KEY_ScreenView);
+        editerderd.clear();
+        editerderd.apply();
+
         SharedPreferences pref = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor editt = pref.edit();
         editt.remove(CONSTANTS.PREF_KEY_IsDisclimer);
+        editt.remove(CONSTANTS.PREF_KEY_Disclimer);
+        editt.remove(CONSTANTS.PREF_KEY_UnLockAudiList);
         editt.clear();
         editt.apply();
 
