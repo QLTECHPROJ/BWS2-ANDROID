@@ -158,7 +158,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
                             GlobalInitExoPlayer.callNewPlayerRelease()
                             val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -181,7 +181,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         GlobalInitExoPlayer.callNewPlayerRelease()
                         val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)

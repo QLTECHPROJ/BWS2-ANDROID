@@ -428,7 +428,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     private fun callFourthNext() {
         val p = Properties()
         p.putValue("screen", 3)
-        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
+        addInSegment(p)
         binding.llIndicate.progress = 2
         binding.llSecond.visibility = View.GONE
         binding.llThird.visibility = View.GONE
@@ -468,7 +468,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     private fun callFifthNext() {
         val p = Properties()
         p.putValue("screen", 4)
-        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
+        addInSegment(p)
         binding.llIndicate.progress = 3
         binding.llSecond.visibility = View.GONE
         binding.llThird.visibility = View.GONE
@@ -520,7 +520,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     private fun callSecondNext(s: String) {
         val p = Properties()
         p.putValue("screen", 2)
-        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
+        addInSegment(p)
         binding.btnPrev.visibility = View.VISIBLE
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
@@ -611,7 +611,7 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.btnContinue.visibility = View.GONE
         val p = Properties()
         p.putValue("screen", 1)
-        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
+        addInSegment(p)
         when {
             gender.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
@@ -655,6 +655,10 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
+    }
+
+    private fun addInSegment(p: Properties) {
+        BWSApplication.addToSegment("Profile Query Screen viewed", p, CONSTANTS.screen)
     }
 
     private fun setDate() {

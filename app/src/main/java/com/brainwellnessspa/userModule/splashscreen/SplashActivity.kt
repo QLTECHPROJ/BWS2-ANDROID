@@ -573,7 +573,7 @@ class SplashActivity : AppCompatActivity() {
             analytics = Analytics.Builder(context, segmentKey).use(FirebaseIntegration.FACTORY).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
             Analytics.setSingletonInstance(analytics)
         } catch (e: java.lang.Exception) { //            catch = true;
-            //            Log.e("in Catch", "True");
+            //            Log.e("in Catch", "True");c
             //            Properties p = new Properties();
             //            p.putValue("Application Crashed", e.toString());
             //            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);

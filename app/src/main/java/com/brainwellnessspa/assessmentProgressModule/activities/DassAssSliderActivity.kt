@@ -85,7 +85,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                 }
                 val p = Properties()
                 p.putValue("screen", myPos)
-                BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
+                addInSegment(p)
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                     firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
                     binding.rvFirstList.adapter = firstListAdapter
@@ -115,6 +115,10 @@ class DassAssSliderActivity : AppCompatActivity() {
         prepareData()
     }
 
+    private fun addInSegment(p: Properties) {
+        BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
+    }
+
     /* This is the device back click event */
     override fun onBackPressed() {
         callBack()
@@ -126,7 +130,7 @@ class DassAssSliderActivity : AppCompatActivity() {
             myPos -= 2
             val p = Properties()
             p.putValue("screen", myPos)
-            BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
+            addInSegment(p)
             binding.lpIndicator.progress = myPos //            binding.tvNumberOfQus.text = myPos.toString()
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 binding.btnNext.visibility = View.GONE
@@ -201,7 +205,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                             }
                             val p = Properties()
                             p.putValue("screen", myPos)
-                            BWSApplication.addToSegment(CONSTANTS.Assessment_Screen_Viewed, p, CONSTANTS.screen)
+                            addInSegment(p)
                             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                                 binding.btnNext.visibility = View.GONE
                                 binding.btnContinue.visibility = View.VISIBLE

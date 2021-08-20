@@ -3109,7 +3109,7 @@ public class BWSApplication extends Application {
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             deleteDownloadFile(PlaylistID,CoUserID);
             if (audioList.size() != 0) {
-                GetSingleMedia(audioList.get(0).getAudioFile(), ctx.getApplicationContext(), PlaylistID, audioList, 0,CoUserID);
+                GetSingleMedia(audioList.get(0).getAudioFile(), ctx, audioList, 0,CoUserID);
             }
         });
     }
@@ -3119,7 +3119,7 @@ public class BWSApplication extends Application {
         deletePlaylist(PlaylistId, CoUserID);
     }
 
-    public static void GetSingleMedia(String AudioFile, Context ctx, String playlistID, List<DownloadAudioDetails> audioList, int i,String CoUserID) {
+    public static void GetSingleMedia(String AudioFile, Context ctx, List<DownloadAudioDetails> audioList, int i,String CoUserID) {
         DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe((LifecycleOwner) ctx, audioList1 -> {
             try {
                 if (audioList1.size() != 0) {
@@ -3129,7 +3129,7 @@ public class BWSApplication extends Application {
                 }
 
                 if (i < audioList.size() - 1) {
-                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx.getApplicationContext(), playlistID, audioList, i + 1,CoUserID);
+                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx, audioList, i + 1,CoUserID);
                     Log.e("DownloadMedia Call", String.valueOf(i + 1));
                 }
             } catch (Exception e) {

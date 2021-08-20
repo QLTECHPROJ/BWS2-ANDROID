@@ -128,7 +128,12 @@ class MainPlaylistFragment : Fragment() {
                         if (listModel != null) {
                             if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 binding.rlCreatePlaylist.visibility = View.VISIBLE
-                                listModelGlobal = listModel!!.responseData //                            adapter = new MainPlayListAdapter();
+                                if(IsLock.equals("1")){
+                                    binding.ivLockCreate.visibility = View.VISIBLE
+                                }else if(IsLock.equals("0")){
+                                    binding.ivLockCreate.visibility = View.GONE
+                                }
+                                listModelGlobal = listModel.responseData //                            adapter = new MainPlayListAdapter();
                                 //                            binding.rvMainPlayList.setAdapter(adapter);
 
                                 //                            adapter = new MainPlayListAdapter();
@@ -257,97 +262,101 @@ class MainPlaylistFragment : Fragment() {
                 viewAllPlaylistFragment.arguments = bundle
             }
             binding.rlCreatePlaylist.setOnClickListener {
-                val p = Properties()
-                p.putValue("source", "Playlist Main Screen")
-                addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
-                val dialog = Dialog(ctx)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.create_palylist)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.blue_transparent)))
-                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
-                val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
-                val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
-                edtCreate.clearFocus()
-                val popupTextWatcher: TextWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                    }
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, act)
+                } else if (IsLock.equals("0")) {
+                    val p = Properties()
+                    p.putValue("source", "Playlist Main Screen")
+                    addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
+                    val dialog = Dialog(ctx)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.create_palylist)
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.blue_transparent)))
+                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    val edtCreate = dialog.findViewById<EditText>(R.id.edtCreate)
+                    val tvCancel = dialog.findViewById<TextView>(R.id.tvCancel)
+                    val btnSendCode = dialog.findViewById<Button>(R.id.btnSendCode)
+                    edtCreate.clearFocus()
+                    val popupTextWatcher: TextWatcher = object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                        }
 
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                        val number = edtCreate.text.toString().trim { it <= ' ' }
-                        if (number.isNotEmpty()) {
-                            btnSendCode.isEnabled = true
-                            btnSendCode.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-                            btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
+                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                            val number = edtCreate.text.toString().trim { it <= ' ' }
+                            if (number.isNotEmpty()) {
+                                btnSendCode.isEnabled = true
+                                btnSendCode.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+                                btnSendCode.setBackgroundResource(R.drawable.white_round_cornor)
+                            } else {
+                                btnSendCode.isEnabled = false
+                                btnSendCode.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+                                btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
+                            }
+                        }
+
+                        override fun afterTextChanged(s: Editable) {}
+                    }
+                    edtCreate.addTextChangedListener(popupTextWatcher)
+                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+                            return@setOnKeyListener true
+                        }
+                        false
+                    }
+                    btnSendCode.setOnClickListener {
+                        if (isNetworkConnected(ctx)) {
+                            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            val listCall = APINewClient.client.getCreatePlaylist(CoUserID, edtCreate.text.toString())
+                            listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
+                                override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
+                                    try {
+                                        val listModel = response.body()
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        if (listModel != null) {
+                                            if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
+                                                    showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
+                                                } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
+                                                    val p = Properties()
+                                                    p.putValue("source", "Playlist Main Screen")
+                                                    p.putValue("playlistId", listModel.responseData!!.playlistID)
+                                                    p.putValue("playlistName", listModel.responseData!!.playlistName)
+                                                    addToSegment(" Playlist Created", p, CONSTANTS.track)
+
+                                                    MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
+                                                    dialog.dismiss()
+                                                }
+                                            } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                                deleteCall(act)
+                                                showToast(listModel.responseMessage, act)
+                                                val i = Intent(act, SignInActivity::class.java)
+                                                i.putExtra("mobileNo", "")
+                                                i.putExtra("countryCode", "")
+                                                i.putExtra("name", "")
+                                                i.putExtra("email", "")
+                                                i.putExtra("countryShortName", "")
+                                                act.startActivity(i)
+                                                act.finish()
+                                            }
+                                        }
+                                    } catch (e: java.lang.Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                }
+                            })
                         } else {
-                            btnSendCode.isEnabled = false
-                            btnSendCode.setTextColor(ContextCompat.getColor(ctx, R.color.white))
-                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     }
-
-                    override fun afterTextChanged(s: Editable) {}
+                    tvCancel.setOnClickListener { dialog.dismiss() }
+                    dialog.show()
+                    dialog.setCancelable(false)
                 }
-                edtCreate.addTextChangedListener(popupTextWatcher)
-                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        return@setOnKeyListener true
-                    }
-                    false
-                }
-                btnSendCode.setOnClickListener {
-                    if (isNetworkConnected(ctx)) {
-                        showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listCall = APINewClient.client.getCreatePlaylist(CoUserID, edtCreate.text.toString())
-                        listCall.enqueue(object : Callback<CreateNewPlaylistModel?> {
-                            override fun onResponse(call: Call<CreateNewPlaylistModel?>, response: Response<CreateNewPlaylistModel?>) {
-                                try {
-                                    val listModel = response.body()
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                    if (listModel != null) {
-                                        if (listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                            if (listModel.responseData!!.iscreate.equals("0", ignoreCase = true)) {
-                                                showToast(listModel.responseMessage, act) //                                            dialog.dismiss()
-                                            } else if (listModel.responseData!!.iscreate.equals("1", ignoreCase = true) || listModel.responseData!!.iscreate.equals("", ignoreCase = true)) {
-                                                val p = Properties()
-                                                p.putValue("source", "Playlist Main Screen")
-                                                p.putValue("playlistId", listModel.responseData!!.playlistID)
-                                                p.putValue("playlistName",listModel.responseData!!.playlistName)
-                                                addToSegment(" Playlist Created", p, CONSTANTS.track)
-
-                                                MainPlaylistFragment().callMyPlaylistsFragment("1", listModel.responseData!!.playlistID.toString(), listModel.responseData!!.playlistName.toString(), "", "0", "Your Created", act, ctx)
-                                                dialog.dismiss()
-                                            }
-                                        } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                            deleteCall(act)
-                                            showToast(listModel.responseMessage, act)
-                                            val i = Intent(act, SignInActivity::class.java)
-                                            i.putExtra("mobileNo", "")
-                                            i.putExtra("countryCode", "")
-                                            i.putExtra("name", "")
-                                            i.putExtra("email", "")
-                                            i.putExtra("countryShortName", "")
-                                            act.startActivity(i)
-                                            act.finish()
-                                        }
-                                    }
-                                } catch (e: java.lang.Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<CreateNewPlaylistModel?>, t: Throwable) {
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                            }
-                        })
-                    } else {
-                        showToast(ctx.getString(R.string.no_server_found), act)
-                    }
-                }
-                tvCancel.setOnClickListener { dialog.dismiss() }
-                dialog.show()
-                dialog.setCancelable(false)
             }
             val manager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
             holder.binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
@@ -407,7 +416,9 @@ class MainPlaylistFragment : Fragment() {
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             if (IsLock.equals("1")) {
                 holder.binding.ivLock.visibility = View.VISIBLE
-            } else {
+            }else if (IsLock.equals("0")) {
+                holder.binding.ivLock.visibility = View.GONE
+            }else {
                 holder.binding.ivLock.visibility = View.GONE
             }
             if (index == position) {

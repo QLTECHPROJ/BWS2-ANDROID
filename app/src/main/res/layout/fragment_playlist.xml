@@ -99,7 +99,7 @@
                                 android:layout_marginEnd="@dimen/_13sdp"
                                 android:contentDescription="@string/todo"
                                 android:src="@drawable/ic_lock_icon"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                             <TextView
                                 android:layout_width="wrap_content"

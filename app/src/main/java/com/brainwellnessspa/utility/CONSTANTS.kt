@@ -219,7 +219,7 @@ object CONSTANTS {
     const val Assessment_Start_Screen_Viewed = "Assessment Start Screen Viewed"
     const val Email_Sent_Screen_Viewed = "Email Sent Screen Viewed"
     const val User_Sign_up = "User Sign up"
-    const val User_Login = "User Login"
+    const val User_Login   = "User Login"
     const val Resend_OTP_Clicked ="Resend OTP Clicked"
 
 }

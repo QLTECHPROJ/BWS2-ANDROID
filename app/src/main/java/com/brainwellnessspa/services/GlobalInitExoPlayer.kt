@@ -374,7 +374,7 @@ class GlobalInitExoPlayer : Service() {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-              /*  if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+              /*  if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "start")
                         Log.e("User Track ", "Start Global Done")
@@ -500,7 +500,7 @@ class GlobalInitExoPlayer : Service() {
                 } else if (state == ExoPlayer.STATE_ENDED) {
                     Log.e("STATE_ENDED"," Global onPlaybackStateChanged Done")
                     try {
-                        /*if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                        /*if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                             if (playFrom.equals("Suggested", ignoreCase = true)) {
                                 getUserActivityCall(ctx, mainPlayModelList1[player.currentWindowIndex].id, mainPlayModelList1[player.currentWindowIndex].playlistID, "complete")
                                 Log.e("User Track ", "End Global Done")

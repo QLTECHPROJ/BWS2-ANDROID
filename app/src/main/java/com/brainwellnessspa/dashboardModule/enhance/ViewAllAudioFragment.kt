@@ -20,7 +20,6 @@ import com.brainwellnessspa.BWSApplication.isDisclaimer
 import com.brainwellnessspa.R
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
-import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel.ResponseData.DisclaimerAudio
 import com.brainwellnessspa.dashboardModule.models.SegmentAudio
 import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
@@ -55,10 +54,10 @@ class ViewAllAudioFragment : Fragment() {
     var userName: String? = null
     var audioList: List<DownloadAudioDetails>? = null
     lateinit var ctx: Context
-    lateinit var activity: Activity
+    lateinit var act: Activity
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ctx = requireActivity()
-        activity = requireActivity()
+        act = requireActivity()
         val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -166,16 +165,16 @@ class ViewAllAudioFragment : Fragment() {
                                 val adapter = AudiolistAdapter(listModel.responseData?.details)
                                 binding.rvMainAudio.adapter = adapter
                             } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                                deleteCall(act)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(act, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
                                 i.putExtra("email", "")
                                 i.putExtra("countryShortName", "")
                                 startActivity(i)
-                                activity.finish()
+                                act.finish()
                             }
                         }
                     } catch (e: Exception) {
@@ -232,7 +231,11 @@ class ViewAllAudioFragment : Fragment() {
             Glide.with(requireActivity()).load(listModelList?.get(position)?.imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(38))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             holder.binding.llMore.visibility = View.VISIBLE
             holder.binding.llMore.setOnClickListener {
-                callAudioDetails(listModelList?.get(position)?.iD, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, act)
+                } else if (IsLock.equals("0")) {
+                    callAudioDetails(listModelList?.get(position)?.iD, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
+                }
             }
             if (listModelList!![position].isPlay.equals("0")) {
                 holder.binding.ivLock.visibility = View.VISIBLE
@@ -248,7 +251,7 @@ class ViewAllAudioFragment : Fragment() {
 
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (listModelList[position].isPlay.equals("0")) {
-                    callEnhanceActivity(ctx,activity)
+                    callEnhanceActivity(ctx,act)
                 } else {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
@@ -284,7 +287,7 @@ class ViewAllAudioFragment : Fragment() {
             }
             holder.binding.rlMainLayout.setOnClickListener {
                 if (listModelList[position].isPlay.equals("0")) {
-                callEnhanceActivity(ctx,activity)
+                callEnhanceActivity(ctx,act)
             } else {
                 callMainTransFrag(position)
             }
@@ -310,7 +313,7 @@ class ViewAllAudioFragment : Fragment() {
                                     audioClick = true
                                 }
                                 callMyPlayer()
-                                showToast("The audio shall start playing after the disclaimer", activity)
+                                showToast("The audio shall start playing after the disclaimer", act)
                             } else {
                                 if (player != null) {
                                     if (position != playerPosition) {
@@ -385,7 +388,7 @@ class ViewAllAudioFragment : Fragment() {
                                 audioClick = true
                             }
                             callMyPlayer()
-                            showToast("The audio shall start playing after the disclaimer", activity)
+                            showToast("The audio shall start playing after the disclaimer", act)
                         } else {
                             if (player != null) {
                                 if (position != playerPosition) {
@@ -456,7 +459,7 @@ class ViewAllAudioFragment : Fragment() {
                                 audioClick = true
                             }
                             callMyPlayer()
-                            showToast("The audio shall start playing after the disclaimer", activity)
+                            showToast("The audio shall start playing after the disclaimer", act)
                         } else {
                             if (player != null) {
                                 if (position != playerPosition) {
@@ -540,7 +543,7 @@ class ViewAllAudioFragment : Fragment() {
                             miniPlayer = 1
                         }
                         callMyPlayer()
-                        showToast("The audio shall start playing after the disclaimer", activity)
+                        showToast("The audio shall start playing after the disclaimer", act)
                     } else {
                         val listModelList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
                         for (i in listModelList?.indices!!) {
@@ -554,12 +557,12 @@ class ViewAllAudioFragment : Fragment() {
                                 callPlayer(pos, listModelList2, true)
                             } else {
                                 //                                pos = 0;
-                                showToast(ctx.getString(R.string.no_server_found), activity)
+                                showToast(ctx.getString(R.string.no_server_found), act)
                             }
                         }
                         if (listModelList2.size == 0) {
                             //                                callTransFrag(pos, listModelList2, true);
-                            showToast(ctx.getString(R.string.no_server_found), activity)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     }
                 } else {
@@ -611,18 +614,18 @@ class ViewAllAudioFragment : Fragment() {
                                 if (listModelList2.size != 0) {
                                     callPlayer(pos, listModelList2, audioc)
                                 } else {
-                                    showToast(ctx.getString(R.string.no_server_found), activity)
+                                    showToast(ctx.getString(R.string.no_server_found), act)
                                 }
                             } else if (listModelList2[pos].audioFile.equals("", ignoreCase = true) && listModelList2.size > 1) {
                                 callPlayer(pos, listModelList2, audioc)
                             } else {
-                                showToast(ctx.getString(R.string.no_server_found), activity)
+                                showToast(ctx.getString(R.string.no_server_found), act)
                             }
                         } else {
-                            showToast(ctx.getString(R.string.no_server_found), activity)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else {
-                        showToast(ctx.getString(R.string.no_server_found), activity)
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 }
             })
@@ -632,7 +635,7 @@ class ViewAllAudioFragment : Fragment() {
             val i = Intent(ctx, MyPlayerActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
             ctx.startActivity(i)
-            activity.overridePendingTransition(0, 0)
+            act.overridePendingTransition(0, 0)
         }
 
         private fun callPlayer(position1: Int, listModel: ArrayList<ViewAllAudioListModel.ResponseData.Detail>, audioc: Boolean) {

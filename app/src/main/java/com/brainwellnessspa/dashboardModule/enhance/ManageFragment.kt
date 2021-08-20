@@ -675,7 +675,7 @@ class ManageFragment : Fragment() {
                     val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
                             GlobalInitExoPlayer.callNewPlayerRelease()
                             val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
@@ -698,7 +698,7 @@ class ManageFragment : Fragment() {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         GlobalInitExoPlayer.callNewPlayerRelease()
                         val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)

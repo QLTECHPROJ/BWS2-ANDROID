@@ -63,9 +63,9 @@ class ViewAllPlaylistFragment : Fragment() {
             name = requireArguments().getString("Name")
             myDownloads = requireArguments().getString("MyDownloads")
         }
-        requireView().isFocusableInTouchMode = true
-        requireView().requestFocus()
-        requireView().setOnKeyListener { _: View?, keyCode: Int, event: KeyEvent ->
+        binding.root.isFocusableInTouchMode = true
+        binding.root.requestFocus()
+        binding.root.setOnKeyListener { _: View?, keyCode: Int, event: KeyEvent ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack()
                 return@setOnKeyListener true

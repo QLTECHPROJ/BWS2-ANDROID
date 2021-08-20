@@ -181,7 +181,8 @@ class MyPlayerActivity : AppCompatActivity() {
             p.putValue("sound", hundredVolume.toString())
             addToSegment("Notification Player Clicked", p, CONSTANTS.track)
         }
-
+        localIntent = Intent("play_pause_Action")
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
         /* register local broadcast for receive when user delete audio from audio detail*/
         LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
 
@@ -256,6 +257,20 @@ class MyPlayerActivity : AppCompatActivity() {
 
     /* main make array function for get player array data */
     private fun makePlayerArray() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val packageName = ctx.packageName
+            val pm = ctx.getSystemService(POWER_SERVICE) as PowerManager
+            val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
+            if (!isIgnoringBatteryOptimizations) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                //                                    registerForActivityResult()
+                startActivityForResult(intent, 15695)
+                //                ctx.startActivity(intent)
+                //                    ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS), 15695)
+            }
+        }
         val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
         audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -443,33 +458,9 @@ class MyPlayerActivity : AppCompatActivity() {
                 editor.apply()
             }
         }
-        //        binding.tvDireName.setText(R.string.Directions);
-        //        callButtonText(position);
-        //        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
-        //            initializePlayerDisclaimer();
-        //        } else {
-        //            initializePlayer();
-        //        }
-
-
-//        private fun askBatteryOptimizations() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val packageName = ctx.packageName
-                val pm = ctx.getSystemService(POWER_SERVICE) as PowerManager
-                val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
-                if (!isIgnoringBatteryOptimizations) {
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                    intent.data = Uri.parse("package:$packageName")
-//                                    registerForActivityResult()
-                    startActivityForResult(intent, 15695)
-                    //                ctx.startActivity(intent)
-//                    ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS), 15695)
-                }
-            }
-//        }
-
-
+        getDownloadData()
+        if (!audioClick) getPrepareShowData()
+        else callButtonText(position)
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -775,6 +766,8 @@ class MyPlayerActivity : AppCompatActivity() {
 
     /* main function for prepare player*/
     private fun getPrepareShowData() {
+        localIntent = Intent("play_pause_Action")
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
         callButtonText(position)
         if (mainPlayModelList[position].id.equals("0", ignoreCase = true)) {
             //            localIntent1 = Intent("descIssue")
@@ -817,6 +810,7 @@ class MyPlayerActivity : AppCompatActivity() {
         /*download button click*/
         binding.llDownload.setOnClickListener {
             if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx,act)
             } else if (IsLock.equals("0")) {
                 if (isNetworkConnected(ctx)) {
                     if (mainPlayModelList[position].id != "0") callDownload()
@@ -908,7 +902,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 if((String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx), TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx)))) == (String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.duration), TimeUnit.MILLISECONDS.toSeconds(player.duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.duration))))){
                     Log.e("STATE_ENDED ", "My Player onPlaybackStateChanged Done")
                     //                        try {
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
@@ -1042,7 +1036,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     if (uiModeManager.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
                         uiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
                     }
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "start")
@@ -1123,7 +1117,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     } else if (state == ExoPlayer.STATE_ENDED) {
                         Log.e("STATE_ENDED ", "My Player onPlaybackStateChanged Done")
                         try {
-                            if (audioPlayerFlag.equals("playlist", ignoreCase = true)) {
+                            if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                                 if (playFrom.equals("Suggested", ignoreCase = true)) {
                                     val global = GlobalInitExoPlayer()
                                     global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
