@@ -32,6 +32,7 @@ import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding
 import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
+import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -231,6 +232,9 @@ class MainPlaylistFragment : Fragment() {
     }
 
     override fun onResume() {
+        var gb = GlobalInitExoPlayer()
+        gb.UpdateMiniPlayer(ctx,act)
+        gb.UpdateNotificationAudioPLayer(ctx)
         prepareData("onResume")
         super.onResume()
     }

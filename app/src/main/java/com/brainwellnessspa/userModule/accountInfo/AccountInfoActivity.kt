@@ -17,12 +17,16 @@ import com.segment.analytics.Properties
 class AccountInfoActivity : AppCompatActivity() {
     lateinit var binding: ActivityAccountInfoBinding
     var userId: String? = ""
+    lateinit var ctx: Context
+    lateinit var act :AccountInfoActivity
     var coUserId: String? = ""
     var isPinSet: String? = ""
     var isMainAccount: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_account_info)
+        ctx = this@AccountInfoActivity
+        act = this@AccountInfoActivity
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -43,12 +47,16 @@ class AccountInfoActivity : AppCompatActivity() {
 
 
         binding.llEtProfile.setOnClickListener {
-            if (isNetworkConnected(this)) {
-                val i = Intent(this, EditProfileActivity::class.java)
-                startActivity(i)
-                finish()
-            } else {
-                showToast(getString(R.string.no_server_found), this)
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(this)) {
+                    val i = Intent(this, EditProfileActivity::class.java)
+                    startActivity(i)
+                    finish()
+                } else {
+                    showToast(getString(R.string.no_server_found), this)
+                }
             }
         }
 

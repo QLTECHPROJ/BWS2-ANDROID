@@ -987,50 +987,37 @@ class GlobalInitExoPlayer : Service() {
         var AudioFlag = "0"
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val expDate = shared1x.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
-        //            expDate = "2020-09-29 06:34:10";
-        Log.e("Exp Date !!!!", expDate!!)
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        var Expdate = Date()
-        try {
-            Expdate = format.parse(expDate)
-            Log.e("Exp Date Expdate!!!!", Expdate.toString())
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
+        val c1: Calendar = Calendar.getInstance()
+        c1.timeInMillis = expDate!!.toInt() * 1000L
+        val d1: Date = c1.time
+//        val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+        val sdf12 = SimpleDateFormat("z", Locale.ENGLISH)
+//        var Expdate = sdf1.format(d1)
+//        var s = sdf12.format(d1)
+//        Log.e("Exp Date Expdate!!!!", Expdate.toString())
+//        Log.e("Exp Date time zone !!!!",s)
         val simpleDateFormat1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        simpleDateFormat1.timeZone = TimeZone.getTimeZone("UTC")
+        simpleDateFormat1.timeZone = TimeZone.getTimeZone(sdf12.format(d1))
         val currdate = Calendar.getInstance().time
-        var currdate1 = Date()
-        val currantDateTime = simpleDateFormat1.format(currdate)
-        try {
-            currdate1 = format.parse(currantDateTime)
-            Log.e("currant currdate !!!!", currdate1.toString())
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-        Log.e("currant Date !!!!", currantDateTime)
+//        Log.e("currant Date !!!!", currdate.toString())
         when {
-            Expdate.before(currdate1) -> {
-                Log.e("app", "Date1 is before Date2")
+            d1.before(currdate) -> {
+//                Log.e("app", "Date1 is before Date2")
                 IsLock = "1"
             }
-            Expdate.after(currdate1) -> {
-                Log.e("app", "Date1 is after Date2")
+            d1.after(currdate) -> {
+//                Log.e("app", "Date1 is after Date2")
                 IsLock = "0"
             }
-            Expdate === currdate1 -> {
-                Log.e("app", "Date1 is equal Date2")
+            d1 === currdate -> {
+//                Log.e("app", "Date1 is equal Date2")
                 IsLock = "1"
             }
         }
         try {
             val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")!!
-            val shared2 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-//            val UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "")
-            val gson1 = Gson()
-            val type1 = object : TypeToken<List<String?>?>() {}.type
-//            val UnlockAudioList = gson1.fromJson<List<String?>>(UnlockAudioLists, type1)
+
             if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true) || AudioFlag.equals("SearchAudio", ignoreCase = true) || AudioFlag.equals("SearchModelAudio", ignoreCase = true))) {
                 val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val gson = Gson()
@@ -1299,8 +1286,8 @@ class GlobalInitExoPlayer : Service() {
         try {
             mediaSession = MediaSessionCompat(ctx, ctx.packageName)
             mediaSession.isActive = true
-            playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
             if (player != null) {
+                playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
                 //            mediaSession.setPlaybackState(
                 //                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
                 //                        player.getCurrentPosition(),1 )

@@ -408,6 +408,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             i.putExtra("TrialPeriod", trialPeriod)
                             i.putExtra("position", position)
                             i.putExtra("Promocode", promocode)
+                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(i)
                             finish()
 

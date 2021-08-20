@@ -176,21 +176,17 @@ class ProfileFragment : Fragment() {
         val p = Properties()
         addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
         binding.llAcInfo.setOnClickListener {
-             if(IsLock.equals("1")){
-              callEnhanceActivity(ctx, act)
-            }else if(IsLock.equals("0")) {
-                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                     return@setOnClickListener
-                 }
-                 mLastClickTime = SystemClock.elapsedRealtime()
-                 if (isNetworkConnected(requireActivity())) {
-                     val i = Intent(requireActivity(), AccountInfoActivity::class.java)
-                     startActivity(i)
-                     requireActivity().overridePendingTransition(0, 0)
-                 } else {
-                     showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
-                 }
-             }
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
+            if (isNetworkConnected(requireActivity())) {
+                val i = Intent(requireActivity(), AccountInfoActivity::class.java)
+                startActivity(i)
+                requireActivity().overridePendingTransition(0, 0)
+            } else {
+                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+            }
         }
 
         binding.llDownloads.setOnClickListener {

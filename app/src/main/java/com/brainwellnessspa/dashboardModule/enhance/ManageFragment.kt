@@ -730,7 +730,7 @@ class ManageFragment : Fragment() {
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
-                    if (listModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                    if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                         getDownloadedList(requireActivity(), DB)
                         Log.e("download audio", downloadAudioDetailsList.toString())
                         binding.llMainLayout.visibility = View.VISIBLE
@@ -855,7 +855,7 @@ class ManageFragment : Fragment() {
                         }
 
                         callObserverMethod(listModel.responseData!!.audio, act, DB)
-                    } else if (listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                    } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                         deleteCall(act)
                         showToast(listModel.responseMessage, act)
                         val i = Intent(act, SignInActivity::class.java)

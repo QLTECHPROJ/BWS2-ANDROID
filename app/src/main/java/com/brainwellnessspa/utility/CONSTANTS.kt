@@ -39,6 +39,7 @@ object CONSTANTS {
     const val MONTH_DATE_YEAR_FORMAT = "MMM dd, yyyy"
     const val DATE_MONTH_YEAR_FORMAT = "dd MMM, yyyy"
     const val DATE_MONTH_YEAR_FORMAT_TIME = "dd MMM, yyyy hh:mm:ss aa"
+    const val DATE_MONTH_YEAR_FORMAT_TIME_with_Timzone = "yyyy-MM-dd HH:mm:ssZZ"
     const val SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
     const val TWENTY_FOUR_HH_MM_FORMAT = "HH:mm"
     var ScreenView = "ScreenView"

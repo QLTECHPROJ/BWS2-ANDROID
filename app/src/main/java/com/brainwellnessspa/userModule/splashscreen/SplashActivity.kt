@@ -557,6 +557,7 @@ class SplashActivity : AppCompatActivity() {
                         }
                     } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
                         val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                         startActivity(intent)
                         finish()
                     }

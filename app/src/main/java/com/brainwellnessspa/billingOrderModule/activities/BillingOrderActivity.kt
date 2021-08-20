@@ -140,14 +140,14 @@ class BillingOrderActivity : AppCompatActivity() {
                             binding.tvPlan.text = listModel.responseData!!.planName
                             binding.tvPrice.text = "$" + listModel.responseData!!.price +" "+ listModel.responseData!!.intervalTime
                             val c: Calendar = Calendar.getInstance()
-                            c.setTimeInMillis(listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L)
-                            val d: Date = c.getTime()
+                            c.timeInMillis = listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L
+                            val d: Date = c.time
                             val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
                             binding.tvActive.text =  sdf.format(d)
 
                             val c1: Calendar = Calendar.getInstance()
-                            c1.setTimeInMillis(listModel.responseData!!.planExpireDate!!.toInt() * 1000L)
-                            val d1: Date = c1.getTime()
+                            c1.timeInMillis = listModel.responseData!!.planExpireDate!!.toInt() * 1000L
+                            val d1: Date = c1.time
                             val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
                             binding.tvStatusRenew.text =  "(Renew " + sdf1.format(d1) + ")"
 
