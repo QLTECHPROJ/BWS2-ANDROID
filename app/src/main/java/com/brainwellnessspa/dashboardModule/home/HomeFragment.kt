@@ -414,16 +414,16 @@ class HomeFragment : Fragment() {
 
         /* Notification ball icon click */
         binding.llNotification.setOnClickListener {
-            if(IsLock.equals("1")){
-              callEnhanceActivity(ctx, act)
-            }else if(IsLock.equals("0")) {
-                if (isNetworkConnected(activity)) {
-                    val i = Intent(requireActivity(), NotificationListActivity::class.java)
-                    startActivity(i)
-                } else {
-                    showToast(getString(R.string.no_server_found), activity)
-                }
+            //            if(IsLock.equals("1")){
+            //              callEnhanceActivity(ctx, act)
+            //            }else if(IsLock.equals("0")) {
+            if (isNetworkConnected(activity)) {
+                val i = Intent(requireActivity(), NotificationListActivity::class.java)
+                startActivity(i)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
             }
+            //            }
         }
         return view
     }
