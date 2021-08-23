@@ -491,7 +491,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         String json11 = gson.toJson(listModelList);
         editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11);
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, PlaylistID);
+        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID);
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, PlaylistName);
         if(Created.equals("2")){
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested");
@@ -612,8 +612,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
-            String MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
-            String PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
             int PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
             if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                 if (PlayerAudioId.equalsIgnoreCase(mData.get(position).getID())) {

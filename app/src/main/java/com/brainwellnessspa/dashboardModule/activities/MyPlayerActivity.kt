@@ -420,7 +420,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     mainPlayModel.id = arrayList[i]!!.ID!!
                     mainPlayModel.name = arrayList[i]!!.Name!!
                     mainPlayModel.audioFile = arrayList[i]!!.AudioFile!!
-                    mainPlayModel.playlistID = ""
+                    mainPlayModel.playlistID = playerPlaylistID!!
                     mainPlayModel.audioDirection = arrayList[i]!!.AudioDirection!!
                     mainPlayModel.audiomastercat = arrayList[i]!!.Audiomastercat!!
                     mainPlayModel.audioSubCategory = arrayList[i]!!.AudioSubCategory!!

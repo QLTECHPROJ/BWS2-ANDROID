@@ -442,10 +442,11 @@ class DassAssSliderActivity : AppCompatActivity() {
                                         p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% ")
                                     }
                                     listModel.responseData?.scoreIncDec.equals("Increase", ignoreCase = true) -> {
-                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff + "% " + listModel.responseData?.scoreIncDec)
+                                        p.putValue("improvementFromPreviousSession", "+ " + listModel.responseData?.indexScoreDiff + "%")
                                     }
+
                                     listModel.responseData?.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
-                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% " + listModel.responseData?.scoreIncDec)
+                                        p.putValue("improvementFromPreviousSession","- " +  listModel.responseData?.indexScoreDiff+ "%")
                                     }
                                 }
                                 BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)

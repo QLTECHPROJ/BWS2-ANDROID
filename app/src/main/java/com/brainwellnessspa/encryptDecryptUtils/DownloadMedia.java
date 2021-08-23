@@ -257,8 +257,12 @@ public class DownloadMedia implements OnDownloadListener {
                         p.putValue("sound", GlobalInitExoPlayer.GetDeviceVolume(ctx));
                         BWSApplication.addToSegment("Playlist Download Completed", p, CONSTANTS.track);
                     }
-                    DB.taskDao().getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).removeObserver(audioListx -> {
-                    });
+                    if (!playlistDownloadId.isEmpty()) {
+                        if (playlistDownloadId.size() != 0) {
+                            DB.taskDao().getNotDownloadPlayListData("Complete", CoUserID, playlistDownloadId.get(0)).removeObserver(audioListx -> {
+                            });
+                        }
+                    }
                 });
             }
             fileNameList.remove(0);
