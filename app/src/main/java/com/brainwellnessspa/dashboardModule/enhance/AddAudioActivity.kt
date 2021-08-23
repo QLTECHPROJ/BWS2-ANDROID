@@ -113,12 +113,12 @@ class AddAudioActivity : AppCompatActivity() {
             p!!.putValue("source", "Add Audio Screen")
         }
         addToSegment("Search Screen Viewed", p, CONSTANTS.screen)
-//        binding.searchView.onActionViewExpanded()
+        binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
         searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
         searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
         val closeButton = binding.searchView.findViewById<ImageView>(R.id.search_close_btn)
-//        binding.searchView.clearFocus()
+        binding.searchView.clearFocus()
 
         /* Back Icon Click */
         binding.llBack.setOnClickListener { callback() }
@@ -145,7 +145,12 @@ class AddAudioActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(search: String): Boolean {
-                prepareSearchData(search, searchEditText)
+                if (searchEditText.equals("")){
+
+                }else {
+                    prepareSearchData(search, searchEditText)
+                }
+
                 p = Properties()
                 if (playlistId.equals("")) {
                     p!!.putValue("source", "Manage Search Screen")

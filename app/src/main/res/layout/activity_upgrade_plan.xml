@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -25,7 +25,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_close_white_icon"
-                    app:tint="@color/black" />
+                    app:tint="@color/black"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
 
@@ -88,59 +89,109 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
-                    android:text="Profile"
+                    android:text="@string/last_active_plan"
                     android:textColor="@color/dark_blue_gray"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_14sdp"
-                    android:background="@drawable/progress_bg"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_13sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="Select Number of Profile"
-                        android:textColor="@color/light_black"
-                        android:textSize="@dimen/_10sdp"
-                        tools:ignore="SpUsage" />
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_2sdp">
 
                     <LinearLayout
+                        android:id="@+id/llPlanMain"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_56sdp"
-                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_6sdp"
+                        android:background="@drawable/light_sky_round_cornors"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_20sdp"
+                        android:paddingStart="@dimen/_16sdp"
+                        android:paddingEnd="@dimen/_0sdp"
                         android:weightSum="1">
 
-                        <SeekBar
-                            android:id="@+id/simpleSeekbar"
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.9"
-                            android:max="4"
-                            android:progressDrawable="@drawable/seekbar_style"
-                            android:thumb="@drawable/custom_thumb" />
-
-                        <TextView
-                            android:id="@+id/tvNoOfPerson"
+                        <LinearLayout
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:layout_weight="0.1"
+                            android:layout_weight="0.62"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvTilte"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="start"
+                                android:text="Weekly"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_16sdp"
+                                tools:ignore="SpUsage" />
+
+                            <TextView
+                                android:id="@+id/tvContent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_14sdp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:lineSpacingExtra="@dimen/_4sdp"
+                                android:text="@string/lorem_ipsum"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                tools:ignore="SpUsage" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAmount"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:layout_weight="0.38"
                             android:fontFamily="@font/montserrat_bold"
-                            android:text="3"
-                            android:textColor="@color/step_one_bg"
-                            android:textSize="@dimen/_36sdp"
+                            android:gravity="center"
+                            android:text="$5.00"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_15sdp"
                             tools:ignore="SpUsage" />
 
                     </LinearLayout>
-                </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlMostPopular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="-10dp"
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:contentDescription="@string/todo"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_popular_tag_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="Most Popular"
+                            android:textColor="@color/white"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/_8sdp"
+                            tools:ignore="SpUsage" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -149,7 +200,7 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
-                    android:text="@string/add_users_in_manage"
+                    android:text="@string/more_plan_for_update"
                     android:textColor="@color/dark_blue_gray"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
@@ -176,7 +227,7 @@
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="UPDATE PLAN"
+            android:text="@string/update_plan"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
             android:visibility="visible"

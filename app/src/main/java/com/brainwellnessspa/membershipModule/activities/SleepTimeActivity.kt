@@ -42,7 +42,15 @@ class SleepTimeActivity : AppCompatActivity() {
         }
         val p = Properties()
         BWSApplication.addToSegment("Sleep Time Screen Viewed", p, CONSTANTS.screen)
+
+        binding.llBack.setOnClickListener {
+            finish()
+        }
         prepareUserData()
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     private fun prepareUserData() {

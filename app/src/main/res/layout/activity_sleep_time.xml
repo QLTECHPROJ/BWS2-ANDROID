@@ -17,58 +17,79 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="-10dp"
+                android:contentDescription="@string/todo"
                 android:scaleType="fitXY"
-                android:src="@drawable/sleep_time_banner"
-                android:contentDescription="@string/todo" />
+                android:src="@drawable/sleep_time_banner" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:paddingTop="@dimen/_12sdp"
-                android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
-                android:textColor="@color/white"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/_13sdp"
-                tools:ignore="SpUsage" />
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="@dimen/_56sdp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
+
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/rlstep2"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/rlFirst"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlFirst">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/rlstep2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="start"
-                android:text="@string/average_sleep_time"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_18sdp"
-                tools:ignore="SpUsage" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:text="@string/average_sleep_time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    tools:ignore="SpUsage" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTimeSlot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:nestedScrollingEnabled="true"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"
-                tools:listitem="@layout/sleep_time_raw"
-                tools:targetApi="lollipop" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:paddingTop="@dimen/_12sdp"
+                    android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="SpUsage" />
 
-        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTimeSlot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/sleep_time_raw"
+                    tools:targetApi="lollipop" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
 
         <LinearLayout
             android:layout_width="match_parent"

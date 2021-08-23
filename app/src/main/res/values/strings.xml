@@ -589,5 +589,8 @@
     <string name="price">Price</string>
     <string name="plan">Plan</string>
     <string name="edit_sleep_time">Edit Sleep Time</string>
+    <string name="update_plan">UPDATE PLAN</string>
+    <string name="more_plan_for_update">More Plan for Update</string>
+    <string name="last_active_plan">Last Active Plan</string>
 </resources>
 
