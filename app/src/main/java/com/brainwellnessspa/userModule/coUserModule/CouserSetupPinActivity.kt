@@ -194,6 +194,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     showToast(listModel.responseMessage, activity)
                                     if (mainAccountID == listModel.responseData?.userId) {
                                         val intent = Intent(applicationContext, WalkScreenActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ScreenView, "4")
                                         startActivity(intent)
                                         finish()
@@ -202,6 +203,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                             finish()
                                         } else {
                                             val intent = Intent(applicationContext, UserListActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             startActivity(intent)
                                             finish()
                                         }
@@ -210,6 +212,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")

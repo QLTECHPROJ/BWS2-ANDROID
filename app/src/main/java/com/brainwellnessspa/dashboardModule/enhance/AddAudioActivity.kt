@@ -113,12 +113,12 @@ class AddAudioActivity : AppCompatActivity() {
             p!!.putValue("source", "Add Audio Screen")
         }
         addToSegment("Search Screen Viewed", p, CONSTANTS.screen)
-        binding.searchView.onActionViewExpanded()
+//        binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
         searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
         searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
         val closeButton = binding.searchView.findViewById<ImageView>(R.id.search_close_btn)
-        binding.searchView.clearFocus()
+//        binding.searchView.clearFocus()
 
         /* Back Icon Click */
         binding.llBack.setOnClickListener { callback() }
@@ -135,26 +135,19 @@ class AddAudioActivity : AppCompatActivity() {
         binding.rvPlayList.layoutManager = layoutPlay
         binding.rvPlayList.itemAnimator = DefaultItemAnimator()
 
-        /* close button click of search view */
-        closeButton.setOnClickListener {
-            binding.searchView.clearFocus()
-            searchEditText.setText("")
-            binding.rvSerachList.adapter = null
-            binding.rvSerachList.visibility = View.GONE
-            binding.llError.visibility = View.GONE
-            binding.searchView.setQuery("", false)
-        }
+
         /* Search view click */
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(search: String): Boolean {
                 binding.searchView.clearFocus()
+//                                showToast("onQueryTextSubmit", activity)
                 return false
             }
 
             override fun onQueryTextChange(search: String): Boolean {
                 prepareSearchData(search, searchEditText)
                 p = Properties()
-                if (playlistId.equals("", ignoreCase = true)) {
+                if (playlistId.equals("")) {
                     p!!.putValue("source", "Manage Search Screen")
                 } else {
                     p!!.putValue("source", "Add Audio Screen")
@@ -166,6 +159,16 @@ class AddAudioActivity : AppCompatActivity() {
             }
 
         })
+
+        /* close button click of search view */
+        closeButton.setOnClickListener {
+            binding.searchView.clearFocus()
+            searchEditText.setText("")
+            binding.rvSerachList.adapter = null
+            binding.rvSerachList.visibility = View.GONE
+            binding.llError.visibility = View.GONE
+            binding.searchView.setQuery("", false)
+        }
     }
 
     override fun onResume() {
@@ -219,10 +222,8 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.rvSerachList.visibility = View.GONE
                                     binding.llError.visibility = View.VISIBLE
                                     binding.tvFound.text = "Please try again with another search term."
-                                    showToast("Please try again", activity)
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
-                                    showToast("Not Please try again", activity)
                                     /* set adapter data to search screen */
                                     binding.llError.visibility = View.GONE
                                     binding.rvSerachList.visibility = View.VISIBLE
@@ -231,7 +232,6 @@ class AddAudioActivity : AppCompatActivity() {
                                     LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                 }
                             } else if (searchEditText.text.toString().equals("", ignoreCase = true)) {
-                                showToast("adapter null", activity)
                                 binding.rvSerachList.adapter = null
                                 binding.rvSerachList.visibility = View.GONE
                                 binding.llError.visibility = View.GONE
@@ -240,6 +240,7 @@ class AddAudioActivity : AppCompatActivity() {
                             deleteCall(activity)
                             showToast(listModel.responseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")
@@ -318,6 +319,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvSAViewAll.setOnClickListener {
                                         notificationStatus = true
                                         val i = Intent(ctx, ViewSuggestedActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("Name", "Suggested Audios")
                                         i.putExtra("PlaylistID", playlistId)
                                         i.putParcelableArrayListExtra("AudiolistModel", listModel.responseData)
@@ -329,6 +331,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -494,6 +497,7 @@ class AddAudioActivity : AppCompatActivity() {
                             deleteCall(activity)
                             showToast(listModels.responseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")
@@ -592,6 +596,7 @@ class AddAudioActivity : AppCompatActivity() {
                             p.putValue("sound", hundredVolume.toString())
                             addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                             val i = Intent(ctx, AddPlaylistActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("AudioId", audioID)
                             i.putExtra("ScreenView", "Audio Details Screen")
                             i.putExtra("PlaylistID", "")
@@ -883,6 +888,7 @@ class AddAudioActivity : AppCompatActivity() {
                         p.putValue("sound", hundredVolume.toString())
                         addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                         val i = Intent(ctx, AddPlaylistActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("AudioId", listModel[position]!!.iD)
                         i.putExtra("ScreenView", "Audio Details Screen")
                         i.putExtra("PlaylistID", "")

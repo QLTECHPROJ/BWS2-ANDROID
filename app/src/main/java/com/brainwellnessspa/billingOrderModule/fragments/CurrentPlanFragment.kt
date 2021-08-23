@@ -28,11 +28,13 @@ class CurrentPlanFragment : Fragment() {
 
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
         }
 
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, CancelMembershipActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("screenView","1")
             startActivity(i)
         }

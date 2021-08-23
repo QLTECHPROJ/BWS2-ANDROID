@@ -411,6 +411,7 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
             val intent = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
             finish()
         }
@@ -421,6 +422,7 @@ class AssProcessActivity : AppCompatActivity() {
 //                 TODO when add plan in user flow comment open
                 IsBackFromEnhance = "1"
                 val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan","0")
                 startActivity(i)
                 finish()
@@ -429,6 +431,7 @@ class AssProcessActivity : AppCompatActivity() {
                 finish()*/
             } else {
                 val intent = Intent(applicationContext, ThankYouActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
             }
@@ -468,6 +471,7 @@ class AssProcessActivity : AppCompatActivity() {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")

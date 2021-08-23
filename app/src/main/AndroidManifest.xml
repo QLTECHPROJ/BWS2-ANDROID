@@ -287,11 +287,13 @@
             android:name=".membershipModule.activities.SleepTimeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".dashboardModule.activities.BottomNavigationActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".dashboardModule.home.NotificationListActivity"
@@ -302,6 +304,7 @@
             android:name=".dashboardModule.enhance.PlaylistDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".dashboardModule.enhance.PreparePlaylistActivity"
@@ -312,18 +315,21 @@
             android:name=".membershipModule.activities.EnhanceDoneActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".membershipModule.activities.EnhanceActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".userModule.splashscreen.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -466,7 +472,8 @@
             android:name=".membershipModule.activities.OrderSummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".faqModule.activities.AudioFaqActivity"
             android:configChanges="orientation|screenSize"

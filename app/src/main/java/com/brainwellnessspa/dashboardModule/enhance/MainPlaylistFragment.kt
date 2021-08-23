@@ -103,6 +103,7 @@ class MainPlaylistFragment : Fragment() {
 
     private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) { //        try {
         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         i.putExtra("New", s)
         i.putExtra("PlaylistID", id)
         i.putExtra("PlaylistName", name)
@@ -157,6 +158,7 @@ class MainPlaylistFragment : Fragment() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -335,6 +337,7 @@ class MainPlaylistFragment : Fragment() {
                                                 deleteCall(act)
                                                 showToast(listModel.responseMessage, act)
                                                 val i = Intent(act, SignInActivity::class.java)
+                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                 i.putExtra("mobileNo", "")
                                                 i.putExtra("countryCode", "")
                                                 i.putExtra("name", "")

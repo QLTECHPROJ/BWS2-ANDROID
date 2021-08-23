@@ -29,7 +29,7 @@
                 <LinearLayout
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.65"
+                    android:layout_weight="0.62"
                     android:orientation="vertical">
 
                     <TextView
@@ -61,12 +61,12 @@
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/_14sdp"
-                    android:layout_weight="0.35"
+                    android:layout_marginRight="@dimen/_12sdp"
+                    android:layout_weight="0.38"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_15sdp" />
 
             </LinearLayout>
 

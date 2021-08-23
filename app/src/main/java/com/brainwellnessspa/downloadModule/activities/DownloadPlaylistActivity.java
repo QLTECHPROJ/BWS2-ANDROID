@@ -604,9 +604,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).placeholder(R.drawable.ic_image_bg).error(R.drawable.ic_image_bg).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
             if (BWSApplication.isNetworkConnected(ctx)) {
-                Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+                Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f).placeholder(R.drawable.default_audio_icon).error(R.drawable.default_audio_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             } else {
-                Glide.with(ctx).load(R.drawable.ic_music_icon).thumbnail(0.05f).placeholder(R.drawable.ic_music_icon).error(R.drawable.ic_music_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+                Glide.with(ctx).load(R.drawable.default_audio_icon).thumbnail(0.05f).placeholder(R.drawable.default_audio_icon).error(R.drawable.default_audio_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
 
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);

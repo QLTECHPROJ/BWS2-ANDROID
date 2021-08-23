@@ -110,6 +110,7 @@ class ManageFragment : Fragment() {
         binding.llSearch.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 val i = Intent(ctx, AddAudioActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("PlaylistID", "")
                 startActivity(i)
             } else {
@@ -142,7 +143,9 @@ class ManageFragment : Fragment() {
                         false
                     }
                     btn.setOnClickListener {
+                        dialog.dismiss()
                         val intent = Intent(activity, SleepTimeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                     }
                     /* This click event is called when not cancelling subscription */
@@ -242,6 +245,7 @@ class ManageFragment : Fragment() {
                                             deleteCall(act)
                                             showToast(listModel.responseMessage, act)
                                             val i = Intent(act, SignInActivity::class.java)
+                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             i.putExtra("mobileNo", "")
                                             i.putExtra("countryCode", "")
                                             i.putExtra("name", "")
@@ -275,6 +279,7 @@ class ManageFragment : Fragment() {
 
     private fun callMyPlaylistActivity(new1: String, playlistID: String?, playlistName: String?, act: Activity) {
         val i = Intent(act, MyPlaylistListingActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         i.putExtra("New", new1)
         i.putExtra("PlaylistID", playlistID)
         i.putExtra("PlaylistName", playlistName)

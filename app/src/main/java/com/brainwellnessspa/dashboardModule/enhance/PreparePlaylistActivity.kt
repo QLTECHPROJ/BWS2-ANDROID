@@ -29,6 +29,7 @@ class PreparePlaylistActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             val i = Intent(applicationContext, PlaylistDoneActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("BackClick", intent.getStringExtra("BackClick"))
             startActivity(i)
             finish()

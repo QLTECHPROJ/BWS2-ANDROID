@@ -5,6 +5,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -42,6 +43,7 @@ class InvoiceActivity : AppCompatActivity() {
     var appointmentList: ArrayList<Appointment?>? = null
     var memberShipList: ArrayList<MemberShip?>? = null
     var userId: String? = ""
+    var coUserId: String? = ""
     var comeFrom: String? = ""
     var context: Context? = null
     var activity: Activity? = null
@@ -54,8 +56,9 @@ class InvoiceActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice)
         context = this@InvoiceActivity
         activity = this@InvoiceActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent != null) {
             comeFrom = intent.getStringExtra("ComeFrom")
         }

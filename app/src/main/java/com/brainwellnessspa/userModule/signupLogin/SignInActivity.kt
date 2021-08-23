@@ -64,7 +64,7 @@ class SignInActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val number: String = binding.etNumber.text.toString().trim()
             when {
-                number.equals("", ignoreCase = true) -> {
+                number.equals("") -> {
                     binding.btnSignIn.isEnabled = false
                     binding.btnSignIn.setTextColor(ContextCompat.getColor(activity, R.color.white))
                     binding.btnSignIn.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -324,6 +324,7 @@ class SignInActivity : AppCompatActivity() {
                             val listModel: UserAccessModel = response.body()!!
                             if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 val i = Intent(this@SignInActivity, AuthOtpActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
                                 i.putExtra(CONSTANTS.countryCode, countryCode)
                                 i.putExtra(CONSTANTS.signupFlag, CONSTANTS.FLAG_ZERO)
@@ -332,6 +333,7 @@ class SignInActivity : AppCompatActivity() {
                                 i.putExtra(CONSTANTS.countryShortName, binding.tvCountryShortName.text.toString())
                                 i.putExtra(CONSTANTS.countryName, countryFullName)
                                 startActivity(i)
+                                finish()
                                 BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                                 val p = Properties()

@@ -32,6 +32,7 @@ class AccountInfoActivity : AppCompatActivity() {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         isPinSet = shared1.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+
         binding.llBack.setOnClickListener {
             finish()
         }
@@ -39,7 +40,7 @@ class AccountInfoActivity : AppCompatActivity() {
         val p = Properties()
         addToSegment("Account Info Screen Viewed", p, CONSTANTS.screen)
 
-        if (isPinSet.equals("1", ignoreCase = true)) {
+        if (isPinSet.equals("1")) {
             binding.llChangePin.visibility = View.VISIBLE
         } else {
             binding.llChangePin.visibility = View.GONE
@@ -52,6 +53,7 @@ class AccountInfoActivity : AppCompatActivity() {
             } else if (IsLock.equals("0")) {
                 if (isNetworkConnected(this)) {
                     val i = Intent(this, EditProfileActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(i)
                     finish()
                 } else {
@@ -63,6 +65,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llDeleteAc.setOnClickListener {
             if (isNetworkConnected(this)) {
                 val i = Intent(this, CancelMembershipActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("screenView", "0")
                 startActivity(i)
                 finish()
@@ -74,6 +77,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llChangePin.setOnClickListener {
             if (isNetworkConnected(this)) {
                 val i = Intent(this, ChangePinActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 finish()
             } else {

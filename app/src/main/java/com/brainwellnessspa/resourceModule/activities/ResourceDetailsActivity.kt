@@ -5,6 +5,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -51,8 +52,8 @@ class ResourceDetailsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource_details)
         ctx = this@ResourceDetailsActivity
         act = this@ResourceDetailsActivity
-        val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userID = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+        val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         if (intent.extras != null) {

@@ -236,7 +236,9 @@ class HomeFragment : Fragment() {
                     }
 
                     btn.setOnClickListener {
+                        dialog.dismiss()
                         val intent = Intent(activity, SleepTimeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                     }
                     /* This click event is called when not cancelling subscription */
@@ -330,6 +332,7 @@ class HomeFragment : Fragment() {
               callEnhanceActivity(ctx, act)
             }else if(IsLock.equals("0")) {
                 val intent = Intent(activity, AssProcessActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                 requireActivity().startActivity(intent)
                 requireActivity().finish()
@@ -404,6 +407,7 @@ class HomeFragment : Fragment() {
             }else if(IsLock.equals("0")) {
                 if (isNetworkConnected(activity)) {
                     val i = Intent(requireActivity(), RecommendedCategoryActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")
                     startActivity(i)
                 } else {
@@ -419,6 +423,7 @@ class HomeFragment : Fragment() {
             //            }else if(IsLock.equals("0")) {
             if (isNetworkConnected(activity)) {
                 val i = Intent(requireActivity(), NotificationListActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
             } else {
                 showToast(getString(R.string.no_server_found), activity)
@@ -761,6 +766,7 @@ class HomeFragment : Fragment() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -1020,6 +1026,7 @@ class HomeFragment : Fragment() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -1056,6 +1063,7 @@ class HomeFragment : Fragment() {
                 try {
                     if (response != null) {
                         val i = Intent(requireActivity(), MyPlaylistListingActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", response.suggestedPlaylist?.playlistID)
                         i.putExtra("PlaylistName", response.suggestedPlaylist?.playlistName)
@@ -1594,6 +1602,7 @@ class HomeFragment : Fragment() {
                                 IsFirstClick = "0"
                                 addCouserBackStatus = 1
                                 val i = Intent(requireActivity(), AddCouserActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 startActivity(i)
                                 mBottomSheetDialog?.hide()
                             }
@@ -1724,33 +1733,39 @@ class HomeFragment : Fragment() {
                                                         mainAccountId = listModel.ResponseData.MainAccountID
                                                         userId = listModel.ResponseData.UserId
                                                         IsLock = listModel.ResponseData.Islock
-                                                        if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                                            if (listModel.ResponseData.IsFirst.equals("1", ignoreCase = true)) {
+                                                        if (listModel.ResponseData.isPinSet.equals("1")) {
+                                                            if (listModel.ResponseData.IsFirst.equals("1")) {
                                                                 val intent = Intent(activity, EmailVerifyActivity::class.java)
+                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                            } else if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
+                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("0")) {
                                                                 val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                                            } else if (listModel.ResponseData.AvgSleepTime.equals("")) {
                                                                 val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("1") && listModel.ResponseData.isAssessmentCompleted.equals("1")) {
                                                                 val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 intent.putExtra("IsFirst", "0")
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
                                                             }
-                                                        } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                        } else if (listModel.ResponseData.isPinSet.equals("0") || listModel.ResponseData.isPinSet.equals("")) {
                                                             IsFirstClick = "0"
                                                             val intent = Intent(activity, AddCouserActivity::class.java)
+                                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                             requireActivity().startActivity(intent)
                                                             requireActivity().finish()
                                                         }
@@ -1839,6 +1854,7 @@ class HomeFragment : Fragment() {
                                                             txtError.text = ""
                                                             deleteCall(activity)
                                                             val i = Intent(activity, SignInActivity::class.java)
+                                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                             i.putExtra("mobileNo", "")
                                                             i.putExtra("countryCode", "")
                                                             i.putExtra("name", "")
@@ -1928,9 +1944,10 @@ class HomeFragment : Fragment() {
                         dialog.setCanceledOnTouchOutside(true)
                         dialog.setCancelable(true)
                     }
-                } else if (modelList[position].isPinSet.equals("0", ignoreCase = true) || modelList[position].isPinSet.equals("", ignoreCase = true)) {
+                } else if (modelList[position].isPinSet.equals("0") || modelList[position].isPinSet.equals("")) {
                     comeHomeScreen = "1"
                     val i = Intent(requireActivity(), CouserSetupPinActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("subUserId", modelList[position].userID)
                     requireActivity().startActivity(i)
                     mBottomSheetDialog?.hide()

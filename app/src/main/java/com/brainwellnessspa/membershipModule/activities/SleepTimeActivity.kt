@@ -97,6 +97,7 @@ class SleepTimeActivity : AppCompatActivity() {
                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel[position].name)
                 editor.apply()
                 val i = Intent(ctx, RecommendedCategoryActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("SleepTime", listModel[position].name)
                 i.putExtra("BackClick", "0")
                 ctx.startActivity(i)

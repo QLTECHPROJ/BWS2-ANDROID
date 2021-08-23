@@ -93,6 +93,7 @@ class ManageUserActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -156,6 +157,7 @@ class ManageUserActivity : AppCompatActivity() {
                                 IsFirstClick = "0"
                                 addCouserBackStatus = 1
                                 val intent = Intent(applicationContext, AddCouserActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 startActivity(intent)
                             }
                         } else {
@@ -216,6 +218,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     deleteCall(activity)
                                                     showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
+                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
                                                     i.putExtra("name", "")
@@ -271,6 +274,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     deleteCall(activity)
                                                     showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
+                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
                                                     i.putExtra("name", "")
@@ -343,6 +347,7 @@ class ManageUserActivity : AppCompatActivity() {
                                                     deleteCall(activity)
                                                     showToast(listModel.responseMessage, activity)
                                                     val i = Intent(activity, SignInActivity::class.java)
+                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                     i.putExtra("mobileNo", "")
                                                     i.putExtra("countryCode", "")
                                                     i.putExtra("name", "")

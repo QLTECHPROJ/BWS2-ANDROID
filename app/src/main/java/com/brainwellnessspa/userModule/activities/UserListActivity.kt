@@ -116,14 +116,14 @@ class UserListActivity : AppCompatActivity() {
             val name: String?
 
             if (isMainAccount.equals("1", ignoreCase = true)) {
-                binding.llAddNewUser.visibility = View.VISIBLE
+                binding.llAddNewUser.visibility = View.GONE
             } else {
                 binding.llAddNewUser.visibility = View.GONE
             }
 
             binding.llAddNewUser.setOnClickListener {
                 if (isMainAccount.equals("1", ignoreCase = true)) {
-                    binding.llAddNewUser.visibility = View.VISIBLE
+                    binding.llAddNewUser.visibility = View.GONE
                     if (!model.maxuseradd.equals("", ignoreCase = true)) {
                         if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
                             showToast("Please upgrade your plan", activity)
@@ -303,23 +303,28 @@ class UserListActivity : AppCompatActivity() {
                                                 if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
                                                     if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                         val intent = Intent(activity, EmailVerifyActivity::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                                         val intent = Intent(activity, AssProcessActivity::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                                         val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
                                                         val intent = Intent(activity, SleepTimeActivity::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
                                                         val intent = Intent(ctx, BottomNavigationActivity::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra("IsFirst", "0")
                                                         activity.startActivity(intent)
                                                         activity.finish()
@@ -327,6 +332,7 @@ class UserListActivity : AppCompatActivity() {
                                                 } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
                                                     IsFirstClick = "0"
                                                     val intent = Intent(activity, AddCouserActivity::class.java)
+                                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                     activity.startActivity(intent)
                                                     activity.finish()
                                                 }

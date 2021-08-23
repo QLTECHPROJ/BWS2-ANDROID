@@ -20,6 +20,7 @@ class DoingGoodActivity : AppCompatActivity() {
         /* This click event is going to other process */
         binding.btnContinue.setOnClickListener {
             val i = Intent(this@DoingGoodActivity, SleepTimeActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
         }
 

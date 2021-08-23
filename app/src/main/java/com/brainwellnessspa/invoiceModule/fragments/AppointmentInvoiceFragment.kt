@@ -3,6 +3,7 @@ package com.brainwellnessspa.invoiceModule.fragments
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ class AppointmentInvoiceFragment : Fragment() {
     lateinit var binding: FragmentInvoiceBinding
     var appointmentList: ArrayList<Appointment>? = null
     var userId: String? = ""
+    var coUserId: String? = ""
     var dialog: Dialog? = null
 
     @SuppressLint("SetTextI18n")
@@ -32,8 +34,9 @@ class AppointmentInvoiceFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false)
         val view = binding.getRoot()
         val shared1 =
-            requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-        userId = shared1.getString(CONSTANTS.PREF_KEY_UserID, "")
+            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (arguments != null) {
             appointmentList =
                 requireArguments().getParcelableArrayList("appointmentInvoiceFragment")

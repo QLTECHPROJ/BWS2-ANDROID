@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         val view = binding.root
-        ctx= requireActivity()
+        ctx = requireActivity()
         act = requireActivity()
         val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -182,6 +182,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), AccountInfoActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -195,6 +196,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             val i = Intent(requireActivity(), DownloadsActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
             requireActivity().overridePendingTransition(0, 0)
         }
@@ -207,6 +209,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(requireActivity())) {
                 InvoiceActivity.invoiceToRecepit = 1
                 val i = Intent(requireActivity(), InvoiceActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("ComeFrom", "")
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
@@ -222,6 +225,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), BillingOrderActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -236,6 +240,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), ManageUserActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -251,6 +256,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), ReminderListsActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -266,6 +272,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(requireActivity())) {
                 IsBackFromEnhance = "0"
                 val i = Intent(requireActivity(), EnhanceActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan", "0")
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
@@ -281,6 +288,7 @@ class ProfileFragment : Fragment() {
               mLastClickTime = SystemClock.elapsedRealtime()
               if (isNetworkConnected(activity)) {
                   val i = Intent(activity, EnhanceActivity::class.java)
+               i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                   i.putExtra("plan","1")
                   startActivity(i)
                   requireActivity().overridePendingTransition(0, 0)
@@ -296,6 +304,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), ResourceActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -310,6 +319,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), FaqActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
                 requireActivity().overridePendingTransition(0, 0)
             } else {
@@ -393,8 +403,7 @@ class ProfileFragment : Fragment() {
 
     private fun callCamaraPermission() {
         val building = AlertDialog.Builder(requireActivity())
-        building.setMessage("""To camera allow ${requireActivity().getString(R.string.app_name)} access to your camera. 
-Tap Setting > permission, and turn Camera on.""")
+        building.setMessage("""To camera allow ${requireActivity().getString(R.string.app_name)} access to your camera. Tap Setting > permission, and turn Camera on.""")
         building.setCancelable(true)
         building.setPositiveButton(requireActivity().getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -479,6 +488,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         deleteCall(requireActivity())
                                         showToast(viewModel.responseMessage, requireActivity())
                                         val i = Intent(requireActivity(), SignInActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("mobileNo", "")
                                         i.putExtra("countryCode", "")
                                         i.putExtra("name", "")
@@ -599,7 +609,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
                                             }
-                                        }catch (e:Exception){
+                                        } catch (e: Exception) {
                                             e.printStackTrace()
                                         }
                                         editor.apply()
@@ -625,6 +635,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     deleteCall(requireActivity())
                                     showToast(viewModel.ResponseMessage, requireActivity())
                                     val i = Intent(requireActivity(), SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -679,6 +690,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     deleteCall(requireActivity())
                                     showToast(addProfileModel.responseMessage, requireActivity())
                                     val i = Intent(requireActivity(), SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -734,6 +746,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         deleteCall(requireActivity())
                                         showToast(addProfileModel.responseMessage, requireActivity())
                                         val i = Intent(requireActivity(), SignInActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("mobileNo", "")
                                         i.putExtra("countryCode", "")
                                         i.putExtra("name", "")
@@ -808,8 +821,13 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent)
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent)
         edit.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
+        edit.remove(CONSTANTS.PREFE_ACCESS_PlanDeviceType)
+        edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin)
+//        edit.remove(CONSTANTS.PREF_KEY_UserPromocode)
+//        edit.remove(CONSTANTS.PREF_KEY_ReferLink)
         edit.clear()
         edit.apply()
+
         val preferred = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         val edited = preferred.edit()
         edited.remove(CONSTANTS.selectedCategoriesTitle)
@@ -838,9 +856,36 @@ Tap Setting > permission, and turn "Files and media" on.""")
         editeed.clear()
         editeed.apply()
 
+        val preferrd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
+        val editd = preferrd.edit()
+        editd.remove(CONSTANTS.PREF_KEY_SplashKey)
+        editd.clear()
+        editd.apply()
+
+        /*val preferrder = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        val editder = preferrder.edit()
+        editder.remove(CONSTANTS.Token)
+        editder.clear()
+        editder.apply()*/
+
+        val preferrderd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
+        val editderd = preferrderd.edit()
+        editderd.remove(CONSTANTS.PREF_KEY_PlaylistID)
+        editderd.remove(CONSTANTS.PREF_KEY_PlaylistName)
+        editderd.remove(CONSTANTS.PREF_KEY_PlaylistDescription)
+        editderd.remove(CONSTANTS.PREF_KEY_PlaylistType)
+        editderd.remove(CONSTANTS.PREF_KEY_Totalhour)
+        editderd.remove(CONSTANTS.PREF_KEY_Totalminute)
+        editderd.remove(CONSTANTS.PREF_KEY_TotalAudio)
+        editderd.remove(CONSTANTS.PREF_KEY_ScreenView)
+        editderd.clear()
+        editderd.apply()
+
         val pref = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val editt = pref.edit()
         editt.remove(CONSTANTS.PREF_KEY_IsDisclimer)
+        editt.remove(CONSTANTS.PREF_KEY_Disclimer)
+//        editt.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
         editt.clear()
         editt.apply()
 
@@ -911,6 +956,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         e.printStackTrace()
                     }
                     val i = Intent(requireActivity(), SignInActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("mobileNo", "")
                     i.putExtra("countryCode", "")
                     i.putExtra("name", "")

@@ -169,6 +169,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                             deleteCall(activity)
                                             showToast(listsModel.responseMessage, activity)
                                             val i = Intent(activity, SignInActivity::class.java)
+                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             i.putExtra("mobileNo", "")
                                             i.putExtra("countryCode", "")
                                             i.putExtra("name", "")
@@ -265,6 +266,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(model.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -414,6 +416,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                             rlCreate.setOnClickListener { //                                addToPlayList = true;
                                 //                                MyPlaylistId = PlaylistID;
                                 val intent = Intent(ctx, MyPlaylistListingActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 intent.putExtra("New", New)
                                 intent.putExtra("PlaylistID", PlaylistID)
                                 intent.putExtra("PlaylistName", name)
@@ -434,6 +437,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                             deleteCall(activity)
                             showToast(listModels.responseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")

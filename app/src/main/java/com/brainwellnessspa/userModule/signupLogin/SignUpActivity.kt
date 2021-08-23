@@ -424,6 +424,7 @@ class SignUpActivity : AppCompatActivity() {
                             p.putValue("source", "SignUp")
                             BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
                             i.putExtra(CONSTANTS.countryCode, countryCode)
                             i.putExtra(CONSTANTS.signupFlag, CONSTANTS.FLAG_ONE)

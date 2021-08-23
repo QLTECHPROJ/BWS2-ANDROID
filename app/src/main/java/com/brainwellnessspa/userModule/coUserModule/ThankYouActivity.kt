@@ -43,19 +43,23 @@ class ThankYouActivity : AppCompatActivity() {
         binding.btnExplore.setOnClickListener {
             if (isProfileCompleted.equals("0", ignoreCase = true)) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
             } else if (avgSleepTime.equals("", ignoreCase = true)) {
                 val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
                 if (coUserCount.toString() > "1") {
                     val intent = Intent(applicationContext, UserListActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(intent)
                     finish()
                 } else {
                     val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     intent.putExtra("IsFirst", "1")
                     startActivity(intent)
                     finish()

@@ -148,8 +148,6 @@ class MyPlayerActivity : AppCompatActivity() {
         playerControlView = Assertions.checkNotNull(binding.playerControlView)
         /* get intent data when click on music notification bar */
         if (intent.hasExtra("notification")) {
-            val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-            val userId = sharedd.getString(CONSTANTS.PREF_KEY_UserID, "")
             val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
             val xposition = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             val gson = Gson()

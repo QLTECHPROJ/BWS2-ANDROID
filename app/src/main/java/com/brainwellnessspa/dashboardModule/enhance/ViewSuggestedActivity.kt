@@ -99,6 +99,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             myBackPress = true
             val i = Intent(ctx, AddAudioActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlaylistID", playlistId)
             startActivity(i)
             finish()
@@ -118,6 +119,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
     override fun onBackPressed() {
         myBackPress = true
         val i = Intent(ctx, AddAudioActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         i.putExtra("PlaylistID", playlistId)
         startActivity(i)
         finish()

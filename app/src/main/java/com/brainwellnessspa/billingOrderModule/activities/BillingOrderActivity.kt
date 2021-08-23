@@ -65,12 +65,14 @@ class BillingOrderActivity : AppCompatActivity() {
         binding.btnUpgradePlan.visibility= View.GONE
 //        binding.btnUpgradePlan.setOnClickListener {
 //            val i = Intent(activity, UpgradePlanActivity::class.java)
+//        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 //            startActivity(i)
 //        }
 
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, CancelMembershipActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("screenView", "1")
             startActivity(i)
         }
@@ -110,6 +112,8 @@ class BillingOrderActivity : AppCompatActivity() {
         } else {
             binding.viewPager.currentItem = 0
         }
+
+        getPlanDetails()
      /*   binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 binding.viewPager.currentItem = tab.position
@@ -135,6 +139,10 @@ class BillingOrderActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: PlanDetails = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanDeviceType, listModel.responseData!!.deviceType)
+                            editor.apply()
 
                             binding.tvTitle.text = listModel.responseData!!.planDescription
                             binding.tvPlan.text = listModel.responseData!!.planName
@@ -152,7 +160,6 @@ class BillingOrderActivity : AppCompatActivity() {
                             binding.tvStatusRenew.text =  "(Renew " + sdf1.format(d1) + ")"
 
                             binding.tvStatus.text = listModel.responseData!!.planStatus
-
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

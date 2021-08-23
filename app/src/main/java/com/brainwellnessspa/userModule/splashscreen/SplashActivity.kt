@@ -69,7 +69,7 @@ class SplashActivity : AppCompatActivity() {
         val editor = sharedx.edit()
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures[0])
         editor.apply()
-        if (key.equals("", ignoreCase = true)) {
+        if (key.equals("")) {
             key = getKey(this)
         }
 
@@ -98,7 +98,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     override fun onResume() {/* TODO conditions for check user exist or not */
-        if (userId.equals("", ignoreCase = true)) {
+        if (userId.equals("")) {
             checkAppVersion()
         } /*else if (!userId.equals("", ignoreCase = true) && coUserId.equals(
                         "",
@@ -146,7 +146,7 @@ class SplashActivity : AppCompatActivity() {
                             setAnalytics(versionModel.ResponseData.segmentKey, context)
 
                             when {
-                                versionModel.ResponseData.IsForce.equals("0", ignoreCase = true) -> {
+                                versionModel.ResponseData.IsForce.equals("0") -> {
                                     val builder = AlertDialog.Builder(this@SplashActivity)
                                     builder.setTitle("Update Brain Wellness App")
                                     builder.setCancelable(false)
@@ -160,7 +160,7 @@ class SplashActivity : AppCompatActivity() {
                                     }
                                     builder.create().show()
                                 }
-                                versionModel.ResponseData.IsForce.equals("1", ignoreCase = true) -> {
+                                versionModel.ResponseData.IsForce.equals("1") -> {
                                     val builder = AlertDialog.Builder(this@SplashActivity)
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
@@ -169,7 +169,7 @@ class SplashActivity : AppCompatActivity() {
                                     }
                                     builder.create().show()
                                 }
-                                versionModel.ResponseData.IsForce.equals("", ignoreCase = true) -> {
+                                versionModel.ResponseData.IsForce.equals("") -> {
 //                                    askBattyPermission()
                                     callDashboard()
                                 }
@@ -196,7 +196,7 @@ class SplashActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
                         val authOtpModel: AuthOtpModel = response.body()!!
-                        if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess))) {
 
                             IsLock = authOtpModel.ResponseData.Islock
                             isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
@@ -256,7 +256,7 @@ class SplashActivity : AppCompatActivity() {
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                             edited.apply()
                             checkAppVersion()
-                        } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                        } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
                             deleteCall(activity)
                             showToast(authOtpModel.ResponseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
@@ -323,63 +323,74 @@ class SplashActivity : AppCompatActivity() {
                 Log.e("avgSleepTime", avgSleepTime.toString())
                 Log.e("coUserCount", coUserCount.toString())
                 Log.e("isSetLoginPin", isSetLoginPin.toString())
-                if (isMainAccount.equals("1", ignoreCase = true)) {
-                    if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                if (isMainAccount.equals("1")) {
+                    if (isAssessmentCompleted.equals("0")) {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                         startActivity(intent)
                         finish()
-                    } else if (planId.equals("", ignoreCase = true)) {
+                    } else if (planId.equals("")) {
                         IsBackFromEnhance = "0"
                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                         finish()
-                    } else if (isPinSet.equals("1", ignoreCase = true)) {
-                        if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                    } else if (isPinSet.equals("1")) {
+                        if (isAssessmentCompleted.equals("0")) {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                             startActivity(intent)
                             finish()
-                        } else if (planId.equals("", ignoreCase = true)) {
+                        } else if (planId.equals("")) {
                             IsBackFromEnhance = "0"
                             val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
-                        } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        } else if (isProfileCompleted.equals("0")) {
                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
-                        } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        } else if (avgSleepTime.equals("")) {
                             val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
                         } else {
-                            if (isSetLoginPin.equals("1", ignoreCase = true)) {
+                            if (isSetLoginPin.equals("1")) {
                                 when {
-                                    isAssessmentCompleted.equals("0", ignoreCase = true) -> {
+                                    isAssessmentCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         startActivity(intent)
                                         finish()
                                     }
-                                    planId.equals("", ignoreCase = true) -> {
+                                    planId.equals("") -> {
                                         IsBackFromEnhance = "0"
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isProfileCompleted.equals("0", ignoreCase = true) -> {
+                                    isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    avgSleepTime.equals("", ignoreCase = true) -> {
+                                    avgSleepTime.equals("") -> {
                                         val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
                                         finish()
@@ -389,33 +400,39 @@ class SplashActivity : AppCompatActivity() {
                                 when {
                                     coUserCount.toString() > "0" -> {
                                         val intent = Intent(activity, UserListActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isAssessmentCompleted.equals("0", ignoreCase = true) -> {
+                                    isAssessmentCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         startActivity(intent)
                                         finish()
                                     }
-                                    planId.equals("", ignoreCase = true) -> {
+                                    planId.equals("") -> {
                                         IsBackFromEnhance = "0"
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isProfileCompleted.equals("0", ignoreCase = true) -> {
+                                    isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    avgSleepTime.equals("", ignoreCase = true) -> {
+                                    avgSleepTime.equals("") -> {
                                         val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
                                         finish()
@@ -423,41 +440,48 @@ class SplashActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                    } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
-                        if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                    } else if (isPinSet.equals("0") || isPinSet.equals("")) {
+                        if (isAssessmentCompleted.equals("0")) {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                             startActivity(intent)
                             finish()
-                        } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        } else if (isProfileCompleted.equals("0")) {
                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
-                        } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        } else if (avgSleepTime.equals("")) {
                             val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
                         } else {
-                            if (isSetLoginPin.equals("1", ignoreCase = true)) {
+                            if (isSetLoginPin.equals("1")) {
                                 when {
-                                    isAssessmentCompleted.equals("0", ignoreCase = true) -> {
+                                    isAssessmentCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isProfileCompleted.equals("0", ignoreCase = true) -> {
+                                    isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    avgSleepTime.equals("", ignoreCase = true) -> {
+                                    avgSleepTime.equals("") -> {
                                         val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
                                         finish()
@@ -466,10 +490,12 @@ class SplashActivity : AppCompatActivity() {
                             } else {
                                 if (coUserCount.toString() > "0") {
                                     val intent = Intent(activity, UserListActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(intent)
                                     finish()
                                 } else {
                                     val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
                                     finish()
@@ -478,46 +504,54 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                    if (isAssessmentCompleted.equals("0")) {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                         startActivity(intent)
                         finish()
-                    } else if (isPinSet.equals("1", ignoreCase = true)) {
-                        if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                    } else if (isPinSet.equals("1")) {
+                        if (isAssessmentCompleted.equals("0")) {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                             startActivity(intent)
                             finish()
-                        } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                        } else if (isProfileCompleted.equals("0")) {
                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
-                        } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                        } else if (avgSleepTime.equals("")) {
                             val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
                             finish()
                         } else {
-                            if (isSetLoginPin.equals("1", ignoreCase = true)) {
+                            if (isSetLoginPin.equals("1")) {
                                 when {
-                                    isAssessmentCompleted.equals("0", ignoreCase = true) -> {
+                                    isAssessmentCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isProfileCompleted.equals("0", ignoreCase = true) -> {
+                                    isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    avgSleepTime.equals("", ignoreCase = true) -> {
+                                    avgSleepTime.equals("") -> {
                                         val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
                                         finish()
@@ -527,27 +561,32 @@ class SplashActivity : AppCompatActivity() {
                                 when {
                                     coUserCount.toString() > "0" -> {
                                         val intent = Intent(activity, UserListActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isAssessmentCompleted.equals("0", ignoreCase = true) -> {
+                                    isAssessmentCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         startActivity(intent)
                                         finish()
                                     }
-                                    isProfileCompleted.equals("0", ignoreCase = true) -> {
+                                    isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
-                                    avgSleepTime.equals("", ignoreCase = true) -> {
+                                    avgSleepTime.equals("") -> {
                                         val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
                                         finish()
@@ -555,9 +594,9 @@ class SplashActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                    } else if (isPinSet.equals("0", ignoreCase = true) || isPinSet.equals("", ignoreCase = true)) {
+                    } else if (isPinSet.equals("0") || isPinSet.equals("")) {
                         val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                         finish()
                     }

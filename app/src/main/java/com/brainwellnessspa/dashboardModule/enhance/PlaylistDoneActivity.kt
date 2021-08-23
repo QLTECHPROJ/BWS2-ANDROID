@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
@@ -27,6 +28,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
     var coUserId: String? = ""
     lateinit var activity: Activity
     var userId: String? = ""
+    private var mLastClickTime: Long = 0
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,20 +46,26 @@ class PlaylistDoneActivity : AppCompatActivity() {
         binding.tvSubTitle.text = getString(R.string.playlist_ready_subtitle)
 
         binding.btnContinue.setOnClickListener {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
             if (intent.extras != null) {
                 backClick = intent.getStringExtra("BackClick")
             }
-            if (backClick.equals("0", true)) {
+            if (backClick.equals("0")) {
                 checkUserDetails()
                 val intent = Intent(activity, BottomNavigationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra("IsFirst", "1")
                 startActivity(intent)
                 finish()
-            } else if (backClick.equals("1", true)) {
+            } else if (backClick.equals("1")) {
                 finish()
             }
         }
     }
+
     private fun checkUserDetails() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -67,7 +75,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
                     try {
                         val authOtpModel: AuthOtpModel = response.body()!!
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (authOtpModel.ResponseCode == getString(R.string.ResponseCodesuccess)) {
                             IsLock = authOtpModel.ResponseData.Islock
                             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
@@ -98,7 +106,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, authOtpModel.ResponseData.planDetails[0].PlanContent)
                                 }
-                            }catch (e:Exception){
+                            } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                             editor.apply()
@@ -115,10 +123,11 @@ class PlaylistDoneActivity : AppCompatActivity() {
                             edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                             edited.apply()
-                        } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                        } else if (authOtpModel.ResponseCode == getString(R.string.ResponseCodeDeleted)) {
                             deleteCall(activity)
                             showToast(authOtpModel.ResponseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")
@@ -139,5 +148,4 @@ class PlaylistDoneActivity : AppCompatActivity() {
             showToast(getString(R.string.no_server_found), activity)
         }
     }
-
 }
