@@ -12,13 +12,14 @@
         <RelativeLayout
             android:id="@+id/rlLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
+            android:layout_height="@dimen/_49sdp">
 
             <LinearLayout
                 android:id="@+id/llBack"
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:gravity="center">
 
                 <ImageView
@@ -49,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/rlLayout"
             android:paddingTop="@dimen/_16sdp"
-            android:paddingBottom="@dimen/_60sdp">
+            android:paddingBottom="@dimen/_80sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -223,16 +224,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/_29sdp"
+            android:layout_marginHorizontal="@dimen/_44sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="@string/update_plan"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
             android:visibility="visible"
             tools:ignore="SpUsage" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

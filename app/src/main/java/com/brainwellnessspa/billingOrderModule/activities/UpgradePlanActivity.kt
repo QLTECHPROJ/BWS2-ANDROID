@@ -78,6 +78,8 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
             planId = intent.getStringExtra("PlanId").toString()
             DeviceType = intent.getStringExtra("DeviceType").toString()
         }
+
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
         binding.btnUpgradePlan.setOnClickListener {
             i.putExtra("plan", intentflag)
             startActivity(i)
@@ -123,15 +125,14 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     private fun prepareUserData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<PlanlistInappModel> = APINewClient.client.getUpgradePlanlistInapp(coUserId)
             listCall.enqueue(object : Callback<PlanlistInappModel> {
                 override fun onResponse(call: Call<PlanlistInappModel>, response: Response<PlanlistInappModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: PlanlistInappModel = response.body()!!
                         listModelGlobal = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                             binding.nestedScroll.isSmoothScrollingEnabled = true
 
                             planListAdapter = PlanListAdapter(listModel.responseData!!.plan!!, ctx, i, skuDetailList, binding)
