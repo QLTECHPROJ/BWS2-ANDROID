@@ -57,7 +57,7 @@ class AddAudioActivity : AppCompatActivity() {
     var userId: String? = null
     var userName: String? = null
     var playlistId: String? = ""
-    var IsPlayDisclimer: String? = null
+    var isPlayDisclimer: String? = null
     var serachListAdpater: SerachListAdpater? = null
     lateinit var searchEditText: EditText
     lateinit var activity: Activity
@@ -135,7 +135,6 @@ class AddAudioActivity : AppCompatActivity() {
         binding.rvPlayList.layoutManager = layoutPlay
         binding.rvPlayList.itemAnimator = DefaultItemAnimator()
 
-
         /* Search view click */
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(search: String): Boolean {
@@ -145,9 +144,7 @@ class AddAudioActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(search: String): Boolean {
-                if (searchEditText.equals("")){
-
-                }else {
+                if (!searchEditText.equals("")) {
                     prepareSearchData(search, searchEditText)
                 }
 
@@ -222,6 +219,7 @@ class AddAudioActivity : AppCompatActivity() {
                         val listModel = response.body()
                         if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            Log.e("Result", "onQueryText Data show")
                             if (!searchEditText!!.text.toString().equals("", ignoreCase = true)) {
                                 if (listModel.responseData!!.isEmpty()) {
                                     binding.rvSerachList.visibility = View.GONE
@@ -229,12 +227,14 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvFound.text = "Please try again with another search term."
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
-                                    /* set adapter data to search screen */
-                                    binding.llError.visibility = View.GONE
-                                    binding.rvSerachList.visibility = View.VISIBLE
-                                    serachListAdpater = SerachListAdpater(listModel.responseData, activity, binding.rvSerachList, coUserId)
-                                    binding.rvSerachList.adapter = serachListAdpater
-                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    Log.e("Result listSize", "onQueryText Data show $listSize")
+                                    Log.e("Result listModel.responseData!!.size", "onQueryText Data show " + listModel.responseData!!.size)
+                                        /* set adapter data to search screen */
+                                        binding.llError.visibility = View.GONE
+                                        binding.rvSerachList.visibility = View.VISIBLE
+                                        serachListAdpater = SerachListAdpater(listModel.responseData, activity, binding.rvSerachList, coUserId)
+                                        binding.rvSerachList.adapter = serachListAdpater
+                                        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                 }
                             } else if (searchEditText.text.toString().equals("", ignoreCase = true)) {
                                 binding.rvSerachList.adapter = null
@@ -254,7 +254,7 @@ class AddAudioActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         } else {
-                            showToast(listModel.responseMessage, activity)
+//                            showToast(listModel.responseMessage, activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -688,10 +688,10 @@ class AddAudioActivity : AppCompatActivity() {
             Glide.with(ctx!!).load(listModel[position].imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             Glide.with(ctx!!).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage)
             holder.binding.ivIcon.setImageResource(R.drawable.ic_add_two_icon)
-            if(listModel[position].disableAudio.equals("0")){
+            if (listModel[position].disableAudio.equals("0")) {
                 holder.binding.llRemoveAudio.isClickable = true
                 holder.binding.llRemoveAudio.isEnabled = true
-            }else if(listModel[position].disableAudio.equals("1")){
+            } else if (listModel[position].disableAudio.equals("1")) {
                 holder.binding.ivIcon.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
                 holder.binding.llRemoveAudio.isClickable = false
                 holder.binding.llRemoveAudio.isEnabled = false
@@ -701,7 +701,7 @@ class AddAudioActivity : AppCompatActivity() {
         private fun callMainTransFrag(position: Int) {
             try {
                 val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
+                isPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -746,14 +746,14 @@ class AddAudioActivity : AppCompatActivity() {
                             listModelList2.add(mainPlayModel)
                         } else {
                             isDisclaimer = 0
-                            if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                            if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
                             }
                         }
                     } else {
                         isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(mainPlayModel)
                         }
@@ -832,10 +832,10 @@ class AddAudioActivity : AppCompatActivity() {
             } else {
                 holder.binding.ivLock.visibility = View.GONE
             }
-            if(listModel[position]!!.disableAudio.equals("0")){
+            if (listModel[position]!!.disableAudio.equals("0")) {
                 holder.binding.llRemoveAudio.isClickable = true
                 holder.binding.llRemoveAudio.isEnabled = true
-            }else if(listModel[position]!!.disableAudio.equals("1")){
+            } else if (listModel[position]!!.disableAudio.equals("1")) {
                 holder.binding.ivIcon.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
                 holder.binding.llRemoveAudio.isClickable = false
                 holder.binding.llRemoveAudio.isEnabled = false
@@ -928,7 +928,7 @@ class AddAudioActivity : AppCompatActivity() {
         private fun callMainTransFrag(position: Int) {
             try {
                 val shared2 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                IsPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
+                isPlayDisclimer = shared2.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                 val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -952,7 +952,7 @@ class AddAudioActivity : AppCompatActivity() {
                     val listModelList2 = ArrayList<SuggestedModel.ResponseData?>()
                     val gson = Gson()
                     val shared12 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
-                    val IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
+                    val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<DisclaimerAudio>(disclimerJson, type)
@@ -973,14 +973,14 @@ class AddAudioActivity : AppCompatActivity() {
                             listModelList2.add(mainPlayModel)
                         } else {
                             isDisclaimer = 0
-                            if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                            if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                                 audioc = true
                                 listModelList2.add(mainPlayModel)
                             }
                         }
                     } else {
                         isDisclaimer = 0
-                        if (IsPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
                             audioc = true
                             listModelList2.add(mainPlayModel)
                         }

@@ -267,6 +267,7 @@ class UserListActivity : AppCompatActivity() {
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                                                 try {
                                                     if (listModel.ResponseData.planDetails.isNotEmpty()) {

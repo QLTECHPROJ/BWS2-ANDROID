@@ -135,7 +135,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 resultIntent.putExtra("message", message)
                 resultIntent.putExtra("PlaylistImage", "")
                 resultIntent.putExtra("ScreenView", "Reminder Notification")
-                taskStackBuilder.addParentStack(MyPlaylistListingActivity::class.java)
+                taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent)
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
                 //                }
@@ -166,7 +166,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 notificationManager.createNotificationChannel(notificationChannel)
             }
             notificationBuilder.priority = NotificationCompat.PRIORITY_HIGH
-            notificationBuilder.setSmallIcon(R.drawable.app_new_icon)
+            notificationBuilder.setSmallIcon(R.drawable.logo_notification)
             notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(message))
             notificationBuilder.setContentTitle(title)
             notificationBuilder.setDefaults(Notification.DEFAULT_ALL or Notification.FLAG_AUTO_CANCEL)
