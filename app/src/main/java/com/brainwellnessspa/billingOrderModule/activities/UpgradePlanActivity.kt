@@ -156,7 +156,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                                         break
                                     }
                                 }
-                            }else if(DeviceType == "0") {
+                            } else if(DeviceType == "0") {
                                 for(i2 in listModel.responseData!!.plan!!.indices) {
                                     if(planId.equals(listModel.responseData!!.plan!![i2].iOSplanId,ignoreCase = true)) {
                                         binding.tvOldPlanTitle.text = listModel.responseData!!.plan!![i2].planInterval
