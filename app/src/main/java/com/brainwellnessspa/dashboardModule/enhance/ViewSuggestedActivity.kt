@@ -396,11 +396,11 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                 holder.binding.ivLock.visibility = View.GONE
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener {
-                 if (listModel[position].isPlay.equals("1")) {
-                    callEnhanceActivity(ctx,activity)
-                } else if (listModel[position].isPlay.equals("0")) {
-                     callMainTransFrag(position)
-                 }
+                if (listModel[position].isPlay.equals("0")) {
+                    callEnhanceActivity(ctx, activity)
+                } else if (listModel[position].isPlay.equals("1")) {
+                    callMainTransFrag(position)
+                }
             }
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
@@ -458,9 +458,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
             try {
                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                //                String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "");
                 val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 if (audioPlayerFlag.equals("SearchAudio", ignoreCase = true) && playFrom.equals("Recommended Search", ignoreCase = true)) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
@@ -475,19 +473,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                     } else {
                         val listModelList2 = ArrayList<SuggestedModel.ResponseData>()
                         listModelList2.add(listModel!![position])
-                        if (player != null) {
-                            if (position != playerPosition) {
-                                player.seekTo(position, 0)
-                                player.playWhenReady = true
-                                val sharedxx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                                val editor = sharedxx.edit()
-                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
-                                editor.apply()
-                            }
-                            callMyPlayer()
-                        } else {
-                            callPlayer(0, listModelList2, true)
-                        }
+                        callPlayer(0, listModelList2, true)
                     }
                 } else {
                     val listModelList2 = ArrayList<SuggestedModel.ResponseData>()
@@ -506,7 +492,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                     mainPlayModel.audioSubCategory = arrayList.audioSubCategory
                     mainPlayModel.imageFile = arrayList.imageFile
                     mainPlayModel.audioDuration = arrayList.audioDuration
-                    var audioc = false
+                    var audioc = true
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             player.playWhenReady = true

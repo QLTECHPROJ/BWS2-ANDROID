@@ -585,7 +585,7 @@
     <string name="agree_to_our">agree to our</string>
     <string name="create_new_playlist">Create \nNew Playlist</string>
     <string name="status">Status</string>
-    <string name="active_since">Active Since</string>
+    <string name="active_since">Last Renewed</string>
     <string name="price">Price</string>
     <string name="plan">Plan</string>
     <string name="edit_sleep_time">Edit Sleep Time</string>

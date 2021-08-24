@@ -41,6 +41,7 @@ class BillingOrderActivity : AppCompatActivity() {
     var userId: String? = ""
     var coUserId: String? = ""
     private var numStarted = 0
+    lateinit var listModelGlobal:PlanDetails
     var stackStatus = 0
     lateinit var activity: Activity
     lateinit var ctx: Context
@@ -62,12 +63,13 @@ class BillingOrderActivity : AppCompatActivity() {
             finish()
         }
         /* This is the upgrade plan click */
-        binding.btnUpgradePlan.visibility= View.GONE
-//        binding.btnUpgradePlan.setOnClickListener {
-//            val i = Intent(activity, UpgradePlanActivity::class.java)
-//        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-//            startActivity(i)
-//        }
+        binding.btnUpgradePlan.setOnClickListener {
+            val i = Intent(activity, UpgradePlanActivity::class.java)
+            i.putExtra("PlanId",listModelGlobal.responseData!!.planId)
+            i.putExtra("DeviceType",listModelGlobal.responseData!!.deviceType)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(i)
+        }
 
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
@@ -138,6 +140,7 @@ class BillingOrderActivity : AppCompatActivity() {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: PlanDetails = response.body()!!
+                        listModelGlobal = response.body()!!
                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
                             val editor = shared.edit()
@@ -157,7 +160,12 @@ class BillingOrderActivity : AppCompatActivity() {
                             c1.timeInMillis = listModel.responseData!!.planExpireDate!!.toInt() * 1000L
                             val d1: Date = c1.time
                             val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
-                            binding.tvStatusRenew.text =  "(Renew " + sdf1.format(d1) + ")"
+                            if(listModel.responseData!!.planStatus.equals("Cancelled",ignoreCase = true)
+                                || listModel.responseData!!.planStatus.equals("Inactive",ignoreCase = true)) {
+                                binding.tvStatusRenew.text = "(Expired On " + sdf1.format(d1) + ")"
+                            }else if(listModel.responseData!!.planStatus.equals("Active",ignoreCase = true)) {
+                                binding.tvStatusRenew.text = "(Renew On " + sdf1.format(d1) + ")"
+                            }
 
                             binding.tvStatus.text = listModel.responseData!!.planStatus
                         }

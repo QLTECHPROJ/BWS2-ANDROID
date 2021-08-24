@@ -54,9 +54,6 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
     var value: Int = 2
     var step = 1
     var min = 1
-    var planFlag: String = ""
-    var planId: String = ""
-    var price: String = ""
     val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
     lateinit var billingClient: BillingClient
     lateinit var params: SkuDetailsParams
@@ -354,7 +351,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
             holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             val gson = Gson()
-            binding1.btnFreeJoin.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[0]
+            binding1.btnFreeJoin.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[1]
             i.putExtra("PlanData", gson.toJson(listModelList))
             i.putExtra("TrialPeriod", "")
             i.putExtra("position", position)

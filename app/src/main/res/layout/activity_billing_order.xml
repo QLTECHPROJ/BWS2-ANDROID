@@ -126,7 +126,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,29 +134,66 @@
                     android:background="@drawable/rounded_light_gray"
                     android:backgroundTint="#227681"
                     tools:targetApi="lollipop"
+                    android:orientation="vertical"
                     android:baselineAligned="false">
 
                     <LinearLayout
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingEnd="@dimen/_0sdp"
+                        android:weightSum="1">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.85"
+                            android:paddingStart="@dimen/_14sdp"
+                            android:paddingTop="@dimen/_18sdp">
+                            <TextView
+                                android:id="@+id/tvTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:text=""
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_17sdp"
+                                android:visibility="visible"
+                                tools:ignore="SpUsage" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.1"
+                            android:paddingTop="@dimen/_24sdp"
+                            android:paddingStart="@dimen/_0sdp">
+
+                            <CheckBox
+                                android:id="@+id/cbChecked"
+                                style="@android:style/Widget.CompoundButton.RadioButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:button="@drawable/radio_btn_background"
+                                android:buttonTint="@color/white"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center_vertical|start"
+                                android:layoutDirection="rtl"
+                                android:overScrollMode="never"
+                                android:checked="true"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_15sdp"
+                                android:visibility="visible"
+                                tools:ignore="SpUsage" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:paddingStart="@dimen/_14sdp"
-                        android:paddingEnd="@dimen/_0sdp"
-                        android:paddingTop="@dimen/_18sdp"
                         android:paddingBottom="@dimen/_20sdp">
-
-                        <TextView
-                            android:id="@+id/tvTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:text=""
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_17sdp"
-                            android:visibility="visible"
-                            tools:ignore="SpUsage" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -405,37 +441,8 @@
                                     tools:ignore="SpUsage" />
                             </LinearLayout>
                         </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.1"
-                        android:paddingTop="@dimen/_24sdp"
-                        android:paddingStart="@dimen/_0sdp"
-                        android:paddingEnd="@dimen/_16sdp">
-
-                        <CheckBox
-                            android:id="@+id/cbChecked"
-                            style="@android:style/Widget.CompoundButton.RadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:button="@drawable/radio_btn_background"
-                            android:buttonTint="@color/white"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center_vertical|start"
-                            android:layoutDirection="rtl"
-                            android:overScrollMode="never"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp"
-                            android:visibility="visible"
-                            tools:ignore="SpUsage" />
-
                     </LinearLayout>
                 </LinearLayout>
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlan"
                     android:layout_width="match_parent"

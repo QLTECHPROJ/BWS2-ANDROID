@@ -485,6 +485,12 @@ interface APINewInterface {
         @Field("UserId")
         UserId: String?): Call<PlanlistInappModel>
 
+    @POST("userplanlist")
+    @FormUrlEncoded
+    fun getUpgradePlanlistInapp(
+        @Field("UserId")
+        UserId: String?): Call<PlanlistInappModel>
+
     @POST("plandetails")
     @FormUrlEncoded
     fun getPlanDetails(

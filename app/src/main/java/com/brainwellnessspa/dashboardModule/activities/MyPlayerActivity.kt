@@ -509,7 +509,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             isDisclaimer = 0
                             val shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                             val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
+                            editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1")
                             editor.apply()
                             removeArray()
                             val p = Properties()
