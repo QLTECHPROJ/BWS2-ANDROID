@@ -77,10 +77,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         val unicode = 0x2B05
         val textIcon = String(Character.toChars(unicode))
 
-        if (isFirst.equals("1", ignoreCase = true)) {
+        if (isFirst.equals("1")) {
             showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
         }
-
     }
 
     /* on Activity Result method use for battery optimization permission allow or deny*/
@@ -108,7 +107,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                 val gson = Gson()
                 val json = shareded.getString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toString())
                 var userActivityTrackModel = ArrayList<UserActivityTrackModel>()
-                if (!json.equals(gson.toString(), ignoreCase = true)) {
+                if (!json.equals(gson.toString())) {
                     val type = object : TypeToken<ArrayList<UserActivityTrackModel?>?>() {}.type
                     userActivityTrackModel = gson.fromJson(json, type)
                     if (userActivityTrackModel.size != 0) {
@@ -146,7 +145,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     /*  This function is use for  back press event handle */
     override fun onBackPressed() {
-        if (isFirst.equals("1", ignoreCase = true)) {
+        if (isFirst.equals("1")) {
             finishAffinity()
         }
         if (binding.navView.selectedItemId == R.id.navigation_Home) {
