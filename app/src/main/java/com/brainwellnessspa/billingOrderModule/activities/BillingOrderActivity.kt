@@ -11,28 +11,21 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.billingOrderModule.fragments.BillingAddressFragment
-import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment
 import com.brainwellnessspa.billingOrderModule.models.PlanDetails
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 /* This is the old BWA billing order activity */
 class BillingOrderActivity : AppCompatActivity() {
@@ -41,7 +34,7 @@ class BillingOrderActivity : AppCompatActivity() {
     var userId: String? = ""
     var coUserId: String? = ""
     private var numStarted = 0
-    lateinit var listModelGlobal:PlanDetails
+    lateinit var listModelGlobal: PlanDetails
     var stackStatus = 0
     lateinit var activity: Activity
     lateinit var ctx: Context
@@ -67,10 +60,11 @@ class BillingOrderActivity : AppCompatActivity() {
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
-            i.putExtra("PlanId",listModelGlobal.responseData!!.planId)
-            i.putExtra("DeviceType",listModelGlobal.responseData!!.deviceType)
+            i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
+            i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
+            finish()
         }
 
         /* This is the cancel plan click */
@@ -79,6 +73,7 @@ class BillingOrderActivity : AppCompatActivity() {
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("screenView", "1")
             startActivity(i)
+            finish()
         }
 
         /* This condition is check about application in background or foreground */
@@ -96,11 +91,11 @@ class BillingOrderActivity : AppCompatActivity() {
         BWSApplication.addToSegment(CONSTANTS.Billing_Order_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the tab layout showing code */
-/*        binding.viewPager.offscreenPageLimit = 2
+        /*        binding.viewPager.offscreenPageLimit = 2
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan")) //        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL*/
-       /* if (BWSApplication.isNetworkConnected(this)) {
+        /* if (BWSApplication.isNetworkConnected(this)) {
             val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
             binding.viewPager.adapter = adapter
             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
@@ -118,7 +113,7 @@ class BillingOrderActivity : AppCompatActivity() {
         }
 
         getPlanDetails()
-     /*   binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+        /*   binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 binding.viewPager.currentItem = tab.position
             }
@@ -131,6 +126,19 @@ class BillingOrderActivity : AppCompatActivity() {
     override fun onResume() {
         getPlanDetails()
         super.onResume()
+    }
+
+    fun getCurrencySymbol(currencyCode: String?, priceAmountMicros: String): String? {
+        return try {
+            val currency = Currency.getInstance(currencyCode)
+            val priceAmount: Float = priceAmountMicros.toFloat() / 1000000.0f
+            val priceAmount1 = "0"
+            val price = "${currency.symbol}$priceAmount$priceAmount1"
+            price
+        } catch (e: java.lang.Exception) {
+            "$"
+        }
+
     }
 
     private fun getPlanDetails() {
@@ -151,35 +159,38 @@ class BillingOrderActivity : AppCompatActivity() {
 
                             binding.tvTitle.text = listModel.responseData!!.planDescription
                             binding.tvPlan.text = listModel.responseData!!.planName
-                            binding.tvPrice.text = "$" + listModel.responseData!!.price +" "+ listModel.responseData!!.intervalTime
+                            val simbl = getCurrencySymbol("INR", "650000000")
+                            //                            binding.tvPrice.text = simbl + /*listModel.responseData!!.price+ */ " " + listModel.responseData!!.intervalTime
+                            binding.tvPrice.text = "$" + listModel.responseData!!.price + " " + listModel.responseData!!.intervalTime
                             val c: Calendar = Calendar.getInstance()
                             c.timeInMillis = listModel.responseData!!.planPurchaseDate!!.toInt() * 1000L
                             val d: Date = c.time
                             val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
-                            binding.tvActive.text =  sdf.format(d)
+                            binding.tvActive.text = sdf.format(d)
 
                             val c1: Calendar = Calendar.getInstance()
                             c1.timeInMillis = listModel.responseData!!.planExpireDate!!.toInt() * 1000L
                             val d1: Date = c1.time
                             val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
-                            if(listModel.responseData!!.planStatus.equals("Cancelled",ignoreCase = true)
-                                || listModel.responseData!!.planStatus.equals("Inactive",ignoreCase = true)) {
+                            if (listModel.responseData!!.planStatus.equals("Cancelled", ignoreCase = true) || listModel.responseData!!.planStatus.equals("Inactive", ignoreCase = true)) {
                                 binding.tvStatusRenew.text = "(Expired On " + sdf1.format(d1) + ")"
-                            }else if(listModel.responseData!!.planStatus.equals("Active",ignoreCase = true)) {
+                            } else if (listModel.responseData!!.planStatus.equals("Active", ignoreCase = true)) {
                                 binding.tvStatusRenew.text = "(Renew On " + sdf1.format(d1) + ")"
+                            } else if (listModel.responseData!!.planStatus.equals("Pause", ignoreCase = true)) {
+                                binding.tvStatusRenew.text = "(Resume On " + sdf1.format(d1) + ")"
                             }
 
                             binding.tvStatus.text = listModel.responseData!!.planStatus
 
-                            if(listModel.responseData!!.planStatus.equals("Inactive")){
+                            if (listModel.responseData!!.planStatus.equals("Inactive")) {
                                 binding.btnUpgradePlan.visibility = View.VISIBLE
-                            }else{
+                            } else {
                                 binding.btnUpgradePlan.visibility = View.GONE
                             }
 
-                            if(listModel.responseData!!.planStatus.equals("active")){
+                            if (listModel.responseData!!.planStatus.equals("active")) {
                                 binding.tvCancel.visibility = View.VISIBLE
-                            }else{
+                            } else {
                                 binding.tvCancel.visibility = View.GONE
                             }
                         }
@@ -205,7 +216,7 @@ class BillingOrderActivity : AppCompatActivity() {
     }
 
     /* This class is the handling tab layout */
-  /*  inner class TabAdapter(fm: FragmentManager?, private var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
+    /*  inner class TabAdapter(fm: FragmentManager?, private var totalTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             val bundle: Bundle
             return when (position) {
