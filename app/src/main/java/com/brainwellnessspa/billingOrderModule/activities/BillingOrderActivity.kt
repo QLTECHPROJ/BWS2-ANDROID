@@ -170,6 +170,18 @@ class BillingOrderActivity : AppCompatActivity() {
                             }
 
                             binding.tvStatus.text = listModel.responseData!!.planStatus
+
+                            if(listModel.responseData!!.planStatus.equals("Inactive")){
+                                binding.btnUpgradePlan.visibility = View.VISIBLE
+                            }else{
+                                binding.btnUpgradePlan.visibility = View.GONE
+                            }
+
+                            if(listModel.responseData!!.planStatus.equals("active")){
+                                binding.tvCancel.visibility = View.VISIBLE
+                            }else{
+                                binding.tvCancel.visibility = View.GONE
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
