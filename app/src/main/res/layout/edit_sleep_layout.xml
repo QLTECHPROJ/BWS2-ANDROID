@@ -27,7 +27,6 @@
             android:layout_marginTop="@dimen/_33sdp"
             android:fontFamily="@font/montserrat_bold"
             android:gravity="center"
-            android:text="@string/logout"
             android:textColor="@color/black"
             android:textSize="@dimen/_18sdp"
             tools:ignore="SpUsage" />
@@ -41,7 +40,7 @@
             android:layout_marginTop="@dimen/_18sdp"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
-            android:text="@string/logout_quotes"
+            android:lineSpacingExtra="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp"
             tools:ignore="SpUsage" />
@@ -64,11 +63,11 @@
                 android:background="@drawable/ripple_bg_theme"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
-                android:paddingHorizontal="@dimen/_20sdp"
+                android:paddingHorizontal="@dimen/_22sdp"
                 android:text="@string/edit_sleep_time"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
                 tools:ignore="SpUsage" />
 
             <TextView
@@ -81,7 +80,7 @@
                 android:text="Edit Area of Focus"
                 android:textAllCaps="true"
                 android:textColor="@color/dark_blue_gray"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
                 tools:ignore="SpUsage" />
 
         </LinearLayout>

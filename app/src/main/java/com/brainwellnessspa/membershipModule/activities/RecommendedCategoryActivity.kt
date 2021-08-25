@@ -735,7 +735,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 startActivity(i)
                                 finish()
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodefail)) -> {
                                 if(listModel.responseData!!.showAlert.equals("1")){
                                     //show alert popup
                                     val dialog = Dialog(ctx!!)
