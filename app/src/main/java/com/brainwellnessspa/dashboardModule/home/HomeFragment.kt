@@ -93,8 +93,8 @@ class HomeFragment : Fragment() {
     var myBackPress = false
     var gson: Gson = Gson()
     var homelistModel: HomeScreenModel = HomeScreenModel()
-    private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
-    private var mBottomSheetDialog: BottomSheetDialog? = null
+    lateinit var mBottomSheetBehavior: BottomSheetBehavior<View>
+    lateinit var mBottomSheetDialog: BottomSheetDialog
     lateinit var dialog: Dialog
 
     /* This listener is use for get play or pause button status when user play pause from music notifiction bar */
@@ -134,16 +134,22 @@ class HomeFragment : Fragment() {
 
         val p = Properties()
         val gson = Gson()
-        if (!json5.equals(gson.toString(), ignoreCase = true)) areaOfFocus = json5
+        if (!json5.equals(gson.toString())) areaOfFocus = json5
         /* Get sleep time from share pref*/
         val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
-        if (!json.equals(gson.toString(), ignoreCase = true)) {
+        if (!json.equals(gson.toString())) {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
+        val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(requireActivity()), R.layout.user_list_custom_layout, null, false)
+        mBottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BaseBottomSheetDialog)
+        mBottomSheetDialog.setContentView(layoutBinding.root)
+        mBottomSheetBehavior = BottomSheetBehavior<View>()
+        mBottomSheetBehavior.isHideable = true
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 //        p.putValue("WellnessScore", indexScore)
 //        p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
@@ -249,17 +255,19 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
         binding.tvReminder.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
-                if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0") ||
+                    homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("")) {
                     binding.tvReminder.text = getString(R.string.set_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("1")) {
                     binding.tvReminder.text = getString(R.string.update_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("2")) {
                     binding.tvReminder.text = getString(R.string.update_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                 }
@@ -339,14 +347,7 @@ class HomeFragment : Fragment() {
         /* User list layout click */
         binding.llBottomView.setOnClickListener {
             if (isNetworkConnected(requireActivity())) {
-                val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(requireActivity()), R.layout.user_list_custom_layout, null, false)
-                mBottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BaseBottomSheetDialog)
-
-                mBottomSheetDialog!!.setContentView(layoutBinding.root)
-                mBottomSheetBehavior = BottomSheetBehavior<View>()
-                mBottomSheetBehavior!!.isHideable = true
-                mBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
-                mBottomSheetDialog!!.show()
+                mBottomSheetDialog.show()
 
                 val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
                 layoutBinding.rvUserList.layoutManager = mLayoutManager
@@ -1810,12 +1811,12 @@ class HomeFragment : Fragment() {
                                                             prepareHomeData()
 
                                                             val activity = SplashActivity()
-                                                            activity.setAnalytics(activity.getString(R.string.segment_key_real_2_staging), requireActivity())
+                                                            activity.setAnalytics(getString(R.string.segment_key_real_2_staging), requireActivity())
 
                                                             //    showToast(listModel.responseMessage,requireActivity())
                                                             callIdentify(requireActivity())
                                                             val p1 = Properties()
-                                                            p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                            p1.putValue("deviceId", Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID))
                                                             p1.putValue("deviceType", "Android")
                                                             p1.putValue("name", listModel.ResponseData.Name)
                                                             p1.putValue("countryCode", "")
@@ -1829,8 +1830,8 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("clinikoId", "")
                                                             var isProf = false
                                                             var isAss = false
-                                                            isProf = if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true)) true else false
-                                                            isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) true else false
+                                                            isProf = if (listModel.ResponseData.isProfileCompleted.equals("1")) true else false
+                                                            isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1")) true else false
                                                             p1.putValue("isProfileCompleted", isProf)
                                                             p1.putValue("isAssessmentCompleted", isAss)
                                                             p1.putValue("WellnessScore", listModel.ResponseData.indexScore)
