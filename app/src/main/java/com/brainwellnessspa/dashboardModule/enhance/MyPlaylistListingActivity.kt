@@ -1039,6 +1039,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             deleteCall(activity)
                             showToast(listModel1.responseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")
@@ -1231,6 +1232,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     listModel.responseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                         deleteCall(activity)
                                         val i = Intent(activity, SignInActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("mobileNo", "")
                                         i.putExtra("countryCode", "")
                                         i.putExtra("name", "")

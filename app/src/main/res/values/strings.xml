@@ -39,7 +39,7 @@
     <string name="view_invoice"><u>View Invoice</u></string>
     <string name="downloads">Downloads</string>
     <string name="invoices">Invoices</string>
-    <string name="logout">Log out</string>
+    <string name="logout">Log Out</string>
     <string name="faq">FAQ</string>
     <string name="reminder">Reminder</string>
     <string name="billing_and_order">Billing and Order</string>
@@ -511,7 +511,7 @@
     <string name="enter_a_4_digit_number_this_is_your_secret_access_code">Enter a 4-digit number. This is your secret access code.</string>
     <string name="delete_account_popup_title">Are you sure you want to permanently delete this account?</string>
     <string name="delete_account_popup_subtitle">You can\'t undo this action</string>
-    <string name="pls_provide_latest_pin">Please provide the latest PIN to login</string>
+    <string name="pls_provide_latest_pin">Please provide the latest 4 digit PIN to login</string>
     <string name="session_description">Session Description</string>
     <string name="start">Start</string>
     <string name="home_address">Home Address</string>
@@ -592,5 +592,8 @@
     <string name="update_plan">UPDATE PLAN</string>
     <string name="more_plan_for_update">More Plan for Update</string>
     <string name="last_active_plan">Last Active Plan</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="emotional_empowerment_program_with_14_sessions_aiming_to_reduce_your_mental_emotional_suffering_and_destructive_habits_to_reclaim_their_happiness_mental_clarity_and_self_confidence"><![CDATA[Emotional Empowerment Program with 14 sessions aiming to reduce your mental & emotional suffering and destructive habits to reclaim your happiness, mental clarity and self-confidence.]]></string>
+    <string name="empower_program_is_going_live_very_soon">Empower Program is going live very soon.</string>
 </resources>
 

@@ -495,7 +495,7 @@
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/upgrade_plan"
                 android:textColor="@color/white"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvCancel"
@@ -509,7 +509,7 @@
                 android:text="@string/cancel"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/_18sdp"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:ignore="SpUsage" />
         </LinearLayout>
     </RelativeLayout>

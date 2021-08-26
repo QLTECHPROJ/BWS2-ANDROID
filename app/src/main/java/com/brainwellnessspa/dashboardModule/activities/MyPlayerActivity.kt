@@ -1260,6 +1260,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                             deleteCall(act)
                                             showToast(listModel.responseMessage, act)
                                             val i = Intent(act, SignInActivity::class.java)
+                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             i.putExtra("mobileNo", "")
                                             i.putExtra("countryCode", "")
                                             i.putExtra("name", "")
@@ -1481,6 +1482,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             deleteCall(act)
                             showToast(model.responseMessage, act)
                             val i = Intent(act, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")

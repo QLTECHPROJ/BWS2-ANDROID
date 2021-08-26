@@ -47,15 +47,15 @@ class CouserSetupPinActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val newPIN: String = binding.etNewPIN.text.toString().trim()
             val confirmPIN: String = binding.etConfirmPIN.text.toString().trim()
-            if (newPIN.equals("", ignoreCase = true) && confirmPIN.equals("", ignoreCase = true)) {
+            if (newPIN == "" && confirmPIN == "") {
                 binding.btnDone.isEnabled = false
                 binding.btnDone.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 binding.btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (newPIN.equals("", ignoreCase = true)) {
+            } else if (newPIN == "") {
                 binding.btnDone.isEnabled = false
                 binding.btnDone.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 binding.btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (confirmPIN.equals("", ignoreCase = true)) {
+            } else if (confirmPIN == "") {
                 binding.btnDone.isEnabled = false
                 binding.btnDone.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 binding.btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -94,7 +94,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
             subUserId = intent.getStringExtra("subUserId")
         }
         binding.llBack.setOnClickListener {
-            if (IsFirstClick.equals("1", ignoreCase = true)) {
+            if (IsFirstClick.equals("1")) {
                 finishAffinity()
             } else {
                 finish()
@@ -140,7 +140,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (IsFirstClick.equals("1", ignoreCase = true)) {
+        if (IsFirstClick.equals("1")) {
             finishAffinity()
         } else {
             finish()
@@ -190,7 +190,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: SetLoginPinModel? = response.body()
                             if (listModel != null) {
-                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                                     showToast(listModel.responseMessage, activity)
                                     if (mainAccountID == listModel.responseData?.userId) {
                                         val intent = Intent(applicationContext, WalkScreenActivity::class.java)
@@ -199,7 +199,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        if (comeHomeScreen.equals("1", ignoreCase = true)) {
+                                        if (comeHomeScreen.equals("1")) {
                                             finish()
                                         } else {
                                             val intent = Intent(applicationContext, UserListActivity::class.java)
@@ -208,7 +208,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                             finish()
                                         }
                                     }
-                                } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
+                                } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted))) {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)

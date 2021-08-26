@@ -213,7 +213,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: RecommendedCategoryModel = response.body()!!
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 binding.searchView.clearFocus()
                                 searchEditText.setText("")
                                 binding.searchView.setQuery("", false)
@@ -230,7 +230,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!, activity)
                                 binding.rvPerantCat.adapter = adapter1 //                            }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
@@ -576,7 +576,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
             val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
             catList.sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-            if (!json2.equals(catList.gson.toString(), ignoreCase = true)) {
+            if (!json2.equals(catList.gson.toString())) {
                 val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
                 catList.selectedCategoriesName = catList.gson.fromJson(json5, type1)
@@ -684,7 +684,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 getPlaylistAudio(listModel.responseData!!.suggestedPlaylist!!.playlistID!!,coUserId!!, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!)
                                 val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
@@ -722,7 +722,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 startActivity(i)
                                 finish()
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
@@ -793,14 +793,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         when {
-            backClick.equals("0", ignoreCase = true) -> {
+            backClick.equals("0") -> {
                 val i = Intent(ctx, SleepTimeActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("SleepTime", sleepTime)
                 startActivity(i)
                 finish()
             }
-            backClick.equals("1", ignoreCase = true) -> {
+            backClick.equals("1") -> {
                 finish()
             }
             else -> {

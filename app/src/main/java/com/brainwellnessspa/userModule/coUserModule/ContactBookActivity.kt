@@ -85,6 +85,7 @@ class ContactBookActivity : AppCompatActivity() {
             IsFirstClick = "0"
             myBackPress = true
             val i = Intent(applicationContext, AddCouserActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
             finish()
         }
@@ -142,6 +143,7 @@ class ContactBookActivity : AppCompatActivity() {
         IsFirstClick = "0"
         myBackPress = true
         val i = Intent(applicationContext, AddCouserActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(i)
         finish()
     }
@@ -374,6 +376,7 @@ class ContactBookActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")

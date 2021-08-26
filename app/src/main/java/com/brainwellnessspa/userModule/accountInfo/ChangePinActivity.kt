@@ -36,19 +36,19 @@ class ChangePinActivity : AppCompatActivity() {
             val currentPIN: String = binding.etCurrentPIN.text.toString().trim()
             val newPIN: String = binding.etNewPIN.text.toString().trim()
             val confirmPIN: String = binding.etConfirmPIN.text.toString().trim()
-            if (currentPIN.equals("", ignoreCase = true) && newPIN.equals("", ignoreCase = true) && confirmPIN.equals("", ignoreCase = true)) {
+            if (currentPIN == "" && newPIN == "" && confirmPIN == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (currentPIN.equals("", ignoreCase = true)) {
+            } else if (currentPIN == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (newPIN.equals("", ignoreCase = true)) {
+            } else if (newPIN == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
-            } else if (confirmPIN.equals("", ignoreCase = true)) {
+            } else if (confirmPIN == "") {
                 binding.btnSave.isEnabled = false
                 binding.btnSave.setTextColor(ContextCompat.getColor(activity, R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -107,40 +107,40 @@ class ChangePinActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun changePin() {
         if (binding.etCurrentPIN.text.toString() == "") {
-            binding.txtCurrentPINError.text = "Please provide a current valid PIN"
+            binding.txtCurrentPINError.text = "Please provide 4 digit PIN"
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
-        } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length != 4) {
-            binding.txtCurrentPINError.text = "Please provide a current valid PIN"
+        } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length <= 4) {
+            binding.txtCurrentPINError.text = "Please provide 4 digit PIN"
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etNewPIN.text.toString() == "") {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "Please provide the latest PIN to login"
+            binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
-        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
+        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length <= 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.VISIBLE
-            binding.txtNewPINError.text = "Please provide the latest PIN to login"
+            binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
         } else if (binding.etConfirmPIN.text.toString() == "") {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
-        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
+            binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
+        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length <= 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please provide the latest PIN to login"
+            binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
         } else if (binding.etConfirmPIN.text.toString() != binding.etNewPIN.text.toString()) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
-            binding.txtConfirmPINError.text = "Please check if both the PINs are same"
+            binding.txtConfirmPINError.text = getString(R.string.check_both_pin_same_or_not)
         } else {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
@@ -157,13 +157,13 @@ class ChangePinActivity : AppCompatActivity() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@ChangePinActivity)
                             val listModel: ChangePinModel = response.body()!!
                             when {
-                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                     val p = Properties()
                                     BWSApplication.addToSegment("Login Pin Changed", p, CONSTANTS.track)
                                     finish()
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
-                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)

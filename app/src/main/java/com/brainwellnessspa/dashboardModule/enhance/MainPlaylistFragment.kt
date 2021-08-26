@@ -466,6 +466,7 @@ class MainPlaylistFragment : Fragment() {
                 }
                 addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 val i = Intent(ctx, AddPlaylistActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("AudioId", "")
                 i.putExtra("ScreenView", "Playlist View All Screen")
                 i.putExtra("PlaylistID", listModel[position].playlistID)

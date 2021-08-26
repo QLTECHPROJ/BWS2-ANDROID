@@ -122,23 +122,28 @@ class AddCouserActivity : AppCompatActivity() {
                             if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
                                 if (authOtpModel.ResponseData.MainAccountID.equals(authOtpModel.ResponseData.UserId, ignoreCase = true)) {
                                     val i = Intent(applicationContext, UserDetailActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(i)
                                 } /* else {
                                        if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                             intent.putExtra("IsFirst", "0")
                                             startActivity(intent)
                                             finish()
@@ -147,6 +152,7 @@ class AddCouserActivity : AppCompatActivity() {
                             } else if (authOtpModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || authOtpModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
                                 comeHomeScreen = "0"
                                 val i = Intent(applicationContext, CouserSetupPinActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("subUserId", authOtpModel.ResponseData.UserId)
                                 startActivity(i)
                             }
@@ -155,6 +161,7 @@ class AddCouserActivity : AppCompatActivity() {
                             deleteCall(activity)
                             showToast(authOtpModel.ResponseMessage, activity)
                             val i = Intent(activity, SignInActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra("mobileNo", "")
                             i.putExtra("countryCode", "")
                             i.putExtra("name", "")
@@ -191,6 +198,7 @@ class AddCouserActivity : AppCompatActivity() {
             mainLayout.setOnClickListener {
                 if (isNetworkConnected(this)) {
                     val i = Intent(applicationContext, ContactBookActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(i)
                     finish()
                     dialog.dismiss()

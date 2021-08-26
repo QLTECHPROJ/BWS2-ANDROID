@@ -60,9 +60,9 @@ class BillingOrderActivity : AppCompatActivity() {
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
 //            finish()
         }
@@ -102,12 +102,12 @@ class BillingOrderActivity : AppCompatActivity() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL*/
         /* if (BWSApplication.isNetworkConnected(this)) {
-            val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
-            binding.viewPager.adapter = adapter
-            binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
-        }*/
+             val adapter = TabAdapter(supportFragmentManager, binding.tabLayout.tabCount)
+             binding.viewPager.adapter = adapter
+             binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
+         } else {
+             BWSApplication.showToast(getString(R.string.no_server_found), this)
+         }*/
 
         if (intent.hasExtra("payment")) {
             payment = intent.getIntExtra("payment", 0)
@@ -124,9 +124,9 @@ class BillingOrderActivity : AppCompatActivity() {
                 binding.viewPager.currentItem = tab.position
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })*/
+               override fun onTabUnselected(tab: TabLayout.Tab) {}
+               override fun onTabReselected(tab: TabLayout.Tab) {}
+           })*/
     }
 
     override fun onResume() {
@@ -249,10 +249,10 @@ class BillingOrderActivity : AppCompatActivity() {
             }
         }
 
-        override fun getCount(): Int {
-            return totalTabs
-        }
-    }*/
+          override fun getCount(): Int {
+              return totalTabs
+          }
+      }*/
 
     /* This class is check about application in background or foreground */
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {

@@ -137,7 +137,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -152,12 +152,13 @@
                     android:id="@+id/tvRemainDev"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_40sdp"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/this_page_is_under_construction"
-                    android:textColor="@color/gray"
+                    android:text="@string/emotional_empowerment_program_with_14_sessions_aiming_to_reduce_your_mental_emotional_suffering_and_destructive_habits_to_reclaim_their_happiness_mental_clarity_and_self_confidence"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="RtlSymmetry,SpUsage" />
 
@@ -165,12 +166,13 @@
                     android:id="@+id/tvRemainDevWork"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/we_re_working_on_it"
-                    android:textColor="@color/gray"
+                    android:text="@string/empower_program_is_going_live_very_soon"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
                     tools:ignore="RtlSymmetry,SpUsage" />
 

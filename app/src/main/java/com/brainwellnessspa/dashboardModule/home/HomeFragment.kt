@@ -158,15 +158,11 @@ class HomeFragment : Fragment() {
         DB = getAudioDataBase(requireActivity())
         binding.tvName.text = userName
         val name: String?
+        binding.llBottomView.isEnabled = true
+        binding.llBottomView.isClickable = true
 
         if (isMainAccount.equals("1")) {
-            binding.ivClickDown.visibility = View.VISIBLE
-            binding.llBottomView.isEnabled = true
-            binding.llBottomView.isClickable = true
         } else {
-            binding.ivClickDown.visibility = View.GONE
-            binding.llBottomView.isEnabled = false
-            binding.llBottomView.isClickable = false
         }
 
         prepareHomeData()
@@ -1634,7 +1630,7 @@ class HomeFragment : Fragment() {
 
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
 
-            if (modelList[position].name.equals(userName, ignoreCase = true)) {
+            if (modelList[position].name.equals(userName)) {
                 holder.bind.ivCheck.visibility = View.VISIBLE
             } else {
                 holder.bind.ivCheck.visibility = View.INVISIBLE
@@ -1654,7 +1650,7 @@ class HomeFragment : Fragment() {
                 if (IsLock.equals("1")) {
                   callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
-                    if (modelList[position].isPinSet.equals("1", ignoreCase = true)) {
+                    if (modelList[position].isPinSet.equals("1")) {
                         if (userId!! == modelList[position].userID) {
                             mBottomSheetDialog?.hide()
                         } else {
@@ -1695,7 +1691,7 @@ class HomeFragment : Fragment() {
                             }
 
                             btnDone.setOnClickListener {
-                                if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                                if (edtOTP1.text.toString().equals("") && edtOTP2.text.toString().equals("") && edtOTP3.text.toString().equals("") && edtOTP4.text.toString().equals("")) {
                                     txtError.visibility = View.VISIBLE
                                     txtError.text = "Please enter OTP"
                                 } else {
@@ -1712,7 +1708,7 @@ class HomeFragment : Fragment() {
                                                     progressBar.visibility = View.GONE
                                                     val listModel: AuthOtpModel = response.body()!!
                                                     when {
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                                             dialog.dismiss()
                                                             mBottomSheetDialog?.hide()/*if (!listModel.responseData!!.userID.equals(
                                                             userId,
@@ -1733,39 +1729,33 @@ class HomeFragment : Fragment() {
                                                         mainAccountId = listModel.ResponseData.MainAccountID
                                                         userId = listModel.ResponseData.UserId
                                                         IsLock = listModel.ResponseData.Islock
-                                                        if (listModel.ResponseData.isPinSet.equals("1")) {
-                                                            if (listModel.ResponseData.IsFirst.equals("1")) {
+                                                        if (listModel.ResponseData.isPinSet == "1") {
+                                                            if (listModel.ResponseData.IsFirst == "1") {
                                                                 val intent = Intent(activity, EmailVerifyActivity::class.java)
-                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
+                                                            } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
-                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("0")) {
+                                                            } else if (listModel.ResponseData.isProfileCompleted == "0") {
                                                                 val intent = Intent(activity, ProfileProgressActivity::class.java)
-                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.AvgSleepTime.equals("")) {
+                                                            } else if (listModel.ResponseData.AvgSleepTime == "") {
                                                                 val intent = Intent(activity, SleepTimeActivity::class.java)
-                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted.equals("1") && listModel.ResponseData.isAssessmentCompleted.equals("1")) {
+                                                            } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
                                                                 val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                                 intent.putExtra("IsFirst", "0")
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
                                                             }
-                                                        } else if (listModel.ResponseData.isPinSet.equals("0") || listModel.ResponseData.isPinSet.equals("")) {
+                                                        } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
                                                             IsFirstClick = "0"
                                                             val intent = Intent(activity, AddCouserActivity::class.java)
-                                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                             requireActivity().startActivity(intent)
                                                             requireActivity().finish()
                                                         }
@@ -1849,7 +1839,7 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
                                                             addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         }
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                                             txtError.visibility = View.GONE
                                                             txtError.text = ""
                                                             deleteCall(activity)
@@ -1863,7 +1853,7 @@ class HomeFragment : Fragment() {
                                                             startActivity(i)
                                                             requireActivity().finish()
                                                         }
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodefail)) -> {
                                                             txtError.visibility = View.VISIBLE
                                                             txtError.text = listModel.ResponseMessage
                                                         }

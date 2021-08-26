@@ -33,11 +33,11 @@ class UserDetailActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             val name: String = binding.etName.text.toString().trim()
             val email: String = binding.etEmail.text.toString().trim()
-            if (name.equals("", ignoreCase = true) && email.equals("", ignoreCase = true)) {
+            if (name == "" && email == "") {
                 checkBtnStatus(0)
-            } else if (name.equals("", ignoreCase = true)) {
+            } else if (name == "") {
                 checkBtnStatus(0)
-            } else if (email.equals("", ignoreCase = true)) {
+            } else if (email == "") {
                 checkBtnStatus(0)
             } else {
                 checkBtnStatus(1)
@@ -98,7 +98,7 @@ class UserDetailActivity : AppCompatActivity() {
                             binding.txtEmailError.visibility = View.GONE
                             val listModel: AddUserModel = response.body()!!
                             when {
-                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                     if (addCouserBackStatus == 1) {
                                         finish()
                                     } else {
@@ -109,7 +109,7 @@ class UserDetailActivity : AppCompatActivity() {
                                     }
                                     showToast(listModel.responseMessage, activity)
                                 }
-                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)

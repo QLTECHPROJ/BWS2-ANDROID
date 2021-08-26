@@ -103,7 +103,7 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:contentDescription="@string/todo"
                             android:src="@drawable/ic_down_arrow"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             app:tint="@color/gray" />
 
                     </LinearLayout>

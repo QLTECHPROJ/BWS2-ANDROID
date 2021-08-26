@@ -303,6 +303,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                                 deleteCall(activity)
                                 showToast(listModels.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -423,6 +424,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                      addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                     if (playlistId.equals("", ignoreCase = true)) {
                         val i = Intent(ctx, AddPlaylistActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("AudioId", listModel[position].iD)
                         i.putExtra("ScreenView", "Audio Details Screen")
                         i.putExtra("PlaylistID", "")

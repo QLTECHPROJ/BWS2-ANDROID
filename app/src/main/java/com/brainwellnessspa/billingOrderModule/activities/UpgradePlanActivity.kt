@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -19,26 +18,17 @@ import com.android.billingclient.api.*
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
-import com.brainwellnessspa.databinding.ActivityEnhanceBinding
 import com.brainwellnessspa.databinding.ActivityUpgradePlanBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.OrderSummaryActivity
-import com.brainwellnessspa.membershipModule.adapters.SubscriptionAdapter
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
 
 /* This is the upgrade plan act */
 class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
@@ -53,13 +43,14 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
     var value: Int = 2
     var step = 1
     var min = 1
-    var planId:String = ""
+    var planId: String = ""
     var DeviceType: String = ""
     val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
     lateinit var billingClient: BillingClient
     lateinit var params: SkuDetailsParams
     var intentflag: String = ""
     var skuDetailList = arrayListOf<SkuDetails>()
+
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)/* This is the layout showing */
@@ -76,7 +67,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         }
         i = Intent(ctx, OrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        if(intent != null){
+        if (intent != null) {
             planId = intent.getStringExtra("PlanId").toString()
             DeviceType = intent.getStringExtra("DeviceType").toString()
         }
@@ -145,13 +136,13 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                             binding.tvDesc.text = listModel.responseData!!.desc
 
                             val p = Properties()
-                            if(intent != null){
+                            if (intent != null) {
                                 planId = intent.getStringExtra("PlanId").toString()
                                 DeviceType = intent.getStringExtra("DeviceType").toString()
                             }
-                            if(DeviceType == "1") {
-                                for(i2 in listModel.responseData!!.plan!!.indices) {
-                                    if(planId.equals(listModel.responseData!!.plan!![i2].androidplanId,ignoreCase = true)) {
+                            if (DeviceType == "1") {
+                                for (i2 in listModel.responseData!!.plan!!.indices) {
+                                    if (planId.equals(listModel.responseData!!.plan!![i2].androidplanId, ignoreCase = true)) {
                                         binding.tvOldPlanTitle.text = listModel.responseData!!.plan!![i2].planInterval
                                         binding.tvOldPlanContent.text = listModel.responseData!!.plan!![i2].subName
                                         p.putValue("planId",planId)
@@ -169,9 +160,9 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                                         break
                                     }
                                 }
-                            } else if(DeviceType == "0") {
-                                for(i2 in listModel.responseData!!.plan!!.indices) {
-                                    if(planId.equals(listModel.responseData!!.plan!![i2].iOSplanId,ignoreCase = true)) {
+                            } else if (DeviceType == "0") {
+                                for (i2 in listModel.responseData!!.plan!!.indices) {
+                                    if (planId.equals(listModel.responseData!!.plan!![i2].iOSplanId, ignoreCase = true)) {
                                         binding.tvOldPlanTitle.text = listModel.responseData!!.plan!![i2].planInterval
                                         binding.tvOldPlanContent.text = listModel.responseData!!.plan!![i2].subName
                                         p.putValue("planId",planId)
@@ -204,23 +195,15 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         setupBillingClient()
         super.onResume()
     }
-    class PlanListAdapter(
-        var listModelList: List<PlanlistInappModel.ResponseData.Plan>,
-        var ctx: Context,
-        var i: Intent,var skuDetailList: java.util.ArrayList<SkuDetails>, var binding1: ActivityUpgradePlanBinding
-    ) :
-        RecyclerView.Adapter<PlanListAdapter.MyViewHolder>() {
+
+    class PlanListAdapter(var listModelList: List<PlanlistInappModel.ResponseData.Plan>, var ctx: Context, var i: Intent, var skuDetailList: java.util.ArrayList<SkuDetails>, var binding1: ActivityUpgradePlanBinding) : RecyclerView.Adapter<PlanListAdapter.MyViewHolder>() {
         private var rowIndex: Int = -1
         private var pos: Int = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.plan_list_filtered_layout,
-                parent,
-                false
-            )
+            val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.plan_list_filtered_layout, parent, false)
             return MyViewHolder(v)
         }
+
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
             holder.binding.tvTilte.text = listModelList[position].planInterval
@@ -233,7 +216,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                 }
             }
 
-            if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true)) {
+            if (listModelList[position].recommendedFlag.equals("1")) {
                 holder.binding.rlMostPopular.visibility = View.VISIBLE
             } else {
                 holder.binding.rlMostPopular.visibility = View.INVISIBLE
@@ -246,7 +229,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
             if (rowIndex == position) {
                 changeFunction(holder, listModelList, position)
             } else {
-                if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
+                if (listModelList[position].recommendedFlag.equals("1") && pos == 0) {
                     holder.binding.rlMostPopular.visibility = View.VISIBLE
                     changeFunction(holder, listModelList, position)
                 } else {
@@ -261,9 +244,9 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         private fun changeFunction(holder: MyViewHolder, listModelList: List<PlanlistInappModel.ResponseData.Plan>, position: Int) {
             holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_sky_round_cornors)
-            holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-            holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-            holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+            holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.white))
             val gson = Gson()
             binding1.btnUpgradePlan.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[1]
             i.putExtra("PlanData", gson.toJson(listModelList))
@@ -279,6 +262,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
-        }
-        override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {}
+    }
+
+    override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {}
 }

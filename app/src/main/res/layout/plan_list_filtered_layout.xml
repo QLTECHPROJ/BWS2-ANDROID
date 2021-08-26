@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
@@ -13,7 +13,8 @@
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_18sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_2sdp">
+            android:layout_marginBottom="@dimen/_2sdp"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:id="@+id/llPlanMain"
@@ -24,6 +25,7 @@
                 android:orientation="horizontal"
                 android:paddingVertical="@dimen/_20sdp"
                 android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="@dimen/_0sdp"
                 android:weightSum="1">
 
                 <LinearLayout
@@ -61,12 +63,13 @@
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/_12sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
                     android:layout_weight="0.38"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
@@ -92,9 +95,9 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/_6sdp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:text="Most Popular"
-                    android:textColor="@color/white"
+                    android:text="@string/most_popular"
                     android:textAllCaps="true"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_8sdp"
                     tools:ignore="SpUsage" />
 

@@ -284,6 +284,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(viewModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
@@ -403,6 +404,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     BWSApplication.deleteCall(activity)
                                     BWSApplication.showToast(viewModel.ResponseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")

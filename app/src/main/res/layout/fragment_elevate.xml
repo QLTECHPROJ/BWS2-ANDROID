@@ -52,13 +52,13 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_310sdp"
                     android:layout_marginHorizontal="36dp"
-                    android:layout_marginTop="-20dp"
+                    android:layout_marginTop="-60dp"
                     android:contentDescription="@string/todo"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_under_construction_bg" />
@@ -80,7 +80,7 @@
                     android:id="@+id/tvRemainDevWork"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_13sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"

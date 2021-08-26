@@ -862,6 +862,7 @@ class ManageFragment : Fragment() {
                         deleteCall(act)
                         showToast(listModel.responseMessage, act)
                         val i = Intent(act, SignInActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("mobileNo", "")
                         i.putExtra("countryCode", "")
                         i.putExtra("name", "")
@@ -1268,6 +1269,7 @@ class ManageFragment : Fragment() {
     private fun callAddToplaylistClick(event: String, listModel: List<HomeDataModel.ResponseData.Audio.Detail>, listm: List<HomeDataModel.ResponseData.Play.Detail>?, position: Int, ctx: Context) {
 
         val i = Intent(ctx, AddPlaylistActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         val p = Properties()
         if (event.equals("Playlist View All Screen")) {
             p.putValue("playlistId", listm!![position].playlistID)

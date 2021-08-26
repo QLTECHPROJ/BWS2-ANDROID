@@ -80,7 +80,7 @@ class ManageUserActivity : AppCompatActivity() {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: ManageUserListModel = response.body()!!
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 val p = Properties()
                                 p.putValue("totalUsers", listModel.responseData!!.userList!!.size)
                                 addToSegment("Manage User Screen Viewed", p, CONSTANTS.screen)
@@ -89,7 +89,7 @@ class ManageUserActivity : AppCompatActivity() {
                                     binding.rvUserList.adapter = enhanceUserListAdapter
                                 }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
