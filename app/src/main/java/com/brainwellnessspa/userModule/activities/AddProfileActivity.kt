@@ -195,9 +195,9 @@ class AddProfileActivity : AppCompatActivity() {
                                         showToast(listModel.responseMessage, activity)
                                         val p = Properties()
                                         p.putValue("name", listModel.responseData!!.name)
-                                        p.putValue("mobileNo", binding.etMobileNumber.text.toString())
                                         p.putValue("email", listModel.responseData!!.email)
-                                        addToSegment("Couser Added", p, CONSTANTS.track)
+                                        p.putValue("isSameMobile", "Yes")
+                                        addToSegment("CoUser Added", p, CONSTANTS.track)
                                         finish()
                                     }
                                     listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {

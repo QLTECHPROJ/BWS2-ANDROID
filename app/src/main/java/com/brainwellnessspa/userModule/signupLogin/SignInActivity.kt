@@ -312,7 +312,15 @@ class SignInActivity : AppCompatActivity() {
                 if (key.equals("", ignoreCase = true)) {
                     key = getKey(applicationContext)
                 }
-
+                val p = Properties()
+                p.putValue("name", name)
+                p.putValue("mobileNo",binding.etNumber.text.toString())
+                p.putValue("countryCode", countryCode)
+                p.putValue("countryName", countryFullName)
+                p.putValue("countryShortName", countryShortName)
+                p.putValue("email", email)
+                p.putValue("source", "Login")
+                BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                 binding.txtNumberError.visibility = View.GONE
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
                 val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key)
@@ -334,20 +342,9 @@ class SignInActivity : AppCompatActivity() {
                                 i.putExtra(CONSTANTS.countryName, countryFullName)
                                 startActivity(i)
                                 finish()
-                                BWSApplication.showToast(listModel.ResponseMessage, activity)
-
-                                val p = Properties()
-                                p.putValue("name", name)
-                                p.putValue("mobileNo", listModel.ResponseData.MobileNo)
-                                p.putValue("countryCode", countryCode)
-                                p.putValue("countryName", countryFullName)
-                                p.putValue("countryShortName", countryShortName)
-                                p.putValue("email", email)
-                                p.putValue("source", "Login")
-                                BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             } else {
-                                BWSApplication.showToast(listModel.ResponseMessage, activity)
                             }
+                            BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                         } catch (e: Exception) {
                             e.printStackTrace()

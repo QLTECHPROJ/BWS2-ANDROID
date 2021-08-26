@@ -436,7 +436,6 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 p.putValue("scoreLevel", listModel.responseData?.scoreLevel)
                                 p.putValue("totalAssessmentsTaken", listModel.responseData?.totalAssesment)
                                 p.putValue("numberOfDaysFromLastAssessmentsTaken", listModel.responseData?.daysfromLastAssesment)
-                                p.putValue("status", "")
                                 when {
                                     listModel.responseData?.scoreIncDec.equals("", ignoreCase = true) -> {
                                         p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% ")

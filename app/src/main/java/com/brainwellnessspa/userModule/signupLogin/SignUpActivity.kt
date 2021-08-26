@@ -155,7 +155,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         p = Properties()
-        BWSApplication.addToSegment("Sign up Screen Viewed", p, CONSTANTS.screen)
+        BWSApplication.addToSegment("Sign Up Screen Viewed", p, CONSTANTS.screen)
 
         if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivVisible.isClickable = false
@@ -401,6 +401,15 @@ class SignUpActivity : AppCompatActivity() {
             if (key.equals("", ignoreCase = true)) {
                 key = BWSApplication.getKey(applicationContext)
             }
+            val p = Properties()
+            p.putValue("name", name)
+            p.putValue("mobileNo",binding.etNumber.text.toString())
+            p.putValue("countryCode", countryCode)
+            p.putValue("countryName", countryFullName)
+            p.putValue("countryShortName", countryShortName)
+            p.putValue("email", email)
+            p.putValue("source", "SignUp")
+            BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
@@ -414,15 +423,6 @@ class SignUpActivity : AppCompatActivity() {
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
                             BWSApplication.showToast(listModel.ResponseMessage, activity)
-                            val p = Properties()
-                            p.putValue("name", name)
-                            p.putValue("mobileNo", listModel.ResponseData.MobileNo)
-                            p.putValue("countryCode", countryCode)
-                            p.putValue("countryName", countryFullName)
-                            p.putValue("countryShortName", countryShortName)
-                            p.putValue("email", email)
-                            p.putValue("source", "SignUp")
-                            BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
                             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
@@ -434,6 +434,7 @@ class SignUpActivity : AppCompatActivity() {
                             i.putExtra(CONSTANTS.countryName, countryFullName)
                             startActivity(i)
                             finish()
+                        }else{
                         }
                         BWSApplication.showToast(listModel.ResponseMessage, activity)
 
