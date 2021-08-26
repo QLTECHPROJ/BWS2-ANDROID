@@ -18,8 +18,6 @@ import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
-import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
@@ -28,7 +26,6 @@ import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -50,12 +47,12 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     var promocode: String? = ""
     var oldPromocode: String? = ""
     var listModelList: ArrayList<PlanlistInappModel.ResponseData.Plan>? = null
-    var listModelList2: ArrayList<PlanListBillingModel.ResponseData.Plan>? = null
     var position = 0
-    val mLastClickTime: Long = 0
     lateinit var ctx: Context
     var json = ""
     var sku = ""
+    var p = Properties()
+    var upgrade = ""
     var intentflag: String = ""
     lateinit var billingClient: BillingClient
     lateinit var params: SkuDetailsParams
@@ -90,15 +87,15 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             displayPrice = intent.getStringExtra("displayPrice") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
             //            renewPlanId = getIntent().getStringExtra("renewPlanId");
             position = intent.getIntExtra("position", 0)
-            if (intent.hasExtra("comeFrom")) {
-                comeFrom = intent.getStringExtra("comeFrom")
-                listModelList2 = intent.getParcelableArrayListExtra("PlanData")
-            } else {
-                json = intent.getStringExtra("PlanData")!!
-                val type = object : TypeToken<ArrayList<PlanlistInappModel.ResponseData.Plan?>?>() {}.type
-                listModelList = gson.fromJson(json, type)
-            }
+            json = intent.getStringExtra("PlanData")!!
+            val type = object : TypeToken<ArrayList<PlanlistInappModel.ResponseData.Plan?>?>() {}.type
+            listModelList = gson.fromJson(json, type)
             intentflag = intent.getStringExtra("plan").toString()
+            if(intent.hasExtra("upgrade")){
+                upgrade = intent.getStringExtra("upgrade")!!
+            }else{
+                upgrade = ""
+            }
         }
         if (intent != null) {
             comesTrue = intent.getStringExtra("ComesTrue")
@@ -107,83 +104,45 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             oldPromocode = intent.getStringExtra(CONSTANTS.Promocode)
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
-        val p = Properties()
-
-        if (!comeFrom.equals("")) {
-            val gson: Gson
-            val gsonBuilder = GsonBuilder()
-            gson = gsonBuilder.create()
-            p.putValue("plan", gson.toJson(listModelList2))
-        } else {
-            val gson: Gson
-            val gsonBuilder = GsonBuilder()
-            gson = gsonBuilder.create()
-            p.putValue("plan", gson.toJson(listModelList))
-        }
+        p = Properties()
+        p.putValue("planId",listModelList!![position].planID)
+        p.putValue("plan",listModelList!![position].subName)
+        p.putValue("planAmount",displayPrice)
+        p.putValue("planInterval",listModelList!![position].planInterval)
+        p.putValue("totalProfile",listModelList!![position].profileCount)
         addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
         if (!oldPromocode.equals("")) {
             binding!!.edtCode.setText(oldPromocode)
         }
-        if (!comeFrom.equals("")) {
-            binding!!.tvPromoCode.visibility = View.GONE
-            binding!!.llPromoCode.visibility = View.GONE
-        } else {
-            binding!!.tvPromoCode.visibility = View.GONE
-            binding!!.llPromoCode.visibility = View.GONE
-        }
+
+        binding!!.tvPromoCode.visibility = View.GONE
+        binding!!.llPromoCode.visibility = View.GONE
+
         try {
-            if (!comeFrom.equals("")) {
-                binding!!.tvTrialPeriod.visibility = View.GONE
-                binding!!.tvPlanInterval.text = listModelList2!![position].planInterval + " Membership"
-                binding!!.tvPlanTenure.text = listModelList2!![position].planTenure
-                binding!!.tvPlanNextRenewal.text = listModelList2!![position].planNextRenewal
-                binding!!.tvSubName.text = listModelList2!![position].subName
-                binding!!.tvSubName1.text = listModelList2!![position].subName
-                /* binding!!.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
-                 binding!!.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
-                 binding!!.tvTotalAmount.text = "$" + listModelList2!![position].planAmount*/
-                binding!!.tvPlanAmount.text = displayPrice
-                binding!!.tvPlanAmount1.text = displayPrice
-                binding!!.tvTotalAmount.text = displayPrice
-                sku = if (listModelList2!![position].planInterval.equals("Annualy")) {
-                    "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
-                } else {
-                    listModelList!![position].planInterval!!.replace("-", "_").toLowerCase(Locale.getDefault()) + "_" + listModelList!![position].profileCount!! + "_" + "profile"
-                }
-            } else {
-                binding!!.tvTrialPeriod.visibility = View.VISIBLE
-                binding!!.tvPlanInterval.text = listModelList!![position].planInterval + " Membership"
-                binding!!.tvPlanTenure.text = listModelList!![position].planTenure
-                binding!!.tvPlanNextRenewal.text = listModelList!![position].planNextRenewal
-                binding!!.tvSubName.text = listModelList!![position].subName
-                binding!!.tvSubName1.text = listModelList!![position].subName
-                binding!!.tvTrialPeriod.text = listModelList!![position].freeTrial
-                /*binding!!.tvPlanAmount.text = "$" + listModelList!![position].planAmount
+            binding!!.tvTrialPeriod.visibility = View.VISIBLE
+            binding!!.tvPlanInterval.text = listModelList!![position].planInterval + " Membership"
+            binding!!.tvPlanTenure.text = listModelList!![position].planTenure
+            binding!!.tvPlanNextRenewal.text = listModelList!![position].planNextRenewal
+            binding!!.tvSubName.text = listModelList!![position].subName
+            binding!!.tvSubName1.text = listModelList!![position].subName
+            binding!!.tvTrialPeriod.text = listModelList!![position].freeTrial
+            /*binding!!.tvPlanAmount.text = "$" + listModelList!![position].planAmount
                 binding!!.tvPlanAmount1.text = "$" + listModelList!![position].planAmount
                 binding!!.tvTotalAmount.text = "$" + listModelList!![position].planAmount*/
-                binding!!.tvPlanAmount.text = displayPrice
-                binding!!.tvPlanAmount1.text = displayPrice
-                binding!!.tvTotalAmount.text = displayPrice
-                //                if (listModelList!![position].planInterval.equals("Annualy")) {
-                //                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
-                //                } else {
-                sku = listModelList!![position].androidplanId!!
-                Log.e("sku", sku)
-                //                }
-            }
+            binding!!.tvPlanAmount.text = displayPrice
+            binding!!.tvPlanAmount1.text = displayPrice
+            binding!!.tvTotalAmount.text = displayPrice
+            //                if (listModelList!![position].planInterval.equals("Annualy")) {
+            //                    sku = "annual_" + listModelList!![position].profileCount!! + "_" + "profile"
+            //                } else {
+            sku = listModelList!![position].androidplanId!!
+            Log.e("sku", sku)
+            //                }
         } catch (e: Exception) {
             e.printStackTrace()
         }
         binding!!.llBack.setOnClickListener {
-            if (!comeFrom.equals("")) {
-                val i = Intent(ctx, MembershipChangeActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                i.putExtra("ComeFrom", comesTrue)
-                startActivity(i)
-                finish()
-            } else {
-                finish()
-            }
+            finish()
         }
     }
 
@@ -229,15 +188,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
     }
 
     override fun onBackPressed() {
-        if (!comeFrom.equals("")) {
-            val i = Intent(ctx, MembershipChangeActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            i.putExtra("ComeFrom", comesTrue)
-            startActivity(i)
-            finish()
-        } else {
-            finish()
-        }
+        finish()
     }
 
     private val promoCodeTextWatcher: TextWatcher = object : TextWatcher {
@@ -295,17 +246,11 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             editor.apply()
             Log.e("Purchase Token", purchases[0].purchaseToken)
             val p = Properties()
-            if (!comeFrom.equals("")) {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList2))
-            } else {
-                val gson: Gson
-                val gsonBuilder = GsonBuilder()
-                gson = gsonBuilder.create()
-                p.putValue("plan", gson.toJson(listModelList))
-            }
+            p.putValue("planId", listModelList!![position].planID)
+            p.putValue("plan", listModelList!![position].planInterval)
+            p.putValue("planAmount", displayPrice)
+            p.putValue("planInterval", listModelList!![position].planInterval)
+            p.putValue("totalProfile", listModelList!![position].profileCount)
             addToSegment("Checkout Proceeded", p, CONSTANTS.track)
             callIAPApi(purchases[0].purchaseToken)
             for (purchase in purchases) {
@@ -402,33 +347,24 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                     }
                                 })
                             }
-
-                            val i = Intent(ctx, EnhanceDoneActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("Name", "")
-                            i.putExtra("Code", "")
-                            i.putExtra("MobileNo", "")
-                            i.putExtra("PlanData", gson.toJson(listModelList))
-                            i.putExtra("TrialPeriod", trialPeriod)
-                            i.putExtra("position", position)
-                            i.putExtra("Promocode", promocode)
-                            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            startActivity(i)
-                            finish()
-
-                            val p = Properties()
-                            if (!comeFrom.equals("")) {
-                                val gson: Gson
-                                val gsonBuilder = GsonBuilder()
-                                gson = gsonBuilder.create()
-                                p.putValue("plan", gson.toJson(listModelList2))
-                            } else {
-                                val gson: Gson
-                                val gsonBuilder = GsonBuilder()
-                                gson = gsonBuilder.create()
-                                p.putValue("plan", gson.toJson(listModelList))
+                            if(upgrade == "1") {
+                                addToSegment("User Plan Upgraded", p, CONSTANTS.track)
+                                finish()
+                            }else if(upgrade == "") {
+                                addToSegment("Checkout Completed", p, CONSTANTS.track)
+                                val i = Intent(ctx, EnhanceDoneActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.putExtra("Name", "")
+                                i.putExtra("Code", "")
+                                i.putExtra("MobileNo", "")
+                                i.putExtra("PlanData", gson.toJson(listModelList))
+                                i.putExtra("TrialPeriod", trialPeriod)
+                                i.putExtra("position", position)
+                                i.putExtra("Promocode", promocode)
+                                i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                startActivity(i)
+                                finish()
                             }
-                            addToSegment("Checkout Completed", p, CONSTANTS.track)
                         }
 
                     } catch (e: Exception) {

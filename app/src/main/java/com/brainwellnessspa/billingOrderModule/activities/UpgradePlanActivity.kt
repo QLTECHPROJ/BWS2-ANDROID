@@ -33,6 +33,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
+import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,6 +69,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+
         /* This is screen back click */
         binding.llBack.setOnClickListener {
             finish()
@@ -82,6 +84,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
         binding.btnUpgradePlan.setOnClickListener {
             i.putExtra("plan", intentflag)
+            i.putExtra("upgrade","1")
             startActivity(i)
             finish()
         }
@@ -140,6 +143,8 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                             binding.rvPlanList.adapter = planListAdapter
                             binding.tvTitle.text = listModel.responseData!!.title
                             binding.tvDesc.text = listModel.responseData!!.desc
+
+                            val p = Properties()
                             if(intent != null){
                                 planId = intent.getStringExtra("PlanId").toString()
                                 DeviceType = intent.getStringExtra("DeviceType").toString()
@@ -149,12 +154,18 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                                     if(planId.equals(listModel.responseData!!.plan!![i2].androidplanId,ignoreCase = true)) {
                                         binding.tvOldPlanTitle.text = listModel.responseData!!.plan!![i2].planInterval
                                         binding.tvOldPlanContent.text = listModel.responseData!!.plan!![i2].subName
+                                        p.putValue("planId",planId)
+                                        p.putValue("plan",listModel.responseData!!.plan!![i2].subName)
+                                        p.putValue("planAmount",listModel.responseData!!.plan!![i2].planAmount)
+                                        p.putValue("planInterval",listModel.responseData!!.plan!![i2].planInterval)
+                                        p.putValue("totalProfile",listModel.responseData!!.plan!![i2].profileCount)
                                         break
                                     }
                                 }
                                 for (i1 in 0 until skuDetailList.size) {
                                     if (planId == skuDetailList[i1].sku) {
                                         binding.tvOldPlanAmount.text = skuDetailList[i1].price
+                                        p.putValue("planAmount",skuDetailList[i1].price)
                                         break
                                     }
                                 }
@@ -163,16 +174,17 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
                                     if(planId.equals(listModel.responseData!!.plan!![i2].iOSplanId,ignoreCase = true)) {
                                         binding.tvOldPlanTitle.text = listModel.responseData!!.plan!![i2].planInterval
                                         binding.tvOldPlanContent.text = listModel.responseData!!.plan!![i2].subName
-                                        break
-                                    }
-                                }
-                                for (i1 in 0 until skuDetailList.size) {
-                                    if (planId == skuDetailList[i1].sku) {
-                                        binding.tvOldPlanAmount.text = skuDetailList[i1].price
+                                        p.putValue("planId",planId)
+                                        p.putValue("plan",listModel.responseData!!.plan!![i2].subName)
+                                        p.putValue("planAmount",listModel.responseData!!.plan!![i2].planAmount)
+                                        p.putValue("planInterval",listModel.responseData!!.plan!![i2].planInterval)
+                                        p.putValue("totalProfile",listModel.responseData!!.plan!![i2].profileCount)
+                                        binding.tvOldPlanAmount.text = listModel.responseData!!.plan!![i2].planAmount
                                         break
                                     }
                                 }
                             }
+                            BWSApplication.addToSegment("Upgrade Plan Screen Viewed", p, CONSTANTS.screen)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

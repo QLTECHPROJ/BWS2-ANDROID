@@ -64,7 +64,7 @@ class BillingOrderActivity : AppCompatActivity() {
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
-            finish()
+//            finish()
         }
 
         /* This is the cancel plan click */
@@ -72,23 +72,29 @@ class BillingOrderActivity : AppCompatActivity() {
             val i = Intent(activity, CancelMembershipActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("screenView", "1")
+            val c: Calendar = Calendar.getInstance()
+            c.timeInMillis = listModelGlobal.responseData!!.planPurchaseDate!!.toInt() * 1000L
+            val d: Date = c.time
+            val sdf = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+            binding.tvActive.text = sdf.format(d)
+
+            val c1: Calendar = Calendar.getInstance()
+            c1.timeInMillis = listModelGlobal.responseData!!.planExpireDate!!.toInt() * 1000L
+            val d1: Date = c1.time
+            val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+             i.putExtra("plan", listModelGlobal.responseData!!.planName)
+             i.putExtra("planStatus",listModelGlobal.responseData!!.planStatus)
+             i.putExtra("planStartDt ",sdf.format(d))
+             i.putExtra("planExpiryDt",sdf1.format(d1))
+             i.putExtra("planAmount",listModelGlobal.responseData!!.price)
             startActivity(i)
-            finish()
+//            finish()
         }
 
         /* This condition is check about application in background or foreground */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
-
-        /* This is segment tag */
-        val p = Properties()
-        p.putValue("plan", "")
-        p.putValue("planStatus", "")
-        p.putValue("planStartDt", "")
-        p.putValue("planExpiryDt", "")
-        p.putValue("planAmount", "")
-        BWSApplication.addToSegment(CONSTANTS.Billing_Order_Screen_Viewed, p, CONSTANTS.screen)
 
         /* This is the tab layout showing code */
         /*        binding.viewPager.offscreenPageLimit = 2
@@ -193,6 +199,13 @@ class BillingOrderActivity : AppCompatActivity() {
                             } else {
                                 binding.tvCancel.visibility = View.GONE
                             }
+                            val p = Properties()
+                            p.putValue("plan", listModel.responseData!!.planName)
+                            p.putValue("planStatus",listModel.responseData!!.planStatus)
+                            p.putValue("planStartDt ",sdf.format(d))
+                            p.putValue("planExpiryDt",sdf1.format(d1))
+                            p.putValue("planAmount",listModel.responseData!!.price)
+                            BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

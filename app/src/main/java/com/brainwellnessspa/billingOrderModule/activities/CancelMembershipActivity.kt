@@ -278,9 +278,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 binding.rlDeleteAc.visibility = View.GONE
                 binding.rlCancelPlan.visibility = View.VISIBLE
                 binding.tvTilte.text = getString(R.string.cancel_plan)
-
-                val p1 = Properties()
-                addToSegment("Cancel Subscription Screen Viewed", p1, CONSTANTS.screen)
                 binding.llBack.setOnClickListener {
                     myBackPress = true
                     if (audioPause) {
@@ -292,12 +289,12 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 /*This is to youtube video playing */
                 binding.youtubeView.initialize(API_KEY, this)
                 val p = Properties()
-                p.putValue("plan", "")
-                p.putValue("planStatus", "")
-                p.putValue("planStartDt", "")
-                p.putValue("planExpiryDt", "")
-                p.putValue("planAmount", "")
-                addToSegment(CONSTANTS.Cancel_Subscription_Viewed, p, CONSTANTS.screen)
+                p.putValue("plan", intent.getStringExtra("plan"))
+                p.putValue("planStatus",  intent.getStringExtra("planStatus"))
+                p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
+                p.putValue("planExpiryDt",  intent.getStringExtra("planExpiryDt"))
+                p.putValue("planAmount",  intent.getStringExtra("planAmount"))
+                addToSegment("Cancel Subscription Screen Viewed", p, CONSTANTS.screen)
 
                 /*This condition is to audio playing or not  */
                 if (player != null) {
@@ -400,6 +397,15 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                         val model = response.body()
                                                         showToast(model!!.responseMessage, activity)
                                                         try {
+                                                            val p = Properties()
+                                                            p.putValue("cancelId",cancelId)
+                                                            p.putValue("cancelReason", binding.edtCancelBox.text.toString())
+                                                            p.putValue("plan", intent.getStringExtra("plan"))
+                                                            p.putValue("planStatus",  intent.getStringExtra("planStatus"))
+                                                            p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
+                                                            p.putValue("planExpiryDt",  intent.getStringExtra("planExpiryDt"))
+                                                            p.putValue("planAmount",  intent.getStringExtra("planAmount"))
+                                                            addToSegment("Subscription Cancelled", p, CONSTANTS.screen)
                                                             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions?sku=weekly_2_profile&package=com.brainwellnessspa")))
 //                                                        https://play.google.com/store/account/subscriptions
                                                         } catch (e: ActivityNotFoundException) {

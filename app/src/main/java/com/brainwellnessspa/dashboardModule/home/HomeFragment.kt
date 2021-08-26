@@ -144,8 +144,8 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-        p.putValue("WellnessScore", indexScore)
-        p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
+//        p.putValue("WellnessScore", indexScore)
+//        p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
         if (sleepTime.equals("", true)) {
@@ -493,7 +493,7 @@ class HomeFragment : Fragment() {
             false
         }
         btn.setOnClickListener {
-            p.putValue("isReminderSet", "Yes")
+//            p.putValue("isReminderSet", "Yes")
             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
             dialog.hide()
             getReminderDay(requireActivity(), requireActivity(), userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")

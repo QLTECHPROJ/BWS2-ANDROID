@@ -3,7 +3,6 @@ package com.brainwellnessspa.utility
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressSaveModel
 import com.brainwellnessspa.billingOrderModule.models.BillingAddressViewModel
 import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
-import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.invoiceModule.models.InvoiceDetailModel
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel
 import retrofit2.Call
@@ -54,11 +53,11 @@ interface APIInterface {
         cancelReason: String?): Call<CancelPlanModel?>?
 
     /* TODO MembershipChangeActivity */
-    @POST("planlistonbilling")
-    @FormUrlEncoded
-    fun getPlanListBilling(
-        @Field("UserID")
-        userID: String?): Call<PlanListBillingModel?>?
+//    @POST("planlistonbilling")
+//    @FormUrlEncoded
+//    fun getPlanListBilling(
+//        @Field("UserID")
+//        userID: String?): Call<PlanListBillingModel?>?
 
     /* TODO InvoiceActivity */
     @POST("invoicelist")

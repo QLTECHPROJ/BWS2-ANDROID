@@ -2397,10 +2397,8 @@ public class BWSApplication extends Application {
             properties.putValue("userGroupId", mainAccountId);
         if (!userId.isEmpty() || !userId.equalsIgnoreCase(""))
             properties.putValue("userId", userId);
-        if (isAdmin.equalsIgnoreCase("1"))
-            isadm = true;
-        else
-            isadm = false;
+
+        isadm = isAdmin.equalsIgnoreCase("1");
 
         SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
