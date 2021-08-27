@@ -704,9 +704,9 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(homelistModel.responseData, binding.barChart, requireActivity())
+                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore, requireActivity())
 
-                                    getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, requireActivity())
+                                    getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, requireActivity())
 
                                     try {
                                         if (response.isFirst.equals("1", ignoreCase = true)) {

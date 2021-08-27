@@ -197,6 +197,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
         binding.ivTransBanner.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
         binding.ivTransBanner.setScaleType(ImageView.ScaleType.FIT_XY);
 
+        MeasureRatio measureRatio4 = BWSApplication.measureRatio(ctx, 0, 5, 4.1f, 1f, 0);
+        binding.ivCloudBanner.getLayoutParams().height = (int) (measureRatio4.getHeight() * measureRatio4.getRatio());
+        binding.ivCloudBanner.getLayoutParams().width = (int) (measureRatio4.getWidthImg() * measureRatio4.getRatio());
+        binding.ivCloudBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+
         MeasureRatio measureRatio2 = BWSApplication.measureRatio(ctx, 0, 5, 4.1f, 1f, 0);
         binding.llPlayer.getLayoutParams().height = (int) (measureRatio2.getHeight() * measureRatio2.getRatio());
         binding.llPlayer.getLayoutParams().width = (int) (measureRatio2.getWidthImg() * measureRatio2.getRatio());
@@ -323,6 +328,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             binding.llPlay.setVisibility(View.VISIBLE);
         }
         binding.tvPlayListName.setText(PlaylistName);
+        binding.tvDescription.setText(PlaylistDescription);
 
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);

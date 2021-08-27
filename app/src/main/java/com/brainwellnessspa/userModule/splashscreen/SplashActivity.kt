@@ -331,7 +331,6 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
-                        IsBackFromEnhance = "0"
                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
@@ -344,7 +343,6 @@ class SplashActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         } else if (planId.equals("")) {
-                            IsBackFromEnhance = "0"
                             val intent = Intent(applicationContext, EnhanceActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             startActivity(intent)
@@ -370,7 +368,6 @@ class SplashActivity : AppCompatActivity() {
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        IsBackFromEnhance = "0"
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
@@ -412,7 +409,6 @@ class SplashActivity : AppCompatActivity() {
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        IsBackFromEnhance = "0"
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         startActivity(intent)
