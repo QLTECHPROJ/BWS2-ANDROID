@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
@@ -593,20 +594,20 @@ class HomeFragment : Fragment() {
         Log.e("UserId", userId.toString())
 
         if (isNetworkConnected(requireActivity())) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel = response.body()!!
                         val gson = Gson()
                         homelistModel = listModel
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess)) -> {
                                 val response = listModel.responseData
                                 if (response != null) {
                                     IsLock = response.IsLock
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
+                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
@@ -1593,7 +1594,7 @@ class HomeFragment : Fragment() {
                         llAddNewUser.visibility = View.VISIBLE
                         if (!model.maxuseradd.equals("", ignoreCase = true)) {
                             if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
-                                showToast("Please upgrade your plan", activity)
+                                showToast("Please update your plan", activity)
                             } else {
                                 /* Add new user button click */
                                 IsFirstClick = "0"

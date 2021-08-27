@@ -349,7 +349,7 @@
     <string name="regularity">Regularity</string>
     <string name="lorem_ipsum_dolor_sit_amet_consetetur">Lorem ipsum dolor sit amet, consetetur</string>
     <string name="change_card">Change Card</string>
-    <string name="upgrade_plan">Upgrade Plan</string>
+    <string name="upgrade_plan">Update Plan</string>
     <string name="purchase_plan">Purchase Plan</string>
     <string name="add_users_in_manage">Add Users in manage</string>
     <string name="set_reminder">Set reminder</string>
@@ -432,7 +432,7 @@
     <string name="pls_provide_valid_mobileno">Please provide a valid mobile number</string>
     <string name="your_playlist_is_ready">You playlist is ready</string>
     <string name="playlist_ready_subtitle">We recommend that you listen to the audios while going to sleep to experience to get the maximum benefits from the program.</string>
-    <string name="manage_user">Manage User</string>
+    <string name="manage_user">Manage People</string>
     <string name="downloads_profile">Downloads</string>
     <string name="reminder_profile">Reminder</string>
     <string name="invoices_profile">Invoices</string>
@@ -507,7 +507,7 @@
     <string name="add_user_subtitle">New person can either use this device, or another one to access the app.</string>
     <string name="popup_title">For multiple users on the same device</string>
     <string name="popup_subtitle">With multiple users, we create separate access pins to ensure privacy. Each person’s details will remain inaccessible to others.</string>
-    <string name="create_pin">Create Pin</string>
+    <string name="create_pin">Create PIN</string>
     <string name="enter_a_4_digit_number_this_is_your_secret_access_code">Enter a 4-digit number. This is your secret access code.</string>
     <string name="delete_account_popup_title">Are you sure you want to permanently delete this account?</string>
     <string name="delete_account_popup_subtitle">You can\'t undo this action</string>
@@ -595,5 +595,6 @@
     <string name="most_popular">Most Popular</string>
     <string name="emotional_empowerment_program_with_14_sessions_aiming_to_reduce_your_mental_emotional_suffering_and_destructive_habits_to_reclaim_their_happiness_mental_clarity_and_self_confidence"><![CDATA[Emotional Empowerment Program with 14 sessions aiming to reduce your mental & emotional suffering and destructive habits to reclaim your happiness, mental clarity and self-confidence.]]></string>
     <string name="empower_program_is_going_live_very_soon">Empower Program is going live very soon.</string>
+    <string name="edit_area_of_focus">Edit Area of Focus</string>
 </resources>
 

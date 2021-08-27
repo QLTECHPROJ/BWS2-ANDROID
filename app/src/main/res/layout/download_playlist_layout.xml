@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:vumeter="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,13 +27,15 @@
                 <ImageView
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo" />
 
                 <ImageView
                     android:id="@+id/ivBackgroundImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="-6dp"/>
+                    android:contentDescription="@string/todo"
+                    android:layout_marginEnd="-6dp"/>
 
                 <io.gresse.hugo.vumeterlibrary.VuMeterView
                     android:id="@+id/equalizerview"
@@ -46,6 +49,17 @@
                     vumeter:vumeter_blockSpacing="2dp"
                     vumeter:vumeter_speed="2"
                     vumeter:vumeter_stopSize="5dp" />
+
+                <ImageView
+                    android:id="@+id/ivLock"
+                    android:layout_width="@dimen/_26sdp"
+                    android:layout_height="@dimen/_26sdp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_lock_icon"
+                    android:visibility="gone"
+                    android:contentDescription="@string/todo" />
 
             </RelativeLayout>
 
@@ -70,7 +84,8 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/tvTimeA"
@@ -80,8 +95,8 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:textColor="@color/extra_light_gray"
-                android:textSize="@dimen/_13sdp" />
-
+                android:textSize="@dimen/_13sdp"
+                tools:ignore="SpUsage" />
 
         </LinearLayout>
 
@@ -100,6 +115,7 @@
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:padding="@dimen/_10sdp"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/ic_menu_icon" />
 
         </LinearLayout>

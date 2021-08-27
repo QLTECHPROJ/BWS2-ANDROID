@@ -741,7 +741,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     val dialog = Dialog(ctx!!)
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                     dialog.setContentView(R.layout.edit_sleep_layout)
-                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx!!, R.color.dark_blue_gray)))
+                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx!!, R.color.transparent_white)))
                                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                     val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
                                     val btn = dialog.findViewById<Button>(R.id.Btn)
@@ -749,8 +749,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                                     tvTitle.visibility = View.GONE
                                     tvHeader.text = listModel.responseData!!.popupContent
-                                    btn.text = "Edit Sleep Time"
-                                    tvGoBack.text = "Edit Area of Focus"
+                                    btn.text = "Edit Area of Focus"
+                                    tvGoBack.text = "Edit Sleep Time"
 
                                     dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -759,14 +759,14 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                         }
                                         false
                                     }
-                                    btn.setOnClickListener {
+                                    tvGoBack.setOnClickListener {
                                         val i = Intent(ctx, SleepTimeActivity::class.java)
                                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("SleepTime", sleepTime)
                                         startActivity(i)
                                         finish()
                                     }
-                                    tvGoBack.setOnClickListener {dialog.hide() }
+                                    btn.setOnClickListener {dialog.hide() }
                                     dialog.show()
                                     dialog.setCancelable(false)
                                 }else if(listModel.responseData!!.showAlert.equals("0")){

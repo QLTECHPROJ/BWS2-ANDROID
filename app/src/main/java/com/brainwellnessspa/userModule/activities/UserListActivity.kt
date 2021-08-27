@@ -126,7 +126,7 @@ class UserListActivity : AppCompatActivity() {
                     binding.llAddNewUser.visibility = View.GONE
                     if (!model.maxuseradd.equals("", ignoreCase = true)) {
                         if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
-                            showToast("Please upgrade your plan", activity)
+                            showToast("Please update your plan", activity)
                         } else {
                             IsFirstClick = "0"
                             val i = Intent(activity, AddCouserActivity::class.java)

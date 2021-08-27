@@ -823,7 +823,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
-                holder.binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                holder.binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.app_theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
 
             } else {
                 holder.binding.llMore.setClickable(false);

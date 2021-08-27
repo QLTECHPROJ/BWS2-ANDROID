@@ -152,7 +152,7 @@ class ManageUserActivity : AppCompatActivity() {
                         binding.llAddNewUser.visibility = View.VISIBLE
                         if (!manageUserListModel.maxuseradd.equals("", ignoreCase = true)) {
                             if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
-                                showToast("Please upgrade your plan", activity)
+                                showToast("Please update your plan", activity)
                             } else {
                                 IsFirstClick = "0"
                                 addCouserBackStatus = 1

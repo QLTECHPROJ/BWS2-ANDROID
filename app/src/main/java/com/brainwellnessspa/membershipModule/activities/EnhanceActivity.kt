@@ -319,7 +319,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
                 }
             }
 
-            if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true)) {
+            if (listModelList[position].recommendedFlag.equals("1")) {
                 holder.binding.rlMostPopular.visibility = View.VISIBLE
             } else {
                 holder.binding.rlMostPopular.visibility = View.INVISIBLE
@@ -332,7 +332,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
             if (rowIndex == position) {
                 changeFunction(holder, listModelList, position)
             } else {
-                if (listModelList[position].recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
+                if (listModelList[position].recommendedFlag.equals("1") && pos == 0) {
                     holder.binding.rlMostPopular.visibility = View.VISIBLE
                     changeFunction(holder, listModelList, position)
                 } else {
@@ -347,9 +347,9 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         private fun changeFunction(holder: MyViewHolder, listModelList: List<PlanlistInappModel.ResponseData.Plan>, position: Int) {
             holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_sky_round_cornors)
-            holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-            holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
-            holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+            holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.white))
             val gson = Gson()
             binding1.btnFreeJoin.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[1]
             i.putExtra("PlanData", gson.toJson(listModelList))
