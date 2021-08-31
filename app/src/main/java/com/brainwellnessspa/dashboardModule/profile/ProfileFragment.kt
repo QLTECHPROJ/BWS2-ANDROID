@@ -927,7 +927,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     return
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
-                if (sucessModel!!.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                if (sucessModel!!.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess))) {
                     val p1 = Properties()
                     /* var isProf = false
                      var isAss = false

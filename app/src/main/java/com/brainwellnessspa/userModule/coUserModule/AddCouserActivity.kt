@@ -81,7 +81,7 @@ class AddCouserActivity : AppCompatActivity() {
                 listCall.enqueue(object : Callback<AuthOtpModel> {
                     override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                         val authOtpModel: AuthOtpModel = response.body()!!
-                        if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess))) {
                             isPinSet = authOtpModel.ResponseData.isPinSet
                             directLogin = authOtpModel.ResponseData.directLogin
 
@@ -115,12 +115,12 @@ class AddCouserActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, authOtpModel.ResponseData.planDetails[0].PlanContent)
                                 }
-                            }catch (e:Exception){
+                            } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                             editor.apply()
-                            if (authOtpModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                if (authOtpModel.ResponseData.MainAccountID.equals(authOtpModel.ResponseData.UserId, ignoreCase = true)) {
+                            if (authOtpModel.ResponseData.isPinSet.equals("1")) {
+                                if (authOtpModel.ResponseData.MainAccountID == authOtpModel.ResponseData.UserId) {
                                     val i = Intent(applicationContext, UserDetailActivity::class.java)
                                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(i)

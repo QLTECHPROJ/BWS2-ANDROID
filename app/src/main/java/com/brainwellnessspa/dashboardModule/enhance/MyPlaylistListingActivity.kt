@@ -899,18 +899,18 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                     val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist") && myPlaylist.equals(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             showToast("The audio shall remove after the disclaimer", activity)
                         } else {
-                            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true) && listModel.size == 1) {
+                            if (audioPlayerFlag.equals("playlist") && myPlaylist.equals(PlaylistID) && listModel.size == 1) {
                                 showToast("Currently you play this playlist, you can't remove last audio", activity)
                             } else {
                                 callRemove(listModel[holder.absoluteAdapterPosition].id, listModel, holder.absoluteAdapterPosition, ctx, activity, PlaylistID.toString(), listModel1)
                             }
                         }
                     } else {
-                        if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true) && listModel.size == 1) {
+                        if (audioPlayerFlag.equals("playlist") && myPlaylist.equals(PlaylistID) && listModel.size == 1) {
                             showToast("Currently you play this playlist, you can't remove last audio", activity)
                         } else {
                             callRemove(listModel[position].id, listModel, holder.absoluteAdapterPosition, ctx, activity, PlaylistID.toString(), listModel1)

@@ -17,6 +17,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
@@ -721,11 +722,17 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 p.putValue("numberOfUpdation", listModel.responseData!!.noUpdation)
                                 addToSegment("Area of Focus Saved", p, CONSTANTS.track)
 
+                                localIntent = Intent("Reminder")
+                                localBroadcastManager = LocalBroadcastManager.getInstance(ctx!!)
+                                localIntent.putExtra("MyReminder", "update")
+                                localBroadcastManager.sendBroadcast(localIntent)
+
                                 val i = Intent(applicationContext, PreparePlaylistActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("BackClick", backClick)
                                 startActivity(i)
                                 finish()
+
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
