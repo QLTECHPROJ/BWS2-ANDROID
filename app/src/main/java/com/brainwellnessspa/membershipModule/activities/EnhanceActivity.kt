@@ -81,12 +81,12 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         i = Intent(ctx, OrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         binding.llBack.setOnClickListener {
-            if (BWSApplication.IsBackFromEnhance.equals("1")) {
-                BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
-                finishAffinity()
+            finishAffinity()
+            BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
+           /* if (BWSApplication.IsBackFromEnhance.equals("1")) {
             } else {
-                finish()
-            }
+                finishAffinity()
+            }*/
         }
 
         binding.btnFreeJoin.setOnClickListener {
@@ -416,12 +416,12 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
     }
 
     override fun onBackPressed() {
-        if (BWSApplication.IsBackFromEnhance.equals("1")) {
-            BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
-            finishAffinity()
+        finishAffinity()
+        BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
+       /* if (BWSApplication.IsBackFromEnhance.equals("1")) {
         } else {
             finish()
-        }
+        }*/
     }
 
     override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {

@@ -714,6 +714,39 @@
                         android:visibility="gone" />
 
                     <LinearLayout
+                        android:id="@+id/llPastIndexScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="start|center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_40sdp"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="@dimen/_8sdp"
+                            android:layout_height="@dimen/_8sdp"
+                            android:contentDescription="@string/todo"
+                            android:rotation="90"
+                            android:background="@color/app_theme_color"
+                            app:tint="@color/light_black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:text="@string/past_wellness_score"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp"
+                            tools:ignore="SpUsage,TooManyViews" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/llActivities"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -743,7 +776,40 @@
                             android:visibility="visible" />
 
                         <LinearLayout
+                            android:id="@+id/llLegendActivity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="start|center_vertical"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:visibility="gone"
+                            android:layout_marginStart="@dimen/_40sdp"
+                            tools:ignore="UseCompoundDrawables">
 
+                            <ImageView
+                                android:layout_width="@dimen/_8sdp"
+                                android:layout_height="@dimen/_8sdp"
+                                android:contentDescription="@string/todo"
+                                android:rotation="90"
+                                android:background="@color/blue"
+                                app:tint="@color/light_black" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:text="@string/last_7_days_time"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_10sdp"
+                                tools:ignore="SpUsage,TooManyViews" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">

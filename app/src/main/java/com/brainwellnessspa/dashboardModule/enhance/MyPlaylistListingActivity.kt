@@ -595,7 +595,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         binding.ivTransBanner.layoutParams.height = (measureRatio2.height * measureRatio2.ratio).toInt()
         binding.ivTransBanner.layoutParams.width = (measureRatio2.widthImg * measureRatio2.ratio).toInt()
         binding.ivTransBanner.setImageResource(R.drawable.rounded_light_app_theme)
-        if (listModel.playlistName.equals("", ignoreCase = true) || listModel.playlistName == null) {
+        if (listModel.playlistName.equals("") || listModel.playlistName == null) {
             binding.tvPlayListName.text = R.string.My_Playlist.toString()
         } else {
             binding.tvPlayListName.text = listModel.playlistName

@@ -60,12 +60,12 @@ class AssProcessActivity : AppCompatActivity() {
         }
 
         /* This condition is string access */
-        if (assProcess.equals("0", ignoreCase = true)) {
+        if (assProcess == "0") {
             val p = Properties()
             addToSegment(CONSTANTS.Assessment_Start_Screen_Viewed, p, CONSTANTS.screen)
             binding.rlDoAss.visibility = View.VISIBLE
             binding.rlDoneAss.visibility = View.GONE
-        } else if (assProcess.equals("1", ignoreCase = true)) {
+        } else if (assProcess == "1") {
             indexScore = Integer.parseInt(intent.getStringExtra(CONSTANTS.IndexScore).toString())
             scoreLevel = intent.getStringExtra(CONSTANTS.ScoreLevel)
             binding.rlDoAss.visibility = View.GONE
@@ -100,6 +100,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore <= 10 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -119,6 +120,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 11..20 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -138,6 +140,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore == 20 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -157,6 +160,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.VISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 21..30 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -176,6 +180,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 31..35 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -195,6 +200,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 35..39 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -214,6 +220,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore == 40 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -233,6 +240,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.VISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 41..50 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -252,6 +260,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 51..59 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -271,6 +280,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore == 60 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -290,8 +300,9 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
-                indexScore in 61..70 -> {
+                indexScore in 61..69 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
                     binding.ivSecond.visibility = View.INVISIBLE
                     binding.ivThird.visibility = View.INVISIBLE
@@ -300,6 +311,27 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivThirTeen.visibility = View.INVISIBLE
                     binding.ivSixth.visibility = View.INVISIBLE
                     binding.ivSeventh.visibility = View.VISIBLE
+                    binding.ivEighth.visibility = View.INVISIBLE
+                    binding.ivNineth.visibility = View.INVISIBLE
+                    binding.ivTenth.visibility = View.INVISIBLE
+                    binding.ivEleventh.visibility = View.INVISIBLE
+                    binding.ivTwelveth.visibility = View.INVISIBLE
+                    binding.ivForteen.visibility = View.INVISIBLE
+                    binding.ivFifteen.visibility = View.INVISIBLE
+                    binding.ivSixteen.visibility = View.INVISIBLE
+                    binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
+                }
+                indexScore == 70 -> {
+                    binding.ivFirst.visibility = View.INVISIBLE
+                    binding.ivSecond.visibility = View.INVISIBLE
+                    binding.ivThird.visibility = View.INVISIBLE
+                    binding.ivForth.visibility = View.INVISIBLE
+                    binding.ivFifth.visibility = View.INVISIBLE
+                    binding.ivThirTeen.visibility = View.INVISIBLE
+                    binding.ivSixth.visibility = View.INVISIBLE
+                    binding.ivSeventh.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.VISIBLE
                     binding.ivEighth.visibility = View.INVISIBLE
                     binding.ivNineth.visibility = View.INVISIBLE
                     binding.ivTenth.visibility = View.INVISIBLE
@@ -328,6 +360,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore == 80 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -347,6 +380,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.VISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 81..90 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -366,6 +400,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore in 91..99 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -385,6 +420,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
                 indexScore == 100 -> {
                     binding.ivFirst.visibility = View.INVISIBLE
@@ -404,6 +440,7 @@ class AssProcessActivity : AppCompatActivity() {
                     binding.ivFifteen.visibility = View.INVISIBLE
                     binding.ivSixteen.visibility = View.INVISIBLE
                     binding.ivSeventeen.visibility = View.INVISIBLE
+                    binding.ivEighteen.visibility = View.INVISIBLE
                 }
             }
         }
@@ -418,9 +455,8 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
-            if (mainAccountId.equals(userId, ignoreCase = true)) {
+            if (mainAccountId.equals(userId)) {
 //                 TODO when add plan in user flow comment open
-                IsBackFromEnhance = "1"
                 val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan","0")

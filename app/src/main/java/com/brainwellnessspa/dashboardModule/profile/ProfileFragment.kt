@@ -270,7 +270,6 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
-                IsBackFromEnhance = "0"
                 val i = Intent(requireActivity(), EnhanceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan", "0")

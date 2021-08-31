@@ -377,7 +377,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     startActivity(intent)
                                     finish()
                                 } else if (listModel.ResponseData.planDetails.isEmpty()) {
-                                    IsBackFromEnhance = "1"
                                     val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     startActivity(intent)
@@ -400,7 +399,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                             intent.putExtra("IsFirst", "1")
                                             startActivity(intent)
                                             finish()
-
                                         }
                                     }
                                 }

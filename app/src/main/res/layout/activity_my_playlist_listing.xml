@@ -271,7 +271,8 @@
                                             android:fontFamily="@font/montserrat_bold"
                                             android:gravity="center"
                                             android:textColor="@color/white"
-                                            android:textSize="@dimen/_20sdp" />
+                                            android:textSize="@dimen/_20sdp"
+                                            tools:ignore="SpUsage" />
                                     </LinearLayout>
 
                                     <LinearLayout

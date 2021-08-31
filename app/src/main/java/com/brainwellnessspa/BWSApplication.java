@@ -173,7 +173,7 @@ public class BWSApplication extends Application {
     };
     public static int miniPlayer = 0;
     public static int addCouserBackStatus = 0;
-    public static String BatteryStatus = "", IsLock = "0", IsBackFromEnhance = "0";
+    public static String BatteryStatus = "", IsLock = "0";
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;
@@ -1671,12 +1671,14 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
+    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llPastIndexScore, Activity act) {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
+            llPastIndexScore.setVisibility(View.GONE);
         } else {
             barChart.setVisibility(View.VISIBLE);
+            llPastIndexScore.setVisibility(View.VISIBLE);
             barChart.setDescription(null);
             barChart.setPinchZoom(false);
             barChart.setScaleEnabled(false);
@@ -1709,6 +1711,7 @@ public class BWSApplication extends Application {
 
             BarData barData = new BarData(dataSets);
             barData.setBarWidth(0.5f);
+            barDataSet.notifyDataSetChanged();
             barData.setValueFormatter(new MyValueFormatter());
             barData.setValueTextSize(7f);
 
@@ -1744,20 +1747,27 @@ public class BWSApplication extends Application {
             barChart.getBarData().setBarWidth(0.4f);
             barChart.getXAxis().setDrawGridLines(false);
             barChart.setFitBars(true);
+            barChart.getLegend().setEnabled(false);
 
             Legend l = barChart.getLegend();
-            l.setEnabled(true);
+            l.setEnabled(false);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
+            l.setXEntrySpace(4f);
+            l.setYEntrySpace(0f);
 //                        l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
         }
     }
 
-    public static void getUserActivity(HomeScreenModel.ResponseData indexData, BarChart barChart, Activity act) {
+    public static void getUserActivity(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llLegendActivity, Activity act) {
         if (indexData.getGraphAnalytics().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
+            llLegendActivity.setVisibility(View.GONE);
         } else {
             barChart.setVisibility(View.VISIBLE);
+            llLegendActivity.setVisibility(View.VISIBLE);
             barChart.setDescription(null);
             barChart.setPinchZoom(false);
             barChart.setScaleEnabled(false);
@@ -1772,7 +1782,7 @@ public class BWSApplication extends Application {
             ArrayList<BarEntry> yAxisValues = new ArrayList<>();
 
             for (int i = 0; i < indexData.getGraphAnalytics().size(); i++) {
-                float val = Float.valueOf(indexData.getGraphAnalytics().get(i).getTime());
+                float val = Float.parseFloat(indexData.getGraphAnalytics().get(i).getTime());
                 yAxisValues.add(new BarEntry(i * spaceForBar, val));
             }
 
@@ -1784,6 +1794,7 @@ public class BWSApplication extends Application {
             BarDataSet barDataSet;
             barDataSet = new BarDataSet(yAxisValues, "Last 7 Days Time");
             barDataSet.setDrawIcons(false);
+            barDataSet.notifyDataSetChanged();
             barDataSet.setColor(act.getResources().getColor(R.color.blue));
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
@@ -1801,6 +1812,7 @@ public class BWSApplication extends Application {
             XAxis xl = barChart.getXAxis();
             xl.setGranularity(1f);
             xl.setDrawGridLines(true);
+            xl.setDrawAxisLine(true);
             xl.setLabelCount(7);
             xl.setLabelRotationAngle(0);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -1825,9 +1837,14 @@ public class BWSApplication extends Application {
             barChart.getBarData().setBarWidth(0.4f);
             barChart.getXAxis().setDrawGridLines(false);
             barChart.setFitBars(true);
+            barChart.getLegend().setEnabled(false);
 
             Legend l = barChart.getLegend();
-            l.setEnabled(true);
+            l.setEnabled(false);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
+            l.setXEntrySpace(4f);
+            l.setYEntrySpace(0f);
             //            l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
             l.setWordWrapEnabled(true);
         }
@@ -2630,7 +2647,6 @@ public class BWSApplication extends Application {
         hourString = "";
         minuteSting = "";
         category = "";
-        IsBackFromEnhance = "0";
         comeHomeScreen = "";
         IsLock = "0";
         addToRecentPlayId = "0";
