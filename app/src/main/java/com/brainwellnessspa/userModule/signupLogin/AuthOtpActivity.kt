@@ -184,6 +184,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            p.putValue("isOtpReceived", "Yes")
                             showToast(listModel.ResponseMessage, activity)
                             logout = false
                             countDownTimer = object : CountDownTimer(30000, 1000) {

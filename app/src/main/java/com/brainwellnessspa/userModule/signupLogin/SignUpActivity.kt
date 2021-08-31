@@ -422,6 +422,7 @@ class SignUpActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
+                            p.putValue("isOtpReceived", "Yes")
                             BWSApplication.showToast(listModel.ResponseMessage, activity)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
                             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -435,7 +436,9 @@ class SignUpActivity : AppCompatActivity() {
                             startActivity(i)
                             finish()
                         }else{
+                            p.putValue("isOtpReceived", "No")
                         }
+                        BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
                         BWSApplication.showToast(listModel.ResponseMessage, activity)
 
                     } catch (e: Exception) {
@@ -444,6 +447,8 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
+                    p.putValue("isOtpReceived", "No")
+                    BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
                     BWSApplication.hideProgressBar(binding.progressBar, null, activity)
                 }
             })

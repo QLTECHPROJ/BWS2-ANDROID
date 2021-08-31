@@ -37,6 +37,10 @@ class AddUserModel {
         @Expose
         var email: String? = ""
 
+        @SerializedName("Mobile")
+        @Expose
+        var mobile: String? = ""
+
         @SerializedName("errormsg")
         @Expose
         var errormsg: String? = ""

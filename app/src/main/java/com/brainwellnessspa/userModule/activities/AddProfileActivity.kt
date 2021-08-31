@@ -197,6 +197,7 @@ class AddProfileActivity : AppCompatActivity() {
                                         p.putValue("name", listModel.responseData!!.name)
                                         p.putValue("email", listModel.responseData!!.email)
                                         p.putValue("isSameMobile", "Yes")
+                                        p.putValue("mobileNo",listModel.responseData!!.mobile)
                                         addToSegment("CoUser Added", p, CONSTANTS.track)
                                         finish()
                                     }

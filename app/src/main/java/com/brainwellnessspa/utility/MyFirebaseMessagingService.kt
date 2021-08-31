@@ -120,25 +120,25 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         try {
             if (flag != null && flag.equals("Playlist", ignoreCase = true)) {
-                /* if (!IsLock.equalsIgnoreCase("0")) {
-                    resultIntent = new Intent(this, BottomNavigationActivity.class);
-                    taskStackBuilder.addParentStack(BottomNavigationActivity.class);
-                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
+                 if (!IsLock.equals("0")) {
+                    resultIntent = Intent(this, BottomNavigationActivity::class.java)
+                    taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
+                    taskStackBuilder.addNextIntentWithParentStack(resultIntent)
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
-                } else {*/
-                resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
-                resultIntent.putExtra("New", "0")
-                resultIntent.putExtra("Goplaylist", "1")
-                resultIntent.putExtra("PlaylistID", id)
-                resultIntent.putExtra("PlaylistName", title)
-                resultIntent.putExtra("notification", "0")
-                resultIntent.putExtra("message", message)
-                resultIntent.putExtra("PlaylistImage", "")
-                resultIntent.putExtra("ScreenView", "Reminder Notification")
-                taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent)
-                resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
-                //                }
+                } else {
+                     resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
+                     resultIntent.putExtra("New", "0")
+                     resultIntent.putExtra("Goplaylist", "1")
+                     resultIntent.putExtra("PlaylistID", id)
+                     resultIntent.putExtra("PlaylistName", title)
+                     resultIntent.putExtra("notification", "0")
+                     resultIntent.putExtra("message", message)
+                     resultIntent.putExtra("PlaylistImage", "")
+                     resultIntent.putExtra("ScreenView", "Reminder Notification")
+                     taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
+                     taskStackBuilder.addNextIntentWithParentStack(resultIntent)
+                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
+                 }
             } else {
                 resultIntent = Intent(this, BottomNavigationActivity::class.java)
                 resultIntent.putExtra("IsFirst", "0")

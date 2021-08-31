@@ -130,10 +130,6 @@ class ProfileProgressActivity : AppCompatActivity() {
             callSecondNext("3")
         }
         binding.btnOpn1.setOnClickListener {
-            binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
-            binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             setDate()
 //            callFourthNext()
         }
@@ -685,14 +681,18 @@ class ProfileProgressActivity : AppCompatActivity() {
             ageMonth = monthOfYear
             ageDate = dayOfMonth
             val birthYear = getAge(ageYear, ageMonth, ageDate)
+            val parser = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
+            val formatter= SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
+            val age1 = sdf.format(date)
+            val userCalendar = formatter.format(parser.parse(age1))
+            binding.btnOpn1.text = userCalendar
             if (birthYear < 0) {
-                callSecondNextElseBlock()
+                binding.btnNext.isClickable = false
+                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             } else {
-                age = sdf.format(date)
-                val parser = SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT)
-                val formatter= SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
-                val userCalendar = formatter.format(parser.parse(age))
-                binding.btnOpn1.text = userCalendar
+                age = age1
                 callFourthNext()
             }
         }, mYear, mMonth, mDay)

@@ -60,7 +60,7 @@ class ContactBookActivity : AppCompatActivity() {
     var favContactListAdapter: FavContactListAdapter? = null
     private var userList: MutableList<ContactlistModel> = ArrayList()
     var favUserList: MutableList<FavContactlistModel> = ArrayList()
-    var p: Properties? = null
+    var p: Properties = Properties()
     var stackStatus = 0
     var myBackPress = false
     private var numStarted = 0
@@ -91,9 +91,9 @@ class ContactBookActivity : AppCompatActivity() {
         }
 
         p = Properties()
-        p!!.putValue("userId", userId)
-        p!!.putValue("referLink", referLink)
-        p!!.putValue("userReferCode", userPromoCode)
+        p.putValue("userId", userId)
+        p.putValue("referLink", referLink)
+        p.putValue("userReferCode", userPromoCode)
         addToSegment("Invite Friends Screen Viewed", p, CONSTANTS.screen)
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -109,11 +109,11 @@ class ContactBookActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(search: String): Boolean {
                 try {
-                    contactListAdapter!!.filter.filter(search)
                     p = Properties()
-                    p!!.putValue("userId", userId)
-                    p!!.putValue("searchKeyword", search)
+                    p.putValue("userId", userId)
+                    p.putValue("searchKeyword", search)
                     addToSegment("Contact Searched", p, CONSTANTS.track)
+                    contactListAdapter!!.filter.filter(search)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -348,6 +348,14 @@ class ContactBookActivity : AppCompatActivity() {
                         val listModel: SetInviteUserModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                Log.e("contactNumber", number)
+                                p = Properties()
+                                p.putValue("userId", userId)
+                                p.putValue("referLink", referLink)
+                                p.putValue("userReferCode", userPromoCode)
+                                p.putValue("contactName", contactName)
+                                p.putValue("contactNumber", number)
+                                addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
                                 if (BtnInvite != null) {
                                     if (isFav.equals("0", ignoreCase = true)) {
                                         BtnInvite.setBackgroundResource(R.drawable.round_blue_cornor_normal)
@@ -359,18 +367,10 @@ class ContactBookActivity : AppCompatActivity() {
                                 val uri = Uri.parse("smsto:$number")
                                 val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
                                 // smsIntent.setData(uri);
-                                smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 30 days free trial\n$referLink")
+                                smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 14 days free trial\n$referLink")
                                 startActivity(smsIntent)
                                 finish()
 
-                                Log.e("contactNumber", number)
-                                p = Properties()
-                                p!!.putValue("userId", userId)
-                                p!!.putValue("referLink", referLink)
-                                p!!.putValue("userReferCode", userPromoCode)
-                                p!!.putValue("contactName", contactName)
-                                p!!.putValue("contactNumber", number)
-                                addToSegment("Invite Friend Clicked", p, CONSTANTS.track)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                 deleteCall(activity)
