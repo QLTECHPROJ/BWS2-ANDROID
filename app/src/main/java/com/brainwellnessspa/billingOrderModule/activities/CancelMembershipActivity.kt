@@ -291,10 +291,10 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 val p = Properties()
                 p.putValue("planId", intent.getStringExtra("planId"))
                 p.putValue("plan", intent.getStringExtra("plan"))
-                p.putValue("planStatus",  intent.getStringExtra("planStatus"))
-                p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
-                p.putValue("planExpiryDt",  intent.getStringExtra("planExpiryDt"))
-                p.putValue("planAmount",  intent.getStringExtra("planAmount"))
+                p.putValue("planStatus", intent.getStringExtra("planStatus"))
+                p.putValue("planStartDt", intent.getStringExtra("planStartDt"))
+                p.putValue("planExpiryDt", intent.getStringExtra("planExpiryDt"))
+                p.putValue("planAmount", intent.getStringExtra("planAmount"))
                 addToSegment("Cancel Subscription Screen Viewed", p, CONSTANTS.screen)
 
                 /*This condition is to audio playing or not  */
@@ -399,14 +399,14 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                         showToast(model!!.responseMessage, activity)
                                                         try {
                                                             val p = Properties()
-                                                            p.putValue("cancelId",cancelId)
+                                                            p.putValue("cancelId", cancelId)
                                                             p.putValue("cancelReason", binding.edtCancelBox.text.toString())
                                                             p.putValue("planId", intent.getStringExtra("planId"))
                                                             p.putValue("plan", intent.getStringExtra("plan"))
-                                                            p.putValue("planStatus",  intent.getStringExtra("planStatus"))
-                                                            p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
-                                                            p.putValue("planExpiryDt",  intent.getStringExtra("planExpiryDt"))
-                                                            p.putValue("planAmount",  intent.getStringExtra("planAmount"))
+                                                            p.putValue("planStatus", intent.getStringExtra("planStatus"))
+                                                            p.putValue("planStartDt", intent.getStringExtra("planStartDt"))
+                                                            p.putValue("planExpiryDt", intent.getStringExtra("planExpiryDt"))
+                                                            p.putValue("planAmount", intent.getStringExtra("planAmount"))
                                                             addToSegment("Subscription Cancelled", p, CONSTANTS.screen)
                                                             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions?sku=weekly_2_profile&package=com.brainwellnessspa")))
 //                                                        https://play.google.com/store/account/subscriptions
@@ -461,7 +461,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                             }
                             dialog.show()
                             dialog.setCancelable(false)
-                        }else {
+                        } else {
                             val dialog = Dialog(ctx)
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                             dialog.setContentView(R.layout.cancel_membership)

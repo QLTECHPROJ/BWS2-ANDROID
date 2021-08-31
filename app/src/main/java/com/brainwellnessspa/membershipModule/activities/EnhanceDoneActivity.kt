@@ -14,6 +14,7 @@ import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
+import kotlin.system.exitProcess
 
 class EnhanceDoneActivity : AppCompatActivity() {
     lateinit var binding: ActivityEnhanceDoneBinding
@@ -73,7 +74,10 @@ class EnhanceDoneActivity : AppCompatActivity() {
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("IsFirstClick", "1")
             startActivity(i)
-            finish()
         }
+    }
+
+    override fun onBackPressed() {
+        finishAffinity()
     }
 }

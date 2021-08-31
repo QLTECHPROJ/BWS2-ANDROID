@@ -349,9 +349,7 @@ class HomeFragment : Fragment() {
 //        profileViewData(activity)
         /* User list layout click */
         binding.llBottomView.setOnClickListener {
-            if (isNetworkConnected(requireActivity())) {
-                mBottomSheetDialog.show()
-
+               if (isNetworkConnected(requireActivity())) {
                 val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
                 layoutBinding.rvUserList.layoutManager = mLayoutManager
                 layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
@@ -359,6 +357,7 @@ class HomeFragment : Fragment() {
                 /* get all user list function */
                 prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar, layoutBinding.llAddNewUser, mBottomSheetDialog)
 
+                mBottomSheetDialog.show()
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }
@@ -605,7 +604,7 @@ class HomeFragment : Fragment() {
                         val gson = Gson()
                         homelistModel = listModel
                         when {
-                            listModel.responseCode.equals(act.getString(R.string.ResponseCodesuccess)) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 val response = listModel.responseData
                                 if (response != null) {
                                     IsLock = response.IsLock

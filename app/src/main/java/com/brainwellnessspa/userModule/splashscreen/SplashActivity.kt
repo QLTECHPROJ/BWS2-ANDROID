@@ -15,6 +15,7 @@ import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
+import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
@@ -53,6 +54,11 @@ class SplashActivity : AppCompatActivity() {
     var isMainAccount: String? = ""
     var isSetLoginPin: String? = ""
     var planId: String? = ""
+    var flag: String? = null
+    var id:String? = null
+    var title:String? = null
+    var message:String? = null
+    var IsLockNoti:String? = null
     var planContent: String? = ""
     lateinit var activity: Activity
     lateinit var context: Context
@@ -92,7 +98,6 @@ class SplashActivity : AppCompatActivity() {
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-
 
 //        BWSApplication.showToast("Notify Me "+ ("\ud83d\ude01")+("\ud83d\udc34"),this)
     }
@@ -238,7 +243,7 @@ class SplashActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, authOtpModel.ResponseData.planDetails[0].PlanContent)
                                 }
-                            }catch (e:Exception){
+                            } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                             editor.apply()
@@ -315,6 +320,32 @@ class SplashActivity : AppCompatActivity() {
                 i.putExtra("countryShortName", "")
                 startActivity(i)
                 finish()
+            } else if (intent.hasExtra("flag")) {
+                var resultIntent:Intent?
+                flag = intent.getStringExtra("flag");
+                id = intent.getStringExtra("id");
+                title = intent.getStringExtra("title");
+                message = intent.getStringExtra("message");
+                IsLockNoti = intent.getStringExtra("IsLock");
+                if (flag != null && flag.equals("Playlist")) {
+                    if (!IsLockNoti.equals("0")) {
+                        resultIntent = Intent(this, BottomNavigationActivity::class.java)
+                        resultIntent.putExtra("IsFirst", "0")
+                        startActivity(resultIntent)
+                        finish()
+                    } else {
+                        resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
+                        resultIntent.putExtra("New", "0")
+                        resultIntent.putExtra("Goplaylist", "1")
+                        resultIntent.putExtra("PlaylistID", id)
+                        resultIntent.putExtra("PlaylistName", title)
+                        resultIntent.putExtra("notification", "0")
+                        resultIntent.putExtra("message", message)
+                        resultIntent.putExtra("PlaylistImage", "")
+                        startActivity(resultIntent)
+                        finish()
+                    }
+                }
             } else {
                 Log.e("isMainAccount", isMainAccount.toString())
                 Log.e("isProfileCompleted", isProfileCompleted.toString())

@@ -171,7 +171,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationBuilder.setContentTitle(title)
             notificationBuilder.setDefaults(Notification.DEFAULT_ALL or Notification.FLAG_AUTO_CANCEL)
             notificationBuilder.setContentText(message)
-            notificationBuilder.color = ContextCompat.getColor(activity, R.color.blue)
+            notificationBuilder.color = ContextCompat.getColor(activity, R.color.app_theme_color)
             notificationBuilder.setShowWhen(true)
             notificationBuilder.setAutoCancel(true)
             notificationBuilder.setSound(defaultSoundUri)

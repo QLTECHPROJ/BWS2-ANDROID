@@ -9,9 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.*
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -157,6 +155,14 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             doubleBackToExitPressedOnce = true
             showToast("Press again to exit", this@BottomNavigationActivity)
             Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        } else if (binding.navView.selectedItemId == R.id.navigation_Manage) {
+            binding.navView.selectedItemId = R.id.navigation_Home
+        } else if (binding.navView.selectedItemId == R.id.navigation_Wellness) {
+            binding.navView.selectedItemId = R.id.navigation_Home
+        } else if (binding.navView.selectedItemId == R.id.navigation_Elevate) {
+            binding.navView.selectedItemId = R.id.navigation_Home
+        } else if (binding.navView.selectedItemId == R.id.navigation_Profile) {
+            binding.navView.selectedItemId = R.id.navigation_Home
         } else {
             super.onBackPressed()
         }
