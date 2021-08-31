@@ -166,7 +166,6 @@ class GlobalInitExoPlayer : Service() {
 
         @JvmStatic
         fun callAllRemovePlayer(ctx: Context,act: Activity) {
-            callNewPlayerRelease()
             val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
             val edited2  = preferred2.edit()
             edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)

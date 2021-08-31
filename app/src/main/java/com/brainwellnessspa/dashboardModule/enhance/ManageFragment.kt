@@ -27,10 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
-import com.brainwellnessspa.dashboardModule.models.CreateNewPlaylistModel
-import com.brainwellnessspa.dashboardModule.models.HomeDataModel
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
@@ -691,9 +688,41 @@ class ManageFragment : Fragment() {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                var gson: Gson = Gson()
+                val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
+                var mainPlayModelList = ArrayList<MainPlayModel>()
+                if (audioPlayerFlag != "0") {
+                    if (!json.equals(gson.toString(), ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
+                        mainPlayModelList = gson.fromJson(json, type)
+                    }
+                }
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                        callAllRemovePlayer(ctx,act)
+                        if (mainPlayModelList.size == playlistSongs.size) {
+                            for (i in audioList) {
+                                var found = false
+                                for (j in playlistSongs) {
+                                    if (i!!.ID == j.id) {
+                                        found = true
+                                    }
+                                }
+                                if (!found) {
+                                    audiolistDiff.add(i!!)
+                                }
+                            }
+                            if (audiolistDiff.isNotEmpty()) {
+                                val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
+                                val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
+                                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                                        callAllRemovePlayer(ctx, act)
+                                    }
+                                }
+                                GetPlaylistMedia(PlaylistID, userId!!, ctx)
+                            }
+                        }
                     }
                 }
                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
