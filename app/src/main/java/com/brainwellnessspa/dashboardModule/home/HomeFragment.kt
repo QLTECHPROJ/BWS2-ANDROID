@@ -3,6 +3,7 @@ package com.brainwellnessspa.dashboardModule.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.NotificationManager
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -44,6 +45,7 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
@@ -354,7 +356,7 @@ class HomeFragment : Fragment() {
                 layoutBinding.rvUserList.layoutManager = mLayoutManager
                 layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
 
-                /* get all user lisst function */
+                /* get all user list function */
                 prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar, layoutBinding.llAddNewUser, mBottomSheetDialog)
 
             } else {
@@ -1427,19 +1429,7 @@ class HomeFragment : Fragment() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
-                            GlobalInitExoPlayer.callNewPlayerRelease()
-                            val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                            val edited2 = preferred2.edit()
-                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                            edited2.clear()
-                            edited2.apply()
+                            callAllRemovePlayer(ctx,act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -1450,19 +1440,7 @@ class HomeFragment : Fragment() {
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                        GlobalInitExoPlayer.callNewPlayerRelease()
-                        val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                        val edited2 = preferred2.edit()
-                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                        edited2.clear()
-                        edited2.apply()
+                        callAllRemovePlayer(ctx,act)
                     }
                 }
                 GetPlaylistMedia(PlaylistID, userId!!, ctx)

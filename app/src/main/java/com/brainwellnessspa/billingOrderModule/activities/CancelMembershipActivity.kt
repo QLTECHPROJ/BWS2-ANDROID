@@ -289,6 +289,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                 /*This is to youtube video playing */
                 binding.youtubeView.initialize(API_KEY, this)
                 val p = Properties()
+                p.putValue("planId", intent.getStringExtra("planId"))
                 p.putValue("plan", intent.getStringExtra("plan"))
                 p.putValue("planStatus",  intent.getStringExtra("planStatus"))
                 p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
@@ -400,6 +401,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                             val p = Properties()
                                                             p.putValue("cancelId",cancelId)
                                                             p.putValue("cancelReason", binding.edtCancelBox.text.toString())
+                                                            p.putValue("planId", intent.getStringExtra("planId"))
                                                             p.putValue("plan", intent.getStringExtra("plan"))
                                                             p.putValue("planStatus",  intent.getStringExtra("planStatus"))
                                                             p.putValue("planStartDt",  intent.getStringExtra("planStartDt"))
@@ -420,11 +422,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                                                                 audioPause = true
                                                             }
                                                         }
-
-                                                        //                                            Properties p = new Properties();
-                                                        //                                            p.putValue("cancelId", cancelId);
-                                                        //                                            p.putValue("cancelReason", CancelReason);
-                                                        //                                            BWSApplication.addToSegment("Cancel Subscription Clicked", p, CONSTANTS.track);
 
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()

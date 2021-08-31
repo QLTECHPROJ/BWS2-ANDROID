@@ -64,7 +64,6 @@ class BillingOrderActivity : AppCompatActivity() {
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             startActivity(i)
-//            finish()
         }
 
         /* This is the cancel plan click */
@@ -82,6 +81,7 @@ class BillingOrderActivity : AppCompatActivity() {
             c1.timeInMillis = listModelGlobal.responseData!!.planExpireDate!!.toInt() * 1000L
             val d1: Date = c1.time
             val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+             i.putExtra("planId", listModelGlobal.responseData!!.planId)
              i.putExtra("plan", listModelGlobal.responseData!!.planName)
              i.putExtra("planStatus",listModelGlobal.responseData!!.planStatus)
              i.putExtra("planStartDt ",sdf.format(d))
@@ -144,7 +144,6 @@ class BillingOrderActivity : AppCompatActivity() {
         } catch (e: java.lang.Exception) {
             "$"
         }
-
     }
 
     private fun getPlanDetails() {

@@ -150,18 +150,22 @@ class ManageUserActivity : AppCompatActivity() {
                 binding.llAddNewUser.setOnClickListener {
                     if (isMainAccount.equals("1", ignoreCase = true)) {
                         binding.llAddNewUser.visibility = View.VISIBLE
-                        if (!manageUserListModel.maxuseradd.equals("", ignoreCase = true)) {
-                            if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
-                                showToast("Please update your plan", activity)
+                        if(IsLock.equals("1")) {
+                            showToast("Please reactivate your plan", activity)
+                        }else{
+                            if (!manageUserListModel.maxuseradd.equals("", ignoreCase = true)) {
+                                if (manageUserListModel.userList!!.size == manageUserListModel.maxuseradd!!.toInt()) {
+                                    showToast("Please update your plan", activity)
+                                } else {
+                                    IsFirstClick = "0"
+                                    addCouserBackStatus = 1
+                                    val intent = Intent(applicationContext, AddCouserActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    startActivity(intent)
+                                }
                             } else {
-                                IsFirstClick = "0"
-                                addCouserBackStatus = 1
-                                val intent = Intent(applicationContext, AddCouserActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                startActivity(intent)
+                                showToast("Please purchase your plan", activity)
                             }
-                        } else {
-                            showToast("Please purchase your plan", activity)
                         }
                     } else {
                         binding.llAddNewUser.visibility = View.GONE

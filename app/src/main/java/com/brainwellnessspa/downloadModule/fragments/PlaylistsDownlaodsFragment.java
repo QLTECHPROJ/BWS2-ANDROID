@@ -36,8 +36,6 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity;
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
-import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
@@ -58,6 +56,8 @@ import java.util.List;
 
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.GetPlaylistMedia;
+import static com.brainwellnessspa.BWSApplication.IsLock;
+import static com.brainwellnessspa.BWSApplication.callEnhanceActivity;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity.comeDeletePlaylist;
 import static com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment.comefromDownload;
@@ -244,32 +244,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
             holder.binding.equalizerview.setVisibility(View.GONE);
- /*           UpdateSongTime1 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        getDownloadData();
-                        if (fileNameList.size() != 0) {
-                            for (int f = 0; f < fileNameList.size(); f++) {
-                                if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
-                                    getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
-                                    break;
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                    }
-
-                }
-            };*/
-        /*if(fileNameList.size()!=0){
-            if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
-                holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1,500);
-            }else{
-                holder.binding.pbProgress.setVisibility(View.GONE);
-            }
-        }*/
             if (fileNameList.size() != 0) {
                 for (int f = 0; f < fileNameList.size(); f++) {
                     if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
@@ -281,7 +255,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 isMyDownloading = false;
             }
-
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equals("0")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
             try {
                 if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") || listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") && listModelList.get(position).getTotalhour().equalsIgnoreCase("") && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
                     holder.binding.tvTime.setText("0 Audio | 0h 0m");
@@ -307,140 +285,131 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f).placeholder(R.drawable.default_audio_icon).error(R.drawable.default_audio_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             Glide.with(ctx).load(R.drawable.ic_image_bg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
-            //            if (IsLock.equalsIgnoreCase("1")) {
-            //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("2")) {
-            //                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-            //                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            //            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            //                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-            //                holder.binding.ivLock.setVisibility(View.GONE);
-            //            }
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                try {
-                    //                    if (IsLock.equalsIgnoreCase("1")) {
-                    //                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    //                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    //                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                    //                        i.putExtra("ComeFrom", "Plan");
-                    //                        ctx.startActivity(i);
-                    //                    } else if (IsLock.equalsIgnoreCase("2")) {
-                    //                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    //                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    //                        BWSApplication.showToast(getString(R.string.reactive_plan), ctx);
-                    //                    } else if (IsLock.equalsIgnoreCase("0")
-                    //                            || IsLock.equalsIgnoreCase("")) {
-                    DB.taskDao().getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(), CoUserID).removeObserver(audioList -> {
-                    });
-                    comefromDownload = "1";
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
-                    i.putExtra("New", "0");
-                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
-                    i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
-                    i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
-                    i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
-                    i.putExtra("PlaylistDescription", listModelList.get(position).getPlaylistDesc());
-                    i.putExtra("Created", listModelList.get(position).getCreated());
-                    i.putExtra("MyDownloads", "1");
-                    ctx.startActivity(i);
-                    Properties p = new Properties();
-                    p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                    p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                    p.putValue("playlistType", "");
-                    BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
-                    //                    }
-                } catch (java.lang.IllegalStateException exception) {
-                    // Attempt to catch rare mysterious Canvas stack underflow events that have been reported in
-                    // ACRA, but simply should not be happening because Canvas save()/restore() calls are definitely
-                    // balanced. The exception is: java.lang.IllegalStateException: Underflow in restore
-                    // See: stackoverflow.com/questions/23893813/
-                    if (exception.getMessage() != null && (//
-                            exception.getMessage().contains("Underflow in restore") || //
-                                    exception.getCause().getMessage().contains("Underflow in restore"))) { //
-                        Log.e("downloadPlaylist NotOpn", "Caught a Canvas stack underflow! (java.lang.IllegalStateException: Underflow in restore)");
-                    } else {
-                        // It wasn't a Canvas underflow, so re-throw.
-                        throw exception;
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, getActivity());
+                } else if (IsLock.equals("0")) {
+                    try {
+                        DB.taskDao().getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(), CoUserID).removeObserver(audioList -> {
+                        });
+                        comefromDownload = "1";
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
+                        i.putExtra("New", "0");
+                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
+                        i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
+                        i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
+                        i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
+                        i.putExtra("PlaylistDescription", listModelList.get(position).getPlaylistDesc());
+                        i.putExtra("Created", listModelList.get(position).getCreated());
+                        i.putExtra("MyDownloads", "1");
+                        ctx.startActivity(i);
+                        Properties p = new Properties();
+                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                        p.putValue("playlistType", "");
+                        BWSApplication.addToSegment("Downloaded Playlist Clicked", p, CONSTANTS.track);
+                        //                    }
+                    } catch (java.lang.IllegalStateException exception) {
+                        // Attempt to catch rare mysterious Canvas stack underflow events that have been reported in
+                        // ACRA, but simply should not be happening because Canvas save()/restore() calls are definitely
+                        // balanced. The exception is: java.lang.IllegalStateException: Underflow in restore
+                        // See: stackoverflow.com/questions/23893813/
+                        if (exception.getMessage() != null && (//
+                                exception.getMessage().contains("Underflow in restore") || //
+                                        exception.getCause().getMessage().contains("Underflow in restore"))) { //
+                            Log.e("downloadPlaylist NotOpn", "Caught a Canvas stack underflow! (java.lang.IllegalStateException: Underflow in restore)");
+                        } else {
+                            // It wasn't a Canvas underflow, so re-throw.
+                            throw exception;
+                        }
                     }
                 }
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                String AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
-                String MyPlaylistName = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "");
-                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
-                    int unicode = 0x1F6AB;
-                    String textIcons = new String(Character.toChars(unicode));
-                    BWSApplication.showToast("You can't delete a playlist while it's playing." +textIcons, ctx);
-                } else {
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.custom_popup_layout);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, getActivity());
+                } else if (IsLock.equals("0")) {
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                    String AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
+                    if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
+                        int unicode = 0x1F6AB;
+                        String textIcons = new String(Character.toChars(unicode));
+                        BWSApplication.showToast("You can't delete a playlist while it's playing." + textIcons, ctx);
+                    } else {
+                        final Dialog dialog = new Dialog(ctx);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.custom_popup_layout);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                    final Button Btn = dialog.findViewById(R.id.Btn);
-                    tvTitle.setText("Remove playlist");
-                    tvHeader.setText("Playlist has been removed");
-                    tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
-                    Btn.setText("Confirm");
-                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss();
-                        }
-                        return false;
-                    });
-
-                    Btn.setOnClickListener(v -> {
-                        if (isMyDownloading) {
-                            //                            handler1.removeCallbacks(UpdateSongTime1);
-                        }
-                        DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
+                        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                        final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                        final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                        final Button Btn = dialog.findViewById(R.id.Btn);
+                        tvTitle.setText("Remove playlist");
+                        tvHeader.setText("Playlist has been removed");
+                        tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
+                        Btn.setText("Confirm");
+                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss();
+                            }
+                            return false;
                         });
-                        getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
-                        GetPlaylistMedia(listModelList.get(position).getPlaylistID(),CoUserID,ctx);
-                        Properties p = new Properties();
-                        p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                        p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                        if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
-                            p.putValue("playlistType", "Created");
-                        } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
-                            p.putValue("playlistType", "Default");
-                        } else if (listModelList.get(position).getCreated().equals("2"))
-                        p.putValue("playlistType", "Suggested");
 
-                        p.putValue("audioCount", listModelList.get(position).getTotalAudio());
-                        p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
-                        if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
-                            p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
-                        } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
-                        } else {
-                            p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
-                        }
-                        p.putValue("source", "Downloaded Playlists");
-                        BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
-                        BWSApplication.showToast("Playlist has been removed", getActivity());
+                        Btn.setOnClickListener(v -> {
+                            if (isMyDownloading) {
+                                //                            handler1.removeCallbacks(UpdateSongTime1);
+                            }
+                            DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
+                            });
+                            getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
+                            GetPlaylistMedia(listModelList.get(position).getPlaylistID(), CoUserID, ctx);
+                            Properties p = new Properties();
+                            p.putValue("playlistId", listModelList.get(position).getPlaylistID());
+                            p.putValue("playlistName", listModelList.get(position).getPlaylistName());
+                            if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
+                                p.putValue("playlistType", "Created");
+                            } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
+                                p.putValue("playlistType", "Default");
+                            } else if (listModelList.get(position).getCreated().equals("2"))
+                                p.putValue("playlistType", "Suggested");
 
-                        notifyItemRemoved(position);
-                        dialog.dismiss();
-                    });
+                            p.putValue("audioCount", listModelList.get(position).getTotalAudio());
+                            p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
+                            if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
+                            } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
+                            } else {
+                                p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                            }
+                            p.putValue("source", "Downloaded Playlists");
+                            BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
+                            BWSApplication.showToast("Playlist has been removed", getActivity());
+                            GetAllMedia(getActivity());
+                            dialog.dismiss();
+                        });
 
-                    tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                    dialog.show();
-                    dialog.setCancelable(false);
+                        tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                        dialog.show();
+                        dialog.setCancelable(false);
+                    }
                 }
             });
         }

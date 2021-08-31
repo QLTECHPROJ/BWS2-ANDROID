@@ -225,9 +225,9 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(requireActivity())) {
                 val i = Intent(requireActivity(), BillingOrderActivity::class.java)
+                requireActivity().overridePendingTransition(0, 0)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
             } else {
                 showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
             }

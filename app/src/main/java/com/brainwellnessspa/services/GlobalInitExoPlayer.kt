@@ -1,9 +1,6 @@
 package com.brainwellnessspa.services
 
-import android.app.Activity
-import android.app.Notification
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -51,7 +48,6 @@ import retrofit2.Response
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -166,6 +162,26 @@ class GlobalInitExoPlayer : Service() {
             //        GetMedia st = new GetMedia();
             //        st.execute();
             return myBitmap
+        }
+
+        @JvmStatic
+        fun callAllRemovePlayer(ctx: Context,act: Activity) {
+            callNewPlayerRelease()
+            val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
+            val edited2  = preferred2.edit()
+            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
+            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
+            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
+            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
+            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
+            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
+            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
+            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
+            edited2.clear()
+            edited2.apply()
+            val notificationManager  = act.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(notificationId)
+            relesePlayer(ctx)
         }
 
         @JvmStatic
@@ -374,7 +390,7 @@ class GlobalInitExoPlayer : Service() {
                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-              /*  if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
+                /*  if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         getUserActivityCall(ctx, mainPlayModelList1x[player.currentWindowIndex].id, mainPlayModelList1x[player.currentWindowIndex].playlistID, "start")
                         Log.e("User Track ", "Start Global Done")
@@ -392,8 +408,8 @@ class GlobalInitExoPlayer : Service() {
                     localIntent!!.putExtra("MyData", "pause")
                     localBroadcastManager!!.sendBroadcast(localIntent!!)
                 }
-                if(player.playbackState == ExoPlayer.STATE_ENDED){
-                    Log.e("STATE_ENDED Global","Done")
+                if (player.playbackState == ExoPlayer.STATE_ENDED) {
+                    Log.e("STATE_ENDED Global", "Done")
                 }
             }
 
@@ -498,7 +514,7 @@ class GlobalInitExoPlayer : Service() {
                     //                        isprogressbar = false;
                 } else if (state == ExoPlayer.STATE_BUFFERING) {
                 } else if (state == ExoPlayer.STATE_ENDED) {
-                    Log.e("STATE_ENDED"," Global onPlaybackStateChanged Done")
+                    Log.e("STATE_ENDED", " Global onPlaybackStateChanged Done")
                     try {
                         /*if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                             if (playFrom.equals("Suggested", ignoreCase = true)) {
@@ -712,12 +728,12 @@ class GlobalInitExoPlayer : Service() {
                     val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                     mainPlayModelList1 = gson.fromJson(json, type)
                 }
-                var ps = 0
-                ps = if (player != null) {
-                    player.currentWindowIndex
+                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                var ps: Int = 0
+                if (player != null) {
+                    ps = player.currentWindowIndex
                 } else {
-                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                    shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                    ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 return mainPlayModelList1[ps].name
             }
@@ -1407,7 +1423,7 @@ class GlobalInitExoPlayer : Service() {
                         if (listModel != null) {
                             when {
                                 listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-//                                  TODO   pref json clear
+                                    //                                  TODO   pref json clear
                                     val preferences: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
                                     val edit = preferences.edit()
                                     edit.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)

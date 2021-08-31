@@ -3,6 +3,7 @@ package com.brainwellnessspa.dashboardModule.enhance
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.NotificationManager
 import android.content.*
 import android.content.Context.MODE_PRIVATE
 import android.graphics.drawable.ColorDrawable
@@ -35,6 +36,7 @@ import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -680,19 +682,7 @@ class ManageFragment : Fragment() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
-                            GlobalInitExoPlayer.callNewPlayerRelease()
-                            val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                            val edited2 = preferred2.edit()
-                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                            edited2.clear()
-                            edited2.apply()
+                            callAllRemovePlayer(ctx,act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -703,19 +693,7 @@ class ManageFragment : Fragment() {
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                        GlobalInitExoPlayer.callNewPlayerRelease()
-                        val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                        val edited2 = preferred2.edit()
-                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                        edited2.clear()
-                        edited2.apply()
+                        callAllRemovePlayer(ctx,act)
                     }
                 }
                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -735,7 +713,7 @@ class ManageFragment : Fragment() {
                     homelistModel = response.body()!!
                     if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                         getDownloadedList(requireActivity(), DB)
-                        Log.e("download audio", downloadAudioDetailsList.toString())
+//                        Log.e("download audio", downloadAudioDetailsList.toString())
                         binding.llMainLayout.visibility = View.VISIBLE
                         binding.llSpace.visibility = View.VISIBLE
                         binding.llPlayer.visibility = View.VISIBLE

@@ -43,7 +43,6 @@ import com.brainwellnessspa.dashboardModule.models.HomeScreenModel;
 import com.brainwellnessspa.dashboardModule.models.MainPlayModel;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
@@ -55,7 +54,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Properties;
@@ -69,19 +67,19 @@ import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator;
 
 import static com.brainwellnessspa.BWSApplication.DB;
 import static com.brainwellnessspa.BWSApplication.GetPlaylistMedia;
+import static com.brainwellnessspa.BWSApplication.IsLock;
 import static com.brainwellnessspa.BWSApplication.PlayerAudioId;
 import static com.brainwellnessspa.BWSApplication.appStatus;
+import static com.brainwellnessspa.BWSApplication.audioClick;
+import static com.brainwellnessspa.BWSApplication.callEnhanceActivity;
 import static com.brainwellnessspa.BWSApplication.getAudioDataBase;
 import static com.brainwellnessspa.BWSApplication.getDownloadData;
-import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
-import static com.brainwellnessspa.BWSApplication.audioClick;
-import static com.brainwellnessspa.BWSApplication.miniPlayer;
 import static com.brainwellnessspa.BWSApplication.isDisclaimer;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
+import static com.brainwellnessspa.BWSApplication.isPlayPlaylist;
+import static com.brainwellnessspa.BWSApplication.miniPlayer;
 import static com.brainwellnessspa.BWSApplication.notificationId;
 import static com.brainwellnessspa.BWSApplication.player;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.callNewPlayerRelease;
 
 public class DownloadPlaylistActivity extends AppCompatActivity implements NetworkChangeReceiver_navigator {
     //    Handler handler3;
@@ -608,7 +606,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             } else {
                 Glide.with(ctx).load(R.drawable.default_audio_icon).thumbnail(0.05f).placeholder(R.drawable.default_audio_icon).error(R.drawable.default_audio_icon).apply(RequestOptions.bitmapTransform(new RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             }
-
+            if (IsLock.equals("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
             AudioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
             String MyPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");
@@ -644,55 +646,135 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 });
             }
             binding.llPlayPause.setOnClickListener(view -> {
-                SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
-                if (isPlayPlaylist == 1) {
-                    if (player != null) {
-                        player.setPlayWhenReady(false);
-                    }
-                    isPlayPlaylist = 2;
-
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                } else if (isPlayPlaylist == 2) {
-                    if (player != null) {
-                        if (PlayerAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID()) && (player.getDuration() - player.getCurrentPosition() <= 20)) {
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
-                            editor.commit();
-                            player.seekTo(0, 0);
-                            player.setPlayWhenReady(true);
-
-                        } else {
-                            player.setPlayWhenReady(true);
+                if(IsLock.equals("1")){
+                    callEnhanceActivity(ctx,act);
+                }else if (IsLock.equals("0")) {
+                    SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
+                    if (isPlayPlaylist == 1) {
+                        if (player != null) {
+                            player.setPlayWhenReady(false);
                         }
+                        isPlayPlaylist = 2;
+
+                        binding.llPause.setVisibility(View.GONE);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                    } else if (isPlayPlaylist == 2) {
+                        if (player != null) {
+                            if (PlayerAudioId.equalsIgnoreCase(mData.get(mData.size() - 1).getID()) && (player.getDuration() - player.getCurrentPosition() <= 20)) {
+                                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = shared.edit();
+                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
+                                editor.commit();
+                                player.seekTo(0, 0);
+                                player.setPlayWhenReady(true);
+
+                            } else {
+                                player.setPlayWhenReady(true);
+                            }
+                        }
+                        isPlayPlaylist = 1;
+                        binding.llPause.setVisibility(View.VISIBLE);
+                        binding.llPlay.setVisibility(View.GONE);
+                    } else {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
+                                if (isDisclaimer == 1) {
+                                    if (player != null) {
+                                        if (!player.getPlayWhenReady()) {
+                                            player.setPlayWhenReady(true);
+                                        } else player.setPlayWhenReady(true);
+                                        callAddTranFrag();
+                                        BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
+                                    } else BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
+                                } else {
+                                    if (player != null) {
+                                        if (position != PlayerPosition) {
+                                            int ix = player.getMediaItemCount();
+                                            if (ix < listModelList.size()) {
+                                                callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistID, true);
+                                            } else {
+                                                player.seekTo(position, 0);
+                                                player.setPlayWhenReady(true);
+                                                SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedxx.edit();
+                                                editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
+                                                editor.commit();
+                                                callAddTranFrag();
+                                            }
+                                        } else {
+                                            callAddTranFrag();
+                                        }
+                                    } else {
+                                        callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistID, true);
+                                        SegmentTag();
+                                    }
+                                }
+                            } else {
+                                ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                                listModelList2.addAll(listModelList);
+                                boolean audioc = true;
+                                if (isDisclaimer == 1) {
+                                    if (player != null) {
+                                        player.setPlayWhenReady(true);
+                                        audioc = false;
+                                        listModelList2.add(position, addDisclaimer);
+                                    } else {
+                                        isDisclaimer = 0;
+                                        if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                            audioc = true;
+                                            listModelList2.add(position, addDisclaimer);
+                                        }
+                                    }
+                                } else {
+                                    isDisclaimer = 0;
+                                    if (IsPlayDisclimer.equalsIgnoreCase("1")) {
+                                        audioc = true;
+                                        listModelList2.add(position, addDisclaimer);
+                                    }
+                                }
+                                callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, audioc);
+                                SegmentTag();
+                            }
+                        } else {
+                            getAllCompletedMedia(0);
+                        }
+                        isPlayPlaylist = 1;
+                        binding.llPause.setVisibility(View.VISIBLE);
+                        binding.llPlay.setVisibility(View.GONE);
                     }
-                    isPlayPlaylist = 1;
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
+                    //                handler3.postDelayed(UpdateSongTime3,500);
+                    notifyDataSetChanged();
+                }
+            });
+
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                if(IsLock.equals("1")){
+                    callEnhanceActivity(ctx,act);
+                }else if (IsLock.equals("0")) {
+                    SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                    IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
+
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 if (player != null) {
                                     if (!player.getPlayWhenReady()) {
                                         player.setPlayWhenReady(true);
-                                    } else
-                                        player.setPlayWhenReady(true);
+                                    } else player.setPlayWhenReady(true);
                                     callAddTranFrag();
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
-                                } else
-                                    BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
+                                } else BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
                             } else {
                                 if (player != null) {
                                     if (position != PlayerPosition) {
                                         int ix = player.getMediaItemCount();
                                         if (ix < listModelList.size()) {
-                                            callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistID, true);
+                                            callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
                                         } else {
                                             player.seekTo(position, 0);
                                             player.setPlayWhenReady(true);
+                                            miniPlayer = 1;
                                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedxx.edit();
                                             editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
@@ -703,7 +785,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                         callAddTranFrag();
                                     }
                                 } else {
-                                    callTransparentFrag(shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0), ctx, listModelList, "", PlaylistID, true);
+                                    callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
                                     SegmentTag();
                                 }
                             }
@@ -730,94 +812,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                                     listModelList2.add(position, addDisclaimer);
                                 }
                             }
-                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID, audioc);
+                            callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, audioc);
                             SegmentTag();
                         }
                     } else {
-                        getAllCompletedMedia(0);
+                        getAllCompletedMedia(position);
                     }
                     isPlayPlaylist = 1;
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
+                    //                handler3.postDelayed(UpdateSongTime3,500);
+                    notifyDataSetChanged();
                 }
-                //                handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();
-            });
-
-            holder.binding.llMainLayout.setOnClickListener(view -> {
-                SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
-
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                if (!player.getPlayWhenReady()) {
-                                    player.setPlayWhenReady(true);
-                                } else
-                                    player.setPlayWhenReady(true);
-                                callAddTranFrag();
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
-                            } else
-                                BWSApplication.showToast("The audio shall start playing after the disclaimer", activity);
-                        } else {
-                            if (player != null) {
-                                if (position != PlayerPosition) {
-                                    int ix = player.getMediaItemCount();
-                                    if (ix < listModelList.size()) {
-                                        callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
-                                    } else {
-                                        player.seekTo(position, 0);
-                                        player.setPlayWhenReady(true);
-                                        miniPlayer = 1;
-                                        SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedxx.edit();
-                                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position);
-                                        editor.commit();
-                                        callAddTranFrag();
-                                    }
-                                } else {
-                                    callAddTranFrag();
-                                }
-                            } else {
-                                callTransparentFrag(position, ctx, listModelList, "", PlaylistID, true);
-                                SegmentTag();
-                            }
-                        }
-                    } else {
-                        ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                        listModelList2.addAll(listModelList);
-                        boolean audioc = true;
-                        if (isDisclaimer == 1) {
-                            if (player != null) {
-                                player.setPlayWhenReady(true);
-                                audioc = false;
-                                listModelList2.add(position, addDisclaimer);
-                            } else {
-                                isDisclaimer = 0;
-                                if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                    audioc = true;
-                                    listModelList2.add(position, addDisclaimer);
-                                }
-                            }
-                        } else {
-                            isDisclaimer = 0;
-                            if (IsPlayDisclimer.equalsIgnoreCase("1")) {
-                                audioc = true;
-                                listModelList2.add(position, addDisclaimer);
-                            }
-                        }
-                        callTransparentFrag(position, ctx, listModelList2, "", PlaylistID, audioc);
-                        SegmentTag();
-                    }
-                } else {
-                    getAllCompletedMedia(position);
-                }
-                isPlayPlaylist = 1;
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                //                handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -831,15 +837,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                 holder.binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             holder.binding.llMore.setOnClickListener(view -> {
-
-                if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
-                    if (isDisclaimer == 1) {
-                        BWSApplication.showToast("You can see details after the disclaimer", activity);
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, act);
+                } else if (IsLock.equals("0")) {
+                    if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("You can see details after the disclaimer", activity);
+                        } else {
+                            BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList", mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
+                        }
                     } else {
                         BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList", mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                     }
-                } else {
-                    BWSApplication.callAudioDetails(mData.get(position).getID(), ctx, act, CoUserID, "downloadList", mData, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), position);
                 }
             });
         }

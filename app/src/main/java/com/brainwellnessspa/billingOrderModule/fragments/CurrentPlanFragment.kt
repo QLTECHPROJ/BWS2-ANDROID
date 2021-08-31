@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
-import com.brainwellnessspa.billingOrderModule.activities.UpgradePlanActivity
 import com.brainwellnessspa.databinding.FragmentCurrentPlanBinding
 import com.brainwellnessspa.utility.CONSTANTS
 
@@ -26,7 +24,7 @@ class CurrentPlanFragment : Fragment() {
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
-        binding.btnUpgradePlan.setOnClickListener {
+     /*   binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
@@ -37,7 +35,7 @@ class CurrentPlanFragment : Fragment() {
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("screenView","1")
             startActivity(i)
-        }
+        }*/
         return view
     }
 }

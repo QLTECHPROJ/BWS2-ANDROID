@@ -177,7 +177,7 @@ public class BWSApplication extends Application {
     public static Bitmap myBitmap = null;
     public static PlayerNotificationManager playerNotificationManager;
     public static long oldSongPos = 0;
-    public static String addToRecentPlayId = "0",comeHomeScreen = "";
+    public static String addToRecentPlayId = "0", comeHomeScreen = "";
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
@@ -253,9 +253,11 @@ public class BWSApplication extends Application {
 
         });
     }
-    public static void callEnhanceActivity(Context ctx, Activity act){
+
+    public static void callEnhanceActivity(Context ctx, Activity act) {
         showToast("Please Reactivate Your Plan", act);
     }
+
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
@@ -1477,8 +1479,7 @@ public class BWSApplication extends Application {
                             if (playlistSongs2.size() == 0) {
                                 break;
                             }
-                        } else
-                            break;
+                        } else break;
                     }
                 }
             }
@@ -1881,7 +1882,7 @@ public class BWSApplication extends Application {
                 SaveMedia(i, 100, comeFrom, mDataDownload, mDataViewAll, mDataPlaylist, mDataPlayer, ctx);
                 int unicode = 0x1F642;
                 String textIcon4 = new String(Character.toChars(unicode));
-                showToast("Your audio is being downloaded!" +textIcon4, act);
+                showToast("Your audio is being downloaded!" + textIcon4, act);
             } else {
                 List<String> url1 = new ArrayList<>();
                 List<String> name1 = new ArrayList<>();
@@ -2102,10 +2103,8 @@ public class BWSApplication extends Application {
 
             currantTime = simpleDateFormat1.format(currdate);
             tvTime.setText(currantTime);
-            if (created.equals("2"))
-                tvTitle.setVisibility(View.VISIBLE);
-            else
-                tvTitle.setVisibility(View.GONE);
+            if (created.equals("2")) tvTitle.setVisibility(View.VISIBLE);
+            else tvTitle.setVisibility(View.GONE);
             Properties p = new Properties();
             p.putValue("reminderId ", "");
             p.putValue("playlistId ", "");
@@ -2192,8 +2191,7 @@ public class BWSApplication extends Application {
             Cminute = Integer.parseInt(min[0]);
             String displayAmPm = min[1];
             if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
-                if (Chour != 12)
-                    Chour = Chour + 12;
+                if (Chour != 12) Chour = Chour + 12;
             }
 
             tvPlaylistName.setText(playlistName);
@@ -2344,24 +2342,17 @@ public class BWSApplication extends Application {
         String json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString());
         String areaOfFocus = "";
 
-        if (!json5.equalsIgnoreCase(gson.toString()))
-            areaOfFocus = json5;
+        if (!json5.equalsIgnoreCase(gson.toString())) areaOfFocus = json5;
 
         boolean isProf = false, isAss = false, isadm = false;
-        if (isProfileCompleted.equalsIgnoreCase("1"))
-            isProf = true;
-        else
-            isProf = false;
+        if (isProfileCompleted.equalsIgnoreCase("1")) isProf = true;
+        else isProf = false;
 
-        if (isAssCompleted.equalsIgnoreCase("1"))
-            isAss = true;
-        else
-            isAss = false;
+        if (isAssCompleted.equalsIgnoreCase("1")) isAss = true;
+        else isAss = false;
 
-        if (isAdmin.equalsIgnoreCase("1"))
-            isadm = true;
-        else
-            isadm = false;
+        if (isAdmin.equalsIgnoreCase("1")) isadm = true;
+        else isadm = false;
 
         analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
@@ -2626,7 +2617,7 @@ public class BWSApplication extends Application {
     }
 
     public static void deleteCall(Context context) {
-        String userId,coUserId;
+        String userId, coUserId;
         SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
@@ -3003,10 +2994,8 @@ public class BWSApplication extends Application {
                 hourString = "" + hourOfDay;
                 am_pm = "AM";
             }
-            if (minute < 10)
-                minuteSting = "0" + minute;
-            else
-                minuteSting = "" + minute;
+            if (minute < 10) minuteSting = "0" + minute;
+            else minuteSting = "" + minute;
             tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
         }
     }
@@ -3081,7 +3070,8 @@ public class BWSApplication extends Application {
             }
         });
     }
-    public static void getDownloadData(Context ctx,String PlaylistID) {
+
+    public static void getDownloadData(Context ctx, String PlaylistID) {
         List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
             SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
@@ -3133,22 +3123,22 @@ public class BWSApplication extends Application {
         }
     }
 
-    public static void GetPlaylistMedia(String PlaylistID,String CoUserID,Context ctx) {
+    public static void GetPlaylistMedia(String PlaylistID, String CoUserID, Context ctx) {
         DB = getAudioDataBase(ctx);
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
-            deleteDownloadFile(PlaylistID,CoUserID);
+            deleteDownloadFile(PlaylistID, CoUserID);
             if (audioList.size() != 0) {
-                GetSingleMedia(audioList.get(0).getAudioFile(), ctx, audioList, 0,CoUserID);
+                GetSingleMedia(audioList.get(0).getAudioFile(), ctx, audioList, 0, CoUserID);
             }
         });
     }
 
-    public static void deleteDownloadFile(String PlaylistId,String CoUserID) {
+    public static void deleteDownloadFile(String PlaylistId, String CoUserID) {
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
         deletePlaylist(PlaylistId, CoUserID);
     }
 
-    public static void GetSingleMedia(String AudioFile, Context ctx, List<DownloadAudioDetails> audioList, int i,String CoUserID) {
+    public static void GetSingleMedia(String AudioFile, Context ctx, List<DownloadAudioDetails> audioList, int i, String CoUserID) {
         DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe((LifecycleOwner) ctx, audioList1 -> {
             try {
                 if (audioList1.size() != 0) {
@@ -3158,7 +3148,7 @@ public class BWSApplication extends Application {
                 }
 
                 if (i < audioList.size() - 1) {
-                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx, audioList, i + 1,CoUserID);
+                    GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx, audioList, i + 1, CoUserID);
                     Log.e("DownloadMedia Call", String.valueOf(i + 1));
                 }
             } catch (Exception e) {
@@ -3168,7 +3158,7 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void deletePlaylist(String playlistId,String CoUserID) {
+    public static void deletePlaylist(String playlistId, String CoUserID) {
         AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
     }
 

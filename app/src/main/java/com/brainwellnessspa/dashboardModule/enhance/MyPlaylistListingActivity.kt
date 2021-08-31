@@ -993,10 +993,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                            val playFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                             var playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(listModel[position].playlistID, ignoreCase = true)) {
-
+                            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(PlaylistID, ignoreCase = true)) {
                                 if (player != null) {
                                     player.removeMediaItem(position)
                                 }
@@ -1007,7 +1005,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(playerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID, PlaylistName!!, created, "0")
+                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                         }
                                     }
                                 } else if (playerPosition == position && position == listModel.size - 1) {
@@ -1018,7 +1016,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(playerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, listModel[0].playlistID, PlaylistName!!, created, "0")
+                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
                                         }
                                     }
                                 } else if (playerPosition < position && playerPosition < listModel.size - 1) {

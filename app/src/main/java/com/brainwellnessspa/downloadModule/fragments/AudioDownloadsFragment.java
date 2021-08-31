@@ -853,7 +853,6 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                     deleteDownloadFile(AudioFile, AudioName, position);
                     BWSApplication.showToast("Audio has been removed", getActivity());
-                    notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch (Exception e) {
                 }

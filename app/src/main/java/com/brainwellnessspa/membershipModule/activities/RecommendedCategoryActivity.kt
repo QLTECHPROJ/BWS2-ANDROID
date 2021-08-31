@@ -33,6 +33,7 @@ import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
+import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -160,19 +161,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
-                            GlobalInitExoPlayer.callNewPlayerRelease()
-                            val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                            val edited2 = preferred2.edit()
-                            edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                            edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                            edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                            edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                            edited2.clear()
-                            edited2.apply()
+                            callAllRemovePlayer(ctx!!,activity)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -183,19 +172,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                        GlobalInitExoPlayer.callNewPlayerRelease()
-                        val preferred2 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                        val edited2 = preferred2.edit()
-                        edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
-                        edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistId)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPlaylistName)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayerPosition)
-                        edited2.remove(CONSTANTS.PREF_KEY_Cat_Name)
-                        edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
-                        edited2.clear()
-                        edited2.apply()
+                        callAllRemovePlayer(ctx!!,activity)
                     }
                 }
                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
