@@ -124,7 +124,7 @@ class ManageFragment : Fragment() {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.cancel_membership)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                     val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
@@ -326,13 +326,13 @@ class ManageFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener)
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener1)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         super.onDestroy()
     }
 
     private fun callObserverMethod(listModel: List<HomeDataModel.ResponseData.Audio>, act: Activity, DB: AudioDatabase) {
-        DB.taskDao()?.geAllDataz("", coUserId)?.observe(requireActivity(), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
+        DB.taskDao()?.geAllDataz("", coUserId)?.observe(ctx as (LifecycleOwner), { downloadAudioDetails: List<DownloadAudioDetailsUniq> ->
             val details = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
             if (downloadAudioDetails.isNotEmpty()) {
                 for (i in downloadAudioDetails.indices) {
@@ -659,6 +659,7 @@ class ManageFragment : Fragment() {
 
     private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<HomeDataModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
         val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        val audiolistDiff1 = arrayListOf<String>()
         DB = getAudioDataBase(ctx);
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
             if (audioList.size == playlistSongs.size) {
@@ -700,18 +701,18 @@ class ManageFragment : Fragment() {
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         if (mainPlayModelList.size == playlistSongs.size) {
-                            for (i in audioList) {
+                            for (i in mainPlayModelList) {
                                 var found = false
                                 for (j in playlistSongs) {
-                                    if (i!!.ID == j.id) {
+                                    if (i.id == j.id) {
                                         found = true
                                     }
                                 }
                                 if (!found) {
-                                    audiolistDiff.add(i!!)
+                                    audiolistDiff1.add(i.id)
                                 }
                             }
-                            if (audiolistDiff.isNotEmpty()) {
+                            if (audiolistDiff1.isNotEmpty()) {
                                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -722,6 +723,8 @@ class ManageFragment : Fragment() {
                                 }
                                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
                             }
+                        } else {
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                 }
@@ -741,7 +744,7 @@ class ManageFragment : Fragment() {
                     val listModel = response.body()!!
                     homelistModel = response.body()!!
                     if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                        getDownloadedList(requireActivity(), DB)
+                        getDownloadedList(ctx, DB)
 //                        Log.e("download audio", downloadAudioDetailsList.toString())
                         binding.llMainLayout.visibility = View.VISIBLE
                         binding.llSpace.visibility = View.VISIBLE
@@ -859,7 +862,7 @@ class ManageFragment : Fragment() {
                                         }
                                     }
                                 } else {
-                                    showToast(requireActivity().getString(R.string.no_server_found), activity)
+                                    showToast(ctx.getString(R.string.no_server_found), activity)
                                 }
                             }
                         }
@@ -896,7 +899,7 @@ class ManageFragment : Fragment() {
                                 e.printStackTrace()
                             }
                         } else {
-                            showToast(requireActivity().getString(R.string.no_server_found), activity)
+                            showToast(ctx.getString(R.string.no_server_found), activity)
                         }
                     }
                 }
@@ -1004,10 +1007,10 @@ class ManageFragment : Fragment() {
                             if (listModelList2.size != 0) {
                                 callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, true)
                             } else {
-                                showToast(requireActivity().getString(R.string.no_server_found), act)
+                                showToast(ctx.getString(R.string.no_server_found), act)
                             }
                         } else { //                                pos = 0;
-                            showToast(requireActivity().getString(R.string.no_server_found), act)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } //                SegmentTag()
                 }
@@ -1058,18 +1061,18 @@ class ManageFragment : Fragment() {
                             if (listModelList2.size != 0) {
                                 callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, audioc)
                             } else {
-                                showToast(requireActivity().getString(R.string.no_server_found), act)
+                                showToast(ctx.getString(R.string.no_server_found), act)
                             }
                         } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
                             callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, audioc)
                         } else {
-                            showToast(requireActivity().getString(R.string.no_server_found), act)
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else {
-                        showToast(requireActivity().getString(R.string.no_server_found), act)
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
-                    showToast(requireActivity().getString(R.string.no_server_found), act)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 } //            SegmentTag()
             }
         })

@@ -1410,6 +1410,7 @@ class HomeFragment : Fragment() {
 
     private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
         val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        val audiolistDiff1 = arrayListOf<String>()
         DB = getAudioDataBase(ctx);
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
             if (audioList.size == playlistSongs.size) {
@@ -1448,20 +1449,20 @@ class HomeFragment : Fragment() {
                     }
                 }
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         if (mainPlayModelList.size == playlistSongs.size) {
-                            for (i in audioList) {
+                            for (i in mainPlayModelList) {
                                 var found = false
                                 for (j in playlistSongs) {
-                                    if (i!!.ID == j.id) {
+                                    if (i.id == j.id) {
                                         found = true
                                     }
                                 }
                                 if (!found) {
-                                    audiolistDiff.add(i!!)
+                                    audiolistDiff1.add(i.id)
                                 }
                             }
-                            if (audiolistDiff.isNotEmpty()) {
+                            if (audiolistDiff1.isNotEmpty()) {
                                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
@@ -1472,6 +1473,8 @@ class HomeFragment : Fragment() {
                                 }
                                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
                             }
+                        } else {
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                 }

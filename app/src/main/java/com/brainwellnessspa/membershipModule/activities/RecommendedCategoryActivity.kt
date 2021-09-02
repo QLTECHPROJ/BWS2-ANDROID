@@ -2,7 +2,6 @@ package com.brainwellnessspa.membershipModule.activities
 
 import android.app.Activity
 import android.app.Dialog
-import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -16,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,17 +23,11 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.enhance.PreparePlaylistActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
-import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils.deleteDownloadedFile
-import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
-import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
-import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.downloader.PRDownloader
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -50,7 +42,7 @@ import kotlin.collections.ArrayList
 class RecommendedCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
     lateinit var catListadapter: SelectedCategory
-    var ctx: Context? = null
+    lateinit var ctx: Context
     var userId: String? = null
     private var backClick: String? = ""
     lateinit var gsonBuilder: GsonBuilder
@@ -58,7 +50,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var coUserId: String? = null
     var coEmail: String? = null
     private lateinit var adapter1: AllCategory
-    lateinit var activity: Activity
+    lateinit var act: Activity
     var selectedCategoriesTitle = arrayListOf<String>()
     var selectedCategoriesName = arrayListOf<String>()
     var gson: Gson = Gson()
@@ -70,7 +62,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recommended_category)
         ctx = this@RecommendedCategoryActivity
-        activity = this@RecommendedCategoryActivity
+        act = this@RecommendedCategoryActivity
         if (intent.extras != null) {
             sleepTime = intent.getStringExtra("SleepTime")
             backClick = intent.getStringExtra("BackClick")
@@ -94,8 +86,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         prepareRecommnedData()
         binding.searchView.onActionViewExpanded()
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text)
-        searchEditText.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue_gray))
-        searchEditText.setHintTextColor(ContextCompat.getColor(activity, R.color.gray))
+        searchEditText.setTextColor(ContextCompat.getColor(act, R.color.dark_blue_gray))
+        searchEditText.setHintTextColor(ContextCompat.getColor(act, R.color.gray))
         val closeButton: ImageView = binding.searchView.findViewById(R.id.search_close_btn)
         binding.searchView.clearFocus()
         closeButton.setOnClickListener {
@@ -138,6 +130,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     private fun getPlaylistAudio(PlaylistID: String, CoUserID: String, playlistSongs: List<SaveRecommendedCatModel.ResponseData.SuggestedPlaylist.PlaylistSong>) {
         val audiolistDiff = arrayListOf<DownloadAudioDetails>()
+        val audiolistDiff1 = arrayListOf<String>()
         DB = getAudioDataBase(ctx);
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).removeObserver {}
@@ -159,7 +152,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
-                            callAllRemovePlayer(ctx!!,activity)
+                            callAllRemovePlayer(ctx,act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -179,28 +172,30 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                     if (playFrom.equals("Suggested", ignoreCase = true)) {
                         if (mainPlayModelList.size == playlistSongs.size) {
-                            for (i in audioList) {
+                            for (i in mainPlayModelList) {
                                 var found = false
                                 for (j in playlistSongs) {
-                                    if (i!!.ID == j.id) {
+                                    if (i.id == j.id) {
                                         found = true
                                     }
                                 }
                                 if (!found) {
-                                    audiolistDiff.add(i!!)
+                                    audiolistDiff1.add(i.id)
                                 }
                             }
-                            if (audiolistDiff.isNotEmpty()) {
+                            if (audiolistDiff1.isNotEmpty()) {
                                 val sharedsa = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                                        callAllRemovePlayer(ctx!!, activity)
+                                        callAllRemovePlayer(ctx, act)
                                     }
                                 }
                                 GetPlaylistMedia(PlaylistID, userId!!, ctx)
                             }
+                        } else {
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                 }
@@ -211,12 +206,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     private fun prepareRecommnedData() {
         if (isNetworkConnected(this)) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<RecommendedCategoryModel> = APINewClient.client.getRecommendedCategory(coUserId)
             listCall.enqueue(object : Callback<RecommendedCategoryModel> {
                 override fun onResponse(call: Call<RecommendedCategoryModel>, response: Response<RecommendedCategoryModel>) {
                     try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: RecommendedCategoryModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
@@ -228,18 +223,18 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 //                                for(i in 0..2){
                                 //                                    listModelNew.add(listModel.responseData!![i])
                                 //                                }
-                                //                                adapter1 = AllCategory(binding, listModelNew, ctx!!)
+                                //                                adapter1 = AllCategory(binding, listModelNew, ctx)
                                 //                                binding.rvPerantCat.adapter = adapter1
                                 //                            }else{
                                 binding.llError.visibility = View.GONE
                                 binding.rvPerantCat.visibility = View.VISIBLE
-                                adapter1 = AllCategory(binding, listModel.responseData!!, ctx!!, activity)
+                                adapter1 = AllCategory(binding, listModel.responseData!!, ctx, act)
                                 binding.rvPerantCat.adapter = adapter1 //                            }
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                                deleteCall(act)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(act, SignInActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -250,7 +245,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, act)
                             }
                         }
                     } catch (e: Exception) {
@@ -259,11 +254,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<RecommendedCategoryModel>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -604,7 +599,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     }
 
     private fun getCatSaveData() {
-        val shared = ctx!!.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
@@ -620,7 +615,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
             layoutManager.flexDirection = FlexDirection.ROW
             layoutManager.justifyContent = JustifyContent.FLEX_START
             binding.rvSelectedCategory.layoutManager = layoutManager
-            catListadapter = SelectedCategory(binding, ctx!!, selectedCategoriesName)
+            catListadapter = SelectedCategory(binding, ctx, selectedCategoriesName)
             binding.rvSelectedCategory.adapter = catListadapter
             binding.btnContinue.isEnabled = true
             binding.btnContinue.isClickable = true
@@ -682,12 +677,12 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
     private fun sendCategoryData(toJson: String) {
         if (isNetworkConnected(ctx)) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<SaveRecommendedCatModel> = APINewClient.client.getSaveRecommendedCategory(coUserId, toJson, sleepTime)
             listCall.enqueue(object : Callback<SaveRecommendedCatModel> {
                 override fun onResponse(call: Call<SaveRecommendedCatModel>, response: Response<SaveRecommendedCatModel>) {
                     try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
@@ -708,7 +703,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 editor.putString(CONSTANTS.selectedCategoriesName, gsons.toJson(selectedCategoriesName)) //Friend
                                 editor.apply()
 
-                                val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                val shared1 = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor1 = shared1.edit()
                                 editor1.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
                                 editor1.putString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toJson(listModel.responseData!!.areaOfFocus))
@@ -723,7 +718,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 addToSegment("Area of Focus Saved", p, CONSTANTS.track)
 
                                 localIntent = Intent("Reminder")
-                                localBroadcastManager = LocalBroadcastManager.getInstance(ctx!!)
+                                localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
                                 localIntent.putExtra("MyReminder", "update")
                                 localBroadcastManager.sendBroadcast(localIntent)
 
@@ -735,9 +730,9 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                                deleteCall(act)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(act, SignInActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
@@ -750,10 +745,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                             listModel.responseCode.equals(getString(R.string.ResponseCodefail)) -> {
                                 if(listModel.responseData!!.showAlert.equals("1")){
                                     //show alert popup
-                                    val dialog = Dialog(ctx!!)
+                                    val dialog = Dialog(ctx)
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                     dialog.setContentView(R.layout.edit_sleep_layout)
-                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx!!, R.color.transparent_white)))
+                                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
                                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                     val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
                                     val btn = dialog.findViewById<Button>(R.id.Btn)
@@ -782,11 +777,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     dialog.show()
                                     dialog.setCancelable(false)
                                 }else if(listModel.responseData!!.showAlert.equals("0")){
-                                    showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, act)
                                 }
                             }
                             else -> {
-                                showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, act)
                             }
                         }
                     } catch (e: Exception) {
@@ -795,11 +790,11 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SaveRecommendedCatModel>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 

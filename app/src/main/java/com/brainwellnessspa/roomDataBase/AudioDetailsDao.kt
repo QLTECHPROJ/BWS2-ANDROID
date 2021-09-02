@@ -26,6 +26,8 @@ interface AudioDetailsDao {
     @Query("SELECT * FROM audio_table ORDER BY uid DESC")
     fun geAllData1ForAll(): List<DownloadAudioDetails?>
 
+    @Query("SELECT * FROM audio_table ORDER BY uid DESC")
+    fun geAllData1ForAllLive(): LiveData<List<DownloadAudioDetails>>
     //    @Query("SELECT * FROM audio_table  ORDER BY uid DESC")// ORDER BY uid ASC
     //    List<DownloadAudioDetails> geAllData1();
     @Query("SELECT DISTINCT Name FROM audio_table WHERE IsDownload =:IsDownload And UserID=:UserID")

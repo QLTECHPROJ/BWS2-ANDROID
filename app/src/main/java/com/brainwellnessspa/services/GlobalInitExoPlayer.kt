@@ -1002,227 +1002,229 @@ class GlobalInitExoPlayer : Service() {
         var AudioFlag = "0"
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val expDate = shared1x.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
-        val c1: Calendar = Calendar.getInstance()
-        c1.timeInMillis = expDate!!.toInt() * 1000L
-        val d1: Date = c1.time
-//        val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
-        val sdf12 = SimpleDateFormat("z", Locale.ENGLISH)
-//        var Expdate = sdf1.format(d1)
-//        var s = sdf12.format(d1)
-//        Log.e("Exp Date Expdate!!!!", Expdate.toString())
-//        Log.e("Exp Date time zone !!!!",s)
-        val simpleDateFormat1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        simpleDateFormat1.timeZone = TimeZone.getTimeZone(sdf12.format(d1))
-        val currdate = Calendar.getInstance().time
-//        Log.e("currant Date !!!!", currdate.toString())
-        when {
-            d1.before(currdate) -> {
-//                Log.e("app", "Date1 is before Date2")
-                IsLock = "1"
+        if(expDate!="") {
+            val c1: Calendar = Calendar.getInstance()
+            c1.timeInMillis = expDate!!.toInt() * 1000L
+            val d1: Date = c1.time
+            //        val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
+            val sdf12 = SimpleDateFormat("z", Locale.ENGLISH)
+            //        var Expdate = sdf1.format(d1)
+            //        var s = sdf12.format(d1)
+            //        Log.e("Exp Date Expdate!!!!", Expdate.toString())
+            //        Log.e("Exp Date time zone !!!!",s)
+            val simpleDateFormat1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            simpleDateFormat1.timeZone = TimeZone.getTimeZone(sdf12.format(d1))
+            val currdate = Calendar.getInstance().time
+            //        Log.e("currant Date !!!!", currdate.toString())
+            when {
+                d1.before(currdate) -> {
+                    //                Log.e("app", "Date1 is before Date2")
+                    IsLock = "1"
+                }
+                d1.after(currdate) -> {
+                    //                Log.e("app", "Date1 is after Date2")
+                    IsLock = "0"
+                }
+                d1 === currdate -> {
+                    //                Log.e("app", "Date1 is equal Date2")
+                    IsLock = "1"
+                }
             }
-            d1.after(currdate) -> {
-//                Log.e("app", "Date1 is after Date2")
-                IsLock = "0"
-            }
-            d1 === currdate -> {
-//                Log.e("app", "Date1 is equal Date2")
-                IsLock = "1"
-            }
-        }
-        try {
-            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")!!
+            try {
+                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")!!
 
-            if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true) || AudioFlag.equals("SearchAudio", ignoreCase = true) || AudioFlag.equals("SearchModelAudio", ignoreCase = true))) {
-                val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                val gson = Gson()
-                val arrayList1 = ArrayList<MainPlayModel>()
-                val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
-                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                val editor = sharedd.edit()
-                if (AudioFlag.equals("MainAudioList", ignoreCase = true)) {
-                    val type = object : TypeToken<ArrayList<HomeDataModel.ResponseData.Audio.Detail?>?>() {}.type
-                    val arrayList = gson.fromJson<ArrayList<HomeDataModel.ResponseData.Audio.Detail>>(json, type)
-                    val arrayList2 = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
-                    val size = arrayList.size
-                    for (i in 0 until size) {
-                        if (arrayList[i].isPlay.equals("1")) {
-                            arrayList2.add(arrayList[i])
+                if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("MainAudioList", ignoreCase = true) || AudioFlag.equals("ViewAllAudioList", ignoreCase = true) || AudioFlag.equals("SearchAudio", ignoreCase = true) || AudioFlag.equals("SearchModelAudio", ignoreCase = true))) {
+                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                    val gson = Gson()
+                    val arrayList1 = ArrayList<MainPlayModel>()
+                    val json = shared.getString(CONSTANTS.PREF_KEY_MainAudioList, gson.toString())
+                    val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                    val editor = sharedd.edit()
+                    if (AudioFlag.equals("MainAudioList", ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<HomeDataModel.ResponseData.Audio.Detail?>?>() {}.type
+                        val arrayList = gson.fromJson<ArrayList<HomeDataModel.ResponseData.Audio.Detail>>(json, type)
+                        val arrayList2 = ArrayList<HomeDataModel.ResponseData.Audio.Detail>()
+                        val size = arrayList.size
+                        for (i in 0 until size) {
+                            if (arrayList[i].isPlay.equals("1")) {
+                                arrayList2.add(arrayList[i])
+                            }
+                        }
+                        if (arrayList2.size != 0) {
+                            for (i in arrayList2.indices) {
+                                val mainPlayModel = MainPlayModel()
+                                mainPlayModel.id = arrayList[i].id.toString()
+                                mainPlayModel.name = arrayList[i].name.toString()
+                                mainPlayModel.audioFile = arrayList[i].audioFile.toString()
+                                mainPlayModel.playlistID = ""
+                                mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
+                                mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
+                                mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
+                                mainPlayModel.imageFile = arrayList[i].imageFile.toString()
+                                mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
+                                arrayList1.add(mainPlayModel)
+                            }
+                        }
+                        if (arrayList2.size < arrayList.size) {
+                            audioClick = if (player != null) {
+                                callNewPlayerRelease()
+                                true
+                            } else {
+                                true
+                            }
+                            val jsonx = gson.toJson(arrayList1)
+                            val json11 = gson.toJson(arrayList2)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
+                            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
+                            editor.apply()
+                        }
+                    } else if (AudioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>?>() {}.type
+                        val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>(json, type)
+                        val arrayList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
+                        val size = arrayList.size
+                        for (i in 0 until size) {
+                            if (arrayList[i].isPlay.equals("1")) {
+                                arrayList2.add(arrayList[i])
+                            }
+                        }
+                        if (arrayList2.size != 0) {
+                            for (i in arrayList2.indices) {
+                                val mainPlayModel = MainPlayModel()
+                                mainPlayModel.id = arrayList[i].iD.toString()
+                                mainPlayModel.name = arrayList[i].name.toString()
+                                mainPlayModel.audioFile = arrayList[i].audioFile.toString()
+                                mainPlayModel.playlistID = ""
+                                mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
+                                mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
+                                mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
+                                mainPlayModel.imageFile = arrayList[i].imageFile.toString()
+                                mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
+                                arrayList1.add(mainPlayModel)
+                            }
+                        }
+                        if (arrayList2.size < arrayList.size) {
+                            audioClick = if (player != null) {
+                                callNewPlayerRelease()
+                                true
+                            } else {
+                                true
+                            }
+                            val jsonx = gson.toJson(arrayList1)
+                            val json11 = gson.toJson(arrayList2)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
+                            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
+                            editor.apply()
+                        }
+                    } else if (AudioFlag.equals("SearchModelAudio", ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<SearchBothModel.ResponseData?>?>() {}.type
+                        val arrayList = gson.fromJson<ArrayList<SearchBothModel.ResponseData>>(json, type)
+                        val arrayList2 = ArrayList<SearchBothModel.ResponseData>()
+                        val size = arrayList.size
+                        for (i in 0 until size) {
+                            if (arrayList[i].isPlay.equals("1")) {
+                                arrayList2.add(arrayList[i])
+                            }
+                        }
+                        if (arrayList2.size != 0) {
+                            for (i in arrayList2.indices) {
+                                val mainPlayModel = MainPlayModel()
+                                mainPlayModel.id = arrayList[i].iD!!
+                                mainPlayModel.name = arrayList[i].name!!
+                                mainPlayModel.audioFile = arrayList[i].audioFile!!
+                                mainPlayModel.playlistID = ""
+                                mainPlayModel.audioDirection = arrayList[i].audioDirection!!
+                                mainPlayModel.audiomastercat = arrayList[i].audiomastercat!!
+                                mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory!!
+                                mainPlayModel.imageFile = arrayList[i].imageFile!!
+                                mainPlayModel.audioDuration = arrayList[i].audioDuration!!
+                                arrayList1.add(mainPlayModel)
+                            }
+                        }
+                        if (arrayList2.size < arrayList.size) {
+                            audioClick = if (player != null) {
+                                callNewPlayerRelease()
+                                true
+                            } else {
+                                true
+                            }
+                            val jsonx = gson.toJson(arrayList1)
+                            val json11 = gson.toJson(arrayList2)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
+                            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
+                            editor.apply()
+                        }
+                    } else if (AudioFlag.equals("SearchAudio", ignoreCase = true)) {
+                        val type = object : TypeToken<ArrayList<SuggestedModel.ResponseData?>?>() {}.type
+                        val arrayList = gson.fromJson<ArrayList<SuggestedModel.ResponseData>>(json, type)
+                        val arrayList2 = ArrayList<SuggestedModel.ResponseData>()
+                        val size = arrayList.size
+                        for (i in 0 until size) {
+                            if (arrayList[i].isPlay.equals("1")) {
+                                arrayList2.add(arrayList[i])
+                            }
+                        }
+                        if (arrayList2.size != 0) {
+                            for (i in arrayList2.indices) {
+                                val mainPlayModel = MainPlayModel()
+                                mainPlayModel.id = arrayList[i].iD!!
+                                mainPlayModel.name = arrayList[i].name!!
+                                mainPlayModel.audioFile = arrayList[i].audioFile!!
+                                mainPlayModel.playlistID = ""
+                                mainPlayModel.audioDirection = arrayList[i].audioDirection!!
+                                mainPlayModel.audiomastercat = arrayList[i].audiomastercat!!
+                                mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory!!
+                                mainPlayModel.imageFile = arrayList[i].imageFile!!
+                                mainPlayModel.audioDuration = arrayList[i].audioDuration!!
+                                arrayList1.add(mainPlayModel)
+                            }
+                        }
+                        if (arrayList2.size < arrayList.size) {
+                            audioClick = if (player != null) {
+                                callNewPlayerRelease()
+                                true
+                            } else {
+                                true
+                            }
+                            val jsonx = gson.toJson(arrayList1)
+                            val json11 = gson.toJson(arrayList2)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
+                            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
+                            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+                            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
+                            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
+                            editor.apply()
                         }
                     }
-                    if (arrayList2.size != 0) {
-                        for (i in arrayList2.indices) {
-                            val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].id.toString()
-                            mainPlayModel.name = arrayList[i].name.toString()
-                            mainPlayModel.audioFile = arrayList[i].audioFile.toString()
-                            mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
-                            mainPlayModel.imageFile = arrayList[i].imageFile.toString()
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
-                            arrayList1.add(mainPlayModel)
-                        }
-                    }
-                    if (arrayList2.size < arrayList.size) {
-                        audioClick = if (player != null) {
-                            callNewPlayerRelease()
-                            true
-                        } else {
-                            true
-                        }
-                        val jsonx = gson.toJson(arrayList1)
-                        val json11 = gson.toJson(arrayList2)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
-                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
-                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
-                        editor.apply()
-                    }
-                } else if (AudioFlag.equals("ViewAllAudioList", ignoreCase = true)) {
-                    val type = object : TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail?>?>() {}.type
-                    val arrayList = gson.fromJson<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>(json, type)
-                    val arrayList2 = ArrayList<ViewAllAudioListModel.ResponseData.Detail>()
-                    val size = arrayList.size
-                    for (i in 0 until size) {
-                        if (arrayList[i].isPlay.equals("1")) {
-                            arrayList2.add(arrayList[i])
-                        }
-                    }
-                    if (arrayList2.size != 0) {
-                        for (i in arrayList2.indices) {
-                            val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].iD.toString()
-                            mainPlayModel.name = arrayList[i].name.toString()
-                            mainPlayModel.audioFile = arrayList[i].audioFile.toString()
-                            mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection.toString()
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat.toString()
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory.toString()
-                            mainPlayModel.imageFile = arrayList[i].imageFile.toString()
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration.toString()
-                            arrayList1.add(mainPlayModel)
-                        }
-                    }
-                    if (arrayList2.size < arrayList.size) {
-                        audioClick = if (player != null) {
-                            callNewPlayerRelease()
-                            true
-                        } else {
-                            true
-                        }
-                        val jsonx = gson.toJson(arrayList1)
-                        val json11 = gson.toJson(arrayList2)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
-                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
-                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
-                        editor.apply()
-                    }
-                } else if (AudioFlag.equals("SearchModelAudio", ignoreCase = true)) {
-                    val type = object : TypeToken<ArrayList<SearchBothModel.ResponseData?>?>() {}.type
-                    val arrayList = gson.fromJson<ArrayList<SearchBothModel.ResponseData>>(json, type)
-                    val arrayList2 = ArrayList<SearchBothModel.ResponseData>()
-                    val size = arrayList.size
-                    for (i in 0 until size) {
-                        if (arrayList[i].isPlay.equals("1")) {
-                            arrayList2.add(arrayList[i])
-                        }
-                    }
-                    if (arrayList2.size != 0) {
-                        for (i in arrayList2.indices) {
-                            val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].iD!!
-                            mainPlayModel.name = arrayList[i].name!!
-                            mainPlayModel.audioFile = arrayList[i].audioFile!!
-                            mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection!!
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat!!
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory!!
-                            mainPlayModel.imageFile = arrayList[i].imageFile!!
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration!!
-                            arrayList1.add(mainPlayModel)
-                        }
-                    }
-                    if (arrayList2.size < arrayList.size) {
-                        audioClick = if (player != null) {
-                            callNewPlayerRelease()
-                            true
-                        } else {
-                            true
-                        }
-                        val jsonx = gson.toJson(arrayList1)
-                        val json11 = gson.toJson(arrayList2)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
-                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
-                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
-                        editor.apply()
-                    }
-                } else if (AudioFlag.equals("SearchAudio", ignoreCase = true)) {
-                    val type = object : TypeToken<ArrayList<SuggestedModel.ResponseData?>?>() {}.type
-                    val arrayList = gson.fromJson<ArrayList<SuggestedModel.ResponseData>>(json, type)
-                    val arrayList2 = ArrayList<SuggestedModel.ResponseData>()
-                    val size = arrayList.size
-                    for (i in 0 until size) {
-                        if (arrayList[i].isPlay.equals("1")) {
-                            arrayList2.add(arrayList[i])
-                        }
-                    }
-                    if (arrayList2.size != 0) {
-                        for (i in arrayList2.indices) {
-                            val mainPlayModel = MainPlayModel()
-                            mainPlayModel.id = arrayList[i].iD!!
-                            mainPlayModel.name = arrayList[i].name!!
-                            mainPlayModel.audioFile = arrayList[i].audioFile!!
-                            mainPlayModel.playlistID = ""
-                            mainPlayModel.audioDirection = arrayList[i].audioDirection!!
-                            mainPlayModel.audiomastercat = arrayList[i].audiomastercat!!
-                            mainPlayModel.audioSubCategory = arrayList[i].audioSubCategory!!
-                            mainPlayModel.imageFile = arrayList[i].imageFile!!
-                            mainPlayModel.audioDuration = arrayList[i].audioDuration!!
-                            arrayList1.add(mainPlayModel)
-                        }
-                    }
-                    if (arrayList2.size < arrayList.size) {
-                        audioClick = if (player != null) {
-                            callNewPlayerRelease()
-                            true
-                        } else {
-                            true
-                        }
-                        val jsonx = gson.toJson(arrayList1)
-                        val json11 = gson.toJson(arrayList2)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, jsonx)
-                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json11)
-                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-                        editor.putString(CONSTANTS.PREF_KEY_PlayFrom, shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, ""))
-                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, AudioFlag)
-                        editor.apply()
+                    UpdateNotificationAudioPLayer(ctx)
+                    if (arrayList1.size == 0) {
+                        removeSharepref(ctx)
                     }
                 }
-                UpdateNotificationAudioPLayer(ctx)
-                if (arrayList1.size == 0) {
-                    removeSharepref(ctx)
-                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
             }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        if (!DownloadMedia.isDownloading) {
-            getPending(ctx, activity)
+            if (!DownloadMedia.isDownloading) {
+                getPending(ctx, activity)
+            }
         }
         return AudioFlag
     }

@@ -654,7 +654,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder,activity)
                 }
             })
         }

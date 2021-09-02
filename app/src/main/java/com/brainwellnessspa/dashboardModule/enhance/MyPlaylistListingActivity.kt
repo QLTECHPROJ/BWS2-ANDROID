@@ -340,6 +340,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun prepareData() {
+        DB.taskDao()?.geAllData1ForAllLive()?.observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+            downloadAudioDetailsListGlobal = audioList as ArrayList<DownloadAudioDetails>
+            DB.taskDao()?.geAllData1ForAllLive()?.removeObserver {}
+        })
         val gson = Gson()
         val shared1x = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val audioPlayerFlagx = shared1x.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -351,7 +355,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 val type = object : TypeToken<ArrayList<MainPlayModel>>() {}.type
                 mainPlayModelList = gson.fromJson(json, type)
             }
-            PlayerAudioId = mainPlayModelList[playerPositionx].id
+            try {
+                PlayerAudioId = mainPlayModelList[playerPositionx].id
+            }catch (e:Exception){
+                PlayerAudioId = mainPlayModelList[0].id
+            }
         }
         if (isNetworkConnected(this)) {
             if (!myDownloads.equals("1", true)) {
@@ -1936,6 +1944,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         AudioDatabase.databaseWriteExecutor.execute {
             downloadAudioDetailsListGlobal = DB.taskDao()?.geAllData1ForAll() as ArrayList<DownloadAudioDetails>
         }
+        DB.taskDao()?.geAllData1ForAllLive()?.observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
+            downloadAudioDetailsListGlobal = audioList as ArrayList<DownloadAudioDetails>
+             DB.taskDao()?.geAllData1ForAllLive()?.removeObserver {}
+        })
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
             val name = arrayListOf<String>()
