@@ -26,7 +26,6 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 /* This is the old BWA billing order activity */
 class BillingOrderActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingOrderBinding
@@ -63,6 +62,7 @@ class BillingOrderActivity : AppCompatActivity() {
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             startActivity(i)
+            finish()
         }
 
         /* This is the cancel plan click */
@@ -80,12 +80,12 @@ class BillingOrderActivity : AppCompatActivity() {
             c1.timeInMillis = listModelGlobal.responseData!!.planExpireDate!!.toInt() * 1000L
             val d1: Date = c1.time
             val sdf1 = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT_TIME)
-             i.putExtra("planId", listModelGlobal.responseData!!.planId)
-             i.putExtra("plan", listModelGlobal.responseData!!.planName)
-             i.putExtra("planStatus",listModelGlobal.responseData!!.planStatus)
-             i.putExtra("planStartDt ",sdf.format(d))
-             i.putExtra("planExpiryDt",sdf1.format(d1))
-             i.putExtra("planAmount",listModelGlobal.responseData!!.price)
+            i.putExtra("planId", listModelGlobal.responseData!!.planId)
+            i.putExtra("plan", listModelGlobal.responseData!!.planName)
+            i.putExtra("planStatus", listModelGlobal.responseData!!.planStatus)
+            i.putExtra("planStartDt ", sdf.format(d))
+            i.putExtra("planExpiryDt", sdf1.format(d1))
+            i.putExtra("planAmount", listModelGlobal.responseData!!.price)
             startActivity(i)
 //            finish()
         }
@@ -130,6 +130,9 @@ class BillingOrderActivity : AppCompatActivity() {
 
     override fun onResume() {
         Log.e("on resume", "yes billing")
+        if (BWSApplication.IsRefreshPlan.equals("1")) {
+            getPlanDetails()
+        }
         getPlanDetails()
         super.onResume()
     }
@@ -200,10 +203,10 @@ class BillingOrderActivity : AppCompatActivity() {
                             }
                             val p = Properties()
                             p.putValue("plan", listModel.responseData!!.planName)
-                            p.putValue("planStatus",listModel.responseData!!.planStatus)
-                            p.putValue("planStartDt ",sdf.format(d))
-                            p.putValue("planExpiryDt",sdf1.format(d1))
-                            p.putValue("planAmount",listModel.responseData!!.price)
+                            p.putValue("planStatus", listModel.responseData!!.planStatus)
+                            p.putValue("planStartDt ", sdf.format(d))
+                            p.putValue("planExpiryDt", sdf1.format(d1))
+                            p.putValue("planAmount", listModel.responseData!!.price)
                             BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen)
                         }
                     } catch (e: Exception) {

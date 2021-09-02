@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:text="@string/last_active_plan"
@@ -128,7 +128,6 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="Weekly"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_16sdp"
                                 tools:ignore="SpUsage" />
@@ -141,7 +140,6 @@
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:lineSpacingExtra="@dimen/_4sdp"
-                                android:text="@string/lorem_ipsum"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_12sdp"
                                 tools:ignore="SpUsage" />
@@ -157,7 +155,6 @@
                             android:layout_weight="0.38"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
-                            android:text="$5.00"
                             android:textColor="@color/white"
                             android:textSize="@dimen/_15sdp"
                             tools:ignore="SpUsage" />

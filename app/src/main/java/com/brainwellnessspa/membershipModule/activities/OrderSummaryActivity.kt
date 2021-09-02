@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
+import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
@@ -349,6 +350,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                 })
                             }
                             if(upgrade == "1") {
+                                IsRefreshPlan ="1"
                                 addToSegment("User Plan Upgraded", p, CONSTANTS.track)
                                 finish()
                             }else if(upgrade == "") {

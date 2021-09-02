@@ -40,6 +40,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     lateinit var firstListAdapter: OptionsFirstListAdapter
     lateinit var secondListAdapter: OptionsSecondListAdapter
     lateinit var ctx: Context
+    var navigation: String = ""
     var assQus = arrayListOf<String>()
     var assAns = arrayListOf<String>()
     var assSort = arrayListOf<String>()
@@ -69,6 +70,10 @@ class DassAssSliderActivity : AppCompatActivity() {
         activity = this@DassAssSliderActivity
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
+
+        if (intent.extras != null) {
+            navigation = intent.getStringExtra("Navigation").toString()
+        }
 
         /* This is the next button click */
         binding.btnNext.setOnClickListener {
@@ -182,7 +187,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: AssessmentQusModel = response.body()!!
                         listModel1 = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                             var condition: String? = ""
                             for (i in 0 until listModel.responseData!!.content?.size!!) {
                                 condition += listModel.responseData!!.content!![i].condition + "\n"
@@ -437,14 +442,14 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 p.putValue("totalAssessmentsTaken", listModel.responseData?.totalAssesment)
                                 p.putValue("numberOfDaysFromLastAssessmentsTaken", listModel.responseData?.daysfromLastAssesment)
                                 when {
-                                    listModel.responseData?.scoreIncDec.equals("", ignoreCase = true) -> {
+                                    listModel.responseData?.scoreIncDec.equals("") -> {
                                         p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% ")
                                     }
-                                    listModel.responseData?.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                    listModel.responseData?.scoreIncDec.equals("Increase") -> {
                                         p.putValue("improvementFromPreviousSession", "+ " + listModel.responseData?.indexScoreDiff + "%")
                                     }
 
-                                    listModel.responseData?.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                    listModel.responseData?.scoreIncDec.equals("Decrease") -> {
                                         p.putValue("improvementFromPreviousSession","- " +  listModel.responseData?.indexScoreDiff+ "%")
                                     }
                                 }
@@ -453,13 +458,15 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 val i = Intent(activity, AssProcessActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.ASSPROCESS, "1")
+                                i.putExtra("Navigation",navigation)
                                 i.putExtra(CONSTANTS.IndexScore, listModel.responseData?.indexScore)
                                 i.putExtra(CONSTANTS.ScoreLevel, listModel.responseData?.scoreLevel)
                                 startActivity(i)
                                 finish()
 
+                                Log.e("navigation assess",navigation)
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 BWSApplication.deleteCall(activity)
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)

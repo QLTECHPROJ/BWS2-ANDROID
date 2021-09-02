@@ -359,6 +359,7 @@ class SplashActivity : AppCompatActivity() {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                        intent.putExtra("Navigation","Enhance")
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
@@ -371,6 +372,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            intent.putExtra("Navigation","Enhance")
                             startActivity(intent)
                             finish()
                         } else if (planId.equals("")) {
@@ -395,6 +397,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        intent.putExtra("Navigation","Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -436,6 +439,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        intent.putExtra("Navigation","Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -472,6 +476,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            intent.putExtra("Navigation","Enhance")
                             startActivity(intent)
                             finish()
                         } else if (isProfileCompleted.equals("0")) {
@@ -491,6 +496,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        intent.putExtra("Navigation","Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -535,6 +541,7 @@ class SplashActivity : AppCompatActivity() {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                        intent.putExtra("Navigation","Enhance")
                         startActivity(intent)
                         finish()
                     } else if (isPinSet.equals("1")) {
@@ -542,6 +549,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                            intent.putExtra("Navigation","Enhance")
                             startActivity(intent)
                             finish()
                         } else if (isProfileCompleted.equals("0")) {
@@ -561,6 +569,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        intent.putExtra("Navigation","Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -596,6 +605,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                        intent.putExtra("Navigation","Enhance")
                                         startActivity(intent)
                                         finish()
                                     }

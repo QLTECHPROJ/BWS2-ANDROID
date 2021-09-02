@@ -61,14 +61,20 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
-        /* This is screen back click */
-        binding.llBack.setOnClickListener {
-            finish()
-        }
         i = Intent(ctx, OrderSummaryActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         if (intent != null) {
             planId = intent.getStringExtra("PlanId").toString()
             DeviceType = intent.getStringExtra("DeviceType").toString()
+        }
+
+        /* This is screen back click */
+        binding.llBack.setOnClickListener {
+            val i = Intent(ctx, BillingOrderActivity::class.java)
+            i.putExtra("PlanId", planId)
+            i.putExtra("DeviceType", DeviceType)
+            startActivity(i)
+            finish()
         }
 
         BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -101,6 +107,14 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
             }
         })
+    }
+
+    override fun onBackPressed() {
+        val i = Intent(ctx, BillingOrderActivity::class.java)
+        i.putExtra("PlanId", planId)
+        i.putExtra("DeviceType", DeviceType)
+        startActivity(i)
+        finish()
     }
 
     private fun loadAllSKUs() = if (billingClient.isReady) {

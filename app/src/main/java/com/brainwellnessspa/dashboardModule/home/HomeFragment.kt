@@ -3,7 +3,6 @@ package com.brainwellnessspa.dashboardModule.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.app.NotificationManager
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -30,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
@@ -52,6 +50,7 @@ import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
@@ -178,9 +177,9 @@ class HomeFragment : Fragment() {
         prepareHomeData()
         /* Condition for get user Image*/
         if (isNetworkConnected(activity)) {
-            if (userImage.equals("", ignoreCase = true)) {
+            if (userImage.equals("")) {
                 binding.ivUser.visibility = View.GONE
-                name = if (userName.equals("", ignoreCase = true)) {
+                name = if (userName.equals("")) {
                     "Guest"
                 } else {
                     userName.toString()
@@ -195,7 +194,7 @@ class HomeFragment : Fragment() {
             }
         } else {
             binding.ivUser.visibility = View.GONE
-            name = if (userName.equals("", ignoreCase = true)) {
+            name = if (userName.equals("")) {
                 "Guest"
             } else {
                 userName.toString()
@@ -306,7 +305,7 @@ class HomeFragment : Fragment() {
                         2 -> {
                             if (player != null) {
                                 val lastIndexID = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!.size - 1].id
-                                if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                if (PlayerAudioId.equals(lastIndexID) && player.duration - player.currentPosition <= 20) {
                                     val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedd.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -342,8 +341,8 @@ class HomeFragment : Fragment() {
                 val intent = Intent(activity, AssProcessActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                intent.putExtra("Navigation","Home")
                 requireActivity().startActivity(intent)
-                requireActivity().finish()
             }
         }/* network check function */
         networkCheck()
@@ -452,7 +451,7 @@ class HomeFragment : Fragment() {
         val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
-        if (!json.equals(gson.toString(), ignoreCase = true)) {
+        if (!json.equals(gson.toString())) {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
@@ -465,11 +464,14 @@ class HomeFragment : Fragment() {
         val adapter = AreaOfFocusAdapter(binding, requireActivity(), selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
         networkCheck()
-        var gb = GlobalInitExoPlayer()
-        gb.UpdateMiniPlayer(ctx,act)
-        gb.UpdateNotificationAudioPLayer(ctx)
-        setPlayPauseIcon()
-//        profileViewData(activity)
+        try {
+            var gb = GlobalInitExoPlayer()
+            gb.UpdateMiniPlayer(ctx,act)
+            gb.UpdateNotificationAudioPLayer(ctx)
+            setPlayPauseIcon()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
         super.onResume()
     }
 
@@ -623,7 +625,7 @@ class HomeFragment : Fragment() {
 
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
-                                    if (response.IsLock.equals("1",ignoreCase = true)){
+                                    if (response.IsLock.equals("1")){
                                         binding.ivLock.visibility = View.VISIBLE
                                     }else {
                                         binding.ivLock.visibility = View.GONE
@@ -631,74 +633,74 @@ class HomeFragment : Fragment() {
 
                                     binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
 
-                                    if (response.shouldCheckIndexScore.equals("0", true)) {
+                                    if (response.shouldCheckIndexScore.equals("0")) {
                                         binding.llCheckIndexscore.visibility = View.GONE
-                                    } else if (response.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                                    } else if (response.shouldCheckIndexScore.equals("1")) {
                                         binding.llCheckIndexscore.visibility = View.VISIBLE
                                     }
 
-                                    if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                    if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
                                         binding.tvReminder.text = getString(R.string.set_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
                                         binding.tvReminder.text = getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                    } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
                                         binding.tvReminder.text = getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
 
 
-                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.dayFrequency.equals("")) {
                                         binding.tvTodayFeq.text = response.dayFrequency
                                     } else {
                                         binding.tvTodayFeq.text = "0"
                                     }
 
-                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.dayTotalTime.equals("")) {
                                         binding.tvTodayTotalTime.text = response.dayTotalTime
                                     } else {
                                         binding.tvTodayTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.dayRegularity.equals("")) {
                                         binding.tvTodayRegularity.text = response.dayRegularity
                                     } else {
                                         binding.tvTodayRegularity.text = "0%"
                                     }
 
 
-                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.monthFrequency.equals("")) {
                                         binding.tvMonthFeq.text = response.monthFrequency
                                     } else {
                                         binding.tvMonthFeq.text = "0"
                                     }
 
-                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.monthTotalTime.equals("")) {
                                         binding.tvMonthTotalTime.text = response.monthTotalTime
                                     } else {
                                         binding.tvMonthTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.monthRegularity.equals("")) {
                                         binding.tvMonthRegularity.text = response.monthRegularity
                                     } else {
                                         binding.tvMonthRegularity.text = "0%"
                                     }
 
-                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.yearFrequency.equals("")) {
                                         binding.tvYearFeq.text = response.yearFrequency
                                     } else {
                                         binding.tvYearFeq.text = "0"
                                     }
 
-                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.yearTotalTime.equals("")) {
                                         binding.tvYearTotalTime.text = response.yearTotalTime
                                     } else {
                                         binding.tvYearTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.yearRegularity.equals("")) {
                                         binding.tvYearRegularity.text = response.yearRegularity
                                     } else {
                                         binding.tvYearRegularity.text = "0%"
@@ -712,7 +714,7 @@ class HomeFragment : Fragment() {
                                     getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, requireActivity())
 
                                     try {
-                                        if (response.isFirst.equals("1", ignoreCase = true)) {
+                                        if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
                                             dialog = Dialog(requireActivity())
@@ -733,7 +735,7 @@ class HomeFragment : Fragment() {
                                     val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
-                                    if (sleepTime.equals("", true)) {
+                                    if (sleepTime.equals("")) {
                                         binding.llSleepTime.visibility = View.GONE
                                     } else {
                                         binding.llSleepTime.visibility = View.VISIBLE
@@ -741,15 +743,15 @@ class HomeFragment : Fragment() {
                                     binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
 
                                     when {
-                                        response.scoreIncDec.equals("", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("") -> {
                                             binding.llCheckPercent.visibility = View.INVISIBLE
                                         }
-                                        response.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("Increase") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
                                             binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                                         }
-                                        response.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("Decrease") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
                                             binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
@@ -763,7 +765,7 @@ class HomeFragment : Fragment() {
 
                                 }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
@@ -806,7 +808,7 @@ class HomeFragment : Fragment() {
                         val gson = Gson()
                         homelistModel = listModel
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 val response = listModel.responseData
                                 if (response != null) {
                                     val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
@@ -825,74 +827,74 @@ class HomeFragment : Fragment() {
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
                                     binding.tvTime.text = response.suggestedPlaylist?.totalhour.toString() + ":" + response.suggestedPlaylist?.totalminute.toString()
 
-                                    if (!response.dayFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.dayFrequency.equals("")) {
                                         binding.tvTodayFeq.text = response.dayFrequency
                                     } else {
                                         binding.tvTodayFeq.text = "0"
                                     }
 
-                                    if (!response.dayTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.dayTotalTime.equals("")) {
                                         binding.tvTodayTotalTime.text = response.dayTotalTime
                                     } else {
                                         binding.tvTodayTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.dayRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.dayRegularity.equals("")) {
                                         binding.tvTodayRegularity.text = response.dayRegularity
                                     } else {
                                         binding.tvTodayRegularity.text = "0%"
                                     }
 
 
-                                    if (!response.monthFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.monthFrequency.equals("")) {
                                         binding.tvMonthFeq.text = response.monthFrequency
                                     } else {
                                         binding.tvMonthFeq.text = "0"
                                     }
 
-                                    if (!response.monthTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.monthTotalTime.equals("")) {
                                         binding.tvMonthTotalTime.text = response.monthTotalTime
                                     } else {
                                         binding.tvMonthTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.monthRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.monthRegularity.equals("")) {
                                         binding.tvMonthRegularity.text = response.monthRegularity
                                     } else {
                                         binding.tvMonthRegularity.text = "0%"
                                     }
 
-                                    if (!response.yearFrequency.equals("", ignoreCase = true)) {
+                                    if (!response.yearFrequency.equals("")) {
                                         binding.tvYearFeq.text = response.yearFrequency
                                     } else {
                                         binding.tvYearFeq.text = "0"
                                     }
 
-                                    if (!response.yearTotalTime.equals("", ignoreCase = true)) {
+                                    if (!response.yearTotalTime.equals("")) {
                                         binding.tvYearTotalTime.text = response.yearTotalTime
                                     } else {
                                         binding.tvYearTotalTime.text = "00:00:00"
                                     }
 
-                                    if (!response.yearRegularity.equals("", ignoreCase = true)) {
+                                    if (!response.yearRegularity.equals("")) {
                                         binding.tvYearRegularity.text = response.yearRegularity
                                     } else {
                                         binding.tvYearRegularity.text = "0%"
                                     }
 
-                                    if (response.shouldCheckIndexScore.equals("0", true)) {
+                                    if (response.shouldCheckIndexScore.equals("0")) {
                                         binding.llCheckIndexscore.visibility = View.GONE
-                                    } else if (response.shouldCheckIndexScore.equals("1", ignoreCase = true)) {
+                                    } else if (response.shouldCheckIndexScore.equals("1")) {
                                         binding.llCheckIndexscore.visibility = View.VISIBLE
                                     }
 
-                                    if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                    if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
                                         binding.tvReminder.text = getString(R.string.set_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                    } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
                                         binding.tvReminder.text = getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                    } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                    } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
                                         binding.tvReminder.text = getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
@@ -901,7 +903,7 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
                                     // askBatteryOptimizations()
                                     try {
-                                        if (response.isFirst.equals("1", ignoreCase = true)) {
+                                        if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
                                             dialog = Dialog(requireActivity())
@@ -920,13 +922,13 @@ class HomeFragment : Fragment() {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
                                         } else if (IsLock.equals("0")) {
-                                            if (response.suggestedPlaylist?.isReminder.equals("0", ignoreCase = true) || response.suggestedPlaylist?.isReminder.equals("", ignoreCase = true)) {
+                                            if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
                                                 binding.tvReminder.text = getString(R.string.set_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
-                                            } else if (response.suggestedPlaylist?.isReminder.equals("1", ignoreCase = true)) {
+                                            } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
                                                 binding.tvReminder.text = getString(R.string.update_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
-                                            } else if (response.suggestedPlaylist?.isReminder.equals("2", ignoreCase = true)) {
+                                            } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
                                                 binding.tvReminder.text = getString(R.string.update_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                             }
@@ -945,15 +947,15 @@ class HomeFragment : Fragment() {
                                     binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
 
                                     when {
-                                        response.scoreIncDec.equals("", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("") -> {
                                             binding.llCheckPercent.visibility = View.INVISIBLE
                                         }
-                                        response.scoreIncDec.equals("Increase", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("Increase") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
                                             binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                                         }
-                                        response.scoreIncDec.equals("Decrease", ignoreCase = true) -> {
+                                        response.scoreIncDec.equals("Decrease") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
                                             binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
@@ -989,7 +991,7 @@ class HomeFragment : Fragment() {
                                                     2 -> {
                                                         if (player != null) {
                                                             val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
-                                                            if (PlayerAudioId.equals(lastIndexID, ignoreCase = true) && player.duration - player.currentPosition <= 20) {
+                                                            if (PlayerAudioId.equals(lastIndexID) && player.duration - player.currentPosition <= 20) {
                                                                 val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                                                 val editor = sharedd.edit()
                                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -1023,7 +1025,7 @@ class HomeFragment : Fragment() {
 
                                 }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 deleteCall(activity)
                                 showToast(listModel.responseMessage, activity)
                                 val i = Intent(activity, SignInActivity::class.java)
@@ -1094,8 +1096,8 @@ class HomeFragment : Fragment() {
             val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "") //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
-            if (myDownloads.equals("1", ignoreCase = true)) {
-                if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(response.suggestedPlaylist?.playlistID, ignoreCase = true)) {
+            if (myDownloads.equals("1")) {
+                if (audioPlayerFlag.equals("Downloadlist") && myPlaylist.equals(response.suggestedPlaylist?.playlistID)) {
                     if (player != null) {
                         if (player.playWhenReady) {
                             isPlayPlaylist = 1 //                    handler3.postDelayed(UpdateSongTime3, 500);
@@ -1117,7 +1119,7 @@ class HomeFragment : Fragment() {
                     binding.llPlay.visibility = View.VISIBLE
                 }
             } else {
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(response.suggestedPlaylist?.playlistID, ignoreCase = true)) {
+                if (audioPlayerFlag.equals("playlist") && myPlaylist.equals(response.suggestedPlaylist?.playlistID)) {
                     if (player != null) {
                         if (player.playWhenReady) {
                             isPlayPlaylist = 1
@@ -1153,7 +1155,7 @@ class HomeFragment : Fragment() {
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
         if (myDownloads.equals("1", true)) {
             if (isNetworkConnected(ctx)) {
-                if (audioPlayerFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
+                if (audioPlayerFlag.equals("Downloadlist") && myPlaylist.equals(playlistID)) {
                     if (isDisclaimer == 1) {
                         if (player != null) {
                             if (!player.playWhenReady) {
@@ -1202,14 +1204,14 @@ class HomeFragment : Fragment() {
                             listModelList2.add(position, mainPlayModel)
                         } else {
                             isDisclaimer = 0
-                            if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                            if (isPlayDisclimer.equals("1")) {
                                 audioc = true
                                 listModelList2.add(position, mainPlayModel)
                             }
                         }
                     } else {
                         isDisclaimer = 0
-                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1")) {
                             audioc = true
                             listModelList2.add(position, mainPlayModel)
                         }
@@ -1220,7 +1222,7 @@ class HomeFragment : Fragment() {
                 getAllCompletedMedia(audioPlayerFlag, playlistID, playlistName, position, listModel, ctx, DB)
             }
         } else {
-            if (audioPlayerFlag.equals("playlist", ignoreCase = true) && myPlaylist.equals(playlistID, ignoreCase = true)) {
+            if (audioPlayerFlag.equals("playlist") && myPlaylist.equals(playlistID)) {
                 if (isDisclaimer == 1) {
                     if (player != null) {
                         if (!player.playWhenReady) {
@@ -1269,14 +1271,14 @@ class HomeFragment : Fragment() {
                         listModelList2.add(position, mainPlayModel)
                     } else {
                         isDisclaimer = 0
-                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1")) {
                             audioc = true
                             listModelList2.add(position, mainPlayModel)
                         }
                     }
                 } else {
                     isDisclaimer = 0
-                    if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                    if (isPlayDisclimer.equals("1")) {
                         audioc = true
                         listModelList2.add(position, mainPlayModel)
                     }
@@ -1297,7 +1299,7 @@ class HomeFragment : Fragment() {
         val myPlaylist = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
-        if (audioFlag.equals("Downloadlist", ignoreCase = true) && myPlaylist.equals(pID, ignoreCase = true)) {
+        if (audioFlag.equals("Downloadlist") && myPlaylist.equals(pID)) {
             if (isDisclaimer == 1) {
                 if (player != null) {
                     if (!player.playWhenReady) {
@@ -1359,14 +1361,14 @@ class HomeFragment : Fragment() {
                         listModelList2.add(pos, mainPlayModel)
                     } else {
                         isDisclaimer = 0
-                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                        if (isPlayDisclimer.equals("1")) {
                             audioc = true
                             listModelList2.add(pos, mainPlayModel)
                         }
                     }
                 } else {
                     isDisclaimer = 0
-                    if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                    if (isPlayDisclimer.equals("1")) {
                         audioc = true
                         listModelList2.add(pos, mainPlayModel)
                     }
@@ -1429,8 +1431,8 @@ class HomeFragment : Fragment() {
                     val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                    if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                        if (playFrom.equals("Suggested", ignoreCase = true)) {
+                    if (audioPlayerFlag.equals("playlist") || audioPlayerFlag.equals("Downloadlist")) {
+                        if (playFrom.equals("Suggested")) {
                             callAllRemovePlayer(ctx,act)
                         }
                     }
@@ -1443,13 +1445,13 @@ class HomeFragment : Fragment() {
                 val json = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toString())
                 var mainPlayModelList = ArrayList<MainPlayModel>()
                 if (audioPlayerFlag != "0") {
-                    if (!json.equals(gson.toString(), ignoreCase = true)) {
+                    if (!json.equals(gson.toString())) {
                         val type = object : TypeToken<ArrayList<MainPlayModel?>?>() {}.type
                         mainPlayModelList = gson.fromJson(json, type)
                     }
                 }
-                if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                     if (playFrom.equals("Suggested", ignoreCase = true)) {
+                if (audioPlayerFlag.equals("playlist") || audioPlayerFlag.equals("Downloadlist")) {
+                    if (playFrom.equals("Suggested")) {
                         if (mainPlayModelList.size == playlistSongs.size) {
                             for (i in mainPlayModelList) {
                                 var found = false
@@ -1511,7 +1513,7 @@ class HomeFragment : Fragment() {
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested")
 
-        if (myDownloads.equals("1", ignoreCase = true)) {
+        if (myDownloads.equals("1")) {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "Downloadlist")
         } else {
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
@@ -1603,9 +1605,9 @@ class HomeFragment : Fragment() {
                 if(IsLock.equals("1")){
                   callEnhanceActivity(ctx, act)
                 }else if(IsLock.equals("0")) {
-                    if (isMainAccount.equals("1", ignoreCase = true)) {
+                    if (isMainAccount.equals("1")) {
                         llAddNewUser.visibility = View.VISIBLE
-                        if (!model.maxuseradd.equals("", ignoreCase = true)) {
+                        if (!model.maxuseradd.equals("")) {
                             if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
                                 showToast("Please update your plan", activity)
                             } else {
@@ -1627,9 +1629,9 @@ class HomeFragment : Fragment() {
             }
 
             val name: String?
-            if (modelList[position].image.equals("", ignoreCase = true)) {
+            if (modelList[position].image.equals("")) {
                 holder.bind.ivProfileImage.visibility = View.GONE
-                name = if (modelList[position].name.equals("", ignoreCase = true)) {
+                name = if (modelList[position].name.equals("")) {
                     "Guest"
                 } else {
                     modelList[position].name.toString()
@@ -1706,7 +1708,7 @@ class HomeFragment : Fragment() {
                             }
 
                             btnDone.setOnClickListener {
-                                if (edtOTP1.text.toString().equals("") && edtOTP2.text.toString().equals("") && edtOTP3.text.toString().equals("") && edtOTP4.text.toString().equals("")) {
+                                if (edtOTP1.text.toString() == "" && edtOTP2.text.toString() == "" && edtOTP3.text.toString() == "" && edtOTP4.text.toString() == "") {
                                     txtError.visibility = View.VISIBLE
                                     txtError.text = "Please enter OTP"
                                 } else {
@@ -1723,7 +1725,7 @@ class HomeFragment : Fragment() {
                                                     progressBar.visibility = View.GONE
                                                     val listModel: AuthOtpModel = response.body()!!
                                                     when {
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
+                                                        listModel.ResponseCode == getString(R.string.ResponseCodesuccess) -> {
                                                             dialog.dismiss()
                                                             mBottomSheetDialog?.hide()/*if (!listModel.responseData!!.userID.equals(
                                                             userId,
@@ -1752,6 +1754,7 @@ class HomeFragment : Fragment() {
                                                             } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
                                                                 val intent = Intent(activity, AssProcessActivity::class.java)
                                                                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                intent.putExtra("Navigation","Enhance")
                                                                 requireActivity().startActivity(intent)
                                                                 requireActivity().finish()
                                                             } else if (listModel.ResponseData.isProfileCompleted == "0") {
@@ -1854,7 +1857,7 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
                                                             addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         }
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
+                                                        listModel.ResponseCode == getString(R.string.ResponseCodeDeleted) -> {
                                                             txtError.visibility = View.GONE
                                                             txtError.text = ""
                                                             deleteCall(activity)
@@ -1868,7 +1871,7 @@ class HomeFragment : Fragment() {
                                                             startActivity(i)
                                                             requireActivity().finish()
                                                         }
-                                                        listModel.ResponseCode.equals(getString(R.string.ResponseCodefail)) -> {
+                                                        listModel.ResponseCode == getString(R.string.ResponseCodefail) -> {
                                                             txtError.visibility = View.VISIBLE
                                                             txtError.text = listModel.ResponseMessage
                                                         }
@@ -1892,21 +1895,21 @@ class HomeFragment : Fragment() {
 
                             tvForgotPin.setOnClickListener {
                                 dialog.dismiss()
-                                val dialog = Dialog(requireActivity())
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                dialog.setContentView(R.layout.add_couser_continue_layout)
-                                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                val mainLayout = dialog.findViewById<ConstraintLayout>(R.id.mainLayout)
-                                val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
-                                val tvText = dialog.findViewById<TextView>(R.id.tvText)
+                                val dialogs = Dialog(requireActivity())
+                                dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                                dialogs.setContentView(R.layout.add_couser_continue_layout)
+                                dialogs.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                dialogs.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                                val mainLayout = dialogs.findViewById<ConstraintLayout>(R.id.mainLayout)
+                                val ivIcon = dialogs.findViewById<ImageView>(R.id.ivIcon)
+                                val tvText = dialogs.findViewById<TextView>(R.id.tvText)
                                 ivIcon.setImageResource(R.drawable.ic_email_success_icon)
                                 val email: String = modelList[position].email.toString()
                                 tvText.text = "A new pin has been sent to \nyour mail id \n$email."
 
-                                dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                dialogs.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss()
+                                        dialogs.dismiss()
                                         return@setOnKeyListener true
                                     }
                                     false
@@ -1914,16 +1917,20 @@ class HomeFragment : Fragment() {
                                 mainLayout.setOnClickListener {
                                     if (isNetworkConnected(requireActivity())) {
                                         showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                        val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
-                                        listCall.enqueue(object : Callback<SucessModel> {
-                                            override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                                        val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
+                                        listCall.enqueue(object : Callback<ForgoPinModel> {
+                                            override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
                                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                                val listModel: SucessModel = response.body()!!
+                                                val listModel: ForgoPinModel = response.body()!!
                                                 when {
-                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                                        dialog.dismiss()
+                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodesuccess)) -> {
+                                                        if (listModel.responseData?.emailSend.equals("1")){
+                                                            dialogs.dismiss()
+                                                        }else {
+                                                            showToast(listModel.responseMessage, requireActivity())
+                                                        }
                                                     }
-                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodefail)) -> {
                                                         showToast(listModel.responseMessage, requireActivity())
                                                     }
                                                     else -> {
@@ -1932,7 +1939,7 @@ class HomeFragment : Fragment() {
                                                 }
                                             }
 
-                                            override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                                            override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
                                                 hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
                                             }
                                         })
@@ -1941,8 +1948,8 @@ class HomeFragment : Fragment() {
                                     }
                                 }
 
-                                dialog.show()
-                                dialog.setCancelable(true)
+                                dialogs.show()
+                                dialogs.setCancelable(true)
                             }
 
                         dialog.show()

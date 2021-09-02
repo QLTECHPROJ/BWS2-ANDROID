@@ -33,6 +33,7 @@ import com.brainwellnessspa.userModule.coUserModule.AddCouserActivity
 import com.brainwellnessspa.userModule.coUserModule.CouserSetupPinActivity
 import com.brainwellnessspa.userModule.models.AddedUserListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
+import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
@@ -115,16 +116,16 @@ class UserListActivity : AppCompatActivity() {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
 
-            if (isMainAccount.equals("1", ignoreCase = true)) {
+            if (isMainAccount.equals("1")) {
                 binding.llAddNewUser.visibility = View.GONE
             } else {
                 binding.llAddNewUser.visibility = View.GONE
             }
 
             binding.llAddNewUser.setOnClickListener {
-                if (isMainAccount.equals("1", ignoreCase = true)) {
+                if (isMainAccount.equals("1")) {
                     binding.llAddNewUser.visibility = View.GONE
-                    if (!model.maxuseradd.equals("", ignoreCase = true)) {
+                    if (!model.maxuseradd.equals("")) {
                         if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
                             showToast("Please update your plan", activity)
                         } else {
@@ -132,7 +133,7 @@ class UserListActivity : AppCompatActivity() {
                             val i = Intent(activity, AddCouserActivity::class.java)
                             activity.startActivity(i)
                         }
-                    }else {
+                    } else {
                         showToast("Please purchase your plan", activity)
                     }
                 } else {
@@ -140,9 +141,9 @@ class UserListActivity : AppCompatActivity() {
                 }
             }
 
-            if (coUsersModel!![position].image.equals("", true)) {
+            if (coUsersModel!![position].image.equals("")) {
                 holder.bindingAdapter.ivProfileImage.visibility = View.GONE
-                name = if (coUsersModel!![position].name.equals("", ignoreCase = true)) {
+                name = if (coUsersModel!![position].name.equals("")) {
                     "Guest"
                 } else {
                     coUsersModel!![position].name.toString()
@@ -162,7 +163,7 @@ class UserListActivity : AppCompatActivity() {
             }
 
             holder.bindingAdapter.rlAddNewCard.setOnClickListener {
-                if (coUsersModel!![position].isPinSet.equals("1", ignoreCase = true)) {
+                if (coUsersModel!![position].isPinSet.equals("1")) {
                     val previousItem = selectedItem
                     selectedItem = position
                     notifyItemChanged(previousItem)
@@ -174,7 +175,7 @@ class UserListActivity : AppCompatActivity() {
                     userId = coUsersModel!![position].mainAccountID.toString()
                     coUserId = coUsersModel!![position].userID.toString()
                     coEmail = coUsersModel!![position].email.toString()
-                } else if (coUsersModel!![position].isPinSet.equals("0", ignoreCase = true) || coUsersModel!![position].isPinSet.equals("", ignoreCase = true)) {
+                } else if (coUsersModel!![position].isPinSet.equals("0") || coUsersModel!![position].isPinSet.equals("")) {
                     comeHomeScreen = "0"
                     val i = Intent(activity, CouserSetupPinActivity::class.java)
                     i.putExtra("subUserId", coUsersModel!![position].userID)
@@ -184,6 +185,11 @@ class UserListActivity : AppCompatActivity() {
 
             Log.e("isMainAccount", isMainAccount)
             binding.btnLogIn.setOnClickListener {
+                Log.e("userID", coUsersModel!![position].userID.toString())
+                Log.e("email", coUsersModel!![position].email.toString())
+                Log.e("name", coUsersModel!![position].name.toString())
+                Log.e("position", position.toString())
+
                 userList.dialog = Dialog(activity)
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
@@ -219,7 +225,7 @@ class UserListActivity : AppCompatActivity() {
                 }
 
                 btnDone.setOnClickListener {
-                    if (edtOTP1.text.toString().equals("", ignoreCase = true) && edtOTP2.text.toString().equals("", ignoreCase = true) && edtOTP3.text.toString().equals("", ignoreCase = true) && edtOTP4.text.toString().equals("", ignoreCase = true)) {
+                    if (edtOTP1.text.toString() == "" && edtOTP2.text.toString() == "" && edtOTP3.text.toString() == "" && edtOTP4.text.toString() == "") {
                         txtError.visibility = View.VISIBLE
                         txtError.text = "Please enter OTP"
                     } else {
@@ -235,7 +241,7 @@ class UserListActivity : AppCompatActivity() {
                                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                         val listModel: AuthOtpModel = response.body()!!
                                         when {
-                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                            listModel.ResponseCode == activity.getString(R.string.ResponseCodesuccess) -> {
                                                 val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
                                                 val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
                                                 val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
@@ -280,7 +286,7 @@ class UserListActivity : AppCompatActivity() {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                                                     }
-                                                }catch (e:Exception){
+                                                } catch (e: Exception) {
                                                     e.printStackTrace()
                                                 }
                                                 editor.apply()
@@ -301,36 +307,37 @@ class UserListActivity : AppCompatActivity() {
                                                 splashActivity.setAnalytics(ctx.resources.getString(R.string.segment_key_real_2_staging), ctx)
                                                 callIdentify(ctx)
                                                 Log.e("isSetLoginPin", isSetLoginPin.toString())
-                                                if (listModel.ResponseData.isPinSet.equals("1", ignoreCase = true)) {
-                                                    if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                if (listModel.ResponseData.isPinSet.equals("1")) {
+                                                    if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
                                                         val intent = Intent(activity, EmailVerifyActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
+                                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
                                                         val intent = Intent(activity, AssProcessActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                        intent.putExtra("Navigation", "Enhance")
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
+                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("0")) {
                                                         val intent = Intent(activity, ProfileProgressActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
+                                                    } else if (listModel.ResponseData.AvgSleepTime.equals("")) {
                                                         val intent = Intent(activity, SleepTimeActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && listModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("1") && listModel.ResponseData.isAssessmentCompleted.equals("1")) {
                                                         val intent = Intent(ctx, BottomNavigationActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra("IsFirst", "0")
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     }
-                                                } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
+                                                } else if (listModel.ResponseData.isPinSet.equals("0") || listModel.ResponseData.isPinSet.equals("")) {
                                                     IsFirstClick = "0"
                                                     val intent = Intent(activity, AddCouserActivity::class.java)
                                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -411,8 +418,7 @@ class UserListActivity : AppCompatActivity() {
                     val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
                     val tvText = dialog.findViewById<TextView>(R.id.tvText)
                     ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                    val email: String = coUsersModel!![position].email.toString()
-                    tvText.text = "A new pin has been sent to \nyour mail id \n$email."
+                    tvText.text = "A new pin has been sent to \nyour mail id \n" + coUsersModel!![position].email + "."
 
                     dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -425,16 +431,20 @@ class UserListActivity : AppCompatActivity() {
                     mainLayout.setOnClickListener {
                         if (isNetworkConnected(activity)) {
                             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(coUsersModel!![position].userID, coUsersModel!![position].email)
-                            listCall.enqueue(object : Callback<SucessModel> {
-                                override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                            val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(coUsersModel!![position].userID, coUsersModel!![position].email)
+                            listCall.enqueue(object : Callback<ForgoPinModel> {
+                                override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    val listModel: SucessModel = response.body()!!
+                                    val listModel: ForgoPinModel = response.body()!!
                                     when {
-                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                            dialog.dismiss()
+                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess)) -> {
+                                            if (listModel.responseData?.emailSend.equals("1")){
+                                                dialog.dismiss()
+                                            }else {
+                                                showToast(listModel.responseMessage, activity)
+                                            }
                                         }
-                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail)) -> {
                                             showToast(listModel.responseMessage, activity)
                                         }
                                         else -> {
@@ -443,7 +453,7 @@ class UserListActivity : AppCompatActivity() {
                                     }
                                 }
 
-                                override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                                override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 }
                             })

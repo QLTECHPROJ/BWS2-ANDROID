@@ -17,6 +17,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityAddProfileBinding
 import com.brainwellnessspa.userModule.models.AddUserModel
+import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -236,13 +237,13 @@ class AddProfileActivity : AppCompatActivity() {
         binding.btnSendNewPin.setOnClickListener {
             if (isNetworkConnected(activity)) {
                 showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                val listCall: Call<SucessModel> = APINewClient.client.getForgotPin(userID, coEMAIL)
-                listCall.enqueue(object : Callback<SucessModel> {
-                    override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(userID, coEMAIL)
+                listCall.enqueue(object : Callback<ForgoPinModel> {
+                    override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val listModel: SucessModel = response.body()!!
+                        val listModel: ForgoPinModel = response.body()!!
                         when {
-                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess)) -> {
                                 val i = Intent(activity, UserListActivity::class.java)
                                 startActivity(i)
                                 finish()
@@ -253,7 +254,7 @@ class AddProfileActivity : AppCompatActivity() {
                                 p.putValue("email", coEMAIL)
                                 addToSegment("Forgot Pin Clicked", p, CONSTANTS.track)
                             }
-                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                            listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail)) -> {
                                 showToast(listModel.responseMessage, activity)
                             }
                             else -> {
@@ -262,7 +263,7 @@ class AddProfileActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                    override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })

@@ -212,7 +212,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             })
 
-            prepareCountryData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder)
+            prepareCountryData(dialog, rvCountryList, tvFound, progressBar, progressBarHolder, searchView)
             dialog.show()
             dialog.setCanceledOnTouchOutside(true)
             dialog.setCancelable(true)
@@ -225,7 +225,7 @@ class SignInActivity : AppCompatActivity() {
         }
 */
 
-        if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
+        if (binding.etPassword.text.toString().trim().equals("")) {
             binding.ivVisible.isClickable = false
             binding.ivVisible.isEnabled = false
             binding.ivVisible.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
@@ -253,15 +253,19 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
+    private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView:SearchView) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+            searchView.isEnabled = false
+            searchView.isClickable = false
             val listCall: Call<CountryListModel> = APINewClient.client.countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
                         BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
+                        searchView.isEnabled = true
+                        searchView.isClickable = true
                         rvCountryList.layoutManager = LinearLayoutManager(activity)
                         adapter = CountrySelectAdapter(dialog, binding, listModel.responseData!!, rvCountryList, tvFound)
                         rvCountryList.adapter = adapter

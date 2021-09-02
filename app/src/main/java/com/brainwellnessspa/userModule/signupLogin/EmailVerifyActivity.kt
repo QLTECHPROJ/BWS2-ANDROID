@@ -44,23 +44,24 @@ class EmailVerifyActivity : AppCompatActivity() {
         }
 
         binding.btnContinue.setOnClickListener {
-            if (isAssessmentCompleted.equals("0", ignoreCase = true)) {
+            if (isAssessmentCompleted.equals("0")) {
                 val intent = Intent(applicationContext, AssProcessActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                intent.putExtra("Navigation","Enhance")
                 startActivity(intent)
                 finish()
-            } else if (isProfileCompleted.equals("0", ignoreCase = true)) {
+            } else if (isProfileCompleted.equals("0")) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
-            } else if (avgSleepTime.equals("", ignoreCase = true)) {
+            } else if (avgSleepTime.equals("")) {
                 val intent = Intent(applicationContext, SleepTimeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 finish()
-            } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+            } else if (isProfileCompleted.equals("1") && isAssessmentCompleted.equals("1")) {
                 val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra("IsFirst", "0")

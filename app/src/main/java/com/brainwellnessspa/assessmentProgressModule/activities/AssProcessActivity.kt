@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,7 +17,6 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
-import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
@@ -30,6 +30,7 @@ import retrofit2.Response
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
+    var navigation: String = ""
     var userId: String? = ""
     var mainAccountId: String? = ""
     var indexScore: Int = 0
@@ -63,9 +64,11 @@ class AssProcessActivity : AppCompatActivity() {
         if (assProcess == "0") {
             val p = Properties()
             addToSegment(CONSTANTS.Assessment_Start_Screen_Viewed, p, CONSTANTS.screen)
+            navigation = intent.getStringExtra("Navigation").toString()
             binding.rlDoAss.visibility = View.VISIBLE
             binding.rlDoneAss.visibility = View.GONE
         } else if (assProcess == "1") {
+            navigation = intent.getStringExtra("Navigation").toString()
             indexScore = Integer.parseInt(intent.getStringExtra(CONSTANTS.IndexScore).toString())
             scoreLevel = intent.getStringExtra(CONSTANTS.ScoreLevel)
             binding.rlDoAss.visibility = View.GONE
@@ -447,8 +450,10 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
+            Log.e("navigation",navigation)
             val intent = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.putExtra("Navigation",navigation)
             startActivity(intent)
             finish()
         }
@@ -457,19 +462,27 @@ class AssProcessActivity : AppCompatActivity() {
         binding.btnDoneAss.setOnClickListener {
             if (mainAccountId.equals(userId)) {
 //                 TODO when add plan in user flow comment open
-                val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                i.putExtra("plan","0")
-                startActivity(i)
-                finish()
-                /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
-                startActivity(i)
-                finish()*/
+                if (navigation == "Home") {
+                    finish()
+                } else {
+                    val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    i.putExtra("plan", "0")
+                    startActivity(i)
+                    finish()
+                    /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
+                    startActivity(i)
+                    finish()*/
+                }
             } else {
-                val intent = Intent(applicationContext, ThankYouActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-                finish()
+                if (navigation == "Home") {
+                    finish()
+                } else {
+                    val intent = Intent(applicationContext, ThankYouActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
     }
@@ -490,7 +503,7 @@ class AssProcessActivity : AppCompatActivity() {
                         val listModel = response.body()
                         if (listModel != null) {
                             when {
-                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                     binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -503,7 +516,7 @@ class AssProcessActivity : AppCompatActivity() {
                                     binding.tvWellnessTitle.text = listModel.responseData?.subTitle
                                     binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))
                                 }
-                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                     deleteCall(activity)
                                     showToast(listModel.responseMessage, activity)
                                     val i = Intent(activity, SignInActivity::class.java)

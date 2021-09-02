@@ -227,8 +227,6 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvFound.text = "Please try again with another search term."
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
-                                    Log.e("Result listSize", "onQueryText Data show $listSize")
-                                    Log.e("Result listModel.responseData!!.size", "onQueryText Data show " + listModel.responseData!!.size)
                                         /* set adapter data to search screen */
                                         binding.llError.visibility = View.GONE
                                         binding.rvSerachList.visibility = View.VISIBLE

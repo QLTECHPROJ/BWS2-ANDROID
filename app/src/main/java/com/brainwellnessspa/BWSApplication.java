@@ -181,7 +181,7 @@ public class BWSApplication extends Application {
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public static String PlayerAudioId = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0";
+    public static String PlayerAudioId = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsRefreshPlan = "0";
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
@@ -2642,6 +2642,7 @@ public class BWSApplication extends Application {
         cancelId = "";
         deleteId = "";
         IsFirstClick = "0";
+        IsRefreshPlan = "0";
         currantTime = "";
         am_pm = "";
         hourString = "";

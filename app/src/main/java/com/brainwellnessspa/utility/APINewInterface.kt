@@ -175,7 +175,7 @@ interface APINewInterface {
         @Field("UserId")
         UserId: String?,
         @Field("Email")
-        email: String?): Call<SucessModel>
+        email: String?): Call<ForgoPinModel>
 
     @POST("profilesaveans")
     @FormUrlEncoded
