@@ -174,12 +174,12 @@ class AddAudioActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        binding.searchView.clearFocus()
+       /* binding.searchView.clearFocus()
         searchEditText.setText("")
         binding.rvSerachList.adapter = null
         binding.rvSerachList.visibility = View.GONE
         binding.llError.visibility = View.GONE
-        binding.searchView.setQuery("", false)
+        binding.searchView.setQuery("", false)*/
         prepareSuggestedData()
         super.onResume()
     }

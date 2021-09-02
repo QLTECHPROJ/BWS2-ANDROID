@@ -276,11 +276,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             p.putValue("email", email)
             if (signupFlag.equals("1")) {
                 p.putValue("source", "SignUp")
-                addToSegment("OTP Entered", p, CONSTANTS.track)
             } else {
                 p.putValue("source", "Login")
-                addToSegment("OTP Entered", p, CONSTANTS.track)
             }
+            addToSegment("OTP Entered", p, CONSTANTS.track)
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
             val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
@@ -327,6 +326,19 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             Log.e("errr", e.printStackTrace().toString())
                         }
                         editor.apply()
+                        val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val edited = sharded.edit()
+                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                        val selectedCategoriesTitle = arrayListOf<String>()
+                        val selectedCategoriesName = arrayListOf<String>()
+                        val gson = Gson()
+                        for (i in listModel.ResponseData.AreaOfFocus) {
+                            selectedCategoriesTitle.add(i.MainCat)
+                            selectedCategoriesName.add(i.RecommendedCat)
+                        }
+                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                        edited.apply()
                         val p = Properties()
                         p.putValue("name", name)
                         p.putValue("mobileNo", listModel.ResponseData.Mobile)
@@ -339,6 +351,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         } else {
                             addToSegment(CONSTANTS.User_Login, p, CONSTANTS.track)
                         }
+                        callIdentify(ctx)
                         if (signupFlag.equals("1", ignoreCase = true)) {
                             val i = Intent(activity, EmailVerifyActivity::class.java)
                             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -405,23 +418,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 }
                             }
                         }
-
-
-                        callIdentify(ctx)
-                        val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                        val edited = sharded.edit()
-                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                        val selectedCategoriesTitle = arrayListOf<String>()
-                        val selectedCategoriesName = arrayListOf<String>()
-                        val gson = Gson()
-                        for (i in listModel.ResponseData.AreaOfFocus) {
-                            selectedCategoriesTitle.add(i.MainCat)
-                            selectedCategoriesName.add(i.RecommendedCat)
-                        }
-                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                        edited.apply()
-//                            showToast(listModel.ResponseMessage, activity)
                     } else {
                         binding.txtError.visibility = View.VISIBLE
                         binding.txtError.text = listModel.ResponseMessage

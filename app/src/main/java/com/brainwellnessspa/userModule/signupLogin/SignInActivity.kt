@@ -387,7 +387,8 @@ class SignInActivity : AppCompatActivity() {
             holder.bindingAdapter.llMainLayout.setOnClickListener {
                 binding.tvCountryShortName.text = mData.shortName
                 binding.tvCountry.text = "+" + mData.code
-                catList.countryFullName = mData.name!!
+                var catList = SignInActivity()
+                catList.countryFullName = mData.name
 
                 dialog.dismiss()
             }

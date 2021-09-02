@@ -66,7 +66,6 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
             finish()
         }
         i = Intent(ctx, OrderSummaryActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         if (intent != null) {
             planId = intent.getStringExtra("PlanId").toString()
             DeviceType = intent.getStringExtra("DeviceType").toString()

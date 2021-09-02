@@ -1467,7 +1467,7 @@ class HomeFragment : Fragment() {
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                                     if (playFrom.equals("Suggested", ignoreCase = true)) {
-                                        callAllRemovePlayer(ctx, activity)
+                                        callAllRemovePlayer(ctx, act)
                                     }
                                 }
                                 GetPlaylistMedia(PlaylistID, userId!!, ctx)

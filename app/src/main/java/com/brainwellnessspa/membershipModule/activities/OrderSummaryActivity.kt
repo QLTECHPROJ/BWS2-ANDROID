@@ -80,7 +80,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
         ctx = this@OrderSummaryActivity
         activity = this@OrderSummaryActivity
 
-        setupBillingClient()
 
         if (intent != null) {
             trialPeriod = intent.getStringExtra("TrialPeriod") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
@@ -104,6 +103,8 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
             oldPromocode = intent.getStringExtra(CONSTANTS.Promocode)
         }
         binding!!.edtCode.addTextChangedListener(promoCodeTextWatcher)
+
+        setupBillingClient()
         p = Properties()
         p.putValue("planId",listModelList!![position].planID)
         p.putValue("plan",listModelList!![position].subName)
@@ -325,25 +326,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                                 edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
                                                 edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                                                 edited.apply()
-
-                                                if(upgrade == "1") {
-                                                    addToSegment("User Plan Upgraded", p, CONSTANTS.track)
-                                                    finish()
-                                                }else if(upgrade == "") {
-                                                    addToSegment("Checkout Completed", p, CONSTANTS.track)
-                                                    val i = Intent(ctx, EnhanceDoneActivity::class.java)
-                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                    i.putExtra("Name", "")
-                                                    i.putExtra("Code", "")
-                                                    i.putExtra("MobileNo", "")
-                                                    i.putExtra("PlanData", gson.toJson(listModelList))
-                                                    i.putExtra("TrialPeriod", trialPeriod)
-                                                    i.putExtra("position", position)
-                                                    i.putExtra("Promocode", promocode)
-                                                    i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                                    startActivity(i)
-                                                    finish()
-                                                }
                                             } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
                                                 deleteCall(activity)
                                                 showToast(authOtpModel.ResponseMessage, activity)
@@ -365,6 +347,24 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                     override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
                                     }
                                 })
+                            }
+                            if(upgrade == "1") {
+                                addToSegment("User Plan Upgraded", p, CONSTANTS.track)
+                                finish()
+                            }else if(upgrade == "") {
+                                addToSegment("Checkout Completed", p, CONSTANTS.track)
+                                val i = Intent(ctx, EnhanceDoneActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.putExtra("Name", "")
+                                i.putExtra("Code", "")
+                                i.putExtra("MobileNo", "")
+                                i.putExtra("PlanData", gson.toJson(listModelList))
+                                i.putExtra("TrialPeriod", trialPeriod)
+                                i.putExtra("position", position)
+                                i.putExtra("Promocode", promocode)
+                                i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                startActivity(i)
+                                finish()
                             }
                         }
 

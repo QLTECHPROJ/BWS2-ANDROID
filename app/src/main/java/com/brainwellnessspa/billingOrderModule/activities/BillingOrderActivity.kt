@@ -60,7 +60,6 @@ class BillingOrderActivity : AppCompatActivity() {
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             startActivity(i)
@@ -130,6 +129,7 @@ class BillingOrderActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        Log.e("on resume", "yes billing")
         getPlanDetails()
         super.onResume()
     }
