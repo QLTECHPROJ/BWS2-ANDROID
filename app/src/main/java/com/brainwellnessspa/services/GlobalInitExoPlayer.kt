@@ -734,7 +734,13 @@ class GlobalInitExoPlayer : Service() {
                 } else {
                     ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
-                return mainPlayModelList1[ps].name
+                var name = ""
+                try{
+                    name = mainPlayModelList1[ps].name
+                }catch (e:Exception){
+                    name = ""
+                }
+                return name
             }
 
             override fun createCurrentContentIntent(player1: Player): PendingIntent? {
@@ -1002,7 +1008,7 @@ class GlobalInitExoPlayer : Service() {
         var AudioFlag = "0"
         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val expDate = shared1x.getString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
-        if(expDate!="") {
+        if (expDate != "") {
             val c1: Calendar = Calendar.getInstance()
             c1.timeInMillis = expDate!!.toInt() * 1000L
             val d1: Date = c1.time
@@ -1217,13 +1223,18 @@ class GlobalInitExoPlayer : Service() {
                     UpdateNotificationAudioPLayer(ctx)
                     if (arrayList1.size == 0) {
                         removeSharepref(ctx)
+                        callAllRemovePlayer(ctx, activity)
                     }
+                }
+                else if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("Top Categories", ignoreCase = true) || AudioFlag.equals("DownloadListAudio", ignoreCase = true) || AudioFlag.equals("Downloadlist", ignoreCase = true) || AudioFlag.equals("playlist", ignoreCase = true))) {
+                    removeSharepref(ctx)
+                    callAllRemovePlayer(ctx, activity)
+                }
+                if (!DownloadMedia.isDownloading) {
+                    getPending(ctx, activity)
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
-            }
-            if (!DownloadMedia.isDownloading) {
-                getPending(ctx, activity)
             }
         }
         return AudioFlag
@@ -1289,7 +1300,6 @@ class GlobalInitExoPlayer : Service() {
         editorr.remove(CONSTANTS.PREF_KEY_PlayFrom)
         editorr.clear()
         editorr.apply()
-        callNewPlayerRelease()
     }
 
     fun UpdateNotificationAudioPLayer(ctx: Context) {

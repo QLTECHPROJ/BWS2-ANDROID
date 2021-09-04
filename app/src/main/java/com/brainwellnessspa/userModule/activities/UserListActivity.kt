@@ -559,7 +559,7 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun prepareUserData() {
-        if (isNetworkConnected(this)) {
+        if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall: Call<AddedUserListModel> = APINewClient.client.getUserList(userId)
             listCall.enqueue(object : Callback<AddedUserListModel> {

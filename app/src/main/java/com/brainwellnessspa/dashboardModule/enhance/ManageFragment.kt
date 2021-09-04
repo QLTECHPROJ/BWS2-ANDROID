@@ -80,6 +80,12 @@ class ManageFragment : Fragment() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        ctx = requireActivity()
+        act = requireActivity()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage, container, false)
@@ -768,7 +774,7 @@ class ManageFragment : Fragment() {
                         binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
                         binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                         binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
-                        Glide.with(act).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
+                        Glide.with(requireActivity()).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
 
                         IsLock = listModel.responseData!!.IsLock
                         playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)

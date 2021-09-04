@@ -416,6 +416,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
         private void getDownloadDataForDelete(String playlistID) {
             List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
+            GetAllMedia(getActivity());
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
@@ -459,6 +460,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 }
             } catch (Exception e) {
                 //                getDownloadDataForDelete(playlistID);
+                GetAllMedia(getActivity());
                 e.printStackTrace();
                 Log.e("Download Playlist ", "Download Playlist remove issue:- " + e.getMessage());
             }
