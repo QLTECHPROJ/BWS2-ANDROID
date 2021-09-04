@@ -109,6 +109,7 @@ class MyPlayerActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        getDownloadData()
         localIntent = Intent("play_pause_Action")
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
 

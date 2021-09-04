@@ -524,7 +524,7 @@ class HomeFragment : Fragment() {
             binding.llNoInternet.visibility = View.GONE
             binding.llPlayer.visibility = View.VISIBLE
             binding.llAreaOfFocus.visibility = View.VISIBLE
-            binding.barChart.visibility = View.VISIBLE
+            binding.barChart.visibility = View.GONE
         } else {
             binding.llSetReminder.visibility = View.GONE
             binding.llIndexScore.visibility = View.GONE
@@ -709,7 +709,7 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore, requireActivity())
+                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,requireActivity(),ctx)
 
                                     getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, requireActivity())
 

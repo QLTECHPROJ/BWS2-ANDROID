@@ -68,6 +68,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Exception: " + e.message)
             }
+            /*if (size > 0) {
+                val extras = Bundle()
+                for ((key, value) in this) {
+                    extras.putString(key, value)
+                }
+                val info = CleverTapAPI.getNotificationInfo(extras)
+                if (info.fromCleverTap) {
+                    CleverTapAPI.createNotification(applicationContext, extras)
+                } else {
+                    // not from CleverTap handle yourself or pass to another provider
+                }
+            }*/
         }
         val p = Properties()
         /*    AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();

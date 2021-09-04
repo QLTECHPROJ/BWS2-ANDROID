@@ -282,7 +282,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             addToSegment("OTP Entered", p, CONSTANTS.track)
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
-            val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString(), CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
+            val otp = binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString()
+            val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(otp, CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) = try {
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)

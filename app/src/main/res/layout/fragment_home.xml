@@ -713,6 +713,17 @@
                         android:minHeight="@dimen/_220sdp"
                         android:visibility="gone" />
 
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:background="@color/white"
+                        android:minHeight="@dimen/_220sdp"
+                        android:layout_above="@+id/seekBar1" />
+
                     <LinearLayout
                         android:id="@+id/llPastIndexScore"
                         android:layout_width="match_parent"

@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -103,22 +104,33 @@ import com.brainwellnessspa.utility.AppSignatureHashHelper;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.CryptLib;
 import com.brainwellnessspa.utility.MeasureRatio;
+import com.brainwellnessspa.utility.MyMarkerView;
 import com.brainwellnessspa.utility.MyValueFormatter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.downloader.PRDownloader;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.components.Legend.LegendForm;
+import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -1671,13 +1683,13 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llPastIndexScore, Activity act) {
+    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart,LinearLayout llPastIndexScore,  LineChart chart, Activity act,Context ctx) {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
             llPastIndexScore.setVisibility(View.GONE);
         } else {
-            barChart.setVisibility(View.VISIBLE);
+         /*   barChart.setVisibility(View.VISIBLE);
             llPastIndexScore.setVisibility(View.VISIBLE);
             barChart.setDescription(null);
             barChart.setPinchZoom(false);
@@ -1727,12 +1739,12 @@ public class BWSApplication extends Application {
             xl.setLabelRotationAngle(0);
             xl.setPosition(XAxis.XAxisPosition.BOTTOM);
             xl.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
-            /*xl.setValueFormatter(new ValueFormatter() {
+            *//*xl.setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
                     return String.valueOf(xAxisValues.get((int) value));
                 }
-            });*/
+            });*//*
             YAxis yl = barChart.getAxisLeft();
             yl.setDrawAxisLine(true);
             yl.setDrawGridLines(true);
@@ -1756,7 +1768,154 @@ public class BWSApplication extends Application {
             l.setXEntrySpace(4f);
             l.setYEntrySpace(0f);
 //                        l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
-            l.setWordWrapEnabled(true);
+            l.setWordWrapEnabled(true);*/
+
+            // background color
+            chart.setBackgroundColor(Color.WHITE);
+            chart.getDescription().setEnabled(false);
+            chart.setTouchEnabled(false);
+            chart.setDrawGridBackground(false);
+            MyMarkerView mv = new MyMarkerView(ctx, R.layout.custom_marker_view);
+            mv.setChartView(chart);
+            chart.setMarker(mv);
+            chart.setDragEnabled(true);
+            chart.setScaleEnabled(true);
+            chart.setPinchZoom(false);
+        }
+        final ArrayList<String> xAxisValues = new ArrayList<>();
+        XAxis xAxis;
+        {
+            xAxisValues.add("Apr 21");
+            xAxisValues.add("May 21");
+            xAxisValues.add("Jun 21");
+            xAxisValues.add("Jul 21");
+            xAxisValues.add("Aug 21");
+            xAxisValues.add("Sep 21");
+            xAxis = chart.getXAxis();
+//            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return String.valueOf(xAxisValues.get((int) value));
+                }
+            });
+//            xAxis.setAxisMinimum(0);
+//            xAxis.setAxisMaximum(xAxisValues.size()-1);
+            xAxis.setLabelCount(xAxisValues.size(),true);
+            xAxis.setGranularity(1f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setLabelRotationAngle(20);
+            xAxis.enableGridDashedLine(10f, 10f, 0f);
+        }
+        YAxis yAxis;
+        {
+            yAxis = chart.getAxisLeft();
+            chart.getAxisRight().setEnabled(false);
+            yAxis.enableGridDashedLine(10f, 10f, 0f);
+            yAxis.setAxisMaximum(100f);
+            yAxis.setAxisMinimum(0f);
+        }
+        {
+            LimitLine llXAxis = new LimitLine(9f, "");
+            llXAxis.setLineWidth(4f);
+            llXAxis.enableDashedLine(10f, 10f, 0f);
+            llXAxis.setLabelPosition(LimitLabelPosition.LEFT_BOTTOM);
+            llXAxis.setTextSize(9f);
+
+            LimitLine ll1 = new LimitLine(150f, "Upper Limit");
+            ll1.setLineWidth(4f);
+            ll1.enableDashedLine(10f, 10f, 0f);
+            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll1.setTextSize(9f);
+
+            LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+            ll2.setLineWidth(4f);
+            ll2.enableDashedLine(10f, 10f, 0f);
+            ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
+            ll2.setTextSize(9f);
+
+            // draw limit lines behind data instead of on top
+            yAxis.setDrawLimitLinesBehindData(true);
+            xAxis.setDrawLimitLinesBehindData(true);
+
+            // add limit lines
+            yAxis.addLimitLine(ll1);
+            yAxis.addLimitLine(ll2);
+            //xAxis.addLimitLine(llXAxis);
+        }
+        // add data
+        setData(xAxisValues.size(), chart, ctx);
+        Legend l = chart.getLegend();
+        l.setForm(LegendForm.LINE);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
+        l.setXEntrySpace(4f);
+        l.setYEntrySpace(0f);
+        l.setWordWrapEnabled(true);
+//        }
+    }
+    private static void setData(int count,LineChart chart,Context ctx) {
+
+        ArrayList<Entry> values = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            float val = 0;
+            if(i<3) {
+                 val = (float) (Math.random()) + (18 * i + 1);
+            }else {
+                 val = (float) (Math.random()) + (9 * i + 1);
+            }
+            values.add(new Entry(i, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+        }
+
+        LineDataSet set1;
+
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            set1.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values, "Past Wellness Score");
+            set1.setDrawIcons(false);
+            // draw dashed line
+            set1.enableDashedLine(10f, 5f, 0f);
+            // black lines and points
+            set1.setColor(Color.BLACK);
+            set1.setCircleColor(Color.BLACK);
+            // line thickness and point size
+            set1.setLineWidth(1f);
+            set1.setCircleRadius(3f);
+            // draw points as solid circles
+            set1.setDrawCircleHole(false);
+            // customize legend entry
+            set1.setFormLineWidth(1f);
+            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+            set1.setFormSize(15.f);
+            // text size of values
+            set1.setValueTextSize(9f);
+            // draw selection line as dashed
+            set1.enableDashedHighlightLine(10f, 5f, 0f);
+            // set the filled area
+            set1.setDrawFilled(true);
+            set1.setFillFormatter((dataSet, dataProvider) -> chart.getAxisLeft().getAxisMinimum());
+            // set color of filled area
+            /*if (Utils.getSDKInt() >= 18) {
+                // drawables only supported on api level 18 and above
+                Drawable drawable = ContextCompat.getDrawable(ctx, R.drawable.fade_red);
+                set1.setFillDrawable(drawable);
+            } else {
+                set1.setFillColor(Color.BLACK);
+            }*/
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+            LineData data = new LineData(dataSets);
+            chart.setData(data);
         }
     }
 
@@ -1828,6 +1987,7 @@ public class BWSApplication extends Application {
             yl.setDrawGridLines(true);
             yl.setGranularity(1f);
             yl.setGranularityEnabled(true);
+            yl.setAxisMaximum(12f);
             yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
             barChart.setVisibleXRangeMaximum(xAxisValues.size());
             barChart.setDragEnabled(false);
@@ -2370,7 +2530,6 @@ public class BWSApplication extends Application {
 
         if (isAdmin.equalsIgnoreCase("1")) isadm = true;
         else isadm = false;
-
         analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
 

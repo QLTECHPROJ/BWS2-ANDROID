@@ -631,7 +631,12 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                    pos = position;
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        if(listModelList2.get(i).getName().equals(listModelList.get(position).getName())){
+                            pos = i;
+                            break;
+                        }
+                    }
                     Gson gson = new Gson();
                     SharedPreferences shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     String IsPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
@@ -688,7 +693,6 @@ public class AudioDownloadsFragment extends Fragment {
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                 }
             }
-
         }
 
         private void callTransFrag(int position, List<DownloadAudioDetails> listModelList, boolean audioc) {

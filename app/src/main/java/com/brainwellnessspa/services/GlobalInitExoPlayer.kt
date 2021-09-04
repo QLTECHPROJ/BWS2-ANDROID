@@ -765,7 +765,13 @@ class GlobalInitExoPlayer : Service() {
                     val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
-                return mainPlayModelList1[ps].audioDirection
+                var audioDirection = ""
+                try{
+                    audioDirection = mainPlayModelList1[ps].audioDirection
+                }catch (e:Exception){
+                    audioDirection = ""
+                }
+                return audioDirection
             }
 
             override fun getCurrentLargeIcon(players: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
