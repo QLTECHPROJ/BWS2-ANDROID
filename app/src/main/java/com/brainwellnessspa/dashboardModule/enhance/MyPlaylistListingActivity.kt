@@ -1705,7 +1705,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
 
     private fun callMyPlayer(ctx: Context, act: Activity) {
         val i = Intent(ctx, MyPlayerActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
         ctx.startActivity(i)
         act.overridePendingTransition(0, 0)
     }

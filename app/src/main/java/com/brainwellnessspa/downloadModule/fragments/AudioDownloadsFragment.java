@@ -279,7 +279,7 @@ public class AudioDownloadsFragment extends Fragment {
 
     private void callAddTransFrag() {
         Intent i = new Intent(getActivity(), MyPlayerActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(0, 0);
     }

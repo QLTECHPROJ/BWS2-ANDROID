@@ -19,6 +19,7 @@ import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_W
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
+import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
 import com.brainwellnessspa.membershipModule.models.UpdatePlanPurchase
@@ -299,6 +300,7 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, authOtpModel.ResponseData.isEmailVerified)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, authOtpModel.ResponseData.IsInCouser)
                                                 try {
                                                     if (authOtpModel.ResponseData.planDetails.isNotEmpty()) {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)
@@ -352,11 +354,14 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                             if(upgrade == "1") {
                                 IsRefreshPlan ="1"
                                 addToSegment("User Plan Upgraded", p, CONSTANTS.track)
+                                val i = Intent(ctx, BillingOrderActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                startActivity(i)
                                 finish()
                             }else if(upgrade == "") {
                                 addToSegment("Checkout Completed", p, CONSTANTS.track)
                                 val i = Intent(ctx, EnhanceDoneActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 i.putExtra("Name", "")
                                 i.putExtra("Code", "")
                                 i.putExtra("MobileNo", "")
@@ -364,7 +369,6 @@ class OrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, Purc
                                 i.putExtra("TrialPeriod", trialPeriod)
                                 i.putExtra("position", position)
                                 i.putExtra("Promocode", promocode)
-                                i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(i)
                                 finish()
                             }

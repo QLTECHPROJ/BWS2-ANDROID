@@ -769,8 +769,8 @@ class AddAudioActivity : AppCompatActivity() {
 
         private fun callMyPlayer() {
             val i = Intent(ctx, MyPlayerActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            ctx!!.startActivity(i)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            activity.startActivity(i)
             activity.overridePendingTransition(0, 0)
         }
 
@@ -993,8 +993,8 @@ class AddAudioActivity : AppCompatActivity() {
 
         private fun callMyPlayer() {
             val i = Intent(ctx, MyPlayerActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            ctx!!.startActivity(i)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            activity.startActivity(i)
             activity.overridePendingTransition(0, 0)
         }
 

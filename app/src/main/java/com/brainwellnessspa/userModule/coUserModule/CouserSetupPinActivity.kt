@@ -152,7 +152,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.VISIBLE
             binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
-        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length != 4) {
+        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length < 4) {
             binding.txtNewPINError.visibility = View.VISIBLE
             binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
@@ -160,7 +160,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
             binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
-        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length != 4) {
+        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length < 4) {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
             binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)

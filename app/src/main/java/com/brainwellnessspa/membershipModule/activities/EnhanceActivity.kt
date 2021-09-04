@@ -10,6 +10,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.webkit.WebSettings
@@ -50,6 +52,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
     lateinit var i: Intent
     var userId: String? = ""
     var coUserId: String? = ""
+    private var doubleBackToExitPressedOnce = false
     var listModelGlobal: PlanlistInappModel? = null
     var value: Int = 2
     var step = 1
@@ -81,8 +84,16 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         i = Intent(ctx, OrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         binding.llBack.setOnClickListener {
-            finishAffinity()
-            BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
+            if (doubleBackToExitPressedOnce) {
+                finishAffinity()
+                return@setOnClickListener
+            }
+            this.doubleBackToExitPressedOnce = true
+            BWSApplication.showToast("Press again to exit", activity)
+
+            Handler(Looper.myLooper()!!).postDelayed({
+                doubleBackToExitPressedOnce = false
+            }, 2000)
            /* if (BWSApplication.IsBackFromEnhance.equals("1")) {
             } else {
                 finishAffinity()
@@ -417,12 +428,16 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
     }
 
     override fun onBackPressed() {
-        finishAffinity()
-        BWSApplication.showToast("Press again to exit", this@EnhanceActivity)
-       /* if (BWSApplication.IsBackFromEnhance.equals("1")) {
-        } else {
-            finish()
-        }*/
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        BWSApplication.showToast("Press again to exit", activity)
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            doubleBackToExitPressedOnce = false
+        }, 2000)
     }
 
     override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {

@@ -443,14 +443,14 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 p.putValue("numberOfDaysFromLastAssessmentsTaken", listModel.responseData?.daysfromLastAssesment)
                                 when {
                                     listModel.responseData?.scoreIncDec.equals("") -> {
-                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff+ "% ")
+                                        p.putValue("improvementFromPreviousSession", listModel.responseData?.indexScoreDiff + "% ")
                                     }
                                     listModel.responseData?.scoreIncDec.equals("Increase") -> {
                                         p.putValue("improvementFromPreviousSession", "+ " + listModel.responseData?.indexScoreDiff + "%")
                                     }
 
                                     listModel.responseData?.scoreIncDec.equals("Decrease") -> {
-                                        p.putValue("improvementFromPreviousSession","- " +  listModel.responseData?.indexScoreDiff+ "%")
+                                        p.putValue("improvementFromPreviousSession", "- " + listModel.responseData?.indexScoreDiff + "%")
                                     }
                                 }
                                 BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
@@ -458,13 +458,13 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 val i = Intent(activity, AssProcessActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                                i.putExtra("Navigation",navigation)
+                                i.putExtra("Navigation", navigation)
                                 i.putExtra(CONSTANTS.IndexScore, listModel.responseData?.indexScore)
                                 i.putExtra(CONSTANTS.ScoreLevel, listModel.responseData?.scoreLevel)
                                 startActivity(i)
                                 finish()
 
-                                Log.e("navigation assess",navigation)
+                                Log.e("navigation assess", navigation)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 BWSApplication.deleteCall(activity)

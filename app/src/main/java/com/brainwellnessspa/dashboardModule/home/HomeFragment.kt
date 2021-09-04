@@ -29,13 +29,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
@@ -85,10 +83,12 @@ class HomeFragment : Fragment() {
     var scoreLevel: String? = ""
     var download = ""
     var isMainAccount: String? = ""
+    var isInCouser: String? = ""
     var liked = ""
     var myDownloads: String? = ""
     var sleepTime: String? = ""
     var indexScore: String? = ""
+    var name: String? = ""
     var selectedCategoriesName = arrayListOf<String>()
     var downloadAudioDetailsList = arrayListOf<String>()
     lateinit var editTexts: Array<EditText>
@@ -96,8 +96,6 @@ class HomeFragment : Fragment() {
     var myBackPress = false
     var gson: Gson = Gson()
     var homelistModel: HomeScreenModel = HomeScreenModel()
-    lateinit var mBottomSheetBehavior: BottomSheetBehavior<View>
-    lateinit var mBottomSheetDialog: BottomSheetDialog
     lateinit var dialog: Dialog
 
     /* This listener is use for get play or pause button status when user play pause from music notifiction bar */
@@ -124,7 +122,7 @@ class HomeFragment : Fragment() {
         val view = binding.root
         act = requireActivity()
         ctx = requireActivity()/* Get mainAccountId, and MAin Account Id from share pref*/
-        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -132,6 +130,7 @@ class HomeFragment : Fragment() {
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
         var areaOfFocus: String? = ""
 
@@ -139,7 +138,7 @@ class HomeFragment : Fragment() {
         val gson = Gson()
         if (!json5.equals(gson.toString())) areaOfFocus = json5
         /* Get sleep time from share pref*/
-        val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         if (!json.equals(gson.toString())) {
@@ -147,36 +146,32 @@ class HomeFragment : Fragment() {
             selectedCategoriesName = gson.fromJson(json, type1)
         }
 
-        val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(requireActivity()), R.layout.user_list_custom_layout, null, false)
-        mBottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BaseBottomSheetDialog)
-        mBottomSheetDialog.setContentView(layoutBinding.root)
-        mBottomSheetBehavior = BottomSheetBehavior<View>()
-        mBottomSheetBehavior.isHideable = true
-        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 //        p.putValue("WellnessScore", indexScore)
 //        p.putValue("areaOfFocus", gson.toJson(areaOfFocus))
         addToSegment("Home Screen Viewed", p, CONSTANTS.screen)
 
-        if (sleepTime.equals("", true)) {
+        if (sleepTime.equals("")) {
             binding.llSleepTime.visibility = View.GONE
         } else {
             binding.llSleepTime.visibility = View.VISIBLE
         }
 
         binding.tvSleepTime.text = "Your average sleep time is \n$sleepTime"
-        DB = getAudioDataBase(requireActivity())
+        DB = getAudioDataBase(ctx)
+
+        /* Set Adapter for area of focus*/
+        val layoutManager = FlexboxLayoutManager(ctx)
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.alignItems = AlignItems.STRETCH
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
+        binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+        val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+        binding.rvAreaOfFocusCategory.adapter = adapter
+
         binding.tvName.text = userName
-        val name: String?
-        binding.llBottomView.isEnabled = true
-        binding.llBottomView.isClickable = true
-
-        if (isMainAccount.equals("1")) {
-        } else {
-        }
-
-        prepareHomeData()
         /* Condition for get user Image*/
-        if (isNetworkConnected(activity)) {
+        if (isNetworkConnected(ctx)) {
             if (userImage.equals("")) {
                 binding.ivUser.visibility = View.GONE
                 name = if (userName.equals("")) {
@@ -184,13 +179,13 @@ class HomeFragment : Fragment() {
                 } else {
                     userName.toString()
                 }
-                val letter = name.substring(0, 1)
+                val letter = name?.substring(0, 1)
                 binding.rlLetter.visibility = View.VISIBLE
                 binding.tvLetter.text = letter
             } else {
                 binding.ivUser.visibility = View.VISIBLE
                 binding.rlLetter.visibility = View.GONE
-                Glide.with(requireActivity()).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
+                Glide.with(ctx).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
             }
         } else {
             binding.ivUser.visibility = View.GONE
@@ -199,30 +194,53 @@ class HomeFragment : Fragment() {
             } else {
                 userName.toString()
             }
-            val letter = name.substring(0, 1)
+            val letter = name?.substring(0, 1)
             binding.rlLetter.visibility = View.VISIBLE
             binding.tvLetter.text = letter
         }
 
-        /* Set Adapter for area of focus*/
-        val layoutManager = FlexboxLayoutManager(requireActivity())
-        layoutManager.flexWrap = FlexWrap.WRAP
-        layoutManager.alignItems = AlignItems.STRETCH
-        layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.justifyContent = JustifyContent.FLEX_START
-        binding.rvAreaOfFocusCategory.layoutManager = layoutManager
-        val adapter = AreaOfFocusAdapter(binding, requireActivity(), selectedCategoriesName)
-        binding.rvAreaOfFocusCategory.adapter = adapter
+        if (isInCouser.equals("1")) {
+            binding.ivClickDown.visibility = View.GONE
+            binding.llBottomView.isClickable = false
+            binding.llBottomView.isEnabled = false
+        } else {
+            binding.ivClickDown.visibility = View.VISIBLE
+            binding.llBottomView.isClickable = true
+            binding.llBottomView.isEnabled = true
+        }
 
+        prepareHomeData()
+
+        /* User list layout click */
+        binding.llBottomView.setOnClickListener {
+            if (isNetworkConnected(ctx)) {
+                val layoutBinding: UserListCustomLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx), R.layout.user_list_custom_layout, null, false)
+                val mBottomSheetDialog = BottomSheetDialog(ctx, R.style.BaseBottomSheetDialog)
+                mBottomSheetDialog.setContentView(layoutBinding.root)
+                val mBottomSheetBehavior = BottomSheetBehavior<View>()
+                mBottomSheetBehavior.isHideable = true
+                mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                mBottomSheetDialog.show()
+                val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx)
+                layoutBinding.rvUserList.layoutManager = mLayoutManager
+                layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
+
+                /* get all user list function */
+                prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar, layoutBinding.llAddNewUser, mBottomSheetDialog)
+
+            } else {
+                showToast(ctx.getString(R.string.no_server_found), act)
+            }
+        }
         binding.llSleepTime.setOnClickListener {
-            if(IsLock.equals("1")){
-              callEnhanceActivity(ctx, act)
-            }else if(IsLock.equals("0")) {
-                if (isNetworkConnected(activity)) {
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(ctx)) {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.cancel_membership)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
                     dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                     val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                     val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
@@ -242,7 +260,7 @@ class HomeFragment : Fragment() {
 
                     btn.setOnClickListener {
                         dialog.dismiss()
-                        val intent = Intent(activity, SleepTimeActivity::class.java)
+                        val intent = Intent(ctx, SleepTimeActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                     }
@@ -254,7 +272,7 @@ class HomeFragment : Fragment() {
                     dialog.setCancelable(false)
 
                 } else {
-                    showToast(getString(R.string.no_server_found), activity)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         }
@@ -263,18 +281,17 @@ class HomeFragment : Fragment() {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
-                if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0") ||
-                    homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("")) {
-                    binding.tvReminder.text = getString(R.string.set_reminder)
+                if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0") || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("")) {
+                    binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                 } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("1")) {
-                    binding.tvReminder.text = getString(R.string.update_reminder)
+                    binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                 } else if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("2")) {
-                    binding.tvReminder.text = getString(R.string.update_reminder)
+                    binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                 }
-                getReminderDay(requireActivity(), requireActivity(), userId, homelistModel.responseData!!.suggestedPlaylist?.playlistID, homelistModel.responseData!!.suggestedPlaylist?.playlistName, requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.reminderTime, homelistModel.responseData!!.suggestedPlaylist?.reminderDay, "0", homelistModel.responseData!!.suggestedPlaylist?.reminderId, homelistModel.responseData!!.suggestedPlaylist?.isReminder, "2")
+                getReminderDay(ctx, act, userId, homelistModel.responseData!!.suggestedPlaylist?.playlistID, homelistModel.responseData!!.suggestedPlaylist?.playlistName, requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.reminderTime, homelistModel.responseData!!.suggestedPlaylist?.reminderDay, "0", homelistModel.responseData!!.suggestedPlaylist?.reminderId, homelistModel.responseData!!.suggestedPlaylist?.isReminder, "2")
             }
         }
         /* click for Go to Playlist listing detail page */
@@ -292,8 +309,8 @@ class HomeFragment : Fragment() {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
-                if (isNetworkConnected(activity)) {
-                    val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                if (isNetworkConnected(ctx)) {
+                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                     when (isPlayPlaylist) {
                         1 -> {
@@ -306,7 +323,7 @@ class HomeFragment : Fragment() {
                             if (player != null) {
                                 val lastIndexID = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!.size - 1].id
                                 if (PlayerAudioId.equals(lastIndexID) && player.duration - player.currentPosition <= 20) {
-                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                    val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                     val editor = sharedd.edit()
                                     editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                     editor.apply()
@@ -323,50 +340,37 @@ class HomeFragment : Fragment() {
                         }
                         else -> {
                             PlayerAudioId = homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                            callMainPlayerSuggested(0, "", homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!, requireActivity(), homelistModel.responseData!!.suggestedPlaylist?.playlistID.toString(), homelistModel.responseData!!.suggestedPlaylist?.playlistName.toString())
+                            callMainPlayerSuggested(0, "", homelistModel.responseData!!.suggestedPlaylist?.playlistSongs!!, ctx, homelistModel.responseData!!.suggestedPlaylist?.playlistID.toString(), homelistModel.responseData!!.suggestedPlaylist?.playlistName.toString())
                             binding.llPlay.visibility = View.GONE
                             binding.llPause.visibility = View.VISIBLE
                         }
                     }
                 } else {
-                    showToast(getString(R.string.no_server_found), activity)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         }
+
         /* check Index score banner click*/
         binding.llCheckIndexscore.setOnClickListener {
-            if(IsLock.equals("1")){
-              callEnhanceActivity(ctx, act)
-            }else if(IsLock.equals("0")) {
-                val intent = Intent(activity, AssProcessActivity::class.java)
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                val intent = Intent(ctx, AssProcessActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                intent.putExtra("Navigation","Home")
-                requireActivity().startActivity(intent)
-            }
-        }/* network check function */
-        networkCheck()
-//        profileViewData(activity)
-        /* User list layout click */
-        binding.llBottomView.setOnClickListener {
-               if (isNetworkConnected(requireActivity())) {
-                val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
-                layoutBinding.rvUserList.layoutManager = mLayoutManager
-                layoutBinding.rvUserList.itemAnimator = DefaultItemAnimator()
-
-                /* get all user list function */
-                prepareUserData(layoutBinding.rvUserList, layoutBinding.progressBar, layoutBinding.llAddNewUser, mBottomSheetDialog)
-
-                mBottomSheetDialog.show()
-            } else {
-                showToast(getString(R.string.no_server_found), activity)
+                intent.putExtra("Navigation", "Home")
+                act.startActivity(intent)
             }
         }
+        /* network check function */
+        networkCheck()
+
 
         binding.llTodayClicked.setOnClickListener {
-            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
-            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
-            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
+            binding.tvYear.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
             binding.ivToday.visibility = View.VISIBLE
             binding.ivMonth.visibility = View.INVISIBLE
             binding.ivYear.visibility = View.INVISIBLE
@@ -376,9 +380,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.llMonthClicked.setOnClickListener {
-            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
-            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
-            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
+            binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+            binding.tvYear.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
             binding.ivToday.visibility = View.INVISIBLE
             binding.ivMonth.visibility = View.VISIBLE
             binding.ivYear.visibility = View.INVISIBLE
@@ -388,9 +392,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.llYearClicked.setOnClickListener {
-            binding.tvToday.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
-            binding.tvMonth.setTextColor(ContextCompat.getColor(requireActivity(), R.color.light_gray))
-            binding.tvYear.setTextColor(ContextCompat.getColor(requireActivity(), R.color.black))
+            binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
+            binding.tvMonth.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
+            binding.tvYear.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             binding.ivToday.visibility = View.INVISIBLE
             binding.ivMonth.visibility = View.INVISIBLE
             binding.ivYear.visibility = View.VISIBLE
@@ -401,16 +405,16 @@ class HomeFragment : Fragment() {
 
         /* Edit area of focus category icon click */
         binding.ivEditCategory.setOnClickListener {
-            if(IsLock.equals("1")){
-              callEnhanceActivity(ctx, act)
-            }else if(IsLock.equals("0")) {
-                if (isNetworkConnected(activity)) {
-                    val i = Intent(requireActivity(), RecommendedCategoryActivity::class.java)
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else if (IsLock.equals("0")) {
+                if (isNetworkConnected(ctx)) {
+                    val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")
-                    startActivity(i)
+                    ctx.startActivity(i)
                 } else {
-                    showToast(getString(R.string.no_server_found), activity)
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         }
@@ -420,17 +424,18 @@ class HomeFragment : Fragment() {
             //            if(IsLock.equals("1")){
             //              callEnhanceActivity(ctx, act)
             //            }else if(IsLock.equals("0")) {
-            if (isNetworkConnected(activity)) {
-                val i = Intent(requireActivity(), NotificationListActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, NotificationListActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(i)
+                ctx.startActivity(i)
             } else {
-                showToast(getString(R.string.no_server_found), activity)
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
             //            }
         }
         return view
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -448,38 +453,87 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+        userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+        scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+        indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
+        isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         if (!json.equals(gson.toString())) {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
             selectedCategoriesName = gson.fromJson(json, type1)
         }
-        val layoutManager = FlexboxLayoutManager(requireActivity())
+        val layoutManager = FlexboxLayoutManager(ctx)
         layoutManager.flexWrap = FlexWrap.WRAP
         layoutManager.alignItems = AlignItems.STRETCH
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.FLEX_START
         binding.rvAreaOfFocusCategory.layoutManager = layoutManager
-        val adapter = AreaOfFocusAdapter(binding, requireActivity(), selectedCategoriesName)
+        val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
         binding.rvAreaOfFocusCategory.adapter = adapter
+
+        binding.tvName.text = userName
+        /* Condition for get user Image*/
+        if (isNetworkConnected(ctx)) {
+            if (userImage.equals("")) {
+                binding.ivUser.visibility = View.GONE
+                name = if (userName.equals("")) {
+                    "Guest"
+                } else {
+                    userName.toString()
+                }
+                val letter = name?.substring(0, 1)
+                binding.rlLetter.visibility = View.VISIBLE
+                binding.tvLetter.text = letter
+            } else {
+                binding.ivUser.visibility = View.VISIBLE
+                binding.rlLetter.visibility = View.GONE
+                Glide.with(ctx).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
+            }
+        } else {
+            binding.ivUser.visibility = View.GONE
+            name = if (userName.equals("")) {
+                "Guest"
+            } else {
+                userName.toString()
+            }
+            val letter = name?.substring(0, 1)
+            binding.rlLetter.visibility = View.VISIBLE
+            binding.tvLetter.text = letter
+        }
+
+        if (isInCouser.equals("1")) {
+            binding.ivClickDown.visibility = View.GONE
+            binding.llBottomView.isClickable = false
+            binding.llBottomView.isEnabled = false
+        } else {
+            binding.ivClickDown.visibility = View.VISIBLE
+            binding.llBottomView.isClickable = true
+            binding.llBottomView.isEnabled = true
+        }
         networkCheck()
         try {
             var gb = GlobalInitExoPlayer()
-            gb.UpdateMiniPlayer(ctx,act)
+            gb.UpdateMiniPlayer(ctx, act)
             gb.UpdateNotificationAudioPLayer(ctx)
             setPlayPauseIcon()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         super.onResume()
     }
 
     private fun getReminderPopup(playlistID: String, playlistName: String, reminderTime: String, reminderDay: String, isReminder: String, reminderId: String) {
-        dialog = Dialog(requireActivity())
+        dialog = Dialog(ctx)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.reminder_popup_layout)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
         dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         val btn = dialog.findViewById<Button>(R.id.Btn)
         val p = Properties()
@@ -499,7 +553,7 @@ class HomeFragment : Fragment() {
 //            p.putValue("isReminderSet", "Yes")
             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
             dialog.hide()
-            getReminderDay(requireActivity(), requireActivity(), userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
+            getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
         }
         /* tvGoBack.setOnClickListener {
              p.putValue("isReminderSet", "Later")
@@ -512,9 +566,9 @@ class HomeFragment : Fragment() {
 
     /* network is available or not function for visible other layout of net is not available image display */
     private fun networkCheck() {
-        val areNotificationEnabled = NotificationManagerCompat.from(requireActivity()).areNotificationsEnabled()
+        val areNotificationEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
         Log.e("areNotificationEnabled", areNotificationEnabled.toString())
-        if (isNetworkConnected(activity)) {
+        if (isNetworkConnected(ctx)) {
             binding.llSetReminder.visibility = View.VISIBLE
             binding.llIndexScore.visibility = View.VISIBLE
             binding.llSevere.visibility = View.VISIBLE
@@ -535,23 +589,23 @@ class HomeFragment : Fragment() {
             binding.llNoInternet.visibility = View.VISIBLE
             binding.llPlayer.visibility = View.GONE
             binding.llAreaOfFocus.visibility = View.GONE
-            binding.barChart.visibility = View.GONE //            showToast(getString(R.string.no_server_found), activity)
+            binding.barChart.visibility = View.GONE //            showToast(ctx.getString(R.string.no_server_found), act)
         }
 
         if (!isDownloading) {
-            callObserve2(requireActivity(), requireActivity())
+            callObserve2(ctx, act)
         }
     }
 
     override fun onDestroy() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener)
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(listener1)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         super.onDestroy()
     }
 
     /* Get User List api and function */
-    private fun prepareUserData(rvUserList: RecyclerView, progressBar: ProgressBar, llAddNewUser: LinearLayout, mBottomSheetDialog: BottomSheetDialog?) {
-        if (isNetworkConnected(requireActivity())) {
+    private fun prepareUserData(rvUserList: RecyclerView, progressBar: ProgressBar, llAddNewUser: LinearLayout, mBottomSheetDialog: BottomSheetDialog) {
+        if (isNetworkConnected(ctx)) {
             progressBar.visibility = View.VISIBLE
             progressBar.invalidate()
             val listCall = APINewClient.client.getUserList(mainAccountId)
@@ -598,7 +652,7 @@ class HomeFragment : Fragment() {
         Log.e("MainAccountId", mainAccountId.toString())
         Log.e("UserId", userId.toString())
 
-        if (isNetworkConnected(requireActivity())) {
+        if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
@@ -608,15 +662,16 @@ class HomeFragment : Fragment() {
                         val gson = Gson()
                         homelistModel = listModel
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
+                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
                                 val response = listModel.responseData
                                 if (response != null) {
                                     IsLock = response.IsLock
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
+                                    val shared = act.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
                                     editor.apply()
+
 
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
@@ -625,9 +680,9 @@ class HomeFragment : Fragment() {
 
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
-                                    if (response.IsLock.equals("1")){
+                                    if (response.IsLock.equals("1")) {
                                         binding.ivLock.visibility = View.VISIBLE
-                                    }else {
+                                    } else {
                                         binding.ivLock.visibility = View.GONE
                                     }
 
@@ -640,13 +695,13 @@ class HomeFragment : Fragment() {
                                     }
 
                                     if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
-                                        binding.tvReminder.text = getString(R.string.set_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
-                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                                     } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
-                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
 
@@ -709,18 +764,18 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,requireActivity(),ctx)
+                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,requireActivity(),act)
 
-                                    getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, requireActivity())
+                                    getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, act)
 
                                     try {
                                         if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog = Dialog(requireActivity())
+                                            dialog = Dialog(ctx)
                                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                             dialog.setContentView(R.layout.reminder_popup_layout)
-                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
                                             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                             dialog.dismiss()
                                             // askBatteryOptimizations()
@@ -732,7 +787,7 @@ class HomeFragment : Fragment() {
                                     /* reminder button click */
                                     setPlayPauseIcon()
 
-                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
                                     if (sleepTime.equals("")) {
@@ -748,38 +803,37 @@ class HomeFragment : Fragment() {
                                         }
                                         response.scoreIncDec.equals("Increase") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
-                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(ctx, R.color.redtheme))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                                         }
                                         response.scoreIncDec.equals("Decrease") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
-                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(ctx, R.color.green_dark_s))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                                         }
                                     }
 
-
                                     /* register reciver fro get play pause action update and reminder update */
-                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
-                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
+                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
 
                                 }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
+                                deleteCall(ctx)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(ctx, SignInActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
                                 i.putExtra("email", "")
                                 i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                requireActivity().finish()
+                                act.startActivity(i)
+                                act.finish()
                             }
                             else -> {
-                                showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, act)
                             }
                         }
                     } catch (e: Exception) {
@@ -788,7 +842,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         }
@@ -798,20 +852,20 @@ class HomeFragment : Fragment() {
         Log.e("MainAccountId", mainAccountId.toString())
         Log.e("UserId", userId.toString())
 
-        if (isNetworkConnected(requireActivity())) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel = response.body()!!
                         val gson = Gson()
                         homelistModel = listModel
                         when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
+                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
                                 val response = listModel.responseData
                                 if (response != null) {
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
+                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, AppCompatActivity.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, response.shouldPlayDisclaimer)
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
@@ -889,13 +943,13 @@ class HomeFragment : Fragment() {
                                     }
 
                                     if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
-                                        binding.tvReminder.text = getString(R.string.set_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
-                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                                     } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
-                                        binding.tvReminder.text = getString(R.string.update_reminder)
+                                        binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                     }
 
@@ -906,10 +960,10 @@ class HomeFragment : Fragment() {
                                         if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
-                                            dialog = Dialog(requireActivity())
+                                            dialog = Dialog(ctx)
                                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                             dialog.setContentView(R.layout.reminder_popup_layout)
-                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.transparent_white)))
+                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
                                             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                             dialog.dismiss()
                                         }
@@ -923,23 +977,23 @@ class HomeFragment : Fragment() {
                                             callEnhanceActivity(ctx, act)
                                         } else if (IsLock.equals("0")) {
                                             if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
-                                                binding.tvReminder.text = getString(R.string.set_reminder)
+                                                binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                             } else if (response.suggestedPlaylist?.isReminder.equals("1")) {
-                                                binding.tvReminder.text = getString(R.string.update_reminder)
+                                                binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_dark_theme_corner)
                                             } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
-                                                binding.tvReminder.text = getString(R.string.update_reminder)
+                                                binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                             }
-                                            getReminderDay(requireActivity(), requireActivity(), userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
+                                            getReminderDay(ctx, act, userId, response.suggestedPlaylist?.playlistID, response.suggestedPlaylist?.playlistName, requireActivity(), response.suggestedPlaylist?.reminderTime, response.suggestedPlaylist?.reminderDay, "0", response.suggestedPlaylist?.reminderId, response.suggestedPlaylist?.isReminder, "2")
                                         }
                                     }
 
-                                    val sharedd = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    val sharedd = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     sleepTime = sharedd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
-                                    if (sleepTime.equals("", true)) {
+                                    if (sleepTime.equals("")) {
                                         binding.llSleepTime.visibility = View.GONE
                                     } else {
                                         binding.llSleepTime.visibility = View.VISIBLE
@@ -952,12 +1006,12 @@ class HomeFragment : Fragment() {
                                         }
                                         response.scoreIncDec.equals("Increase") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
-                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.redtheme))
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(ctx, R.color.redtheme))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_down_arrow_icon)
                                         }
                                         response.scoreIncDec.equals("Decrease") -> {
                                             binding.llCheckPercent.visibility = View.VISIBLE
-                                            binding.tvPercent.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_dark_s))
+                                            binding.tvPercent.setTextColor(ContextCompat.getColor(ctx, R.color.green_dark_s))
                                             binding.ivIndexArrow.setBackgroundResource(R.drawable.ic_up_arrow_icon)
                                         }
                                     }
@@ -978,8 +1032,8 @@ class HomeFragment : Fragment() {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
                                         } else if (IsLock.equals("0")) {
-                                            if (isNetworkConnected(activity)) {
-                                                val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                            if (isNetworkConnected(ctx)) {
+                                                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                                 when (isPlayPlaylist) {
                                                     1 -> {
@@ -992,7 +1046,7 @@ class HomeFragment : Fragment() {
                                                         if (player != null) {
                                                             val lastIndexID = response.suggestedPlaylist?.playlistSongs!![response.suggestedPlaylist?.playlistSongs!!.size - 1].id
                                                             if (PlayerAudioId.equals(lastIndexID) && player.duration - player.currentPosition <= 20) {
-                                                                val sharedd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                                                                val sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                                                 val editor = sharedd.edit()
                                                                 editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                                                                 editor.apply()
@@ -1009,37 +1063,37 @@ class HomeFragment : Fragment() {
                                                     }
                                                     else -> {
                                                         PlayerAudioId = response.suggestedPlaylist?.playlistSongs!![playerPosition].id
-                                                        callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, requireActivity(), response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
+                                                        callMainPlayerSuggested(0, "", response.suggestedPlaylist?.playlistSongs!!, ctx, response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString())
                                                         binding.llPlay.visibility = View.GONE
                                                         binding.llPause.visibility = View.VISIBLE
                                                     }
                                                 }
                                             } else {
-                                                showToast(getString(R.string.no_server_found), activity)
+                                                showToast(ctx.getString(R.string.no_server_found), act)
                                             }
                                         }
                                     }
                                     /* register reciver fro get play pause action update and reminder update */
-                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener, IntentFilter("play_pause_Action"))
-                                    LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(listener1, IntentFilter("Reminder"))
+                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
 
                                 }
                             }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
+                                deleteCall(ctx)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(ctx, SignInActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
                                 i.putExtra("email", "")
                                 i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                requireActivity().finish()
+                                act.startActivity(i)
+                                act.finish()
                             }
                             else -> {
-                                showToast(listModel.responseMessage, activity)
+                                showToast(listModel.responseMessage, act)
                             }
                         }
                     } catch (e: Exception) {
@@ -1048,7 +1102,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<HomeScreenModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         }
@@ -1056,17 +1110,17 @@ class HomeFragment : Fragment() {
 
     /* click for Go to Playlist listing detail page */
     private fun callPlaylistDetailsClick() {
-        if(IsLock.equals("1")){
+        if (IsLock.equals("1")) {
             binding.ivLock.visibility = View.VISIBLE
-          callEnhanceActivity(ctx,act)
-        }else if(IsLock.equals("0")) {
+            callEnhanceActivity(ctx, act)
+        } else if (IsLock.equals("0")) {
             binding.ivLock.visibility = View.GONE
             val response = homelistModel.responseData
-            if (isNetworkConnected(activity)) {
+            if (isNetworkConnected(ctx)) {
                 try {
                     if (response != null) {
-                        val i = Intent(requireActivity(), MyPlaylistListingActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", response.suggestedPlaylist?.playlistID)
                         i.putExtra("PlaylistName", response.suggestedPlaylist?.playlistName)
@@ -1074,15 +1128,14 @@ class HomeFragment : Fragment() {
                         i.putExtra("PlaylistSource", "")
                         i.putExtra("MyDownloads", "0")
                         i.putExtra("ScreenView", "")
-                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        requireActivity().startActivity(i)
-                        requireActivity().overridePendingTransition(0, 0)
+                        act.startActivity(i)
+                        act.overridePendingTransition(0, 0)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             } else {
-                showToast(getString(R.string.no_server_found), activity)
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
     }
@@ -1093,7 +1146,7 @@ class HomeFragment : Fragment() {
 
         if (response != null) {
             /* Get String of Player play from */
-            val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
+            val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE)
             val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
             val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "") //        val MyPlaylistName = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "") //        val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "") //        val PlayerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
             if (myDownloads.equals("1")) {
@@ -1153,7 +1206,7 @@ class HomeFragment : Fragment() {
         val playerPosition: Int = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
         val shared12 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val isPlayDisclimer = shared12.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
-        if (myDownloads.equals("1", true)) {
+        if (myDownloads.equals("1")) {
             if (isNetworkConnected(ctx)) {
                 if (audioPlayerFlag.equals("Downloadlist") && myPlaylist.equals(playlistID)) {
                     if (isDisclaimer == 1) {
@@ -1165,7 +1218,7 @@ class HomeFragment : Fragment() {
                             audioClick = true
                         }
                         callMyPlayer(ctx)
-                        showToast("The audio shall start playing after the disclaimer", requireActivity())
+                        showToast("The audio shall start playing after the disclaimer", act)
                     } else {
                         if (player != null) {
                             if (position != playerPosition) {
@@ -1232,7 +1285,7 @@ class HomeFragment : Fragment() {
                         audioClick = true
                     }
                     callMyPlayer(ctx)
-                    showToast("The audio shall start playing after the disclaimer", requireActivity())
+                    showToast("The audio shall start playing after the disclaimer", act)
                 } else {
                     if (player != null) {
                         if (position != playerPosition) {
@@ -1309,7 +1362,7 @@ class HomeFragment : Fragment() {
                     audioClick = true
                 }
                 callMyPlayer(ctx)
-                showToast("The audio shall start playing after the disclaimer", requireActivity())
+                showToast("The audio shall start playing after the disclaimer", act)
             } else {
                 val listModelList2 = arrayListOf<HomeScreenModel.ResponseData.SuggestedPlaylist.PlaylistSong>()
                 for (i in listModel.indices) {
@@ -1324,10 +1377,10 @@ class HomeFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, listModelList2, ctx, pID, pName, true)
                         } else {
-                            showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else { //                                pos = 0;
-                        showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } //                SegmentTag()
             }
@@ -1378,18 +1431,18 @@ class HomeFragment : Fragment() {
                         if (listModelList2.size != 0) {
                             callPlayerSuggested(pos, listModelList2, ctx, pID, pName, audioc)
                         } else {
-                            showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } else if (listModelList2[pos].id.equals("0") && listModelList2.size > 1) {
-                        callPlayerSuggested(pos, listModelList2, requireActivity(), pID, pName, audioc)
+                        callPlayerSuggested(pos, listModelList2, ctx, pID, pName, audioc)
                     } else {
-                        showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                        showToast(ctx.getString(R.string.no_server_found), act)
                     }
                 } else {
-                    showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             } else {
-                showToast(ctx.getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             } //            SegmentTag()
         }
     }
@@ -1427,13 +1480,13 @@ class HomeFragment : Fragment() {
                         audiolistDiff.add(i!!)
                     }
                 }
-                if(audiolistDiff.isNotEmpty()){
+                if (audiolistDiff.isNotEmpty()) {
                     val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                     val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist") || audioPlayerFlag.equals("Downloadlist")) {
                         if (playFrom.equals("Suggested")) {
-                            callAllRemovePlayer(ctx,act)
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -1468,8 +1521,8 @@ class HomeFragment : Fragment() {
                                 val sharedsa = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                                 val audioPlayerFlag = sharedsa.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "")
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                                if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
-                                    if (playFrom.equals("Suggested", ignoreCase = true)) {
+                                if (audioPlayerFlag.equals("playlist") || audioPlayerFlag.equals("Downloadlist")) {
+                                    if (playFrom.equals("Suggested")) {
                                         callAllRemovePlayer(ctx, act)
                                     }
                                 }
@@ -1520,20 +1573,19 @@ class HomeFragment : Fragment() {
         }
         editor.apply()
         audioClick = audioc
-        callMyPlayer(requireActivity())
+        callMyPlayer(ctx)
     }
 
     /* Open Player function */
     private fun callMyPlayer(ctx: Context) {
         val i = Intent(ctx, MyPlayerActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-        requireActivity().startActivity(i)
-        requireActivity().overridePendingTransition(0, 0)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        act.startActivity(i)
+        act.overridePendingTransition(0, 0)
     }
 
     /* Area of focus adapter */
     class AreaOfFocusAdapter(var binding: FragmentHomeBinding, var ctx: Context, private var selectedCategoriesName: ArrayList<String>) : RecyclerView.Adapter<AreaOfFocusAdapter.MyViewHolder>() {
-
         inner class MyViewHolder(var bindingAdapter: SelectedCategoryRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -1582,7 +1634,7 @@ class HomeFragment : Fragment() {
     }
 
     /* Set User List Adapter*/
-    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData, val mBottomSheetDialog: BottomSheetDialog?, private val llAddNewUser: LinearLayout) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
+    inner class UserListAdapter(private val model: AddedUserListModel.ResponseData, val mBottomSheetDialog: BottomSheetDialog, val llAddNewUser: LinearLayout) : RecyclerView.Adapter<UserListAdapter.MyViewHolder>() {
         var selectedItem = -1
         var pos = 0
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -1595,32 +1647,32 @@ class HomeFragment : Fragment() {
             val modelList = model.userList
             holder.bind.tvName.text = modelList!![position].name
 
-            if (isMainAccount.equals("1", ignoreCase = true)) {
+            if (isMainAccount.equals("1")) {
                 llAddNewUser.visibility = View.VISIBLE
             } else {
                 llAddNewUser.visibility = View.GONE
             }
 
             llAddNewUser.setOnClickListener {
-                if(IsLock.equals("1")){
-                  callEnhanceActivity(ctx, act)
-                }else if(IsLock.equals("0")) {
+                if (IsLock.equals("1")) {
+                    callEnhanceActivity(ctx, act)
+                } else if (IsLock.equals("0")) {
                     if (isMainAccount.equals("1")) {
                         llAddNewUser.visibility = View.VISIBLE
                         if (!model.maxuseradd.equals("")) {
                             if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
-                                showToast("Please update your plan", activity)
+                                showToast("Please update your plan", act)
                             } else {
                                 /* Add new user button click */
                                 IsFirstClick = "0"
                                 addCouserBackStatus = 1
-                                val i = Intent(requireActivity(), AddCouserActivity::class.java)
+                                val i = Intent(ctx, AddCouserActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                startActivity(i)
-                                mBottomSheetDialog?.hide()
+                                act.startActivity(i)
+                                mBottomSheetDialog.hide()
                             }
                         } else {
-                            showToast("Please purchase your plan", activity)
+                            showToast("Please purchase your plan", act)
                         }
                     } else {
                         llAddNewUser.visibility = View.GONE
@@ -1628,7 +1680,6 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            val name: String?
             if (modelList[position].image.equals("")) {
                 holder.bind.ivProfileImage.visibility = View.GONE
                 name = if (modelList[position].name.equals("")) {
@@ -1636,13 +1687,13 @@ class HomeFragment : Fragment() {
                 } else {
                     modelList[position].name.toString()
                 }
-                val letter = name.substring(0, 1)
+                val letter = name?.substring(0, 1)
                 holder.bind.rlLetter.visibility = View.VISIBLE
                 holder.bind.tvLetter.text = letter
             } else {
                 holder.bind.ivProfileImage.visibility = View.VISIBLE
                 holder.bind.rlLetter.visibility = View.GONE
-                Glide.with(requireActivity()).load(modelList[position].image).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(holder.bind.ivProfileImage)
+                Glide.with(ctx).load(modelList[position].image).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(holder.bind.ivProfileImage)
             }
 
             holder.bind.ivCheck.setImageResource(R.drawable.ic_user_checked_icon)
@@ -1665,20 +1716,20 @@ class HomeFragment : Fragment() {
 
             holder.bind.llAddNewCard.setOnClickListener {
                 if (IsLock.equals("1")) {
-                  callEnhanceActivity(ctx, act)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
                     if (modelList[position].isPinSet.equals("1")) {
                         if (userId!! == modelList[position].userID) {
-                            mBottomSheetDialog?.hide()
+                            mBottomSheetDialog.hide()
                         } else {
                             selectedItem = position
                             pos++
                             notifyDataSetChanged()
-                            val dialog = Dialog(requireActivity())
+                            val dialog = Dialog(ctx)
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                             dialog.setContentView(R.layout.comfirm_pin_layout)
-                            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                             val btnDone = dialog.findViewById<Button>(R.id.btnDone)
                             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                             val txtError = dialog.findViewById<TextView>(R.id.txtError)
@@ -1702,7 +1753,6 @@ class HomeFragment : Fragment() {
                                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                                     dialog.dismiss()
                                     return@setOnKeyListener true
-
                                 }
                                 false
                             }
@@ -1712,128 +1762,179 @@ class HomeFragment : Fragment() {
                                     txtError.visibility = View.VISIBLE
                                     txtError.text = "Please enter OTP"
                                 } else {
-                                    if (isNetworkConnected(requireActivity())) {
+                                    if (isNetworkConnected(ctx)) {
                                         txtError.visibility = View.GONE
                                         txtError.text = ""
                                         progressBar.visibility = View.VISIBLE
                                         progressBar.invalidate()
-                                        val listCall = APINewClient.client.getVerifyPin(modelList[position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                        val listCall = APINewClient.client.getVerifyPin(modelList[selectedItem].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                                         listCall.enqueue(object : Callback<AuthOtpModel> {
                                             @SuppressLint("HardwareIds")
                                             override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                                 try {
                                                     progressBar.visibility = View.GONE
                                                     val listModel: AuthOtpModel = response.body()!!
-                                                    when {
-                                                        listModel.ResponseCode == getString(R.string.ResponseCodesuccess) -> {
+                                                    when (listModel.ResponseCode) {
+                                                        ctx.getString(R.string.ResponseCodesuccess) -> {
+                                                            mBottomSheetDialog.hide()
                                                             dialog.dismiss()
-                                                            mBottomSheetDialog?.hide()/*if (!listModel.responseData!!.userID.equals(
-                                                            userId,
-                                                            ignoreCase = true
-                                                        )
-                                                        && !listModel.responseData!!.coUserId.equals(
-                                                            coUserId,
-                                                            ignoreCase = true
-                                                        )
-                                                    ) {
-                                                        callObserve1(ctx)
-                                                    } else {
-                                                        callObserve2(ctx)
-                                                    }*/
-                                                        Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
-                                                        Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
-                                                        logout = false
-                                                        mainAccountId = listModel.ResponseData.MainAccountID
-                                                        userId = listModel.ResponseData.UserId
-                                                        IsLock = listModel.ResponseData.Islock
-                                                        if (listModel.ResponseData.isPinSet == "1") {
-                                                            if (listModel.ResponseData.IsFirst == "1") {
-                                                                val intent = Intent(activity, EmailVerifyActivity::class.java)
-                                                                requireActivity().startActivity(intent)
-                                                                requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
-                                                                val intent = Intent(activity, AssProcessActivity::class.java)
-                                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                                                intent.putExtra("Navigation","Enhance")
-                                                                requireActivity().startActivity(intent)
-                                                                requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted == "0") {
-                                                                val intent = Intent(activity, ProfileProgressActivity::class.java)
-                                                                requireActivity().startActivity(intent)
-                                                                requireActivity().finish()
-                                                            } else if (listModel.ResponseData.AvgSleepTime == "") {
-                                                                val intent = Intent(activity, SleepTimeActivity::class.java)
-                                                                requireActivity().startActivity(intent)
-                                                                requireActivity().finish()
-                                                            } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
-                                                                val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                                                intent.putExtra("IsFirst", "0")
-                                                                requireActivity().startActivity(intent)
-                                                                requireActivity().finish()
+                                                            /*if (!listModel.responseData!!.userID.equals(userId) && !listModel.responseData!!.coUserId.equals(coUserId)) {
+                                                                                                            callObserve1(ctx)
+                                                                                                        } else {
+                                                                                                            callObserve2(ctx)
+                                                                                                        }*/
+                                                            Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
+                                                            Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
+                                                            logout = false
+                                                            mainAccountId = listModel.ResponseData.MainAccountID
+                                                            userId = listModel.ResponseData.UserId
+                                                            IsLock = listModel.ResponseData.Islock
+                                                            val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                            val editor = shared.edit()
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                                            try {
+                                                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                                }
+                                                            } catch (e: Exception) {
+                                                                e.printStackTrace()
                                                             }
-                                                        } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
-                                                            IsFirstClick = "0"
-                                                            val intent = Intent(activity, AddCouserActivity::class.java)
-                                                            requireActivity().startActivity(intent)
-                                                            requireActivity().finish()
-                                                        }
-                                                        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                                        val editor = shared.edit()
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
-                                                        try {
-                                                            if (listModel.ResponseData.planDetails.isNotEmpty()) {
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
-                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                            editor.apply()
+                                                            val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                            val edited = sharded.edit()
+                                                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                            val selectedCategoriesTitle = arrayListOf<String>()
+                                                            val selectedCategoriesName = arrayListOf<String>()
+                                                            val gson = Gson()
+                                                            for (i in listModel.ResponseData.AreaOfFocus) {
+                                                                selectedCategoriesTitle.add(i.MainCat)
+                                                                selectedCategoriesName.add(i.RecommendedCat)
                                                             }
-                                                        }catch (e:Exception){
-                                                            e.printStackTrace()
-                                                        }
-                                                        editor.apply()
-                                                        val sharded = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                                        val edited = sharded.edit()
-                                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                        val selectedCategoriesTitle = arrayListOf<String>()
-                                                        val selectedCategoriesName = arrayListOf<String>()
-                                                        val gson = Gson()
-                                                        for (i in listModel.ResponseData.AreaOfFocus) {
-                                                            selectedCategoriesTitle.add(i.MainCat)
-                                                            selectedCategoriesName.add(i.RecommendedCat)
-                                                        }
-                                                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                                        edited.apply()
+                                                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                            edited.apply()
+                                                            if (listModel.ResponseData.isPinSet == "1") {
+                                                                if (listModel.ResponseData.IsFirst == "1") {
+                                                                    val intent = Intent(ctx, EmailVerifyActivity::class.java)
+                                                                    act.startActivity(intent)
+                                                                    act.finish()
+                                                                } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
+                                                                    val intent = Intent(ctx, AssProcessActivity::class.java)
+                                                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                    intent.putExtra("Navigation", "Enhance")
+                                                                    act.startActivity(intent)
+                                                                    act.finish()
+                                                                } else if (listModel.ResponseData.isProfileCompleted == "0") {
+                                                                    val intent = Intent(ctx, ProfileProgressActivity::class.java)
+                                                                    act.startActivity(intent)
+                                                                    act.finish()
+                                                                } else if (listModel.ResponseData.AvgSleepTime == "") {
+                                                                    val intent = Intent(ctx, SleepTimeActivity::class.java)
+                                                                    act.startActivity(intent)
+                                                                    act.finish()
+                                                                } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
+                                                                    prepareHomeData()
+                                                                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                                    mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+                                                                    userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+                                                                    userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+                                                                    userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+                                                                    scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+                                                                    indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
+                                                                    isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+                                                                    isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+                                                                    binding.tvName.text = userName
+                                                                    /* Condition for get user Image*/
+                                                                    if (isNetworkConnected(ctx)) {
+                                                                        if (userImage.equals("")) {
+                                                                            binding.ivUser.visibility = View.GONE
+                                                                            name = if (userName.equals("")) {
+                                                                                "Guest"
+                                                                            } else {
+                                                                                userName.toString()
+                                                                            }
+                                                                            val letter = name?.substring(0, 1)
+                                                                            binding.rlLetter.visibility = View.VISIBLE
+                                                                            binding.tvLetter.text = letter
+                                                                        } else {
+                                                                            binding.ivUser.visibility = View.VISIBLE
+                                                                            binding.rlLetter.visibility = View.GONE
+                                                                            Glide.with(ctx).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
+                                                                        }
+                                                                    } else {
+                                                                        binding.ivUser.visibility = View.GONE
+                                                                        name = if (userName.equals("")) {
+                                                                            "Guest"
+                                                                        } else {
+                                                                            userName.toString()
+                                                                        }
+                                                                        val letter = name?.substring(0, 1)
+                                                                        binding.rlLetter.visibility = View.VISIBLE
+                                                                        binding.tvLetter.text = letter
+                                                                    }
+                                                                    val layoutManager = FlexboxLayoutManager(ctx)
+                                                                    layoutManager.flexWrap = FlexWrap.WRAP
+                                                                    layoutManager.alignItems = AlignItems.STRETCH
+                                                                    layoutManager.flexDirection = FlexDirection.ROW
+                                                                    layoutManager.justifyContent = JustifyContent.FLEX_START
+                                                                    binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+                                                                    val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+                                                                    binding.rvAreaOfFocusCategory.adapter = adapter
+
+                                                                    if (isInCouser.equals("1")) {
+                                                                        binding.ivClickDown.visibility = View.GONE
+                                                                        binding.llBottomView.isClickable = false
+                                                                        binding.llBottomView.isEnabled = false
+                                                                    } else {
+                                                                        binding.ivClickDown.visibility = View.VISIBLE
+                                                                        binding.llBottomView.isClickable = true
+                                                                        binding.llBottomView.isEnabled = true
+                                                                    }
+                                                                    /*val intent = Intent(ctx, BottomNavigationActivity::class.java)
+                                                                        intent.putExtra("IsFirst", "0")
+                                                                        act.startActivity(intent)
+                                                                        act.finish()*/
+                                                                }
+                                                            } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
+                                                                IsFirstClick = "0"
+                                                                val intent = Intent(ctx, AddCouserActivity::class.java)
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            }
 
                                                             prepareHomeData()
 
                                                             val activity = SplashActivity()
-                                                            activity.setAnalytics(getString(R.string.segment_key_real_2_staging), requireActivity())
+                                                            activity.setAnalytics(ctx.getString(R.string.segment_key_real_2_staging), ctx)
 
-                                                            //    showToast(listModel.responseMessage,requireActivity())
-                                                            callIdentify(requireActivity())
+                                                            //    showToast(listModel.responseMessage,act)
+                                                            callIdentify(act)
                                                             val p1 = Properties()
-                                                            p1.putValue("deviceId", Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID))
+                                                            p1.putValue("deviceId", Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID))
                                                             p1.putValue("deviceType", "Android")
                                                             p1.putValue("name", listModel.ResponseData.Name)
                                                             p1.putValue("countryCode", "")
@@ -1857,21 +1958,21 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
                                                             addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                         }
-                                                        listModel.ResponseCode == getString(R.string.ResponseCodeDeleted) -> {
+                                                        ctx.getString(R.string.ResponseCodeDeleted) -> {
                                                             txtError.visibility = View.GONE
                                                             txtError.text = ""
-                                                            deleteCall(activity)
-                                                            val i = Intent(activity, SignInActivity::class.java)
+                                                            deleteCall(ctx)
+                                                            val i = Intent(ctx, SignInActivity::class.java)
                                                             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                             i.putExtra("mobileNo", "")
                                                             i.putExtra("countryCode", "")
                                                             i.putExtra("name", "")
                                                             i.putExtra("email", "")
                                                             i.putExtra("countryShortName", "")
-                                                            startActivity(i)
-                                                            requireActivity().finish()
+                                                            act.startActivity(i)
+                                                            act.finish()
                                                         }
-                                                        listModel.ResponseCode == getString(R.string.ResponseCodefail) -> {
+                                                        ctx.getString(R.string.ResponseCodefail) -> {
                                                             txtError.visibility = View.VISIBLE
                                                             txtError.text = listModel.ResponseMessage
                                                         }
@@ -1895,7 +1996,7 @@ class HomeFragment : Fragment() {
 
                             tvForgotPin.setOnClickListener {
                                 dialog.dismiss()
-                                val dialogs = Dialog(requireActivity())
+                                val dialogs = Dialog(ctx)
                                 dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE)
                                 dialogs.setContentView(R.layout.add_couser_continue_layout)
                                 dialogs.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1904,7 +2005,7 @@ class HomeFragment : Fragment() {
                                 val ivIcon = dialogs.findViewById<ImageView>(R.id.ivIcon)
                                 val tvText = dialogs.findViewById<TextView>(R.id.tvText)
                                 ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                                val email: String = modelList[position].email.toString()
+                                val email: String = modelList[selectedItem].email.toString()
                                 tvText.text = "A new pin has been sent to \nyour mail id \n$email."
 
                                 dialogs.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
@@ -1914,57 +2015,57 @@ class HomeFragment : Fragment() {
                                     }
                                     false
                                 }
-                                mainLayout.setOnClickListener {
-                                    if (isNetworkConnected(requireActivity())) {
-                                        showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                        val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(modelList[position].userID, modelList[position].email)
-                                        listCall.enqueue(object : Callback<ForgoPinModel> {
-                                            override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
-                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                                val listModel: ForgoPinModel = response.body()!!
-                                                when {
-                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodesuccess)) -> {
-                                                        if (listModel.responseData?.emailSend.equals("1")){
-                                                            dialogs.dismiss()
-                                                        }else {
-                                                            showToast(listModel.responseMessage, requireActivity())
-                                                        }
-                                                    }
-                                                    listModel.responseCode.equals(requireActivity().getString(R.string.ResponseCodefail)) -> {
-                                                        showToast(listModel.responseMessage, requireActivity())
-                                                    }
-                                                    else -> {
-                                                        showToast(listModel.responseMessage, requireActivity())
+
+                                if (isNetworkConnected(ctx)) {
+                                    val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(modelList[selectedItem].userID, modelList[selectedItem].email)
+                                    listCall.enqueue(object : Callback<ForgoPinModel> {
+                                        override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
+                                            val listModel: ForgoPinModel = response.body()!!
+                                            when {
+                                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
+                                                    if (listModel.responseData?.emailSend.equals("1")) {
+                                                    } else {
+//                                                        showToast(listModel.responseMessage, act)
                                                     }
                                                 }
+                                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodefail)) -> {
+                                                    showToast(listModel.responseMessage, act)
+                                                }
+                                                else -> {
+                                                    showToast(listModel.responseMessage, act)
+                                                }
                                             }
+                                        }
 
-                                            override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
-                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                            }
-                                        })
-                                    } else {
-                                        showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
-                                    }
+                                        override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        }
+                                    })
+                                } else {
+                                    showToast(ctx.getString(R.string.no_server_found), act)
+                                }
+
+                                mainLayout.setOnClickListener {
+                                    dialogs.dismiss()
                                 }
 
                                 dialogs.show()
                                 dialogs.setCancelable(true)
                             }
 
-                        dialog.show()
-                        dialog.setCanceledOnTouchOutside(true)
-                        dialog.setCancelable(true)
-                    }
-                } else if (modelList[position].isPinSet.equals("0") || modelList[position].isPinSet.equals("")) {
-                    comeHomeScreen = "1"
-                    val i = Intent(requireActivity(), CouserSetupPinActivity::class.java)
+                            dialog.show()
+                            dialog.setCanceledOnTouchOutside(true)
+                            dialog.setCancelable(true)
+                        }
+                    } else if (modelList[position].isPinSet.equals("0") || modelList[position].isPinSet.equals("")) {
+                        comeHomeScreen = "1"
+                        val i = Intent(act, CouserSetupPinActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    i.putExtra("subUserId", modelList[position].userID)
-                    requireActivity().startActivity(i)
-                    mBottomSheetDialog?.hide()
+                        i.putExtra("subUserId", modelList[position].userID)
+                        act.startActivity(i)
+                        mBottomSheetDialog?.hide()
+                    }
                 }
-            }
             }
         }
 
@@ -1989,11 +2090,11 @@ class HomeFragment : Fragment() {
             val otp4 = edtOTP4.text.toString().trim { it <= ' ' }
             if (otp1.isNotEmpty() && otp2.isNotEmpty() && otp3.isNotEmpty() && otp4.isNotEmpty()) {
                 btnDone.isEnabled = true
-                btnDone.setTextColor(ContextCompat.getColor(requireActivity(), R.color.white))
+                btnDone.setTextColor(ContextCompat.getColor(ctx, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 btnDone.isEnabled = false
-                btnDone.setTextColor(ContextCompat.getColor(requireActivity(), R.color.white))
+                btnDone.setTextColor(ContextCompat.getColor(ctx, R.color.white))
                 btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
         }
@@ -2037,9 +2138,9 @@ class HomeFragment : Fragment() {
             }
 
         private fun hideKeyboard() {
-            if (requireActivity().currentFocus != null) {
-                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
+            if (act.currentFocus != null) {
+                val inputMethodManager = ctx.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(act.currentFocus!!.windowToken, 0)
             }
         }
 

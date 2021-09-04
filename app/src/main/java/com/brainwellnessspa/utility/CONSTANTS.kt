@@ -104,6 +104,7 @@ object CONSTANTS {
     const val PREFE_ACCESS_isMainAccount = "isMainAccount"
     const val PREFE_ACCESS_isEmailVerified = "isEmailVerified"
     const val PREFE_ACCESS_coUserCount = "coUserCount"
+    const val PREFE_ACCESS_isInCouser = "isInCouser"
     const val PREFE_ACCESS_PlanDeviceType = "PlanDeviceType"
     const val PREFE_ACCESS_PlanId = "PlanId"
     const val PREFE_ACCESS_PlanPurchaseDate = "PlanPurchaseDate"

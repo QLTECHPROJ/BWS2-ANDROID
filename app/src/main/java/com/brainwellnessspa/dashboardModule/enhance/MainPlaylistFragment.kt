@@ -103,7 +103,7 @@ class MainPlaylistFragment : Fragment() {
 
     private fun callMyPlaylistsFragment(s: String, id: String, name: String, playlistImage: String, MyDownloads: String, ScreenView: String, act: Activity, ctx: Context) { //        try {
         val i = Intent(ctx, MyPlaylistListingActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
         i.putExtra("New", s)
         i.putExtra("PlaylistID", id)
         i.putExtra("PlaylistName", name)
@@ -111,8 +111,7 @@ class MainPlaylistFragment : Fragment() {
         i.putExtra("PlaylistSource", playlistSource)
         i.putExtra("MyDownloads", MyDownloads)
         i.putExtra("ScreenView", ScreenView)
-        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-        ctx.startActivity(i)
+        act.startActivity(i)
         act.overridePendingTransition(0, 0) //        } catch (e: Exception) {
         //            e.printStackTrace()
         //        }

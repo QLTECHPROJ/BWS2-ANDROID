@@ -1,10 +1,7 @@
 package com.brainwellnessspa.dashboardModule.activities
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.app.NotificationManager
-import android.app.Service
-import android.app.UiModeManager
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -46,37 +43,42 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
     var playlistImage = ""
     var playlistType = ""
     var new = ""
+    lateinit var ctx: Context
+    lateinit var act: Activity
     lateinit var dialog: Dialog
     private var uiModeManager: UiModeManager? = null
     private var myNetworkReceiver: MyNetworkReceiver? = null
     private var myBatteryReceiver: MyBatteryReceiver? = null
 
-    @SuppressLint("BatteryLife")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_navigation)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration.Builder(R.id.navigation_Home, R.id.navigation_Manage, R.id.navigation_Wellness, R.id.navigation_Elevate, R.id.navigation_Profile).build()
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupWithNavController(binding.navView, navController)
+        act = this@BottomNavigationActivity
+        ctx = this@BottomNavigationActivity
+
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
+
         /* get user id and main account id*/
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+
         if (intent.extras != null) {
             isFirst = intent.getStringExtra("IsFirst")
         }
+
         val unicode = 0x2B05
         val textIcon = String(Character.toChars(unicode))
 
         if (isFirst.equals("1")) {
-            showToast("You're in, $userName!! \nLet's explore your path to inner peace!", this@BottomNavigationActivity)
+            showToast("You're in, $userName!! \nLet's explore your path to inner peace!", act)
         }
     }
 
@@ -100,7 +102,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         NetWatch.builder(this).setCallBack(object : NetworkChangeReceiver_navigator {
             override fun onConnected(source: Int) {
                 // do some thing
-                GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
+                GlobalInitExoPlayer.callResumePlayer(ctx)
                 val shareded = getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Service.MODE_PRIVATE)
                 val gson = Gson()
                 val json = shareded.getString(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY, gson.toString())
@@ -110,7 +112,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                     userActivityTrackModel = gson.fromJson(json, type)
                     if (userActivityTrackModel.size != 0) {
                         val global = GlobalInitExoPlayer()
-                        global.getUserActivityCall(this@BottomNavigationActivity, "", "", "")
+                        global.getUserActivityCall(ctx, "", "", "")
                     }
                 }
             }
@@ -125,16 +127,16 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     override fun onDestroy() {
         NetWatch.unregister(this)
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(notificationId)
-        GlobalInitExoPlayer.relesePlayer(this@BottomNavigationActivity)
+//        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.cancel(notificationId)
+        GlobalInitExoPlayer.relesePlayer(ctx)
         //        unregisterReceiver(myNetworkReceiver);
-        deleteCache(this@BottomNavigationActivity)
+        deleteCache(ctx)
         super.onDestroy()
     }
 
     override fun onConnected(source: Int) {
-        GlobalInitExoPlayer.callResumePlayer(this@BottomNavigationActivity)
+        GlobalInitExoPlayer.callResumePlayer(ctx)
     }
 
     override fun onDisconnected(): View? {
@@ -153,7 +155,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                 return
             }
             doubleBackToExitPressedOnce = true
-            showToast("Press again to exit", this@BottomNavigationActivity)
+            showToast("Press again to exit", act)
             Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         } else if (binding.navView.selectedItemId == R.id.navigation_Manage) {
             binding.navView.selectedItemId = R.id.navigation_Home
@@ -166,9 +168,5 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         } else {
             super.onBackPressed()
         }
-    }
-
-    companion object {
-        var audioClick = false
     }
 }

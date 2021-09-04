@@ -101,7 +101,7 @@ class ProfileFragment : Fragment() {
         val view = binding.root
         ctx = requireActivity()
         act = requireActivity()
-        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -117,18 +117,18 @@ class ProfileFragment : Fragment() {
         deviceType = shared1.getString(CONSTANTS.PREFE_ACCESS_DeviceType, "")
         val gson = Gson()
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
-        if (!json5.equals(gson.toString(), ignoreCase = true)) areaOfFocus = json5
-        val shared = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        if (!json5.equals(gson.toString())) areaOfFocus = json5
+        val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         binding.tvName.text = userName
         mRequestPermissionHandler = RequestPermissionHandler()
         binding.tvVersion.text = "Version " + BuildConfig.VERSION_NAME
         val name: String?
         profilePicPath = userImage
-        if (isNetworkConnected(requireActivity())) {
-            if (profilePicPath.equals("", ignoreCase = true)) {
+        if (isNetworkConnected(ctx)) {
+            if (profilePicPath.equals("")) {
                 binding.civProfile.visibility = View.GONE
-                name = if (userName.equals("", ignoreCase = true)) {
+                name = if (userName.equals("")) {
                     "Guest"
                 } else {
                     userName
@@ -142,13 +142,13 @@ class ProfileFragment : Fragment() {
                 setProfilePic(profilePicPath)
             }
         } else {
-            if (userName.equals("", ignoreCase = true) || userName.equals(" ", ignoreCase = true) || userName == null) {
+            if (userName.equals("") || userName.equals(" ") || userName == null) {
                 binding.tvName.setText(R.string.Guest)
             } else {
                 binding.tvName.text = userName
             }
             binding.civProfile.visibility = View.GONE
-            name = if (userName.equals("", ignoreCase = true)) {
+            name = if (userName.equals("")) {
                 "Guest"
             } else {
                 userName
@@ -166,10 +166,10 @@ class ProfileFragment : Fragment() {
                     return@setOnClickListener
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
-                if (isNetworkConnected(requireActivity())) {
+                if (isNetworkConnected(ctx)) {
                     selectImage()
                 } else {
-                    showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                    showToast(ctx.getString(R.string.no_server_found), act)
                 }
             }
         }
@@ -180,13 +180,13 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), AccountInfoActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, AccountInfoActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -195,10 +195,10 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            val i = Intent(requireActivity(), DownloadsActivity::class.java)
+            val i = Intent(ctx, DownloadsActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(i)
-            requireActivity().overridePendingTransition(0, 0)
+            act.overridePendingTransition(0, 0)
         }
 
         binding.llInvoices.setOnClickListener {
@@ -206,15 +206,15 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
+            if (isNetworkConnected(ctx)) {
                 InvoiceActivity.invoiceToRecepit = 1
-                val i = Intent(requireActivity(), InvoiceActivity::class.java)
+                val i = Intent(ctx, InvoiceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("ComeFrom", "")
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -223,13 +223,13 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), BillingOrderActivity::class.java)
-                requireActivity().overridePendingTransition(0, 0)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, BillingOrderActivity::class.java)
+                act.overridePendingTransition(0, 0)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -238,13 +238,13 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), ManageUserActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, ManageUserActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -254,13 +254,13 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), ReminderListsActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, ReminderListsActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -269,14 +269,14 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), EnhanceActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, EnhanceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan", "0")
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -290,7 +290,7 @@ class ProfileFragment : Fragment() {
                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                   i.putExtra("plan","1")
                   startActivity(i)
-                  requireActivity().overridePendingTransition(0, 0)
+                  act.overridePendingTransition(0, 0)
               } else {
                   showToast(getString(R.string.no_server_found), activity)
               }
@@ -301,13 +301,13 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), ResourceActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, ResourceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
@@ -316,22 +316,22 @@ class ProfileFragment : Fragment() {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-            if (isNetworkConnected(requireActivity())) {
-                val i = Intent(requireActivity(), FaqActivity::class.java)
+            if (isNetworkConnected(ctx)) {
+                val i = Intent(ctx, FaqActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                requireActivity().overridePendingTransition(0, 0)
+                act.overridePendingTransition(0, 0)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
 
         binding.llLogOut.setOnClickListener {
-            if (isNetworkConnected(requireActivity())) {
-                logoutDialog = Dialog(requireActivity())
+            if (isNetworkConnected(ctx)) {
+                logoutDialog = Dialog(ctx)
                 logoutDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 logoutDialog!!.setContentView(R.layout.logout_layout)
-                logoutDialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(), R.color.dark_blue_gray)))
+                logoutDialog!!.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.dark_blue_gray)))
                 logoutDialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 val tvGoBack = logoutDialog!!.findViewById<TextView>(R.id.tvGoBack)
                 val btn = logoutDialog!!.findViewById<Button>(R.id.Btn)
@@ -346,14 +346,14 @@ class ProfileFragment : Fragment() {
                 }
                 btn.setOnClickListener {
                     logoutDialog!!.hide()
-                    showProgressBar(progressBar, progressBarHolder, requireActivity())
+                    showProgressBar(progressBar, progressBarHolder, act)
                     deleteCall(logoutDialog!!, progressBar, progressBarHolder)
                 }
                 tvGoBack.setOnClickListener { logoutDialog!!.hide() }
                 logoutDialog!!.show()
                 logoutDialog!!.setCancelable(false)
             } else {
-                showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
         return view
@@ -366,10 +366,10 @@ class ProfileFragment : Fragment() {
 
     private fun selectImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 callProfilePathSet()
             } else {
-                mRequestPermissionHandler!!.requestPermission(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA), 123, object : RequestPermissionListener {
+                mRequestPermissionHandler!!.requestPermission(act, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA), 123, object : RequestPermissionListener {
                     override fun onSuccess() {
                         callProfilePathSet()
                     }
@@ -378,20 +378,20 @@ class ProfileFragment : Fragment() {
                 })
             }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 callProfilePathSet()
             } else {
-                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    mRequestPermissionHandler!!.requestPermission(requireActivity(), arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE), 123, object : RequestPermissionListener {
+                if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    mRequestPermissionHandler!!.requestPermission(act, arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE), 123, object : RequestPermissionListener {
                         override fun onSuccess() {
                             callProfilePathSet()
                         }
 
                         override fun onFailed() {}
                     })
-                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                } else if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                     callCamaraPermission()
-                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                } else if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     callReadPermission()
                 }
             }
@@ -401,42 +401,42 @@ class ProfileFragment : Fragment() {
     }
 
     private fun callCamaraPermission() {
-        val building = AlertDialog.Builder(requireActivity())
-        building.setMessage("""To camera allow ${requireActivity().getString(R.string.app_name)} access to your camera. Tap Setting > permission, and turn Camera on.""")
+        val building = AlertDialog.Builder(ctx)
+        building.setMessage("""To camera allow ${ctx.getString(R.string.app_name)} access to your camera. Tap Setting > permission, and turn Camera on.""")
         building.setCancelable(true)
-        building.setPositiveButton(requireActivity().getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
+        building.setPositiveButton(ctx.getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+            val uri = Uri.fromParts("package", ctx.packageName, null)
             intent.data = uri
             startActivity(intent)
             dialogs.dismiss()
         }
-        building.setNegativeButton(requireActivity().getString(R.string.not_now)) { dialogs: DialogInterface, _: Int -> dialogs.dismiss() }
+        building.setNegativeButton(ctx.getString(R.string.not_now)) { dialogs: DialogInterface, _: Int -> dialogs.dismiss() }
         val alert11 = building.create()
         alert11.window!!.setBackgroundDrawableResource(R.drawable.dialog_bg)
         alert11.show()
-        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
-        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
+        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ctx, R.color.blue))
+        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ctx, R.color.blue))
     }
 
     private fun callReadPermission() {
-        val buildable = AlertDialog.Builder(requireActivity())
-        buildable.setMessage("""To upload image allow ${requireActivity().getString(R.string.app_name)} access to your device's files. 
+        val buildable = AlertDialog.Builder(ctx)
+        buildable.setMessage("""To upload image allow ${ctx.getString(R.string.app_name)} access to your device's files. 
 Tap Setting > permission, and turn "Files and media" on.""")
         buildable.setCancelable(true)
-        buildable.setPositiveButton(requireActivity().getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
+        buildable.setPositiveButton(ctx.getString(R.string.Settings)) { dialogs: DialogInterface, _: Int ->
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+            val uri = Uri.fromParts("package", ctx.packageName, null)
             intent.data = uri
             startActivity(intent)
             dialogs.dismiss()
         }
-        buildable.setNegativeButton(requireActivity().getString(R.string.not_now)) { dialogue: DialogInterface, _: Int -> dialogue.dismiss() }
+        buildable.setNegativeButton(ctx.getString(R.string.not_now)) { dialogue: DialogInterface, _: Int -> dialogue.dismiss() }
         val alert11 = buildable.create()
         alert11.window!!.setBackgroundDrawableResource(R.drawable.dialog_bg)
         alert11.show()
-        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
-        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireActivity(), R.color.blue))
+        alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ctx, R.color.blue))
+        alert11.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ctx, R.color.blue))
     }
 
     private fun callProfilePathSet() {
@@ -445,12 +445,12 @@ Tap Setting > permission, and turn "Files and media" on.""")
         } else {
             arrayOf(getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel))
         }
-        val builder = AlertDialog.Builder(requireActivity())
+        val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.addPhoto)
         builder.setItems(options) { dialog: DialogInterface, item: Int ->
             if (options[item] == getString(R.string.takePhoto)) {
                 val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                if (pictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+                if (pictureIntent.resolveActivity(ctx.packageManager) != null) {
                     var photoFile: File? = null
                     try {
                         photoFile = createImageFile()
@@ -458,7 +458,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         ex.printStackTrace()
                     }
                     if (photoFile != null) {
-                        val photoURI = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".provider", photoFile)
+                        val photoURI = FileProvider.getUriForFile(ctx, BuildConfig.APPLICATION_ID + ".provider", photoFile)
                         pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                         startActivityForResult(pictureIntent, CONTENT_REQUEST)
                     }
@@ -467,26 +467,26 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(intent, 2)
             } else if (options[item] == getString(R.string.removeProfilePicture)) {
-                if (isNetworkConnected(requireActivity())) {
-                    showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                if (isNetworkConnected(ctx)) {
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     val listCall = APINewClient.client.getRemoveProfile(coUserId)
                     listCall.enqueue(object : Callback<RemoveProfileModel?> {
                         override fun onResponse(call: Call<RemoveProfileModel?>, response: Response<RemoveProfileModel?>) {
                             try {
                                 val viewModel = response.body()
-                                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                 if (viewModel != null) {
-                                    if (viewModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                        showToast(viewModel.responseMessage, requireActivity())
-                                        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                    if (viewModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess))) {
+                                        showToast(viewModel.responseMessage, act)
+                                        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                         val editor = shared.edit()
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
                                         editor.apply()
                                         profileViewData()
-                                    } else if (viewModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                        deleteCall(requireActivity())
-                                        showToast(viewModel.responseMessage, requireActivity())
-                                        val i = Intent(requireActivity(), SignInActivity::class.java)
+                                    } else if (viewModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted))) {
+                                        deleteCall(ctx)
+                                        showToast(viewModel.responseMessage, act)
+                                        val i = Intent(ctx, SignInActivity::class.java)
                                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("mobileNo", "")
                                         i.putExtra("countryCode", "")
@@ -494,7 +494,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         i.putExtra("email", "")
                                         i.putExtra("countryShortName", "")
                                         startActivity(i)
-                                        requireActivity().finish()
+                                        act.finish()
                                     }
                                 }
                             } catch (e: Exception) {
@@ -503,11 +503,11 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         }
 
                         override fun onFailure(call: Call<RemoveProfileModel?>, t: Throwable) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         }
                     })
                 }
-            } else if (options[item] == getString(R.string.cancel)) {
+            } else if (options[item] == ctx.getString(R.string.cancel)) {
 //                val p = Properties()
 //                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
@@ -522,31 +522,31 @@ Tap Setting > permission, and turn "Files and media" on.""")
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "IMG_" + timeStamp + "_"
-        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir = ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         image = File.createTempFile(imageFileName, ".jpg", storageDir)
         profilePicPath = image.absolutePath
         return image
     }
 
     fun profileViewData() {
-        if (isNetworkConnected(requireActivity())) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+        if (isNetworkConnected(ctx)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             APINewClient.client.getCoUserDetails(coUserId).enqueue(object : Callback<AuthOtpModel?> {
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
                     try {
                         val viewModel = response.body()
                         if (viewModel != null) {
                             when {
-                                viewModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                    if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
+                                viewModel.ResponseCode == ctx.getString(R.string.ResponseCodesuccess) -> {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    if (viewModel.ResponseData.Name == "" || viewModel.ResponseData.Name == " ") {
                                         binding.tvName.setText(R.string.Guest)
                                     } else {
                                         binding.tvName.text = viewModel.ResponseData.Name
                                     }
 
                                     IsLock = viewModel.ResponseData.Islock
-                                    if (viewModel.ResponseData.isMainAccount.equals("1", ignoreCase = true)) {
+                                    if (viewModel.ResponseData.isMainAccount == "1") {
                                         binding.llManageUser.visibility = View.VISIBLE
                                         binding.llBillingOrder.visibility = View.VISIBLE
                                         binding.llPlan.visibility = View.VISIBLE
@@ -562,9 +562,9 @@ Tap Setting > permission, and turn "Files and media" on.""")
 
                                     val name: String
                                     profilePicPath = viewModel.ResponseData.Image
-                                    if (profilePicPath.equals("", ignoreCase = true)) {
+                                    if (profilePicPath.equals("")) {
                                         binding.civProfile.visibility = View.GONE
-                                        name = if (viewModel.ResponseData.Name.equals("", ignoreCase = true)) {
+                                        name = if (viewModel.ResponseData.Name.equals("")) {
                                             "Guest"
                                         } else {
                                             viewModel.ResponseData.Name
@@ -578,7 +578,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         setProfilePic(profilePicPath)
                                     }
 
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared?.edit()
                                     if (editor != null) {
                                         editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
@@ -597,6 +597,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, viewModel.ResponseData.IsInCouser)
                                         try {
                                             if (viewModel.ResponseData.planDetails.isNotEmpty()) {
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
@@ -614,7 +615,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.apply()
                                     }
 
-                                    val sharded = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                    val sharded = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     val edited = sharded?.edit()
                                     if (edited != null) {
                                         edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
@@ -630,21 +631,21 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         edited.apply()
                                     }
                                 }
-                                viewModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    deleteCall(requireActivity())
-                                    showToast(viewModel.ResponseMessage, requireActivity())
-                                    val i = Intent(requireActivity(), SignInActivity::class.java)
+                                viewModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted)) -> {
+                                    deleteCall(ctx)
+                                    showToast(viewModel.ResponseMessage, act)
+                                    val i = Intent(ctx, SignInActivity::class.java)
                                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
                                     i.putExtra("email", "")
                                     i.putExtra("countryShortName", "")
-                                    requireActivity().startActivity(i)
-                                    requireActivity().finish()
+                                    act.startActivity(i)
+                                    act.finish()
                                 }
                                 else -> {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                 }
                             }
                         }
@@ -654,7 +655,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder,activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         }
@@ -664,39 +665,39 @@ Tap Setting > permission, and turn "Files and media" on.""")
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
-                showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                showProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 setProfilePic(profilePicPath)
-                if (isNetworkConnected(requireActivity())) {
+                if (isNetworkConnected(ctx)) {
                     val map = HashMap<String, String?>()
                     map[CONSTANTS.PREF_KEY_UserID] = coUserId
                     val typedFile = TypedFile(CONSTANTS.MULTIPART_FORMAT, image)
                     apiService!!.getAddProfiles(coUserId, typedFile, object : retrofit.Callback<AddProfileModel> {
                         override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
                             try {
-                                if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    showToast(addProfileModel.responseMessage, requireActivity())
+                                if (addProfileModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess))) {
+                                    showToast(addProfileModel.responseMessage, act)
 //                                    val p = Properties()
 //                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
 
-                                    Glide.with(requireActivity()).load(addProfileModel.responseData?.profileImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civProfile)
+                                    Glide.with(ctx).load(addProfileModel.responseData?.profileImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civProfile)
                                     profileViewData()
-                                    val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                    val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
                                     editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                     editor.apply()
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                } else if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                    deleteCall(requireActivity())
-                                    showToast(addProfileModel.responseMessage, requireActivity())
-                                    val i = Intent(requireActivity(), SignInActivity::class.java)
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                } else if (addProfileModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted))) {
+                                    deleteCall(ctx)
+                                    showToast(addProfileModel.responseMessage, act)
+                                    val i = Intent(ctx, SignInActivity::class.java)
                                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     i.putExtra("mobileNo", "")
                                     i.putExtra("countryCode", "")
                                     i.putExtra("name", "")
                                     i.putExtra("email", "")
                                     i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    requireActivity().finish()
+                                    act.startActivity(i)
+                                    act.finish()
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -704,12 +705,12 @@ Tap Setting > permission, and turn "Files and media" on.""")
                         }
 
                         override fun failure(e: RetrofitError) {
-                            hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                            showToast(e.message, requireActivity())
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            showToast(e.message, act)
                         }
                     })
                 } else {
-                    showToast(getString(R.string.no_server_found), requireActivity())
+                    showToast(getString(R.string.no_server_found), act)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -719,50 +720,50 @@ Tap Setting > permission, and turn "Files and media" on.""")
             try {
                 if (data != null) {
                     val selectedImageUri = data.data
-                    showProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     setProfilePic(selectedImageUri.toString())
                     try {
-                        if (isNetworkConnected(requireActivity())) {
+                        if (isNetworkConnected(ctx)) {
                             val map = HashMap<String, String?>()
                             map[CONSTANTS.PREF_KEY_UserID] = coUserId
-                            val file = File(Objects.requireNonNull(getPath(selectedImageUri!!, requireActivity())))
+                            val file = File(Objects.requireNonNull(getPath(selectedImageUri!!, ctx)))
                             val typedFile = TypedFile(CONSTANTS.MULTIPART_FORMAT, file)
                             apiService!!.getAddProfiles(coUserId, typedFile, object : retrofit.Callback<AddProfileModel> {
                                 override fun success(addProfileModel: AddProfileModel, response: retrofit.client.Response) {
-                                    if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                    if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess))) {
                                         profilePicPath = addProfileModel.responseData?.profileImage
                                         setProfilePic(profilePicPath)
                                         profileViewData()
 //                                val p = Properties()
 //                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
-                                        showToast(addProfileModel.responseMessage, requireActivity())
-                                        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                        showToast(addProfileModel.responseMessage, act)
+                                        val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                         val editor = shared.edit()
                                         editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, addProfileModel.responseData?.profileImage)
                                         editor.apply()
-                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                                    } else if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                        deleteCall(requireActivity())
-                                        showToast(addProfileModel.responseMessage, requireActivity())
-                                        val i = Intent(requireActivity(), SignInActivity::class.java)
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    } else if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted))) {
+                                        deleteCall(ctx)
+                                        showToast(addProfileModel.responseMessage, act)
+                                        val i = Intent(ctx, SignInActivity::class.java)
                                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         i.putExtra("mobileNo", "")
                                         i.putExtra("countryCode", "")
                                         i.putExtra("name", "")
                                         i.putExtra("email", "")
                                         i.putExtra("countryShortName", "")
-                                        startActivity(i)
-                                        requireActivity().finish()
+                                        act.startActivity(i)
+                                        act.finish()
                                     }
                                 }
 
                                 override fun failure(e: RetrofitError) {
-                                    showToast(e.message, requireActivity())
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                                    showToast(e.message, act)
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                 }
                             })
                         } else {
-                            showToast(requireActivity().getString(R.string.no_server_found), requireActivity())
+                            showToast(ctx.getString(R.string.no_server_found), act)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -776,16 +777,16 @@ Tap Setting > permission, and turn "Files and media" on.""")
         } else if (requestCode == Activity.RESULT_CANCELED) {
 //            val p = Properties()
 //            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
-            requireActivity().finish()
+            act.finish()
         }
     }
 
     private fun setProfilePic(profilePicPath: String?) {
-        Glide.with(requireActivity()).load(profilePicPath).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civProfile)
+        Glide.with(ctx).load(profilePicPath).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civProfile)
     }
 
     private fun deleteCall(dialog: Dialog, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
-        val preferences = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val preferences = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         val edit = preferences.edit()
         edit.remove(CONSTANTS.PREFE_ACCESS_mainAccountID)
         edit.remove(CONSTANTS.PREFE_ACCESS_UserId)
@@ -822,12 +823,13 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanDeviceType)
         edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin)
+        edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser)
 //        edit.remove(CONSTANTS.PREF_KEY_UserPromocode)
 //        edit.remove(CONSTANTS.PREF_KEY_ReferLink)
         edit.clear()
         edit.apply()
 
-        val preferred = requireActivity().getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         val edited = preferred.edit()
         edited.remove(CONSTANTS.selectedCategoriesTitle)
         edited.remove(CONSTANTS.selectedCategoriesName)
@@ -835,7 +837,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited.clear()
         edited.apply()
 
-        val preferred1 = requireActivity().getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
+        val preferred1 = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
         val edited1 = preferred1.edit()
         edited1.remove(CONSTANTS.AssQus)
         edited1.remove(CONSTANTS.AssAns)
@@ -843,31 +845,31 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited1.clear()
         edited1.apply()
 
-        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
         val editorcv = shared.edit()
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId)
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId)
         editorcv.apply()
 
-        val preferreed = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
+        val preferreed = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_USER_ACTIVITY, Context.MODE_PRIVATE)
         val editeed = preferreed.edit()
         editeed.remove(CONSTANTS.PREF_KEY_USER_TRACK_ARRAY)
         editeed.clear()
         editeed.apply()
 
-        val preferrd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
+        val preferrd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
         val editd = preferrd.edit()
         editd.remove(CONSTANTS.PREF_KEY_SplashKey)
         editd.clear()
         editd.apply()
 
-        /*val preferrder = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        /*val preferrder = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         val editder = preferrder.edit()
         editder.remove(CONSTANTS.Token)
         editder.clear()
         editder.apply()*/
 
-        val preferrderd = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
+        val preferrderd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
         val editderd = preferrderd.edit()
         editderd.remove(CONSTANTS.PREF_KEY_PlaylistID)
         editderd.remove(CONSTANTS.PREF_KEY_PlaylistName)
@@ -880,7 +882,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         editderd.clear()
         editderd.apply()
 
-        val pref = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
+        val pref = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE)
         val editt = pref.edit()
         editt.remove(CONSTANTS.PREF_KEY_IsDisclimer)
         editt.remove(CONSTANTS.PREF_KEY_Disclimer)
@@ -888,7 +890,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         editt.clear()
         editt.apply()
 
-        val preferred2 = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         val edited2 = preferred2.edit()
         edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
         edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
@@ -901,18 +903,18 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edited2.clear()
         edited2.apply()
         logout = true
-        deleteCache(requireActivity())
+        deleteCache(ctx)
         callLogoutApi(dialog, progressBar, progressBarHolder)
     }
 
     private fun callLogoutApi(dialog: Dialog, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
-        val sharedPreferences2 = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(requireActivity()) { task: Task<InstallationTokenResult> ->
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
                 val newToken = task.result.token
                 Log.e("newToken", newToken)
-                val editor = requireActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
                 editor.putString(CONSTANTS.Token, newToken) // Friend
                 editor.apply()
             }
@@ -931,8 +933,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     val p1 = Properties()
                     /* var isProf = false
                      var isAss = false
-                     isProf = isProfileCompleted.equals("1", ignoreCase = true)
-                     isAss = isAssessmentCompleted.equals("1", ignoreCase = true)*/
+                     isProf = isProfileCompleted.equals("1")
+                     isAss = isAssessmentCompleted.equals("1")*/
 
                     /* p1.putValue("deviceId", deviceId)
                      p1.putValue("deviceType", "Android")
@@ -945,8 +947,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                      p1.putValue("avgSleepTime", avgSleepTime)
                      p1.putValue("areaOfFocus", areaOfFocus)*/
                     addToSegment("User Logout", p1, CONSTANTS.track)
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
-                    hideProgressBar(progressBar, progressBarHolder, requireActivity())
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                    hideProgressBar(progressBar, progressBarHolder, act)
                     dialog.hide()
                     try {
                         analytics.flush()
@@ -954,15 +956,15 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                    val i = Intent(requireActivity(), SignInActivity::class.java)
+                    val i = Intent(ctx, SignInActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("mobileNo", "")
                     i.putExtra("countryCode", "")
                     i.putExtra("name", "")
                     i.putExtra("email", "")
                     i.putExtra("countryShortName", "")
-                    startActivity(i)
-                    requireActivity().finish()
+                    act.startActivity(i)
+                    act.finish()
                 }
                 //                } catch (Exception e) {
                 //                    e.printStackTrace();
@@ -970,7 +972,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
             }
 
             override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
-                hideProgressBar(binding.progressBar, binding.progressBarHolder, requireActivity())
+                hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
             }
         })
     }

@@ -134,6 +134,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.InstallationTokenResult;
 import com.google.gson.Gson;
@@ -2849,6 +2851,7 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin);
         edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
         edit.remove(CONSTANTS.PREF_KEY_ReferLink);
+        edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser);
         edit.clear();
         edit.apply();
 

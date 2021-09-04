@@ -111,7 +111,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.GONE
-        } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length <= 4) {
+        } else if (binding.etCurrentPIN.text.toString() != "" && binding.etCurrentPIN.text.toString().length < 4) {
             binding.txtCurrentPINError.text = "Please provide 4 digit PIN"
             binding.txtCurrentPINError.visibility = View.VISIBLE
             binding.txtNewPINError.visibility = View.GONE
@@ -121,7 +121,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.VISIBLE
             binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
             binding.txtConfirmPINError.visibility = View.GONE
-        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length <= 4) {
+        } else if (binding.etNewPIN.text.toString() != "" && binding.etNewPIN.text.toString().length < 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.VISIBLE
             binding.txtNewPINError.text = getString(R.string.pls_provide_latest_pin)
@@ -131,7 +131,7 @@ class ChangePinActivity : AppCompatActivity() {
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE
             binding.txtConfirmPINError.text = getString(R.string.pls_provide_latest_pin)
-        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length <= 4) {
+        } else if (binding.etConfirmPIN.text.toString() != "" && binding.etConfirmPIN.text.toString().length < 4) {
             binding.txtCurrentPINError.visibility = View.GONE
             binding.txtNewPINError.visibility = View.GONE
             binding.txtConfirmPINError.visibility = View.VISIBLE

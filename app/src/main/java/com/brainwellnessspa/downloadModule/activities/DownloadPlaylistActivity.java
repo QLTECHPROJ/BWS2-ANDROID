@@ -510,7 +510,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
     private void callAddTranFrag() {
         try {
             Intent i = new Intent(ctx, MyPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             overridePendingTransition(0, 0);
         } catch (Exception e) {

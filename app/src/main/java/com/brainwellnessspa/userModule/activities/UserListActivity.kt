@@ -25,7 +25,6 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
-import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityUserListBinding
 import com.brainwellnessspa.databinding.ScreenUserListLayoutBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
@@ -116,14 +115,14 @@ class UserListActivity : AppCompatActivity() {
             holder.bindingAdapter.tvName.text = coUsersModel!![position].name
             val name: String?
 
-            if (isMainAccount.equals("1")) {
+            if (isMainAccount == "1") {
                 binding.llAddNewUser.visibility = View.GONE
             } else {
                 binding.llAddNewUser.visibility = View.GONE
             }
 
             binding.llAddNewUser.setOnClickListener {
-                if (isMainAccount.equals("1")) {
+                if (isMainAccount == "1") {
                     binding.llAddNewUser.visibility = View.GONE
                     if (!model.maxuseradd.equals("")) {
                         if (model.totalUserCount?.toInt() == model.maxuseradd?.toInt()) {
@@ -185,11 +184,6 @@ class UserListActivity : AppCompatActivity() {
 
             Log.e("isMainAccount", isMainAccount)
             binding.btnLogIn.setOnClickListener {
-                Log.e("userID", coUsersModel!![position].userID.toString())
-                Log.e("email", coUsersModel!![position].email.toString())
-                Log.e("name", coUsersModel!![position].name.toString())
-                Log.e("position", position.toString())
-
                 userList.dialog = Dialog(activity)
                 userList.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 userList.dialog.setContentView(R.layout.comfirm_pin_layout)
@@ -234,24 +228,24 @@ class UserListActivity : AppCompatActivity() {
                         if (isNetworkConnected(activity)) {
 
                             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(coUsersModel!![position].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                            val listCall: Call<AuthOtpModel> = APINewClient.client.getVerifyPin(coUsersModel!![selectedItem].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
                             listCall.enqueue(object : Callback<AuthOtpModel> {
                                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                                     try {
                                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                         val listModel: AuthOtpModel = response.body()!!
-                                        when {
-                                            listModel.ResponseCode == activity.getString(R.string.ResponseCodesuccess) -> {
+                                        when (listModel.ResponseCode) {
+                                            activity.getString(R.string.ResponseCodesuccess) -> {
                                                 val shared1: SharedPreferences = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE)
                                                 val logoutUserID = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, "")
                                                 val logoutCoUserId = shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, "")
                                                 IsLock = listModel.ResponseData.Islock
                                                 /*   if (!listModel.responseData!!.userID.equals(logoutUserID, ignoreCase = true)
-                                                                                           && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
-                                                                                       callObserve1(ctx)
-                                                                                   } else {
-                                                                                       callObserve2(ctx)
-                                                                                   }*/
+                                                                                                                                   && !listModel.responseData!!.coUserId.equals(Logout_CoUserId, ignoreCase = true)) {
+                                                                                                                               callObserve1(ctx)
+                                                                                                                           } else {
+                                                                                                                               callObserve2(ctx)
+                                                                                                                           }*/
                                                 Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
                                                 Log.e("Old UserId MobileNo", "$logoutUserID.....$logoutCoUserId")
                                                 logout = false
@@ -275,6 +269,7 @@ class UserListActivity : AppCompatActivity() {
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                                                 try {
                                                     if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
@@ -307,37 +302,37 @@ class UserListActivity : AppCompatActivity() {
                                                 splashActivity.setAnalytics(ctx.resources.getString(R.string.segment_key_real_2_staging), ctx)
                                                 callIdentify(ctx)
                                                 Log.e("isSetLoginPin", isSetLoginPin.toString())
-                                                if (listModel.ResponseData.isPinSet.equals("1")) {
-                                                    if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
+                                                if (listModel.ResponseData.isPinSet == "1") {
+                                                    if (listModel.ResponseData.isAssessmentCompleted == "0") {
                                                         val intent = Intent(activity, EmailVerifyActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isAssessmentCompleted.equals("0")) {
+                                                    } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
                                                         val intent = Intent(activity, AssProcessActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                                         intent.putExtra("Navigation", "Enhance")
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("0")) {
+                                                    } else if (listModel.ResponseData.isProfileCompleted == "0") {
                                                         val intent = Intent(activity, ProfileProgressActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.AvgSleepTime.equals("")) {
+                                                    } else if (listModel.ResponseData.AvgSleepTime == "") {
                                                         val intent = Intent(activity, SleepTimeActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         activity.startActivity(intent)
                                                         activity.finish()
-                                                    } else if (listModel.ResponseData.isProfileCompleted.equals("1") && listModel.ResponseData.isAssessmentCompleted.equals("1")) {
+                                                    } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
                                                         val intent = Intent(ctx, BottomNavigationActivity::class.java)
                                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                                         intent.putExtra("IsFirst", "0")
                                                         activity.startActivity(intent)
                                                         activity.finish()
                                                     }
-                                                } else if (listModel.ResponseData.isPinSet.equals("0") || listModel.ResponseData.isPinSet.equals("")) {
+                                                } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
                                                     IsFirstClick = "0"
                                                     val intent = Intent(activity, AddCouserActivity::class.java)
                                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -346,31 +341,31 @@ class UserListActivity : AppCompatActivity() {
                                                 }
 
                                                 /*   val p1 = Properties()
-                                               p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
-                                               p1.putValue("deviceType", "Android")
-                                               p1.putValue("name", listModel.ResponseData.Name)
-                                               p1.putValue("countryCode", "")
-                                               p1.putValue("countryName", "")
-                                               p1.putValue("phone", listModel.ResponseData.Mobile)
-                                               p1.putValue("email", listModel.ResponseData.Email)
-                                               p1.putValue("plan", "")
-                                               p1.putValue("planStatus", "")
-                                               p1.putValue("planStartDt", "")
-                                               p1.putValue("planExpiryDt", "")
-                                               p1.putValue("clinikoId", "")
-                                               p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
-                                               p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
-                                               p1.putValue("indexScore", listModel.ResponseData.indexScore)
-                                               p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                               p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                               p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                               addToSegment("CoUser Login", p1, CONSTANTS.track)*/
+                                                                                       p1.putValue("deviceId", Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID))
+                                                                                       p1.putValue("deviceType", "Android")
+                                                                                       p1.putValue("name", listModel.ResponseData.Name)
+                                                                                       p1.putValue("countryCode", "")
+                                                                                       p1.putValue("countryName", "")
+                                                                                       p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                                                       p1.putValue("email", listModel.ResponseData.Email)
+                                                                                       p1.putValue("plan", "")
+                                                                                       p1.putValue("planStatus", "")
+                                                                                       p1.putValue("planStartDt", "")
+                                                                                       p1.putValue("planExpiryDt", "")
+                                                                                       p1.putValue("clinikoId", "")
+                                                                                       p1.putValue("isProfileCompleted", listModel.ResponseData.isProfileCompleted)
+                                                                                       p1.putValue("isAssessmentCompleted", listModel.ResponseData.isAssessmentCompleted)
+                                                                                       p1.putValue("indexScore", listModel.ResponseData.indexScore)
+                                                                                       p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                                                       p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                                                       p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                                                       addToSegment("CoUser Login", p1, CONSTANTS.track)*/
 
                                                 userList.dialog.dismiss()
 
                                                 //  showToast(listModel.responseMessage, activity)
                                             }
-                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                            activity.getString(R.string.ResponseCodeDeleted) -> {
                                                 txtError.visibility = View.GONE
                                                 txtError.text = ""
                                                 deleteCall(activity)
@@ -383,7 +378,7 @@ class UserListActivity : AppCompatActivity() {
                                                 activity.startActivity(i)
                                                 activity.finish()
                                             }
-                                            listModel.ResponseCode.equals(activity.getString(R.string.ResponseCodefail), ignoreCase = true) -> {
+                                            activity.getString(R.string.ResponseCodefail) -> {
                                                 txtError.visibility = View.VISIBLE
                                                 txtError.text = listModel.ResponseMessage
                                             }
@@ -418,7 +413,7 @@ class UserListActivity : AppCompatActivity() {
                     val ivIcon = dialog.findViewById<ImageView>(R.id.ivIcon)
                     val tvText = dialog.findViewById<TextView>(R.id.tvText)
                     ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                    tvText.text = "A new pin has been sent to \nyour mail id \n" + coUsersModel!![position].email + "."
+                    tvText.text = "A new pin has been sent to \nyour mail id \n" + coUsersModel!![selectedItem].email + "."
 
                     dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
                         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -428,38 +423,37 @@ class UserListActivity : AppCompatActivity() {
                         false
                     }
 
-                    mainLayout.setOnClickListener {
-                        if (isNetworkConnected(activity)) {
-                            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                            val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(coUsersModel!![position].userID, coUsersModel!![position].email)
-                            listCall.enqueue(object : Callback<ForgoPinModel> {
-                                override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    val listModel: ForgoPinModel = response.body()!!
-                                    when {
-                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess)) -> {
-                                            if (listModel.responseData?.emailSend.equals("1")){
-                                                dialog.dismiss()
-                                            }else {
-                                                showToast(listModel.responseMessage, activity)
-                                            }
-                                        }
-                                        listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail)) -> {
-                                            showToast(listModel.responseMessage, activity)
-                                        }
-                                        else -> {
-                                            showToast(listModel.responseMessage, activity)
+                    if (isNetworkConnected(activity)) {
+                        val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(coUsersModel!![selectedItem].userID, coUsersModel!![selectedItem].email)
+                        listCall.enqueue(object : Callback<ForgoPinModel> {
+                            override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
+                                val listModel: ForgoPinModel = response.body()!!
+                                when {
+                                    listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess)) -> {
+                                        if (listModel.responseData?.emailSend.equals("1")){
+                                        }else {
+//                                            showToast(listModel.responseMessage, activity)
                                         }
                                     }
+                                    listModel.responseCode.equals(activity.getString(R.string.ResponseCodefail)) -> {
+                                        showToast(listModel.responseMessage, activity)
+                                    }
+                                    else -> {
+                                        showToast(listModel.responseMessage, activity)
+                                    }
                                 }
+                            }
 
-                                override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                }
-                            })
-                        } else {
-                            showToast(activity.getString(R.string.no_server_found), activity)
-                        }
+                            override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
+                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            }
+                        })
+                    } else {
+                        showToast(activity.getString(R.string.no_server_found), activity)
+                    }
+
+                    mainLayout.setOnClickListener {
+                        dialog.hide()
                     }
 
                     dialog.show()

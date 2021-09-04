@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.wellness
 
-import android.content.Intent
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +10,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.enhance.ManageFragment
 import com.brainwellnessspa.dashboardModule.session.SessionDetailFragment
-import com.brainwellnessspa.dashboardModule.session.SessionExpContinueActivity
 import com.brainwellnessspa.databinding.FragmentWellnessBinding
 
 class WellnessFragment : Fragment() {
     lateinit var binding: FragmentWellnessBinding
+    lateinit var ctx: Context
+    lateinit var act: Activity
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wellness, container, false)
         val view = binding.root
+        ctx = requireActivity()
+        act = requireActivity()
 
         binding.llExpSession.setOnClickListener {
-          /*  val i = Intent(requireActivity(), SessionExpContinueActivity::class.java)
-            startActivity(i)*/
+            /*  val i = Intent(requireActivity(), SessionExpContinueActivity::class.java)
+              startActivity(i)*/
             val fragment: Fragment = SessionDetailFragment()
             val fragmentManager1 = requireActivity().supportFragmentManager
             fragmentManager1.beginTransaction().replace(R.id.flContainer, fragment).commit()
@@ -39,7 +43,7 @@ class WellnessFragment : Fragment() {
     }
 
     private fun networkCheck() {
-        if (BWSApplication.isNetworkConnected(activity)) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
             binding.llRemainDev.visibility = View.VISIBLE /* VISIBLE*/
             binding.llNoInternet.visibility = View.GONE
         } else {

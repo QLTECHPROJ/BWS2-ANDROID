@@ -58,7 +58,7 @@ class ViewAllAudioFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ctx = requireActivity()
         act = requireActivity()
-        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
@@ -635,8 +635,8 @@ class ViewAllAudioFragment : Fragment() {
 
         private fun callMyPlayer() {
             val i = Intent(ctx, MyPlayerActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            ctx.startActivity(i)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            act.startActivity(i)
             act.overridePendingTransition(0, 0)
         }
 

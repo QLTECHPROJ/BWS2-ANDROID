@@ -1,15 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/dark_blue_gray</item>
-        <item name="colorAccent">@color/dark_blue_gray</item>
+        <item name="colorPrimaryDark">@color/app_theme_color</item>
+        <item name="colorAccent">@color/app_theme_color</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/dark_blue_gray</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/app_theme_color</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorControlNormal">@color/light_gray</item>
-        <item name="colorControlActivated">@color/dark_blue_gray</item>
+        <item name="colorControlNormal">@color/app_theme_color</item>
+        <item name="colorControlActivated">@color/app_theme_color</item>
     </style>
 
     <style name="WallSearchView" parent="Widget.AppCompat.SearchView">
@@ -24,7 +24,7 @@
         <item name="colorControlNormal">@color/gray</item>
         <item name="android:textCursorDrawable">@drawable/et_underline_selector</item>
     </style>
-
+w
     <style name="BottomNavigationView">
         <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView.Active
         </item>
@@ -39,20 +39,19 @@
 
     <!-- inactive tab icon style -->
     <style name="TextAppearance.BottomNavigationView.Inactive">
-        <item name="android:textSize">9dp</item>
+        <item name="android:textSize">@dimen/_9sdp</item>
         <item name="android:fontFamily">@font/montserrat_semi_bold</item>
     </style>
 
     <!-- active tab icon style -->
     <style name="TextAppearance.BottomNavigationView.Active">
-        <item name="android:textSize">9dp</item>
+        <item name="android:textSize">@dimen/_9sdp</item>
         <item name="android:fontFamily">@font/montserrat_semi_bold</item>
     </style>
 
     <style name="AppTheme.NoTitle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="android:windowContentTransitions" tools:ignore="NewApi">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/dark_blue_gray
         </item>
@@ -67,7 +66,7 @@
     </style>
 
     <style name="ErrorText" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textSize">@dimen/_12sdp</item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/dark_blue_gray</item>
         <item name="android:textColor">@color/red</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>

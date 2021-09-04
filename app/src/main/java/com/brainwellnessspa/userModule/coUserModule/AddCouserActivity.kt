@@ -104,6 +104,7 @@ class AddCouserActivity : AppCompatActivity() {
                             editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, authOtpModel.ResponseData.isEmailVerified)
                             editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
                             editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, authOtpModel.ResponseData.IsInCouser)
                             try {
                                 if (authOtpModel.ResponseData.planDetails.isNotEmpty()) {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)

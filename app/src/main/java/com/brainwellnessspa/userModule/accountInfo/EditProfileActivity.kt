@@ -340,7 +340,7 @@ class EditProfileActivity : AppCompatActivity() {
                                         userCalendar = formatter.format(parser.parse(userCalendar))
                                     }
 
-                                    if (viewModel.ResponseData.isEmailVerified.equals("1", ignoreCase = true)) {
+                                    if (viewModel.ResponseData.isEmailVerified.equals("1")) {
                                         binding.ivCheckEmail.visibility = View.VISIBLE
                                     } else {
                                         binding.ivCheckEmail.visibility = View.GONE
@@ -378,6 +378,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, viewModel.ResponseData.IsInCouser)
                                     try {
                                         if (viewModel.ResponseData.planDetails.isNotEmpty()) {
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)

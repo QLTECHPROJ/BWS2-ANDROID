@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.enhance
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -41,7 +42,8 @@ class ViewAllPlaylistFragment : Fragment() {
     lateinit var binding: FragmentViewAllPlaylistBinding
     var getLibraryId: String? = null
     var name: String? = null
-    lateinit var ctx:Context
+    lateinit var ctx: Context
+    lateinit var act: Activity
     var coUserId: String? = null
     var userId: String? = null
     var userName: String? = null
@@ -50,14 +52,15 @@ class ViewAllPlaylistFragment : Fragment() {
     var screenView: String? = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false)
-        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        ctx = requireActivity()
+        act = requireActivity()
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
-        val shared = requireActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+        val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
         audioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-        ctx = requireActivity()
-        DB = getAudioDataBase(activity)
+        DB = getAudioDataBase(ctx)
         if (arguments != null) {
             getLibraryId = requireArguments().getString("GetLibraryID")
             name = requireArguments().getString("Name")
@@ -73,13 +76,14 @@ class ViewAllPlaylistFragment : Fragment() {
             false
         }
         binding.llBack.setOnClickListener { callBack() }
-        val manager = GridLayoutManager(activity, 2)
+        val manager = GridLayoutManager(ctx, 2)
         binding.rvMainAudio.itemAnimator = DefaultItemAnimator()
         binding.rvMainAudio.layoutManager = manager
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n") private fun getAllMedia() {
+    @SuppressLint("SetTextI18n")
+    private fun getAllMedia() {
         DB.taskDao()?.getAllPlaylist1(coUserId)?.observe(requireActivity(), { audioList: List<DownloadPlaylistDetailsUnique> ->
             binding.tvTitle.text = "My Downloads"
             screenView = "My Downloads"
@@ -126,7 +130,7 @@ class ViewAllPlaylistFragment : Fragment() {
     }
 
     override fun onResume() {
-        if (myDownloads.equals("1", ignoreCase = true)) {
+        if (myDownloads.equals("1")) {
             getAllMedia()
         } else {
             prepareData()
@@ -211,49 +215,53 @@ class ViewAllPlaylistFragment : Fragment() {
     } catch (Exception e) {
         e.printStackTrace();
     }*/
-        if (isNetworkConnected(activity)) {
+        if (isNetworkConnected(ctx)) {
             try {
-                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                showProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 val listCall = APINewClient.client.getViewAllPlayLists(coUserId, getLibraryId)
                 listCall.enqueue(object : Callback<ViewAllPlayListModel?> {
                     override fun onResponse(call: Call<ViewAllPlayListModel?>, response: Response<ViewAllPlayListModel?>) {
                         try {
                             val listModel = response.body()
                             if (listModel != null) {
-                                if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    binding.tvTitle.text = listModel.responseData!!.view
-                                    screenView = listModel.responseData!!.view
-                                    val p = Properties()
-                                    val section = ArrayList<SegmentPlaylist>()
-                                    for (i in listModel.responseData!!.details!!.indices) {
-                                        val e = SegmentPlaylist()
-                                        e.playlistId = listModel.responseData!!.details!![i].playlistID
-                                        e.playlistName = listModel.responseData!!.details!![i].playlistName
-                                        e.playlistType = listModel.responseData!!.details!![i].created
-                                        e.playlistDuration = (listModel.responseData!!.details!![i].totalhour + "h " + listModel.responseData!!.details!![i].totalminute + "m")
-                                        e.audioCount = listModel.responseData!!.details!![i].totalAudio
-                                        section.add(e)
+                                when {
+                                    listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        binding.tvTitle.text = listModel.responseData!!.view
+                                        screenView = listModel.responseData!!.view
+                                        val p = Properties()
+                                        val section = ArrayList<SegmentPlaylist>()
+                                        for (i in listModel.responseData!!.details!!.indices) {
+                                            val e = SegmentPlaylist()
+                                            e.playlistId = listModel.responseData!!.details!![i].playlistID
+                                            e.playlistName = listModel.responseData!!.details!![i].playlistName
+                                            e.playlistType = listModel.responseData!!.details!![i].created
+                                            e.playlistDuration = (listModel.responseData!!.details!![i].totalhour + "h " + listModel.responseData!!.details!![i].totalminute + "m")
+                                            e.audioCount = listModel.responseData!!.details!![i].totalAudio
+                                            section.add(e)
+                                        }
+                                        val gson = Gson()
+                                        p.putValue("playlists", gson.toJson(section))
+                                        p.putValue("section", screenView)
+                                        addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen)
+                                        val adapter = PlaylistAdapter(listModel.responseData!!.details!!)
+                                        binding.rvMainAudio.adapter = adapter
                                     }
-                                    val gson = Gson()
-                                    p.putValue("playlists", gson.toJson(section))
-                                    p.putValue("section", screenView)
-                                    addToSegment("View All Playlist Screen Viewed", p, CONSTANTS.screen)
-                                    val adapter = PlaylistAdapter(listModel.responseData!!.details!!)
-                                    binding.rvMainAudio.adapter = adapter
-                                } else if(listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)){
-                                    deleteCall(activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    activity?.startActivity(i)
-                                    activity?.finish()
-                                }else {
-                                    showToast(listModel.responseMessage, activity)
+                                    listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
+                                        deleteCall(ctx)
+                                        val i = Intent(act, SignInActivity::class.java)
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        i.putExtra("mobileNo", "")
+                                        i.putExtra("countryCode", "")
+                                        i.putExtra("name", "")
+                                        i.putExtra("email", "")
+                                        i.putExtra("countryShortName", "")
+                                        act.startActivity(i)
+                                        act.finish()
+                                    }
+                                    else -> {
+                                        showToast(listModel.responseMessage, act)
+                                    }
                                 }
                             }
                         } catch (e: Exception) {
@@ -262,14 +270,14 @@ class ViewAllPlaylistFragment : Fragment() {
                     }
 
                     override fun onFailure(call: Call<ViewAllPlayListModel?>, t: Throwable) {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     }
                 })
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         } else {
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(ctx.getString(R.string.no_server_found), act)
         }
     }
 
@@ -280,21 +288,22 @@ class ViewAllPlaylistFragment : Fragment() {
             return MyViewHolder(v)
         }
 
-        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val measureRatio = measureRatio(activity, 0f, 1f, 1f, 0.44f, 0f)
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.44f, 0f)
             holder.binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
             holder.binding.tvAddToPlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
             holder.binding.tvAddToPlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
             holder.binding.tvPlaylistName.text = listModelList[position].playlistName
-            val measureRatio1 = measureRatio(activity, 0f, 1f, 1f, 0.44f, 0f)
+            val measureRatio1 = measureRatio(ctx, 0f, 1f, 1f, 0.44f, 0f)
             holder.binding.rlMainLayout.layoutParams.height = (measureRatio1.height * measureRatio1.ratio).toInt()
             holder.binding.rlMainLayout.layoutParams.width = (measureRatio1.widthImg * measureRatio1.ratio).toInt()
             Glide.with(requireActivity()).load(listModelList[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
 
             if (IsLock.equals("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.visibility = View.VISIBLE
             } else if (IsLock.equals("0")) {
                 holder.binding.ivLock.visibility = View.GONE
             }
@@ -312,24 +321,31 @@ class ViewAllPlaylistFragment : Fragment() {
                 val p = Properties()
                 p.putValue("playlistId", listModelList[position].playlistID)
                 p.putValue("playlistName", listModelList[position].playlistName)
-                p.putValue("source","Playlist View All Screen")
-                if (listModelList[position].created.equals("1",ignoreCase = true)) {
-                    p.putValue("playlistType", "Created")
-                } else if (listModelList[position].created == "0") {
-                    p.putValue("playlistType", "Default")
-                } else if (listModelList[position].created.equals("2"))
-                    p.putValue("playlistType", "Suggested")
+                p.putValue("source", "Playlist View All Screen")
+                when {
+                    listModelList[position].created.equals("1") -> {
+                        p.putValue("playlistType", "Created")
+                    }
+                    listModelList[position].created == "0" -> {
+                        p.putValue("playlistType", "Default")
+                    }
+                    listModelList[position].created.equals("2") -> p.putValue("playlistType", "Suggested")
+                }
 
-                if (listModelList[position].totalhour == "") {
-                    p.putValue("playlistDuration", "0h " + listModelList[position].totalhour  + "m")
-                } else if (listModelList[position].totalminute == "") {
-                    p.putValue("playlistDuration", listModelList[position].totalhour  + "h 0m")
-                } else {
-                    p.putValue("playlistDuration", listModelList[position].totalhour  + "h " + listModelList[position].totalminute + "m")
+                when {
+                    listModelList[position].totalhour == "" -> {
+                        p.putValue("playlistDuration", "0h " + listModelList[position].totalhour + "m")
+                    }
+                    listModelList[position].totalminute == "" -> {
+                        p.putValue("playlistDuration", listModelList[position].totalhour + "h 0m")
+                    }
+                    else -> {
+                        p.putValue("playlistDuration", listModelList[position].totalhour + "h " + listModelList[position].totalminute + "m")
+                    }
                 }
                 addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 holder.binding.ivLock.visibility = View.GONE
-                val i = Intent(activity, AddPlaylistActivity::class.java)
+                val i = Intent(act, AddPlaylistActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("AudioId", "")
                 i.putExtra("ScreenView", "Playlist View All Screen")
@@ -338,15 +354,15 @@ class ViewAllPlaylistFragment : Fragment() {
                 i.putExtra("PlaylistImage", listModelList[position].playlistImage)
                 i.putExtra("PlaylistType", listModelList[position].created)
                 i.putExtra("Liked", "0")
-                startActivity(i)
+                act.startActivity(i)
             }
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx,activity)
+                    callEnhanceActivity(ctx, act)
                 } else if (IsLock.equals("0")) {
-                    if (myDownloads.equals("1", ignoreCase = true)) {
+                    if (myDownloads.equals("1")) {
                         //                            getMedia(listModelList.get(position).getPlaylistID());
-                        val i = Intent(activity, DownloadPlaylistActivity::class.java)
+                        val i = Intent(ctx, DownloadPlaylistActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", listModelList[position].playlistID)
@@ -357,11 +373,11 @@ class ViewAllPlaylistFragment : Fragment() {
                         i.putExtra("Totalhour", listModelList[position].totalhour)
                         i.putExtra("Totalminute", listModelList[position].totalminute)
                         i.putExtra("MyDownloads", "1")
-                        requireActivity().startActivity(i)
+                        act.startActivity(i)
                     } else {
                         GetPlaylistLibraryID = getLibraryId
-                        val i = Intent(activity, MyPlaylistListingActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        val i = Intent(ctx, MyPlaylistListingActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         i.putExtra("New", "0")
                         i.putExtra("PlaylistID", listModelList[position].playlistID)
                         i.putExtra("PlaylistName", listModelList[position].playlistName)
@@ -369,8 +385,7 @@ class ViewAllPlaylistFragment : Fragment() {
                         i.putExtra("MyDownloads", myDownloads)
                         i.putExtra("ScreenView", screenView)
                         i.putExtra("PlaylistType", listModelList[position].created)
-                        i.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        startActivity(i)
+                        act.startActivity(i)
                     }
                 }
             }

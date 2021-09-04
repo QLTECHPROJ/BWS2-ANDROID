@@ -160,7 +160,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             tvSendOTPbool = false
             val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
             var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
-            if (key.equals("", ignoreCase = true)) {
+            if (key.equals("")) {
                 key = getKey(applicationContext)
             }
             val p = Properties()
@@ -312,6 +312,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                         editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                         try {
                             if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
