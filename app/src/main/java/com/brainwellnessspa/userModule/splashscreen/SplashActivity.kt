@@ -2,11 +2,13 @@ package com.brainwellnessspa.userModule.splashscreen
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.*
+import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -28,14 +30,22 @@ import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
+import com.clevertap.android.sdk.CTInboxListener
+import com.clevertap.android.sdk.CTInboxStyleConfig
+import com.clevertap.android.sdk.CleverTapAPI
+import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.HashMap
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationListener{
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
@@ -77,6 +87,29 @@ class SplashActivity : AppCompatActivity() {
         editor.apply()
         if (key.equals("")) {
             key = getKey(this)
+        }
+
+        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        if (TextUtils.isEmpty(fcmId)) {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this@SplashActivity) { task: Task<InstallationTokenResult> ->
+                val newToken = task.result.token
+                Log.e("newToken", newToken)
+                val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, newToken) // Friend
+                editor.apply()
+            }
+            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        }
+        clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
+//        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CleverTapAPI.createNotificationChannel(applicationContext,getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
+        }
+        clevertapDefaultInstance?.apply {
+            ctNotificationInboxListener = this@SplashActivity
+            initializeInbox()
         }
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -159,7 +192,7 @@ class SplashActivity : AppCompatActivity() {
                                         this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                         dialog.cancel()
                                     }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
-//                                        askBattyPermission()
+                                        //                                        askBattyPermission()
                                         callDashboard()
                                         dialog.dismiss()
                                     }
@@ -175,7 +208,7 @@ class SplashActivity : AppCompatActivity() {
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce.equals("") -> {
-//                                    askBattyPermission()
+                                    //                                    askBattyPermission()
                                     callDashboard()
                                 }
                             }
@@ -360,7 +393,7 @@ class SplashActivity : AppCompatActivity() {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                        intent.putExtra("Navigation","Enhance")
+                        intent.putExtra("Navigation", "Enhance")
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
@@ -373,7 +406,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                            intent.putExtra("Navigation","Enhance")
+                            intent.putExtra("Navigation", "Enhance")
                             startActivity(intent)
                             finish()
                         } else if (planId.equals("")) {
@@ -398,7 +431,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -440,7 +473,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -477,7 +510,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                            intent.putExtra("Navigation","Enhance")
+                            intent.putExtra("Navigation", "Enhance")
                             startActivity(intent)
                             finish()
                         } else if (isProfileCompleted.equals("0")) {
@@ -497,7 +530,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -542,7 +575,7 @@ class SplashActivity : AppCompatActivity() {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                        intent.putExtra("Navigation","Enhance")
+                        intent.putExtra("Navigation", "Enhance")
                         startActivity(intent)
                         finish()
                     } else if (isPinSet.equals("1")) {
@@ -550,7 +583,7 @@ class SplashActivity : AppCompatActivity() {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                            intent.putExtra("Navigation","Enhance")
+                            intent.putExtra("Navigation", "Enhance")
                             startActivity(intent)
                             finish()
                         } else if (isProfileCompleted.equals("0")) {
@@ -570,7 +603,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -606,7 +639,7 @@ class SplashActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -646,15 +679,41 @@ class SplashActivity : AppCompatActivity() {
 
     /* TODO function for segment analytics  */
     fun setAnalytics(segmentKey: String, context: Context) {
-        try { //     TODO : Live segment key
-            //                            analytics = new Analytics.Builder(getApplication(), "Al8EubbxttJtx0GvcsQymw9ER1SR2Ovy")//live
+        try {
             analytics = Analytics.Builder(context, segmentKey).use(FirebaseIntegration.FACTORY).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
             Analytics.setSingletonInstance(analytics)
-        } catch (e: java.lang.Exception) { //            catch = true;
-            //            Log.e("in Catch", "True");c
-            //            Properties p = new Properties();
-            //            p.putValue("Application Crashed", e.toString());
-            //            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
+        } catch (e: java.lang.Exception) {}
+    }
+
+    override fun inboxDidInitialize() {
+        var cleverTapAPI: CleverTapAPI? = null
+        cleverTapAPI = CleverTapAPI.getDefaultInstance(this@SplashActivity)
+        val inboxTabs =
+            arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
+        CTInboxStyleConfig().apply {
+            tabs = inboxTabs //Do not use this if you don't want to use tabs
+            tabBackgroundColor = "#FF0000"
+            selectedTabIndicatorColor = "#0000FF"
+            selectedTabColor = "#000000"
+            unselectedTabColor = "#FFFFFF"
+            backButtonColor = "#FF0000"
+            navBarTitleColor = "#FF0000"
+            navBarTitle = "MY INBOX"
+            navBarColor = "#FFFFFF"
+            inboxBackgroundColor = "#00FF00"
+            firstTabTitle = "First Tab"
+            cleverTapAPI?.showAppInbox(this) //Opens activity With Tabs
+
         }
+        //OR
+        cleverTapAPI!!.showAppInbox()//Opens Activity with default style config
+    }
+
+    override fun inboxMessagesDidUpdate() {
+
+    }
+
+    override fun onNotificationClickedPayloadReceived(payload: HashMap<String, Any>?) {
+
     }
 }

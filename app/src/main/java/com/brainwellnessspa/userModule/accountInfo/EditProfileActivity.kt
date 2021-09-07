@@ -137,7 +137,41 @@ class EditProfileActivity : AppCompatActivity() {
         profileViewData(applicationContext)
         binding.etCalendar.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                setDate()
+                if (binding.etCalendar.text.toString().isNotEmpty()) {
+                    val dialog = Dialog(this@EditProfileActivity)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.cancel_membership)
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@EditProfileActivity, R.color.transparent_white)))
+                    dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                    val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
+                    val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
+                    val btn = dialog.findViewById<Button>(R.id.Btn)
+                    tvTitle.text = ""
+                    tvSubTitle.text = "Changing Date of Birth may cause change in your age category and if this happens, you will be redirected to select your sleep time and area of focus again. Do you wish to continue ?"
+                    tvGoBack.text = "No"
+                    tvTitle.visibility = View.GONE
+                    tvGoBack.visibility = View.GONE
+                    btn.text = "Ok"
+                    dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+                            return@setOnKeyListener true
+                        }
+                        false
+                    }
+
+                    btn.setOnClickListener {
+                        dialog.dismiss()
+                        setDate()
+                    }
+                    /* This click event is called when not cancelling subscription */
+                    tvGoBack.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                    dialog.setCancelable(false)
+                }
             }
         }
         binding.btnSave.setOnClickListener {
@@ -238,41 +272,9 @@ class EditProfileActivity : AppCompatActivity() {
                                             activity.finish()
                                         }
                                         viewModel.responseData!!.ageSlabChange.equals("1") -> {
-                                            val dialog = Dialog(this@EditProfileActivity)
-                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                            dialog.setContentView(R.layout.cancel_membership)
-                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@EditProfileActivity, R.color.transparent_white)))
-                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                                            val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
-                                            val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                                            val btn = dialog.findViewById<Button>(R.id.Btn)
-                                            tvTitle.text = ""
-                                            tvSubTitle.text = "Changing Date of Birth may cause change in your age category and if this happens, you will be redirected to select your sleep time and area of focus again. Do you wish to continue ?"
-                                            tvGoBack.text = "No"
-                                            tvTitle.visibility = View.GONE
-                                            tvGoBack.visibility = View.GONE
-                                            btn.text = "Ok"
-                                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                                    dialog.dismiss()
-                                                    return@setOnKeyListener true
-                                                }
-                                                false
-                                            }
-
-                                            btn.setOnClickListener {
-                                                dialog.dismiss()
-                                                val intent = Intent(activity, SleepTimeActivity::class.java)
-                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                activity.startActivity(intent)
-                                            }
-                                            /* This click event is called when not cancelling subscription */
-                                            tvGoBack.setOnClickListener {
-                                                dialog.dismiss()
-                                            }
-                                            dialog.show()
-                                            dialog.setCancelable(false)
+                                            val intent = Intent(activity, SleepTimeActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                            activity.startActivity(intent)
                                         }
                                         else -> {
                                             activity.finish()

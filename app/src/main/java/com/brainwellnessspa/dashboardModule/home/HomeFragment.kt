@@ -209,7 +209,7 @@ class HomeFragment : Fragment() {
             binding.llBottomView.isEnabled = true
         }
 
-        prepareHomeData()
+
 
         /* User list layout click */
         binding.llBottomView.setOnClickListener {
@@ -366,7 +366,7 @@ class HomeFragment : Fragment() {
         /* network check function */
         networkCheck()
 
-
+        prepareHomeData()
         binding.llTodayClicked.setOnClickListener {
             binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             binding.tvMonth.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
@@ -764,7 +764,7 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,requireActivity(),act)
+                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,ctx,act)
 
                                     getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, act)
 

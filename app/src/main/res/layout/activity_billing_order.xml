@@ -258,6 +258,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_16sdp"
                             android:weightSum="1"
+                            android:visibility="gone"
                             android:baselineAligned="false">
 
                             <LinearLayout

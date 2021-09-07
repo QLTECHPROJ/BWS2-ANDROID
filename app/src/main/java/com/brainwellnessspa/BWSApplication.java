@@ -27,6 +27,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -64,6 +65,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -111,7 +113,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-//import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.downloader.PRDownloader;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -131,6 +133,7 @@ import com.github.mikephil.charting.components.Legend.LegendForm;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -224,7 +227,7 @@ public class BWSApplication extends Application {
     public static int isSetLoginPin = 0;
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
-
+    public static CleverTapAPI clevertapDefaultInstance;
     public static Context getContext() {
         return mContext;
     }
@@ -1685,7 +1688,7 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart,LinearLayout llPastIndexScore,  LineChart chart, Activity act,Context ctx) {
+    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart,LinearLayout llPastIndexScore,  LineChart chart,Context ctx ,Activity act) {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
@@ -1848,10 +1851,13 @@ public class BWSApplication extends Application {
         // add data
         setData(xAxisValues.size(), chart, ctx);
         Legend l = chart.getLegend();
-        l.setForm(LegendForm.LINE);
+        l.setForm(LegendForm.CIRCLE);
+        l.setFormSize(1f);
+        l.setFormToTextSpace(5f);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
         l.setXEntrySpace(4f);
         l.setYEntrySpace(0f);
@@ -1864,7 +1870,7 @@ public class BWSApplication extends Application {
 
         for (int i = 0; i < count; i++) {
             float val = 0;
-            if(i<3) {
+            if(i%2==0) {
                  val = (float) (Math.random()) + (18 * i + 1);
             }else {
                  val = (float) (Math.random()) + (9 * i + 1);
@@ -1907,13 +1913,13 @@ public class BWSApplication extends Application {
             set1.setDrawFilled(true);
             set1.setFillFormatter((dataSet, dataProvider) -> chart.getAxisLeft().getAxisMinimum());
             // set color of filled area
-            /*if (Utils.getSDKInt() >= 18) {
+            if (Utils.getSDKInt() >= 18) {
                 // drawables only supported on api level 18 and above
                 Drawable drawable = ContextCompat.getDrawable(ctx, R.drawable.fade_red);
                 set1.setFillDrawable(drawable);
             } else {
                 set1.setFillColor(Color.BLACK);
-            }*/
+            }
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
             LineData data = new LineData(dataSets);
@@ -2532,6 +2538,37 @@ public class BWSApplication extends Application {
 
         if (isAdmin.equalsIgnoreCase("1")) isadm = true;
         else isadm = false;
+        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+        profileUpdate.put("userGroupId", mainAccountId);
+        profileUpdate.put("userId", userId);
+        profileUpdate.put("id", userId);
+        profileUpdate.put("isAdmin", isadm);
+        profileUpdate.put("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
+        profileUpdate.put("deviceType", "Android");
+        profileUpdate.put("Name",name);
+        profileUpdate.put("Email",email);
+        profileUpdate.put("Mobile",mobile);
+        profileUpdate.put("DOB", dob);
+        profileUpdate.put("profileImage", image);
+        profileUpdate.put("isProfileCompleted", isProf);
+        profileUpdate.put("isAssessmentCompleted", isAss);
+        profileUpdate.put("wellnessScore", indexScore);
+        profileUpdate.put("scoreLevel", scoreLevel);
+        profileUpdate.put("areaOfFocus", areaOfFocus);
+        profileUpdate.put("avgSleepTime", sleepTime);
+        profileUpdate.put("plan", planId);
+        profileUpdate.put("planStatus", planStatus);
+        profileUpdate.put("planStartDt", planPurchaseDate);
+        profileUpdate.put("planExpiryDt", planExpDate);
+        profileUpdate.put("MSG-push", true);
+        profileUpdate.put("MSG-whatsapp", true);
+        profileUpdate.put("MSG-email", true);
+        profileUpdate.put("MSG-sms", true);
+        profileUpdate.put("Identity", userId);
+        CleverTapAPI cleverTapDefaultInstance = CleverTapAPI.getDefaultInstance(ctx);
+        cleverTapDefaultInstance.onUserLogin(profileUpdate);
+        cleverTapDefaultInstance.pushProfile(profileUpdate);
+
         analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
 
@@ -2792,6 +2829,13 @@ public class BWSApplication extends Application {
         super.onCreate();
         mContext = this;
         BWSApplication = this;
+        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+        profileUpdate.put("MSG-push", true);
+        profileUpdate.put("MSG-whatsapp", true);
+        profileUpdate.put("MSG-email", true);
+        profileUpdate.put("MSG-sms", true);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated",profileUpdate);
     }
 
     public static void deleteCall(Context context) {

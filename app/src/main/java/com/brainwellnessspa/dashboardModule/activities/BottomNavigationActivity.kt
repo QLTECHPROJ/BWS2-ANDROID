@@ -1,12 +1,12 @@
 package com.brainwellnessspa.dashboardModule.activities
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.*
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -23,13 +23,20 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MyBatteryReceiver
 import com.brainwellnessspa.utility.MyNetworkReceiver
 import com.brainwellnessspa.utility.UserActivityTrackModel
+import com.clevertap.android.sdk.CTInboxListener
+import com.clevertap.android.sdk.CTInboxStyleConfig
+import com.clevertap.android.sdk.CleverTapAPI
+import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ir.drax.netwatch.NetWatch
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
 import java.util.*
 
-class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator {
+class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator, CTInboxListener, CTPushNotificationListener {
     /* main dashboard bottom activity for all menu */
     lateinit var binding: ActivityBottomNavigationBinding
     var doubleBackToExitPressedOnce = false
@@ -63,7 +70,27 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
-
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        if (TextUtils.isEmpty(fcmId)) {
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this@BottomNavigationActivity) { task: Task<InstallationTokenResult> ->
+                val newToken = task.result.token
+                Log.e("newToken", newToken)
+                val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, newToken) // Friend
+                editor.apply()
+            }
+            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        }
+        clevertapDefaultInstance!!.pushFcmRegistrationId(fcmId, true)
+        //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
+        }
+        clevertapDefaultInstance.apply {
+            this!!.ctNotificationInboxListener = this@BottomNavigationActivity
+            initializeInbox()
+        }
         /* get user id and main account id*/
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -168,5 +195,36 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         } else {
             super.onBackPressed()
         }
+    }
+    override fun inboxDidInitialize() {
+        var cleverTapAPI: CleverTapAPI? = null
+        cleverTapAPI = CleverTapAPI.getDefaultInstance(this@BottomNavigationActivity)
+        val inboxTabs =
+            arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
+        CTInboxStyleConfig().apply {
+            tabs = inboxTabs //Do not use this if you don't want to use tabs
+            tabBackgroundColor = "#FF0000"
+            selectedTabIndicatorColor = "#0000FF"
+            selectedTabColor = "#000000"
+            unselectedTabColor = "#FFFFFF"
+            backButtonColor = "#FF0000"
+            navBarTitleColor = "#FF0000"
+            navBarTitle = "MY INBOX"
+            navBarColor = "#FFFFFF"
+            inboxBackgroundColor = "#00FF00"
+            firstTabTitle = "First Tab"
+            cleverTapAPI?.showAppInbox(this) //Opens activity With Tabs
+
+        }
+        //OR
+        cleverTapAPI!!.showAppInbox()//Opens Activity with default style config
+    }
+
+    override fun inboxMessagesDidUpdate() {
+
+    }
+
+    override fun onNotificationClickedPayloadReceived(payload: HashMap<String, Any>?) {
+
     }
 }

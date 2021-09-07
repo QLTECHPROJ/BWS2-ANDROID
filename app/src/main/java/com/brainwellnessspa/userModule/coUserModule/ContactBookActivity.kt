@@ -367,7 +367,7 @@ class ContactBookActivity : AppCompatActivity() {
                                 val uri = Uri.parse("smsto:$number")
                                 val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
                                 // smsIntent.setData(uri);
-                                smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 14 days free trial\n$referLink")
+                                smsIntent.putExtra("sms_body", "Hey, I am loving using the Brain Wellness App. You can develop yourself in the comfort of your home while you sleep and gain access to over 75 audio programs helping you to live inspired and improve your mental wellbeing. I would like to invite you to try it. Sign up using the link and get 14 days free trial \n$referLink")
                                 startActivity(smsIntent)
                                 finish()
 

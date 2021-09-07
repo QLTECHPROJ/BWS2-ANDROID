@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity;
+import com.brainwellnessspa.encryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.roomDataBase.AudioDatabase;
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.utility.CONSTANTS;
@@ -106,10 +109,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        if (comeDeletePlaylist == 1) {
-            GetAllMedia(getActivity());
-            comeDeletePlaylist = 0;
-        }
         GetAllMedia(getActivity());
         super.onResume();
     }
@@ -373,31 +372,29 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                         });
 
                         Btn.setOnClickListener(v -> {
-                            if (isMyDownloading) {
-                                //                            handler1.removeCallbacks(UpdateSongTime1);
-                            }
-                            DB.taskDao().getAllPlaylist1(CoUserID).removeObserver(audioList -> {
-                            });
-                            getDownloadDataForDelete(listModelList.get(position).getPlaylistID());
-                            GetPlaylistMedia(listModelList.get(position).getPlaylistID(), CoUserID, ctx);
+                            List<DownloadPlaylistDetails> list2 = new ArrayList<>();
+                            list2.addAll(listModelList);
+                            int i = position;
+                            GetPlaylistMedia1(list2.get(i).getPlaylistID(), CoUserID, ctx);
+                            getDownloadDataForDelete(list2.get(i).getPlaylistID());
                             Properties p = new Properties();
-                            p.putValue("playlistId", listModelList.get(position).getPlaylistID());
-                            p.putValue("playlistName", listModelList.get(position).getPlaylistName());
-                            if (listModelList.get(position).getCreated().equalsIgnoreCase("1")) {
+                            p.putValue("playlistId", list2.get(i).getPlaylistID());
+                            p.putValue("playlistName", list2.get(i).getPlaylistName());
+                            if (list2.get(i).getCreated().equalsIgnoreCase("1")) {
                                 p.putValue("playlistType", "Created");
-                            } else if (listModelList.get(position).getCreated().equalsIgnoreCase("0")) {
+                            } else if (list2.get(i).getCreated().equalsIgnoreCase("0")) {
                                 p.putValue("playlistType", "Default");
-                            } else if (listModelList.get(position).getCreated().equals("2"))
+                            } else if (list2.get(i).getCreated().equals("2"))
                                 p.putValue("playlistType", "Suggested");
 
-                            p.putValue("audioCount", listModelList.get(position).getTotalAudio());
-                            p.putValue("playlistDescription", listModelList.get(position).getPlaylistDesc());
-                            if (listModelList.get(position).getTotalhour().equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", "0h " + listModelList.get(position).getTotalminute() + "m");
-                            } else if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
-                                p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h 0m");
+                            p.putValue("audioCount", list2.get(i).getTotalAudio());
+                            p.putValue("playlistDescription", list2.get(i).getPlaylistDesc());
+                            if (list2.get(i).getTotalhour().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", "0h " + list2.get(position).getTotalminute() + "m");
+                            } else if (list2.get(i).getTotalminute().equalsIgnoreCase("")) {
+                                p.putValue("playlistDuration", list2.get(i).getTotalhour() + "h 0m");
                             } else {
-                                p.putValue("playlistDuration", listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+                                p.putValue("playlistDuration", list2.get(i).getTotalhour() + "h " + list2.get(i).getTotalminute() + "m");
                             }
                             p.putValue("source", "Downloaded Playlists");
                             BWSApplication.addToSegment("Downloaded Playlist Removed", p, CONSTANTS.track);
@@ -416,7 +413,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
         private void getDownloadDataForDelete(String playlistID) {
             List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
-            GetAllMedia(getActivity());
             try {
                 SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 Gson gson = new Gson();
@@ -460,13 +456,50 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                 }
             } catch (Exception e) {
                 //                getDownloadDataForDelete(playlistID);
-                GetAllMedia(getActivity());
                 e.printStackTrace();
                 Log.e("Download Playlist ", "Download Playlist remove issue:- " + e.getMessage());
             }
 
         }
+        public void GetPlaylistMedia1(String PlaylistID, String CoUserID, Context ctx) {
+            DB = getAudioDataBase(ctx);
+            DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
+                deleteDownloadFile(PlaylistID, CoUserID);
+                if (audioList.size() != 0) {
+                    GetSingleMedia(audioList.get(0).getAudioFile(), ctx, audioList, 0, CoUserID);
+                }
+            });
+        }
 
+        public void deleteDownloadFile(String PlaylistId, String CoUserID) {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deleteByPlaylistId(PlaylistId, CoUserID));
+            deletePlaylist(PlaylistId, CoUserID);
+        }
+
+        public void GetSingleMedia(String AudioFile, Context ctx, List<DownloadAudioDetails> audioList, int i, String CoUserID) {
+            DB.taskDao().getLastIdByuId1(AudioFile, CoUserID).observe((LifecycleOwner) ctx, audioList1 -> {
+                try {
+                    if (audioList1.size() != 0) {
+                        if (audioList1.size() == 1) {
+                            FileUtils.deleteDownloadedFile(ctx, audioList1.get(0).getName());
+                        }
+                    }
+
+                    if (i < audioList.size() - 1) {
+                        GetSingleMedia(audioList.get(i + 1).getAudioFile(), ctx, audioList, i + 1, CoUserID);
+                        Log.e("DownloadMedia Call", String.valueOf(i + 1));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            });
+        }
+
+        public void deletePlaylist(String playlistId, String CoUserID) {
+            AudioDatabase.databaseWriteExecutor.execute(() -> DB.taskDao().deletePlaylist(playlistId, CoUserID));
+            GetAllMedia(getActivity());
+        }
         private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
             DB.taskDao().getCountDownloadProgress1("Complete", playlistID, CoUserID).observe(this.ctx, audioList -> {
                 if (audioList != null) {

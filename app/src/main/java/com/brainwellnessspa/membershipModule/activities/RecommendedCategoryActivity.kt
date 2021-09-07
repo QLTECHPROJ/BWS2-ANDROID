@@ -773,7 +773,15 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                         startActivity(i)
                                         finish()
                                     }
-                                    btn.setOnClickListener {dialog.hide() }
+                                    btn.setOnClickListener {
+                                        val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                        val edited = preferred.edit()
+                                        edited.remove(CONSTANTS.selectedCategoriesTitle)
+                                        edited.remove(CONSTANTS.selectedCategoriesName)
+                                        edited.clear()
+                                        edited.apply()
+                                        dialog.hide()
+                                    }
                                     dialog.show()
                                     dialog.setCancelable(false)
                                 }else if(listModel.responseData!!.showAlert.equals("0")){
