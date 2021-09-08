@@ -889,7 +889,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
 
                     if (position != PlayerPosition) {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                            pos = position;
+                            for (int i = 0; i < listModelList.size(); i++) {
+                                if (listModelList2.get(i).getName().equals(listModelList.get(position).getName())) {
+                                    pos = i;
+                                    break;
+                                }
+                            }
                             if (listModelList2.size() != 0) {
                                 callTransparentFrag(pos, ctx, listModelList2, "", PlaylistID, true);
                             } else {
@@ -913,7 +918,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
                     }
                 }
                 if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                    pos = position;
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        if (listModelList2.get(i).getName().equals(listModelList.get(position).getName())) {
+                            pos = i;
+                            break;
+                        }
+                    }
 
                     boolean audioc = true;
                     if (isDisclaimer == 1) {

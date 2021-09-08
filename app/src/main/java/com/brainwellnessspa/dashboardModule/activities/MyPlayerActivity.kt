@@ -102,8 +102,8 @@ class MyPlayerActivity : AppCompatActivity() {
     private val listener1: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.hasExtra("MyReminder")) {
-                audioClick = false
-                makePlayerArray()
+                getDownloadData()
+                GetMediaPer()
             }
         }
     }
@@ -112,7 +112,7 @@ class MyPlayerActivity : AppCompatActivity() {
         getDownloadData()
         localIntent = Intent("play_pause_Action")
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
-
+        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener1, IntentFilter("Reminder"))
         LocalBroadcastManager.getInstance(act).registerReceiver(listener, IntentFilter("DownloadProgress"))
         super.onResume()
     }

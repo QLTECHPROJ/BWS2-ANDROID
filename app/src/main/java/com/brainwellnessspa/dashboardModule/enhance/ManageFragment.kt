@@ -495,7 +495,12 @@ class ManageFragment : Fragment() {
                     if (player != null) {
                         if (position != playerPosition) {
                             if (downloadAudioDetailsList.contains(listModelList[position].name)) {
-                                pos = position
+                                for (i in listModelList.indices) {
+                                    if (listModelList2[i].name == listModelList[position].name) {
+                                        pos = i
+                                        break
+                                    }
+                                }
                                 callPlayer(pos, views!!, listModelList2, ctx, act, true)
                             } else { //                                pos = 0;
                                 showToast(ctx.getString(R.string.no_server_found), act)
@@ -508,7 +513,12 @@ class ManageFragment : Fragment() {
                         }
                     } else {
                         if (downloadAudioDetailsList.contains(listModelList[position].name)) {
-                            pos = position
+                            for (i in listModelList.indices) {
+                                if (listModelList2[i].name == listModelList[position].name) {
+                                    pos = i
+                                    break
+                                }
+                            }
                             callPlayer(pos, views!!, listModelList2, ctx, act, true)
                         } else { //                                pos = 0;
                             showToast(ctx.getString(R.string.no_server_found), act)
@@ -683,7 +693,7 @@ class ManageFragment : Fragment() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist") || audioPlayerFlag.equals("Downloadlist")) {
                         if (playFrom.equals("Suggested")) {
-                            callAllRemovePlayer(ctx,act)
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -749,7 +759,7 @@ class ManageFragment : Fragment() {
                     when {
                         listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
                             getDownloadedList(ctx, DB)
-                    //                        Log.e("download audio", downloadAudioDetailsList.toString())
+                            //                        Log.e("download audio", downloadAudioDetailsList.toString())
                             binding.llMainLayout.visibility = View.VISIBLE
                             binding.llSpace.visibility = View.VISIBLE
                             binding.llPlayer.visibility = View.VISIBLE
@@ -763,16 +773,16 @@ class ManageFragment : Fragment() {
                             }
                             val p = Properties()
 
-                        val gson: Gson
-                        val gsonBuilder = GsonBuilder()
-                        gson = gsonBuilder.create()
-                        p.putValue("sections", gson.toJson(section))
-                        addToSegment("Enhance Screen Viewed", p, CONSTANTS.screen)
-                        val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
-                        binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
-                        binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
-                        binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
-                        Glide.with(ctx).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
+                            val gson: Gson
+                            val gsonBuilder = GsonBuilder()
+                            gson = gsonBuilder.create()
+                            p.putValue("sections", gson.toJson(section))
+                            addToSegment("Enhance Screen Viewed", p, CONSTANTS.screen)
+                            val measureRatio = measureRatio(ctx, 0f, 1f, 1f, 0.38f, 0f)
+                            binding.ivCreatePlaylist.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
+                            binding.ivCreatePlaylist.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
+                            binding.ivCreatePlaylist.scaleType = ImageView.ScaleType.FIT_XY
+                            Glide.with(ctx).load(R.drawable.ic_create_playlist).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(20))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivCreatePlaylist)
 
                             IsLock = listModel.responseData!!.IsLock
                             playlistAdapter = PlaylistAdapter(listModel.responseData!!.playlist[0], ctx, binding, act, DB)
@@ -1009,8 +1019,13 @@ class ManageFragment : Fragment() {
                     }
                     if (position != positionSaved) {
                         if (downloadAudioDetailsList.contains(listModel[position].name)) {
-                            positionSaved = position
-                            PlayerAudioId = listModel[position].id
+                            for (i in listModel.indices) {
+                                if (listModelList2[i].name == listModel[position].name) {
+                                    pos = i
+                                    break
+                                }
+                            }
+                            PlayerAudioId = listModel[pos].id
                             if (listModelList2.size != 0) {
                                 callPlayerSuggested(pos, "", listModelList2, ctx, act, pID, pName, true)
                             } else {
@@ -1029,7 +1044,12 @@ class ManageFragment : Fragment() {
                     }
                 }
                 if (downloadAudioDetailsList.contains(listModel[position].name)) {
-                    pos = position
+                    for (i in listModel.indices) {
+                        if (listModelList2[i].name == listModel[position].name) {
+                            pos = i
+                            break
+                        }
+                    }
                     val gson = Gson()
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type

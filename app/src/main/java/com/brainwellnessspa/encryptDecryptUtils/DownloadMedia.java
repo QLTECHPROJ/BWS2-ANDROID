@@ -335,6 +335,13 @@ public class DownloadMedia implements OnDownloadListener {
                         fileNameList.add(notDownloadedData.get(i).getName());
                         playlistDownloadId.add(notDownloadedData.get(i).getPlaylistId());
                     }
+                    SharedPreferences preferences11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit1 = preferences11.edit();
+                    edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
+                    edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
+                    edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
+                    edit1.clear();
+                    edit1.apply();
                     SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedx.edit();
                     Gson gson = new Gson();

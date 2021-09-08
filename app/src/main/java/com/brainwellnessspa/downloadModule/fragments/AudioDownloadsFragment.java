@@ -600,7 +600,12 @@ public class AudioDownloadsFragment extends Fragment {
                     if (player != null) {
                         if (position != PlayerPosition) {
                             if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                                pos = position;
+                                for (int i = 0; i < listModelList.size(); i++) {
+                                    if (listModelList2.get(i).getName().equals(listModelList.get(position).getName())) {
+                                        pos = i;
+                                        break;
+                                    }
+                                }
                                 callTransFrag(pos, listModelList2, true);
                             } else {
                                 //                                pos = 0;
@@ -615,7 +620,12 @@ public class AudioDownloadsFragment extends Fragment {
                         }
                     } else {
                         if (downloadAudioDetailsList.contains(listModelList.get(position).getName())) {
-                            pos = position;
+                            for (int i = 0; i < listModelList.size(); i++) {
+                                if (listModelList2.get(i).getName().equals(listModelList.get(position).getName())) {
+                                    pos = i;
+                                    break;
+                                }
+                            }
                             callTransFrag(pos, listModelList2, true);
                         } else {
                             //                                pos = 0;

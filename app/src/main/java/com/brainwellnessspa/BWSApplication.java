@@ -308,7 +308,8 @@ public class BWSApplication extends Application {
         dialog.setContentView(R.layout.open_detail_page_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.blue_transparent_extra)));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
+        localIntent = new Intent("Reminder");
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         Properties p = new Properties();
         MainPlayModel m;
         ArrayList<MainPlayModel> mpm = new ArrayList<MainPlayModel>();
@@ -380,13 +381,23 @@ public class BWSApplication extends Application {
         GetAllMediaDownload(ctx);
         dialog.setOnKeyListener((v1, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
+                localIntent = new Intent("Reminder");
+                localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+                localIntent.putExtra("MyReminder", "update");
+                localBroadcastManager.sendBroadcast(localIntent);
                 dialog.dismiss();
                 return true;
             }
             return false;
         });
 
-        llBack.setOnClickListener(v -> dialog.dismiss());
+        llBack.setOnClickListener(v -> {
+            localIntent = new Intent("Reminder");
+            localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+            localIntent.putExtra("MyReminder", "update");
+            localBroadcastManager.sendBroadcast(localIntent);
+            dialog.dismiss();
+        });
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         String PlayFrom = shared.getString(CONSTANTS.PREF_KEY_PlayFrom, "");
 
@@ -541,6 +552,7 @@ public class BWSApplication extends Application {
             });
         }
         llDownload.setOnClickListener(view -> {
+            GetAllMediaDownload(ctx);
             ivDownloads.setImageResource(R.drawable.ic_download_done_icon);
             ivDownloads.setColorFilter(ctx.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             llDownload.setClickable(false);
@@ -2022,7 +2034,7 @@ public class BWSApplication extends Application {
         List<String> fileNameList = new ArrayList<>();
         List<String> audioFile1;
         List<String> playlistDownloadId = new ArrayList<>();
-
+        GetAllMediaDownload(ctx);
         try {
             int i = position;
             String audioFile = "", Name = "";
@@ -2830,12 +2842,6 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-        profileUpdate.put("MSG-push", true);
-        profileUpdate.put("MSG-whatsapp", true);
-        profileUpdate.put("MSG-email", true);
-        profileUpdate.put("MSG-sms", true);
-        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated",profileUpdate);
     }
 
     public static void deleteCall(Context context) {

@@ -2378,7 +2378,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     val listmodel = listModelGlobal.responseData
                     if (listmodel != null) {
                     if (downloadAudioDetailsList.contains(listmodel.playlistSongs!![position].name)) {
-                        positionSaved = position
+                        for (i in listmodel.playlistSongs!!.indices) {
+                            if (listModelList2[i].name == listmodel.playlistSongs!![position].name) {
+                                pos = i
+                                break
+                            }
+                        }
                         PlayerAudioId = listmodel.playlistSongs!![position].id
                         if (listModelList2.size != 0) {
                             view = if (listmodel.created == "1") {
@@ -2409,7 +2414,12 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 }
             }
             if (downloadAudioDetailsList.contains(listModelGlobal.responseData!!.playlistSongs!![position].name)) {
-                pos = position
+                for (i in listModelGlobal.responseData!!.playlistSongs!!.indices) {
+                    if (listModelList2[i].name == listModelGlobal.responseData!!.playlistSongs!![position].name) {
+                        pos = i
+                        break
+                    }
+                }
                 val gson = Gson()
                 val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
