@@ -457,6 +457,7 @@ class EditProfileActivity : AppCompatActivity() {
             mMonth = Integer.parseInt(ageArray[1]) - 1
             mDay = Integer.parseInt(ageArray[2])
         }
+
         val datePickerDialog = DatePickerDialog(this, R.style.DialogTheme, { view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             view.minDate = System.currentTimeMillis() - 1000
             val cal = Calendar.getInstance()

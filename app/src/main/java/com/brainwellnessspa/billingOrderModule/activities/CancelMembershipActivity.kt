@@ -470,7 +470,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                             val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
                             val tvSubTitle = dialog.findViewById<TextView>(R.id.tvSubTitle)
                             val tvGoBack = dialog.findViewById<TextView>(R.id.tvGoBack)
-                            tvTitle.text = "You can cancel the plan in your ios account."
+                            tvTitle.text = "Since you'd originally purchased the plan from an iOS device, please cancel your plan from the Apple Store."
                             tvSubTitle.text = getString(R.string.delete_account_popup_subtitle)
                             val btn = dialog.findViewById<Button>(R.id.Btn)
                             btn.text = getString(R.string.ok)

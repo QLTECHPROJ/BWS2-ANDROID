@@ -579,6 +579,8 @@ class HomeFragment : Fragment() {
             binding.llPlayer.visibility = View.VISIBLE
             binding.llAreaOfFocus.visibility = View.VISIBLE
             binding.barChart.visibility = View.GONE
+            binding.chart1.visibility = View.VISIBLE
+            binding.barMyActivitiesChart.visibility = View.VISIBLE
         } else {
             binding.llSetReminder.visibility = View.GONE
             binding.llIndexScore.visibility = View.GONE
@@ -590,6 +592,8 @@ class HomeFragment : Fragment() {
             binding.llPlayer.visibility = View.GONE
             binding.llAreaOfFocus.visibility = View.GONE
             binding.barChart.visibility = View.GONE //            showToast(ctx.getString(R.string.no_server_found), act)
+            binding.chart1.visibility = View.GONE //            showToast(ctx.getString(R.string.no_server_found), act)
+            binding.barMyActivitiesChart.visibility = View.GONE //            showToast(ctx.getString(R.string.no_server_found), act)
         }
 
         if (!isDownloading) {
