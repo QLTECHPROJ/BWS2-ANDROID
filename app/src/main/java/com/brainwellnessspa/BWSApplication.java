@@ -139,6 +139,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.InstallationTokenResult;
 import com.google.gson.Gson;
@@ -164,6 +165,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -381,10 +383,12 @@ public class BWSApplication extends Application {
         GetAllMediaDownload(ctx);
         dialog.setOnKeyListener((v1, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                localIntent = new Intent("Reminder");
-                localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
-                localIntent.putExtra("MyReminder", "update");
-                localBroadcastManager.sendBroadcast(localIntent);
+                if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                    localIntent = new Intent("Reminder");
+                    localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+                    localIntent.putExtra("MyReminder", "update");
+                    localBroadcastManager.sendBroadcast(localIntent);
+                }
                 dialog.dismiss();
                 return true;
             }
@@ -392,10 +396,12 @@ public class BWSApplication extends Application {
         });
 
         llBack.setOnClickListener(v -> {
-            localIntent = new Intent("Reminder");
-            localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
-            localIntent.putExtra("MyReminder", "update");
-            localBroadcastManager.sendBroadcast(localIntent);
+               if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                    localIntent = new Intent("Reminder");
+                    localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+                    localIntent.putExtra("MyReminder", "update");
+                    localBroadcastManager.sendBroadcast(localIntent);
+                }
             dialog.dismiss();
         });
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
@@ -1801,13 +1807,18 @@ public class BWSApplication extends Application {
         }
         final ArrayList<String> xAxisValues = new ArrayList<>();
         XAxis xAxis;
-        {
-            xAxisValues.add("Apr 21");
+        {//200 73402oppp26822
+           /* xAxisValues.add("Apr 21");
             xAxisValues.add("May 21");
             xAxisValues.add("Jun 21");
             xAxisValues.add("Jul 21");
             xAxisValues.add("Aug 21");
-            xAxisValues.add("Sep 21");
+            xAxisValues.add("Sep 21");*/
+//            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+//                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+//            }
+            xAxisValues.add(indexData.getPastIndexScore().get(0).getMonthName());
+            xAxisValues.add(indexData.getPastIndexScore().get(0).getMonthName());
             xAxis = chart.getXAxis();
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
             xAxis.setValueFormatter(new ValueFormatter() {
@@ -1861,7 +1872,7 @@ public class BWSApplication extends Application {
             //xAxis.addLimitLine(llXAxis);
         }
         // add data
-        setData(xAxisValues.size(), chart, ctx);
+        setData(xAxisValues.size(), chart, ctx,indexData.getPastIndexScore());
         Legend l = chart.getLegend();
         l.setForm(LegendForm.CIRCLE);
         l.setFormSize(1f);
@@ -1876,19 +1887,17 @@ public class BWSApplication extends Application {
         l.setWordWrapEnabled(true);
 //        }
     }
-    private static void setData(int count,LineChart chart,Context ctx) {
+    private static void setData(int count, LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.PastIndexScore> pastIndexScore) {
 
         ArrayList<Entry> values = new ArrayList<>();
+        float val = Float.parseFloat(pastIndexScore.get(0).getIndexScore());
+        values.add(new Entry(0, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+        val = Float.parseFloat(pastIndexScore.get(0).getIndexScore());
+        values.add(new Entry(1, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+//        for (int i = 0; i < count; i++) {
 
-        for (int i = 0; i < count; i++) {
-            float val = 0;
-            if(i%2==0) {
-                 val = (float) (Math.random()) + (18 * i + 1);
-            }else {
-                 val = (float) (Math.random()) + (9 * i + 1);
-            }
-            values.add(new Entry(i, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
-        }
+
+//        }
 
         LineDataSet set1;
 
@@ -2842,6 +2851,15 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+        profileUpdate.put("MSG-push", true);
+        profileUpdate.put("MSG-whatsapp", true);
+        profileUpdate.put("MSG-email", true);
+        profileUpdate.put("MSG-sms", true);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated",profileUpdate);
+        FirebaseAnalytics mFirebaseAnalytics;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.setUserProperty("ct_objectId", Objects.requireNonNull(CleverTapAPI.getDefaultInstance(this)).getCleverTapID());
     }
 
     public static void deleteCall(Context context) {

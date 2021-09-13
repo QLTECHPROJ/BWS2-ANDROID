@@ -764,8 +764,11 @@ class HomeFragment : Fragment() {
                                     getPlaylistDetail(response.suggestedPlaylist?.playlistID.toString(), DB, response.suggestedPlaylist!!.playlistSongs!!)
 
                                     /* Get Past Index Score graph function */
-                                    getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore,binding.chart1,ctx,act)
-
+                                    try {
+                                        getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore, binding.chart1, ctx, act)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
                                     getUserActivity(homelistModel.responseData, binding.barMyActivitiesChart, binding.llLegendActivity, act)
 
                                     try {
