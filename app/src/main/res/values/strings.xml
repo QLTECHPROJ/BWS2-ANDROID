@@ -600,5 +600,12 @@
     <string name="past_wellness_score">Past wellness Score</string>
     <string name="coming_soon">Coming Soon</string>
     <string name="the_next_steps_forward_in_your_wellness_journey_will_be_available_shortly">The next steps forward in your wellness journey will be available shortly.</string>
+    <string name="title_extract">Title *</string>
+    <string name="mr">Mr</string>
+    <string name="mrs">Mrs</string>
+    <string name="master">Master</string>
+    <string name="ms">Ms</string>
+    <string name="dr">Dr</string>
+    <string name="other">Other</string>
 </resources>
 
