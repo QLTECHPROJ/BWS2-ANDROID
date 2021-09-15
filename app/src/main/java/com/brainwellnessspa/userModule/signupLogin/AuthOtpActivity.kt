@@ -53,13 +53,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     private lateinit var editTexts: Array<EditText>
     private var tvSendOTPbool = true
     var mobileNo: String? = null
-    var countryCode: String? = null
-    var countryName: String? = null
     var signupFlag: String? = null
     var name: String? = null
     var email: String? = null
     var countDownTimer: CountDownTimer? = null
-    private var countryShortName: String? = null
     private var receiver: BroadcastReceiver? = null
     var fcmId: String = ""
 
@@ -77,7 +74,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             name = intent.getStringExtra(CONSTANTS.name)
             email = intent.getStringExtra(CONSTANTS.email)
             countryShortName = intent.getStringExtra(CONSTANTS.countryShortName)
-            countryName = intent.getStringExtra(CONSTANTS.countryName)
+            countryFullName = intent.getStringExtra(CONSTANTS.countryName)
         }
 
         if (signupFlag.equals("1", ignoreCase = true)) {
@@ -167,7 +164,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             p.putValue("name", name)
             p.putValue("mobileNo", mobileNo)
             p.putValue("countryCode", countryCode)
-            p.putValue("countryName", countryName)
+            p.putValue("countryName", countryFullName)
             p.putValue("countryShortName", countryShortName)
             p.putValue("email", email)
             if (signupFlag.equals("1")) {
@@ -271,7 +268,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             p.putValue("name", name)
             p.putValue("mobileNo", mobileNo)
             p.putValue("countryCode", countryCode)
-            p.putValue("countryName", countryName)
+            p.putValue("countryName", countryFullName)
             p.putValue("countryShortName", countryShortName)
             p.putValue("email", email)
             if (signupFlag.equals("1")) {
@@ -301,6 +298,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
                         editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
                         editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
                         editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
                         editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
                         editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
@@ -345,7 +343,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         p.putValue("name", name)
                         p.putValue("mobileNo", listModel.ResponseData.Mobile)
                         p.putValue("countryCode", countryCode)
-                        p.putValue("countryName", countryName)
+                        p.putValue("countryName", countryFullName)
                         p.putValue("countryShortName", countryShortName)
                         p.putValue("email", email)
                         if (signupFlag.equals("1")) {

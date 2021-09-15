@@ -18,6 +18,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
+import com.brainwellnessspa.dashboardModule.session.SessionPcDetailActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
@@ -252,6 +253,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                             editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, authOtpModel.ResponseData.Email)
                             editor.putString(CONSTANTS.PREFE_ACCESS_NAME, authOtpModel.ResponseData.Name)
                             editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, authOtpModel.ResponseData.CountryCode)
                             editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
                             editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
                             editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
@@ -561,7 +563,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    val intent = Intent(activity, SessionPcDetailActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)

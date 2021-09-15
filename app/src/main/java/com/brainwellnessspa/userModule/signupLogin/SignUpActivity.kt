@@ -24,7 +24,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.*
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityCreateAccountBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
@@ -44,14 +45,11 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var dialog: Dialog
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
-    var mobileNo: String? = null
-    var countryCode: String? = null
-    var name: String? = null
-    var email: String? = null
-    var countryShortName: String? = null
+    var mobileNo: String? = ""
+    var name: String? = ""
+    var email: String? = ""
     lateinit var ctx: Context
     lateinit var activity: Activity
-    var countryFullName: String = ""
     lateinit var searchEditText: EditText
     var p: Properties? = null
 
@@ -155,7 +153,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         p = Properties()
-        BWSApplication.addToSegment("Sign Up Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Sign Up Screen Viewed", p, CONSTANTS.screen)
 
         if (binding.etPassword.text.toString().trim().equals("", ignoreCase = true)) {
             binding.ivVisible.isClickable = false
@@ -312,7 +310,7 @@ class SignUpActivity : AppCompatActivity() {
                 false
             }
             val p = Properties()
-            BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen)
+            addToSegment("Country List Viewed", p, CONSTANTS.screen)
 
             searchView.onActionViewExpanded()
             searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -368,15 +366,15 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView :SearchView) {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+        if (isNetworkConnected(this)) {
+            showProgressBar(progressBar, progressBarHolder, activity)
             searchView.isEnabled = false
             searchView.isClickable = false
             val listCall: Call<CountryListModel> = APINewClient.client.countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
-                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                        hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         searchView.isEnabled = true
                         searchView.isClickable = true
@@ -389,21 +387,21 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<CountryListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(progressBar, null, activity)
+                    hideProgressBar(progressBar, null, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
+            showToast(getString(R.string.no_server_found), this)
         }
     }
 
     @SuppressLint("HardwareIds")
     fun signUpUser() {
-        if (BWSApplication.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
             var key: String = shared1.getString(CONSTANTS.PREF_KEY_SplashKey, "").toString()
             if (key.equals("", ignoreCase = true)) {
-                key = BWSApplication.getKey(applicationContext)
+                key = getKey(applicationContext)
             }
             val p = Properties()
             p.putValue("name", name)
@@ -413,8 +411,8 @@ class SignUpActivity : AppCompatActivity() {
             p.putValue("countryShortName", countryShortName)
             p.putValue("email", email)
             p.putValue("source", "SignUp")
-            BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            addToSegment("Send OTP Clicked", p, CONSTANTS.track)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
 
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             Log.e("countryCode", countryCode)
@@ -423,11 +421,11 @@ class SignUpActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode == "200") {
                             p.putValue("isOtpReceived", "Yes")
-                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, activity)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
                             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                             i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
@@ -442,8 +440,8 @@ class SignUpActivity : AppCompatActivity() {
                         }else{
                             p.putValue("isOtpReceived", "No")
                         }
-                        BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
-                        BWSApplication.showToast(listModel.ResponseMessage, activity)
+                        addToSegment("OTP Sent", p, CONSTANTS.track)
+                        showToast(listModel.ResponseMessage, activity)
 
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -452,18 +450,17 @@ class SignUpActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                     p.putValue("isOtpReceived", "No")
-                    BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
-                    BWSApplication.hideProgressBar(binding.progressBar, null, activity)
+                    addToSegment("OTP Sent", p, CONSTANTS.track)
+                    hideProgressBar(binding.progressBar, null, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
     class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivityCreateAccountBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView, private var activity: Activity) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
-        var catList = SignUpActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.country_popup_layout, parent, false)
             return MyViewHolder(v)
@@ -481,7 +478,7 @@ class SignUpActivity : AppCompatActivity() {
             holder.bindingAdapter.llMainLayout.setOnClickListener {
                 binding.tvCountryShortName.text = mData.shortName
                 binding.tvCountry.text = "+" + mData.code
-                catList.countryFullName = mData.name!!
+                countryFullName = mData.name!!
 
                 dialog.dismiss()
             }

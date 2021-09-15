@@ -25,7 +25,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.getKey
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivitySignInBinding
 import com.brainwellnessspa.databinding.CountryPopupLayoutBinding
@@ -52,11 +52,8 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var dialog: Dialog
     lateinit var searchEditText: EditText
     var mobileNo: String? = ""
-    var countryCode: String? = ""
     var name: String? = ""
     var email: String? = ""
-    var countryShortName: String? = ""
-    var countryFullName: String? = ""
     var p: Properties? = null
 
     private var userTextWatcher: TextWatcher = object : TextWatcher {
@@ -373,7 +370,6 @@ class SignInActivity : AppCompatActivity() {
 
     class CountrySelectAdapter(private var dialog: Dialog, private var binding: ActivitySignInBinding, private val modelList: List<CountryListModel.ResponseData>, private var rvCountryList: RecyclerView, private var tvFound: TextView) : RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder>(), Filterable {
         private var listFilterData: List<CountryListModel.ResponseData>
-        var catList = SignInActivity()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: CountryPopupLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.country_popup_layout, parent, false)
             return MyViewHolder(v)
@@ -391,8 +387,7 @@ class SignInActivity : AppCompatActivity() {
             holder.bindingAdapter.llMainLayout.setOnClickListener {
                 binding.tvCountryShortName.text = mData.shortName
                 binding.tvCountry.text = "+" + mData.code
-                var catList = SignInActivity()
-                catList.countryFullName = mData.name
+                countryFullName = mData.name
 
                 dialog.dismiss()
             }

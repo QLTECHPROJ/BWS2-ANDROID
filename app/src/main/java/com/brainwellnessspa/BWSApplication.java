@@ -230,6 +230,7 @@ public class BWSApplication extends Application {
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
     public static CleverTapAPI clevertapDefaultInstance;
+    public static String countryShortName = "",countryCode = "",countryFullName= "";
     public static Context getContext() {
         return mContext;
     }
@@ -2528,6 +2529,7 @@ public class BWSApplication extends Application {
         String name = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "");
         String dob = shared1.getString(CONSTANTS.PREFE_ACCESS_DOB, "");
         String mobile = shared1.getString(CONSTANTS.PREFE_ACCESS_MOBILE, "");
+        String countryCode = shared1.getString(CONSTANTS.PREFE_ACCESS_CountryCode, "");
         String indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "");
         String scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "");
         String sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "");
@@ -2566,9 +2568,11 @@ public class BWSApplication extends Application {
         profileUpdate.put("isAdmin", isadm);
         profileUpdate.put("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
         profileUpdate.put("deviceType", "Android");
-        profileUpdate.put("Name",name);
-        profileUpdate.put("Email",email);
-        profileUpdate.put("Mobile",mobile);
+        profileUpdate.put("name",name);
+        profileUpdate.put("email",email);
+        profileUpdate.put("mobileNo",mobile);
+        profileUpdate.put("phoneNo","+" + countryCode + mobile);
+        profileUpdate.put("countryCode",countryCode);
         profileUpdate.put("DOB", dob);
         profileUpdate.put("profileImage", image);
         profileUpdate.put("isProfileCompleted", isProf);
@@ -2590,7 +2594,7 @@ public class BWSApplication extends Application {
         cleverTapDefaultInstance.onUserLogin(profileUpdate);
         cleverTapDefaultInstance.pushProfile(profileUpdate);
 
-        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone(mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
+        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("mobileNo",mobile).putValue("countryCode",countryCode).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone("+" + countryCode + mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {

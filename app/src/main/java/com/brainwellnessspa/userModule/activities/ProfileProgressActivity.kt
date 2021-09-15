@@ -56,7 +56,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     var ageDate: Int = 0
     private var emailUser: String? = ""
     private var doubleBackToExitPressedOnce = false
-    lateinit var activity: Activity
+    lateinit var act: Activity
     private lateinit var exitDialog: Dialog
     lateinit var ctx: Context
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,19 +67,19 @@ class ProfileProgressActivity : AppCompatActivity() {
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        activity = this@ProfileProgressActivity
+        act = this@ProfileProgressActivity
 
         callFirstNext()
         binding.btnMale.setOnClickListener {
             gender = "Male"
             genderX = ""
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnMale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             callSecondNext("2")
         }
@@ -87,12 +87,12 @@ class ProfileProgressActivity : AppCompatActivity() {
             gender = "Female"
             genderX = ""
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnFemale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             callSecondNext("2")
         }
@@ -100,32 +100,32 @@ class ProfileProgressActivity : AppCompatActivity() {
         binding.btnGenX.setOnClickListener {
             gender = "Gender X"
             binding.btnNext.isClickable = false
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnGenX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             callSecondNext("2")
         }
         binding.btnMaleGX.setOnClickListener {
             genderX = "Male"
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnMaleGX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnMaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            binding.btnFemaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnFemaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             callSecondNext("3")
         }
         binding.btnFemaleGX.setOnClickListener {
             genderX = "Female"
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnMaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnFemaleGX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnFemaleGX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             callSecondNext("3")
         }
@@ -138,10 +138,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.llIndicate.progress = 3
             binding.btnPrev.visibility = View.VISIBLE
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             callFifthNext()
         }
@@ -150,10 +150,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.llIndicate.progress = 3
             binding.btnPrev.visibility = View.VISIBLE
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             callFifthNext()
         }
@@ -167,10 +167,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnContinue.isEnabled = true
             binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnSixYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
         }
 
@@ -183,10 +183,10 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnContinue.isEnabled = true
             binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             binding.btnNext.isClickable = true
-            binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-            binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.black))
             binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-            binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+            binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
             binding.btnSixNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
         }
 
@@ -217,7 +217,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                     return
                 }
                 this.doubleBackToExitPressedOnce = true
-                BWSApplication.showToast("Press again to exit", activity)
+                BWSApplication.showToast("Press again to exit", act)
 
                 Handler(Looper.myLooper()!!).postDelayed({
                     doubleBackToExitPressedOnce = false
@@ -244,7 +244,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                 callFifthPrev()
             }
             else -> {
-                exitDialog = Dialog(activity)
+                exitDialog = Dialog(act)
                 exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 exitDialog.setContentView(R.layout.logout_layout)
                 exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -328,26 +328,26 @@ class ProfileProgressActivity : AppCompatActivity() {
         when {
             prevDrugUse.equals("Yes", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             prevDrugUse.equals("No", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
@@ -364,12 +364,12 @@ class ProfileProgressActivity : AppCompatActivity() {
 
     private fun sendProfileData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<ProfileSaveDataModel> = APINewClient.client.getProfileSaveData(coUserId, gender, genderX, age, prevDrugUse, medication)
             listCall.enqueue(object : Callback<ProfileSaveDataModel> {
                 override fun onResponse(call: Call<ProfileSaveDataModel>, response: Response<ProfileSaveDataModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: ProfileSaveDataModel = response.body()!!
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
@@ -392,9 +392,9 @@ class ProfileProgressActivity : AppCompatActivity() {
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
+                                BWSApplication.deleteCall(act)
+                                BWSApplication.showToast(listModel.responseMessage, act)
+                                val i = Intent(act, SignInActivity::class.java)
                                 i.putExtra("mobileNo", "")
                                 i.putExtra("countryCode", "")
                                 i.putExtra("name", "")
@@ -404,7 +404,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                BWSApplication.showToast(listModel.responseMessage, act)
                             }
                         }
 
@@ -414,11 +414,11 @@ class ProfileProgressActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ProfileSaveDataModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            BWSApplication.showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -437,26 +437,26 @@ class ProfileProgressActivity : AppCompatActivity() {
         when {
             prevDrugUse.equals("Yes", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             prevDrugUse.equals("No", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
@@ -485,10 +485,10 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnContinue.isEnabled = true
                 binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnSixYes.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             medication.equals("No", true) -> {
@@ -497,18 +497,18 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnContinue.isEnabled = true
                 binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnSixNo.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnSixYes.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnSixYes.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixYes.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnSixNo.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnSixNo.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnSixNo.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
@@ -543,26 +543,26 @@ class ProfileProgressActivity : AppCompatActivity() {
         when {
             genderX.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMaleGX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             genderX.equals("Female", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnFemaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnFemaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnFemaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
@@ -577,15 +577,15 @@ class ProfileProgressActivity : AppCompatActivity() {
         when {
             !age.equals("", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
                 binding.btnOpn1.text = age
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
                 val calendar = Calendar.getInstance()
                 calendar.time = Date()
@@ -612,43 +612,43 @@ class ProfileProgressActivity : AppCompatActivity() {
         when {
             gender.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnMale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             gender.equals("Female", true) -> {
                 binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
             gender.equals("Gender X", true) -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.light_blue_theme))
+                binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnGenX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
             }
             else -> {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
 //                binding.llIndicate.progress = 1
-                binding.btnMale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnFemale.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnFemale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnFemale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
-                binding.btnGenX.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnGenX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnGenX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             }
         }
@@ -688,8 +688,8 @@ class ProfileProgressActivity : AppCompatActivity() {
             binding.btnOpn1.text = userCalendar
             if (birthYear < 0) {
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-                binding.btnOpn1.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             } else {
                 age = age1

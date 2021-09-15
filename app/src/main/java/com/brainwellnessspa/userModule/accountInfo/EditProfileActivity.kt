@@ -369,6 +369,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, viewModel.ResponseData.CountryCode)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
                                     editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
