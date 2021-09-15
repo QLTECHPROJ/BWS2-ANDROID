@@ -563,7 +563,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    val intent = Intent(activity, SessionPcDetailActivity::class.java)
+                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
