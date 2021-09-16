@@ -2571,7 +2571,7 @@ public class BWSApplication extends Application {
         profileUpdate.put("name",name);
         profileUpdate.put("email",email);
         profileUpdate.put("mobileNo",mobile);
-        profileUpdate.put("phoneNo","+" + countryCode + mobile);
+        profileUpdate.put("Phone","+" + countryCode + mobile);
         profileUpdate.put("countryCode",countryCode);
         profileUpdate.put("DOB", dob);
         profileUpdate.put("profileImage", image);
