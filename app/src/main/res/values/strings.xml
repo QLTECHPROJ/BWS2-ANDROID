@@ -529,6 +529,8 @@
     <string name="rarely">Rarely</string>
     <string name="never">Never</string>
     <string name="if_so_when_was_the_last_treatment">If so when was the last treatment?</string>
+    <string name="mental_health_challenges">Can you please provide us with a brief history of your mental health challenges?*</string>
+    <string name="mental_health_treatment">What treatments have you undertaken to overcome the above challenges?</string>
     <string name="have_you_received_electric_shock_treatment">Have you received electric shock treatment? *</string>
     <string name="_1_are_you_experiencing_any_of_the_following">1 Are you experiencing any of the following? *</string>
     <string name="have_you_ever_taken_drugs_other_than_prescription">Have you ever taken drugs other than prescription? *</string>
@@ -542,8 +544,8 @@
     <string name="_4_are_you_suffering_from_suicidal_thoughts_and_emotions">4. Are you suffering from suicidal thoughts and emotions? *</string>
     <string name="country_code_61">+61</string>
     <string name="country_shortname_default">AU</string>
-    <string name="no_country_matchlist">Sorry we are not available in this country yet</string>
     <string name="whoooops_nno_active_internet">Whoooops!\nNo active internet :(</string>
+    <string name="no_country_matchlist">Sorry we are not available in this country yet</string>
     <string name="when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible">When we recommend a playlist, we ensure that it matches with your sleep time. Therefore, it\'s important to select a range as accurate as possible.</string>
     <string name="choose_the_day_amp_time"><![CDATA[Choose the day & Time]]></string>
     <string name="_09_00_am">09:00 am</string>

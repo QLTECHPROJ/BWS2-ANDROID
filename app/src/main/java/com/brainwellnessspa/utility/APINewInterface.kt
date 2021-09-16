@@ -195,6 +195,32 @@ interface APINewInterface {
         @Field("Medication")
         medication: String?): Call<ProfileSaveDataModel>
 
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStep1ProfileSaveData(
+        @Field("Step")
+        Step: String?,
+        @Field("UserId")
+        UserId: String?,
+        @Field("dob")
+        dob: String?,
+        @Field("title")
+        title: String?,
+        @Field("gender")
+        gender: String?,
+        @Field("home_address")
+        home_address: String?,
+        @Field("suburb")
+        suburb: String?,
+        @Field("postcode")
+        postcode: String?,
+        @Field("ethnicity")
+        ethnicity: String?,
+        @Field("mental_health_challenges")
+        mental_health_challenges: String?,
+        @Field("mental_health_treatments")
+        mental_health_treatments: String?): Call<ProfileSaveDataModel>
+
     @POST("assesmentsaveans")
     @FormUrlEncoded
     fun getAssessmentSaveData(
