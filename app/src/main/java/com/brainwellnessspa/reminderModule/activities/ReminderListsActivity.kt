@@ -102,7 +102,9 @@ class ReminderListsActivity : AppCompatActivity() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
-        }/*   binding.btnAddReminder.setOnClickListener(view -> {
+        }
+
+    /*   binding.btnAddReminder.setOnClickListener(view -> {
             notificationStatus = true;
             myBackPress = false;
             if (BWSApplication.isNetworkConnected(ctx)) {

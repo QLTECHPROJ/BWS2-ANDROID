@@ -397,12 +397,12 @@ public class BWSApplication extends Application {
         });
 
         llBack.setOnClickListener(v -> {
-               if (comeFrom.equalsIgnoreCase("audioPlayer")) {
-                    localIntent = new Intent("Reminder");
-                    localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
-                    localIntent.putExtra("MyReminder", "update");
-                    localBroadcastManager.sendBroadcast(localIntent);
-                }
+            if (comeFrom.equalsIgnoreCase("audioPlayer")) {
+                localIntent = new Intent("Reminder");
+                localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
+                localIntent.putExtra("MyReminder", "update");
+                localBroadcastManager.sendBroadcast(localIntent);
+            }
             dialog.dismiss();
         });
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
@@ -1707,7 +1707,7 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart,LinearLayout llPastIndexScore,  LineChart chart,Context ctx ,Activity act) {
+    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llPastIndexScore, LineChart chart, Context ctx, Activity act) {
         if (indexData.getPastIndexScore().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
@@ -1830,7 +1830,7 @@ public class BWSApplication extends Application {
             });
 //            xAxis.setAxisMinimum(0);
 //            xAxis.setAxisMaximum(xAxisValues.size()-1);
-            xAxis.setLabelCount(xAxisValues.size(),true);
+            xAxis.setLabelCount(xAxisValues.size(), true);
             xAxis.setGranularity(1f);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setLabelRotationAngle(20);
@@ -1873,7 +1873,7 @@ public class BWSApplication extends Application {
             //xAxis.addLimitLine(llXAxis);
         }
         // add data
-        setData(xAxisValues.size(), chart, ctx,indexData.getPastIndexScore());
+        setData(xAxisValues.size(), chart, ctx, indexData.getPastIndexScore());
         Legend l = chart.getLegend();
         l.setForm(LegendForm.CIRCLE);
         l.setFormSize(1f);
@@ -1888,6 +1888,7 @@ public class BWSApplication extends Application {
         l.setWordWrapEnabled(true);
 //        }
     }
+
     private static void setData(int count, LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.PastIndexScore> pastIndexScore) {
 
         ArrayList<Entry> values = new ArrayList<>();
@@ -2860,7 +2861,7 @@ public class BWSApplication extends Application {
         profileUpdate.put("MSG-whatsapp", true);
         profileUpdate.put("MSG-email", true);
         profileUpdate.put("MSG-sms", true);
-        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated",profileUpdate);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
         FirebaseAnalytics mFirebaseAnalytics;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setUserProperty("ct_objectId", Objects.requireNonNull(CleverTapAPI.getDefaultInstance(this)).getCleverTapID());
@@ -2872,6 +2873,8 @@ public class BWSApplication extends Application {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         addCouserBackStatus = 0;
+        PlayerAudioId = "";
+        PlayerStatus = "";
         cancelId = "";
         deleteId = "";
         IsFirstClick = "0";

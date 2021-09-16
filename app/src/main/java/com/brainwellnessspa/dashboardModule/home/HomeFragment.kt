@@ -22,6 +22,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -232,6 +233,7 @@ class HomeFragment : Fragment() {
                 showToast(ctx.getString(R.string.no_server_found), act)
             }
         }
+
         binding.llSleepTime.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
@@ -367,6 +369,7 @@ class HomeFragment : Fragment() {
         networkCheck()
 
         prepareHomeData()
+
         binding.llTodayClicked.setOnClickListener {
             binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.black))
             binding.tvMonth.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
@@ -1935,7 +1938,7 @@ class HomeFragment : Fragment() {
                                                             }
 
                                                             prepareHomeData()
-
+                                                            callAllRemovePlayer(ctx, act)
                                                             val activity = SplashActivity()
                                                             activity.setAnalytics(ctx.getString(R.string.segment_key_real_2_staging), ctx)
 

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/_28sdp"
+    android:background="@drawable/popup_background"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/_210sdp"
+            android:layout_height="@dimen/_210sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:contentDescription="@string/todo" />
+        <!--android:src="@drawable/support_banner"-->
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_24sdp"
+            android:paddingTop="@dimen/_31sdp"
+            android:text="@string/Support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_24sdp"
+            android:paddingTop="@dimen/_22sdp"
+            android:text="@string/support_quotes"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_24sdp"
+            android:text="@string/support_link"
+            android:textColor="@color/app_theme_color"
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="SpUsage" />
+
+        <LinearLayout
+            android:id="@+id/llClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGoBack"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_44sdp"
+                android:layout_marginBottom="@dimen/_26sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="@string/Close"
+                android:textAllCaps="true"
+                android:textColor="@color/dark_blue_gray"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

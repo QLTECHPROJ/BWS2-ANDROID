@@ -43,6 +43,8 @@ interface APINewInterface {
         DeviceType: String?,
         @Field("SignupFlag")
         SignupFlag: String?,
+        @Field("Email")
+        Email: String?,
         @Field("key")
         key: String?): Call<UserAccessModel>
 

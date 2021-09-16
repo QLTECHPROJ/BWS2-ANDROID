@@ -250,7 +250,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView:SearchView) {
+    private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView: SearchView) {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
             searchView.isEnabled = false
@@ -315,7 +315,7 @@ class SignInActivity : AppCompatActivity() {
                 }
                 val p = Properties()
                 p.putValue("name", name)
-                p.putValue("mobileNo",binding.etNumber.text.toString())
+                p.putValue("mobileNo", binding.etNumber.text.toString())
                 p.putValue("countryCode", countryCode)
                 p.putValue("countryName", countryFullName)
                 p.putValue("countryShortName", countryShortName)
@@ -324,7 +324,7 @@ class SignInActivity : AppCompatActivity() {
                 BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                 binding.txtNumberError.visibility = View.GONE
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
-                val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key)
+                val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, "", key)
                 listCall.enqueue(object : Callback<UserAccessModel> {
                     override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                         try {

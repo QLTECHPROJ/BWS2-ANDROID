@@ -1,13 +1,14 @@
 package com.brainwellnessspa.dashboardModule.profile
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
@@ -19,10 +20,8 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -69,10 +68,12 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
     private var mLastClickTime: Long = 0
     private var logoutDialog: Dialog? = null
+    private var supportDialog: Dialog? = null
     lateinit var image: File
     lateinit var ctx: Context
     lateinit var act: Activity
@@ -93,9 +94,8 @@ class ProfileFragment : Fragment() {
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
     var areaOfFocus: String? = ""
+//    areaOfFocus
 
-    //    areaOfFocus
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         val view = binding.root
@@ -175,6 +175,7 @@ class ProfileFragment : Fragment() {
         }
         val p = Properties()
         addToSegment("Account Screen Viewed", p, CONSTANTS.screen)
+
         binding.llAcInfo.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -190,6 +191,40 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        binding.llSupport.setOnClickListener { view18 ->
+            supportDialog = Dialog(ctx)
+            supportDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            supportDialog!!.setContentView(R.layout.support_layout)
+            supportDialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            supportDialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            val tvEmail = supportDialog!!.findViewById<TextView>(R.id.tvEmail)
+            val llClose = supportDialog!!.findViewById<LinearLayout>(R.id.llClose)
+            tvEmail.setOnClickListener { v: View? ->
+                val intent = Intent(Intent.ACTION_SEND)
+                val recipients = arrayOf("support@brainwellnessapp.com")
+                intent.putExtra(Intent.EXTRA_EMAIL, recipients)
+                intent.putExtra(Intent.EXTRA_SUBJECT, "")
+                intent.putExtra(Intent.EXTRA_TEXT, "")
+                intent.putExtra(Intent.EXTRA_CC, "")
+                intent.type = "text/html"
+                intent.setPackage("com.google.android.gm")
+                try {
+                    startActivity(Intent.createChooser(intent, "Send mail"))
+                } catch (ex: ActivityNotFoundException) {
+                    showToast("There are no email clients installed.", activity)
+                }
+            }
+            supportDialog!!.setOnKeyListener { v: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    supportDialog!!.dismiss()
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            llClose.setOnClickListener { v: View? -> supportDialog!!.dismiss() }
+            supportDialog!!.show()
+            supportDialog!!.setCancelable(false)
+        }
         binding.llDownloads.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -227,7 +262,7 @@ class ProfileFragment : Fragment() {
                 val i = Intent(ctx, BillingOrderActivity::class.java)
                 act.overridePendingTransition(0, 0)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(i)
+                act.startActivity(i)
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)
             }
@@ -241,7 +276,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(ctx)) {
                 val i = Intent(ctx, ManageUserActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(i)
+                act.startActivity(i)
                 act.overridePendingTransition(0, 0)
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)
@@ -257,7 +292,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(ctx)) {
                 val i = Intent(ctx, ReminderListsActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(i)
+                act.startActivity(i)
                 act.overridePendingTransition(0, 0)
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)
@@ -273,7 +308,7 @@ class ProfileFragment : Fragment() {
                 val i = Intent(ctx, EnhanceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan", "0")
-                startActivity(i)
+                act.startActivity(i)
                 act.overridePendingTransition(0, 0)
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)

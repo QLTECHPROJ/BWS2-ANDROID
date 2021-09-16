@@ -417,7 +417,7 @@ class SignUpActivity : AppCompatActivity() {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             Log.e("countryCode", countryCode)
             Log.e("countryFullName", countryFullName)
-            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key)
+            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE,binding.etEmail.text.toString(), key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {

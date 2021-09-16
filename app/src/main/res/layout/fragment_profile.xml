@@ -525,6 +525,8 @@
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
                     </LinearLayout>
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -533,6 +535,52 @@
                     android:layout_marginTop="@dimen/_26sdp"
                     android:background="@drawable/account_gray_bg"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/llSupport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_16sdp"
+                        android:visibility="visible"
+                        android:weightSum="1">
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_support_icon"
+                            android:contentDescription="@string/todo" />
+
+                        <TextView
+                            android:id="@+id/tvSupport"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_18sdp"
+                            android:layout_weight="0.8"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/support"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_right_arrow_ac_icon"
+                            android:contentDescription="@string/todo" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:visibility="visible"
+                        android:background="@color/dim_light_gray" />
 
                     <LinearLayout
                         android:id="@+id/llFAQ"

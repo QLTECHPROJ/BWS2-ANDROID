@@ -174,7 +174,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             }
             addToSegment(CONSTANTS.Resend_OTP_Clicked, p, CONSTANTS.track)
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, key)
+            val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, email, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {
@@ -207,7 +207,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             startSMSListener()
                             binding.edtOTP1.requestFocus()
                             p.putValue("isOtpReceived", "Yes")
-                        }else{
+                        } else {
                             p.putValue("isOtpReceived", "No")
                             binding.txtError.visibility = View.VISIBLE
                             binding.txtError.text = listModel.ResponseMessage
@@ -370,7 +370,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         val intent = Intent(activity, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation","Enhance")
+                                        intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
                                         finish()
                                     }
@@ -394,7 +394,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     val intent = Intent(activity, AssProcessActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                    intent.putExtra("Navigation","Enhance")
+                                    intent.putExtra("Navigation", "Enhance")
                                     startActivity(intent)
                                     finish()
                                 } else if (listModel.ResponseData.planDetails.isEmpty()) {

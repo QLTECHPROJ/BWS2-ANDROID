@@ -165,9 +165,9 @@ class GlobalInitExoPlayer : Service() {
         }
 
         @JvmStatic
-        fun callAllRemovePlayer(ctx: Context,act: Activity) {
+        fun callAllRemovePlayer(ctx: Context, act: Activity) {
             val preferred2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, MODE_PRIVATE)
-            val edited2  = preferred2.edit()
+            val edited2 = preferred2.edit()
             edited2.remove(CONSTANTS.PREF_KEY_MainAudioList)
             edited2.remove(CONSTANTS.PREF_KEY_PlayerAudioList)
             edited2.remove(CONSTANTS.PREF_KEY_AudioPlayerFlag)
@@ -178,7 +178,7 @@ class GlobalInitExoPlayer : Service() {
             edited2.remove(CONSTANTS.PREF_KEY_PlayFrom)
             edited2.clear()
             edited2.apply()
-            val notificationManager  = act.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = act.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(notificationId)
             relesePlayer(ctx)
         }
@@ -735,9 +735,9 @@ class GlobalInitExoPlayer : Service() {
                     ps = shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 var name = ""
-                try{
+                try {
                     name = mainPlayModelList1[ps].name
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     name = ""
                 }
                 return name
@@ -766,9 +766,9 @@ class GlobalInitExoPlayer : Service() {
                     shared.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
                 }
                 var audioDirection = ""
-                try{
+                try {
                     audioDirection = mainPlayModelList1[ps].audioDirection
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     audioDirection = ""
                 }
                 return audioDirection
@@ -1231,8 +1231,7 @@ class GlobalInitExoPlayer : Service() {
                         removeSharepref(ctx)
                         callAllRemovePlayer(ctx, activity)
                     }
-                }
-                else if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("Top Categories", ignoreCase = true) || AudioFlag.equals("DownloadListAudio", ignoreCase = true) || AudioFlag.equals("Downloadlist", ignoreCase = true) || AudioFlag.equals("playlist", ignoreCase = true))) {
+                } else if (IsLock.equals("1", ignoreCase = true) && (AudioFlag.equals("Top Categories", ignoreCase = true) || AudioFlag.equals("DownloadListAudio", ignoreCase = true) || AudioFlag.equals("Downloadlist", ignoreCase = true) || AudioFlag.equals("playlist", ignoreCase = true))) {
                     removeSharepref(ctx)
                     callAllRemovePlayer(ctx, activity)
                 }

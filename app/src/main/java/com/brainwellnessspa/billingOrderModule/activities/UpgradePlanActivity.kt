@@ -71,6 +71,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         /* This is screen back click */
         binding.llBack.setOnClickListener {
             val i = Intent(ctx, BillingOrderActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlanId", planId)
             i.putExtra("DeviceType", DeviceType)
             startActivity(i)
@@ -111,6 +112,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     override fun onBackPressed() {
         val i = Intent(ctx, BillingOrderActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         i.putExtra("PlanId", planId)
         i.putExtra("DeviceType", DeviceType)
         startActivity(i)

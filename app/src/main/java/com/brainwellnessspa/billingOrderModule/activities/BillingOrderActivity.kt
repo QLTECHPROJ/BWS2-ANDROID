@@ -59,6 +59,7 @@ class BillingOrderActivity : AppCompatActivity() {
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             startActivity(i)
@@ -196,7 +197,7 @@ class BillingOrderActivity : AppCompatActivity() {
                                 binding.btnUpgradePlan.visibility = View.GONE
                             }
 
-                            if (listModel.responseData!!.planStatus.equals("active")) {
+                            if (listModel.responseData!!.planStatus.equals("Active")) {
                                 binding.tvCancel.visibility = View.VISIBLE
                             } else {
                                 binding.tvCancel.visibility = View.GONE
