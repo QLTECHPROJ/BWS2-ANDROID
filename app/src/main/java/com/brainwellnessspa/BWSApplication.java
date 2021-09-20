@@ -230,7 +230,8 @@ public class BWSApplication extends Application {
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
     public static CleverTapAPI clevertapDefaultInstance;
-    public static String countryShortName = "",countryCode = "",countryFullName= "";
+    public static String countryShortName = "", countryCode = "", countryFullName = "";
+
     public static Context getContext() {
         return mContext;
     }
@@ -2293,11 +2294,14 @@ public class BWSApplication extends Application {
         final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
 
+        String timezoneName = "";
         cbCheck.setText(ctx.getString(R.string.select_all));
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
             simpleDateFormat1.setTimeZone(TimeZone.getDefault());
+            timezoneName = simpleDateFormat1.getTimeZone().getID();
+            Log.e("Display Name Time Zone", simpleDateFormat1.getTimeZone().getID());
             Log.e("Default Time Zone", simpleDateFormat1.getTimeZone().getDisplayName() + simpleDateFormat1.getTimeZone());
             DateFormat df = DateFormat.getTimeInstance();
             String gmtTime = df.format(new Date());
@@ -2323,6 +2327,10 @@ public class BWSApplication extends Application {
             p.putValue("reminderDay", "");
             addToSegment("Add/Edit Reminder Screen Viewed", p, CONSTANTS.screen);
         } else {
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+            simpleDateFormat1.setTimeZone(TimeZone.getDefault());
+            timezoneName = simpleDateFormat1.getTimeZone().getID();
+            Log.e("Display Name Time Zone", simpleDateFormat1.getTimeZone().getID());
             tvTime.setText(Time);
             currantTime = Time;
             Properties p = new Properties();
@@ -2420,7 +2428,7 @@ public class BWSApplication extends Application {
             RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx);
             rvSelectDay.setLayoutManager(manager);
             rvSelectDay.setItemAnimator(new DefaultItemAnimator());
-            ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions);
+            ReminderSelectionListAdapter adapter = new ReminderSelectionListAdapter(reminderSelectionModel, act, ctx, btnNext, userId, playlistID, playlistName, dialog, fragmentActivity, tvTime, progressBarHolder, progressBar, llSelectTime, RDay, Time, isSuggested, reminderID, created, llOptions, timezoneName);
             rvSelectDay.setAdapter(adapter);
 
             Log.e("remiderDays", TextUtils.join(",", remiderDays));
@@ -2569,11 +2577,11 @@ public class BWSApplication extends Application {
         profileUpdate.put("isAdmin", isadm);
         profileUpdate.put("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
         profileUpdate.put("deviceType", "Android");
-        profileUpdate.put("name",name);
-        profileUpdate.put("email",email);
-        profileUpdate.put("mobileNo",mobile);
-        profileUpdate.put("Phone","+" + countryCode + mobile);
-        profileUpdate.put("countryCode",countryCode);
+        profileUpdate.put("name", name);
+        profileUpdate.put("email", email);
+        profileUpdate.put("mobileNo", mobile);
+        profileUpdate.put("Phone", "+" + countryCode + mobile);
+        profileUpdate.put("countryCode", countryCode);
         profileUpdate.put("DOB", dob);
         profileUpdate.put("profileImage", image);
         profileUpdate.put("isProfileCompleted", isProf);
@@ -2595,7 +2603,7 @@ public class BWSApplication extends Application {
         cleverTapDefaultInstance.onUserLogin(profileUpdate);
         cleverTapDefaultInstance.pushProfile(profileUpdate);
 
-        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("mobileNo",mobile).putValue("countryCode",countryCode).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone("+" + countryCode + mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
+        analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("mobileNo", mobile).putValue("countryCode", countryCode).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone("+" + countryCode + mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {
@@ -2927,6 +2935,9 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
         edit.remove(CONSTANTS.PREF_KEY_ReferLink);
         edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser);
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle);
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportText);
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail);
         edit.clear();
         edit.apply();
 
@@ -3011,7 +3022,7 @@ public class BWSApplication extends Application {
         Activity act;
         Context ctx;
         Button btnNext;
-        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested, reminderId, created;
+        String userId, PlaylistID, PlaylistName, RDay, Time, isSuggested, reminderId, created, timezoneName;
         Dialog dialogOld;
         FragmentActivity fragmentActivity;
         TextView timeDisplay;
@@ -3020,7 +3031,7 @@ public class BWSApplication extends Application {
         LinearLayout llSelectTime, llOptions;
         private final ReminderSelectionModel[] selectionModels;
 
-        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created, LinearLayout llOptions) {
+        public ReminderSelectionListAdapter(ReminderSelectionModel[] selectionModels, Activity act, Context ctx, Button btnNext, String userId, String PlaylistID, String PlaylistName, Dialog dialogOld, FragmentActivity fragmentActivity, TextView timeDisplay, FrameLayout progressBarHolder, ProgressBar progressBar, LinearLayout llSelectTime, String RDay, String Time, String isSuggested, String reminderId, String created, LinearLayout llOptions, String timezoneName) {
             this.selectionModels = selectionModels;
             this.act = act;
             this.ctx = ctx;
@@ -3040,6 +3051,7 @@ public class BWSApplication extends Application {
             this.reminderId = reminderId;
             this.created = created;
             this.llOptions = llOptions;
+            this.timezoneName = timezoneName;
         }
 
         @NotNull
@@ -3107,7 +3119,7 @@ public class BWSApplication extends Application {
                     Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
                     if (isNetworkConnected(ctx)) {
                         showProgressBar(progressBar, progressBarHolder, act);
-                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(userId, PlaylistID, TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
+                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(userId, PlaylistID, TextUtils.join(",", remiderDays), tvTime.getText().toString(), timezoneName, CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<SetReminderOldModel>() {
                             @Override
                             public void onResponse(@NotNull Call<SetReminderOldModel> call, @NotNull Response<SetReminderOldModel> response) {

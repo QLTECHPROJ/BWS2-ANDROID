@@ -257,7 +257,7 @@
     <string name="Support">Support</string>
     <string name="not_available">Not available at the moment. Please contact support</string>
     <string name="support_quotes">Please contact support at</string>
-    <string name="support_link">support@brainwellnessapp.com</string>
+    <string name="support_link">support@brainwellnessapp.com.au</string>
     <string name="toast_an_error_occurred">error</string>
     <string name="Create_Account">Create Account</string>
     <string name="welcome_quotes">Welcome to \nBrain Wellness App</string>
@@ -609,5 +609,15 @@
     <string name="ms">Ms</string>
     <string name="dr">Dr</string>
     <string name="other">Other</string>
+    <string name="support">Support</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="brain_wellness_app">Brain Wellness App</string>
+    <string name="close_app_text">Are you sure you want to exit the app?</string>
+    <string name="mild">Mild</string>
+    <string name="moderate">Moderate</string>
+    <string name="are_you_aware_of_your_parents_grandparents_or_great_grandparents_ever_experiencing_a_trauma_psychological_or_physical_this_could_include_any_of_the_above_listed_examples_and_or_being_a_survivor_of_the_war">Are you aware of your parents, grandparents or great grandparents ever experiencing a trauma (psychological or physical)? This could include any of the above listed examples and/or being a survivor of the war. *</string>
+    <string name="have_you_ever_experienced_psychotic_episodes_in_the_past_and_been_hospitalised_for_them">Have you ever experienced psychotic episodes in the past and been hospitalised for them? *</string>
+    <string name="are_you_suffering_from_suicidal_thoughts_and_emotions">Are you suffering from suicidal thoughts and emotions? *</string>
+    <string name="if_the_answer_is_yes_your_thoughts_and_emotions_are">If the answer is yes, your thoughts and emotions are</string>
 </resources>
 

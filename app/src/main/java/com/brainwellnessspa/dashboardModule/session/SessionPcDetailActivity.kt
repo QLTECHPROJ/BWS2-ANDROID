@@ -27,8 +27,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionPcDetailBinding
-import com.brainwellnessspa.userModule.models.ProfileSaveDataModel
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -41,8 +41,8 @@ import java.util.*
 
 class SessionPcDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionPcDetailBinding
-    lateinit var ctx:Context
-    lateinit var act:Activity
+    lateinit var ctx: Context
+    lateinit var act: Activity
     var titleF: String = ""
     var gender: String = ""
     var genderX: String = ""
@@ -73,44 +73,45 @@ class SessionPcDetailActivity : AppCompatActivity() {
             ethnicity = binding.etEthnicity.text.toString().trim()
             mentalHealthChallenges = binding.edtCancelBoxAc1.text.toString().trim()
             mentalHealthTreatments = binding.edtCancelBoxAc2.text.toString().trim()
-            if(address == "" && suburb == "" && postcode == "" && ethnicity == "" ) {
-                binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else if(address != "" && suburb == "" && postcode == "" && ethnicity == "" ) {
-                binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else if(address != "" && suburb != "" && postcode == "" && ethnicity == "" ) {
-                binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else if(address != "" && suburb != "" && postcode != "" && ethnicity == "" ) {
-                binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
-            } else {
-                binding.btnNext.isClickable = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            if (binding.llAddress.isVisible || binding.llAddress.visibility == View.VISIBLE) {
+                if (address != "" && suburb != "" && postcode != "" && ethnicity != "") {
+                    binding.btnNext.isClickable = true
+                    binding.btnNext.isEnabled = true
+                    binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                } else {
+                    binding.btnNext.isClickable = false
+                    binding.btnNext.isEnabled = false
+                    binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                }
             }
-            if(binding.llFifth.isVisible || binding.llFifth.visibility == View.VISIBLE) {
+            if (binding.llFifth.isVisible || binding.llFifth.visibility == View.VISIBLE) {
                 if (binding.cbYes1.isChecked && mentalHealthChallenges == "") {
                     binding.btnNext.isClickable = false
+                    binding.btnNext.isEnabled = false
                     binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 } else if (binding.cbYes1.isChecked && mentalHealthChallenges != "") {
                     binding.btnNext.isClickable = true
+                    binding.btnNext.isEnabled = true
                     binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 }
             }
-            if(binding.llSixth.isVisible || binding.llSixth.visibility == View.VISIBLE) {
+            if (binding.llSixth.isVisible || binding.llSixth.visibility == View.VISIBLE) {
+                binding.btnNext.visibility = View.GONE
                 if (binding.cbYes2.isChecked && mentalHealthTreatments == "") {
-                    binding.btnNext.isClickable = false
-                    binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                    binding.btnContinue.isClickable = false
+                    binding.btnContinue.isEnabled = false
+                    binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
                 } else if (binding.cbYes2.isChecked && mentalHealthTreatments != "") {
-                    binding.btnNext.isClickable = true
-                    binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                    binding.btnContinue.isClickable = true
+                    binding.btnContinue.isEnabled = true
+                    binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
                 }
             }
         }
 
         override fun afterTextChanged(s: Editable) {}
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_pc_detail)
@@ -181,6 +182,15 @@ class SessionPcDetailActivity : AppCompatActivity() {
         binding.cbYes1.setOnClickListener {
             binding.cbYes1.isChecked = true
             binding.cbNo1.isChecked = false
+            if (mentalHealthChallenges == "") {
+                binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            } else {
+                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            }
             binding.llfifth2.visibility = View.VISIBLE
         }
         binding.cbNo1.setOnClickListener {
@@ -195,6 +205,15 @@ class SessionPcDetailActivity : AppCompatActivity() {
             binding.cbYes2.isChecked = true
             binding.cbNo2.isChecked = false
             binding.llSixth2.visibility = View.VISIBLE
+            if (mentalHealthTreatments == "") {
+                binding.btnContinue.isClickable = false
+                binding.btnContinue.isEnabled = false
+                binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else {
+                binding.btnContinue.isClickable = true
+                binding.btnContinue.isEnabled = true
+                binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            }
         }
         binding.cbNo2.setOnClickListener {
             binding.cbYes2.isChecked = false
@@ -202,6 +221,9 @@ class SessionPcDetailActivity : AppCompatActivity() {
             mentalHealthTreatments = ""
             binding.edtCancelBoxAc2.setText("")
             binding.llSixth2.visibility = View.GONE
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
         }
 
         binding.btnNext.setOnClickListener {
@@ -221,15 +243,16 @@ class SessionPcDetailActivity : AppCompatActivity() {
             sendProfileData()
         }
     }
+
     private fun sendProfileData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall: Call<ProfileSaveDataModel> = APINewClient.client.getEEPStep1ProfileSaveData("1", coUserId, age, titleF, gender, address, suburb, postcode, ethnicity, mentalHealthChallenges, mentalHealthTreatments)
-            listCall.enqueue(object : Callback<ProfileSaveDataModel> {
-                override fun onResponse(call: Call<ProfileSaveDataModel>, response: Response<ProfileSaveDataModel>) {
+            val listCall: Call<SessionsProfileSaveDataModel> = APINewClient.client.getEEPStepOneProfileSaveData("1", coUserId, age, titleF, gender, address, suburb, postcode, ethnicity, mentalHealthChallenges, mentalHealthTreatments)
+            listCall.enqueue(object : Callback<SessionsProfileSaveDataModel> {
+                override fun onResponse(call: Call<SessionsProfileSaveDataModel>, response: Response<SessionsProfileSaveDataModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listModel: ProfileSaveDataModel = response.body()!!
+                        val listModel: SessionsProfileSaveDataModel = response.body()!!
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_DOB, age)
@@ -245,10 +268,11 @@ class SessionPcDetailActivity : AppCompatActivity() {
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
                                 BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
-                                val i = Intent(this@ProfileProgressActivity, SleepTimeActivity::class.java)
+                                */
+                                val i = Intent(ctx, SessionsStepTwoActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 startActivity(i)
-                                finish()*/
+                                finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                 BWSApplication.deleteCall(act)
@@ -272,7 +296,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<ProfileSaveDataModel>, t: Throwable) {
+                override fun onFailure(call: Call<SessionsProfileSaveDataModel>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
@@ -290,6 +314,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
     private fun callFirstCondition(titles: String) {
         titleF = titles
         binding.btnNext.isClickable = true
+        binding.btnNext.isEnabled = true
         callMainStepNext()
     }
 
@@ -305,12 +330,16 @@ class SessionPcDetailActivity : AppCompatActivity() {
         binding.btnPrev.visibility = View.GONE
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
+        binding.btnNext.isClickable = false
+        binding.btnNext.isEnabled = false
+        binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
         val p = Properties()
         p.putValue("screen", 1)
         //        addInSegment(p)
         when {
             titleF.equals("Mr", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnMr.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
@@ -327,6 +356,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             titleF.equals("Mrs", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -343,6 +373,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             titleF.equals("Master", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -359,6 +390,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             titleF.equals("Ms", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -375,6 +407,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             titleF.equals("Dr", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -391,6 +424,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             titleF.equals("Other ", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -407,6 +441,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             else -> {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMr.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMr.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -464,6 +499,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
         when {
             gender.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnMale.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
@@ -474,6 +510,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             gender.equals("Female", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -484,6 +521,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             gender.equals("Gender X", true) -> {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMale.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -494,6 +532,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             else -> {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 //                binding.llIndicate.progress = 1
                 binding.btnMale.setTextColor(ContextCompat.getColor(act, R.color.black))
@@ -538,6 +577,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
         when {
             genderX.equals("Male", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
@@ -546,6 +586,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             genderX.equals("Female", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -554,6 +595,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             else -> {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnMaleGX.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnMaleGX.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -575,6 +617,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
         when {
             !age.equals("", true) -> {
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
@@ -582,6 +625,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
             else -> {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
@@ -618,16 +662,33 @@ class SessionPcDetailActivity : AppCompatActivity() {
         binding.btnNext.visibility = View.VISIBLE
         binding.btnContinue.visibility = View.GONE
         binding.btnNext.isClickable = true
+        binding.btnNext.isEnabled = true
         binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
 
-        if(mentalHealthChallenges==""){
-            binding.cbYes1.isChecked = false
-            binding.cbNo1.isChecked = true
-            binding.llfifth2.visibility = View.GONE
-        }else if(mentalHealthChallenges!=""){
-            binding.cbYes1.isChecked =true
+        if (mentalHealthChallenges == "" && binding.cbYes1.isChecked) {
+            binding.llfifth2.visibility = View.VISIBLE
+            if (mentalHealthChallenges == "") {
+                binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+            } else {
+                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
+                binding.edtCancelBoxAc1.setText(mentalHealthChallenges)
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+            }
+        } else if (mentalHealthChallenges != "" && binding.cbYes1.isChecked) {
+            binding.cbYes1.isChecked = true
             binding.cbNo1.isChecked = false
             binding.llfifth2.visibility = View.VISIBLE
+            binding.btnNext.isClickable = true
+            binding.btnNext.isEnabled = true
+            binding.edtCancelBoxAc1.setText(mentalHealthChallenges)
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+        } else {
+            binding.btnNext.isClickable = true
+            binding.btnNext.isEnabled = true
+            binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
         }
     }
 
@@ -646,19 +707,30 @@ class SessionPcDetailActivity : AppCompatActivity() {
         binding.btnPrev.visibility = View.VISIBLE
         binding.btnNext.visibility = View.GONE
         binding.btnContinue.visibility = View.VISIBLE
-        binding.btnContinue.isClickable = true
-        binding.btnContinue.isEnabled = true
-        binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
-        binding.btnNext.isClickable = true
-        binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
-        if(mentalHealthTreatments == ""){
-            binding.cbYes2.isChecked = false
-            binding.cbNo2.isChecked = true
-            binding.llSixth2.visibility = View.GONE
-        }else if(mentalHealthTreatments != ""){
-            binding.cbYes2.isChecked =true
-            binding.cbNo2.isChecked = false
+        if (mentalHealthTreatments == "" && binding.cbYes2.isChecked) {
             binding.llSixth2.visibility = View.VISIBLE
+            if (mentalHealthTreatments == "") {
+                binding.btnContinue.isEnabled = false
+                binding.btnContinue.isClickable = false
+                binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
+            } else {
+                binding.edtCancelBoxAc2.setText(mentalHealthTreatments)
+                binding.btnContinue.isClickable = true
+                binding.btnContinue.isEnabled = true
+                binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            }
+        } else if (mentalHealthTreatments != "" && binding.cbYes2.isChecked) {
+            binding.cbYes2.isChecked = true
+            binding.cbNo2.isChecked = false
+            binding.edtCancelBoxAc2.setText(mentalHealthTreatments)
+            binding.llSixth2.visibility = View.VISIBLE
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
+        } else {
+            binding.btnContinue.isClickable = true
+            binding.btnContinue.isEnabled = true
+            binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
         }
     }
 
@@ -692,12 +764,14 @@ class SessionPcDetailActivity : AppCompatActivity() {
             binding.btnOpn1.text = userCalendar
             if (birthYear < 0) {
                 binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.black))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             } else {
                 age = age1
                 binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 callFourthNext()
             }
@@ -846,5 +920,4 @@ class SessionPcDetailActivity : AppCompatActivity() {
             }
         }
     }
-
 }

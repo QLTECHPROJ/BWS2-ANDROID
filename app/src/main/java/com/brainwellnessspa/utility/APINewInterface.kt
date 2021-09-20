@@ -197,29 +197,65 @@ interface APINewInterface {
 
     @POST("eepprofile")
     @FormUrlEncoded
-    fun getEEPStep1ProfileSaveData(
-        @Field("Step")
-        Step: String?,
-        @Field("UserId")
-        UserId: String?,
-        @Field("dob")
-        dob: String?,
-        @Field("title")
-        title: String?,
-        @Field("gender")
-        gender: String?,
-        @Field("home_address")
-        home_address: String?,
-        @Field("suburb")
-        suburb: String?,
-        @Field("postcode")
-        postcode: String?,
-        @Field("ethnicity")
-        ethnicity: String?,
-        @Field("mental_health_challenges")
-        mental_health_challenges: String?,
-        @Field("mental_health_treatments")
-        mental_health_treatments: String?): Call<ProfileSaveDataModel>
+    fun getEEPStepOneProfileSaveData(
+            @Field("Step")
+            Step: String?,
+            @Field("UserId")
+            UserId: String?,
+            @Field("dob")
+            dob: String?,
+            @Field("title")
+            title: String?,
+            @Field("gender")
+            gender: String?,
+            @Field("home_address")
+            home_address: String?,
+            @Field("suburb")
+            suburb: String?,
+            @Field("postcode")
+            postcode: String?,
+            @Field("ethnicity")
+            ethnicity: String?,
+            @Field("mental_health_challenges")
+            mental_health_challenges: String?,
+            @Field("mental_health_treatments")
+            mental_health_treatments: String?): Call<SessionsProfileSaveDataModel>
+
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStepTwoProfileSaveData(
+            @Field("Step")
+            step: String?,
+            @Field("UserId")
+            userId: String?,
+            @Field("electric_shock_treatment")
+            electric_shock_treatment: String?,
+            @Field("electric_shock_last_treatment")
+            electric_shock_last_treatment: String?,
+            @Field("drug_prescription")
+            drug_prescription: String?,
+            @Field("types_of_drug")
+            types_of_drug: String?,
+            @Field("sense_of_terror")
+            sense_of_terror: String?): Call<SessionsProfileSaveDataModel>
+
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStepThreeProfileSaveData(
+            @Field("Step")
+            step: String?,
+            @Field("UserId")
+            userId: String?,
+            @Field("trauma_history")
+            electric_shock_treatment: String?,
+            @Field("phychotic_episode")
+            electric_shock_last_treatment: String?,
+            @Field("psychotic_emotions")
+            drug_prescription: String?,
+            @Field("suicidal_episode")
+            types_of_drug: String?,
+            @Field("suicidal_emotions")
+            sense_of_terror: String?): Call<SessionsProfileSaveDataModel>
 
     @POST("assesmentsaveans")
     @FormUrlEncoded
@@ -450,16 +486,18 @@ interface APINewInterface {
     @POST("setreminder")
     @FormUrlEncoded
     fun getSetReminder(
-        @Field("UserId")
-        UserId: String?,
-        @Field("PlaylistId")
-        PlaylistId: String?,
-        @Field("ReminderDay")
-        ReminderDay: String?,
-        @Field("ReminderTime")
-        ReminderTime: String?,
-        @Field("IsSingle")
-        IsSingle: String?): Call<SetReminderOldModel>
+            @Field("UserId")
+            UserId: String?,
+            @Field("PlaylistId")
+            PlaylistId: String?,
+            @Field("ReminderDay")
+            ReminderDay: String?,
+            @Field("ReminderTime")
+            ReminderTime: String?,
+            @Field("localTimezone")
+            localTimezone: String?,
+            @Field("IsSingle")
+            IsSingle: String?): Call<SetReminderOldModel>
 
     @POST("reminderlist")
     @FormUrlEncoded

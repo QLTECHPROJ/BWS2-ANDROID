@@ -22,8 +22,8 @@
             android:layout_width="@dimen/_210sdp"
             android:layout_height="@dimen/_210sdp"
             android:layout_marginTop="@dimen/_40sdp"
-            android:contentDescription="@string/todo" />
-        <!--android:src="@drawable/support_banner"-->
+            android:contentDescription="@string/todo"
+            android:src="@drawable/support_banner" />
 
         <TextView
             android:id="@+id/tvTitle"

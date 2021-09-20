@@ -183,7 +183,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                         val versionModel: VersionModel = response.body()!!
                         try {
                             setAnalytics(versionModel.ResponseData.segmentKey, context)
-
+                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val editor = shared.edit()
+                            editor.putString(CONSTANTS.PREFE_ACCESS_supportTitle, versionModel.ResponseData.supportTitle)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_supportText, versionModel.ResponseData.supportText)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_supportEmail, versionModel.ResponseData.supportEmail)
+                            editor.apply()
                             when {
                                 versionModel.ResponseData.IsForce.equals("0") -> {
                                     val builder = AlertDialog.Builder(this@SplashActivity)

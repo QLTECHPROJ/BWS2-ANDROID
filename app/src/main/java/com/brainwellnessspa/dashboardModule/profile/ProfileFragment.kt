@@ -91,6 +91,9 @@ class ProfileFragment : Fragment() {
     var isProfileCompleted: String? = null
     var isAssessmentCompleted: String? = null
     var indexScore: String? = null
+    var supportTitle: String? = null
+    var supportText: String? = null
+    var supportEmail: String? = null
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
     var areaOfFocus: String? = ""
@@ -115,6 +118,9 @@ class ProfileFragment : Fragment() {
         scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
         deviceId = shared1.getString(CONSTANTS.PREFE_ACCESS_DeviceID, "")
         deviceType = shared1.getString(CONSTANTS.PREFE_ACCESS_DeviceType, "")
+        supportTitle = shared1.getString(CONSTANTS.PREFE_ACCESS_supportTitle, "")
+        supportText = shared1.getString(CONSTANTS.PREFE_ACCESS_supportText, "")
+        supportEmail = shared1.getString(CONSTANTS.PREFE_ACCESS_supportEmail, "")
         val gson = Gson()
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
         if (!json5.equals(gson.toString())) areaOfFocus = json5
@@ -191,17 +197,41 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding.llSupport.setOnClickListener { view18 ->
+        binding.llSupport.setOnClickListener {
             supportDialog = Dialog(ctx)
             supportDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
             supportDialog!!.setContentView(R.layout.support_layout)
             supportDialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             supportDialog!!.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             val tvEmail = supportDialog!!.findViewById<TextView>(R.id.tvEmail)
+            val tvTitle = supportDialog!!.findViewById<TextView>(R.id.tvTitle)
+            val tvHeader = supportDialog!!.findViewById<TextView>(R.id.tvHeader)
             val llClose = supportDialog!!.findViewById<LinearLayout>(R.id.llClose)
-            tvEmail.setOnClickListener { v: View? ->
+            if (supportTitle.equals("", ignoreCase = true)) {
+                tvTitle.text = getString(R.string.support)
+            } else {
+                tvTitle.text = supportTitle
+            }
+
+            if (supportText.equals("", ignoreCase = true)) {
+                tvHeader.text = getString(R.string.support_quotes)
+            } else {
+                tvHeader.text = supportText
+            }
+
+            if (supportEmail.equals("", ignoreCase = true)) {
+                tvEmail.text = getString(R.string.support_link)
+            } else {
+                tvEmail.text = supportEmail
+            }
+            tvEmail.setOnClickListener {
                 val intent = Intent(Intent.ACTION_SEND)
-                val recipients = arrayOf("support@brainwellnessapp.com")
+                val recipients = if (supportEmail.equals("", ignoreCase = true)) {
+                    arrayOf(getString(R.string.support_link))
+                } else {
+                    arrayOf(supportEmail)
+                }
+
                 intent.putExtra(Intent.EXTRA_EMAIL, recipients)
                 intent.putExtra(Intent.EXTRA_SUBJECT, "")
                 intent.putExtra(Intent.EXTRA_TEXT, "")
@@ -860,6 +890,9 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanDeviceType)
         edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin)
         edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser)
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle)
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportText)
+        edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail)
 //        edit.remove(CONSTANTS.PREF_KEY_UserPromocode)
 //        edit.remove(CONSTANTS.PREF_KEY_ReferLink)
         edit.clear()
