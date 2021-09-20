@@ -2577,11 +2577,12 @@ public class BWSApplication extends Application {
         profileUpdate.put("isAdmin", isadm);
         profileUpdate.put("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
         profileUpdate.put("deviceType", "Android");
-        profileUpdate.put("name", name);
-        profileUpdate.put("email", email);
-        profileUpdate.put("mobileNo", mobile);
-        profileUpdate.put("Phone", "+" + countryCode + mobile);
-        profileUpdate.put("countryCode", countryCode);
+        profileUpdate.put("Name",name);
+        profileUpdate.put("Email",email);
+        profileUpdate.put("MobileNo",mobile);
+        profileUpdate.put("Mobile",mobile);
+        profileUpdate.put("Phone","+" + countryCode + mobile);
+        profileUpdate.put("countryCode",countryCode);
         profileUpdate.put("DOB", dob);
         profileUpdate.put("profileImage", image);
         profileUpdate.put("isProfileCompleted", isProf);
