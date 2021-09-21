@@ -17,7 +17,7 @@
                 android:id="@+id/llPlanSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/top_round_blue_cornor"
+                android:background="@drawable/top_round_green_cornor"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/_16sdp"
                 android:paddingTop="@dimen/_16sdp"

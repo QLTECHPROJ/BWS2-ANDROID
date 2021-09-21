@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
+import com.brainwellnessspa.billingOrderModule.activities.IAPCancelMembershipActivity
 import com.brainwellnessspa.databinding.ActivityAccountInfoBinding
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -64,7 +64,7 @@ class AccountInfoActivity : AppCompatActivity() {
 
         binding.llDeleteAc.setOnClickListener {
             if (isNetworkConnected(this)) {
-                val i = Intent(this, CancelMembershipActivity::class.java)
+                val i = Intent(this, IAPCancelMembershipActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("screenView", "0")
                 startActivity(i)

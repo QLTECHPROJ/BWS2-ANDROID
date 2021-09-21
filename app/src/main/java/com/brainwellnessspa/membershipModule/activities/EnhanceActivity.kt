@@ -81,7 +81,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         BWSApplication.addToSegment("Enhance Plan Screen Viewed", p, CONSTANTS.screen)
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
-        i = Intent(ctx, OrderSummaryActivity::class.java)
+        i = Intent(ctx, IAPOrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         binding.llBack.setOnClickListener {
             if (doubleBackToExitPressedOnce) {

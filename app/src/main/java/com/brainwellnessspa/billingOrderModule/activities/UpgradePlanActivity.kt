@@ -20,7 +20,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityUpgradePlanBinding
 import com.brainwellnessspa.databinding.PlanListFilteredLayoutBinding
-import com.brainwellnessspa.membershipModule.activities.OrderSummaryActivity
+import com.brainwellnessspa.membershipModule.activities.IAPOrderSummaryActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -61,7 +61,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
-        i = Intent(ctx, OrderSummaryActivity::class.java)
+        i = Intent(ctx, IAPOrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         if (intent != null) {
             planId = intent.getStringExtra("PlanId").toString()
@@ -70,7 +70,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         /* This is screen back click */
         binding.llBack.setOnClickListener {
-            val i = Intent(ctx, BillingOrderActivity::class.java)
+            val i = Intent(ctx, IAPBillingOrderActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("PlanId", planId)
             i.putExtra("DeviceType", DeviceType)
@@ -111,7 +111,7 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
     }
 
     override fun onBackPressed() {
-        val i = Intent(ctx, BillingOrderActivity::class.java)
+        val i = Intent(ctx, IAPBillingOrderActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         i.putExtra("PlanId", planId)
         i.putExtra("DeviceType", DeviceType)

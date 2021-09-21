@@ -61,7 +61,7 @@
                 android:layout_marginHorizontal="@dimen/_55sdp"
                 android:layout_marginBottom="@dimen/_18sdp"
                 android:layout_below="@+id/nestedScroll"
-                android:background="@drawable/extra_round_cornor"
+                android:background="@drawable/light_green_rounded_filled"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
                 android:text="@string/Complete_the_Booklet"

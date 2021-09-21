@@ -31,6 +31,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
+import com.brainwellnessspa.billingOrderModule.activities.IAPBillingOrderActivity
 import com.brainwellnessspa.dashboardModule.models.AddProfileModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.FragmentProfileBinding
@@ -289,7 +290,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(ctx)) {
-                val i = Intent(ctx, BillingOrderActivity::class.java)
+                val i = Intent(ctx, IAPBillingOrderActivity::class.java)
                 act.overridePendingTransition(0, 0)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 act.startActivity(i)
@@ -345,21 +346,20 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        /*  binding.llPlan1.setOnClickListener {
+          binding.llPlan1.setOnClickListener {
               if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                   return@setOnClickListener
               }
               mLastClickTime = SystemClock.elapsedRealtime()
               if (isNetworkConnected(activity)) {
-                  val i = Intent(activity, EnhanceActivity::class.java)
-               i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                  i.putExtra("plan","1")
-                  startActivity(i)
+                  val i = Intent(activity, BillingOrderActivity::class.java)
+                  i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                  act.startActivity(i)
                   act.overridePendingTransition(0, 0)
               } else {
                   showToast(getString(R.string.no_server_found), activity)
               }
-          }*/
+          }
 
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -614,7 +614,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     if (viewModel.ResponseData.isMainAccount == "1") {
                                         binding.llManageUser.visibility = View.VISIBLE
                                         binding.llBillingOrder.visibility = View.VISIBLE
-                                        binding.llPlan.visibility = View.VISIBLE
+                                        binding.llPlan.visibility = View.GONE
                                         binding.viewManage.visibility = View.VISIBLE
                                         binding.viewBillingOrder.visibility = View.VISIBLE
                                     } else {
@@ -629,7 +629,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     profilePicPath = viewModel.ResponseData.Image
                                     if (profilePicPath.equals("")) {
                                         binding.civProfile.visibility = View.GONE
-                                        name = if (viewModel.ResponseData.Name.equals("")) {
+                                        name = if (viewModel.ResponseData.Name == "") {
                                             "Guest"
                                         } else {
                                             viewModel.ResponseData.Name

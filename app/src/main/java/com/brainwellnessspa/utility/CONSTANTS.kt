@@ -84,6 +84,7 @@ object CONSTANTS {
 
     //multipart tag for file upload
     const val MULTIPART_FORMAT = "multipart/form-data"
+    const val PREF_KEY_CardID="CardId"
     const val PREFE_ACCESS_SIGNIN_COUSER = "CoUser"
     const val PREFE_ACCESS_mainAccountID = "mainAccountID"
     const val PREFE_ACCESS_NAME = "Name"

@@ -293,7 +293,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_24sdp"
-            android:background="@drawable/extra_round_cornor"
+            android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"

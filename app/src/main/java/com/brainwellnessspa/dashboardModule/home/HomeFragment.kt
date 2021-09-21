@@ -605,6 +605,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroy() {
+        ctx = requireActivity()
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         super.onDestroy()

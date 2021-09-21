@@ -128,7 +128,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -160,7 +160,7 @@
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
                     </LinearLayout>
-                    <!--<LinearLayout
+                    <LinearLayout
                         android:id="@+id/llPlan1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -187,7 +187,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="@string/upgrade_plan"
+                            android:text="Stripe Billing &amp; Order"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
@@ -199,7 +199,7 @@
                             android:layout_weight="0.1"
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
-                    </LinearLayout>-->
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout

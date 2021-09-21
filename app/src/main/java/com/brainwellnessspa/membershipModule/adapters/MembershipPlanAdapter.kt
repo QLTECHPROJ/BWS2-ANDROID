@@ -78,7 +78,7 @@ class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanL
     }
 
     private fun changeFunction(holder: MyViewHolder, listModel: MembershipPlanListModel.Plan, position: Int) {
-        holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_blue_cornor)
+        holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_green_cornor)
         holder.binding.llFeatures.visibility = View.VISIBLE
         holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.white))
         holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.white))
