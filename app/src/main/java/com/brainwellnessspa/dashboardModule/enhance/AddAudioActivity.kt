@@ -33,7 +33,7 @@ import com.brainwellnessspa.databinding.GlobalSearchLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -240,17 +240,7 @@ class AddAudioActivity : AppCompatActivity() {
                                 binding.llError.visibility = View.GONE
                             }
                         } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, listModel.responseMessage)
                         } else {
 //                            showToast(listModel.responseMessage, activity)
                         }
@@ -331,17 +321,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     }
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    deleteCall(activity)
-                                    showToast(listModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
+                                    callDelete403(activity, listModel.responseMessage)
                                 }
                                 else -> {
                                     showToast(listModel.responseMessage, activity)
@@ -497,17 +477,7 @@ class AddAudioActivity : AppCompatActivity() {
                                 finish()
                             }
                         } else if (listModels.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModels.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, listModels.responseMessage)
                         } else if (listModels.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
                             showToast(listModels.responseMessage, activity)
                         }

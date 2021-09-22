@@ -23,7 +23,7 @@ import com.brainwellnessspa.databinding.FragmentViewAllPlaylistBinding
 import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding
 import com.brainwellnessspa.downloadModule.activities.DownloadPlaylistActivity
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -248,16 +248,7 @@ class ViewAllPlaylistFragment : Fragment() {
                                         binding.rvMainAudio.adapter = adapter
                                     }
                                     listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                                        deleteCall(ctx)
-                                        val i = Intent(act, SignInActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        act.startActivity(i)
-                                        act.finish()
+                                        callDelete403(act, listModel.responseMessage)
                                     }
                                     else -> {
                                         showToast(listModel.responseMessage, act)

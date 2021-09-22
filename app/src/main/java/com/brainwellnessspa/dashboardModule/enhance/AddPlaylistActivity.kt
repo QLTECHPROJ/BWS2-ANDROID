@@ -28,7 +28,7 @@ import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.ActivityAddPlaylistBinding
 import com.brainwellnessspa.databinding.AddPlayListLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -166,17 +166,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                                 showToast(listsModel.responseMessage, activity)
                                             }
                                         } else if (listsModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                            deleteCall(activity)
-                                            showToast(listsModel.responseMessage, activity)
-                                            val i = Intent(activity, SignInActivity::class.java)
-                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                            i.putExtra("mobileNo", "")
-                                            i.putExtra("countryCode", "")
-                                            i.putExtra("name", "")
-                                            i.putExtra("email", "")
-                                            i.putExtra("countryShortName", "")
-                                            startActivity(i)
-                                            finish()
+                                            callDelete403(activity, listsModel.responseMessage)
                                         }
                                     }
                                 } catch (e: Exception) {
@@ -263,17 +253,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                                     binding.rvPlayLists.adapter = addPlaylistAdapter
                                 }
                             } else if (model.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(model.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity,model.responseMessage)
                             }
                         }
                     } catch (e: Exception) {
@@ -434,17 +414,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                             dialog.show()
                             dialog.setCancelable(false)
                         } else if (listModels.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModels.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, listModels.responseMessage)
                         } else if (listModels.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             showToast(listModels.responseMessage, activity)

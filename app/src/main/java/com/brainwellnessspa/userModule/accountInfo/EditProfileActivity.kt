@@ -34,7 +34,7 @@ import com.brainwellnessspa.databinding.ActivityEditProfileBinding
 import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.EditProfileModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -282,18 +282,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     }
                                 }
                                 viewModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(viewModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    activity.finish()
+                                    BWSApplication.callDelete403(activity, viewModel.responseMessage)
                                 }
                                 else -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -405,17 +394,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
                                 }
                                 viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(viewModel.ResponseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    activity.startActivity(i)
-                                    activity.finish()
+                                    BWSApplication.callDelete403(activity, viewModel.ResponseMessage)
                                 }
                                 else -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)

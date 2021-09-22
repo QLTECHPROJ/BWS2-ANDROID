@@ -35,7 +35,7 @@ import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -369,15 +369,7 @@ class UserListActivity : AppCompatActivity() {
                                             activity.getString(R.string.ResponseCodeDeleted) -> {
                                                 txtError.visibility = View.GONE
                                                 txtError.text = ""
-                                                deleteCall(activity)
-                                                val i = Intent(activity, SignInActivity::class.java)
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                activity.startActivity(i)
-                                                activity.finish()
+                                                callDelete403(activity, listModel.ResponseMessage)
                                             }
                                             activity.getString(R.string.ResponseCodefail) -> {
                                                 txtError.visibility = View.VISIBLE
@@ -587,15 +579,7 @@ class UserListActivity : AppCompatActivity() {
                                 addToSegment("Couser List Viewed", p, CONSTANTS.screen)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                deleteCall(activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, activity)

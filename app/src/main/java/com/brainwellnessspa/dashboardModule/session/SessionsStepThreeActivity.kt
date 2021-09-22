@@ -28,7 +28,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionsStepThreeBinding
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -372,16 +372,7 @@ class  SessionsStepThreeActivity : AppCompatActivity() {
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, activity)

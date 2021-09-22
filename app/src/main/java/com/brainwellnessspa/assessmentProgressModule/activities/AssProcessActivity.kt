@@ -18,7 +18,6 @@ import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsM
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -26,7 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/* This is to Assessment started activity and ended activity */
+/* This is to Assessment started act and ended act */
 class AssProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAssProcessBinding
     var assProcess: String = ""
@@ -39,13 +38,13 @@ class AssProcessActivity : AppCompatActivity() {
     var isAssessmentCompleted: String? = ""
     var avgSleepTime: String? = ""
     private var assesmentContent: String? = ""
-    lateinit var activity: Activity
+    lateinit var act: Activity
 
     /* This is the first lunched function */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)/* This is the layout showing */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_ass_process)
-        activity = this@AssProcessActivity
+        act = this@AssProcessActivity
         /* This is the get string userid & couserid */
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -493,8 +492,8 @@ class AssProcessActivity : AppCompatActivity() {
     }
 
     private fun prepareData(userID: String?) {
-        if (isNetworkConnected(activity)) {
-            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(act)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall = APINewClient.client.getAssesmentGetDetails(userID) /*Flag = 0 Staging Flag = 1 Live*/
             listCall.enqueue(object : Callback<AssesmentGetDetailsModel?> {
                 @SuppressLint("SetTextI18n")
@@ -504,7 +503,7 @@ class AssProcessActivity : AppCompatActivity() {
                         if (listModel != null) {
                             when {
                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
-                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                     binding.assesmentTitle.text = listModel.responseData?.assesmentTitle
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         binding.assesmentContent.text = Html.fromHtml(listModel.responseData?.assesmentContent, Html.FROM_HTML_MODE_COMPACT);
@@ -517,20 +516,10 @@ class AssProcessActivity : AppCompatActivity() {
                                     binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                    deleteCall(activity)
-                                    showToast(listModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
+                                    callDelete403(act,listModel.responseMessage)
                                 }
                                 else -> {
-                                    showToast(listModel.responseMessage, activity)
+                                    showToast(listModel.responseMessage, act)
                                 }
                             }
                         }
@@ -540,11 +529,11 @@ class AssProcessActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssesmentGetDetailsModel?>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 

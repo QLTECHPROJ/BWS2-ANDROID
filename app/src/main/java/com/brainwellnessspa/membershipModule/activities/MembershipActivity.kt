@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.callSignActivity
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityMembershipBinding
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding
@@ -25,8 +26,6 @@ import com.brainwellnessspa.databinding.SubscribeBoxLayoutBinding
 import com.brainwellnessspa.faqModule.models.FaqListModel
 import com.brainwellnessspa.membershipModule.adapters.MembershipPlanAdapter
 import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
-import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.APINewClient.client
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MeasureRatio
@@ -57,15 +56,7 @@ class MembershipActivity : AppCompatActivity() {
         ctx = this@MembershipActivity
         act = this@MembershipActivity
         binding.llBack.setOnClickListener { view ->
-            val i = Intent(ctx, SignInActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            i.putExtra("mobileNo", "")
-            i.putExtra("countryCode", "")
-            i.putExtra("name", "")
-            i.putExtra("email", "")
-            i.putExtra("countryShortName", "")
-            startActivity(i)
-            finish()
+            callSignActivity(act)
         }
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvList.layoutManager = mLayoutManager
@@ -111,17 +102,7 @@ class MembershipActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val i = Intent(ctx, SignInActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        i.putExtra("mobileNo", "")
-        i.putExtra("countryCode", "")
-        i.putExtra("name", "")
-        i.putExtra("email", "")
-        i.putExtra("countryShortName", "")
-        startActivity(i)
-        finish()
-        startActivity(i)
-        finish()
+        callSignActivity(act)
     }
 
     private fun prepareMembershipData() {

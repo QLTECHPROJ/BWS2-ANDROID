@@ -29,7 +29,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionPcDetailBinding
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -275,16 +275,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.deleteCall(act)
-                                BWSApplication.showToast(listModel.responseMessage, act)
-                                val i = Intent(act, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                BWSApplication.callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
                                 BWSApplication.showToast(listModel.responseMessage, act)

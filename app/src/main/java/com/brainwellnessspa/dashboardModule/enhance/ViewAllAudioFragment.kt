@@ -28,7 +28,7 @@ import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetailsUniq
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -165,17 +165,7 @@ class ViewAllAudioFragment : Fragment() {
                                 val adapter = AudiolistAdapter(listModel.responseData?.details)
                                 binding.rvMainAudio.adapter = adapter
                             } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(act)
-                                showToast(listModel.responseMessage, act)
-                                val i = Intent(act, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                act.finish()
+                                callDelete403(act, listModel.responseMessage)
                             }
                         }
                     } catch (e: Exception) {

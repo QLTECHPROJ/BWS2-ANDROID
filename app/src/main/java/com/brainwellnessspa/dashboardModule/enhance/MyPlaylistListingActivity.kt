@@ -40,7 +40,7 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.*
 import com.brainwellnessspa.utility.ItemMoveCallback.ItemTouchHelperContract
 import com.bumptech.glide.Glide
@@ -504,17 +504,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                 setData(listModel.responseData)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, activity)
@@ -1042,17 +1032,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             localBroadcastManager.sendBroadcast(localIntent)
                             showToast(listModel1.responseMessage, activity)
                         } else if (listModel1.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(listModel1.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            activity.startActivity(i)
-                            activity.finish()
+                            callDelete403(activity, listModel1.responseMessage)
                         }
                     }
 
@@ -1236,16 +1216,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     listModel.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                     }
                                     listModel.responseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                        deleteCall(activity)
-                                        val i = Intent(activity, SignInActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        activity.startActivity(i)
-                                        activity.finish()
+                                        callDelete403(activity, listModel.responseMessage)
                                     }
                                     else -> {
                                         //                                showToast(listModel.responseMessage, activity)

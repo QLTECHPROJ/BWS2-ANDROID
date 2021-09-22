@@ -37,7 +37,7 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAud
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetSourceName
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callNewPlayerRelease
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.getMediaBitmap
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.exoplayer2.C
@@ -1258,17 +1258,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                     if (listModel != null) {
                                         if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                         } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                            deleteCall(act)
-                                            showToast(listModel.responseMessage, act)
-                                            val i = Intent(act, SignInActivity::class.java)
-                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                            i.putExtra("mobileNo", "")
-                                            i.putExtra("countryCode", "")
-                                            i.putExtra("name", "")
-                                            i.putExtra("email", "")
-                                            i.putExtra("countryShortName", "")
-                                            startActivity(i)
-                                            finish()
+                                            callDelete403(act, listModel.responseMessage)
                                         }
                                     }
                                 }
@@ -1480,17 +1470,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         if (model.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
 
                         } else if (model.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(act)
-                            showToast(model.responseMessage, act)
-                            val i = Intent(act, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(act, model.responseMessage)
                         }
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()

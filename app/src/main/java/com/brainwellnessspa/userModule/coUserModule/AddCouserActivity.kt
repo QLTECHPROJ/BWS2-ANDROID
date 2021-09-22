@@ -22,7 +22,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityAddCouserBinding
 import com.brainwellnessspa.userModule.models.AuthOtpModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -160,17 +160,7 @@ class AddCouserActivity : AppCompatActivity() {
                             }
                             finish()
                         } else if (authOtpModel.ResponseCode.equals(activity.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                            deleteCall(activity)
-                            showToast(authOtpModel.ResponseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            activity.startActivity(i)
-                            activity.finish()
+                            callDelete403(activity, authOtpModel.ResponseMessage)
                         }
                     }
 

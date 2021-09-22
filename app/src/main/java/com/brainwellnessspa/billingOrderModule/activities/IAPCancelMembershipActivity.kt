@@ -28,7 +28,7 @@ import com.brainwellnessspa.billingOrderModule.models.CancelPlanModel
 import com.brainwellnessspa.databinding.ActivityCancelMembershipBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.models.DeleteInviteUserModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -186,8 +186,6 @@ class IAPCancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnIniti
                                                         when {
                                                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                                                 dialog.dismiss()
-                                                                deleteCall(activity)
-                                                                showToast(listModel.responseMessage, activity)
                                                                 val properties = Properties()
                                                                 when (deleteId) {
                                                                     "1" -> {
@@ -208,28 +206,10 @@ class IAPCancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnIniti
                                                                     }
                                                                 }
                                                                 addToSegment("Account Deleted", properties, CONSTANTS.track)
-                                                                val i = Intent(activity, SignInActivity::class.java)
-                                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                                i.putExtra("mobileNo", "")
-                                                                i.putExtra("countryCode", "")
-                                                                i.putExtra("name", "")
-                                                                i.putExtra("email", "")
-                                                                i.putExtra("countryShortName", "")
-                                                                startActivity(i)
-                                                                finish()
+                                                                callDelete403(activity, listModel.responseMessage)
                                                             }
                                                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                                                deleteCall(activity)
-                                                                showToast(listModel.responseMessage, activity)
-                                                                val i = Intent(activity, SignInActivity::class.java)
-                                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                                i.putExtra("mobileNo", "")
-                                                                i.putExtra("countryCode", "")
-                                                                i.putExtra("name", "")
-                                                                i.putExtra("email", "")
-                                                                i.putExtra("countryShortName", "")
-                                                                startActivity(i)
-                                                                finish()
+                                                                callDelete403(activity, listModel.responseMessage)
                                                             }
                                                             else -> {
                                                                 showToast(listModel.responseMessage, activity)
@@ -409,7 +389,7 @@ class IAPCancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnIniti
                                                             p.putValue("planAmount", intent.getStringExtra("planAmount"))
                                                             addToSegment("Subscription Cancelled", p, CONSTANTS.screen)
                                                             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions?sku=weekly_2_profile&package=com.brainwellnessspa")))
-//                                                        https://play.google.com/store/account/subscriptions
+                                                            //                                                        https://play.google.com/store/account/subscriptions
                                                         } catch (e: ActivityNotFoundException) {
                                                             showToast("Cant open the browser", activity)
                                                             e.printStackTrace()

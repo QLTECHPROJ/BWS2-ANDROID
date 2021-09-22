@@ -45,6 +45,7 @@ import java.util.*
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
+    lateinit var ctx : Context
     private var fcmId: String = ""
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
@@ -83,6 +84,7 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         activity = this@SignInActivity
+        ctx = this@SignInActivity
         binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
         if (intent != null) {
@@ -217,7 +219,7 @@ class SignInActivity : AppCompatActivity() {
 
 /*
         binding.tvForgotPswd.setOnClickListener {
-            val i = Intent(this@SignInActivity, ForgotPswdActivity::class.java)
+            val i = Intent(ctx, ForgotPswdActivity::class.java)
             startActivity(i)
         }
 */
@@ -323,17 +325,17 @@ class SignInActivity : AppCompatActivity() {
                 p.putValue("source", "Login")
                 BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                 binding.txtNumberError.visibility = View.GONE
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, "", key)
                 listCall.enqueue(object : Callback<UserAccessModel> {
                     override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                         try {
                             binding.txtNumberError.visibility = View.GONE
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: UserAccessModel = response.body()!!
                             if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 p.putValue("isOtpReceived", "Yes")
-                                val i = Intent(this@SignInActivity, AuthOtpActivity::class.java)
+                                val i = Intent(ctx, AuthOtpActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
                                 i.putExtra(CONSTANTS.countryCode, countryCode)
@@ -358,7 +360,7 @@ class SignInActivity : AppCompatActivity() {
                     override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                         p.putValue("isOtpReceived", "No")
                         BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, this@SignInActivity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
 

@@ -164,14 +164,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.tvSignIn.setOnClickListener {
-            val i = Intent(activity, SignInActivity::class.java)
-            i.putExtra("mobileNo", "")
-            i.putExtra("countryCode", "")
-            i.putExtra("name", "")
-            i.putExtra("email", "")
-            i.putExtra("countryShortName", "")
-            startActivity(i)
-            finish()
+            callSignActivity(activity)
         }
 
         binding.tvtncs.setOnClickListener {
@@ -355,14 +348,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val i = Intent(activity, SignInActivity::class.java)
-        i.putExtra("mobileNo", "")
-        i.putExtra("countryCode", "")
-        i.putExtra("name", "")
-        i.putExtra("email", "")
-        i.putExtra("countryShortName", "")
-        startActivity(i)
-        finish()
+        callSignActivity(activity)
     }
 
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView :SearchView) {

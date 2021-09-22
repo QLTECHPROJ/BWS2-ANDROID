@@ -99,6 +99,7 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.services.PlayerJobService;
+;
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
@@ -265,9 +266,6 @@ public class BWSApplication extends Application {
     }
 
     private static void CallObserverMethodGetAllMedia(Context ctx) {
-        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
-        String coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao().geAllData1LiveForAll().observe((LifecycleOwner) ctx, audioList -> {
             playlistDownloadAudioDetailsList = audioList;
@@ -279,9 +277,38 @@ public class BWSApplication extends Application {
         showToast("Please Reactivate Your Plan", act);
     }
 
+    public static void callDelete403(Activity act, String msg){
+        try {
+            analytics.flush();
+            analytics.reset();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        deleteCall(act);
+        showToast(msg, act);
+        callSignActivity(act);
+    }
+
+    public static void callSignActivity(Activity act){
+        HashMap<String, Object> profileUpdate = new HashMap<>();
+        profileUpdate.put("MSG-push", true);
+        profileUpdate.put("MSG-email", true);
+        profileUpdate.put("MSG-sms", true);
+        profileUpdate.put("MSG-whatsapp", true);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
+        Intent i =new Intent(act, SignInActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        i.putExtra("mobileNo", "");
+        i.putExtra("countryCode", "");
+        i.putExtra("name", "");
+        i.putExtra("email", "");
+        i.putExtra("countryShortName", "");
+        act.startActivity(i);
+        act.finish();
+    }
+
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB = getAudioDataBase(ctx);
         DB.taskDao().getPlaylist1(PlaylistID, CoUserID).observe((LifecycleOwner) ctx, audioList -> {
@@ -534,16 +561,7 @@ public class BWSApplication extends Application {
                                     rvDirlist.setAdapter(directionAdapter);
                                 }
                             } else if (listModel.getResponseCode().equals(act.getString(R.string.ResponseCodeDeleted))) {
-                                deleteCall(act);
-                                showToast(listModel.getResponseMessage(), act);
-                                Intent i = new Intent(act, SignInActivity.class);
-                                i.putExtra("mobileNo", "");
-                                i.putExtra("countryCode", "");
-                                i.putExtra("name", "");
-                                i.putExtra("email", "");
-                                i.putExtra("countryShortName", "");
-                                act.startActivity(i);
-                                act.finish();
+                                callDelete403(act,listModel.getResponseMessage());
                             } else {
                                 showToast(listModel.getResponseMessage(), act);
                             }
@@ -745,16 +763,7 @@ public class BWSApplication extends Application {
                                         }
                                     }
                                 } else if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                    deleteCall(act);
-                                    showToast(listModel.getResponseMessage(), act);
-                                    Intent i = new Intent(act, SignInActivity.class);
-                                    i.putExtra("mobileNo", "");
-                                    i.putExtra("countryCode", "");
-                                    i.putExtra("name", "");
-                                    i.putExtra("email", "");
-                                    i.putExtra("countryShortName", "");
-                                    act.startActivity(i);
-                                    act.finish();
+                                    callDelete403(act,listModel.getResponseMessage());
                                 }
                             }
                         }
@@ -1181,16 +1190,7 @@ public class BWSApplication extends Application {
                                                                 act.finish();
                                                                 dialog.dismiss();
                                                             } else if (listModel1.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                                                deleteCall(act);
-                                                                showToast(listModel1.getResponseMessage(), act);
-                                                                Intent i = new Intent(act, SignInActivity.class);
-                                                                i.putExtra("mobileNo", "");
-                                                                i.putExtra("countryCode", "");
-                                                                i.putExtra("name", "");
-                                                                i.putExtra("email", "");
-                                                                i.putExtra("countryShortName", "");
-                                                                act.startActivity(i);
-                                                                act.finish();
+                                                                callDelete403(act,listModel.getResponseMessage());
                                                             }
                                                         }
                                                         //                                                            Fragment audioFragment = new MainPlaylistFragment();
@@ -1345,16 +1345,7 @@ public class BWSApplication extends Application {
                                                                 dialogs.dismiss();
                                                             }
                                                         } else if (listModel1.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                                            deleteCall(act);
-                                                            showToast(listModel1.getResponseMessage(), act);
-                                                            Intent i = new Intent(act, SignInActivity.class);
-                                                            i.putExtra("mobileNo", "");
-                                                            i.putExtra("countryCode", "");
-                                                            i.putExtra("name", "");
-                                                            i.putExtra("email", "");
-                                                            i.putExtra("countryShortName", "");
-                                                            act.startActivity(i);
-                                                            act.finish();
+                                                            callDelete403(act,listModel.getResponseMessage());
                                                         }
                                                     }
                                                 } catch (Exception e) {
@@ -1382,16 +1373,7 @@ public class BWSApplication extends Application {
                             llDownload.setOnClickListener(view -> callDownloadPlayList(act, listModel.getResponseData().getPlaylistSongs(), ctx, llDownload, ivDownloads, downloadPlaylistDetails, CoUSERID, PlaylistID));
 
                         } else if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                            deleteCall(act);
-                            showToast(listModel.getResponseMessage(), act);
-                            Intent i = new Intent(act, SignInActivity.class);
-                            i.putExtra("mobileNo", "");
-                            i.putExtra("countryCode", "");
-                            i.putExtra("name", "");
-                            i.putExtra("email", "");
-                            i.putExtra("countryShortName", "");
-                            act.startActivity(i);
-                            act.finish();
+                            callDelete403(act,listModel.getResponseMessage());
                         } else {
                             showToast(listModel.getResponseMessage(), act);
                         }
@@ -1579,7 +1561,6 @@ public class BWSApplication extends Application {
     private static void savePlaylist(Context ctx, DownloadPlaylistDetails downloadPlaylistDetails) {
         DB = getAudioDataBase(ctx);
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadPlaylistDetails.setUserID(CoUserID);
         try {
@@ -1660,7 +1641,6 @@ public class BWSApplication extends Application {
     public static void GetMedia(String AudioFile, Context ctx, String audioFileName, ImageView ivDownloads, TextView tvDownloads, LinearLayout llDownload) {
         DB = getAudioDataBase(ctx);
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         DB.taskDao().getaudioByPlaylist1(AudioFile, "", CoUserID).observe((LifecycleOwner) ctx, audioList -> {
             List<String> fileNameList = new ArrayList<>();
@@ -2161,7 +2141,6 @@ public class BWSApplication extends Application {
         DB = getAudioDataBase(ctx);
         DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
-        String UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "");
         String CoUserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         downloadAudioDetails.setUserID(CoUserID);
         if (comeFrom.equalsIgnoreCase("downloadList")) {
@@ -2738,20 +2717,20 @@ public class BWSApplication extends Application {
         return BWSApplication;
     }
 
-    public static void hideProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity ctx) {
+    public static void hideProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity act) {
         try {
             progressBarHolder.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
-            ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void showProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity ctx) {
+    public static void showProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity act) {
         try {
             progressBarHolder.setVisibility(View.VISIBLE);
-            ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            act.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             progressBar.setVisibility(View.VISIBLE);
             progressBar.invalidate();
         } catch (Exception e) {
@@ -3154,16 +3133,7 @@ public class BWSApplication extends Application {
                                         localIntent.putExtra("MyReminder", "update");
                                         localBroadcastManager.sendBroadcast(localIntent);
                                     } else if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodeDeleted))) {
-                                        deleteCall(act);
-                                        showToast(listModel.getResponseMessage(), act);
-                                        Intent i = new Intent(act, SignInActivity.class);
-                                        i.putExtra("mobileNo", "");
-                                        i.putExtra("countryCode", "");
-                                        i.putExtra("name", "");
-                                        i.putExtra("email", "");
-                                        i.putExtra("countryShortName", "");
-                                        act.startActivity(i);
-                                        act.finish();
+                                        callDelete403(act,listModel.getResponseMessage());
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -3185,16 +3155,7 @@ public class BWSApplication extends Application {
                                     if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
 
                                     } else if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                        deleteCall(act);
-                                        showToast(model.getResponseMessage(), act);
-                                        Intent i = new Intent(act, SignInActivity.class);
-                                        i.putExtra("mobileNo", "");
-                                        i.putExtra("countryCode", "");
-                                        i.putExtra("name", "");
-                                        i.putExtra("email", "");
-                                        i.putExtra("countryShortName", "");
-                                        act.startActivity(i);
-                                        act.finish();
+                                        callDelete403(act,model.getResponseMessage());
                                     } else {
                                         showToast(model.getResponseMessage(), act);
                                     }

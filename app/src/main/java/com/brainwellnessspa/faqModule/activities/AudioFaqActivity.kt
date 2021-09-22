@@ -52,7 +52,6 @@ class AudioFaqActivity : AppCompatActivity() {
         ctx = this@AudioFaqActivity
         faqListModel = ArrayList()
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        userID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (intent != null) {
             faqListModel = intent.getParcelableArrayListExtra("faqListModel")

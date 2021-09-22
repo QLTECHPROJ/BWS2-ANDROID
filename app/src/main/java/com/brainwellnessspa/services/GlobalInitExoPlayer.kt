@@ -28,7 +28,7 @@ import com.brainwellnessspa.encryptDecryptUtils.FileUtils
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.userModule.models.UserAudioTrackingModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.UserActivityTrackModel
@@ -476,16 +476,7 @@ class GlobalInitExoPlayer : Service() {
                                 if (listModel != null) {
                                     if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                        deleteCall(ctx as Activity?)
-                                        showToast(listModel.responseMessage, ctx as Activity?)
-                                        val i = Intent(ctx, SignInActivity::class.java)
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        startActivity(i)
-                                        ctx.finish()
+                                        callDelete403(ctx as Activity, listModel.responseMessage)
                                     }
                                 }
                             }
@@ -646,16 +637,7 @@ class GlobalInitExoPlayer : Service() {
                                 if (listModel != null) {
                                     if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                     } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                        deleteCall(ctx as Activity?)
-                                        showToast(listModel.responseMessage, ctx as Activity?)
-                                        val i = Intent(ctx, SignInActivity::class.java)
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        startActivity(i)
-                                        ctx.finish()
+                                        callDelete403(ctx as Activity, listModel.responseMessage)
                                     }
                                 }
                             }
@@ -1449,16 +1431,7 @@ class GlobalInitExoPlayer : Service() {
                                     Log.e("Issue Done", gson.toJson(userActivityTrackModel))
                                 }
                                 listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    deleteCall(ctx)
-                                    showToast(listModel.responseMessage, ctx as Activity?)
-                                    val i = Intent(ctx, SignInActivity::class.java)
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    ctx.finish()
+                                    callDelete403(ctx as Activity, listModel.responseMessage)
                                 }
                                 else -> {
                                     showToast(listModel.responseMessage, ctx as Activity?)

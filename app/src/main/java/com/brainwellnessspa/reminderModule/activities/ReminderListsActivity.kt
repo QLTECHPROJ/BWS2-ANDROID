@@ -38,7 +38,7 @@ import com.brainwellnessspa.reminderModule.models.ReminderListModel
 import com.brainwellnessspa.reminderModule.models.ReminderStatusModel
 import com.brainwellnessspa.reminderModule.models.SegmentReminder
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -197,16 +197,7 @@ class ReminderListsActivity : AppCompatActivity() {
                                     binding.btnDeleteReminder.visibility = View.VISIBLE
                                 }
                             } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                BWSApplication.callDelete403(activity, listModel.responseMessage)
                             }
                         }
                     } catch (e: Exception) {
@@ -251,16 +242,7 @@ class ReminderListsActivity : AppCompatActivity() {
                                     dialog.dismiss()
                                     prepareData()
                                 } else if (model.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(model.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
+                                    BWSApplication.callDelete403(activity, model.responseMessage)
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -510,16 +492,7 @@ class ReminderListsActivity : AppCompatActivity() {
                                     BWSApplication.addToSegment("Playlist Reminder Set Off", p, CONSTANTS.screen)*/
                                 BWSApplication.showToast(listModel.responseMessage, activity)
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                BWSApplication.callDelete403(activity, listModel.responseMessage)
                             }
                         }
                     } catch (e: Exception) {
@@ -621,16 +594,7 @@ class ReminderListsActivity : AppCompatActivity() {
                                             prepareData()
                                             dialog.dismiss()
                                         } else if (model.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                            BWSApplication.deleteCall(activity)
-                                            BWSApplication.showToast(model.responseMessage, activity)
-                                            val i = Intent(activity, SignInActivity::class.java)
-                                            i.putExtra("mobileNo", "")
-                                            i.putExtra("countryCode", "")
-                                            i.putExtra("name", "")
-                                            i.putExtra("email", "")
-                                            i.putExtra("countryShortName", "")
-                                            startActivity(i)
-                                            finish()
+                                            BWSApplication.callDelete403(activity, model.responseMessage)
                                         }
                                     }
                                 } catch (e: Exception) {

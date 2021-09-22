@@ -24,7 +24,6 @@ import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -34,7 +33,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/* This activity is assessment form activity */
+/* This act is assessment form act */
 class DassAssSliderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDassAssSliderBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
@@ -45,7 +44,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     var assAns = arrayListOf<String>()
     var assSort = arrayListOf<String>()
     lateinit var listModel1: AssessmentQusModel
-    lateinit var activity: Activity
+    lateinit var act: Activity
     var myPos: Int = 0
     private var doubleBackToExitPressedOnce = false
     var mainAccountID: String? = ""
@@ -67,7 +66,7 @@ class DassAssSliderActivity : AppCompatActivity() {
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
         ctx = this@DassAssSliderActivity
-        activity = this@DassAssSliderActivity
+        act = this@DassAssSliderActivity
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
@@ -92,10 +91,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                 p.putValue("screen", myPos)
                 addInSegment(p)
                 if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
                     binding.rvFirstList.adapter = firstListAdapter
                 } else {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
+                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
                     binding.rvFirstList.adapter = firstListAdapter
                 }
             }
@@ -140,12 +139,12 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (myPos == listModel1.responseData!!.questions!!.size - 1) {
                 binding.btnNext.visibility = View.GONE
                 binding.btnContinue.visibility = View.VISIBLE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
                 binding.rvFirstList.adapter = firstListAdapter
             } else {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
+                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
                 binding.rvFirstList.adapter = firstListAdapter
             }
         } else {
@@ -154,7 +153,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                 return
             }
             this.doubleBackToExitPressedOnce = true
-            BWSApplication.showToast("Press again to exit", activity)
+            BWSApplication.showToast("Press again to exit", act)
 
             Handler(Looper.myLooper()!!).postDelayed({
                 doubleBackToExitPressedOnce = false
@@ -179,50 +178,56 @@ class DassAssSliderActivity : AppCompatActivity() {
     /* This function is get assessment questions */
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<AssessmentQusModel> = APINewClient.client.assessmentQus
             listCall.enqueue(object : Callback<AssessmentQusModel> {
                 override fun onResponse(call: Call<AssessmentQusModel>, response: Response<AssessmentQusModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: AssessmentQusModel = response.body()!!
                         listModel1 = response.body()!!
-                        if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
-                            var condition: String? = ""
-                            for (i in 0 until listModel.responseData!!.content?.size!!) {
-                                condition += listModel.responseData!!.content!![i].condition + "\n"
-                            }
-                            binding.tvQus.text = listModel.responseData!!.toptitle
-                            binding.tvText1.text = listModel.responseData!!.subtitle
-                            binding.tvText.text = condition
-                            binding.lpIndicator.max = listModel.responseData!!.questions!!.size
-                            binding.lpIndicator.progress = 0 //                            binding.tvNumberOfQus.text = myPos.toString()
-                            //                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString
-                            if (assQus.size != 0) {
-                                val mod = assQus.size % 2
-                                myPos = if (mod == 0) {
-                                    assQus.size
-                                } else {
-                                    assQus.size - 1
+                        when {
+                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
+                                var condition: String? = ""
+                                for (i in 0 until listModel.responseData!!.content?.size!!) {
+                                    condition += listModel.responseData!!.content!![i].condition + "\n"
                                 }
-                                binding.lpIndicator.progress = myPos
-                                Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + assQus.size.toString())
+                                binding.tvQus.text = listModel.responseData!!.toptitle
+                                binding.tvText1.text = listModel.responseData!!.subtitle
+                                binding.tvText.text = condition
+                                binding.lpIndicator.max = listModel.responseData!!.questions!!.size
+                                binding.lpIndicator.progress = 0 //                            binding.tvNumberOfQus.text = myPos.toString()
+                                //                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString
+                                if (assQus.size != 0) {
+                                    val mod = assQus.size % 2
+                                    myPos = if (mod == 0) {
+                                        assQus.size
+                                    } else {
+                                        assQus.size - 1
+                                    }
+                                    binding.lpIndicator.progress = myPos
+                                    Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + assQus.size.toString())
+                                }
+                                val p = Properties()
+                                p.putValue("screen", myPos)
+                                addInSegment(p)
+                                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                                    binding.btnNext.visibility = View.GONE
+                                    binding.btnContinue.visibility = View.VISIBLE
+                                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
+                                    binding.rvFirstList.adapter = firstListAdapter
+                                } else if (myPos < listModel.responseData!!.questions!!.size) { //                                if(myPos ==)
+                                    firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
+                                    binding.rvFirstList.adapter = firstListAdapter
+                                }
+                                BWSApplication.showToast(listModel.responseMessage, act)
                             }
-                            val p = Properties()
-                            p.putValue("screen", myPos)
-                            addInSegment(p)
-                            if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                                binding.btnNext.visibility = View.GONE
-                                binding.btnContinue.visibility = View.VISIBLE
-                                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, activity)
-                                binding.rvFirstList.adapter = firstListAdapter
-                            } else if (myPos < listModel.responseData!!.questions!!.size) { //                                if(myPos ==)
-                                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, activity)
-                                binding.rvFirstList.adapter = firstListAdapter
+                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
+                                BWSApplication.callDelete403(act, listModel.responseMessage)
                             }
-                            BWSApplication.showToast(listModel.responseMessage, activity)
-                        } else {
-                            BWSApplication.showToast(listModel.responseMessage, activity)
+                            else -> {
+                                BWSApplication.showToast(listModel.responseMessage, act)
+                            }
                         }
 
                     } catch (e: Exception) {
@@ -231,7 +236,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssessmentQusModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
@@ -241,7 +246,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = DassAssSliderActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -263,9 +268,9 @@ class DassAssSliderActivity : AppCompatActivity() {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
                 holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
                 if (position == 0) {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act)
                 } else {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, activity)
+                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, act)
                 }
                 holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
             }
@@ -277,7 +282,7 @@ class DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the second options box input layout */
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val activity: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
@@ -379,14 +384,14 @@ class DassAssSliderActivity : AppCompatActivity() {
             if (dass.assQus.size >= mmypos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnContinue.isClickable = true
                 binding.btnContinue.isEnabled = true
                 binding.btnContinue.setBackgroundResource(R.drawable.light_green_rounded_filled)
             } else {
                 binding.btnNext.isEnabled = false
                 binding.btnNext.isClickable = false
-                binding.btnNext.setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
                 binding.btnContinue.isEnabled = false
                 binding.btnContinue.isClickable = false
                 binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
@@ -413,12 +418,12 @@ class DassAssSliderActivity : AppCompatActivity() {
         }
 
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<AssessmentSaveDataModel> = APINewClient.client.getAssessmentSaveData(userId, gson.toJson(assAns).toString())
             listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
                 override fun onResponse(call: Call<AssessmentSaveDataModel>, response: Response<AssessmentSaveDataModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: AssessmentSaveDataModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
@@ -429,7 +434,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 edited1.remove(CONSTANTS.AssSort)
                                 edited1.clear()
                                 edited1.apply()
-                                val shareded = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                val shareded = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                 val editor = shareded.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData?.indexScore)
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.responseData?.scoreLevel)
@@ -455,7 +460,7 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 }
                                 BWSApplication.addToSegment(CONSTANTS.Assessment_Form_Submitted, p, CONSTANTS.track)
                                 callIdentify(ctx)
-                                val i = Intent(activity, AssProcessActivity::class.java)
+                                val i = Intent(act, AssProcessActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 i.putExtra(CONSTANTS.ASSPROCESS, "1")
                                 i.putExtra("Navigation", navigation)
@@ -467,20 +472,10 @@ class DassAssSliderActivity : AppCompatActivity() {
                                 Log.e("navigation assess", navigation)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                BWSApplication.deleteCall(activity)
-                                BWSApplication.showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                BWSApplication.callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, activity)
+                                BWSApplication.showToast(listModel.responseMessage, act)
                             }
                         }
                     } catch (e: Exception) {
@@ -489,11 +484,11 @@ class DassAssSliderActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AssessmentSaveDataModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            BWSApplication.showToast(getString(R.string.no_server_found), act)
         }
     }
 }

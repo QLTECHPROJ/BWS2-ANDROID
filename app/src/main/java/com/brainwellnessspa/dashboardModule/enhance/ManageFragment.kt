@@ -32,7 +32,7 @@ import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -245,17 +245,7 @@ class ManageFragment : Fragment() {
                                                 //                                        }
                                             }
                                         } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
-                                            deleteCall(act)
-                                            showToast(listModel.responseMessage, act)
-                                            val i = Intent(act, SignInActivity::class.java)
-                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                            i.putExtra("mobileNo", "")
-                                            i.putExtra("countryCode", "")
-                                            i.putExtra("name", "")
-                                            i.putExtra("email", "")
-                                            i.putExtra("countryShortName", "")
-                                            act.startActivity(i)
-                                            act.finish()
+                                            callDelete403(act, listModel.responseMessage)
                                         }
                                     }
                                 } catch (e: java.lang.Exception) {
@@ -884,17 +874,7 @@ class ManageFragment : Fragment() {
                             callObserverMethod(listModel.responseData!!.audio, act, DB)
                         }
                         listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                            deleteCall(act)
-                            showToast(listModel.responseMessage, act)
-                            val i = Intent(act, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            act.startActivity(i)
-                            act.finish()
+                            callDelete403(act, listModel.responseMessage)
                         }
                         else -> {
                             showToast(listModel.responseMessage, activity)

@@ -38,7 +38,7 @@ import com.brainwellnessspa.referralModule.models.ContactlistModel
 import com.brainwellnessspa.referralModule.models.FavContactlistModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
 import com.brainwellnessspa.userModule.models.SetInviteUserModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -373,17 +373,7 @@ class ContactBookActivity : AppCompatActivity() {
 
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, activity)

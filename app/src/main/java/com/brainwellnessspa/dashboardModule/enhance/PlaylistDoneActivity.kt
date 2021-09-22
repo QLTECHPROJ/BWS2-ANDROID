@@ -13,7 +13,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityPlaylistDoneBinding
 import com.brainwellnessspa.userModule.models.AuthOtpModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -126,17 +126,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                             edited.apply()
                         } else if (authOtpModel.ResponseCode == getString(R.string.ResponseCodeDeleted)) {
-                            deleteCall(activity)
-                            showToast(authOtpModel.ResponseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, authOtpModel.ResponseMessage)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

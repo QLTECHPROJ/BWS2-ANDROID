@@ -34,7 +34,7 @@ import com.brainwellnessspa.resourceModule.models.ResourceFilterModel
 import com.brainwellnessspa.resourceModule.models.ResourceListModel
 import com.brainwellnessspa.resourceModule.models.SegmentResource
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.material.tabs.TabLayout
@@ -163,17 +163,7 @@ class ResourceActivity : AppCompatActivity() {
                                 p!!.putValue("resources", gsons.toJson(section1))
                                 addToSegment("Resources Screen Viewed", p, CONSTANTS.screen)
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             } else {
                                 showToast(listModel.responseMessage, activity)
                             }
@@ -277,17 +267,7 @@ class ResourceActivity : AppCompatActivity() {
                                 p4!!.putValue("allMasterCategory", gson!!.toJson(section))
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModel.responseMessage)
                             }
                         }
                     }

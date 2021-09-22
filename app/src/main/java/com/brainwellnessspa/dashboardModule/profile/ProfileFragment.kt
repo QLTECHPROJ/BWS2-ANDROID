@@ -44,7 +44,7 @@ import com.brainwellnessspa.resourceModule.activities.ResourceActivity
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.RemoveProfileModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APIClientProfile.apiService
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -98,7 +98,7 @@ class ProfileFragment : Fragment() {
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
     var areaOfFocus: String? = ""
-//    areaOfFocus
+    //    areaOfFocus
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
@@ -346,20 +346,20 @@ class ProfileFragment : Fragment() {
             }
         }
 
-          binding.llPlan1.setOnClickListener {
-              if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                  return@setOnClickListener
-              }
-              mLastClickTime = SystemClock.elapsedRealtime()
-              if (isNetworkConnected(activity)) {
-                  val i = Intent(activity, BillingOrderActivity::class.java)
-                  i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                  act.startActivity(i)
-                  act.overridePendingTransition(0, 0)
-              } else {
-                  showToast(getString(R.string.no_server_found), activity)
-              }
-          }
+        binding.llPlan1.setOnClickListener {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return@setOnClickListener
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
+            if (isNetworkConnected(activity)) {
+                val i = Intent(activity, BillingOrderActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                act.startActivity(i)
+                act.overridePendingTransition(0, 0)
+            } else {
+                showToast(getString(R.string.no_server_found), activity)
+            }
+        }
 
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -549,17 +549,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.apply()
                                         profileViewData()
                                     } else if (viewModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted))) {
-                                        deleteCall(ctx)
-                                        showToast(viewModel.responseMessage, act)
-                                        val i = Intent(ctx, SignInActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        startActivity(i)
-                                        act.finish()
+                                        callDelete403(act, viewModel.responseMessage)
                                     }
                                 }
                             } catch (e: Exception) {
@@ -573,8 +563,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                     })
                 }
             } else if (options[item] == ctx.getString(R.string.cancel)) {
-//                val p = Properties()
-//                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+                //                val p = Properties()
+                //                addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
                 dialog.dismiss()
             }
         }
@@ -698,17 +688,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     }
                                 }
                                 viewModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted)) -> {
-                                    deleteCall(ctx)
-                                    showToast(viewModel.ResponseMessage, act)
-                                    val i = Intent(ctx, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    act.startActivity(i)
-                                    act.finish()
+                                    callDelete403(act, viewModel.ResponseMessage)
                                 }
                                 else -> {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -742,8 +722,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                             try {
                                 if (addProfileModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess))) {
                                     showToast(addProfileModel.responseMessage, act)
-//                                    val p = Properties()
-//                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
+                                    //                                    val p = Properties()
+                                    //                                    addToSegment("Camera Photo Added", p, CONSTANTS.track)
 
                                     Glide.with(ctx).load(addProfileModel.responseData?.profileImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.civProfile)
                                     profileViewData()
@@ -753,17 +733,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     editor.apply()
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                 } else if (addProfileModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted))) {
-                                    deleteCall(ctx)
-                                    showToast(addProfileModel.responseMessage, act)
-                                    val i = Intent(ctx, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    act.startActivity(i)
-                                    act.finish()
+                                    callDelete403(act, addProfileModel.responseMessage)
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -800,8 +770,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         profilePicPath = addProfileModel.responseData?.profileImage
                                         setProfilePic(profilePicPath)
                                         profileViewData()
-//                                val p = Properties()
-//                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
+                                        //                                val p = Properties()
+                                        //                                addToSegment("Gallery Photo Added", p, CONSTANTS.track)
                                         showToast(addProfileModel.responseMessage, act)
                                         val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                         val editor = shared.edit()
@@ -809,17 +779,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.apply()
                                         hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                                     } else if (addProfileModel.responseCode.equals(activity?.getString(R.string.ResponseCodeDeleted))) {
-                                        deleteCall(ctx)
-                                        showToast(addProfileModel.responseMessage, act)
-                                        val i = Intent(ctx, SignInActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                        i.putExtra("mobileNo", "")
-                                        i.putExtra("countryCode", "")
-                                        i.putExtra("name", "")
-                                        i.putExtra("email", "")
-                                        i.putExtra("countryShortName", "")
-                                        act.startActivity(i)
-                                        act.finish()
+                                        callDelete403(act, addProfileModel.responseMessage)
                                     }
                                 }
 
@@ -841,8 +801,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 Log.e("Permission", e.message!!)
             }
         } else if (requestCode == Activity.RESULT_CANCELED) {
-//            val p = Properties()
-//            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
+            //            val p = Properties()
+            //            addToSegment("Profile Photo Cancelled", p, CONSTANTS.track)
             act.finish()
         }
     }
@@ -893,8 +853,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle)
         edit.remove(CONSTANTS.PREFE_ACCESS_supportText)
         edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail)
-//        edit.remove(CONSTANTS.PREF_KEY_UserPromocode)
-//        edit.remove(CONSTANTS.PREF_KEY_ReferLink)
+        //        edit.remove(CONSTANTS.PREF_KEY_UserPromocode)
+        //        edit.remove(CONSTANTS.PREF_KEY_ReferLink)
         edit.clear()
         edit.apply()
 
@@ -955,7 +915,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         val editt = pref.edit()
         editt.remove(CONSTANTS.PREF_KEY_IsDisclimer)
         editt.remove(CONSTANTS.PREF_KEY_Disclimer)
-//        editt.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
+        //        editt.remove(CONSTANTS.PREF_KEY_UnLockAudiList)
         editt.clear()
         editt.apply()
 
@@ -993,51 +953,18 @@ Tap Setting > permission, and turn "Files and media" on.""")
         APINewClient.client.getLogout(userId, fcmId, CONSTANTS.FLAG_ONE).enqueue(object : Callback<SucessModel?> {
             override fun onResponse(call: Call<SucessModel?>, response: Response<SucessModel?>) {
                 val sucessModel = response.body()
-                //                try {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
                 if (sucessModel!!.responseCode.equals(activity?.getString(R.string.ResponseCodesuccess))) {
                     val p1 = Properties()
-                    /* var isProf = false
-                     var isAss = false
-                     isProf = isProfileCompleted.equals("1")
-                     isAss = isAssessmentCompleted.equals("1")*/
-
-                    /* p1.putValue("deviceId", deviceId)
-                     p1.putValue("deviceType", "Android")
-                     p1.putValue("phone", userMobile)
-                     p1.putValue("email", userEmail)
-                     p1.putValue("isProfileCompleted", isProf)
-                     p1.putValue("isAssessmentCompleted", isAss)
-                     p1.putValue("WellnessScore", indexScore)
-                     p1.putValue("scoreLevel", scoreLevel)
-                     p1.putValue("avgSleepTime", avgSleepTime)
-                     p1.putValue("areaOfFocus", areaOfFocus)*/
                     addToSegment("User Logout", p1, CONSTANTS.track)
                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     hideProgressBar(progressBar, progressBarHolder, act)
                     dialog.hide()
-                    try {
-                        analytics.flush()
-                        analytics.reset()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    val i = Intent(ctx, SignInActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    i.putExtra("mobileNo", "")
-                    i.putExtra("countryCode", "")
-                    i.putExtra("name", "")
-                    i.putExtra("email", "")
-                    i.putExtra("countryShortName", "")
-                    act.startActivity(i)
-                    act.finish()
+                    callDelete403(activity, sucessModel.responseMessage)
                 }
-                //                } catch (Exception e) {
-                //                    e.printStackTrace();
-                //                }
             }
 
             override fun onFailure(call: Call<SucessModel?>, t: Throwable) {

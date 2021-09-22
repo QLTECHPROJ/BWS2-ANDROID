@@ -27,7 +27,7 @@ import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
@@ -303,16 +303,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                             edited.apply()
                             checkAppVersion()
                         } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
-                            deleteCall(activity)
-                            showToast(authOtpModel.ResponseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, authOtpModel.ResponseMessage)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -353,14 +344,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
     private fun callDashboard() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (userId.equals("")) {
-                val i = Intent(this@SplashActivity, SignInActivity::class.java)
-                i.putExtra("mobileNo", "")
-                i.putExtra("countryCode", "")
-                i.putExtra("name", "")
-                i.putExtra("email", "")
-                i.putExtra("countryShortName", "")
-                startActivity(i)
-                finish()
+                callSignActivity(activity)
             } else if (intent.hasExtra("flag")) {
                 val resultIntent:Intent?
                 flag = intent.getStringExtra("flag");

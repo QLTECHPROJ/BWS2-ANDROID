@@ -28,7 +28,7 @@ import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.databinding.ActivityViewSuggestedBinding
 import com.brainwellnessspa.databinding.DownloadsLayoutBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -300,17 +300,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                                     finish()
                                 }
                             } else if (listModels.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(listModels.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(activity, listModels.responseMessage)
                             }
                         }
                     } catch (e: Exception) {

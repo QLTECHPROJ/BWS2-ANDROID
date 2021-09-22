@@ -52,7 +52,7 @@ import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -831,17 +831,7 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(ctx)
-                                showToast(listModel.responseMessage, act)
-                                val i = Intent(ctx, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                act.startActivity(i)
-                                act.finish()
+                                callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, act)
@@ -1091,17 +1081,7 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(ctx)
-                                showToast(listModel.responseMessage, act)
-                                val i = Intent(ctx, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                act.startActivity(i)
-                                act.finish()
+                                callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, act)
@@ -1973,16 +1953,7 @@ class HomeFragment : Fragment() {
                                                         ctx.getString(R.string.ResponseCodeDeleted) -> {
                                                             txtError.visibility = View.GONE
                                                             txtError.text = ""
-                                                            deleteCall(ctx)
-                                                            val i = Intent(ctx, SignInActivity::class.java)
-                                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                            i.putExtra("mobileNo", "")
-                                                            i.putExtra("countryCode", "")
-                                                            i.putExtra("name", "")
-                                                            i.putExtra("email", "")
-                                                            i.putExtra("countryShortName", "")
-                                                            act.startActivity(i)
-                                                            act.finish()
+                                                            callDelete403(act, listModel.ResponseMessage)
                                                         }
                                                         ctx.getString(R.string.ResponseCodefail) -> {
                                                             txtError.visibility = View.VISIBLE

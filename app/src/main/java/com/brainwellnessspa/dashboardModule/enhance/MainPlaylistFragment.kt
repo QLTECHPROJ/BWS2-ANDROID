@@ -33,7 +33,7 @@ import com.brainwellnessspa.databinding.PlaylistCustomLayoutBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetailsUnique
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -154,17 +154,7 @@ class MainPlaylistFragment : Fragment() {
                                     addToSegment("Playlist Screen Viewed", p, CONSTANTS.screen)
                                 }
                             } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                deleteCall(activity)
-                                showToast(listModel.responseMessage, activity)
-                                val i = Intent(activity, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                act.finish()
+                                callDelete403(act, listModel.responseMessage)
                             } else {
                                 showToast(listModel.responseMessage, activity)
                             }
@@ -333,17 +323,7 @@ class MainPlaylistFragment : Fragment() {
                                                     dialog.dismiss()
                                                 }
                                             } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
-                                                deleteCall(act)
-                                                showToast(listModel.responseMessage, act)
-                                                val i = Intent(act, SignInActivity::class.java)
-                                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                i.putExtra("mobileNo", "")
-                                                i.putExtra("countryCode", "")
-                                                i.putExtra("name", "")
-                                                i.putExtra("email", "")
-                                                i.putExtra("countryShortName", "")
-                                                act.startActivity(i)
-                                                act.finish()
+                                                callDelete403(act, listModel.responseMessage)
                                             }
                                         }
                                     } catch (e: java.lang.Exception) {

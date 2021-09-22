@@ -18,7 +18,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.NotificationlistModel
 import com.brainwellnessspa.databinding.ActivityNotificationListBinding
 import com.brainwellnessspa.databinding.NotificationListLayoutBinding
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
@@ -85,17 +85,7 @@ class NotificationListActivity : AppCompatActivity() {
                                 binding.rvNotiList.adapter = adapter
                             }
                         } else if (listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted))) {
-                            deleteCall(activity)
-                            showToast(listModel.responseMessage, activity)
-                            val i = Intent(activity, SignInActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            i.putExtra("mobileNo", "")
-                            i.putExtra("countryCode", "")
-                            i.putExtra("name", "")
-                            i.putExtra("email", "")
-                            i.putExtra("countryShortName", "")
-                            startActivity(i)
-                            finish()
+                            callDelete403(activity, listModel.responseMessage)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

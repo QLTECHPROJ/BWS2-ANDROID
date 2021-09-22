@@ -16,7 +16,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityChangePinBinding
 import com.brainwellnessspa.userModule.models.ChangePinModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties
@@ -164,17 +164,7 @@ class ChangePinActivity : AppCompatActivity() {
                                     BWSApplication.showToast(listModel.responseMessage, activity)
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                    BWSApplication.deleteCall(activity)
-                                    BWSApplication.showToast(listModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
+                                    BWSApplication.callDelete403(activity, listModel.responseMessage)
                                 }
                                 else -> {
                                     BWSApplication.showToast(listModel.responseMessage, activity)

@@ -16,7 +16,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityUserDetailBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AddUserModel
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -110,17 +110,7 @@ class UserDetailActivity : AppCompatActivity() {
                                     showToast(listModel.responseMessage, activity)
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                    deleteCall(activity)
-                                    showToast(listModel.responseMessage, activity)
-                                    val i = Intent(activity, SignInActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    i.putExtra("mobileNo", "")
-                                    i.putExtra("countryCode", "")
-                                    i.putExtra("name", "")
-                                    i.putExtra("email", "")
-                                    i.putExtra("countryShortName", "")
-                                    startActivity(i)
-                                    finish()
+                                    callDelete403(activity, listModel.responseMessage)
                                 }
                                 else -> {
                                     showToast(listModel.responseMessage, activity)

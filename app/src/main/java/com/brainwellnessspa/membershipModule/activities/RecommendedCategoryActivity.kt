@@ -25,7 +25,7 @@ import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
-import com.brainwellnessspa.userModule.signupLogin.SignInActivity
+
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
@@ -232,17 +232,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 binding.rvPerantCat.adapter = adapter1 //                            }
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(act)
-                                showToast(listModel.responseMessage, act)
-                                val i = Intent(act, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
                                 showToast(listModel.responseMessage, act)
@@ -730,17 +720,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
 
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                deleteCall(act)
-                                showToast(listModel.responseMessage, act)
-                                val i = Intent(act, SignInActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                i.putExtra("mobileNo", "")
-                                i.putExtra("countryCode", "")
-                                i.putExtra("name", "")
-                                i.putExtra("email", "")
-                                i.putExtra("countryShortName", "")
-                                startActivity(i)
-                                finish()
+                                callDelete403(act, listModel.responseMessage)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodefail)) -> {
                                 if(listModel.responseData!!.showAlert.equals("1")){
