@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.addPaymentStripe.AddPaymentActivity
+import com.brainwellnessspa.addPaymentStripeModule.AddPaymentActivity
 import com.brainwellnessspa.billingOrderModule.models.CardListModel
 import com.brainwellnessspa.billingOrderModule.models.CardModel
 import com.brainwellnessspa.billingOrderModule.models.SegmentPayment

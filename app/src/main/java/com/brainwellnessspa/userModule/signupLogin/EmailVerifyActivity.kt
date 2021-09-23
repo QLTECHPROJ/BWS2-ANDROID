@@ -10,7 +10,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityEmailVerifyBinding
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.utility.CONSTANTS
 import com.segment.analytics.Properties

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.membershipModule.activities
+package com.brainwellnessspa.areaOfFocusModule.activities
 
 import android.app.Activity
 import android.content.Context
@@ -104,7 +104,7 @@ class SleepTimeActivity : AppCompatActivity() {
                 val editor = shared.edit()
                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel[position].name)
                 editor.apply()
-                val i = Intent(ctx, RecommendedCategoryActivity::class.java)
+                val i = Intent(ctx, AreaOfFocusActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("SleepTime", listModel[position].name)
                 i.putExtra("BackClick", "0")

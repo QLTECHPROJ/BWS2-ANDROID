@@ -58,7 +58,7 @@
 
                     </RelativeLayout>
 
-                    <com.brainwellnessspa.RoundedImageView
+                    <com.brainwellnessspa.utility.RoundedImageView
                         android:id="@+id/ivUser"
                         android:layout_width="@dimen/_36sdp"
                         android:layout_height="@dimen/_36sdp"

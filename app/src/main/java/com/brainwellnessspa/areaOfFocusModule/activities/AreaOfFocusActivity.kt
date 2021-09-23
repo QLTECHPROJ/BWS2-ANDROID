@@ -1,4 +1,4 @@
-package com.brainwellnessspa.membershipModule.activities
+package com.brainwellnessspa.areaOfFocusModule.activities
 
 import android.app.Activity
 import android.app.Dialog
@@ -30,7 +30,6 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -39,13 +38,12 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
-class RecommendedCategoryActivity : AppCompatActivity() {
+class AreaOfFocusActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecommendedCategoryBinding
     lateinit var catListadapter: SelectedCategory
     lateinit var ctx: Context
     var userId: String? = null
     private var backClick: String? = ""
-    lateinit var gsonBuilder: GsonBuilder
     var sleepTime: String? = null
     var coUserId: String? = null
     var coEmail: String? = null
@@ -61,8 +59,8 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recommended_category)
-        ctx = this@RecommendedCategoryActivity
-        act = this@RecommendedCategoryActivity
+        ctx = this@AreaOfFocusActivity
+        act = this@AreaOfFocusActivity
         if (intent.extras != null) {
             sleepTime = intent.getStringExtra("SleepTime")
             backClick = intent.getStringExtra("BackClick")
@@ -338,7 +336,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     class ChildCategory(var binding: ActivityRecommendedCategoryBinding, private val responseListModel: List<RecommendedCategoryModel.ResponseData.Detail>?, private val listModel: ArrayList<RecommendedCategoryModel.ResponseData>?, val pos: Int, var ctx: Context, var activity: Activity) : RecyclerView.Adapter<ChildCategory.MyViewHolder>() {
         private var mSelectedItem = -1
         var posItem: Int = -1
-        var catList = RecommendedCategoryActivity()
+        var catList = AreaOfFocusActivity()
 
         inner class MyViewHolder(var bindingAdapter: AllCatDataRawBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {

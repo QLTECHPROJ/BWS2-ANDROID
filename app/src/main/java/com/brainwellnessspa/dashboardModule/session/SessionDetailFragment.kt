@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -199,9 +201,29 @@ class SessionDetailFragment : Fragment() {
             }
 //            @color/pink
 //            @color/green_dark_s
-
-            holder.bindingAdapter.tvBeforeSession.text = ""
-            holder.bindingAdapter.tvAfterSession.text = ""
+            var beforeText = ""
+            for (i in catName[position].beforeSession!!.indices) {
+                beforeText += if (i < catName[position].beforeSession!!.size - 1) {
+                    "<font color='" + catName[position].beforeSession!![i].color + "'>" + catName[position].beforeSession!![i].key + "," + "</font>"
+                }else {
+                    "<font color='" + catName[position].beforeSession!![i].color + "'>" + catName[position].beforeSession!![i].key + "</font>"
+                }
+            }
+            var afterText = ""
+            for (i in catName[position].afterSession!!.indices){
+                afterText += if (i < catName[position].afterSession!!.size - 1) {
+                    "<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + "," + "</font>"
+                }else{
+                    "<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + "</font>"
+                }
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(beforeText, Html.FROM_HTML_MODE_COMPACT)
+                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(afterText, Html.FROM_HTML_MODE_COMPACT)
+            }else{
+                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(beforeText)
+                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(afterText)
+            }
 
             if (catName.size == 1) {
                 holder.bindingAdapter.viewDown.visibility = View.GONE

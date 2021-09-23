@@ -32,9 +32,8 @@ import com.brainwellnessspa.dashboardModule.models.ViewAllAudioListModel
 import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
-import com.brainwellnessspa.encryptDecryptUtils.FileUtils
-import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -268,7 +267,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
         }
         binding.ivEditCategory.setOnClickListener {
-            val i = Intent(activity, RecommendedCategoryActivity::class.java)
+            val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+            val edited = preferred.edit()
+            edited.remove(CONSTANTS.selectedCategoriesTitle)
+            edited.remove(CONSTANTS.selectedCategoriesName)
+            edited.clear()
+            edited.apply()
+            val i = Intent(activity, AreaOfFocusActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra("BackClick", "1")
             startActivity(i)

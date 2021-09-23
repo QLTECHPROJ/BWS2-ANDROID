@@ -1,4 +1,4 @@
-package com.brainwellnessspa
+package com.brainwellnessspa.utility
 
 import android.Manifest
 import android.content.Context
@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.brainwellnessspa.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

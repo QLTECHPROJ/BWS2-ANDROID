@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityThankYouBinding
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.utility.CONSTANTS

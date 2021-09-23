@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityDoingGoodBinding
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 
 /* This is the assessment complete go to next screen activity */
 class DoingGoodActivity : AppCompatActivity() {

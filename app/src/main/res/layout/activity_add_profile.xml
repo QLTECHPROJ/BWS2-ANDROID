@@ -68,7 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.brainwellnessspa.RoundedImageView
+                        <com.brainwellnessspa.utility.RoundedImageView
                             android:id="@+id/civProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
@@ -80,7 +80,7 @@
                             android:padding="@dimen/_4sdp"
                             android:visibility="visible">
 
-                            <com.brainwellnessspa.RoundedImageView
+                            <com.brainwellnessspa.utility.RoundedImageView
                                 android:id="@+id/civLetter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

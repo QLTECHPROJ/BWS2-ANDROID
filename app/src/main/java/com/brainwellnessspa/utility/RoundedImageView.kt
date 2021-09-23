@@ -1,4 +1,4 @@
-package com.brainwellnessspa
+package com.brainwellnessspa.utility
 
 import android.content.Context
 import android.graphics.*

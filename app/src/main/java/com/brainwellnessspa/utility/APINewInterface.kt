@@ -1,6 +1,6 @@
 package com.brainwellnessspa.utility
 
-import com.brainwellnessspa.addPaymentStripe.model.AddCardModel
+import com.brainwellnessspa.addPaymentStripeModule.model.AddCardModel
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
 import com.brainwellnessspa.billingOrderModule.models.*

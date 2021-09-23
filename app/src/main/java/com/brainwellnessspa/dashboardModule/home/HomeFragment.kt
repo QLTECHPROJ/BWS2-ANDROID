@@ -37,8 +37,8 @@ import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
-import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -412,7 +412,13 @@ class HomeFragment : Fragment() {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
                 if (isNetworkConnected(ctx)) {
-                    val i = Intent(ctx, RecommendedCategoryActivity::class.java)
+                    val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                    val edited = preferred.edit()
+                    edited.remove(CONSTANTS.selectedCategoriesTitle)
+                    edited.remove(CONSTANTS.selectedCategoriesName)
+                    edited.clear()
+                    edited.apply()
+                    val i = Intent(ctx, AreaOfFocusActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")
                     ctx.startActivity(i)

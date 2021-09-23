@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".membershipModule.activities.SleepTimeActivity">
+        tools:context=".areaOfFocusModule.activities.SleepTimeActivity">
 
         <RelativeLayout
             android:id="@+id/rlFirst"

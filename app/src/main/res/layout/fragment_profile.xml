@@ -39,7 +39,7 @@
                         android:paddingTop="@dimen/_20sdp"
                         tools:ignore="RtlSymmetry">
 
-                        <com.brainwellnessspa.RoundedImageView
+                        <com.brainwellnessspa.utility.RoundedImageView
                             android:id="@+id/civProfile"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"

@@ -1,4 +1,4 @@
-package com.brainwellnessspa.addPaymentStripe
+package com.brainwellnessspa.addPaymentStripeModule
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
@@ -24,7 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.addPaymentStripe.model.AddCardModel
+import com.brainwellnessspa.addPaymentStripeModule.model.AddCardModel
 import com.brainwellnessspa.billingOrderModule.activities.PaymentActivity
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.databinding.ActivityAddPaymentBinding

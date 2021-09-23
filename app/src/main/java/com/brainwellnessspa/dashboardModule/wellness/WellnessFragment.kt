@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.session.SessionDetailFragment
 import com.brainwellnessspa.dashboardModule.session.SessionPcDetailActivity
 import com.brainwellnessspa.dashboardModule.session.SessionsStepThreeActivity
 import com.brainwellnessspa.dashboardModule.session.SessionsStepTwoActivity

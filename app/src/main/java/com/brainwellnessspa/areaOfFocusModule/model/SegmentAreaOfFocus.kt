@@ -1,4 +1,4 @@
-package com.brainwellnessspa.membershipModule.models
+package com.brainwellnessspa.areaOfFocusModule.model
 
 class SegmentAreaOfFocus {
     var mainCategory: String? = null

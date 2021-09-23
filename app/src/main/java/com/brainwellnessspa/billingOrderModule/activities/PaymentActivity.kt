@@ -32,7 +32,7 @@ import com.brainwellnessspa.billingOrderModule.models.PayNowDetailsModel
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.billingOrderModule.models.SegmentPayment
 import com.brainwellnessspa.R
-import com.brainwellnessspa.addPaymentStripe.AddPaymentActivity
+import com.brainwellnessspa.addPaymentStripeModule.AddPaymentActivity
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity.Companion.renewPlanFlag
 import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity.Companion.renewPlanId
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment.Companion.PlanStatus
