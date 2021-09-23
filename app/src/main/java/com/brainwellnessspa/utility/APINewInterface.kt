@@ -222,6 +222,10 @@ interface APINewInterface {
             @Field("UserId")
             UserId: String?): Call<SessionListModel>
 
+    @POST("sessionstepstatus")
+    @FormUrlEncoded
+    fun getSessionStepStatusList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("StepId") StepId: String?): Call<SessionStepStatusListModel>
+
     @POST("sessionsteplist")
     @FormUrlEncoded
     fun getSessionStepList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepListModel>

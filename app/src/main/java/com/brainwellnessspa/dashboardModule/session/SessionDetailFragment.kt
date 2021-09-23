@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionListModel
+import com.brainwellnessspa.dashboardModule.models.SessionStepStatusListModel
 import com.brainwellnessspa.databinding.FragmentSessionDetailBinding
 import com.brainwellnessspa.databinding.SessionMainLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -73,6 +74,32 @@ class SessionDetailFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<SessionListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                }
+            })
+        } else {
+            BWSApplication.showToast(act.getString(R.string.no_server_found), act)
+        }
+    }
+
+    fun prepareSessionStepStatusListData() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall = APINewClient.client.getSessionStepStatusList("1","1","1")
+            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                    try {
+                        val listModel = response.body()
+                        val response = listModel?.responseData
+                        if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
