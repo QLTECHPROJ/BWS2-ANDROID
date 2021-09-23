@@ -216,12 +216,27 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getResourceList(@Field("UserId") UserId: String?, @Field("ResourceTypeId") ResourceTypeId: String?, @Field("Category") Category: String?): Call<ResourceListModel>
 
+    @POST("sessionlist")
+    @FormUrlEncoded
+    fun getSessionList(
+            @Field("UserId")
+            UserId: String?): Call<SessionListModel>
+
+    @POST("sessionsteplist")
+    @FormUrlEncoded
+    fun getSessionStepList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepListModel>
+
     @POST("resourcecatlist")
     @FormUrlEncoded
-    fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>
+    fun getResourceCatList(
+            @Field("UserId")
+            UserId: String?): Call<ResourceFilterModel>
 
     @get:GET("faqlist")
     val faqLists: Call<FaqListModel>
+
+    @get:GET("brainfeelingcat")
+    val braincatLists: Call<BrainCatListModel>
 
     @POST("setreminder")
     @FormUrlEncoded

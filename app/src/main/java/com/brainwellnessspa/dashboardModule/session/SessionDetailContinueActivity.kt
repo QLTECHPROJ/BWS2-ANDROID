@@ -1,35 +1,100 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.SessionActivitiesModel
+import com.brainwellnessspa.dashboardModule.models.SessionListModel
+import com.brainwellnessspa.dashboardModule.models.SessionStepListModel
 import com.brainwellnessspa.databinding.ActivitySessionDetailContinueBinding
 import com.brainwellnessspa.databinding.SessionDetailLayoutBinding
+import com.brainwellnessspa.utility.APINewClient
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SessionDetailContinueActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionDetailContinueBinding
     lateinit var activity: Activity
     lateinit var adapter: SessionDetailAdapter
-    var model = arrayOf(SessionActivitiesModel("1"), SessionActivitiesModel("2"), SessionActivitiesModel("3"), SessionActivitiesModel("4"), SessionActivitiesModel("5"), SessionActivitiesModel("6"), SessionActivitiesModel("7"), SessionActivitiesModel("8"), SessionActivitiesModel("9"))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_detail_continue)
         activity = this@SessionDetailContinueActivity
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        adapter = SessionDetailAdapter(binding, model, activity)
-        binding.rvList.adapter = adapter
+        prepareData()
+
+        binding.btnContinue.setOnClickListener {
+            val i = Intent(activity, BrainStatusActivity::class.java)
+            startActivity(i)
+        }
     }
 
-    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: Array<SessionActivitiesModel>, val activity: Activity) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
+    fun prepareData() {
+        if (BWSApplication.isNetworkConnected(activity)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APINewClient.client.getSessionStepList("1", "1")
+            listCall.enqueue(object : Callback<SessionStepListModel?> {
+                override fun onResponse(call: Call<SessionStepListModel?>, response: Response<SessionStepListModel?>) {
+                    try {
+                        val listModel = response.body()
+                        val response = listModel?.responseData
+                        if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            if (response != null) {
+                                binding.tvTitle.text = response.sessionTitle
+                                binding.tvScreenTitle.text = response.sessionTitle
+                                binding.tvshortDesc.text = response.sessionShortDesc
+                                binding.tvDesc.text = response.sessionDesc
 
+                                Glide.with(activity).load(response.sessionImg).thumbnail(0.05f)
+                                        .apply(RequestOptions.bitmapTransform(RoundedCorners(2)))
+                                        .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner)
+
+                                if (response.sessionProgress.equals("Great")) {
+                                    binding.llGreatProgress.visibility = View.VISIBLE
+                                    binding.llSlowProgress.visibility = View.GONE
+                                } else if (response.sessionProgress.equals("Slow")) {
+                                    binding.llGreatProgress.visibility = View.GONE
+                                    binding.llSlowProgress.visibility = View.VISIBLE
+                                } else {
+                                    binding.llGreatProgress.visibility = View.GONE
+                                    binding.llSlowProgress.visibility = View.GONE
+                                }
+                                adapter = SessionDetailAdapter(binding, response.data, activity)
+                                binding.rvList.adapter = adapter
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<SessionStepListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+        }
+    }
+
+    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val activity: Activity) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
         inner class MyViewHolder(var bindingAdapter: SessionDetailLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -38,24 +103,52 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvNumber.text = catName[position].title
+            val db = catName!![position]
 
-            if (catName.size == 1) {
-                holder.bindingAdapter.viewDown.visibility = View.GONE;
+            holder.bindingAdapter.tvNumber.text = db.stepId
+            holder.bindingAdapter.tvTitle.text = db.desc
+
+            Glide.with(activity).load(db.statusImg).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(2)))
+                    .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivAction)
+
+            when {
+                db.userStepStatus.equals("Completed") -> {
+                    holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_complete_selected_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_dark_bg)
+                    holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.white))
+                    holder.bindingAdapter.ivDownload.visibility = View.GONE
+                }
+                db.userStepStatus.equals("Inprogress") -> {
+                    holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
+                    holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
+                    holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
+                    holder.bindingAdapter.ivDownload.visibility = View.VISIBLE
+                }
+                db.userStepStatus.equals("Lock") -> {
+                    holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
+                    holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
+                    holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
+                    holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
+                    holder.bindingAdapter.ivDownload.visibility = View.GONE
+                }
+            }
+
+            if (catName!!.size == 1) {
+                holder.bindingAdapter.viewDown.visibility = View.GONE
             } else {
-                holder.bindingAdapter.viewDown.visibility = View.VISIBLE;
+                holder.bindingAdapter.viewDown.visibility = View.VISIBLE
             }
 
-            if (position==(catName.size -1))
-            {
-                holder.bindingAdapter.viewDown.visibility = View.GONE;
+            if (position == (catName!!.size - 1)) {
+                holder.bindingAdapter.viewDown.visibility = View.GONE
             }
-
         }
 
         override fun getItemCount(): Int {
-            return catName.size
+            return catName!!.size
         }
     }
-
 }

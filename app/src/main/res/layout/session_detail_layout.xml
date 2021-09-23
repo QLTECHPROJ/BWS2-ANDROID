@@ -6,6 +6,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/llBorder"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_80sdp"
             android:background="@drawable/session_complete_selected_bg"
@@ -13,6 +14,7 @@
             android:weightSum="1">
 
             <LinearLayout
+                android:id="@+id/llNumber"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -32,7 +34,6 @@
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:maxLines="2"
-                    android:text="1"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_40sdp"
@@ -60,7 +61,6 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:maxLines="2"
-                    android:text="We begin your journey towards emotional empowerment by helping you to strengthen your foundations..."
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
                     tools:ignore="SpUsage" />
@@ -75,12 +75,14 @@
                 android:layout_weight="0.16">
 
                 <ImageView
+                    android:id="@+id/ivDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_14sdp"
+                    android:visibility="gone"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_session_download_icon" />
 
@@ -94,6 +96,7 @@
                 android:layout_weight="0.12">
 
                 <ImageView
+                    android:id="@+id/ivAction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

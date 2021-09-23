@@ -19,9 +19,9 @@
 
     <fragment
         android:id="@+id/navigation_Wellness"
-        android:name="com.brainwellnessspa.dashboardModule.wellness.WellnessFragment"
+        android:name="com.brainwellnessspa.dashboardModule.session.SessionDetailFragment"
         android:label="@string/title_Empower"
-        tools:layout="@layout/fragment_wellness" />
+        tools:layout="@layout/fragment_session_detail" />
 
     <fragment
         android:id="@+id/navigation_Elevate"

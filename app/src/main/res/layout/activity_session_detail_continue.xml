@@ -9,49 +9,61 @@
         android:background="@color/white"
         tools:context=".dashboardModule.session.SessionDetailContinueActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
-
-            <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/todo"
-                    android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/black" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="Session 1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
-                tools:ignore="SpUsage" />
-
-        </RelativeLayout>
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/rlLayout">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ivBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_180sdp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/session_unselected_bg"
+                        android:contentDescription="@string/todo" />
+
+                    <RelativeLayout
+                        android:id="@+id/rlLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_56sdp">
+
+                        <LinearLayout
+                            android:id="@+id/llBack"
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/todo"
+                                android:src="@drawable/ic_left_arrow_icon"
+                                app:tint="@color/black" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvScreenTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            tools:ignore="SpUsage" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/llGreatProgress"
@@ -62,6 +74,7 @@
                     android:background="@drawable/round_chip_green"
                     android:backgroundTint="#65C993"
                     android:baselineAligned="false"
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     android:weightSum="10"
                     tools:targetApi="lollipop">
@@ -126,6 +139,7 @@
                     android:background="@drawable/round_chip_pink"
                     android:backgroundTint="#DC7793"
                     android:baselineAligned="false"
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     android:weightSum="10"
                     tools:targetApi="lollipop">
@@ -186,13 +200,13 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tvTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Session 1"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_26sdp"
                         tools:ignore="SpUsage" />
@@ -208,17 +222,18 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvshortDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
-                    android:text="Strengthen Your Foundations"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
 
                 <TextView
+                    android:id="@+id/tvDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
@@ -226,7 +241,6 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/we_begin_your_journey_towards_emotional_empowerment_by_helping_you_to_strengthen_your_foundations_b_red_more_b"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="SpUsage" />
@@ -251,7 +265,6 @@
                     android:layout_marginTop="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_31sdp"
                     android:background="@drawable/light_green_rounded_filled"
-                    android:enabled="false"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingHorizontal="@dimen/_55sdp"
                     android:paddingVertical="@dimen/_4sdp"
@@ -261,5 +274,30 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
     </RelativeLayout>
 </layout>

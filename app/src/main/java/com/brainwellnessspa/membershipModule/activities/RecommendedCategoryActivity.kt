@@ -56,7 +56,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
     var gson: Gson = Gson()
     lateinit var searchEditText: EditText
     lateinit var editor: SharedPreferences.Editor
-    var  PlaylistID:String = ""
+    var PlaylistID: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,7 +133,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
         val audiolistDiff1 = arrayListOf<String>()
         DB = getAudioDataBase(ctx);
         DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).observe(this, { audioList: List<DownloadAudioDetails?> ->
-        DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).removeObserver {}
+            DB.taskDao().getAllAudioByPlaylist1(PlaylistID, CoUserID).removeObserver {}
             if (audioList.size == playlistSongs.size) {
                 for (i in audioList) {
                     var found = false
@@ -152,7 +152,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                     val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                         if (playFrom.equals("Suggested", ignoreCase = true)) {
-                            callAllRemovePlayer(ctx,act)
+                            callAllRemovePlayer(ctx, act)
                         }
                     }
                     GetPlaylistMedia(PlaylistID, userId!!, ctx)
@@ -367,10 +367,10 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                                if(catList.selectedCategoriesTitle.size<3){
+                                if (catList.selectedCategoriesTitle.size < 3) {
                                     catList.selectedCategoriesTitle.add(listModel[pos].view.toString())
                                     catList.selectedCategoriesName.add(listModel[pos].details!![layoutPosition].problemName.toString())
-                                }else{
+                                } else {
                                     showToast("You can pick up to 3 areas of focus. They can be changed anytime.", activity)
                                 }
                             } else {
@@ -676,7 +676,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                         val listModel: SaveRecommendedCatModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
-                                getPlaylistAudio(listModel.responseData!!.suggestedPlaylist!!.playlistID!!,coUserId!!, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!)
+                                getPlaylistAudio(listModel.responseData!!.suggestedPlaylist!!.playlistID!!, coUserId!!, listModel.responseData!!.suggestedPlaylist!!.playlistSongs!!)
                                 val shared = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                 val editor = shared.edit()
                                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.responseData!!.avgSleepTime)
@@ -723,7 +723,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                 callDelete403(act, listModel.responseMessage)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodefail)) -> {
-                                if(listModel.responseData!!.showAlert.equals("1")){
+                                if (listModel.responseData!!.showAlert.equals("1")) {
                                     //show alert popup
                                     val dialog = Dialog(ctx)
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -764,7 +764,7 @@ class RecommendedCategoryActivity : AppCompatActivity() {
                                     }
                                     dialog.show()
                                     dialog.setCancelable(false)
-                                }else if(listModel.responseData!!.showAlert.equals("0")){
+                                } else if (listModel.responseData!!.showAlert.equals("0")) {
                                     showToast(listModel.responseMessage, act)
                                 }
                             }

@@ -7,17 +7,21 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.BrainFeelingStatusModel
+import com.brainwellnessspa.dashboardModule.models.BrainCatListModel
 import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
 import com.brainwellnessspa.databinding.BrainFeelingStatusLayoutBinding
+import com.brainwellnessspa.utility.APINewClient
 import com.google.android.flexbox.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BrainStatusActivity : AppCompatActivity() {
     lateinit var binding: ActivityBrainStatusBinding
     lateinit var adapter: BrainFeelingStatusAdapter
     lateinit var activity: Activity
-    var model = arrayOf(BrainFeelingStatusModel("Constant thoughts"), BrainFeelingStatusModel("Overthinking"), BrainFeelingStatusModel("Negative"), BrainFeelingStatusModel("Tired"), BrainFeelingStatusModel("Processing Quick"), BrainFeelingStatusModel("Processing Slow"), BrainFeelingStatusModel("Busy"), BrainFeelingStatusModel("Angry"), BrainFeelingStatusModel("Fatigued"), BrainFeelingStatusModel("Exhausted"), BrainFeelingStatusModel("Sad"), BrainFeelingStatusModel("Emotional"), BrainFeelingStatusModel("Foggy"), BrainFeelingStatusModel("Confused"), BrainFeelingStatusModel("Exhausted"), BrainFeelingStatusModel("Overwhelmed"), BrainFeelingStatusModel("Depressed"), BrainFeelingStatusModel("Anxious"), BrainFeelingStatusModel("Brain Processing Slower"), BrainFeelingStatusModel("Positive"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +33,40 @@ class BrainStatusActivity : AppCompatActivity() {
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.FLEX_START
         binding.rvList.layoutManager = layoutManager
-
-        adapter = BrainFeelingStatusAdapter(binding, activity, model)
-        binding.rvList.adapter = adapter
+        prepareData()
     }
 
-    class BrainFeelingStatusAdapter(var binding: ActivityBrainStatusBinding, var activity: Activity, var catName: Array<BrainFeelingStatusModel>) : RecyclerView.Adapter<BrainFeelingStatusAdapter.MyViewHolder>() {
+    private fun prepareData() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APINewClient.client.braincatLists
+            listCall.enqueue(object : Callback<BrainCatListModel?> {
+                override fun onResponse(call: Call<BrainCatListModel?>, response: Response<BrainCatListModel?>) {
+                    try {
+                        val listModel = response.body()
+                        val responsedb = listModel?.responseData
+                        if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            if (responsedb != null) {
+                                adapter = BrainFeelingStatusAdapter(binding, activity, responsedb.data)
+                            }
+                            binding.rvList.adapter = adapter
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<BrainCatListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+        }
+    }
+
+    class BrainFeelingStatusAdapter(var binding: ActivityBrainStatusBinding, var activity: Activity, var catName: List<BrainCatListModel.ResponseData.Data>?) : RecyclerView.Adapter<BrainFeelingStatusAdapter.MyViewHolder>() {
 
         inner class MyViewHolder(var bindingAdapter: BrainFeelingStatusLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -44,12 +76,22 @@ class BrainStatusActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bindingAdapter.tvText.text = catName[position].title
+            val db = catName?.get(position)
+            if (db != null) {
+                holder.bindingAdapter.tvText.text = db.name
+
+                holder.bindingAdapter.llCategory.setOnClickListener {
+                    if (db.catFlag.equals("0", ignoreCase = true)) {
+                        holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
+                    } else if (db.catFlag.equals("1", ignoreCase = true)) {
+                        holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
+                    }
+                }
+            }
         }
 
         override fun getItemCount(): Int {
-            return catName.size
+            return catName!!.size
         }
     }
-
 }
