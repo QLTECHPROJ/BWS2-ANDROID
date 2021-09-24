@@ -290,12 +290,6 @@ public class BWSApplication extends Application {
     }
 
     public static void callSignActivity(Activity act){
-        HashMap<String, Object> profileUpdate = new HashMap<>();
-        profileUpdate.put("MSG-push", true);
-        profileUpdate.put("MSG-email", true);
-        profileUpdate.put("MSG-sms", true);
-        profileUpdate.put("MSG-whatsapp", true);
-        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
         Intent i =new Intent(act, SignInActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("mobileNo", "");
@@ -305,6 +299,12 @@ public class BWSApplication extends Application {
         i.putExtra("countryShortName", "");
         act.startActivity(i);
         act.finish();
+        HashMap<String, Object> profileUpdate = new HashMap<>();
+        profileUpdate.put("MSG-push", true);
+        profileUpdate.put("MSG-email", true);
+        profileUpdate.put("MSG-sms", true);
+        profileUpdate.put("MSG-whatsapp", true);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
     }
 
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {

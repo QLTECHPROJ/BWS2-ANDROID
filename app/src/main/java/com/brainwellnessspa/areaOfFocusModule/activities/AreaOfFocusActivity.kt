@@ -484,17 +484,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } //            if (position == posItem) {
-            //                if (pos == 0) {
-            //                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg)
-            //                } else if (pos == 1) {
-            //                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_green)
-            //                } else if (pos == 2) {
-            //                    holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_bg_blue)
-            //                }
-            //            } else {
-            //                holder.bindingAdapter.llCategory.setBackgroundResource(R.drawable.round_chip_gray)
-            //            }
+            }
             if (position == posItem) {
                 if (catList.selectedCategoriesTitle.size == 1) {
                     if (catList.selectedCategoriesName[0] == responseListModel!![position].problemName.toString() && catList.selectedCategoriesTitle[0] == listModel!![pos].view) {

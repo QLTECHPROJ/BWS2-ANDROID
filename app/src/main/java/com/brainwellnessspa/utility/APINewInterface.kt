@@ -242,6 +242,11 @@ interface APINewInterface {
     @get:GET("brainfeelingcat")
     val braincatLists: Call<BrainCatListModel>
 
+    @POST("brainfeelingsavecat")
+    @FormUrlEncoded
+    fun getBrainFeelingSaveCat(
+        @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type:String?,@Field("feeling_cat_id") feeling_cat_id:String?, ): Call<SucessModel>
+
     @POST("setreminder")
     @FormUrlEncoded
     fun getSetReminder(@Field("UserId") UserId: String?, @Field("PlaylistId") PlaylistId: String?, @Field("ReminderDay") ReminderDay: String?, @Field("ReminderTime") ReminderTime: String?, @Field("localTimezone") localTimezone: String?, @Field("IsSingle") IsSingle: String?): Call<SetReminderOldModel>

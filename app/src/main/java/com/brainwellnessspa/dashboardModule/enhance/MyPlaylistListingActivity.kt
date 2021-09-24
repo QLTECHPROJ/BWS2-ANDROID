@@ -1031,10 +1031,13 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     saveToPref(playerPosition, listModel)
                                 }
                             }
-                            localIntent = Intent("Reminder")
-                            localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
-                            localIntent.putExtra("MyReminder", "update")
-                            localBroadcastManager.sendBroadcast(localIntent)
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(0, listModel.size);
+
+                            //                            localIntent = Intent("Reminder")
+//                            localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
+//                            localIntent.putExtra("MyReminder", "update")
+//                            localBroadcastManager.sendBroadcast(localIntent)
                             showToast(listModel1.responseMessage, activity)
                         } else if (listModel1.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                             callDelete403(activity, listModel1.responseMessage)
@@ -1054,23 +1057,6 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
                         editor.apply()
                     }
-
-                    //                    private fun saveToPref(pos: Int, mData: ArrayList<playlistModel.ResponseData.PlaylistSong>) {
-                    //                        val shareddd: SharedPreferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                    //                        val editor = shareddd.edit()
-                    //                        val gson = Gson()
-                    //                        val json = gson.toJson(mData)
-                    //                        editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
-                    //                        editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, pos)
-                    //                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false)
-                    //                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true)
-                    //                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID)
-                    //                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist")
-                    //                        editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
-                    //                        editor.commit()
-                    //                        callAddTransFrag()
-                    //                    }
-
                     override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }

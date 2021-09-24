@@ -195,7 +195,7 @@ class SessionDetailFragment : Fragment() {
                     holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
                     holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
                 }
-                catName[position].userSessionStatus.equals("Inprogress") -> {
+                catName[position].userSessionStatus.equals("InProgress") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
                     holder.bindingAdapter.ivBanner.visibility = View.VISIBLE
@@ -217,7 +217,7 @@ class SessionDetailFragment : Fragment() {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         activity.startActivity(i)
                     }
-                    catName[position].userSessionStatus.equals("Inprogress") -> {
+                    catName[position].userSessionStatus.equals("InProgress") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         activity.startActivity(i)
                     }
@@ -226,30 +226,22 @@ class SessionDetailFragment : Fragment() {
                     }
                 }
             }
-//            @color/pink
-//            @color/green_dark_s
-            var beforeText = ""
+            val beforeText = arrayListOf<String>()
             for (i in catName[position].beforeSession!!.indices) {
-                beforeText += if (i < catName[position].beforeSession!!.size - 1) {
-                    "<font color='" + catName[position].beforeSession!![i].color + "'>" + catName[position].beforeSession!![i].key + "," + "</font>"
-                }else {
-                    "<font color='" + catName[position].beforeSession!![i].color + "'>" + catName[position].beforeSession!![i].key + "</font>"
-                }
+                beforeText.add("<font color='" + catName[position].beforeSession!![i].color + "'>" + catName[position].beforeSession!![i].key +/* "," + */"</font>")
             }
-            var afterText = ""
-            for (i in catName[position].afterSession!!.indices){
-                afterText += if (i < catName[position].afterSession!!.size - 1) {
-                    "<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + "," + "</font>"
-                }else{
-                    "<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + "</font>"
-                }
+            val afterText = arrayListOf<String>()
+            for (i in catName[position].afterSession!!.indices) {
+                afterText.add("<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + /*"," +*/ "</font>")
             }
+            val s = TextUtils.join(",",beforeText)
+            val s1 = TextUtils.join(",",afterText)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(beforeText, Html.FROM_HTML_MODE_COMPACT)
-                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(afterText, Html.FROM_HTML_MODE_COMPACT)
+                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
+                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(s1, Html.FROM_HTML_MODE_COMPACT)
             }else{
-                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(beforeText)
-                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(afterText)
+                holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(s)
+                holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(s1)
             }
 
             if (catName.size == 1) {
