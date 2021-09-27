@@ -7,7 +7,8 @@ import retrofit.http.POST
 import retrofit.http.Part
 import retrofit.mime.TypedFile
 
-interface APIInterfaceProfile {/*TODO UserProfileActivity */
+interface APIInterfaceProfile {
+    /*TODO UserProfileActivity */
 
     //  TODO Profile Image Upload
     @Multipart

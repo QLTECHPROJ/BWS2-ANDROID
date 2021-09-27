@@ -1060,7 +1060,7 @@ public class BWSApplication extends Application {
                             //                                if (isNetworkConnected(ctx)) {
                             //                                    showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             //                                    Call<DownloadPlaylistModel> listCall13 = null;
-                            //                                    listCall13 = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                            //                                    listCall13 = APINewClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
                             //                                    listCall13.enqueue(new Callback<DownloadPlaylistModel>() {
                             //                                        @Override
                             //                                        public void onResponse(Call<DownloadPlaylistModel> call13, Response<DownloadPlaylistModel> response13) {

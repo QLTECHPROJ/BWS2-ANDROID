@@ -93,17 +93,6 @@ public class DownloadsActivity extends AppCompatActivity implements NetworkChang
         callMembershipMediaPlayer();
         audioDownloadList = new ArrayList<>();
         playlistList = new ArrayList<>();
-/*        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
-            listCall.enqueue(new Callback<DownloadlistModel>() {
-                @Override
-                public void onResponse(Call<DownloadlistModel> call, Response<DownloadlistModel> response) {
-                    if (response.isSuccessful()) {*/
-        //                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-
-        //                        audioList = listModel.getResponseData().getAudio();
-        //                        playlistList = listModel.getResponseData().getPlaylist();
         binding.viewPager.setOffscreenPageLimit(2);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));

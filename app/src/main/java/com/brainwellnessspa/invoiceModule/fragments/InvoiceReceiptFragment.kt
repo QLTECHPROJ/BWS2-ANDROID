@@ -1,9 +1,7 @@
 package com.brainwellnessspa.invoiceModule.fragments
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,16 +9,10 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity
-import com.brainwellnessspa.invoiceModule.models.InvoiceDetailModel
 import com.brainwellnessspa.R
-import com.brainwellnessspa.utility.APIClient
-import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.databinding.FragmentInvoiceReceiptBinding
-import com.segment.analytics.Properties
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity
+import com.brainwellnessspa.utility.CONSTANTS
 
 class InvoiceReceiptFragment : DialogFragment() {
     lateinit var binding: FragmentInvoiceReceiptBinding
@@ -29,14 +21,10 @@ class InvoiceReceiptFragment : DialogFragment() {
     var coUserId: String? = ""
     var flag: String? = ""
     var invoiceAmount: String? = ""
-    override fun onCreateView(inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_invoice_receipt, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice_receipt, container, false)
         InvoiceActivity.invoiceToRecepit = 1
-        val shared1 =
-            requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        val shared1 = requireActivity().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         if (dialog != null && dialog!!.window != null) {
@@ -72,9 +60,9 @@ class InvoiceReceiptFragment : DialogFragment() {
 
     private fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.client
-                .getInvoiceDetailPlaylist(userID, invoiceID, "1") /*Flag = 0 Staging Flag = 1 Live*/
+            /* BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+             val listCall = APINewClient.client
+                 .getInvoiceDetailPlaylist(userID, invoiceID, "1") *//*Flag = 0 Staging Flag = 1 Live*//*
             if (listCall != null) {
                 listCall.enqueue(object : Callback<InvoiceDetailModel?> {
                     @SuppressLint("SetTextI18n")
@@ -164,7 +152,7 @@ class InvoiceReceiptFragment : DialogFragment() {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
-            }
+            }*/
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }

@@ -151,11 +151,7 @@ class GlobalInitExoPlayer : Service() {
                         val `is` = connection.inputStream
                         myBitmap = BitmapFactory.decodeStream(`is`)
                     } catch (e: IOException) {
-                        if (e.message.equals("http://brainwellnessapp.com.au/bwsapi/public/images/AUDIO/", ignoreCase = true)) {
-                            myBitmap = BitmapFactory.decodeResource(ctx.resources, R.drawable.default_audio_icon)
-                        } else {
-                            println(e)
-                        }
+                        println(e)
                     }
                 }
             }

@@ -21,21 +21,11 @@ import com.brainwellnessspa.databinding.ActivityInvoiceBinding
 import com.brainwellnessspa.downloadModule.fragments.AudioDownloadsFragment
 import com.brainwellnessspa.invoiceModule.fragments.AppointmentInvoiceFragment
 import com.brainwellnessspa.invoiceModule.fragments.MembershipInvoiceFragment
-import com.brainwellnessspa.invoiceModule.models.InvoiceListModel
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.Appointment
 import com.brainwellnessspa.invoiceModule.models.InvoiceListModel.MemberShip
-import com.brainwellnessspa.invoiceModule.models.SegmentMembership
 import com.brainwellnessspa.services.GlobalInitExoPlayer
-import com.brainwellnessspa.utility.APIClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
-import com.google.gson.Gson
 import com.segment.analytics.Properties
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
 class InvoiceActivity : AppCompatActivity() {
@@ -109,8 +99,8 @@ class InvoiceActivity : AppCompatActivity() {
 
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APIClient.client.getInvoicelistPlaylist(userId, "1")
+      /*      BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            val listCall = APINewClient.client.getInvoicelistPlaylist(userId, "1")
             listCall!!.enqueue(object : Callback<InvoiceListModel?> {
                 override fun onResponse(call: Call<InvoiceListModel?>, response: Response<InvoiceListModel?>) {
                     try {
@@ -166,7 +156,7 @@ class InvoiceActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<InvoiceListModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
-            })
+            })*/
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this)
         }

@@ -133,7 +133,7 @@ class AppointmentInvoiceFragment : Fragment() {
 
                 if (BWSApplication.isNetworkConnected(getActivity())) {
                     BWSApplication.showProgressBar(progressBar, progressBarHolder, getActivity());
-                    Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); *//*Flag = 0 Stagging Flag = 1 Live*/ /*
+                    Call<InvoiceDetailModel> listCall = APINewClient.getClient().getInvoiceDetailPlaylist(userId, listModelList.get(position).getInvoiceId(), "1"); *//*Flag = 0 Stagging Flag = 1 Live*/ /*
                     listCall.enqueue(new Callback<InvoiceDetailModel>() {
                         @Override
                         public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {

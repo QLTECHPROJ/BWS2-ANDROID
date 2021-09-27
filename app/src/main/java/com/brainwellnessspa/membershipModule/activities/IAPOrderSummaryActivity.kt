@@ -208,37 +208,6 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
 
         override fun afterTextChanged(s: Editable) {}
     }
-
-    /* fun prepareCheckReferCode(promoCode: String?) {
-         if (BWSApplication.isNetworkConnected(ctx)) {
-             BWSApplication.showProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-             val listCall = APIClient.client.checkReferCode(promoCode)
-             listCall!!.enqueue(object : Callback<CheckReferCodeModel?> {
-                 override fun onResponse(call: Call<CheckReferCodeModel?>, response: Response<CheckReferCodeModel?>) {
-                     try {
-                         val listModel = response.body()
-                         if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                             BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-                             if (listModel.responseData!!.codeExist.equals("0", ignoreCase = true)) {
-                                 BWSApplication.showToast(listModel.responseMessage, activity)
-                             } else {
-                                 BWSApplication.showToast(listModel.responseMessage, activity)
-                             }
-                         }
-                     } catch (e: Exception) {
-                         e.printStackTrace()
-                     }
-                 }
-
-                 override fun onFailure(call: Call<CheckReferCodeModel?>, t: Throwable) {
-                     BWSApplication.hideProgressBar(binding!!.progressBar, binding!!.progressBarHolder, activity)
-                 }
-             })
-         } else {
-             BWSApplication.showToast(getString(R.string.no_server_found), activity)
-         }
-     }*/
-
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
