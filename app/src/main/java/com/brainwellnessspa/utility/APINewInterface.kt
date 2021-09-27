@@ -111,7 +111,17 @@ interface APINewInterface {
 
     @POST("eepprofile")
     @FormUrlEncoded
-    fun getEEPStepThreeProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("trauma_history") electric_shock_treatment: String?, @Field("phychotic_episode") electric_shock_last_treatment: String?, @Field("psychotic_emotions") drug_prescription: String?, @Field("suicidal_episode") types_of_drug: String?, @Field("suicidal_emotions") sense_of_terror: String?): Call<SessionsProfileSaveDataModel>
+    fun getEEPStepThreeProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("trauma_history") trauma_history: String?, @Field("phychotic_episode") phychotic_episode: String?, @Field("psychotic_emotions") psychotic_emotions: String?, @Field("suicidal_episode") suicidal_episode: String?, @Field("suicidal_emotions") suicidal_emotions: String?): Call<SessionsProfileSaveDataModel>
+
+    @POST("steptypeone")
+    @FormUrlEncoded
+    fun getEEPStepTypeOneSaveData(@Field("StepId") StepId: String?,
+                                  @Field("SessionId") SessionId: String?): Call<StepTypeOneSaveDataModel>
+
+    @POST("steptypetwo")
+    @FormUrlEncoded
+    fun getEEPStepTypeTwoSaveData(@Field("StepId") StepId: String?,
+                                  @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
 
     @POST("assesmentsaveans")
     @FormUrlEncoded
@@ -245,7 +255,8 @@ interface APINewInterface {
     @POST("brainfeelingsavecat")
     @FormUrlEncoded
     fun getBrainFeelingSaveCat(
-        @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type:String?,@Field("feeling_cat_id") feeling_cat_id:String?, ): Call<SucessModel>
+            @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?,
+    ): Call<SucessModel>
 
     @POST("setreminder")
     @FormUrlEncoded

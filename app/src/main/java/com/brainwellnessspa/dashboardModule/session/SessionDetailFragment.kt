@@ -43,8 +43,24 @@ class SessionDetailFragment : Fragment() {
         ctx = requireActivity()
         act = requireActivity()
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        prepareData()
+//        prepareData()
+        networkCheck()
         return binding.root
+    }
+
+    override fun onResume() {
+        networkCheck()
+        super.onResume()
+    }
+
+    private fun networkCheck() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            binding.llRemainDev.visibility = View.VISIBLE /* VISIBLE*/
+            binding.llNoInternet.visibility = View.GONE
+        } else {
+            binding.llRemainDev.visibility = View.GONE
+            binding.llNoInternet.visibility = View.VISIBLE /* VISIBLE*/
+        }
     }
 
     /* session_unselected_bg
@@ -87,7 +103,7 @@ class SessionDetailFragment : Fragment() {
     fun prepareSessionStepStatusListData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getSessionStepStatusList("1","1","1")
+            val listCall = APINewClient.client.getSessionStepStatusList("1", "1", "1")
             listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
                 override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
                     try {
@@ -234,12 +250,12 @@ class SessionDetailFragment : Fragment() {
             for (i in catName[position].afterSession!!.indices) {
                 afterText.add("<font color='" + catName[position].afterSession!![i].color + "'>" + catName[position].afterSession!![i].key + /*"," +*/ "</font>")
             }
-            val s = TextUtils.join(",",beforeText)
-            val s1 = TextUtils.join(",",afterText)
+            val s = TextUtils.join(",", beforeText)
+            val s1 = TextUtils.join(",", afterText)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
                 holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(s1, Html.FROM_HTML_MODE_COMPACT)
-            }else{
+            } else {
                 holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(s)
                 holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(s1)
             }

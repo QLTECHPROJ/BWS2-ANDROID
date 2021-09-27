@@ -26,9 +26,9 @@
                         android:id="@+id/ivBanner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_180sdp"
+                        android:contentDescription="@string/todo"
                         android:scaleType="fitXY"
-                        android:src="@drawable/session_unselected_bg"
-                        android:contentDescription="@string/todo" />
+                        android:src="@drawable/session_unselected_bg" />
 
                     <RelativeLayout
                         android:id="@+id/rlLayout"
@@ -74,8 +74,8 @@
                     android:background="@drawable/round_chip_green"
                     android:backgroundTint="#65C993"
                     android:baselineAligned="false"
-                    android:visibility="gone"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="10"
                     tools:targetApi="lollipop">
 
@@ -139,8 +139,8 @@
                     android:background="@drawable/round_chip_pink"
                     android:backgroundTint="#DC7793"
                     android:baselineAligned="false"
-                    android:visibility="gone"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="10"
                     tools:targetApi="lollipop">
 
