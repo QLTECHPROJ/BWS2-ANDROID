@@ -1,31 +1,18 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
-import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
-import com.brainwellnessspa.dashboardModule.enhance.PreparePlaylistActivity
 import com.brainwellnessspa.dashboardModule.models.BrainCatListModel
-import com.brainwellnessspa.dashboardModule.models.SaveRecommendedCatModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
-import com.brainwellnessspa.dashboardModule.models.sendRecommndedData
 import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
 import com.brainwellnessspa.databinding.BrainFeelingStatusLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -33,7 +20,6 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,7 +33,7 @@ class BrainStatusActivity : AppCompatActivity() {
     var coUserId: String? = ""
     var SessionId: String? = "1"
     var Type: String? = "before"
-    var EEPCatId= arrayListOf<String>()
+    var EEPCatId = arrayListOf<String>()
     var EEPCatName = arrayListOf<String>()
     lateinit var editor: SharedPreferences.Editor
 
@@ -80,7 +66,7 @@ class BrainStatusActivity : AppCompatActivity() {
     private fun sendCategoryData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat("1", SessionId,Type,gson.toJson(EEPCatId))
+            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat("1", SessionId, Type, gson.toJson(EEPCatId))
             listCall.enqueue(object : Callback<SucessModel> {
                 override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                     try {
@@ -132,7 +118,7 @@ class BrainStatusActivity : AppCompatActivity() {
                         if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             if (responsedb != null) {
-                                adapter = BrainFeelingStatusAdapter(binding, activity, responsedb.data,ctx,binding)
+                                adapter = BrainFeelingStatusAdapter(binding, activity, responsedb.data, ctx, binding)
                             }
                             binding.rvList.adapter = adapter
                         }
@@ -149,6 +135,7 @@ class BrainStatusActivity : AppCompatActivity() {
             BWSApplication.showToast(getString(R.string.no_server_found), activity)
         }
     }
+
     private fun getCatSaveData() {
         val shared = ctx.getSharedPreferences(CONSTANTS.EEPCatMain, Context.MODE_PRIVATE)
         val json1 = shared.getString(CONSTANTS.EEPCatId, gson.toString())
@@ -168,10 +155,13 @@ class BrainStatusActivity : AppCompatActivity() {
             binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
         }
     }
+
     class BrainFeelingStatusAdapter(var binding: ActivityBrainStatusBinding, var activity: Activity, var listModel: List<BrainCatListModel.ResponseData.Data>?, var ctx: Context, var binding1: ActivityBrainStatusBinding) : RecyclerView.Adapter<BrainFeelingStatusAdapter.MyViewHolder>() {
 
         var catList = BrainStatusActivity()
-            inner class MyViewHolder(var bindingAdapter: BrainFeelingStatusLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+
+        inner class MyViewHolder(var bindingAdapter: BrainFeelingStatusLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: BrainFeelingStatusLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.brain_feeling_status_layout, parent, false)
             setData()
@@ -241,7 +231,7 @@ class BrainStatusActivity : AppCompatActivity() {
                 }
             }
         }
-        
+
         private fun setData() {
             val shared = ctx.getSharedPreferences(CONSTANTS.EEPCatMain, Context.MODE_PRIVATE)
             val json1 = shared.getString(CONSTANTS.EEPCatId, catList.gson.toString())
@@ -261,6 +251,7 @@ class BrainStatusActivity : AppCompatActivity() {
                 binding.btnContinue.setBackgroundResource(R.drawable.gray_round_cornor)
             }
         }
+
         override fun getItemCount(): Int {
             return listModel!!.size
         }

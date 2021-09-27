@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,12 +30,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:maxLines="2"
-                    android:layout_marginEnd="@dimen/_10sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_40sdp"
                     tools:ignore="SpUsage" />
@@ -82,9 +83,9 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_14sdp"
-                    android:visibility="gone"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_session_download_icon" />
+                    android:src="@drawable/ic_session_download_icon"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
