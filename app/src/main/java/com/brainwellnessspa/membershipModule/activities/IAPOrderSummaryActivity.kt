@@ -483,7 +483,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
     public static String GOOGLE_CODE = "4/0AY0e-g7LoHIAy2ulpKIfeciuZSkBrFBh6RseKYb372xyxSb7Gmleh-vHyywKqAEGWlTiMg";
     public static String GOOGLE_REDIRECT_URI = "https://brainwellnessspa.com.au/";
     public static String GOOGLE_ACCESS_TYPE = "offline";
-    public static String GOOGLE_REDIRECT_URI1 = "https://brainwellnessspa.com.au?code=4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fandroidpublisher/";
+    public static String GOOGLE_REDIRECT_URI1 = "http://brainwellnessapp.com.au?code=4%2F0AY0e-g5HwhmC7D1M2ab--RVBhI2HkU5n1qMJPE3UgQlWa3XoB23tDojyKsd0fw6w_VwS5Q&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fandroidpublisher/";
 
    public static SubscriptionPurchase getRefreshToken() {
         String refreshToken = "";
@@ -492,9 +492,9 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/token");
         try {
-//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
-//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
-//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&prompt=consent&redirect_uri=https://brainwellnessspa.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&redirect_uri=http://brainwellnessapp.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=http://brainwellnessapp.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
+//https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&prompt=consent&redirect_uri=http://brainwellnessapp.com.au&client_id=861076939494-enq38ui5d9hcbhmt3h972aok62c723ns.apps.googleusercontent.com
             List<NameValuePair> nameValuePairs = new ArrayList<>(6);
             nameValuePairs.add(new BasicNameValuePair("grant_type",GOOGLE_AUTHORIZATION));
             nameValuePairs.add(new BasicNameValuePair("client_id",GOOGLE_CLIENT_ID));
