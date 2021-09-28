@@ -84,7 +84,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 "Audio_database")
                 .addMigrations(MIGRATION_1_2)
                 .build();
-        /*if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/api/staging/v1/")) {
+        /*if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessapp.com.au/bwsapi/api/staging/v1/")) {
             options = new FirebaseOptions.Builder()
                     .setProjectId("brain-wellness-spa-d4ac0")
                     .setApplicationId("1:139951188296:android:e98df657440cfaa3722b7d")
@@ -92,7 +92,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                      .setStorageBucket("brain-wellness-spa-d4ac0.appspot.com")
                     .build();
             FirebaseAppName = "Staging";
-        }else if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/api/live/v1/")) {
+        }else if(AppUtils.BASE_URL.equalsIgnoreCase("http://brainwellnessapp.com.au/bwsapi/api/live/v1/")) {
             options = new FirebaseOptions.Builder()
                     .setProjectId("brain-wellness-app-live")
                     .setApplicationId("1:753168671199:android:036d8f6ad0f156399aa46a")
@@ -238,12 +238,17 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
                     VersionModel versionModel = response.body();
                     try {
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_supportText, versionModel.getResponseData().getSupportText());
+                        editor.putString(CONSTANTS.PREF_KEY_supportEmail, versionModel.getResponseData().getSupportEmail());
+                        editor.apply();
                         setAnalytics();
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Update Brain Wellness Spa");
+                            builder.setTitle("Update Brain Wellness App");
                             builder.setCancelable(false);
-                            builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
+                            builder.setMessage("Brain Wellness App recommends that you update to the latest version")
                                     .setPositiveButton("UPDATE", (dialog, id) -> {
                                         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
                                         dialog.cancel();
@@ -258,7 +263,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Required");
                             builder.setCancelable(false);
-                            builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
+                            builder.setMessage("To keep using Brain Wellness App, download the latest version")
                                     .setCancelable(false)
                                     .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
                             builder.create().show();

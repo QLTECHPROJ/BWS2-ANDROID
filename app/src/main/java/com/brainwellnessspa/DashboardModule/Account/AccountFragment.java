@@ -88,7 +88,7 @@ public class AccountFragment extends Fragment {
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName, AccountFirstLogin = "0";
+    String UserID, MobileNo, Email, DeviceType, DeviceID, Name, UserName, AccountFirstLogin = "0", supportText = "", supportEmail = "";
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
@@ -97,7 +97,7 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ComeScreenAccount = 1; 
+        ComeScreenAccount = 1;
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -112,6 +112,8 @@ public class AccountFragment extends Fragment {
         Email = (shared1.getString(CONSTANTS.PREF_KEY_Email, ""));
         DeviceType = (shared1.getString(CONSTANTS.PREF_KEY_DeviceType, ""));
         DeviceID = (shared1.getString(CONSTANTS.PREF_KEY_DeviceID, ""));
+        supportText = (shared1.getString(CONSTANTS.PREF_KEY_supportText, ""));
+        supportEmail = (shared1.getString(CONSTANTS.PREF_KEY_supportEmail, ""));
         ComeScreenAccount = 1;
         comefromDownload = "0";
        /* MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
@@ -279,11 +281,14 @@ public class AccountFragment extends Fragment {
             supportDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             supportDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             final TextView tvEmail = supportDialog.findViewById(R.id.tvEmail);
+            final TextView tvHeader = supportDialog.findViewById(R.id.tvHeader);
             final LinearLayout llClose = supportDialog.findViewById(R.id.llClose);
             ComeScreenAccount = 1;
+            tvHeader.setText(supportText);
+            tvEmail.setText(supportEmail);
             tvEmail.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                String[] recipients = {"support@brainwellnessapp.com"};
+                String[] recipients = {supportEmail};
                 intent.putExtra(Intent.EXTRA_EMAIL, recipients);
                 intent.putExtra(Intent.EXTRA_SUBJECT, "");
                 intent.putExtra(Intent.EXTRA_TEXT, "");
@@ -442,7 +447,7 @@ public class AccountFragment extends Fragment {
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_AccountFirstLogin, "0");
-                            editor.commit();
+                            editor.apply();
                             invoiceToDashboard = 0;
                             invoiceToRecepit = 0;
                             fancyShowCaseView31.hide();
@@ -505,17 +510,19 @@ public class AccountFragment extends Fragment {
         edit.remove(CONSTANTS.PREF_KEY_DeviceType);
         edit.remove(CONSTANTS.PREF_KEY_Identify);
         edit.remove(CONSTANTS.PREF_KEY_DeviceID);
+        edit.remove(CONSTANTS.PREF_KEY_supportText);
+        edit.remove(CONSTANTS.PREF_KEY_supportEmail);
 //        edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
 //        edit.remove(CONSTANTS.PREF_KEY_ReferLink);
         edit.clear();
-        edit.commit();
+        edit.apply();
 
         SharedPreferences preferencesx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         SharedPreferences.Editor editx = preferencesx.edit();
         editx.remove(CONSTANTS.PREF_KEY_IsRepeat);
         editx.remove(CONSTANTS.PREF_KEY_IsShuffle);
         editx.clear();
-        editx.commit();
+        editx.apply();
         PRDownloader.cancel(downloadIdOne);
         filename = "";
         logout = true;
@@ -525,12 +532,12 @@ public class AccountFragment extends Fragment {
         edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
         edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
         edit1.clear();
-        edit1.commit();
+        edit1.apply();
         SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shareds.edit();
         editor.remove(CONSTANTS.PREF_KEY_CardID);
         editor.clear();
-        editor.commit();
+        editor.apply();
 
         SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editorr = sharedm.edit();
@@ -543,8 +550,7 @@ public class AccountFragment extends Fragment {
         editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
         editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
         editorr.clear();
-        editorr.commit();
-
+        editorr.apply();
 
         deleteCache(getActivity());
         callLogoutApi(dialog, progressBar, progressBarHolder);
@@ -566,7 +572,7 @@ public class AccountFragment extends Fragment {
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putString(CONSTANTS.PREF_KEY_UserPromocode, viewModel.getResponseData().getUserReferCode());
                         editor.putString(CONSTANTS.PREF_KEY_ReferLink, viewModel.getResponseData().getReferLink());
-                        editor.commit();
+                        editor.apply();
                         if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                 viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                 viewModel.getResponseData().getName() == null) {

@@ -86,11 +86,11 @@ public class AppointmentFragment extends Fragment {
         comefromDownload = "0";
         binding.cvSetSession.setOnClickListener(view1 -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
+            i.setData(Uri.parse("https://brainwellnessapp.com.au/bookings/services.php"));
             startActivity(i);
             p = new Properties();
             p.putValue("userId", UserID);
-            p.putValue("bookingLink", "https://brainwellnessspa.com.au/bookings/services.php");
+            p.putValue("bookingLink", "https://brainwellnessapp.com.au/bookings/services.php");
             BWSApplication.addToSegment("Book a New Appointment Clicked", p, CONSTANTS.track);
         });
         return view;

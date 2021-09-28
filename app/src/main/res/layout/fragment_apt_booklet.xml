@@ -44,7 +44,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="Please complete the brain wellness spa treatment booklet. The completion of this booklet will give your facilitator an indication of where your brain is at. Depending on the answers you provide, we can explain to you why your brain is behaving in a certain way."
+                        android:text="Please complete the brain wellness app treatment booklet. The completion of this booklet will give your facilitator an indication of where your brain is at. Depending on the answers you provide, we can explain to you why your brain is behaving in a certain way."
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>

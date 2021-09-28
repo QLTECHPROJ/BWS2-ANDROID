@@ -312,7 +312,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                     e.printStackTrace();
                                                 }
                                                 editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserID());
-                                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "1");
+                                                editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0");
                                                 editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
                                                 editor.putString(CONSTANTS.PREF_KEY_PlayerFirstLogin, "1");
                                                 editor.putString(CONSTANTS.PREF_KEY_AudioFirstLogin, "1");

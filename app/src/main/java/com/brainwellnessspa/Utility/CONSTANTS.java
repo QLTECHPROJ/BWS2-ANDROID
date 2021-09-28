@@ -110,6 +110,8 @@ public class CONSTANTS {
     public static final String PREF_KEY_Email = "Email";
     public static final String PREF_KEY_DeviceType = "DeviceType";
     public static final String PREF_KEY_DeviceID = "DeviceID";
+    public static final String PREF_KEY_supportText = "supportText";
+    public static final String PREF_KEY_supportEmail = "supportEmail";
     public static final String PREF_KEY_IsLock = "IsLock";
     public static final String PREF_KEY_UnLockAudiList = "UnLockAudiList";
     public static final String PREF_KEY_modelList = "modelList";

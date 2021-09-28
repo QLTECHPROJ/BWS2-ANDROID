@@ -40,7 +40,7 @@
     <string name="title_account">ACCOUNT</string>
     <string name="title_search">SEARCH</string>
     <string name="thank_u">Thank You</string>
-    <string name="thank_u_quotes">Congratulations on joining the Brain Wellness Spa Audio Membership</string>
+    <string name="thank_u_quotes">Congratulations on joining the Brain Wellness App Audio Membership</string>
     <string name="explore_app">Explore app</string>
     <string name="view_invoice"><u>View Invoice</u></string>
     <string name="downloads">Downloads</string>
@@ -76,7 +76,7 @@
     <string name="Cvv">CVV</string>
     <string name="Add_New_Card">Add New Card</string>
     <string name="FAQ">FAQ</string>
-    <string name="disclaimer"><b>Disclaimer:</b> The Brain Wellness Spa offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
+    <string name="disclaimer"><b>Disclaimer:</b> The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness App Method).\n\nThe Brain Wellness App Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="Disclaimer">Disclaimer</string>
     <string name="Audio">Audio</string>
     <string name="Playlist">Playlist</string>
@@ -147,7 +147,7 @@
     <string name="Resource">Resource</string>
     <string name="Resources">Resources</string>
     <string name="Select_reason">Select reason</string>
-    <string name="logout_quotes">Are you sure you want to log out Brain Wellness Spa?</string>
+    <string name="logout_quotes">Are you sure you want to log out Brain Wellness App?</string>
     <string name="Discover_More">Discover More</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="no_server_found">You are not currently connected to internet. Please try again.!</string>
@@ -233,7 +233,7 @@
     <string name="disclaimers"><u>Disclaimer</u></string>
     <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
     <string name="and">and</string>
-    <string name="Disclaimer_text">The Brain Wellness Spa offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
+    <string name="Disclaimer_text">The Brain Wellness App offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness App Method).\n\nThe Brain Wellness App Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
     <string name="General">General</string>
     <string name="Favorites">Favorites</string>
     <string name="Refer_A_Friend">Refer A Friend</string>

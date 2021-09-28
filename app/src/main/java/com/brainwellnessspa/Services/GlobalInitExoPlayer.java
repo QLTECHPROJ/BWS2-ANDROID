@@ -157,7 +157,7 @@ public class GlobalInitExoPlayer extends Service {
                         InputStream is = connection.getInputStream();
                         myBitmap = BitmapFactory.decodeStream(is);
                     } catch (IOException | OutOfMemoryError e) {
-                        if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
+                        if (e.getMessage().equalsIgnoreCase("http://brainwellnessapp.com.au/bwsapi/public/images/AUDIO/")) {
                             myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                         } else {
                             System.out.println(e);
@@ -185,7 +185,7 @@ public class GlobalInitExoPlayer extends Service {
                     InputStream is = connection.getInputStream();
                     myBitmap = BitmapFactory.decodeStream(is);
                 } catch (IOException e) {
-                    if (e.getMessage().equalsIgnoreCase("http://brainwellnessspa.com.au/bwsapi/public/images/AUDIO/")) {
+                    if (e.getMessage().equalsIgnoreCase("http://brainwellnessapp.com.au/bwsapi/public/images/AUDIO/")) {
                         myBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.disclaimer);
                     } else {
                         System.out.println(e);

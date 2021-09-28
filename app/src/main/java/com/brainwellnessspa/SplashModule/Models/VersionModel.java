@@ -60,6 +60,14 @@ public class VersionModel {
         @SerializedName("segmentKey")
         @Expose
         private String segmentKey;
+        @SerializedName("supportText")
+        @Expose
+        private String supportText;
+
+        @SerializedName("supportEmail")
+        @Expose
+        private String supportEmail;
+
         public String getIsForce() {
             return isForce;
         }
@@ -82,6 +90,22 @@ public class VersionModel {
 
         public void setSegmentKey(String segmentKey) {
             this.segmentKey = segmentKey;
+        }
+
+        public String getSupportText() {
+            return supportText;
+        }
+
+        public void setSupportText(String supportText) {
+            this.supportText = supportText;
+        }
+
+        public String getSupportEmail() {
+            return supportEmail;
+        }
+
+        public void setSupportEmail(String supportEmail) {
+            this.supportEmail = supportEmail;
         }
     }
 }
