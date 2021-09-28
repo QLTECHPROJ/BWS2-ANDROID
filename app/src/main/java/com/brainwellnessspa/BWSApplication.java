@@ -3099,7 +3099,7 @@ public class BWSApplication extends Application {
                     Log.e("remiderDays Done", TextUtils.join(",", remiderDays));
                     if (isNetworkConnected(ctx)) {
                         showProgressBar(progressBar, progressBarHolder, act);
-                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(userId, PlaylistID, TextUtils.join(",", remiderDays), tvTime.getText().toString(), timezoneName, CONSTANTS.FLAG_ONE);
+                        Call<SetReminderOldModel> listCall = APINewClient.getClient().getSetReminder(userId, PlaylistID, TextUtils.join(",", remiderDays), tvTime.getText().toString(), CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<SetReminderOldModel>() {
                             @Override
                             public void onResponse(@NotNull Call<SetReminderOldModel> call, @NotNull Response<SetReminderOldModel> response) {

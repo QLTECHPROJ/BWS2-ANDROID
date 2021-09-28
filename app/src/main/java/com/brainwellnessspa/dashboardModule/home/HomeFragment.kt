@@ -132,6 +132,7 @@ class HomeFragment : Fragment() {
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+        sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
         var areaOfFocus: String? = ""
 
@@ -140,7 +141,6 @@ class HomeFragment : Fragment() {
         if (!json5.equals(gson.toString())) areaOfFocus = json5
         /* Get sleep time from share pref*/
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-        sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         if (!json.equals(gson.toString())) {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
@@ -209,7 +209,6 @@ class HomeFragment : Fragment() {
             binding.llBottomView.isClickable = true
             binding.llBottomView.isEnabled = true
         }
-
 
 
         /* User list layout click */
@@ -419,9 +418,9 @@ class HomeFragment : Fragment() {
                     edited.clear()
                     edited.apply()
                     val i = Intent(ctx, AreaOfFocusActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")
-                    ctx.startActivity(i)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    act.startActivity(i)
                 } else {
                     showToast(ctx.getString(R.string.no_server_found), act)
                 }

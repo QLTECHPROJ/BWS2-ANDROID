@@ -15,18 +15,17 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
-import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
-
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
@@ -43,9 +42,10 @@ import com.segment.analytics.android.integrations.firebase.FirebaseIntegration
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.HashMap
+import java.text.SimpleDateFormat
+import java.util.*
 
-class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationListener{
+class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
@@ -63,12 +63,13 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
     var directLogin: String? = ""
     var isMainAccount: String? = ""
     var isSetLoginPin: String? = ""
+    var timezoneName: String? = ""
     var planId: String? = ""
     var flag: String? = null
-    var id:String? = null
-    var title:String? = null
-    var message:String? = null
-    var IsLockNoti:String? = null
+    var id: String? = null
+    var title: String? = null
+    var message: String? = null
+    var IsLockNoti: String? = null
     var planContent: String? = ""
     lateinit var activity: Activity
     lateinit var context: Context
@@ -93,7 +94,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this@SplashActivity) { task: Task<InstallationTokenResult> ->
+            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity) { task: Task<InstallationTokenResult> ->
                 val newToken = task.result.token
                 Log.e("newToken", newToken)
                 val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
@@ -105,7 +106,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
         clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
 //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CleverTapAPI.createNotificationChannel(applicationContext,getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
+            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
         }
         clevertapDefaultInstance?.apply {
             ctNotificationInboxListener = this@SplashActivity
@@ -131,25 +132,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-
-//        BWSApplication.showToast("Notify Me "+ ("\ud83d\ude01")+("\ud83d\udc34"),this)
     }
 
     override fun onResume() {/* TODO conditions for check user exist or not */
         if (userId.equals("")) {
             checkAppVersion()
-        } /*else if (!userId.equals("", ignoreCase = true) && coUserId.equals(
-                        "",
-                        ignoreCase = true
-                )
-        ) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this@SplashActivity, UserListActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, (2 * 800).toLong())
-
-        }*/ else {
+        } else {
             checkUserDetails()
         }
         super.onResume()
@@ -173,9 +161,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
 
     /* TODO function for check app version  */
     private fun checkAppVersion() {
+        val simpleDateFormat1 = SimpleDateFormat("hh:mm a")
+        simpleDateFormat1.timeZone = TimeZone.getDefault()
+        timezoneName = simpleDateFormat1.timeZone.id
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
         if (isNetworkConnected(this)) {
-            val listCall: Call<VersionModel> = APINewClient.client.getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE)
+            val listCall: Call<VersionModel> = APINewClient.client.getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE, timezoneName)
             listCall.enqueue(object : Callback<VersionModel> {
                 override fun onResponse(call: Call<VersionModel>, response: Response<VersionModel>) {
                     try {
@@ -190,11 +181,11 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                             editor.apply()
                             when {
                                 versionModel.ResponseData.IsForce.equals("0") -> {
-                                    val builder = AlertDialog.Builder(this@SplashActivity)
+                                    val builder = AlertDialog.Builder(context)
                                     builder.setTitle("Update Brain Wellness App")
                                     builder.setCancelable(false)
                                     builder.setMessage("Brain Wellness App recommends that you update to the latest version").setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
-                                        this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                         dialog.cancel()
                                     }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
                                         //                                        askBattyPermission()
@@ -204,11 +195,11 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce.equals("1") -> {
-                                    val builder = AlertDialog.Builder(this@SplashActivity)
+                                    val builder = AlertDialog.Builder(context)
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
                                     builder.setMessage("To keep using Brain Wellness App, download the latest version").setCancelable(false).setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
-                                        this@SplashActivity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                     }
                                     builder.create().show()
                                 }
@@ -316,7 +307,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
             setAnalytics(getString(R.string.segment_key_real_2_staging), context)
 //            askBattyPermission()
             callDashboard()
-            showToast(getString(R.string.no_server_found), this@SplashActivity)
+            showToast(getString(R.string.no_server_found), activity)
         }
     }
 
@@ -345,7 +336,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
             if (userId.equals("")) {
                 callSignActivity(activity)
             } else if (intent.hasExtra("flag")) {
-                val resultIntent:Intent?
+                val resultIntent: Intent?
                 flag = intent.getStringExtra("flag");
                 id = intent.getStringExtra("id");
                 title = intent.getStringExtra("title");
@@ -672,14 +663,15 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
         try {
             analytics = Analytics.Builder(context, segmentKey).use(FirebaseIntegration.FACTORY).trackApplicationLifecycleEvents().logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation().trackAttributionInformation().trackDeepLinks().collectDeviceId(true).build()/*.use(FirebaseIntegration.FACTORY) */
             Analytics.setSingletonInstance(analytics)
-        } catch (e: java.lang.Exception) {}
+        } catch (e: java.lang.Exception) {
+        }
     }
 
     override fun inboxDidInitialize() {
         var cleverTapAPI: CleverTapAPI? = null
-        cleverTapAPI = CleverTapAPI.getDefaultInstance(this@SplashActivity)
+        cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
         val inboxTabs =
-            arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
+                arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
         CTInboxStyleConfig().apply {
             tabs = inboxTabs //Do not use this if you don't want to use tabs
             tabBackgroundColor = "#FF0000"

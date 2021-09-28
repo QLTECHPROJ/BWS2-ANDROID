@@ -52,8 +52,7 @@ class AssProcessActivity : AppCompatActivity() {
         isProfileCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
         isAssessmentCompleted = shared1.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
         assesmentContent = shared1.getString(CONSTANTS.PREFE_ACCESS_assesmentContent, "")
-        val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-        avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        avgSleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         /* This condition is get string access */
         if (intent.extras != null) {
             assProcess = intent.getStringExtra(CONSTANTS.ASSPROCESS).toString()
@@ -536,5 +535,4 @@ class AssProcessActivity : AppCompatActivity() {
             showToast(getString(R.string.no_server_found), act)
         }
     }
-
 }
