@@ -28,7 +28,7 @@ interface APINewInterface {
 
     @POST("appversion")
     @FormUrlEncoded
-    fun getAppVersions(@Field("Version") version: String?, @Field("AppType") appType: String?): Call<VersionModel>
+    fun getAppVersions(@Field("Version") version: String?, @Field("AppType") appType: String?, @Field("localTimezone") localTimezone: String?): Call<VersionModel>
 
     @POST("loginsignup")
     @FormUrlEncoded
@@ -260,7 +260,7 @@ interface APINewInterface {
 
     @POST("setreminder")
     @FormUrlEncoded
-    fun getSetReminder(@Field("UserId") UserId: String?, @Field("PlaylistId") PlaylistId: String?, @Field("ReminderDay") ReminderDay: String?, @Field("ReminderTime") ReminderTime: String?, @Field("localTimezone") localTimezone: String?, @Field("IsSingle") IsSingle: String?): Call<SetReminderOldModel>
+    fun getSetReminder(@Field("UserId") UserId: String?, @Field("PlaylistId") PlaylistId: String?, @Field("ReminderDay") ReminderDay: String?, @Field("ReminderTime") ReminderTime: String?, @Field("IsSingle") IsSingle: String?): Call<SetReminderOldModel>
 
     @POST("reminderlist")
     @FormUrlEncoded

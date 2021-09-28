@@ -44,7 +44,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
     lateinit var ctx: Context
     var userId: String? = null
     private var backClick: String? = ""
-    var sleepTime: String? = null
+    var avgSleepTime: String? = null
     var coUserId: String? = null
     var coEmail: String? = null
     private lateinit var adapter1: AllCategory
@@ -61,15 +61,16 @@ class AreaOfFocusActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recommended_category)
         ctx = this@AreaOfFocusActivity
         act = this@AreaOfFocusActivity
-        if (intent.extras != null) {
-            sleepTime = intent.getStringExtra("SleepTime")
-            backClick = intent.getStringExtra("BackClick")
-        }
 
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         coEmail = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+        avgSleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
+        if (intent.extras != null) {
+            backClick = intent.getStringExtra("BackClick")
+        }
 
         val p = Properties()
         addToSegment("Area of Focus Screen Viewed", p, CONSTANTS.screen)
@@ -122,7 +123,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
                 sendR.ProblemName = (selectedCategoriesName[i])
                 array.add(sendR)
             }
-            sendCategoryData(gson.toJson(array))
+            sendCategoryData(gson.toJson(array), avgSleepTime.toString())
         }
     }
 
@@ -551,10 +552,11 @@ class AreaOfFocusActivity : AppCompatActivity() {
         }
 
         private fun setData() {
+            val sharededd = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+            catList.avgSleepTime = sharededd.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
             val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
             val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, catList.gson.toString())
             val json5 = shared.getString(CONSTANTS.selectedCategoriesName, catList.gson.toString())
-            catList.sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
             if (!json2.equals(catList.gson.toString())) {
                 val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
                 catList.selectedCategoriesTitle = catList.gson.fromJson(json2, type1)
@@ -580,7 +582,6 @@ class AreaOfFocusActivity : AppCompatActivity() {
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         val json2 = shared.getString(CONSTANTS.selectedCategoriesTitle, gson.toString())
         val json5 = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
-        sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         if (!json2.equals(gson.toString(), ignoreCase = true)) {
             val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
             selectedCategoriesTitle = gson.fromJson(json2, type1)
@@ -653,7 +654,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendCategoryData(toJson: String) {
+    private fun sendCategoryData(toJson: String, sleepTime: String) {
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<SaveRecommendedCatModel> = APINewClient.client.getSaveRecommendedCategory(coUserId, toJson, sleepTime)
@@ -779,7 +780,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
             backClick.equals("0") -> {
                 val i = Intent(ctx, SleepTimeActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                i.putExtra("SleepTime", sleepTime)
+                i.putExtra("SleepTime", avgSleepTime)
                 startActivity(i)
                 finish()
             }
