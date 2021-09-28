@@ -18,10 +18,9 @@ import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import java.util.*
 
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
-class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanListModel.Plan>, var ctx: Context, var btnFreeJoin: Button, var TrialPeriod: String, var activity: Activity) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
+class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanListModel.Plan>, var ctx: Context, var btnFreeJoin: Button, var TrialPeriod: String, var activity: Activity, var i: Intent) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
     private var rowIndex = -1
     private var pos = 0
-    var i: Intent? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val v: MembershipPlanBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false)
         return MyViewHolder(v)

@@ -34,7 +34,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /* This act is assessment form act */
-class DassAssSliderActivity : AppCompatActivity() {
+class  DassAssSliderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDassAssSliderBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
     lateinit var secondListAdapter: OptionsSecondListAdapter

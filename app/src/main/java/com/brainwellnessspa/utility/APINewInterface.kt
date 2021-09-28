@@ -310,35 +310,39 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getCancelPlan(@Field("UserId") userID: String?, @Field("CancelId") cancelId: String?, @Field("CancelReason") cancelReason: String?): Call<CancelPlanModel>
 
+    @POST("cancelplanstripe")
+    @FormUrlEncoded
+    fun getCancelPlanStripe(@Field("UserID") userID: String?, @Field("CancelId") cancelId: String?, @Field("CancelReason") cancelReason: String?): Call<CancelPlanModel>
+
     /* TODO AddPaymentActivity */
     @POST("cardadd")
     @FormUrlEncoded
-    fun getAddCard(@Field("UserId") userID: String?, @Field("TokenId") tokenId: String?): Call<AddCardModel>
+    fun getAddCard(@Field("UserID") userID: String?, @Field("TokenId") tokenId: String?): Call<AddCardModel>
 
     /* TODO MembershipChangeActivity */
     @POST("planlistonbilling")
     @FormUrlEncoded
-    fun getPlanListBilling(@Field("UserId") userID: String?): Call<PlanListBillingModel>
+    fun getPlanListBilling(@Field("UserID") userID: String?): Call<PlanListBillingModel>
 
     /* TODO PaymentFragment & AllCardAdapter*/
     @POST("cardlist")
     @FormUrlEncoded
-    fun getCardLists(@Field("UserId") userID: String?): Call<CardListModel>
+    fun getCardLists(@Field("UserID") userID: String?): Call<CardListModel>
 
     /* TODO AllCardAdapter */
     @POST("carddefault")
     @FormUrlEncoded
-    fun getChangeCard(@Field("UserId") userID: String?, @Field("CardId") cardId: String?): Call<CardListModel>
+    fun getChangeCard(@Field("UserID") userID: String?, @Field("CardId") cardId: String?): Call<CardListModel>
 
     /* TODO AllCardAdapter */
     @POST("cardremove")
     @FormUrlEncoded
-    fun getRemoveCard(@Field("UserId") userID: String?, @Field("CardId") cardId: String?): Call<CardModel>
+    fun getRemoveCard(@Field("UserID") userID: String?, @Field("CardId") cardId: String?): Call<CardModel>
 
     /* TODO BillingAddressFragment */
     @POST("payonbillingorder")
     @FormUrlEncoded
-    fun getPayNowDetails(@Field("UserId") userID: String?, @Field("CardId") cardId: String?, @Field("PlanId") planId: String?, @Field("PlanType") planType: String?, @Field("invoicePayId") invoicePayId: String?, @Field("PlanStatus") planStatus: String?): Call<PayNowDetailsModel>
+    fun getPayNowDetails(@Field("UserID") userID: String?, @Field("CardId") cardId: String?, @Field("PlanId") planId: String?, @Field("PlanType") planType: String?, @Field("invoicePayId") invoicePayId: String?, @Field("PlanStatus") planStatus: String?): Call<PayNowDetailsModel>
 
     @POST("useraudiotracking")
     @FormUrlEncoded
@@ -347,7 +351,7 @@ interface APINewInterface {
     /* TODO CurrentPlanFragment */
     @POST("billingorder")
     @FormUrlEncoded
-    fun getCurrentPlanView(@Field("UserId") userID: String?): Call<CurrentPlanVieViewModel>
+    fun getCurrentPlanView(@Field("UserID") userID: String?): Call<CurrentPlanVieViewModel>
 
     /* TODO Membership Plan List */
     @GET("planlist")

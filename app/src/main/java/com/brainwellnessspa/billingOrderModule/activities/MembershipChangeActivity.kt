@@ -31,6 +31,7 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MeasureRatio
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -127,12 +128,9 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
     }
 
-    inner class MembershipPlanAdapter(listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>, ctx: Context?, btnFreeJoin: Button) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
-        private val listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>
-        var ctx: Context?
+    inner class MembershipPlanAdapter(var listModelList: ArrayList<PlanListBillingModel.ResponseData.Plan>,var ctx: Context?,var btnFreeJoin: Button) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
         private var row_index = -1
         private var pos = 0
-        var btnFreeJoin: Button
         var i: Intent? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: MembershipPlanBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false)
@@ -198,10 +196,11 @@ class MembershipChangeActivity : AppCompatActivity() {
             renewPlanFlag = listModel.planFlag
             renewPlanId = listModel.planID
             notificationStatus = true
+            val gson = Gson()
             i = Intent(ctx, OrderSummaryActivity::class.java)
             i!!.putExtra("comeFrom", "membership")
             i!!.putExtra("ComesTrue", ComeFrom)
-            i!!.putParcelableArrayListExtra("PlanData", listModelList)
+            i!!.putExtra("PlanData", gson.toJson(listModelList))
             i!!.putExtra("TrialPeriod", "")
             i!!.putExtra("position", position)
             i!!.putExtra("Promocode", "")
@@ -212,12 +211,6 @@ class MembershipChangeActivity : AppCompatActivity() {
         }
 
         inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(binding.root)
-
-        init {
-            this.listModelList = listModelList
-            this.ctx = ctx
-            this.btnFreeJoin = btnFreeJoin
-        }
     }
 
     internal inner class AppLifecycleCallback : ActivityLifecycleCallbacks {

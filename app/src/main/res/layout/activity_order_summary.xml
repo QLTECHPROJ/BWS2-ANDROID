@@ -343,6 +343,7 @@
                             android:textColor="@color/dark_blue_gray"
                             android:textColorHint="@color/dark_blue_gray"
                             android:textCursorDrawable="@null"
+                            android:text=""
                             android:textSize="@dimen/_13sdp"
                             app:hintTextColor="@color/dark_blue_gray"
                             tools:ignore="SpUsage"

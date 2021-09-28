@@ -17,6 +17,8 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.MembershipActivity
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -464,11 +466,22 @@ class AssProcessActivity : AppCompatActivity() {
                 if (navigation == "Home") {
                     finish()
                 } else {
-                    val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    i.putExtra("plan", "0")
-                    startActivity(i)
-                    finish()
+                    val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                    val paymentType = shared.getString(CONSTANTS.PREFE_ACCESS_paymentType, "")
+                    if(paymentType == "0"){
+                        val i = Intent(this@AssProcessActivity, ProfileProgressActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.putExtra("plan", "0")
+                        startActivity(i)
+                        finish()
+                    }else if (paymentType == "1"){
+                        val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.putExtra("plan", "0")
+                        startActivity(i)
+                        finish()
+                    }
+
                     /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
                     startActivity(i)
                     finish()*/

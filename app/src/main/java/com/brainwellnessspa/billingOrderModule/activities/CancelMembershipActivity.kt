@@ -52,6 +52,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         activity = this@CancelMembershipActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         userID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
+        binding.rlCancelPlan.visibility = View.VISIBLE
         binding.llBack.setOnClickListener {
             myBackPress = true
             if (audioPause) {
@@ -152,7 +153,7 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
                         }
                         MotionEvent.ACTION_UP -> {
                             if (BWSApplication.isNetworkConnected(ctx)) {
-                                val listCall = client.getCancelPlan(userID, cancelId, binding.edtCancelBox.text.toString())
+                                val listCall = client.getCancelPlanStripe(userID, cancelId, binding.edtCancelBox.text.toString())
                                 listCall.enqueue(object : Callback<CancelPlanModel?> {
                                     override fun onResponse(call: Call<CancelPlanModel?>, response: Response<CancelPlanModel?>) {
                                         try {

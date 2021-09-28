@@ -687,7 +687,7 @@ class HomeFragment : Fragment() {
                                     editor.apply()
 
 
-                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0]
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
                                     binding.llIndicate.progress = response.indexScore!!.toInt()
@@ -879,7 +879,7 @@ class HomeFragment : Fragment() {
                                     editor.apply()
 
                                     IsLock = response.IsLock
-                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0]
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
                                     binding.llIndicate.progress = response.indexScore!!.toInt()
@@ -1807,19 +1807,40 @@ class HomeFragment : Fragment() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
-                                                            try {
-                                                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                            if(listModel.ResponseData.paymentType == "0"){
+                                                                // Stripe
+                                                                try {
+                                                                    if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                                                    }
+                                                                } catch (e: Exception) {
+                                                                    e.printStackTrace()
                                                                 }
-                                                            } catch (e: Exception) {
-                                                                e.printStackTrace()
+                                                            }else if(listModel.ResponseData.paymentType == "1"){
+                                                                // IAP
+                                                                try {
+                                                                    if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                                    }
+                                                                } catch (e: Exception) {
+                                                                    e.printStackTrace()
+                                                                }
                                                             }
                                                             editor.apply()
                                                             val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -1946,8 +1967,8 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("clinikoId", "")
                                                             var isProf = false
                                                             var isAss = false
-                                                            isProf = if (listModel.ResponseData.isProfileCompleted.equals("1")) true else false
-                                                            isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1")) true else false
+                                                            isProf = listModel.ResponseData.isProfileCompleted.equals("1")
+                                                            isAss = listModel.ResponseData.isAssessmentCompleted.equals("1")
                                                             p1.putValue("isProfileCompleted", isProf)
                                                             p1.putValue("isAssessmentCompleted", isAss)
                                                             p1.putValue("WellnessScore", listModel.ResponseData.indexScore)

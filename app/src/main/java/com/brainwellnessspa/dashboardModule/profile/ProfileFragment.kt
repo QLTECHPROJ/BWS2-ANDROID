@@ -589,19 +589,19 @@ Tap Setting > permission, and turn "Files and media" on.""")
             APINewClient.client.getCoUserDetails(coUserId).enqueue(object : Callback<AuthOtpModel?> {
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
                     try {
-                        val viewModel = response.body()
-                        if (viewModel != null) {
+                        val listModel = response.body()
+                        if (listModel != null) {
                             when {
-                                viewModel.ResponseCode == ctx.getString(R.string.ResponseCodesuccess) -> {
+                                listModel.ResponseCode == ctx.getString(R.string.ResponseCodesuccess) -> {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                    if (viewModel.ResponseData.Name == "" || viewModel.ResponseData.Name == " ") {
+                                    if (listModel.ResponseData.Name == "" || listModel.ResponseData.Name == " ") {
                                         binding.tvName.setText(R.string.Guest)
                                     } else {
-                                        binding.tvName.text = viewModel.ResponseData.Name
+                                        binding.tvName.text = listModel.ResponseData.Name
                                     }
 
-                                    IsLock = viewModel.ResponseData.Islock
-                                    if (viewModel.ResponseData.isMainAccount == "1") {
+                                    IsLock = listModel.ResponseData.Islock
+                                    if (listModel.ResponseData.isMainAccount == "1") {
                                         binding.llManageUser.visibility = View.VISIBLE
                                         binding.llBillingOrder.visibility = View.VISIBLE
                                         binding.llPlan.visibility = View.GONE
@@ -616,13 +616,13 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     }
 
                                     val name: String
-                                    profilePicPath = viewModel.ResponseData.Image
+                                    profilePicPath = listModel.ResponseData.Image
                                     if (profilePicPath.equals("")) {
                                         binding.civProfile.visibility = View.GONE
-                                        name = if (viewModel.ResponseData.Name == "") {
+                                        name = if (listModel.ResponseData.Name == "") {
                                             "Guest"
                                         } else {
-                                            viewModel.ResponseData.Name
+                                            listModel.ResponseData.Name
                                         }
                                         val letter = name.substring(0, 1)
                                         binding.rlLetter.visibility = View.VISIBLE
@@ -636,37 +636,58 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared?.edit()
                                     if (editor != null) {
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, viewModel.ResponseData.CountryCode)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, viewModel.ResponseData.Image)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, viewModel.ResponseData.isProfileCompleted)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, viewModel.ResponseData.IsInCouser)
-                                        try {
-                                            if (viewModel.ResponseData.planDetails.isNotEmpty()) {
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
-                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                        if(listModel.ResponseData.paymentType == "0"){
+                                            // Stripe
+                                            try {
+                                                if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
                                             }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
+                                        }else if(listModel.ResponseData.paymentType == "1"){
+                                            // IAP
+                                            try {
+                                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                         editor.apply()
                                     }
@@ -674,11 +695,11 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                     val sharded = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                                     val edited = sharded?.edit()
                                     if (edited != null) {
-                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
+                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
                                         val selectedCategoriesTitle = arrayListOf<String>()
                                         val selectedCategoriesName = arrayListOf<String>()
                                         val gson = Gson()
-                                        for (i in viewModel.ResponseData.AreaOfFocus) {
+                                        for (i in listModel.ResponseData.AreaOfFocus) {
                                             selectedCategoriesTitle.add(i.MainCat)
                                             selectedCategoriesName.add(i.RecommendedCat)
                                         }
@@ -687,8 +708,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         edited.apply()
                                     }
                                 }
-                                viewModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted)) -> {
-                                    callDelete403(act, viewModel.ResponseMessage)
+                                listModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted)) -> {
+                                    callDelete403(act, listModel.ResponseMessage)
                                 }
                                 else -> {
                                     hideProgressBar(binding.progressBar, binding.progressBarHolder, act)

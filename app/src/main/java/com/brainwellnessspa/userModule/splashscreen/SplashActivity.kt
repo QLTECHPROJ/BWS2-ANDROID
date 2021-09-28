@@ -19,9 +19,10 @@ import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivi
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
+import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -64,6 +65,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
     var isMainAccount: String? = ""
     var isSetLoginPin: String? = ""
     var planId: String? = ""
+    var paymentType: String? = ""
     var flag: String? = null
     var id:String? = null
     var title:String? = null
@@ -238,62 +240,87 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
-                        val authOtpModel: AuthOtpModel = response.body()!!
-                        if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess))) {
+                        val listModel: AuthOtpModel = response.body()!!
+                        if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess))) {
 
-                            IsLock = authOtpModel.ResponseData.Islock
-                            isProfileCompleted = authOtpModel.ResponseData.isProfileCompleted
-                            isAssessmentCompleted = authOtpModel.ResponseData.isAssessmentCompleted
-                            indexScore = authOtpModel.ResponseData.indexScore
-                            avgSleepTime = authOtpModel.ResponseData.AvgSleepTime
-                            isPinSet = authOtpModel.ResponseData.isPinSet
-                            coUserCount = authOtpModel.ResponseData.CoUserCount
-                            directLogin = authOtpModel.ResponseData.directLogin
-                            isMainAccount = authOtpModel.ResponseData.isMainAccount
+                            IsLock = listModel.ResponseData.Islock
+                            isProfileCompleted = listModel.ResponseData.isProfileCompleted
+                            isAssessmentCompleted = listModel.ResponseData.isAssessmentCompleted
+                            indexScore = listModel.ResponseData.indexScore
+                            avgSleepTime = listModel.ResponseData.AvgSleepTime
+                            isPinSet = listModel.ResponseData.isPinSet
+                            coUserCount = listModel.ResponseData.CoUserCount
+                            directLogin = listModel.ResponseData.directLogin
+                            isMainAccount = listModel.ResponseData.isMainAccount
                             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
-                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, authOtpModel.ResponseData.MainAccountID)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, authOtpModel.ResponseData.UserId)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, authOtpModel.ResponseData.Email)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, authOtpModel.ResponseData.Name)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, authOtpModel.ResponseData.Mobile)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, authOtpModel.ResponseData.CountryCode)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, authOtpModel.ResponseData.indexScore)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, authOtpModel.ResponseData.ScoreLevel)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, authOtpModel.ResponseData.Image)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, authOtpModel.ResponseData.isProfileCompleted)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, authOtpModel.ResponseData.isAssessmentCompleted)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, authOtpModel.ResponseData.directLogin)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, authOtpModel.ResponseData.isPinSet)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, authOtpModel.ResponseData.isEmailVerified)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, authOtpModel.ResponseData.isMainAccount)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, authOtpModel.ResponseData.CoUserCount)
-                            editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, authOtpModel.ResponseData.IsInCouser)
-                            try {
-                                if (authOtpModel.ResponseData.planDetails.isNotEmpty()) {
-                                    planId = authOtpModel.ResponseData.planDetails[0].PlanId
-                                    planContent = authOtpModel.ResponseData.planDetails[0].PlanContent
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, authOtpModel.ResponseData.planDetails[0].PlanId)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, authOtpModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, authOtpModel.ResponseData.planDetails[0].PlanExpireDate)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, authOtpModel.ResponseData.planDetails[0].TransactionId)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, authOtpModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, authOtpModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, authOtpModel.ResponseData.planDetails[0].PlanStatus)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, authOtpModel.ResponseData.planDetails[0].PlanContent)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
+                            paymentType = listModel.ResponseData.paymentType
+                            if(listModel.ResponseData.paymentType == "0"){
+                                // Stripe
+                                try {
+                                    if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                        planId = listModel.ResponseData.oldPaymentDetails[0].PlanId
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
                                 }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+                            }else if(listModel.ResponseData.paymentType == "1"){
+                                // IAP
+                                try {
+                                    if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                        planId = listModel.ResponseData.planDetails[0].PlanId
+                                        planContent = listModel.ResponseData.planDetails[0].PlanContent
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
+
                             editor.apply()
                             val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             val edited = shred.edit()
-                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, authOtpModel.ResponseData.AvgSleepTime)
+                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
                             val selectedCategoriesTitle = arrayListOf<String>()
                             val selectedCategoriesName = arrayListOf<String>()
                             val gson = Gson()
-                            for (i in authOtpModel.ResponseData.AreaOfFocus) {
+                            for (i in listModel.ResponseData.AreaOfFocus) {
                                 selectedCategoriesTitle.add(i.MainCat)
                                 selectedCategoriesName.add(i.RecommendedCat)
                             }
@@ -301,8 +328,8 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                             edited.apply()
                             checkAppVersion()
-                        } else if (authOtpModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
-                            callDelete403(activity, authOtpModel.ResponseMessage)
+                        } else if (listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
+                            callDelete403(activity, listModel.ResponseMessage)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -387,10 +414,19 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
-                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        startActivity(intent)
-                        finish()
+                        if(paymentType == "0") {
+                            // stripe
+                            val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            startActivity(intent)
+                            finish()
+                        }else if(paymentType == "1") {
+                         //IAP
+                            val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            startActivity(intent)
+                            finish()
+                        }
                     } else if (isPinSet.equals("1")) {
                         if (isAssessmentCompleted.equals("0")) {
                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
@@ -400,10 +436,17 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                             startActivity(intent)
                             finish()
                         } else if (planId.equals("")) {
-                            val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            startActivity(intent)
-                            finish()
+                            if(paymentType == "0") {
+                                val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                startActivity(intent)
+                                finish()
+                            }else if(paymentType == "1") {
+                                val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                startActivity(intent)
+                                finish()
+                            }
                         } else if (isProfileCompleted.equals("0")) {
                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -426,10 +469,17 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
+                                        if(paymentType == "0") {
+                                            val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            startActivity(intent)
+                                            finish()
+                                        }else if(paymentType == "1") {
+                                            val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            startActivity(intent)
+                                            finish()
+                                        }
                                     }
                                     isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
@@ -468,10 +518,17 @@ class SplashActivity : AppCompatActivity(), CTInboxListener,CTPushNotificationLi
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
+                                        if(paymentType == "0") {
+                                            val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            startActivity(intent)
+                                            finish()
+                                        }else if(paymentType == "1") {
+                                            val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                            startActivity(intent)
+                                            finish()
+                                        }
                                     }
                                     isProfileCompleted.equals("0") -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)

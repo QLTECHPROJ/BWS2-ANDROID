@@ -7,49 +7,39 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-open class MembershipPlanListModel protected constructor(`in`: Parcel) : Parcelable {
+open class MembershipPlanListModel {
     @SerializedName("ResponseData")
     @Expose
-    var responseData: ResponseData?
+    var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose
-    var responseCode: String?
+    var responseCode: String? = null
 
     @SerializedName("ResponseMessage")
     @Expose
-    var responseMessage: String?
+    var responseMessage: String? = null
 
     @SerializedName("ResponseStatus")
     @Expose
-    var responseStatus: String?
-    override fun describeContents(): Int {
-        return 0
-    }
+    var responseStatus: String? = null
 
-    override fun writeToParcel(parcel: Parcel, i: Int) {
-        parcel.writeParcelable(responseData, i)
-        parcel.writeString(responseCode)
-        parcel.writeString(responseMessage)
-        parcel.writeString(responseStatus)
-    }
-
-    open class ResponseData protected constructor(`in`: Parcel) : Parcelable {
+    open class ResponseData {
         @SerializedName("Image")
         @Expose
-        var image: String? = `in`.readString()
+        var image: String? = ""
 
         @SerializedName("Title")
         @Expose
-        var title: String? = `in`.readString()
+        var title: String? = ""
 
         @SerializedName("Desc")
         @Expose
-        var desc: String? = `in`.readString()
+        var desc: String? = ""
 
         @SerializedName("TrialPeriod")
         @Expose
-        var trialPeriod: String? = `in`.readString()
+        var trialPeriod: String? = ""
 
         @SerializedName("Plan")
         @Expose
@@ -58,68 +48,44 @@ open class MembershipPlanListModel protected constructor(`in`: Parcel) : Parcela
         @SerializedName("AudioFiles")
         @Expose
         var audioFiles: ArrayList<AudioFile>? = null
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        override fun writeToParcel(parcel: Parcel, i: Int) {
-            parcel.writeString(image)
-            parcel.writeString(title)
-            parcel.writeString(desc)
-            parcel.writeString(trialPeriod)
-        }
-
-        companion object {
-            @JvmField val CREATOR: Creator<ResponseData?> = object : Creator<ResponseData?> {
-                override fun createFromParcel(`in`: Parcel): ResponseData {
-                    return ResponseData(`in`)
-                }
-
-                override fun newArray(size: Int): Array<ResponseData?> {
-                    return arrayOfNulls(size)
-                }
-            }
-        }
-
     }
 
-    open class Plan protected constructor(`in`: Parcel) : Parcelable {
+    open class Plan{
         @SerializedName("PlanPosition")
         @Expose
-        var planPosition: String? = `in`.readString()
+        var planPosition: String? = ""
 
         @SerializedName("PlanID")
         @Expose
-        var planID: String? = `in`.readString()
+        var planID: String? = ""
 
         @SerializedName("PlanAmount")
         @Expose
-        var planAmount: String? = `in`.readString()
+        var planAmount: String? = ""
 
         @SerializedName("PlanCurrency")
         @Expose
-        var planCurrency: String? = `in`.readString()
+        var planCurrency: String? = ""
 
         @SerializedName("PlanInterval")
         @Expose
-        var planInterval: String? = `in`.readString()
+        var planInterval: String? = ""
 
         @SerializedName("PlanImage")
         @Expose
-        var planImage: String? = `in`.readString()
+        var planImage: String? = ""
 
         @SerializedName("PlanTenure")
         @Expose
-        var planTenure: String? = `in`.readString()
+        var planTenure: String? = ""
 
         @SerializedName("PlanNextRenewal")
         @Expose
-        var planNextRenewal: String? = `in`.readString()
+        var planNextRenewal: String? = ""
 
         @SerializedName("SubName")
         @Expose
-        var subName: String? = `in`.readString()
+        var subName: String? = ""
 
         @SerializedName("PlanFeatures")
         @Expose
@@ -127,42 +93,11 @@ open class MembershipPlanListModel protected constructor(`in`: Parcel) : Parcela
 
         @SerializedName("RecommendedFlag")
         @Expose
-        var recommendedFlag: String? = `in`.readString()
+        var recommendedFlag: String? = ""
 
         @SerializedName("PlanFlag")
         @Expose
-        var planFlag: String? = `in`.readString()
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        override fun writeToParcel(parcel: Parcel, i: Int) {
-            parcel.writeString(planPosition)
-            parcel.writeString(planID)
-            parcel.writeString(planAmount)
-            parcel.writeString(planCurrency)
-            parcel.writeString(planInterval)
-            parcel.writeString(planImage)
-            parcel.writeString(planTenure)
-            parcel.writeString(planNextRenewal)
-            parcel.writeString(subName)
-            parcel.writeString(recommendedFlag)
-            parcel.writeString(planFlag)
-        }
-
-        companion object {
-            @JvmField val CREATOR: Creator<Plan?> = object : Creator<Plan?> {
-                override fun createFromParcel(`in`: Parcel): Plan {
-                    return Plan(`in`)
-                }
-
-                override fun newArray(size: Int): Array<Plan?> {
-                    return arrayOfNulls(size)
-                }
-            }
-        }
-
+        var planFlag: String? = ""
     }
 
     inner class PlanFeatures {
@@ -184,23 +119,5 @@ open class MembershipPlanListModel protected constructor(`in`: Parcel) : Parcela
         @Expose
         var imageFile: String? = null
     }
-
-    companion object {
-        @JvmField val CREATOR: Creator<MembershipPlanListModel?> = object : Creator<MembershipPlanListModel?> {
-            override fun createFromParcel(`in`: Parcel): MembershipPlanListModel {
-                return MembershipPlanListModel(`in`)
-            }
-
-            override fun newArray(size: Int): Array<MembershipPlanListModel?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    init {
-        responseData = `in`.readParcelable(ResponseData::class.java.classLoader)
-        responseCode = `in`.readString()
-        responseMessage = `in`.readString()
-        responseStatus = `in`.readString()
-    }
+ 
 }

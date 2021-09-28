@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -35,7 +34,6 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,7 +47,8 @@ class MembershipActivity : AppCompatActivity() {
     lateinit var ctx: Context
     var adapter: MembershipFaqAdapter? = null
     private val mLastClickTime: Long = 0
-    lateinit  var act: Activity
+    lateinit var i: Intent
+    lateinit var act: Activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership)
@@ -68,6 +67,8 @@ class MembershipActivity : AppCompatActivity() {
         binding.rvFaqList.layoutManager = serachList
         binding.rvFaqList.itemAnimator = DefaultItemAnimator()
         val p = Properties()
+        i = Intent(ctx, OrderSummaryActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         BWSApplication.addToSegment("Plan List Viewed", p, CONSTANTS.screen)
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -165,7 +166,7 @@ class MembershipActivity : AppCompatActivity() {
                                 binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
                                 binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner)
-                                membershipPlanAdapter = MembershipPlanAdapter(membershipPlanListModel.responseData!!.plan!!, ctx, binding.btnFreeJoin, membershipPlanListModel.responseData!!.trialPeriod!!, act)
+                                membershipPlanAdapter = MembershipPlanAdapter(membershipPlanListModel.responseData!!.plan!!, ctx, binding.btnFreeJoin, membershipPlanListModel.responseData!!.trialPeriod!!, act, i)
                                 binding.rvPlanList.adapter = membershipPlanAdapter
                                 subscriptionAdapter = SubscriptionAdapter(membershipPlanListModel.responseData!!.audioFiles!!, ctx)
                                 binding.rvList.adapter = subscriptionAdapter

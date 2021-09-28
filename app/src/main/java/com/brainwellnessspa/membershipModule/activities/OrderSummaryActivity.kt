@@ -23,6 +23,7 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,6 +36,7 @@ class OrderSummaryActivity : AppCompatActivity() {
     var comeFrom: String? = ""
     var UserId: String? = null
 
+    val gson = Gson()
     //    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
     var ComesTrue: String? = null
@@ -60,9 +62,13 @@ class OrderSummaryActivity : AppCompatActivity() {
             position = intent.getIntExtra("position", 0)
             if (intent.hasExtra("comeFrom")) {
                 comeFrom = intent.getStringExtra("comeFrom")
-                listModelList2 = intent.getParcelableArrayListExtra("PlanData")
+                val json4 = intent.getStringExtra("PlanData")
+                val type1 = object : TypeToken<ArrayList<PlanListBillingModel.ResponseData.Plan>?>() {}.type
+                listModelList2 = gson.fromJson(json4, type1)
             } else {
-                listModelList = intent.getParcelableArrayListExtra<MembershipPlanListModel.Plan>("PlanData")
+                val json4 = intent.getStringExtra("PlanData")
+                val type1 = object : TypeToken<ArrayList<MembershipPlanListModel.Plan>?>() {}.type
+                listModelList = gson.fromJson(json4, type1)
             }
         }
         if (intent != null) {
@@ -130,54 +136,59 @@ class OrderSummaryActivity : AppCompatActivity() {
         binding.btnApply.setOnClickListener { v -> prepareCheckReferCode(binding.edtCode.text.toString()) }
         binding.btnCheckout.setOnClickListener { view ->
             try {
-                if (binding.edtCode.text.toString().equals("")) {
+                if (binding.edtCode.text.toString() == "") {
                     Promocode = ""
                     val p1 = Properties()
-                    if (!comeFrom.equals("", ignoreCase = true)) {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                            return@setOnClickListener
-                        }
-                        mLastClickTime = SystemClock.elapsedRealtime()
-                        val gson: Gson
-                        val gsonBuilder = GsonBuilder()
-                        gson = gsonBuilder.create()
-                        p1.putValue("plan", gson.toJson(listModelList2))
-                        p1.putValue("planStartDt ", "")
-                        p1.putValue("planExpiryDt", listModelList2!![position].planNextRenewal)
-                        p1.putValue("planRenewalDt", listModelList2!![position].planNextRenewal)
-                        p1.putValue("planAmount", listModelList2!![position].planAmount)
-                        val i = Intent(ctx, PaymentActivity::class.java)
-                        i.putExtra("ComesTrue", ComesTrue)
-                        i.putExtra("comeFrom", "membership")
-                        i.putParcelableArrayListExtra("PlanData", listModelList2)
-                        i.putExtra("TrialPeriod", "")
-                        i.putExtra("position", position)
-                        startActivity(i)
-                        finish()
-                    } else {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                            return@setOnClickListener
-                        }
-                        mLastClickTime = SystemClock.elapsedRealtime()
-                        val gsonBuilder = GsonBuilder()
-                        val gson: Gson
-                        gson = gsonBuilder.create()
-                        p1.putValue("plan", gson.toJson(listModelList))
-                        p1.putValue("planStartDt ", "")
-                        p1.putValue("planExpiryDt", listModelList!![position].planNextRenewal)
-                        p1.putValue("planRenewalDt", listModelList!![position].planNextRenewal)
-                        p1.putValue("planAmount", listModelList!![position].planAmount)
-                        val i = Intent(ctx, SignUpActivity::class.java)
-                        i.putExtra("Name", "")
-                        i.putExtra("Code", "")
-                        i.putExtra("MobileNo", "")
-                        i.putParcelableArrayListExtra("PlanData", listModelList)
-                        i.putExtra("TrialPeriod", TrialPeriod)
-                        i.putExtra("position", position)
-                        i.putExtra("Promocode", Promocode)
-                        startActivity(i)
-                        finish()
+
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return@setOnClickListener
                     }
+                    mLastClickTime = SystemClock.elapsedRealtime()
+                    val gson: Gson
+                    val gsonBuilder = GsonBuilder()
+                    gson = gsonBuilder.create()
+                    p1.putValue("plan", gson.toJson(listModelList2))
+                    p1.putValue("planStartDt ", "")
+                    p1.putValue("planExpiryDt", listModelList2!![position].planNextRenewal)
+                    p1.putValue("planRenewalDt", listModelList2!![position].planNextRenewal)
+                    p1.putValue("planAmount", listModelList2!![position].planAmount)
+                    val i = Intent(ctx, PaymentActivity::class.java)
+                    i.putExtra("ComesTrue", ComesTrue)
+                    i.putExtra("comeFrom", "membership")
+                    if (!comeFrom.equals("", ignoreCase = true)) {
+                        i.putExtra("PlanData", gson.toJson(listModelList2))
+                    } else {
+                        i.putExtra("PlanData", gson.toJson(listModelList))
+                    }
+
+                    i.putExtra("TrialPeriod", "")
+                    i.putExtra("position", position)
+                    startActivity(i)
+                    finish()
+                    //                    } else {
+                    //                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    //                            return@setOnClickListener
+                    //                        }
+                    //                        mLastClickTime = SystemClock.elapsedRealtime()
+                    //                        val gsonBuilder = GsonBuilder()
+                    //                        val gson: Gson
+                    //                        gson = gsonBuilder.create()
+                    //                        p1.putValue("plan", gson.toJson(listModelList))
+                    //                        p1.putValue("planStartDt ", "")
+                    //                        p1.putValue("planExpiryDt", listModelList!![position].planNextRenewal)
+                    //                        p1.putValue("planRenewalDt", listModelList!![position].planNextRenewal)
+                    //                        p1.putValue("planAmount", listModelList!![position].planAmount)
+                    //                        val i = Intent(ctx, SignUpActivity::class.java)
+                    //                        i.putExtra("Name", "")
+                    //                        i.putExtra("Code", "")
+                    //                        i.putExtra("MobileNo", "")
+                    //                        i.putExtra("PlanData", gson.toJson(listModelList))
+                    //                        i.putExtra("TrialPeriod", TrialPeriod)
+                    //                        i.putExtra("position", position)
+                    //                        i.putExtra("Promocode", Promocode)
+                    //                        startActivity(i)
+                    //                        finish()
+                    //                    }
                     BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track)
                 } else {
                     Promocode = binding.edtCode.text.toString()
@@ -204,12 +215,16 @@ class OrderSummaryActivity : AppCompatActivity() {
                                             val i = Intent(ctx, PaymentActivity::class.java)
                                             i.putExtra("ComesTrue", ComesTrue)
                                             i.putExtra("comeFrom", "membership")
-                                            i.putParcelableArrayListExtra("PlanData", listModelList2)
+                                            if (!comeFrom.equals("", ignoreCase = true)) {
+                                                i.putExtra("PlanData", gson.toJson(listModelList2))
+                                            } else {
+                                                i.putExtra("PlanData", gson.toJson(listModelList))
+                                            }
                                             i.putExtra("TrialPeriod", "")
                                             i.putExtra("position", position)
                                             startActivity(i)
                                             finish()
-                                        } else {
+                                        } /*else {
                                             val gson: Gson
                                             val gsonBuilder = GsonBuilder()
                                             gson = gsonBuilder.create()
@@ -228,7 +243,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                                             i.putExtra("Promocode", Promocode)
                                             startActivity(i)
                                             finish()
-                                        }
+                                        }*/
                                         BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track)
                                     } else {
                                         BWSApplication.showToast(listModel.responseMessage, activity)

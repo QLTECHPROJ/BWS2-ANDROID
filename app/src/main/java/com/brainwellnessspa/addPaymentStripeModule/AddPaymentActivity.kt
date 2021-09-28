@@ -33,6 +33,8 @@ import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import com.stripe.android.Stripe
 import com.stripe.android.TokenCallback
@@ -49,6 +51,7 @@ class AddPaymentActivity : AppCompatActivity() {
     lateinit var activity: Activity
     var d: Dialog? = null
     var a = 0
+    val gson = Gson()
     var TrialPeriod: String? = null
     var comeFrom: String? = ""
     var ComesTrue: String? = null
@@ -79,9 +82,14 @@ class AddPaymentActivity : AppCompatActivity() {
             position = intent.getIntExtra("position", 0)
             if (intent.hasExtra("comeFrom")) {
                 comeFrom = intent.getStringExtra("comeFrom")
-                listModelList2 = intent.getParcelableArrayListExtra("PlanData")
+                comeFrom = intent.getStringExtra("comeFrom")
+                val json4 =  intent.getStringExtra("PlanData")
+                val type1 = object : TypeToken<ArrayList<PlanListBillingModel.ResponseData.Plan>?>() {}.type
+                listModelList2 = gson.fromJson(json4, type1)
             } else {
-                listModelList = intent.getParcelableArrayListExtra("PlanData")
+                val json4 =  intent.getStringExtra("PlanData")
+                val type1 = object : TypeToken<ArrayList<MembershipPlanListModel.Plan>?>() {}.type
+                listModelList = gson.fromJson(json4, type1)
             }
         }
         if (intent != null) {
@@ -95,7 +103,11 @@ class AddPaymentActivity : AppCompatActivity() {
                 val i = Intent(context, PaymentActivity::class.java)
                 i.putExtra("ComesTrue", ComesTrue)
                 i.putExtra("comeFrom", "membership")
-                i.putParcelableArrayListExtra("PlanData", listModelList2)
+                if (intent.hasExtra("comeFrom")) {
+                    i.putExtra("PlanData", gson.toJson(listModelList2))
+                }else{
+                    i.putExtra("PlanData", gson.toJson(listModelList))
+                }
                 i.putExtra("TrialPeriod", "")
                 i.putExtra("position", position)
                 startActivity(i)
@@ -284,7 +296,11 @@ class AddPaymentActivity : AppCompatActivity() {
             val i = Intent(context, PaymentActivity::class.java)
             i.putExtra("ComesTrue", ComesTrue)
             i.putExtra("comeFrom", "membership")
-            i.putParcelableArrayListExtra("PlanData", listModelList2)
+            if (intent.hasExtra("comeFrom")) {
+                i.putExtra("PlanData", gson.toJson(listModelList2))
+            }else{
+                i.putExtra("PlanData", gson.toJson(listModelList))
+            }
             i.putExtra("TrialPeriod", "")
             i.putExtra("position", position)
             startActivity(i)

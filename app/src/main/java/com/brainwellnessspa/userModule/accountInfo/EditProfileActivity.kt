@@ -309,19 +309,19 @@ class EditProfileActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
                     try {
-                        val viewModel = response.body()
-                        if (viewModel != null) {
+                        val listModel = response.body()
+                        if (listModel != null) {
                             when {
-                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
+                                listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                                    if (viewModel.ResponseData.Name.equals("", ignoreCase = true) || viewModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
+                                    if (listModel.ResponseData.Name.equals("", ignoreCase = true) || listModel.ResponseData.Name.equals(" ", ignoreCase = true)) {
                                         binding.etUser.setText(R.string.Guest)
                                     } else {
-                                        binding.etUser.setText(viewModel.ResponseData.Name)
+                                        binding.etUser.setText(listModel.ResponseData.Name)
                                     }
-                                    userName = viewModel.ResponseData.Name
-                                    userCalendar = viewModel.ResponseData.DOB
-                                    copyUserCalendar = viewModel.ResponseData.DOB
+                                    userName = listModel.ResponseData.Name
+                                    userCalendar = listModel.ResponseData.DOB
+                                    copyUserCalendar = listModel.ResponseData.DOB
                                     Log.e("old Date", userCalendar.toString())
 
                                     binding.etCalendar.setText(userCalendar.toString())
@@ -331,15 +331,15 @@ class EditProfileActivity : AppCompatActivity() {
                                         userCalendar = formatter.format(parser.parse(userCalendar))
                                     }
 
-                                    if (viewModel.ResponseData.isEmailVerified.equals("1")) {
+                                    if (listModel.ResponseData.isEmailVerified.equals("1")) {
                                         binding.ivCheckEmail.visibility = View.VISIBLE
                                     } else {
                                         binding.ivCheckEmail.visibility = View.GONE
                                     }
 
-                                    userMobileNumber = viewModel.ResponseData.Mobile
-                                    userEmail = viewModel.ResponseData.Email
-                                    if (viewModel.ResponseData.Mobile == "") {
+                                    userMobileNumber = listModel.ResponseData.Mobile
+                                    userEmail = listModel.ResponseData.Email
+                                    if (listModel.ResponseData.Mobile == "") {
                                         binding.etMobileNumber.isEnabled = true
                                         binding.etMobileNumber.isClickable = true
                                     } else {
@@ -347,43 +347,64 @@ class EditProfileActivity : AppCompatActivity() {
                                         binding.etMobileNumber.isClickable = false
                                         binding.etMobileNumber.setTextColor(ContextCompat.getColor(ctx, R.color.light_gray))
                                     }
-                                    binding.etMobileNumber.setText(viewModel.ResponseData.Mobile)
-                                    binding.etEmail.setText(viewModel.ResponseData.Email)
+                                    binding.etMobileNumber.setText(listModel.ResponseData.Mobile)
+                                    binding.etEmail.setText(listModel.ResponseData.Email)
 
-                                    IsLock = viewModel.ResponseData.Islock
+                                    IsLock = listModel.ResponseData.Islock
                                     val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                     val editor = shared.edit()
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, viewModel.ResponseData.MainAccountID)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_UserId, viewModel.ResponseData.UserId)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, viewModel.ResponseData.Email)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, viewModel.ResponseData.Name)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, viewModel.ResponseData.Mobile)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, viewModel.ResponseData.CountryCode)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, viewModel.ResponseData.AvgSleepTime)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, viewModel.ResponseData.indexScore)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, viewModel.ResponseData.ScoreLevel)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, viewModel.ResponseData.Image)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, viewModel.ResponseData.isProfileCompleted)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, viewModel.ResponseData.isAssessmentCompleted)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, viewModel.ResponseData.directLogin)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, viewModel.ResponseData.isPinSet)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, viewModel.ResponseData.isEmailVerified)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, viewModel.ResponseData.isMainAccount)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, viewModel.ResponseData.CoUserCount)
-                                    editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, viewModel.ResponseData.IsInCouser)
-                                    try {
-                                        if (viewModel.ResponseData.planDetails.isNotEmpty()) {
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, viewModel.ResponseData.planDetails[0].PlanId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, viewModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, viewModel.ResponseData.planDetails[0].PlanExpireDate)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, viewModel.ResponseData.planDetails[0].TransactionId)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, viewModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, viewModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, viewModel.ResponseData.planDetails[0].PlanStatus)
-                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, viewModel.ResponseData.planDetails[0].PlanContent)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                    if(listModel.ResponseData.paymentType == "0"){
+                                        // Stripe
+                                        try {
+                                            if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
                                         }
-                                    } catch (e:Exception) {
-                                        e.printStackTrace()
+                                    }else if(listModel.ResponseData.paymentType == "1"){
+                                        // IAP
+                                        try {
+                                            if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
                                     }
                                     editor.apply()
                                     val p = Properties()
@@ -393,8 +414,8 @@ class EditProfileActivity : AppCompatActivity() {
                                     p.putValue("email", userEmail)
                                     BWSApplication.addToSegment("Edit Profile Screen Viewed", p, CONSTANTS.screen)
                                 }
-                                viewModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                    BWSApplication.callDelete403(activity, viewModel.ResponseMessage)
+                                listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                                    BWSApplication.callDelete403(activity, listModel.ResponseMessage)
                                 }
                                 else -> {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
