@@ -107,11 +107,6 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         if (isFirst.equals("1")) {
             showToast("You're in, $userName!! \nLet's explore your path to inner peace!", act)
         }
-    }
-
-    /* on Activity Result method use for battery optimization permission allow or deny*/
-
-    override fun onResume() {
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
         if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
             uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -149,6 +144,12 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
                 return null //To display a dialog simply return a custom view or just null to ignore it
             }
         }).setNotificationCancelable(false).build()
+    }
+
+    /* on Activity Result method use for battery optimization permission allow or deny*/
+
+    override fun onResume() {
+
         super.onResume()
     }
 

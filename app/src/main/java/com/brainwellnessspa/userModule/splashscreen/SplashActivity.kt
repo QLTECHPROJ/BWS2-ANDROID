@@ -108,7 +108,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
+            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_HIGH, true)
         }
         clevertapDefaultInstance?.apply {
             ctNotificationInboxListener = this@SplashActivity

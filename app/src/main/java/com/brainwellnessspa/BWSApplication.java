@@ -1794,13 +1794,11 @@ public class BWSApplication extends Application {
             xAxisValues.add("May 21");
             xAxisValues.add("Jun 21");
             xAxisValues.add("Jul 21");
-            xAxisValues.add("Aug 21");
-            xAxisValues.add("Sep 21");*/
-//            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-//                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
-//            }
-            xAxisValues.add(indexData.getPastIndexScore().get(0).getMonthName());
-            xAxisValues.add(indexData.getPastIndexScore().get(0).getMonthName());
+            xAxisValues.add("Aug 21");*/
+            xAxisValues.add("");
+            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+            }
             xAxis = chart.getXAxis();
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
             xAxis.setValueFormatter(new ValueFormatter() {
@@ -1854,7 +1852,7 @@ public class BWSApplication extends Application {
             //xAxis.addLimitLine(llXAxis);
         }
         // add data
-        setData(xAxisValues.size(), chart, ctx, indexData.getPastIndexScore());
+        setData(indexData.getPastIndexScore().size(), chart, ctx, indexData.getPastIndexScore());
         Legend l = chart.getLegend();
         l.setForm(LegendForm.CIRCLE);
         l.setFormSize(1f);
@@ -1873,14 +1871,13 @@ public class BWSApplication extends Application {
     private static void setData(int count, LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.PastIndexScore> pastIndexScore) {
 
         ArrayList<Entry> values = new ArrayList<>();
-        float val = Float.parseFloat(pastIndexScore.get(0).getIndexScore());
+        float val = Float.parseFloat("0");
         values.add(new Entry(0, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
-        val = Float.parseFloat(pastIndexScore.get(0).getIndexScore());
-        values.add(new Entry(1, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
-//        for (int i = 0; i < count; i++) {
 
-
-//        }
+        for (int i = 0; i < count; i++) {
+            val = Float.parseFloat(pastIndexScore.get(i).getIndexScore());
+            values.add(new Entry(i+1, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+        }
 
         LineDataSet set1;
 
