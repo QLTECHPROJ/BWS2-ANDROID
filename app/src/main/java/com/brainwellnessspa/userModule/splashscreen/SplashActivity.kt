@@ -17,13 +17,12 @@ import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
-import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -107,7 +106,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         }
         clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
-//        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
+        //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
         }
@@ -169,7 +168,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         timezoneName = simpleDateFormat1.timeZone.id
         val appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa"
         if (isNetworkConnected(this)) {
-            val listCall: Call<VersionModel> = APINewClient.client.getAppVersions(BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE, timezoneName)
+            val listCall: Call<VersionModel> = APINewClient.client.getAppVersions(coUserId,BuildConfig.VERSION_CODE.toString(), CONSTANTS.FLAG_ONE, timezoneName)
             listCall.enqueue(object : Callback<VersionModel> {
                 override fun onResponse(call: Call<VersionModel>, response: Response<VersionModel>) {
                     try {
@@ -266,7 +265,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                             editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                             paymentType = listModel.ResponseData.paymentType
-                            if(listModel.ResponseData.paymentType == "0"){
+                            if (listModel.ResponseData.paymentType == "0") {
                                 // Stripe
                                 try {
                                     if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
@@ -285,7 +284,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
-                            }else if(listModel.ResponseData.paymentType == "1"){
+                            } else if (listModel.ResponseData.paymentType == "1") {
                                 // IAP
                                 try {
                                     if (listModel.ResponseData.planDetails.isNotEmpty()) {
@@ -333,7 +332,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             })
         } else {
             setAnalytics(getString(R.string.segment_key_real_2_staging), context)
-//            askBattyPermission()
+            //            askBattyPermission()
             callDashboard()
             showToast(getString(R.string.no_server_found), activity)
         }
@@ -406,14 +405,14 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
-                        if(paymentType == "0") {
+                        if (paymentType == "0") {
                             // stripe
                             val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(intent)
                             finish()
-                        }else if(paymentType == "1") {
-                         //IAP
+                        } else if (paymentType == "1") {
+                            //IAP
                             val intent = Intent(applicationContext, EnhanceActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(intent)
@@ -428,12 +427,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                             startActivity(intent)
                             finish()
                         } else if (planId.equals("")) {
-                            if(paymentType == "0") {
+                            if (paymentType == "0") {
                                 val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(intent)
                                 finish()
-                            }else if(paymentType == "1") {
+                            } else if (paymentType == "1") {
                                 val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(intent)
@@ -461,12 +460,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        if(paymentType == "0") {
+                                        if (paymentType == "0") {
                                             val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
-                                        }else if(paymentType == "1") {
+                                        } else if (paymentType == "1") {
                                             val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
@@ -510,12 +509,12 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                         finish()
                                     }
                                     planId.equals("") -> {
-                                        if(paymentType == "0") {
+                                        if (paymentType == "0") {
                                             val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
-                                        }else if(paymentType == "1") {
+                                        } else if (paymentType == "1") {
                                             val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
@@ -728,8 +727,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
     override fun inboxDidInitialize() {
         var cleverTapAPI: CleverTapAPI? = null
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
-        val inboxTabs =
-                arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
+        val inboxTabs = arrayListOf("Promotions", "Offers", "Others") //Anything after the first 2 will be ignored
         CTInboxStyleConfig().apply {
             tabs = inboxTabs //Do not use this if you don't want to use tabs
             tabBackgroundColor = "#FF0000"
@@ -746,7 +744,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
 
         }
         //OR
-        cleverTapAPI!!.showAppInbox()//Opens Activity with default style config
+        cleverTapAPI!!.showAppInbox() //Opens Activity with default style config
     }
 
     override fun inboxMessagesDidUpdate() {

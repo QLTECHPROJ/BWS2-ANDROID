@@ -28,7 +28,7 @@ interface APINewInterface {
 
     @POST("appversion")
     @FormUrlEncoded
-    fun getAppVersions(@Field("Version") version: String?, @Field("AppType") appType: String?, @Field("localTimezone") localTimezone: String?): Call<VersionModel>
+    fun getAppVersions(@Field("UserId") userId: String?,@Field("Version") version: String?, @Field("AppType") appType: String?, @Field("localTimezone") localTimezone: String?): Call<VersionModel>
 
     @POST("loginsignup")
     @FormUrlEncoded
