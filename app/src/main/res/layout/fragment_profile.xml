@@ -562,7 +562,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="@string/support"
+                            android:text="@string/Support"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />

@@ -386,7 +386,6 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         intent.putExtra("IsFirst", "1")
                                         startActivity(intent)
                                         finish()
-
                                     }
                                 }
                             } else {

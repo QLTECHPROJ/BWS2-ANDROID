@@ -210,8 +210,6 @@ class HomeFragment : Fragment() {
             binding.llBottomView.isEnabled = true
         }
 
-
-
         /* User list layout click */
         binding.llBottomView.setOnClickListener {
             if (isNetworkConnected(ctx)) {
