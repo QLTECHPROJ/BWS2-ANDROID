@@ -194,7 +194,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 int Years = binding1.YearPicker.getValue();
 
                 Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
-                new Stripe().createToken(card, getString(R.string.stripe_live_key), new TokenCallback() {
+                new Stripe().createToken(card, getString(R.string.stripe_test_key), new TokenCallback() {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
