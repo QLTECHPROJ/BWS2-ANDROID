@@ -37,8 +37,8 @@ import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
-import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
-import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
+import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
+import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -52,7 +52,7 @@ import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.ForgoPinModel
 import com.brainwellnessspa.userModule.models.SegmentUserList
 import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
-
+import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -132,7 +132,6 @@ class HomeFragment : Fragment() {
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
-        sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
         var areaOfFocus: String? = ""
 
@@ -141,6 +140,7 @@ class HomeFragment : Fragment() {
         if (!json5.equals(gson.toString())) areaOfFocus = json5
         /* Get sleep time from share pref*/
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         if (!json.equals(gson.toString())) {
             val type1 = object : TypeToken<ArrayList<String?>?>() {}.type
@@ -209,7 +209,6 @@ class HomeFragment : Fragment() {
             binding.llBottomView.isClickable = true
             binding.llBottomView.isEnabled = true
         }
-
 
         /* User list layout click */
         binding.llBottomView.setOnClickListener {
@@ -411,16 +410,10 @@ class HomeFragment : Fragment() {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
                 if (isNetworkConnected(ctx)) {
-                    val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                    val edited = preferred.edit()
-                    edited.remove(CONSTANTS.selectedCategoriesTitle)
-                    edited.remove(CONSTANTS.selectedCategoriesName)
-                    edited.clear()
-                    edited.apply()
-                    val i = Intent(ctx, AreaOfFocusActivity::class.java)
-                    i.putExtra("BackClick", "1")
+                    val i = Intent(ctx, RecommendedCategoryActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    act.startActivity(i)
+                    i.putExtra("BackClick", "1")
+                    ctx.startActivity(i)
                 } else {
                     showToast(ctx.getString(R.string.no_server_found), act)
                 }
@@ -610,7 +603,6 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        ctx = requireActivity()
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener)
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener1)
         super.onDestroy()
@@ -686,7 +678,7 @@ class HomeFragment : Fragment() {
                                     editor.apply()
 
 
-                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0]
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
                                     binding.llIndicate.progress = response.indexScore!!.toInt()
@@ -836,7 +828,17 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                                callDelete403(act, listModel.responseMessage)
+                                deleteCall(ctx)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(ctx, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                act.startActivity(i)
+                                act.finish()
                             }
                             else -> {
                                 showToast(listModel.responseMessage, act)
@@ -878,7 +880,7 @@ class HomeFragment : Fragment() {
                                     editor.apply()
 
                                     IsLock = response.IsLock
-                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0]
+                                    binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
                                     binding.llIndicate.progress = response.indexScore!!.toInt()
@@ -1086,7 +1088,17 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             listModel.responseCode.equals(ctx.getString(R.string.ResponseCodeDeleted)) -> {
-                                callDelete403(act, listModel.responseMessage)
+                                deleteCall(ctx)
+                                showToast(listModel.responseMessage, act)
+                                val i = Intent(ctx, SignInActivity::class.java)
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.putExtra("mobileNo", "")
+                                i.putExtra("countryCode", "")
+                                i.putExtra("name", "")
+                                i.putExtra("email", "")
+                                i.putExtra("countryShortName", "")
+                                act.startActivity(i)
+                                act.finish()
                             }
                             else -> {
                                 showToast(listModel.responseMessage, act)
@@ -1806,40 +1818,19 @@ class HomeFragment : Fragment() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
-                                                            if(listModel.ResponseData.paymentType == "0"){
-                                                                // Stripe
-                                                                try {
-                                                                    if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
-                                                                    }
-                                                                } catch (e: Exception) {
-                                                                    e.printStackTrace()
+                                                            try {
+                                                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                                                                 }
-                                                            }else if(listModel.ResponseData.paymentType == "1"){
-                                                                // IAP
-                                                                try {
-                                                                    if (listModel.ResponseData.planDetails.isNotEmpty()) {
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
-                                                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
-                                                                    }
-                                                                } catch (e: Exception) {
-                                                                    e.printStackTrace()
-                                                                }
+                                                            } catch (e: Exception) {
+                                                                e.printStackTrace()
                                                             }
                                                             editor.apply()
                                                             val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -1966,8 +1957,8 @@ class HomeFragment : Fragment() {
                                                             p1.putValue("clinikoId", "")
                                                             var isProf = false
                                                             var isAss = false
-                                                            isProf = listModel.ResponseData.isProfileCompleted.equals("1")
-                                                            isAss = listModel.ResponseData.isAssessmentCompleted.equals("1")
+                                                            isProf = if (listModel.ResponseData.isProfileCompleted.equals("1")) true else false
+                                                            isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1")) true else false
                                                             p1.putValue("isProfileCompleted", isProf)
                                                             p1.putValue("isAssessmentCompleted", isAss)
                                                             p1.putValue("WellnessScore", listModel.ResponseData.indexScore)
@@ -1979,7 +1970,16 @@ class HomeFragment : Fragment() {
                                                         ctx.getString(R.string.ResponseCodeDeleted) -> {
                                                             txtError.visibility = View.GONE
                                                             txtError.text = ""
-                                                            callDelete403(act, listModel.ResponseMessage)
+                                                            deleteCall(ctx)
+                                                            val i = Intent(ctx, SignInActivity::class.java)
+                                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                            i.putExtra("mobileNo", "")
+                                                            i.putExtra("countryCode", "")
+                                                            i.putExtra("name", "")
+                                                            i.putExtra("email", "")
+                                                            i.putExtra("countryShortName", "")
+                                                            act.startActivity(i)
+                                                            act.finish()
                                                         }
                                                         ctx.getString(R.string.ResponseCodefail) -> {
                                                             txtError.visibility = View.VISIBLE

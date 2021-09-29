@@ -39,7 +39,7 @@
                         android:paddingTop="@dimen/_20sdp"
                         tools:ignore="RtlSymmetry">
 
-                        <com.brainwellnessspa.utility.RoundedImageView
+                        <com.brainwellnessspa.RoundedImageView
                             android:id="@+id/civProfile"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
@@ -118,7 +118,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:background="@drawable/account_gray_bg"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/llPlan"
@@ -128,7 +128,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -160,7 +160,7 @@
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
                     </LinearLayout>
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:id="@+id/llPlan1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:orientation="horizontal"
                         android:paddingVertical="@dimen/_16sdp"
                         android:weightSum="1"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         tools:ignore="UselessParent">
 
                         <ImageView
@@ -187,7 +187,7 @@
                             android:layout_weight="0.8"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="Stripe Billing &amp; Order"
+                            android:text="@string/upgrade_plan"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
@@ -199,7 +199,7 @@
                             android:layout_weight="0.1"
                             android:src="@drawable/ic_right_arrow_ac_icon"
                             android:contentDescription="@string/todo" />
-                    </LinearLayout>
+                    </LinearLayout>-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -536,6 +536,51 @@
                     android:background="@drawable/account_gray_bg"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:id="@+id/llSupport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_16sdp"
+                        android:visibility="visible"
+                        android:weightSum="1">
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_support_icon"
+                            android:contentDescription="@string/todo" />
+
+                        <TextView
+                            android:id="@+id/tvSupport"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_18sdp"
+                            android:layout_weight="0.8"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/Support"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="SpUsage" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/ic_right_arrow_ac_icon"
+                            android:contentDescription="@string/todo" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:visibility="visible"
+                        android:background="@color/dim_light_gray" />
 
                     <LinearLayout
                         android:id="@+id/llFAQ"
@@ -564,52 +609,6 @@
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
                             android:text="@string/faqs"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            tools:ignore="SpUsage" />
-
-                        <ImageView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:layout_marginEnd="@dimen/_6sdp"
-                            android:layout_weight="0.1"
-                            android:src="@drawable/ic_right_arrow_ac_icon"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1.5dp"
-                        android:visibility="visible"
-                        android:background="@color/dim_light_gray" />
-
-                    <LinearLayout
-                        android:id="@+id/llSupport"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingVertical="@dimen/_16sdp"
-                        android:visibility="visible"
-                        android:weightSum="1">
-
-                        <ImageView
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:layout_marginStart="@dimen/_6sdp"
-                            android:layout_weight="0.1"
-                            android:src="@drawable/ic_support_icon"
-                            android:contentDescription="@string/todo" />
-
-                        <TextView
-                            android:id="@+id/tvSupport"
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/_18sdp"
-                            android:layout_weight="0.8"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:gravity="start"
-                            android:text="@string/support"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
