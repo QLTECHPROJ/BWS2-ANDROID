@@ -2903,6 +2903,7 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodStart);
         edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd);
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanStatus);
+        edit.remove(CONSTANTS.PREFE_ACCESS_CardId);
         edit.remove(CONSTANTS.PREFE_ACCESS_AreaOfFocus);
         edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent);
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent);
@@ -2912,6 +2913,7 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREF_KEY_UserPromocode);
         edit.remove(CONSTANTS.PREF_KEY_ReferLink);
         edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser);
+        edit.remove(CONSTANTS.PREFE_ACCESS_paymentType);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportText);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail);

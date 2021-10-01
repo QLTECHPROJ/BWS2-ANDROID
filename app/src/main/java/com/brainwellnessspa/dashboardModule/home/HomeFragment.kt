@@ -1818,6 +1818,7 @@ class HomeFragment : Fragment() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.v)
                                                             try {
                                                                 if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)

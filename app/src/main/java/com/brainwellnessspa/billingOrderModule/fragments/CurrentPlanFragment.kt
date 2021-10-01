@@ -37,7 +37,7 @@ after complete plan(10days)=>in active => pay now => plan selection
 suspended => paynow => Direct payment*/
 class CurrentPlanFragment : Fragment() {
     lateinit var binding: FragmentCurrentPlanBinding
-    var UserID: String? = null
+    var UserID: String? = null // coUserIsD
     private var mLastClickTime: Long = 0
     lateinit var act:Activity
     var adpater: FeaturedListAdpater? = null

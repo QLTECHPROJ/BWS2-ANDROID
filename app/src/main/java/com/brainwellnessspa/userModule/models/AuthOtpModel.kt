@@ -8,4 +8,4 @@ data class AreaOfFocus(val CatId: String, val MainCat: String, val RecommendedCa
 
 data class planDetails(val UserId: String, val UserGroupId: String, val PlanId: String, val PlanPurchaseDate: String, val PlanExpireDate: String, val OriginalTransactionId: String, val TransactionId: String, val TrialPeriodStart: String, val TrialPeriodEnd: String, val PlanStatus: String, val PlanContent: String)
 
-data class oldPaymentDetails(val Plan: String, val PlanId: String, val PlanFlag: String, val purchaseDate: String, val OrderTotal: String,val PlanStr: String, val expireDate: String, val CardId: String,val PlanStatus: String)
+data class oldPaymentDetails(val Plan: String, val PlanId: String, val PlanFlag: String, val purchaseDate: String, val OrderTotal: String,val PlanStr: String, val expireDate: String, val CardId: String,val PlanStatus: String, val PlanContent: String)

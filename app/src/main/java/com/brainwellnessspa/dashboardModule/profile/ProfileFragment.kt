@@ -654,7 +654,8 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                                         editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
-                                        if(listModel.ResponseData.paymentType == "0"){
+                                        editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
+                                        if (listModel.ResponseData.paymentType == "0") {
                                             // Stripe
                                             try {
                                                 if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
@@ -668,11 +669,12 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
                                                     editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.oldPaymentDetails[0].PlanContent)
                                                 }
                                             } catch (e: Exception) {
                                                 e.printStackTrace()
                                             }
-                                        }else if(listModel.ResponseData.paymentType == "1"){
+                                        } else if (listModel.ResponseData.paymentType == "1") {
                                             // IAP
                                             try {
                                                 if (listModel.ResponseData.planDetails.isNotEmpty()) {
@@ -864,6 +866,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodStart)
         edit.remove(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd)
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanStatus)
+        edit.remove(CONSTANTS.PREFE_ACCESS_CardId)
         edit.remove(CONSTANTS.PREFE_ACCESS_AreaOfFocus)
         edit.remove(CONSTANTS.PREFE_ACCESS_assesmentContent)
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanContent)
@@ -871,6 +874,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
         edit.remove(CONSTANTS.PREFE_ACCESS_PlanDeviceType)
         edit.remove(CONSTANTS.PREF_KEY_ReminderFirstLogin)
         edit.remove(CONSTANTS.PREFE_ACCESS_isInCouser)
+        edit.remove(CONSTANTS.PREFE_ACCESS_paymentType)
         edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle)
         edit.remove(CONSTANTS.PREFE_ACCESS_supportText)
         edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail)
