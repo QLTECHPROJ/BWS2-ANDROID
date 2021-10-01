@@ -88,6 +88,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         val editor = sharedx.edit()
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.appSignatures[0])
         editor.apply()
+
         if (key.equals("")) {
             key = getKey(this)
         }
@@ -115,6 +116,9 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             initializeInbox()
         }
 
+    }
+
+    override fun onResume() {/* TODO conditions for check user exist or not */
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -134,9 +138,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-    }
 
-    override fun onResume() {/* TODO conditions for check user exist or not */
         if (userId.equals("")) {
             checkAppVersion()
         } else {
@@ -265,47 +267,63 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                             editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                             paymentType = listModel.ResponseData.paymentType
-                            if (listModel.ResponseData.paymentType == "0") {
-                                // Stripe
-                                try {
-                                    if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
-                                        planId = listModel.ResponseData.oldPaymentDetails[0].PlanId
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.oldPaymentDetails[0].PlanContent)
+                            if (listModel.ResponseData.planDetails.isEmpty() && listModel.ResponseData.oldPaymentDetails.isEmpty()) {
+                                planId = ""
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_CardId, "")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, "")
+                            } else {
+                                if (listModel.ResponseData.paymentType == "0") {
+                                    // Stripe
+                                    try {
+                                        if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                            planId = listModel.ResponseData.oldPaymentDetails[0].PlanId
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.oldPaymentDetails[0].PlanContent)
+
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            } else if (listModel.ResponseData.paymentType == "1") {
-                                // IAP
-                                try {
-                                    if (listModel.ResponseData.planDetails.isNotEmpty()) {
-                                        planId = listModel.ResponseData.planDetails[0].PlanId
-                                        planContent = listModel.ResponseData.planDetails[0].PlanContent
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
-                                        editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                } else if (listModel.ResponseData.paymentType == "1") {
+                                    // IAP
+                                    try {
+                                        if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                            planId = listModel.ResponseData.planDetails[0].PlanId
+                                            planContent = listModel.ResponseData.planDetails[0].PlanContent
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
                                 }
                             }
-
                             editor.apply()
+
                             val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             val edited = shred.edit()
                             edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
@@ -319,6 +337,27 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                             edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
                             edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
                             edited.apply()
+
+                            val sharedded = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            userId = sharedded.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+                            coUserId = sharedded.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+                            emailUser = sharedded.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+                            name = sharedded.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+                            mobileNo = sharedded.getString(CONSTANTS.PREFE_ACCESS_MOBILE, "")
+                            indexScore = sharedded.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
+                            scoreLevel = sharedded.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+                            image = sharedded.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+                            isProfileCompleted = sharedded.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
+                            isAssessmentCompleted = sharedded.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+                            coUserCount = sharedded.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
+                            directLogin = sharedded.getString(CONSTANTS.PREFE_ACCESS_directLogin, "")
+                            isSetLoginPin = sharedded.getString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "")
+                            isPinSet = sharedded.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
+                            planId = sharedded.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+                            isMainAccount = sharedded.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+                            val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                            avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+
                             checkAppVersion()
                         } else if (listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
                             callDelete403(activity, listModel.ResponseMessage)
@@ -396,7 +435,28 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 Log.e("WellnessScore", indexScore.toString())
                 Log.e("avgSleepTime", avgSleepTime.toString())
                 Log.e("coUserCount", coUserCount.toString())
-                Log.e("isSetLoginPin", isSetLoginPin.toString())
+                Log.e("isSetLoginPin", isSetLoginPin.toString())//debug ma aapp chalu kr
+
+                val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+                coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+                emailUser = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
+                name = shared.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+                mobileNo = shared.getString(CONSTANTS.PREFE_ACCESS_MOBILE, "")
+                indexScore = shared.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
+                scoreLevel = shared.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+                image = shared.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+                isProfileCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "")
+                isAssessmentCompleted = shared.getString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, "")
+                coUserCount = shared.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
+                directLogin = shared.getString(CONSTANTS.PREFE_ACCESS_directLogin, "")
+                isSetLoginPin = shared.getString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "")
+                isPinSet = shared.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
+                planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+                isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+                val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")// run kkr ane jo plan detail ma aave to aapni bhul sudhrig ai ok
+
                 if (isMainAccount.equals("1")) {
                     if (isAssessmentCompleted.equals("0")) {
                         val intent = Intent(applicationContext, AssProcessActivity::class.java)

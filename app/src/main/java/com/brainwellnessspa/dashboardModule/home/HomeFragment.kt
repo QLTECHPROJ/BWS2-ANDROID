@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
+import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
@@ -37,8 +39,6 @@ import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
-import com.brainwellnessspa.membershipModule.activities.RecommendedCategoryActivity
-import com.brainwellnessspa.membershipModule.activities.SleepTimeActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -410,7 +410,7 @@ class HomeFragment : Fragment() {
                 callEnhanceActivity(ctx, act)
             } else if (IsLock.equals("0")) {
                 if (isNetworkConnected(ctx)) {
-                    val i = Intent(ctx, RecommendedCategoryActivity::class.java)
+                    val i = Intent(ctx, AreaOfFocusActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")
                     ctx.startActivity(i)
@@ -1818,7 +1818,7 @@ class HomeFragment : Fragment() {
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.v)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                                                             try {
                                                                 if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                                                     editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)

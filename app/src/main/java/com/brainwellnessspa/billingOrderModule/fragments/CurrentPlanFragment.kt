@@ -52,7 +52,7 @@ class CurrentPlanFragment : Fragment() {
         binding.rvFeatured.layoutManager = serachList
         binding.rvFeatured.itemAnimator = DefaultItemAnimator()
         //        PrepareData();
-        binding.btnCancelSubscrible.setOnClickListener { view13 ->
+        binding.btnCancelSubscrible.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -60,7 +60,7 @@ class CurrentPlanFragment : Fragment() {
             val i = Intent(activity, CancelMembershipActivity::class.java)
             startActivity(i)
         }
-        binding.tvChangeCard.setOnClickListener { view12 ->
+        binding.tvChangeCard.setOnClickListener {
             myBackPressbill = true
             val i = Intent(activity, BillingOrderActivity::class.java)
             i.putExtra("payment", 1)

@@ -346,6 +346,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
+/*
         binding.llPlan1.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
@@ -360,6 +361,7 @@ class ProfileFragment : Fragment() {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+*/
 
         binding.llResources.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
