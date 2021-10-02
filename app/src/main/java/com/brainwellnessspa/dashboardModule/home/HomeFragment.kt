@@ -235,7 +235,7 @@ class HomeFragment : Fragment() {
         binding.llSleepTime.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (isNetworkConnected(ctx)) {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -280,7 +280,7 @@ class HomeFragment : Fragment() {
         binding.tvReminder.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0") || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("")) {
                     binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -308,7 +308,7 @@ class HomeFragment : Fragment() {
         binding.llPlayPause.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (isNetworkConnected(ctx)) {
                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -355,7 +355,7 @@ class HomeFragment : Fragment() {
         binding.llCheckIndexscore.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 val intent = Intent(ctx, AssProcessActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
@@ -408,7 +408,7 @@ class HomeFragment : Fragment() {
         binding.ivEditCategory.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (isNetworkConnected(ctx)) {
                     val i = Intent(ctx, AreaOfFocusActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -983,7 +983,7 @@ class HomeFragment : Fragment() {
                                     binding.tvReminder.setOnClickListener {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
-                                        } else if (IsLock.equals("0")) {
+                                        } else  {
                                             if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
                                                 binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -1039,7 +1039,7 @@ class HomeFragment : Fragment() {
                                     binding.llPlayPause.setOnClickListener {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
-                                        } else if (IsLock.equals("0")) {
+                                        } else  {
                                             if (isNetworkConnected(ctx)) {
                                                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -1121,7 +1121,7 @@ class HomeFragment : Fragment() {
         if (IsLock.equals("1")) {
             binding.ivLock.visibility = View.VISIBLE
             callEnhanceActivity(ctx, act)
-        } else if (IsLock.equals("0")) {
+        } else  {
             binding.ivLock.visibility = View.GONE
             val response = homelistModel.responseData
             if (isNetworkConnected(ctx)) {
@@ -1664,7 +1664,7 @@ class HomeFragment : Fragment() {
             llAddNewUser.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (isMainAccount.equals("1")) {
                         llAddNewUser.visibility = View.VISIBLE
                         if (!model.maxuseradd.equals("")) {
@@ -1725,7 +1725,7 @@ class HomeFragment : Fragment() {
             holder.bind.llAddNewCard.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (modelList[position].isPinSet.equals("1")) {
                         if (userId!! == modelList[position].userID) {
                             mBottomSheetDialog.hide()

@@ -396,7 +396,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx,activity)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     val p = Properties()
                     p.putValue("audioId", listModel[position].iD)
                     p.putValue("audioName", listModel[position].name)

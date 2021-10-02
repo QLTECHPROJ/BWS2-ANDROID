@@ -54,9 +54,11 @@ import com.brainwellnessspa.utility.RequestPermissionHandler.RequestPermissionLi
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit.RetrofitError
@@ -98,6 +100,7 @@ class ProfileFragment : Fragment() {
     var scoreLevel: String? = null
     var avgSleepTime: String? = null
     var areaOfFocus: String? = ""
+    lateinit var listModel1:AuthOtpModel
     //    areaOfFocus
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -168,7 +171,7 @@ class ProfileFragment : Fragment() {
         binding.llImageUpload.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return@setOnClickListener
                 }
@@ -290,10 +293,23 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(ctx)) {
-                val i = Intent(ctx, IAPBillingOrderActivity::class.java)
-                act.overridePendingTransition(0, 0)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                act.startActivity(i)
+                if(listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
+                    val intent = Intent(ctx, EnhanceActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    startActivity(intent)
+                }else{
+                    if(listModel1.ResponseData.paymentType == "0"){
+                        val i = Intent(ctx, BillingOrderActivity::class.java)
+                        act.overridePendingTransition(0, 0)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        act.startActivity(i)
+                    }else if(listModel1.ResponseData.paymentType == "1") {
+                        val i = Intent(ctx, IAPBillingOrderActivity::class.java)
+                        act.overridePendingTransition(0, 0)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        act.startActivity(i)
+                    }
+                }
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)
             }
@@ -592,6 +608,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                 override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
                     try {
                         val listModel = response.body()
+                        listModel1 = response.body()!!
                         if (listModel != null) {
                             when {
                                 listModel.ResponseCode == ctx.getString(R.string.ResponseCodesuccess) -> {
@@ -694,6 +711,33 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                             }
                                         }
                                         editor.apply()
+                                    }
+                                    binding.llBillingOrder.setOnClickListener {
+                                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                            return@setOnClickListener
+                                        }
+                                        mLastClickTime = SystemClock.elapsedRealtime()
+                                        if (isNetworkConnected(ctx)) {
+                                            if(listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
+                                                val intent = Intent(ctx, EnhanceActivity::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                                startActivity(intent)
+                                            }else{
+                                                if(listModel1.ResponseData.paymentType == "0"){
+                                                    val i = Intent(ctx, BillingOrderActivity::class.java)
+                                                    act.overridePendingTransition(0, 0)
+                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                    act.startActivity(i)
+                                                }else if(listModel1.ResponseData.paymentType == "1") {
+                                                    val i = Intent(ctx, IAPBillingOrderActivity::class.java)
+                                                    act.overridePendingTransition(0, 0)
+                                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                    act.startActivity(i)
+                                                }
+                                            }
+                                        } else {
+                                            showToast(ctx.getString(R.string.no_server_found), act)
+                                        }
                                     }
 
                                     val sharded = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
@@ -964,17 +1008,21 @@ Tap Setting > permission, and turn "Files and media" on.""")
     }
 
     private fun callLogoutApi(dialog: Dialog, progressBar: ProgressBar, progressBarHolder: FrameLayout) {
-        val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        val sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(act) { task: Task<InstallationTokenResult> ->
-                val newToken = task.result.token
-                Log.e("newToken", newToken)
-                val editor = ctx.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) // Friend
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                val token = task.result
+                Log.e("newToken", token)
+                val editor = ctx.getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, token) // Friend
                 editor.apply()
-            }
-            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+            })
+            val sharedPreferences3 = ctx.getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
+            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")
         }
 
         APINewClient.client.getLogout(userId, fcmId, CONSTANTS.FLAG_ONE).enqueue(object : Callback<SucessModel?> {

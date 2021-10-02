@@ -14,7 +14,6 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -100,12 +99,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         val registrationComplete = Intent(CONSTANTS.REGISTRATION_COMPLETE)
         registrationComplete.putExtra("token", token)
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete)
-        if (token.isEmpty()) {
-            token = FirebaseInstanceId.getInstance().token!!
-        }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(registrationComplete)
         FirebaseMessaging.getInstance().subscribeToTopic("all")
-        val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+        val editor1 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
         fcm_Tocken = token
@@ -113,7 +109,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        val editor1 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
+        val editor1 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()
         Log.e(TAGs, "sendRegistrationToServer: $token")
@@ -134,7 +130,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             if (flag != null && flag.equals("Playlist", ignoreCase = true)) {
                  if (!IsLock.equals("0")) {
                     resultIntent = Intent(this, BottomNavigationActivity::class.java)
-                    taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
+                     resultIntent.putExtra("IsFirst", "0")
+                     taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent)
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
@@ -170,9 +167,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 notificationChannel.description = "BWS Notification"
                 notificationChannel.vibrationPattern = v
                 notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                notificationBuilder = NotificationCompat.Builder(this, notificationChannel.id)
+                notificationBuilder = NotificationCompat.Builder(context, notificationChannel.id)
             } else {
-                notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notificationManager.createNotificationChannel(notificationChannel)

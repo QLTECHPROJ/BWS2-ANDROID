@@ -295,7 +295,7 @@ class ViewAllPlaylistFragment : Fragment() {
 
             if (IsLock.equals("1")) {
                 holder.binding.ivLock.visibility = View.VISIBLE
-            } else if (IsLock.equals("0")) {
+            } else  {
                 holder.binding.ivLock.visibility = View.GONE
             }
             if (index == position) {
@@ -350,7 +350,7 @@ class ViewAllPlaylistFragment : Fragment() {
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (myDownloads.equals("1")) {
                         //                            getMedia(listModelList.get(position).getPlaylistID());
                         val i = Intent(ctx, DownloadPlaylistActivity::class.java)

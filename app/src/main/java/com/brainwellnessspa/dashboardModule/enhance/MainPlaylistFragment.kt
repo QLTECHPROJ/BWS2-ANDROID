@@ -131,7 +131,7 @@ class MainPlaylistFragment : Fragment() {
                                 binding.rlCreatePlaylist.visibility = View.VISIBLE
                                 if(IsLock.equals("1")){
                                     binding.ivLockCreate.visibility = View.VISIBLE
-                                }else if(IsLock.equals("0")){
+                                }else {
                                     binding.ivLockCreate.visibility = View.GONE
                                 }
                                 listModelGlobal = listModel.responseData //                            adapter = new MainPlayListAdapter();
@@ -259,7 +259,7 @@ class MainPlaylistFragment : Fragment() {
             binding.rlCreatePlaylist.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     val p = Properties()
                     p.putValue("source", "Playlist Main Screen")
                     addToSegment("Create Playlist Clicked", p, CONSTANTS.track)
@@ -402,9 +402,7 @@ class MainPlaylistFragment : Fragment() {
             Glide.with(ctx).load(listModel[position].playlistImage).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(42))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage)
             if (IsLock.equals("1")) {
                 holder.binding.ivLock.visibility = View.VISIBLE
-            }else if (IsLock.equals("0")) {
-                holder.binding.ivLock.visibility = View.GONE
-            }else {
+            }else  {
                 holder.binding.ivLock.visibility = View.GONE
             }
             if (index == position) {
@@ -416,7 +414,7 @@ class MainPlaylistFragment : Fragment() {
             holder.binding.rlMainLayout.setOnLongClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx,act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     holder.binding.tvAddToPlaylist.visibility = View.VISIBLE
                     index = position
                     notifyDataSetChanged()
@@ -459,7 +457,7 @@ class MainPlaylistFragment : Fragment() {
             holder.binding.rlMainLayout.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx,act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (MyDownloads.equals("1", ignoreCase = true)) {
                         MainPlaylistFragment().callMyPlaylistsFragment("0", listModel[position].playlistID!!, listModel[position].playlistName!!, listModel[position].playlistImage!!, MyDownloads, "Downloaded Playlists", act, ctx)
                     } else {

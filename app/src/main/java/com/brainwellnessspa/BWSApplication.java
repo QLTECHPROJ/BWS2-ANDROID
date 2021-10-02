@@ -64,6 +64,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -138,11 +139,14 @@ import com.github.mikephil.charting.utils.Utils;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.InstallationTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.segment.analytics.Analytics;
@@ -2617,17 +2621,33 @@ public class BWSApplication extends Application {
 
         isadm = isAdmin.equalsIgnoreCase("1");
 
-        SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
         String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcmId)) {
             FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(task -> {
                 String newToken = task.getResult().getToken();
                 Log.e("newToken", newToken);
-                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit();
                 editor.putString(CONSTANTS.Token, newToken); //Friend
                 editor.apply();
             });
-            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    if (!task.isSuccessful()) {
+                        ;
+                        return;
+                    }
+                    // Get new FCM registration token
+                    String token = task.getResult();
+                    // Log and toast
+                    Log.e("newToken", token);
+                    SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, token); //Friend
+                    editor.apply();
+                }
+            });
+            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
             fcmId = sharedPreferences3.getString(CONSTANTS.Token, "");
         }
 
@@ -2948,7 +2968,7 @@ public class BWSApplication extends Application {
         editd.clear();
         editd.apply();
 
-      /*  SharedPreferences preferrer = context.getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+      /*  SharedPreferences preferrer = context.getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
         SharedPreferences.Editor editerder = preferrer.edit();
         editerder.remove(CONSTANTS.Token);
         editerder.clear();
@@ -2980,6 +3000,11 @@ public class BWSApplication extends Application {
         editor.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, userId);
         editor.putString(CONSTANTS.PREF_KEY_LOGOUT_CoUserID, coUserId);
         editor.apply();
+
+        SharedPreferences sharedxc = context.getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorxc = sharedxc.edit();
+        editorxc.remove(CONSTANTS.Token);
+        editorxc.apply();
 
         SharedPreferences preferred2 = context.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
         SharedPreferences.Editor edited2 = preferred2.edit();

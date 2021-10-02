@@ -195,7 +195,7 @@ class MyPlayerActivity : AppCompatActivity() {
         binding.llInfo.setOnClickListener {
              if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                  if (isNetworkConnected(ctx)) {
                      val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                      audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
@@ -810,7 +810,7 @@ class MyPlayerActivity : AppCompatActivity() {
         binding.llDownload.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx,act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (isNetworkConnected(ctx)) {
                     if (mainPlayModelList[position].id != "0") callDownload()
                 } else {

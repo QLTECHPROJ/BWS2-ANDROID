@@ -256,7 +256,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             }
             if (IsLock.equals("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equals("0")) {
+            } else  {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
             try {
@@ -287,7 +287,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0")) {
+            } else  {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
@@ -295,7 +295,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, getActivity());
-                } else if (IsLock.equals("0")) {
+                } else  {
                     try {
                         DB.taskDao().getCountDownloadProgress1("Complete", listModelList.get(position).getPlaylistID(), CoUserID).removeObserver(audioList -> {
                         });
@@ -341,7 +341,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, getActivity());
-                } else if (IsLock.equals("0")) {
+                } else  {
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
                     String AudioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "");

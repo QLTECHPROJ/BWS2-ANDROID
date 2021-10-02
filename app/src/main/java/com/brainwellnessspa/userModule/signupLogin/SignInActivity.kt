@@ -34,9 +34,11 @@ import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -290,17 +292,19 @@ class SignInActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
-            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+            val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result.token
-                    Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+                    val token = task.result
+                    val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, token) // Friend
                     editor.apply()
-                }
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+                })
+                val sharedPreferences3 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
             if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {

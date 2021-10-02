@@ -18,6 +18,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -37,9 +38,11 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.SmsReceiver
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -250,17 +253,19 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.txtError.visibility = View.GONE
         binding.txtError.text = ""
         if (isNetworkConnected(this)) {
-            val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+            val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
             if (TextUtils.isEmpty(fcmId)) {
-                FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this) { task: Task<InstallationTokenResult> ->
-                    val newToken = task.result.token
-                    Log.e("newToken", newToken)
-                    val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, newToken) //Friend
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+                    val token = task.result
+                    val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
+                    editor.putString(CONSTANTS.Token, token) // Friend
                     editor.apply()
-                }
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+                })
+                val sharedPreferences3 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
                 fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
             }
             val p = Properties()

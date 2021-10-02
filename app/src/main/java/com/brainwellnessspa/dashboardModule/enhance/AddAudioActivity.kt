@@ -550,7 +550,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
                         callEnhanceActivity(ctx, activity)
-                    } else if (IsLock.equals("0")) {
+                    } else  {
                         val audioID = listModel[position].iD
                         if (playlistId.equals("", ignoreCase = true)) {
                             val p = Properties()
@@ -609,7 +609,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.llMainLayout.setOnClickListener {
                     if (IsLock.equals("1")) {
                         callEnhanceActivity(ctx, activity)
-                    } else if (IsLock.equals("0")) {
+                    } else  {
                         AudioDownloadsFragment.comefromDownload = "0"
                         addToSearch = true
                         MyPlaylistIds = listModel[position].iD
@@ -620,7 +620,7 @@ class AddAudioActivity : AppCompatActivity() {
                 holder.binding.llRemoveAudio.setOnClickListener {
                     if (IsLock.equals("1")) {
                         callEnhanceActivity(ctx, activity)
-                    } else if (IsLock.equals("0")) {
+                    } else  {
                         val shared1 = ctx!!.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                         val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
                         val myPlaylist = shared1.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
@@ -841,7 +841,7 @@ class AddAudioActivity : AppCompatActivity() {
             holder.binding.llRemoveAudio.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, activity)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (playlistId.equals("", ignoreCase = true)) {
                         val p = Properties()
                         p.putValue("audioId", listModel[position]!!.iD)

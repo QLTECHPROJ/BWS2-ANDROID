@@ -171,6 +171,7 @@ object CONSTANTS {
     const val PREF_KEY_Totalminute = "Totalminute"
     const val PREF_KEY_TotalAudio = "TotalAudio"
     const val PREF_KEY_ScreenView = "ScreenView"
+    const val FCMToken = "FCMToken"
     const val Token = "Token"
     const val RecommendedCatMain = "RecommendedCatMain"
     const val EEPCatMain = "EEPCatMain"

@@ -34,9 +34,11 @@ import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration
@@ -67,11 +69,11 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
     var timezoneName: String? = ""
     var planId: String? = ""
     var paymentType: String? = ""
-    var flag: String? = null
-    var id: String? = null
-    var title: String? = null
-    var message: String? = null
-    var IsLockNoti: String? = null
+    var flag: String? = ""
+    var id: String? = ""
+    var title: String? = ""
+    var message: String? = ""
+    var IsLockNoti: String? = ""
     var planContent: String? = ""
     lateinit var activity: Activity
     lateinit var context: Context
@@ -82,6 +84,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
         context = this@SplashActivity
         activity = this@SplashActivity
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
@@ -94,17 +97,22 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         }
 
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
-        val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        Log.e("token", fcmId.toString())
         if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(activity) { task: Task<InstallationTokenResult> ->
-                val newToken = task.result.token
-                Log.e("newToken", newToken)
-                val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) // Friend
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                val token = task.result
+                val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, token) // Friend
                 editor.apply()
-            }
-            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+            })
+            val sharedPreferences21 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
+            fcmId = sharedPreferences21.getString(CONSTANTS.Token, "")
+            Log.e("token", fcmId.toString())
         }
         clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
@@ -115,7 +123,6 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             ctNotificationInboxListener = this@SplashActivity
             initializeInbox()
         }
-
     }
 
     override fun onResume() {/* TODO conditions for check user exist or not */
@@ -410,7 +417,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 message = intent.getStringExtra("message");
                 IsLockNoti = intent.getStringExtra("IsLock");
                 if (flag != null && flag.equals("Playlist")) {
-                    if (!IsLockNoti.equals("0")) {
+                    if (!IsLockNoti.equals("1")) {
                         resultIntent = Intent(this, BottomNavigationActivity::class.java)
                         resultIntent.putExtra("IsFirst", "0")
                         startActivity(resultIntent)

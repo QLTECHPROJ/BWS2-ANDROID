@@ -406,7 +406,7 @@ public class AudioDownloadsFragment extends Fragment {
             comefromDownload = "1";
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") ) {
+            } else {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE);
@@ -440,7 +440,7 @@ public class AudioDownloadsFragment extends Fragment {
                 comefromDownload = "1";
                 if (IsLock.equalsIgnoreCase("1")) {
                     callEnhanceActivity(ctx,getActivity());
-                } else if (IsLock.equalsIgnoreCase("0")) {
+                } else  {
                     comefromDownload = "1";
                     holder.binding.ivLock.setVisibility(View.GONE);
                     int PlayerPosition = sharedzw.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0);
@@ -526,7 +526,7 @@ public class AudioDownloadsFragment extends Fragment {
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
                     callEnhanceActivity(ctx,getActivity());
-                } else if (IsLock.equalsIgnoreCase("0")) {
+                } else  {
                     try {
                         if (AudioPlayerFlag.equalsIgnoreCase("DownloadListAudio")) {
                             String name = "";

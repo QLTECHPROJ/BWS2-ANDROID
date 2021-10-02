@@ -27,9 +27,11 @@ import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.installations.InstallationTokenResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ir.drax.netwatch.NetWatch
@@ -70,18 +72,25 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             Log.e("Nite Mode :", AppCompatDelegate.getDefaultNightMode().toString())
         }
-        val sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE)
+
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(this@BottomNavigationActivity) { task: Task<InstallationTokenResult> ->
-                val newToken = task.result.token
-                Log.e("newToken", newToken)
-                val editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, newToken) // Friend
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                val token = task.result
+                Log.e("newToken", token)
+                val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
+                editor.putString(CONSTANTS.Token, token) // Friend
                 editor.apply()
-            }
-            fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+            })
+            val sharedPreferences21 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
+            fcmId = sharedPreferences21.getString(CONSTANTS.Token, "")
         }
+
         clevertapDefaultInstance!!.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -224,7 +224,7 @@ class ViewAllAudioFragment : Fragment() {
             holder.binding.llMore.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else if (IsLock.equals("0")) {
+                } else  {
                     callAudioDetails(listModelList?.get(position)?.iD, ctx, getActivity(), coUserId, "viewAllAudioList", ArrayList(), listModelList, ArrayList(), ArrayList(), position)
                 }
             }

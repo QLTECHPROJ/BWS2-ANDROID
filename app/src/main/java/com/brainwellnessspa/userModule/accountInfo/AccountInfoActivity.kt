@@ -50,7 +50,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llEtProfile.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else if (IsLock.equals("0")) {
+            } else  {
                 if (isNetworkConnected(this)) {
                     val i = Intent(this, EditProfileActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP

@@ -654,7 +654,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             binding.llPlayPause.setOnClickListener(view -> {
                 if(IsLock.equals("1")){
                     callEnhanceActivity(ctx,act);
-                }else if (IsLock.equals("0")) {
+                }else  {
                     SharedPreferences sharedx1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     IsPlayDisclimer = (sharedx1.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
                     if (isPlayPlaylist == 1) {
@@ -757,7 +757,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if(IsLock.equals("1")){
                     callEnhanceActivity(ctx,act);
-                }else if (IsLock.equals("0")) {
+                }else  {
                     SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                     IsPlayDisclimer = (sharedx.getString(CONSTANTS.PREF_KEY_IsDisclimer, "0"));
 
@@ -845,7 +845,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity implements Netwo
             holder.binding.llMore.setOnClickListener(view -> {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act);
-                } else if (IsLock.equals("0")) {
+                } else  {
                     if (AudioPlayerFlag.equalsIgnoreCase("Downloadlist") && MyPlaylist.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("You can see details after the disclaimer", activity);
