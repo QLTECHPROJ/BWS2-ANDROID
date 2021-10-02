@@ -35,7 +35,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class  SessionsStepThreeActivity : AppCompatActivity() {
+class SessionsStepThreeActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionsStepThreeBinding
     lateinit var activity: Activity
     lateinit var ctx: Context
@@ -366,7 +366,7 @@ class  SessionsStepThreeActivity : AppCompatActivity() {
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
                                 BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
-                                val i = Intent(ctx, SessionsStepThreeActivity::class.java)
+                                val i = Intent(ctx, EmpowerManageActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 startActivity(i)
                                 finish()

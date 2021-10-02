@@ -23,10 +23,10 @@ class SessionQuestionsActivity : AppCompatActivity() {
     lateinit var adapter: SessionQuestionsAdapter
     var coUserId: String? = ""
     var model = arrayOf(SessionActivitiesModel("1. If I do not have enoughtime to do everything, I do not worry about it."),
-        SessionActivitiesModel("2. My worries overwhelm me"),
-        SessionActivitiesModel("3. I do not tend to worry about things."),
-        SessionActivitiesModel("4. Many situations make me worry."),
-        SessionActivitiesModel("5. I know I should not worry about things, but I just cannot help it."))
+            SessionActivitiesModel("2. My worries overwhelm me"),
+            SessionActivitiesModel("3. I do not tend to worry about things."),
+            SessionActivitiesModel("4. Many situations make me worry."),
+            SessionActivitiesModel("5. I know I should not worry about things, but I just cannot help it."))
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_questions)

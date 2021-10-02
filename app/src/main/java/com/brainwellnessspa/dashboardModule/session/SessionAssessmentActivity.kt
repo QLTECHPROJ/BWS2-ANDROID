@@ -57,5 +57,4 @@ class SessionAssessmentActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: PreceptionsAssessmentLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
-
 }

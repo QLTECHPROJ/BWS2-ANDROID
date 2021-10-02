@@ -36,13 +36,13 @@ class SessionActivitiesActivity : AppCompatActivity() {
     }
 
     inner class SessionActivitieAdapter(private val modelList: Array<SessionActivitiesModel>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<SessionActivitieAdapter.MyViewHolder>() {
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: AudioFaqLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.audio_faq_layout, parent, false)
             return MyViewHolder(v)
         }
 
-        @SuppressLint("ResourceType") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        @SuppressLint("ResourceType")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val model: SessionActivitiesModel = modelList[position]
             holder.binding.tvTitle.text = model.title
         }
@@ -53,5 +53,4 @@ class SessionActivitiesActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: AudioFaqLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
-
 }

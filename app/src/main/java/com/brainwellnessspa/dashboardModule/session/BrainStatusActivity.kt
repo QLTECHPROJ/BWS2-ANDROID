@@ -2,6 +2,7 @@ package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -76,6 +77,8 @@ class BrainStatusActivity : AppCompatActivity() {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
 
+                                val i = Intent(activity, SessionPcDetailActivity::class.java)
+                                startActivity(i)
                                 finish()
                                 //                                BWSApplication.localIntent = Intent("Reminder")
 //                                BWSApplication.localBroadcastManager = LocalBroadcastManager.getInstance(ctx)

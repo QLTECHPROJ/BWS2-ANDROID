@@ -61,20 +61,26 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                 binding.tvScreenTitle.text = response.sessionTitle
                                 binding.tvshortDesc.text = response.sessionShortDesc
                                 binding.tvDesc.text = response.sessionDesc
-
+                                binding.llBack.visibility = View.VISIBLE
+                                binding.ivDone.visibility = View.VISIBLE
+                                binding.btnContinue.visibility = View.VISIBLE
                                 Glide.with(activity).load(response.sessionImg).thumbnail(0.05f)
                                         .apply(RequestOptions.bitmapTransform(RoundedCorners(2)))
                                         .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner)
 
-                                if (response.sessionProgress.equals("Great")) {
-                                    binding.llGreatProgress.visibility = View.VISIBLE
-                                    binding.llSlowProgress.visibility = View.GONE
-                                } else if (response.sessionProgress.equals("Slow")) {
-                                    binding.llGreatProgress.visibility = View.GONE
-                                    binding.llSlowProgress.visibility = View.VISIBLE
-                                } else {
-                                    binding.llGreatProgress.visibility = View.GONE
-                                    binding.llSlowProgress.visibility = View.GONE
+                                when {
+                                    response.sessionProgress.equals("Great") -> {
+                                        binding.llGreatProgress.visibility = View.VISIBLE
+                                        binding.llSlowProgress.visibility = View.GONE
+                                    }
+                                    response.sessionProgress.equals("Slow") -> {
+                                        binding.llGreatProgress.visibility = View.GONE
+                                        binding.llSlowProgress.visibility = View.VISIBLE
+                                    }
+                                    else -> {
+                                        binding.llGreatProgress.visibility = View.GONE
+                                        binding.llSlowProgress.visibility = View.GONE
+                                    }
                                 }
                                 adapter = SessionDetailAdapter(binding, response.data, activity)
                                 binding.rvList.adapter = adapter
