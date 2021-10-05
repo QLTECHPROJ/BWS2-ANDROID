@@ -128,6 +128,9 @@ object CONSTANTS {
     const val PREFE_ACCESS_CountryCode = "CountryCode"
     const val PREFE_ACCESS_UserId = "UserId"
     const val PREF_KEY_LOGIN = "Login"
+    /*const val PREF_KEY_LockApiTime = "LockApiTime"
+    const val PREF_KEY_LockClick = "LockClick"
+    const val PREF_KEY_LockSetTime = "LockSetTime"*/
     const val PREF_KEY_Splash = "Splash"
     const val PREF_KEY_SplashKey = "SplashKey"
     const val PREF_KEY_PLAYER = "Player"

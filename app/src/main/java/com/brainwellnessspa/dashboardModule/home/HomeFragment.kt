@@ -770,7 +770,7 @@ class HomeFragment : Fragment() {
 
                                     /* Get Past Index Score graph function */
                                     try {
-                                        getPastIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore, binding.chart1, ctx, act)
+                                        getGraphIndexScore(homelistModel.responseData, binding.barChart, binding.llPastIndexScore, binding.chart1, ctx, act)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }

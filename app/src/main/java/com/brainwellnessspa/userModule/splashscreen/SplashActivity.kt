@@ -35,9 +35,6 @@ import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
@@ -442,7 +439,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 Log.e("WellnessScore", indexScore.toString())
                 Log.e("avgSleepTime", avgSleepTime.toString())
                 Log.e("coUserCount", coUserCount.toString())
-                Log.e("isSetLoginPin", isSetLoginPin.toString())//debug ma aapp chalu kr
+                Log.e("isSetLoginPin", isSetLoginPin.toString())
 
                 val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                 userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -462,7 +459,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
                 isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
                 val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")// run kkr ane jo plan detail ma aave to aapni bhul sudhrig ai ok
+                avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
                 if (isMainAccount.equals("1")) {
                     if (isAssessmentCompleted.equals("0")) {

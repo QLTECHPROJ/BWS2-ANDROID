@@ -618,16 +618,16 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         var splited = arrayOfNulls<String>(0)
         if (otp != null) {
             splited = when {
-                otp.startsWith("[#] Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
+                otp.startsWith("[#]") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("(#) Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
+                otp.startsWith("(#)") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("<#> Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
+                otp.startsWith("<#>") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("?<#?> Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
+                otp.startsWith("?<#?>") -> {
                     otp.split(" ").toTypedArray()
                 }
                 else -> {

@@ -113,7 +113,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         p = Properties()
-        BWSApplication.addToSegment("Login Screen Viewed", p, CONSTANTS.screen)
+        addToSegment("Login Screen Viewed", p, CONSTANTS.screen)
 
         binding.tvSignUp.setOnClickListener {
             val i = Intent(activity, SignUpActivity::class.java)
@@ -179,7 +179,7 @@ class SignInActivity : AppCompatActivity() {
             }
 
             p = Properties()
-            BWSApplication.addToSegment("Country List Viewed", p, CONSTANTS.screen)
+            addToSegment("Country List Viewed", p, CONSTANTS.screen)
 
             searchView.onActionViewExpanded()
             searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -255,15 +255,15 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun prepareCountryData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView: SearchView) {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity)
+        if (isNetworkConnected(this)) {
+            showProgressBar(progressBar, progressBarHolder, activity)
             searchView.isEnabled = false
             searchView.isClickable = false
             val listCall: Call<CountryListModel> = APINewClient.client.countryLists
             listCall.enqueue(object : Callback<CountryListModel> {
                 override fun onResponse(call: Call<CountryListModel>, response: Response<CountryListModel>) {
                     try {
-                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity)
+                        hideProgressBar(progressBar, progressBarHolder, activity)
                         val listModel: CountryListModel = response.body()!!
                         searchView.isEnabled = true
                         searchView.isClickable = true
@@ -276,11 +276,11 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<CountryListModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(progressBar, null, activity)
+                    hideProgressBar(progressBar, null, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
+            showToast(getString(R.string.no_server_found), this)
         }
     }
 
@@ -290,7 +290,7 @@ class SignInActivity : AppCompatActivity() {
 
     @SuppressLint("HardwareIds", "SetTextI18n")
     fun prepareData() {
-        if (BWSApplication.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
@@ -327,15 +327,15 @@ class SignInActivity : AppCompatActivity() {
                 p.putValue("countryShortName", countryShortName)
                 p.putValue("email", email)
                 p.putValue("source", "Login")
-                BWSApplication.addToSegment("Send OTP Clicked", p, CONSTANTS.track)
+                addToSegment("Send OTP Clicked", p, CONSTANTS.track)
                 binding.txtNumberError.visibility = View.GONE
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(binding.etNumber.text.toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, "", key)
                 listCall.enqueue(object : Callback<UserAccessModel> {
                     override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                         try {
                             binding.txtNumberError.visibility = View.GONE
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: UserAccessModel = response.body()!!
                             if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                 p.putValue("isOtpReceived", "Yes")
@@ -353,8 +353,8 @@ class SignInActivity : AppCompatActivity() {
                             } else {
                                 p.putValue("isOtpReceived", "No")
                             }
-                            BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
-                            BWSApplication.showToast(listModel.ResponseMessage, activity)
+                            addToSegment("OTP Sent", p, CONSTANTS.track)
+                            showToast(listModel.ResponseMessage, activity)
 
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -363,14 +363,14 @@ class SignInActivity : AppCompatActivity() {
 
                     override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                         p.putValue("isOtpReceived", "No")
-                        BWSApplication.addToSegment("OTP Sent", p, CONSTANTS.track)
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        addToSegment("OTP Sent", p, CONSTANTS.track)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
                 })
 
             }
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
+            showToast(getString(R.string.no_server_found), this)
         }
     }
 

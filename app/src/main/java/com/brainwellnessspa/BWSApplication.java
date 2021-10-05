@@ -141,11 +141,8 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.installations.InstallationTokenResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -277,9 +274,48 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void callEnhanceActivity(Context ctx, Activity act) {
+    public static void callEnhanceActivity(Context ctx, Activity act){
         showToast("Please Reactivate Your Plan", act);
+        /*SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LockClick, Context.MODE_PRIVATE);
+        String OldTime = shared1.getString(CONSTANTS.PREF_KEY_LockApiTime, "");
+        int SetTime = shared1.getInt(CONSTANTS.PREF_KEY_LockSetTime, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat outputFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+        String currentDate = outputFmt.format(calendar.getTime());
+
+        Log.e("Old Time:- ",OldTime);
+        Log.e("Current Time:- ",currentDate);
+        if(OldTime.equals("")){
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LockClick, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_LockApiTime, currentDate);
+            editor.apply();
+            callLockMailSendAPi(ctx,act, currentDate);
+        }else {
+            try {
+                Date d1 = outputFmt.parse(currentDate);
+                Date d2 = outputFmt.parse(OldTime);
+                long difference_In_Time = d1.getTime() - d2.getTime();
+                long difference_In_Hours = (difference_In_Time / (1000 * 60 * 60)) % 24;
+
+                Log.e("difference_In_Hours:- ", String.valueOf(difference_In_Hours));
+                if (difference_In_Hours >= SetTime) {
+                    callLockMailSendAPi(ctx, act,currentDate);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }*/
     }
+
+   /* private static void callLockMailSendAPi(Context ctx, Activity act, String currentDate) {
+        showToast("Please Reactivate Your Plan", act);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LockClick, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_LockApiTime, currentDate);
+        editor.apply();
+    }*/
 
     public static void callDelete403(Activity act, String msg){
         try {
@@ -1692,8 +1728,8 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void getPastIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llPastIndexScore, LineChart chart, Context ctx, Activity act) {
-        if (indexData.getPastIndexScore().size() == 0) {
+    public static void getGraphIndexScore(HomeScreenModel.ResponseData indexData, BarChart barChart, LinearLayout llPastIndexScore, LineChart chart, Context ctx, Activity act) {
+        if (indexData.getGraphIndexScore().size() == 0) {
             barChart.clear();
             barChart.setVisibility(View.GONE);
             llPastIndexScore.setVisibility(View.GONE);
@@ -1712,14 +1748,14 @@ public class BWSApplication extends Application {
             int spaceForBar = 1;
             ArrayList<BarEntry> yAxisValues = new ArrayList<>();
 
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                float val = Float.parseFloat(indexData.getPastIndexScore().get(i).getIndexScore());
+            for (int i = 0; i < indexData.getGraphIndexScore().size(); i++) {
+                float val = Float.parseFloat(indexData.getGraphIndexScore().get(i).getIndexScore());
                 yAxisValues.add(new BarEntry(i * spaceForBar, val));
             }
 
             final ArrayList<String> xAxisValues = new ArrayList<>();
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+            for (int i = 0; i < indexData.getGraphIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getGraphIndexScore().get(i).getMonthName());
             }
 
             BarDataSet barDataSet;
@@ -1793,17 +1829,15 @@ public class BWSApplication extends Application {
         }
         final ArrayList<String> xAxisValues = new ArrayList<>();
         XAxis xAxis;
-        {//200 73402oppp26822
-           /* xAxisValues.add("Apr 21");
-            xAxisValues.add("May 21");
-            xAxisValues.add("Jun 21");
-            xAxisValues.add("Jul 21");
-            xAxisValues.add("Aug 21");*/
-            xAxisValues.add("");
-            for (int i = 0; i < indexData.getPastIndexScore().size(); i++) {
-                xAxisValues.add(indexData.getPastIndexScore().get(i).getMonthName());
+        {
+//            xAxisValues.add("");
+            for (int i = 0; i < indexData.getGraphIndexScore().size(); i++) {
+                xAxisValues.add(indexData.getGraphIndexScore().get(i).getDisplayName());
             }
             xAxis = chart.getXAxis();
+            xAxis.setAxisMinimum(0);
+            xAxis.setAxisMaximum(xAxisValues.size()-1);
+            xAxis.setLabelCount(xAxisValues.size(), true);
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
             xAxis.setValueFormatter(new ValueFormatter() {
                 @Override
@@ -1811,9 +1845,6 @@ public class BWSApplication extends Application {
                     return String.valueOf(xAxisValues.get((int) value));
                 }
             });
-//            xAxis.setAxisMinimum(0);
-//            xAxis.setAxisMaximum(xAxisValues.size()-1);
-            xAxis.setLabelCount(xAxisValues.size(), true);
             xAxis.setGranularity(1f);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setLabelRotationAngle(20);
@@ -1856,7 +1887,7 @@ public class BWSApplication extends Application {
             //xAxis.addLimitLine(llXAxis);
         }
         // add data
-        setData(indexData.getPastIndexScore().size(), chart, ctx, indexData.getPastIndexScore());
+        setData(chart, ctx, indexData.getGraphIndexScore());
         Legend l = chart.getLegend();
         l.setForm(LegendForm.CIRCLE);
         l.setFormSize(1f);
@@ -1872,15 +1903,15 @@ public class BWSApplication extends Application {
 //        }
     }
 
-    private static void setData(int count, LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.PastIndexScore> pastIndexScore) {
+    private static void setData( LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.GraphIndexScore> pastIndexScore) {
 
         ArrayList<Entry> values = new ArrayList<>();
-        float val = Float.parseFloat("0");
-        values.add(new Entry(0, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+//        float val = Float.parseFloat("0");
+//        values.add(new Entry(0, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
 
-        for (int i = 0; i < count; i++) {
-            val = Float.parseFloat(pastIndexScore.get(i).getIndexScore());
-            values.add(new Entry(i+1, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
+        for (int i = 0; i < pastIndexScore.size(); i++) {
+            float val = Float.parseFloat(pastIndexScore.get(i).getIndexScore());
+            values.add(new Entry(i, val, ctx.getResources().getDrawable(R.drawable.ic_star)));
         }
 
         LineDataSet set1;

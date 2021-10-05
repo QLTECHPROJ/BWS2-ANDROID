@@ -93,9 +93,9 @@ class HomeScreenModel {
         @Expose
         var suggestedPlaylist: SuggestedPlaylist? = null
 
-        @SerializedName("PastIndexScore")
+        @SerializedName("GraphIndexScore")
         @Expose
-        var pastIndexScore: List<PastIndexScore>? = null
+        var graphIndexScore: List<GraphIndexScore>? = null
 
         @SerializedName("GraphAnalytics")
         @Expose
@@ -147,14 +147,18 @@ class HomeScreenModel {
             var bitrate: String? = null
         }
 
-        class PastIndexScore {
-            @SerializedName("Month")
-            @Expose
-            var month: String? = null
-
+        class GraphIndexScore {
             @SerializedName("MonthName")
             @Expose
             var monthName: String? = null
+
+            @SerializedName("Year")
+            @Expose
+            var year: String? = null
+
+            @SerializedName("displayName")
+            @Expose
+            var displayName: String? = null
 
             @SerializedName("IndexScore")
             @Expose
