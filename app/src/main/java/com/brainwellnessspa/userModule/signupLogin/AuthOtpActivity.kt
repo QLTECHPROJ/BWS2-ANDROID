@@ -618,16 +618,16 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         var splited = arrayOfNulls<String>(0)
         if (otp != null) {
             splited = when {
-                otp.startsWith("[#] Your OTP is") -> {
+                otp.startsWith("[#] Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("(#) Your OTP is") -> {
+                otp.startsWith("(#) Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("<#> Your OTP is") -> {
+                otp.startsWith("<#> Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
                     otp.split(" ").toTypedArray()
                 }
-                otp.startsWith("?<#?> Your OTP is") -> {
+                otp.startsWith("?<#?> Hi! Your OTP to sign-in to the Brain Wellness App is") -> {
                     otp.split(" ").toTypedArray()
                 }
                 else -> {
@@ -635,7 +635,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 }
             }
         }
-        val message = splited[4]
+        val message = splited[12]
         binding.edtOTP1.setText(message!![0].toString())
         binding.edtOTP2.setText(message[1].toString())
         binding.edtOTP3.setText(message[2].toString())
