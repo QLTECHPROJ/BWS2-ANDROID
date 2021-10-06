@@ -49,4 +49,5 @@
     <color name="progressfilled">#F1646A</color>
     <color name="session_progress">#9A86BB</color>
     <color name="pink">#C44B6C</color>
+    <color name="lighted_gray">#40DADADA</color>
 </resources>

@@ -63,10 +63,6 @@ class SessionDetailFragment : Fragment() {
         }
     }
 
-    /* session_unselected_bg
-    * session_selected_bg
-    * session_idea_icon
-    * ic_session_lock_icon*/
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -80,7 +76,7 @@ class SessionDetailFragment : Fragment() {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                             if (response != null) {
                                 binding.tvTitle.text = response.completionPercentage + "%"
-                                binding.tvUpdated.text = response.completedSession + "/" + response.totalSession
+                                binding.tvUpdated.text = response.completedSession + " / " + response.totalSession
                                 adapter = SessionMainAdapter(binding, response.data!!, activity, afterSession)
                                 binding.rvList.adapter = adapter
                                 binding.pbProgress.progress = response.completionPercentage!!.toInt()
@@ -139,10 +135,6 @@ class SessionDetailFragment : Fragment() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.bindingAdapter.tvTitle.text = catName[position].title
             holder.bindingAdapter.tvSentData.text = catName[position].desc
-
-            Glide.with(activity!!).load(catName[position].statusImg).thumbnail(0.05f)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
-                    .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
 
             if (catName[position].sessionDate.equals("", ignoreCase = true)) {
                 holder.bindingAdapter.tvDate.visibility = View.GONE
@@ -203,9 +195,17 @@ class SessionDetailFragment : Fragment() {
                 holder.bindingAdapter.tvBooklet.text = catName[position].bookletTitle
             }
 
+/* session_unselected_bg
+* session_selected_bg
+* session_idea_icon
+* ic_session_lock_icon*/
+
             when {
                 catName[position].userSessionStatus.equals("Completed") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
+                    Glide.with(activity!!).load(R.drawable.session_done_icon).thumbnail(0.05f)
+                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
                     holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
@@ -213,6 +213,9 @@ class SessionDetailFragment : Fragment() {
                 }
                 catName[position].userSessionStatus.equals("InProgress") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
+                    Glide.with(activity!!).load(R.drawable.session_idea_icon).thumbnail(0.05f)
+                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
                     holder.bindingAdapter.ivBanner.visibility = View.VISIBLE
                     holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
@@ -220,6 +223,9 @@ class SessionDetailFragment : Fragment() {
                 }
                 catName[position].userSessionStatus.equals("Lock") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
+                    Glide.with(activity!!).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
+                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
                     holder.bindingAdapter.llAfterSession.visibility = View.GONE
@@ -231,11 +237,11 @@ class SessionDetailFragment : Fragment() {
                 when {
                     catName[position].userSessionStatus.equals("Completed") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
-                        activity.startActivity(i)
+                        activity!!.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("InProgress") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
-                        activity.startActivity(i)
+                        activity!!.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Lock") -> {
                         BWSApplication.showToast("Please complete above session first", activity)

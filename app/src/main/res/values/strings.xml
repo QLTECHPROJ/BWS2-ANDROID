@@ -634,5 +634,7 @@
     <string name="if_you_re_suffering_from_emotional_and_mental_health_issues_our_14_session_100_natural_and_drug_free_empower_program_may_help_you_try_our_introductory_experience_session_today">If you’re suffering from emotional and mental health issues, our 14 session, 100% natural and drug free, Empower program may help you. Try our introductory ‘Experience Session’ today.</string>
     <string name="self_reported_date_of_2173_clients_before_and_after_the_introductory_session">Self reported date of 2173 clients before and after the introductory session</string>
     <string name="lorem_ipsum_dolor_sit">Lorem ipsum dolor sit</string>
+    <string name="before_session">Before Session:</string>
+    <string name="after_session">After Session:</string>
 </resources>
 

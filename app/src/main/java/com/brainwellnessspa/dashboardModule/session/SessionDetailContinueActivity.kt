@@ -122,6 +122,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 db.userStepStatus.equals("Completed") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_complete_selected_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_dark_bg)
+                    holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(activity, R.color.session_progress))
                     holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.white))
                     holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.white))
                     holder.bindingAdapter.ivDownload.visibility = View.GONE
@@ -129,6 +130,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 db.userStepStatus.equals("Inprogress") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
+                    holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(activity, R.color.lighted_gray))
                     holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.ivDownload.visibility = View.VISIBLE
@@ -136,6 +138,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 db.userStepStatus.equals("Lock") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
+                    holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(activity, R.color.lighted_gray))
                     holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.ivDownload.visibility = View.GONE

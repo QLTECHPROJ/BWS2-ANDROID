@@ -248,7 +248,7 @@ class AddPaymentActivity : AppCompatActivity() {
             val CardName = binding.etName.text.toString().trim()
             val Month = binding.textMonth.text.toString().trim()
             val CVV = binding.etCvv.text.toString().trim()
-            if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
+            if (CardNo.isNotEmpty() && CardName.isNotEmpty() && Month.isNotEmpty() && CVV.isNotEmpty()) {
                 binding.btnSave.isEnabled = true
                 binding.btnSave.setTextColor(resources.getColor(R.color.white))
                 binding.btnSave.setBackgroundResource(R.drawable.light_green_rounded_filled)

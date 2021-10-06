@@ -25,7 +25,7 @@
                     <ImageView
                         android:id="@+id/ivBanner"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_180sdp"
+                        android:layout_height="@dimen/_280sdp"
                         android:contentDescription="@string/todo"
                         android:scaleType="fitXY"
                         android:src="@drawable/session_unselected_bg" />

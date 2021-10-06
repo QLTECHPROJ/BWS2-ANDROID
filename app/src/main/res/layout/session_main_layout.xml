@@ -67,7 +67,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:contentDescription="@string/todo"
-                    android:padding="@dimen/_6sdp"
+                    android:padding="@dimen/_4sdp"
                     android:scaleType="fitXY"
                     android:src="@drawable/session_done_icon" />
 
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="Before Session:"
+                        android:text="@string/before_session"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
@@ -254,7 +254,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="After Session:"
+                        android:text="@string/after_session"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
