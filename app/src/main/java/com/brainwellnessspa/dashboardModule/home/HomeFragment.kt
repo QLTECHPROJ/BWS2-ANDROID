@@ -410,6 +410,12 @@ class HomeFragment : Fragment() {
                 callEnhanceActivity(ctx, act)
             } else  {
                 if (isNetworkConnected(ctx)) {
+                    val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                    val edited = preferred.edit()
+                    edited.remove(CONSTANTS.selectedCategoriesTitle)
+                    edited.remove(CONSTANTS.selectedCategoriesName)
+                    edited.clear()
+                    edited.apply()
                     val i = Intent(ctx, AreaOfFocusActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     i.putExtra("BackClick", "1")

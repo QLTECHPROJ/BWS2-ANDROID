@@ -3,6 +3,7 @@ package com.brainwellnessspa.userModule.coUserModule
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.R
@@ -20,9 +21,9 @@ class ThankYouActivity : AppCompatActivity() {
     var userName: String? = null
     var isProfileCompleted: String? = null
     var isAssessmentCompleted: String? = null
-    var avgSleepTime: String? = null
-    var coUserCount: String? = null
-    var planContent: String? = null
+    var avgSleepTime: String? = ""
+    var coUserCount: String? = ""
+    var planContent: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class ThankYouActivity : AppCompatActivity() {
         coUserCount = shared1.getString(CONSTANTS.PREFE_ACCESS_coUserCount, "")
         planContent = shared1.getString(CONSTANTS.PREFE_ACCESS_PlanContent, "")
 
+        Log.e("planContent",planContent!!)
         binding.tvName.text = userName
         binding.tvSubTitle.text = planContent
         binding.btnExplore.setOnClickListener {

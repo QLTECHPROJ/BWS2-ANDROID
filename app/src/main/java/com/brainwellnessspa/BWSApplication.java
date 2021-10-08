@@ -1,11 +1,5 @@
 package com.brainwellnessspa;
 
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
-import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -64,7 +58,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -100,7 +93,6 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.services.PlayerJobService;
-;
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
@@ -120,29 +112,26 @@ import com.downloader.PRDownloader;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.Legend.LegendForm;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.components.Legend.LegendForm;
-import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -177,6 +166,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
+import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -274,8 +268,8 @@ public class BWSApplication extends Application {
         });
     }
 
-    public static void callEnhanceActivity(Context ctx, Activity act){
-        showToast("Please Reactivate Your Plan", act);
+    public static void callEnhanceActivity(Context ctx, Activity act) {
+        showToast("Please Re-activate Your Membership Plan", act);
         /*SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LockClick, Context.MODE_PRIVATE);
         String OldTime = shared1.getString(CONSTANTS.PREF_KEY_LockApiTime, "");
         int SetTime = shared1.getInt(CONSTANTS.PREF_KEY_LockSetTime, 0);
@@ -317,7 +311,7 @@ public class BWSApplication extends Application {
         editor.apply();
     }*/
 
-    public static void callDelete403(Activity act, String msg){
+    public static void callDelete403(Activity act, String msg) {
         try {
             analytics.flush();
             analytics.reset();
@@ -329,8 +323,8 @@ public class BWSApplication extends Application {
         callSignActivity(act);
     }
 
-    public static void callSignActivity(Activity act){
-        Intent i =new Intent(act, SignInActivity.class);
+    public static void callSignActivity(Activity act) {
+        Intent i = new Intent(act, SignInActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("mobileNo", "");
         i.putExtra("countryCode", "");
@@ -601,7 +595,7 @@ public class BWSApplication extends Application {
                                     rvDirlist.setAdapter(directionAdapter);
                                 }
                             } else if (listModel.getResponseCode().equals(act.getString(R.string.ResponseCodeDeleted))) {
-                                callDelete403(act,listModel.getResponseMessage());
+                                callDelete403(act, listModel.getResponseMessage());
                             } else {
                                 showToast(listModel.getResponseMessage(), act);
                             }
@@ -803,7 +797,7 @@ public class BWSApplication extends Application {
                                         }
                                     }
                                 } else if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                    callDelete403(act,listModel.getResponseMessage());
+                                    callDelete403(act, listModel.getResponseMessage());
                                 }
                             }
                         }
@@ -1230,7 +1224,7 @@ public class BWSApplication extends Application {
                                                                 act.finish();
                                                                 dialog.dismiss();
                                                             } else if (listModel1.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                                                callDelete403(act,listModel.getResponseMessage());
+                                                                callDelete403(act, listModel.getResponseMessage());
                                                             }
                                                         }
                                                         //                                                            Fragment audioFragment = new MainPlaylistFragment();
@@ -1385,7 +1379,7 @@ public class BWSApplication extends Application {
                                                                 dialogs.dismiss();
                                                             }
                                                         } else if (listModel1.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                                            callDelete403(act,listModel.getResponseMessage());
+                                                            callDelete403(act, listModel.getResponseMessage());
                                                         }
                                                     }
                                                 } catch (Exception e) {
@@ -1413,7 +1407,7 @@ public class BWSApplication extends Application {
                             llDownload.setOnClickListener(view -> callDownloadPlayList(act, listModel.getResponseData().getPlaylistSongs(), ctx, llDownload, ivDownloads, downloadPlaylistDetails, CoUSERID, PlaylistID));
 
                         } else if (listModel.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                            callDelete403(act,listModel.getResponseMessage());
+                            callDelete403(act, listModel.getResponseMessage());
                         } else {
                             showToast(listModel.getResponseMessage(), act);
                         }
@@ -1836,7 +1830,7 @@ public class BWSApplication extends Application {
             }
             xAxis = chart.getXAxis();
             xAxis.setAxisMinimum(0);
-            xAxis.setAxisMaximum(xAxisValues.size()-1);
+            xAxis.setAxisMaximum(xAxisValues.size() - 1);
             xAxis.setLabelCount(xAxisValues.size(), true);
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
             xAxis.setValueFormatter(new ValueFormatter() {
@@ -1903,7 +1897,7 @@ public class BWSApplication extends Application {
 //        }
     }
 
-    private static void setData( LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.GraphIndexScore> pastIndexScore) {
+    private static void setData(LineChart chart, Context ctx, List<HomeScreenModel.ResponseData.GraphIndexScore> pastIndexScore) {
 
         ArrayList<Entry> values = new ArrayList<>();
 //        float val = Float.parseFloat("0");
@@ -1916,8 +1910,7 @@ public class BWSApplication extends Application {
 
         LineDataSet set1;
 
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
+        if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
             set1.setValues(values);
             set1.notifyDataSetChanged();
@@ -2583,8 +2576,8 @@ public class BWSApplication extends Application {
         else isadm = false;
         HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
         profileUpdate.put("Identity", userId);
-        profileUpdate.put("Name",name);
-        profileUpdate.put("Phone","+" + countryCode + mobile);
+        profileUpdate.put("Name", name);
+        profileUpdate.put("Phone", "+" + countryCode + mobile);
         profileUpdate.put("Photo", image);
         profileUpdate.put("UserGroupId", mainAccountId);
         profileUpdate.put("UserId", userId);
@@ -2592,7 +2585,7 @@ public class BWSApplication extends Application {
         profileUpdate.put("IsAdmin", isadm);
         profileUpdate.put("DeviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
         profileUpdate.put("DeviceType", "Android");
-        profileUpdate.put("CountryCode",countryCode);
+        profileUpdate.put("CountryCode", countryCode);
         profileUpdate.put("DOB", dob);
         profileUpdate.put("IsProfileCompleted", isProf);
         profileUpdate.put("IsAssessmentCompleted", isAss);
@@ -2608,14 +2601,34 @@ public class BWSApplication extends Application {
         profileUpdate.put("MSG-email", true);
         profileUpdate.put("MSG-sms", true);
         profileUpdate.put("MSG-whatsapp", true);
-        profileUpdate.put("Email",email);
-        profileUpdate.put("MobileNo",mobile);
-        profileUpdate.put("Mobile",mobile);
+        profileUpdate.put("Email", email);
+        profileUpdate.put("MobileNo", mobile);
+        profileUpdate.put("Mobile", mobile);
         CleverTapAPI cleverTapDefaultInstance = CleverTapAPI.getDefaultInstance(ctx);
         cleverTapDefaultInstance.onUserLogin(profileUpdate);
         cleverTapDefaultInstance.pushProfile(profileUpdate);
 
         analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("mobileNo", mobile).putValue("countryCode", countryCode).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone("+" + countryCode + mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
+    }
+
+    public static void callFCMRegMethod(Context ctx) {
+        SharedPreferences sharedPreferences2 = ctx.getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
+        String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
+        Log.e("Token", fcmId);
+        if (TextUtils.isEmpty(fcmId)) {
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+                // Get new FCM registration token
+                String token = task.getResult();
+                // Log and toast
+                Log.e("newToken", token);
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit();
+                editor.putString(CONSTANTS.Token, token); //Friend
+                editor.apply();
+            });
+        }
     }
 
     public static void addToSegment(String TagName, Properties properties, String methodName) {
@@ -2654,33 +2667,7 @@ public class BWSApplication extends Application {
 
         SharedPreferences sharedPreferences2 = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
         String fcmId = sharedPreferences2.getString(CONSTANTS.Token, "");
-        if (TextUtils.isEmpty(fcmId)) {
-            FirebaseInstallations.getInstance().getToken(true).addOnCompleteListener(task -> {
-                String newToken = task.getResult().getToken();
-                Log.e("newToken", newToken);
-                SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit();
-                editor.putString(CONSTANTS.Token, newToken); //Friend
-                editor.apply();
-            });
-            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                    if (!task.isSuccessful()) {
-                        ;
-                        return;
-                    }
-                    // Get new FCM registration token
-                    String token = task.getResult();
-                    // Log and toast
-                    Log.e("newToken", token);
-                    SharedPreferences.Editor editor = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit();
-                    editor.putString(CONSTANTS.Token, token); //Friend
-                    editor.apply();
-                }
-            });
-            SharedPreferences sharedPreferences3 = getContext().getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE);
-            fcmId = sharedPreferences3.getString(CONSTANTS.Token, "");
-        }
+        callFCMRegMethod(getContext());
 
         properties.putValue("isAdmin", isadm);
         properties.putValue("deviceToken", fcmId);
@@ -2896,11 +2883,13 @@ public class BWSApplication extends Application {
         profileUpdate.put("MSG-push", true);
         profileUpdate.put("MSG-email", true);
         profileUpdate.put("MSG-sms", true);
-        profileUpdate.put("MSG-whatsapp", true);    
+        profileUpdate.put("MSG-whatsapp", true);
         clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
         FirebaseAnalytics mFirebaseAnalytics;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setUserProperty("ct_objectId", Objects.requireNonNull(CleverTapAPI.getDefaultInstance(this)).getCleverTapID());
+        callFCMRegMethod(getContext());
+
     }
 
     public static void deleteCall(Context context) {
@@ -3188,7 +3177,7 @@ public class BWSApplication extends Application {
                                         localIntent.putExtra("MyReminder", "update");
                                         localBroadcastManager.sendBroadcast(localIntent);
                                     } else if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodeDeleted))) {
-                                        callDelete403(act,listModel.getResponseMessage());
+                                        callDelete403(act, listModel.getResponseMessage());
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -3210,7 +3199,7 @@ public class BWSApplication extends Application {
                                     if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
 
                                     } else if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                        callDelete403(act,model.getResponseMessage());
+                                        callDelete403(act, model.getResponseMessage());
                                     } else {
                                         showToast(model.getResponseMessage(), act);
                                     }
@@ -3304,15 +3293,7 @@ public class BWSApplication extends Application {
 
             return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return false;

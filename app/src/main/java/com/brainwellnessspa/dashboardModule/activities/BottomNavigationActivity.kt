@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.*
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -27,10 +26,6 @@ import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -74,23 +69,9 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         }
 
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        callFCMRegMethod(ctx)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
-        if (TextUtils.isEmpty(fcmId)) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@OnCompleteListener
-                }
-                val token = task.result
-                Log.e("newToken", token)
-                val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, token) // Friend
-                editor.apply()
-            })
-            val sharedPreferences21 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
-            fcmId = sharedPreferences21.getString(CONSTANTS.Token, "")
-        }
-
         clevertapDefaultInstance!!.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -164,8 +145,8 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     override fun onDestroy() {
         NetWatch.unregister(this)
-//        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-//        notificationManager.cancel(notificationId)
+        //        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        //        notificationManager.cancel(notificationId)
         GlobalInitExoPlayer.relesePlayer(ctx)
         //        unregisterReceiver(myNetworkReceiver);
         deleteCache(ctx)
@@ -206,11 +187,11 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
             super.onBackPressed()
         }
     }
+
     override fun inboxDidInitialize() {
         var cleverTapAPI: CleverTapAPI? = null
         cleverTapAPI = CleverTapAPI.getDefaultInstance(this@BottomNavigationActivity)
-        val inboxTabs =
-            arrayListOf("Promotions", "Offers", "Others")//Anything after the first 2 will be ignored
+        val inboxTabs = arrayListOf("Promotions", "Offers", "Others") //Anything after the first 2 will be ignored
         CTInboxStyleConfig().apply {
             tabs = inboxTabs //Do not use this if you don't want to use tabs
             tabBackgroundColor = "#FF0000"
@@ -227,7 +208,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
         }
         //OR
-        cleverTapAPI!!.showAppInbox()//Opens Activity with default style config
+        cleverTapAPI!!.showAppInbox() //Opens Activity with default style config
     }
 
     override fun inboxMessagesDidUpdate() {

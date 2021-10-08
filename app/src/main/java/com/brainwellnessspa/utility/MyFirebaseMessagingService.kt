@@ -37,6 +37,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     lateinit var activity: MyFirebaseMessagingService
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        context = this@MyFirebaseMessagingService
+        activity = this@MyFirebaseMessagingService
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
 //        String tag = remoteMessage.getData().get("tag");
 
@@ -95,10 +97,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
+        context = this@MyFirebaseMessagingService
+        activity = this@MyFirebaseMessagingService
         var token = token
         super.onNewToken(token)
         val registrationComplete = Intent(CONSTANTS.REGISTRATION_COMPLETE)
         registrationComplete.putExtra("token", token)
+        if(context == null){
+            context = applicationContext
+        }
         LocalBroadcastManager.getInstance(context).sendBroadcast(registrationComplete)
         FirebaseMessaging.getInstance().subscribeToTopic("all")
         val editor1 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit()
@@ -109,6 +116,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
+        context = this@MyFirebaseMessagingService
+        activity = this@MyFirebaseMessagingService
         val editor1 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE).edit()
         editor1.putString(CONSTANTS.Token, token) //Friend
         editor1.apply()

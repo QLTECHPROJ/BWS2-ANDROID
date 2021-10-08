@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.*
-import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -34,7 +33,6 @@ import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
@@ -94,23 +92,10 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         }
 
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
-        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
+        callFCMRegMethod(context)
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         Log.e("token", fcmId.toString())
-        if (TextUtils.isEmpty(fcmId)) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@OnCompleteListener
-                }
-                val token = task.result
-                val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
-                editor.putString(CONSTANTS.Token, token) // Friend
-                editor.apply()
-            })
-            val sharedPreferences21 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
-            fcmId = sharedPreferences21.getString(CONSTANTS.Token, "")
-            Log.e("token", fcmId.toString())
-        }
         clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -290,6 +275,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                     try {
                                         if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
                                             planId = listModel.ResponseData.oldPaymentDetails[0].PlanId
+                                            planContent = listModel.ResponseData.planDetails[0].PlanContent
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
@@ -625,11 +611,19 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                     }
                 } else {
                     if (isAssessmentCompleted.equals("0")) {
-                        val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                      /*  val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                         intent.putExtra("Navigation", "Enhance")
                         startActivity(intent)
+                        finish()*/
+                        val i = Intent(activity, AssProcessActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.putExtra(CONSTANTS.ASSPROCESS, "1")
+                        i.putExtra("Navigation", "enhance")
+                        i.putExtra(CONSTANTS.IndexScore, "58")
+                        i.putExtra(CONSTANTS.ScoreLevel, "asdf")
+                        startActivity(i)
                         finish()
                     } else if (isPinSet.equals("1")) {
                         if (isSetLoginPin.equals("1")) {

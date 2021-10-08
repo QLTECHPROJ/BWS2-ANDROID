@@ -11,11 +11,9 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivitySignInBinding
@@ -34,11 +31,6 @@ import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.webView.TncActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
-import com.google.firebase.messaging.FirebaseMessaging
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,7 +39,7 @@ import java.util.*
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
-    lateinit var ctx : Context
+    lateinit var ctx: Context
     private var fcmId: String = ""
     lateinit var adapter: CountrySelectAdapter
     var searchFilter: String = ""
@@ -219,12 +211,12 @@ class SignInActivity : AppCompatActivity() {
             dialog.setCancelable(true)
         }
 
-/*
-        binding.tvForgotPswd.setOnClickListener {
-            val i = Intent(ctx, ForgotPswdActivity::class.java)
-            startActivity(i)
-        }
-*/
+        /*
+                binding.tvForgotPswd.setOnClickListener {
+                    val i = Intent(ctx, ForgotPswdActivity::class.java)
+                    startActivity(i)
+                }
+        */
 
         if (binding.etPassword.text.toString().trim().equals("")) {
             binding.ivVisible.isClickable = false
@@ -292,21 +284,9 @@ class SignInActivity : AppCompatActivity() {
     fun prepareData() {
         if (isNetworkConnected(this)) {
             val countryCode: String = binding.tvCountry.text.toString().replace("+", "")
+            callFCMRegMethod(ctx)
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-            if (TextUtils.isEmpty(fcmId)) {
-                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
-                    }
-                    val token = task.result
-                    val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, token) // Friend
-                    editor.apply()
-                })
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
-                fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
-            }
             if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = "Please provide a mobile number"

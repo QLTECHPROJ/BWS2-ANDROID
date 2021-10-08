@@ -1002,20 +1002,32 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     player.removeMediaItem(position)
                                 }
                                 if (playerPosition == position && position < listModel.size - 1) { //                                            pos = pos + 1;
-                                    if (isDisclaimer == 1) { //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                    if (isDisclaimer == 1) {
                                     } else {
-                                        if (player != null) { //                                            player.seekTo(pos, 0);
-                                            player.playWhenReady = true
+                                        if (player != null) {
                                             saveToPref(playerPosition, listModel)
                                         } else {
                                             MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                         }
                                     }
-                                } else if (playerPosition == position && position == listModel.size - 1) {
+                                } else if ((playerPosition == position) && (position == listModel.size - 1)) {
                                     playerPosition = 0
-                                    if (isDisclaimer == 1) { //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                    if (isDisclaimer == 1) {
                                     } else {
-                                        if (player != null) { //                                            player.seekTo(pos, 0);
+                                        if (player != null) {
+                                            player.seekTo(playerPosition, 0)
+                                            player.playWhenReady = true
+                                            saveToPref(playerPosition, listModel)
+                                        } else {
+                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                        }
+                                    }
+                                }else if ((playerPosition == position) && (position == listModel.size)) {
+                                    playerPosition = 0
+                                    if (isDisclaimer == 1) {
+                                    } else {
+                                        if (player != null) {
+                                            player.seekTo(playerPosition, 0)
                                             player.playWhenReady = true
                                             saveToPref(playerPosition, listModel)
                                         } else {
@@ -1023,12 +1035,25 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                         }
                                     }
                                 } else if (playerPosition < position && playerPosition < listModel.size - 1) {
-                                    saveToPref(playerPosition, listModel)
+                                    if (player != null) {
+                                        saveToPref(playerPosition, listModel)
+                                    } else {
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                    }
                                 } else if (playerPosition < position && playerPosition == listModel.size - 1) {
-                                    saveToPref(playerPosition, listModel)
+                                    if (player != null) {
+                                        saveToPref(playerPosition, listModel)
+                                    } else {
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                    }
                                 } else if (playerPosition > position && playerPosition == listModel.size) {
                                     playerPosition -= 1
-                                    saveToPref(playerPosition, listModel)
+                                    if (player != null) {
+                                        player.playWhenReady = true
+                                        saveToPref(playerPosition, listModel)
+                                    } else {
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                    }
                                 }
                             }
                             notifyItemRemoved(position);
@@ -1045,6 +1070,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     }
 
                     private fun saveToPref(playerPosition: Int, listModel: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>) {
+                        if (player != null) {
+                            player.seekTo(playerPosition, 0)
+                            player.playWhenReady = true
+                        }
                         val shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         val gson = Gson()
@@ -1056,6 +1085,8 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Created")
                         editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "playlist")
                         editor.apply()
+                        var gb = GlobalInitExoPlayer()
+                        gb.UpdateNotificationAudioPLayer(ctx)
                     }
                     override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)

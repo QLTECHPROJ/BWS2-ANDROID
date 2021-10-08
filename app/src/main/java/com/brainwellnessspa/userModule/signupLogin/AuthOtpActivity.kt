@@ -11,14 +11,12 @@ import android.os.CountDownTimer
 import android.provider.Settings
 import android.text.Editable
 import android.text.Html
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -38,11 +36,7 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.SmsReceiver
 import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
@@ -253,24 +247,13 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.txtError.visibility = View.GONE
         binding.txtError.text = ""
         if (isNetworkConnected(this)) {
+
+            callFCMRegMethod(ctx)
             val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
             fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")!!
-            if (TextUtils.isEmpty(fcmId)) {
-                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
-                    }
-                    val token = task.result
-                    val editor = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE).edit()
-                    editor.putString(CONSTANTS.Token, token) // Friend
-                    editor.apply()
-                })
-                val sharedPreferences3 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
-                fcmId = sharedPreferences3.getString(CONSTANTS.Token, "")!!
-            }
             val p = Properties()
-//            p.putValue("otpReceived", "Yes")
-//            p.putValue("otpSubmitted", "Yes")
+            //            p.putValue("otpReceived", "Yes")
+            //            p.putValue("otpSubmitted", "Yes")
             p.putValue("name", name)
             p.putValue("mobileNo", mobileNo)
             p.putValue("countryCode", countryCode)
@@ -320,9 +303,9 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                         val paymentType = listModel.ResponseData.paymentType
                         var planId = ""
-                        if(listModel.ResponseData.oldPaymentDetails.isEmpty() && listModel.ResponseData.planDetails.isEmpty()){
+                        if (listModel.ResponseData.oldPaymentDetails.isEmpty() && listModel.ResponseData.planDetails.isEmpty()) {
                             planId = ""
-                        }else {
+                        } else {
                             if (listModel.ResponseData.paymentType == "0") {
                                 // Stripe
                                 try {
@@ -433,20 +416,20 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     intent.putExtra("Navigation", "Enhance")
                                     startActivity(intent)
                                     finish()
-                                } else if (planId == ""){
+                                } else if (planId == "") {
                                     if (paymentType == "0") {
                                         // stripe
                                         val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
-                                    }else if(paymentType == "1") {
+                                    } else if (paymentType == "1") {
                                         //IAP
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
-                                    }else{
+                                    } else {
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
@@ -647,10 +630,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     }
 
     override fun onOTPTimeOut() {
-//        showToast("OTP Time out");
+        //        showToast("OTP Time out");
     }
 
     override fun onOTPReceivedError(error: String?) {
-//        showToast(error);
+        //        showToast(error);
     }
 }
