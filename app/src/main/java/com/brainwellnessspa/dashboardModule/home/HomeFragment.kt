@@ -69,6 +69,7 @@ import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -79,6 +80,7 @@ class HomeFragment : Fragment() {
     var adapter: UserListAdapter? = null
     var userId: String? = ""
     var mainAccountId: String? = ""
+    var timezoneName: String? = ""
     var userName: String? = ""
     private var userImage: String? = ""
     var scoreLevel: String? = ""
@@ -235,7 +237,7 @@ class HomeFragment : Fragment() {
         binding.llSleepTime.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else  {
+            } else {
                 if (isNetworkConnected(ctx)) {
                     val dialog = Dialog(ctx)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -280,7 +282,7 @@ class HomeFragment : Fragment() {
         binding.tvReminder.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else  {
+            } else {
                 if (homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("0") || homelistModel.responseData!!.suggestedPlaylist?.isReminder.equals("")) {
                     binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                     binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -308,7 +310,7 @@ class HomeFragment : Fragment() {
         binding.llPlayPause.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else  {
+            } else {
                 if (isNetworkConnected(ctx)) {
                     val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                     val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -355,7 +357,7 @@ class HomeFragment : Fragment() {
         binding.llCheckIndexscore.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else  {
+            } else {
                 val intent = Intent(ctx, AssProcessActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
@@ -408,7 +410,7 @@ class HomeFragment : Fragment() {
         binding.ivEditCategory.setOnClickListener {
             if (IsLock.equals("1")) {
                 callEnhanceActivity(ctx, act)
-            } else  {
+            } else {
                 if (isNetworkConnected(ctx)) {
                     val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                     val edited = preferred.edit()
@@ -664,8 +666,11 @@ class HomeFragment : Fragment() {
         Log.e("UserId", userId.toString())
 
         if (isNetworkConnected(ctx)) {
+            val simpleDateFormat1 = SimpleDateFormat("hh:mm a")
+            simpleDateFormat1.timeZone = TimeZone.getDefault()
+            timezoneName = simpleDateFormat1.timeZone.id
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
+            APINewClient.client.getHomeScreenData(userId, timezoneName).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -865,10 +870,12 @@ class HomeFragment : Fragment() {
     fun prepareHomeDataReminder() {/* Get firebase token form share pref*/
         Log.e("MainAccountId", mainAccountId.toString())
         Log.e("UserId", userId.toString())
-
+        val simpleDateFormat1 = SimpleDateFormat("hh:mm a")
+        simpleDateFormat1.timeZone = TimeZone.getDefault()
+        timezoneName = simpleDateFormat1.timeZone.id
         if (isNetworkConnected(ctx)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            APINewClient.client.getHomeScreenData(userId).enqueue(object : Callback<HomeScreenModel?> {
+            APINewClient.client.getHomeScreenData(userId, timezoneName).enqueue(object : Callback<HomeScreenModel?> {
                 override fun onResponse(call: Call<HomeScreenModel?>, response: Response<HomeScreenModel?>) {
                     try {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -989,7 +996,7 @@ class HomeFragment : Fragment() {
                                     binding.tvReminder.setOnClickListener {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
-                                        } else  {
+                                        } else {
                                             if (response.suggestedPlaylist?.isReminder.equals("0") || response.suggestedPlaylist?.isReminder.equals("")) {
                                                 binding.tvReminder.text = ctx.getString(R.string.set_reminder)
                                                 binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
@@ -1045,7 +1052,7 @@ class HomeFragment : Fragment() {
                                     binding.llPlayPause.setOnClickListener {
                                         if (IsLock.equals("1")) {
                                             callEnhanceActivity(ctx, act)
-                                        } else  {
+                                        } else {
                                             if (isNetworkConnected(ctx)) {
                                                 val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, AppCompatActivity.MODE_PRIVATE) //                            val AudioPlayerFlag = //                                shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0") //                            val MyPlaylist = //                                shared1.getString(CONSTANTS.PREF_KEY_PayerPlaylistId, "") //                            val PlayFrom = shared1.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                                 val playerPosition = shared1.getInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
@@ -1127,7 +1134,7 @@ class HomeFragment : Fragment() {
         if (IsLock.equals("1")) {
             binding.ivLock.visibility = View.VISIBLE
             callEnhanceActivity(ctx, act)
-        } else  {
+        } else {
             binding.ivLock.visibility = View.GONE
             val response = homelistModel.responseData
             if (isNetworkConnected(ctx)) {
@@ -1670,7 +1677,7 @@ class HomeFragment : Fragment() {
             llAddNewUser.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else  {
+                } else {
                     if (isMainAccount.equals("1")) {
                         llAddNewUser.visibility = View.VISIBLE
                         if (!model.maxuseradd.equals("")) {
@@ -1731,7 +1738,7 @@ class HomeFragment : Fragment() {
             holder.bind.llAddNewCard.setOnClickListener {
                 if (IsLock.equals("1")) {
                     callEnhanceActivity(ctx, act)
-                } else  {
+                } else {
                     if (modelList[position].isPinSet.equals("1")) {
                         if (userId!! == modelList[position].userID) {
                             mBottomSheetDialog.hide()

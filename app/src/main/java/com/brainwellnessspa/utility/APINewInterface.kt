@@ -208,7 +208,7 @@ interface APINewInterface {
 
     @POST("homescreen")
     @FormUrlEncoded
-    fun getHomeScreenData(@Field("UserId") UserId: String?): Call<HomeScreenModel>
+    fun getHomeScreenData(@Field("UserId") UserId: String?,@Field("localTimezone") localTimezone: String?): Call<HomeScreenModel>
 
     @POST("logout")
     @FormUrlEncoded
