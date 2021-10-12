@@ -697,6 +697,8 @@ public class BWSApplication extends Application {
                                                         pos = pos;
                                                     } else if (pos == position && position == mDataPlaylist.size() - 1) {
                                                         pos = 0;
+                                                    }  else if (pos == position && position == mDataPlaylist.size()) {
+                                                        pos = 0;
                                                     } else if (pos < position && pos < mDataPlaylist.size() - 1) {
                                                         pos = pos;
                                                     } else if (pos < position && pos == mDataPlaylist.size() - 1) {
@@ -740,7 +742,10 @@ public class BWSApplication extends Application {
                                                     editor1.apply();
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
+                                                        player.seekTo(pos, 0);
                                                         player.setPlayWhenReady(true);
+                                                        GlobalInitExoPlayer gb = new GlobalInitExoPlayer();
+                                                        gb.UpdateNotificationAudioPLayer(ctx);
                                                     }
                                                     dialog.dismiss();
                                                 }
@@ -785,6 +790,10 @@ public class BWSApplication extends Application {
                                                     //                                                }else {
                                                     if (player != null) {
                                                         player.removeMediaItem(oldpos);
+                                                        player.seekTo(pos, 0);
+                                                        player.setPlayWhenReady(true);
+                                                        GlobalInitExoPlayer gb = new GlobalInitExoPlayer();
+                                                        gb.UpdateNotificationAudioPLayer(ctx);
                                                     }
                                                     //                                                }
                                                     dialog.dismiss();

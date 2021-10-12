@@ -315,7 +315,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     override fun onResume() {
-            val shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared1.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared1.getString(CONSTANTS.selectedCategoriesName, gson.toString())
         if (!json.equals(gson.toString(), ignoreCase = true)) {
@@ -1590,7 +1590,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 } else {
                     val listModelList2 = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>()
                     listModelList2.addAll(listModel)
-                    val gson = Gson()
+                    /*val gson = Gson()
                     val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                     val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                     val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
@@ -1602,9 +1602,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     mainPlayModel.audiomastercat = arrayList.audiomastercat!!
                     mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
                     mainPlayModel.imageFile = arrayList.imageFile!!
-                    mainPlayModel.audioDuration = arrayList.audioDuration!!
+                    mainPlayModel.audioDuration = arrayList.audioDuration!!*/
                     var audioc = true
-                    if (isDisclaimer == 1) {
+                    /*if (isDisclaimer == 1) {
                         if (player != null) {
                             player.playWhenReady = true
                             audioc = false
@@ -1622,7 +1622,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                             audioc = true
                             listModelList2.add(position, mainPlayModel)
                         }
-                    }
+                    }*/
                     callPlayer(position, view, listModelList2, ctx, act, playlistId, playlistName, created, audioc, myDownloads)
                 }
             } else {
@@ -1658,7 +1658,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             } else {
                 val listModelList2 = arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>()
                 listModelList2.addAll(listModel)
-                val gson = Gson()
+                /*val gson = Gson()
                 val disclimerJson = shared12.getString(CONSTANTS.PREF_KEY_Disclimer, gson.toString())
                 val type = object : TypeToken<HomeScreenModel.ResponseData.DisclaimerAudio?>() {}.type
                 val arrayList = gson.fromJson<HomeScreenModel.ResponseData.DisclaimerAudio>(disclimerJson, type)
@@ -1670,9 +1670,9 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 mainPlayModel.audiomastercat = arrayList.audiomastercat!!
                 mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
                 mainPlayModel.imageFile = arrayList.imageFile!!
-                mainPlayModel.audioDuration = arrayList.audioDuration!!
-                var audioc = true
-                if (isDisclaimer == 1) {
+                mainPlayModel.audioDuration = arrayList.audioDuration!!*/
+              var audioc = true
+               /*   if (isDisclaimer == 1) {
                     if (player != null) {
                         player.playWhenReady = true
                         audioc = false
@@ -1690,7 +1690,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         audioc = true
                         listModelList2.add(position, mainPlayModel)
                     }
-                }
+                }*/
                 callPlayer(position, view, listModelList2, ctx, act, playlistId, playlistName, created, audioc, myDownloads)
             }
         }
