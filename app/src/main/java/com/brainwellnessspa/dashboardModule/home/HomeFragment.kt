@@ -692,8 +692,11 @@ class HomeFragment : Fragment() {
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
-                                    binding.llIndicate.progress = response.indexScore!!.toInt()
-
+                                    try {
+                                        binding.llIndicate.progress = response.indexScore!!.toInt()
+                                    }catch (e:Exception){
+                                        e.printStackTrace()
+                                    }
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName
                                     binding.tvSleepTimeTitle.text = response.suggestedPlaylist?.playlistDirection
                                     if (response.IsLock.equals("1")) {

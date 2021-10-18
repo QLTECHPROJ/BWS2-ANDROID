@@ -151,7 +151,6 @@ class PaymentActivity : AppCompatActivity() {
                             if (cardListModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                 val p = Properties()
-                                p.putValue("UserID", userId)
                                 if (cardListModel.responseData!!.isEmpty()) {
                                     binding.rvCardList.adapter = null
                                     binding.rvCardList.visibility = View.GONE

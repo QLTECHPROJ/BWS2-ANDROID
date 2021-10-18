@@ -35,7 +35,7 @@ class BillingOrderActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order)
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         UserID = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        binding.llBack.setOnClickListener { view ->
+        binding.llBack.setOnClickListener {
             myBackPressbill = true
             finish()
         }
@@ -43,12 +43,6 @@ class BillingOrderActivity : AppCompatActivity() {
             registerActivityLifecycleCallbacks(AppLifecycleCallback())
         }
         val p = Properties()
-        p.putValue("userId", UserID)
-        p.putValue("plan", "")
-        p.putValue("planStatus", "")
-        p.putValue("planStartDt", "")
-        p.putValue("planExpiryDt", "")
-        p.putValue("planAmount", "")
         BWSApplication.addToSegment("Billing & Order Screen Viewed", p, CONSTANTS.screen)
         binding.viewPager.offscreenPageLimit = 3
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"))

@@ -59,9 +59,8 @@ class PaymentFragment : Fragment() {
                 val i = Intent(activity, AddPaymentActivity::class.java)
                 i.putExtra("ComePayment", "1")
                 startActivity(i)
-                /*Properties p1 = new Properties();
-        p1.putValue("userId", UserID);
-        BWSApplication.addToSegment("Payment Card Add Clicked", p1, CONSTANTS.track);*/
+                val p1 =  Properties()
+                BWSApplication.addToSegment("Payment Card Add Clicked", p1, CONSTANTS.track)
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), activity)
             }
