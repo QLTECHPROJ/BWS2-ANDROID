@@ -1862,13 +1862,8 @@ public class BWSApplication extends Application {
             yAxis.setAxisMinimum(0f);
         }
         {
-            LimitLine llXAxis = new LimitLine(9f, "");
-            llXAxis.setLineWidth(4f);
-            llXAxis.enableDashedLine(10f, 10f, 0f);
-            llXAxis.setLabelPosition(LimitLabelPosition.LEFT_BOTTOM);
-            llXAxis.setTextSize(9f);
 
-            LimitLine ll1 = new LimitLine(150f, "Upper Limit");
+            LimitLine ll1 = new LimitLine(180f, "Upper Limit");
             ll1.setLineWidth(4f);
             ll1.enableDashedLine(10f, 10f, 0f);
             ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
@@ -1893,7 +1888,7 @@ public class BWSApplication extends Application {
         setData(chart, ctx, indexData.getGraphIndexScore());
         Legend l = chart.getLegend();
         l.setForm(LegendForm.CIRCLE);
-        l.setFormSize(1f);
+        l.setFormSize(0f);
         l.setFormToTextSpace(5f);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);

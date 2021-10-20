@@ -64,7 +64,9 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_otp)
         activity = this@AuthOtpActivity
         ctx = this@AuthOtpActivity
-
+        receiver?.let {
+            LocalBroadcastManager.getInstance(ctx).registerReceiver(it, IntentFilter("otp"))
+        }
         if (intent != null) {
             mobileNo = intent.getStringExtra(CONSTANTS.mobileNumber)
             countryCode = intent.getStringExtra(CONSTANTS.countryCode)
@@ -302,6 +304,11 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                         editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                         val paymentType = listModel.ResponseData.paymentType
+                        if (signupFlag.equals("1", ignoreCase = true)) {
+                            if(paymentType == ""){
+                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType,"1")
+                            }
+                        }
                         var planId = ""
                         if (listModel.ResponseData.oldPaymentDetails.isEmpty() && listModel.ResponseData.planDetails.isEmpty()) {
                             planId = ""
@@ -477,14 +484,14 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
     override fun onResume() {
         receiver?.let {
-            LocalBroadcastManager.getInstance(this).registerReceiver(it, IntentFilter("otp"))
+            LocalBroadcastManager.getInstance(ctx).registerReceiver(it, IntentFilter("otp"))
         }
         super.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        receiver?.let { LocalBroadcastManager.getInstance(this).unregisterReceiver(it) }
+        receiver?.let { LocalBroadcastManager.getInstance(ctx).unregisterReceiver(it) }
     }
 
     override fun onDestroy() {

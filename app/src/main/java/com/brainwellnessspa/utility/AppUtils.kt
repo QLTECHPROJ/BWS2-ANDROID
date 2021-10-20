@@ -9,7 +9,7 @@ object AppUtils : Application() {
     const val BASE_URL = STAGING_MAIN_URL*/
     private const val STAGING_MAIN_URL = "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"
     private const val LIVE_MAIN_URL = "http://brainwellnessapp.com.au/bwsapi/api/live/v2/"
-    const val New_BASE_URL = LIVE_MAIN_URL
+    const val New_BASE_URL = STAGING_MAIN_URL
     const val DEVELOPER_KEY = "AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8"
     const val YOUTUBE_VIDEO_CODE = "y1rfRW6WX08"
     var tncs_url = "$MAIN_URL/terms-conditions/"

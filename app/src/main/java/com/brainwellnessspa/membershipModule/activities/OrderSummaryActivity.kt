@@ -165,6 +165,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                     i.putExtra("position", position)
                     startActivity(i)
                     finish()
+
                     //                    } else {
                     //                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     //                            return@setOnClickListener
@@ -189,6 +190,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                     //                        startActivity(i)
                     //                        finish()
                     //                    }
+
                     BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track)
                 } else {
                     Promocode = binding.edtCode.text.toString()

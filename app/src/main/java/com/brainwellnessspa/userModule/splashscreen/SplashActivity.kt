@@ -43,7 +43,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
+class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
