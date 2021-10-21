@@ -105,18 +105,22 @@ class OrderSummaryActivity : AppCompatActivity() {
             if (!comeFrom.equals("", ignoreCase = true)) {
                 binding.tvTrialPeriod.visibility = View.GONE
                 binding.tvPlanInterval.text = listModelList2!![position].planInterval + " Membership"
-                binding.tvPlanTenure.text = listModelList2!![position].planTenure
+                binding.tvPlanTenure.text = "per/" + listModelList2!![position].planTenure
                 binding.tvPlanNextRenewal.text = listModelList2!![position].planNextRenewal
                 binding.tvSubName.text = listModelList2!![position].subName
                 binding.tvPlanAmount.text = "$" + listModelList2!![position].planAmount
+                binding.tvSubName1.text = listModelList2!![position].subName
+                binding.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
                 binding.tvTotalAmount.text = "$" + listModelList2!![position].planAmount
             } else {
                 binding.tvTrialPeriod.visibility = View.VISIBLE
                 binding.tvPlanInterval.text = listModelList!![position].planInterval.toString() + " Membership"
-                binding.tvPlanTenure.text = listModelList!![position].planTenure
+                binding.tvPlanTenure.text = "per/" + listModelList!![position].planTenure
                 binding.tvPlanNextRenewal.text = listModelList!![position].planNextRenewal
                 binding.tvSubName.text = listModelList!![position].subName
                 binding.tvTrialPeriod.text = TrialPeriod
+                binding.tvSubName1.text = listModelList2!![position].subName
+                binding.tvPlanAmount1.text = "$" + listModelList2!![position].planAmount
                 binding.tvPlanAmount.text = "$" + listModelList!![position].planAmount
                 binding.tvTotalAmount.text = "$" + listModelList!![position].planAmount
             }

@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.MembershipPlanBinding
+import com.brainwellnessspa.membershipModule.activities.OrderSummaryActivity
 import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
+import com.google.gson.Gson
 import java.util.*
 
 //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
@@ -85,11 +87,13 @@ class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanL
         holder.binding.llFeatures.setBackgroundColor(ContextCompat.getColor(activity, R.color.white))
         planFlag = listModel.planFlag.toString()
         price = listModel.planAmount.toString()
-        planId = listModel.planID.toString() //        i = new Intent(ctx, OrderSummaryActivity.class);
-        //        i.putParcelableArrayListExtra("PlanData", listModelList);
-        //        i.putExtra("TrialPeriod", TrialPeriod);
-        //        i.putExtra("position", position);
-        //        i.putExtra("Promocode", "");
+        planId = listModel.planID.toString()
+        val gson = Gson();
+        i = Intent(ctx, OrderSummaryActivity::class.java)
+        i.putExtra("PlanData", gson.toJson(listModelList))
+        i.putExtra("TrialPeriod", "")
+        i.putExtra("position", position)
+        i.putExtra("Promocode", "")
     }
 
     override fun getItemCount(): Int {

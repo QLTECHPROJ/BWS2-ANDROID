@@ -82,7 +82,9 @@ class PaymentActivity : AppCompatActivity() {
         binding.rvCardList.layoutManager = mLayoutManager
         binding.rvCardList.itemAnimator = DefaultItemAnimator()
         if (intent != null) {
-            trialPeriod = intent.getStringExtra("TrialPeriod")
+            if (intent.hasExtra("TrialPeriod")) {
+                trialPeriod = intent.getStringExtra("TrialPeriod")
+            }
             position = intent.getIntExtra("position", 0)
             if (intent.hasExtra("comeFrom")) {
                 comeFrom = intent.getStringExtra("comeFrom")
