@@ -29,7 +29,6 @@ import androidx.fragment.app.Fragment
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
-import com.brainwellnessspa.addPaymentStripeModule.AddPaymentActivity
 import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
 import com.brainwellnessspa.billingOrderModule.activities.IAPBillingOrderActivity
 import com.brainwellnessspa.dashboardModule.models.AddProfileModel

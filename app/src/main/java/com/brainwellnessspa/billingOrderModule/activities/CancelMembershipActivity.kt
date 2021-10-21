@@ -66,12 +66,6 @@ class CancelMembershipActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitiali
         }
         binding.youtubeView.initialize(API_KEY, this)
         val p = Properties()
-        p.putValue("userId", userID)
-        p.putValue("plan", "")
-        p.putValue("planStatus", "")
-        p.putValue("planStartDt", "")
-        p.putValue("planExpiryDt", "")
-        p.putValue("planAmount", "")
         BWSApplication.addToSegment("Cancel Subscription Viewed", p, CONSTANTS.screen)
         if (player != null) {
             if (player.playWhenReady) {

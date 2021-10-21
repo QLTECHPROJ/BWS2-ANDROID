@@ -473,7 +473,7 @@ class AssProcessActivity : AppCompatActivity() {
                         i.putExtra("plan", "0")
                         startActivity(i)
                         finish()
-                    }else if (paymentType == "1"){
+                    }else {
                         val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("plan", "0")

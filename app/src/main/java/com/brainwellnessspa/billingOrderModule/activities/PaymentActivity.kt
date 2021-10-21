@@ -251,7 +251,7 @@ class PaymentActivity : AppCompatActivity() {
             } else {
                 holder.binding.ivCheck.setImageResource(R.drawable.ic_unchecked_icon)
             }
-            holder.binding.llAddNewCard.setOnClickListener { view ->
+            holder.binding.llAddNewCard.setOnClickListener {
                 if (BWSApplication.isNetworkConnected(context)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     val listCall: Call<CardListModel> = APINewClient.client.getChangeCard(userId, listModel.customer)
@@ -265,6 +265,9 @@ class PaymentActivity : AppCompatActivity() {
                                         rvCardList.adapter = null
                                         rvCardList.visibility = View.GONE
                                     } else {
+                                        val p = Properties()
+                                        p.putValue("cardId",listModel.customer)
+                                        BWSApplication.addToSegment("Payment Card Selected", p, CONSTANTS.track)
                                         rvCardList.visibility = View.VISIBLE
                                         adapter = AllCardsAdapter(cardListModel.responseData!!, ImgV, progressBarHolder, rvCardList)
                                         rvCardList.adapter = adapter
@@ -287,7 +290,7 @@ class PaymentActivity : AppCompatActivity() {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             }
-            holder.binding.rlRemoveCard.setOnClickListener { view ->
+            holder.binding.rlRemoveCard.setOnClickListener {
                 val dialog = Dialog(context)
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.delete_payment_card)
@@ -321,6 +324,9 @@ class PaymentActivity : AppCompatActivity() {
                                             if (response.isSuccessful) {
                                                 val cardModel: CardModel? = response.body()
                                                 if (cardModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
+                                                    val p = Properties()
+                                                    p.putValue("cardId",listModel.customer)
+                                                    BWSApplication.addToSegment("Payment Card Removed", p, CONSTANTS.track)
                                                     prepareCardList()
                                                     dialog.dismiss()
                                                     BWSApplication.showToast(cardModel.responseMessage, activity)
