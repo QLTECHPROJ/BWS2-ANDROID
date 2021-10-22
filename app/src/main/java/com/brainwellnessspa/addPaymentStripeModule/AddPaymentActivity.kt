@@ -184,6 +184,8 @@ class AddPaymentActivity : AppCompatActivity() {
                 binding.tlName.error = ""
                 binding.tlNumber.error = ""
                 binding.txtError.text = ""
+                val p = Properties()
+                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track)
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 val strCardNo: String = binding.etNumber.text.toString().trim().replace("\\s+", "")
                 val months = binding1.MonthPicker.value
@@ -212,8 +214,11 @@ class AddPaymentActivity : AppCompatActivity() {
                                                 val keyboard = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                                                 keyboard.hideSoftInputFromWindow(view.windowToken, 0)
                                                 val p = Properties()
-                                                p.putValue("userId", UserID)
-                                                BWSApplication.addToSegment("Payment Card Add Clicked", p, CONSTANTS.track)
+                                                p.putValue("cardNumber", strCardNo)
+                                                p.putValue("cardHolderName", binding.etName.text.toString())
+                                                p.putValue("cardExpiry", "$months/$Years")
+                                                p.putValue("cardCvv",  binding.etCvv.text.toString())
+                                                BWSApplication.addToSegment("Payment Card Added", p, CONSTANTS.track)
                                                 finish()
                                                 BWSApplication.showToast(cardModel.responseMessage, activity)
                                             } else if (cardModel.responseCode.equals(getString(R.string.ResponseCodefail), ignoreCase = true)) {
