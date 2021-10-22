@@ -99,7 +99,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             myBackPress = true
             val i = Intent(ctx, AddAudioActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             i.putExtra("PlaylistID", playlistId)
             startActivity(i)
             finish()
@@ -119,7 +119,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
     override fun onBackPressed() {
         myBackPress = true
         val i = Intent(ctx, AddAudioActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
         i.putExtra("PlaylistID", playlistId)
         startActivity(i)
         finish()
@@ -414,7 +414,7 @@ class  ViewSuggestedActivity : AppCompatActivity() {
                      addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                     if (playlistId.equals("", ignoreCase = true)) {
                         val i = Intent(ctx, AddPlaylistActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         i.putExtra("AudioId", listModel[position].iD)
                         i.putExtra("ScreenView", "Audio Details Screen")
                         i.putExtra("PlaylistID", "")

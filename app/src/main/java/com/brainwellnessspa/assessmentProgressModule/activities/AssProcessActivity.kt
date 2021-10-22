@@ -473,7 +473,7 @@ class AssProcessActivity : AppCompatActivity() {
                         i.putExtra("plan", "0")
                         startActivity(i)
                         finish()
-                    }else if (paymentType == "1"){
+                    }else if (paymentType == "1") {
                         val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("plan", "0")
@@ -490,7 +490,7 @@ class AssProcessActivity : AppCompatActivity() {
                     finish()
                 } else {
                     val intent = Intent(applicationContext, ThankYouActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
                     startActivity(intent)
                     finish()
                 }

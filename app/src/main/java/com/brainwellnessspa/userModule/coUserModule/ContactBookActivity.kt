@@ -85,7 +85,7 @@ class ContactBookActivity : AppCompatActivity() {
             IsFirstClick = "0"
             myBackPress = true
             val i = Intent(applicationContext, AddCouserActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(i)
             finish()
         }
@@ -143,7 +143,7 @@ class ContactBookActivity : AppCompatActivity() {
         IsFirstClick = "0"
         myBackPress = true
         val i = Intent(applicationContext, AddCouserActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
         startActivity(i)
         finish()
     }

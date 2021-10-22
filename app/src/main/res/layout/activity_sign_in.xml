@@ -543,6 +543,7 @@
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:paddingTop="@dimen/_20sdp"
+                        android:visibility="gone"
                         android:text="@string/info_bwa_two"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/_12sdp"

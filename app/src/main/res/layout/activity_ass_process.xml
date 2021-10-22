@@ -31,7 +31,7 @@
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
-                android:text="@string/get_your_wellness_score"
+                android:text="@string/great"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp"
                 tools:ignore="SpUsage" />
@@ -390,6 +390,7 @@
                     android:layout_marginTop="@dimen/_18sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
+                    android:textColor="@color/black"
                     android:lineSpacingExtra="@dimen/_10sdp"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />

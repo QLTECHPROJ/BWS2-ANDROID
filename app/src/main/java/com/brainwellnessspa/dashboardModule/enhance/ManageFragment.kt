@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.*
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -28,10 +29,14 @@ import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
+import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
+import com.brainwellnessspa.billingOrderModule.activities.IAPBillingOrderActivity
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.roomDataBase.*
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.GetCurrentAudioPosition
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemovePlayer
+import com.brainwellnessspa.userModule.models.AuthOtpModel
 
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -112,10 +117,103 @@ class ManageFragment : Fragment() {
         networkCheck()
         binding.llSearch.setOnClickListener {
             if (isNetworkConnected(activity)) {
-                val i = Intent(ctx, AddAudioActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                i.putExtra("PlaylistID", "")
-                startActivity(i)
+                if (isNetworkConnected(ctx)) {
+                    showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                    APINewClient.client.getCoUserDetails(coUserId).enqueue(object : Callback<AuthOtpModel?> {
+                        override fun onResponse(call: Call<AuthOtpModel?>, response: Response<AuthOtpModel?>) {
+                            try {
+                                val listModel = response.body()
+                                if (listModel != null) {
+                                    when {
+                                        listModel.ResponseCode == ctx.getString(R.string.ResponseCodesuccess) -> {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                            val shared = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                            val editor = shared?.edit()
+                                            if (editor != null) {
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
+                                                if (listModel.ResponseData.paymentType == "0") {
+                                                    // Stripe
+                                                    try {
+                                                        if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.oldPaymentDetails[0].PlanContent)
+                                                        }
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                } else if (listModel.ResponseData.paymentType == "1") {
+                                                    // IAP
+                                                    try {
+                                                        if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                            editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                                        }
+                                                    } catch (e: Exception) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+
+                                                IsLock = listModel.ResponseData.Islock
+                                                editor.apply()
+                                                val i = Intent(ctx, AddAudioActivity::class.java)
+                                                i .flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                i.putExtra("PlaylistID", "")
+                                                startActivity(i)
+                                            }
+                                        }
+                                        listModel.ResponseCode.equals(activity?.getString(R.string.ResponseCodeDeleted)) -> {
+                                            callDelete403(act, listModel.ResponseMessage)
+                                        }
+                                        else -> {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        }
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<AuthOtpModel?>, t: Throwable) {
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        }
+                    })
+                }
+
+
             } else {
                 showToast(getString(R.string.no_server_found), activity)
             }

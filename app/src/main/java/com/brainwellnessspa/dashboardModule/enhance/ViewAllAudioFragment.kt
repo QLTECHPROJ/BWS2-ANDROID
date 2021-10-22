@@ -267,7 +267,7 @@ class ViewAllAudioFragment : Fragment() {
                 p.putValue("sound", hundredVolume.toString())
                 addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                 val i = Intent(getActivity(), AddPlaylistActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 i.putExtra("AudioId", listModelList[position].iD)
                 i.putExtra("ScreenView", "Audio View All Screen")
                 i.putExtra("PlaylistID", "")

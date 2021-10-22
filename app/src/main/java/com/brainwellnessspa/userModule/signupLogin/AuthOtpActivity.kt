@@ -381,7 +381,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         callIdentify(ctx)
                         if (signupFlag.equals("1")) {
                             val i = Intent(activity, EmailVerifyActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(i)
                             finish()
                         } else {
@@ -389,13 +389,13 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 when {
                                     listModel.ResponseData.IsFirst == "1" -> {
                                         val i = Intent(activity, EmailVerifyActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(i)
                                         finish()
                                     }
                                     listModel.ResponseData.isAssessmentCompleted == "0" -> {
                                         val intent = Intent(activity, AssProcessActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         intent.putExtra("Navigation", "Enhance")
                                         startActivity(intent)
@@ -403,13 +403,13 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     }
                                     listModel.ResponseData.isProfileCompleted == "0" -> {
                                         val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
                                         val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra("IsFirst", "1")
                                         startActivity(intent)
                                         finish()
@@ -418,7 +418,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             } else {
                                 if (listModel.ResponseData.isAssessmentCompleted == "0") {
                                     val intent = Intent(activity, AssProcessActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     intent.putExtra("Navigation", "Enhance")
                                     startActivity(intent)
@@ -445,18 +445,18 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 } else {
                                     if (listModel.ResponseData.CoUserCount > "0") {
                                         val intent = Intent(activity, UserListActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     } else {
                                         if (listModel.ResponseData.isProfileCompleted == "0") {
                                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
                                         } else {
                                             val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             intent.putExtra("IsFirst", "1")
                                             startActivity(intent)
                                             finish()

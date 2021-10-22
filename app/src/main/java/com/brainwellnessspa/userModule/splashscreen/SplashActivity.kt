@@ -9,6 +9,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.*
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
@@ -75,6 +76,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
 
     /* TODO function for app started  */
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
         context = this@SplashActivity
@@ -400,7 +402,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                 message = intent.getStringExtra("message");
                 IsLockNoti = intent.getStringExtra("IsLock");
                 if (flag != null && flag.equals("Playlist")) {
-                    if (!IsLockNoti.equals("1")) {
+                    if (!IsLockNoti.equals("0")) {
                         resultIntent = Intent(this, BottomNavigationActivity::class.java)
                         resultIntent.putExtra("IsFirst", "0")
                         startActivity(resultIntent)
@@ -611,14 +613,14 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                     }
                 } else {
                     if (isAssessmentCompleted.equals("0")) {
-                      /*  val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        /*  val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                         intent.putExtra("Navigation", "Enhance")
                         startActivity(intent)
                         finish()*/
                         val i = Intent(activity, AssProcessActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         i.putExtra(CONSTANTS.ASSPROCESS, "1")
                         i.putExtra("Navigation", "enhance")
                         i.putExtra(CONSTANTS.IndexScore, "58")
@@ -695,14 +697,14 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                         }
                     } else if (isPinSet.equals("0") || isPinSet.equals("")) {
                         val intent = Intent(applicationContext, EnhanceDoneActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
                         startActivity(intent)
                         finish()
                     }
                 }
 
             }
-        }, (2 * 800).toLong())
+        }, (2 * 600).toLong())
     }
 
     /* TODO function for segment analytics  */

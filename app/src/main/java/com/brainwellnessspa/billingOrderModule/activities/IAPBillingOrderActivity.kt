@@ -60,7 +60,7 @@ class IAPBillingOrderActivity : AppCompatActivity() {
         /* This is the upgrade plan click */
         binding.btnUpgradePlan.setOnClickListener {
             val i = Intent(activity, UpgradePlanActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             i.putExtra("PlanId", listModelGlobal.responseData!!.planId)
             i.putExtra("DeviceType", listModelGlobal.responseData!!.deviceType)
             startActivity(i)
@@ -70,7 +70,7 @@ class IAPBillingOrderActivity : AppCompatActivity() {
         /* This is the cancel plan click */
         binding.tvCancel.setOnClickListener {
             val i = Intent(activity, IAPCancelMembershipActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             i.putExtra("screenView", "1")
             val c: Calendar = Calendar.getInstance()
             c.timeInMillis = listModelGlobal.responseData!!.planPurchaseDate!!.toInt() * 1000L

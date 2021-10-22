@@ -312,7 +312,7 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvSAViewAll.setOnClickListener {
                                         notificationStatus = true
                                         val i = Intent(ctx, ViewSuggestedActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         i.putExtra("Name", "Suggested Audios")
                                         i.putExtra("PlaylistID", playlistId)
                                         i.putParcelableArrayListExtra("AudiolistModel", listModel.responseData)
@@ -569,7 +569,7 @@ class AddAudioActivity : AppCompatActivity() {
                             p.putValue("sound", hundredVolume.toString())
                             addToSegment("Add To Playlist Clicked", p, CONSTANTS.track)
                             val i = Intent(ctx, AddPlaylistActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             i.putExtra("AudioId", audioID)
                             i.putExtra("ScreenView", "Audio Details Screen")
                             i.putExtra("PlaylistID", "")

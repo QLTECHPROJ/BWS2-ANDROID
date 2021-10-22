@@ -54,6 +54,7 @@ class MembershipActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership)
         ctx = this@MembershipActivity
         act = this@MembershipActivity
+
         binding.llBack.setOnClickListener { view ->
             callSignActivity(act)
         }
@@ -68,7 +69,7 @@ class MembershipActivity : AppCompatActivity() {
         binding.rvFaqList.itemAnimator = DefaultItemAnimator()
         val p = Properties()
         i = Intent(ctx, OrderSummaryActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
         BWSApplication.addToSegment("Plan List Viewed", p, CONSTANTS.screen)
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
@@ -252,5 +253,4 @@ class MembershipActivity : AppCompatActivity() {
             }
         }
     }
-
 }

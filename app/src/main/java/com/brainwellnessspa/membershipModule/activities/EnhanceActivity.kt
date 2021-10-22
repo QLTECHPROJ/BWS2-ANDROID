@@ -82,22 +82,10 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(activity)
         i = Intent(ctx, IAPOrderSummaryActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        binding.llBack.setOnClickListener {
-            if (doubleBackToExitPressedOnce) {
-                finishAffinity()
-                return@setOnClickListener
-            }
-            this.doubleBackToExitPressedOnce = true
-            BWSApplication.showToast("Press again to exit", activity)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
 
-            Handler(Looper.myLooper()!!).postDelayed({
-                doubleBackToExitPressedOnce = false
-            }, 2000)
-           /* if (BWSApplication.IsBackFromEnhance.equals("1")) {
-            } else {
-                finishAffinity()
-            }*/
+        binding.llBack.setOnClickListener {
+            onBackPressed()
         }
 
         binding.btnFreeJoin.setOnClickListener {
@@ -108,14 +96,14 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
         binding.tvtncs.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             i.putExtra(CONSTANTS.Web, "Tnc")
             startActivity(i)
         }
 
         binding.tvPrivacyPolicys.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
             startActivity(i)
         }

@@ -267,7 +267,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
                                 p.putValue("medication", medication)
                                 BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
                                 val i = Intent(ctx, SessionsStepThreeActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(i)
                                 finish()
                             }

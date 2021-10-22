@@ -69,7 +69,7 @@
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_4sdp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/session_done_icon" />
+                    android:src="@drawable/session_inprogress_status_icon" />
 
             </LinearLayout>
 
