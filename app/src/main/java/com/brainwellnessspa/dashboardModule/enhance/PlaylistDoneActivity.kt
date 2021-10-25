@@ -56,7 +56,7 @@ class PlaylistDoneActivity : AppCompatActivity() {
             if (backClick.equals("0")) {
                 checkUserDetails()
                 val intent = Intent(activity, BottomNavigationActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 intent.putExtra("IsFirst", "1")
                 startActivity(intent)
                 finish()

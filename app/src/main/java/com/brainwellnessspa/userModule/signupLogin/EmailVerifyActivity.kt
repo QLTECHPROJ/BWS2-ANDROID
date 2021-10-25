@@ -46,24 +46,24 @@ class EmailVerifyActivity : AppCompatActivity() {
         binding.btnContinue.setOnClickListener {
             if (isAssessmentCompleted.equals("0")) {
                 val intent = Intent(applicationContext, AssProcessActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                 intent.putExtra("Navigation","Enhance")
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("0")) {
                 val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
                 finish()
             } else if (avgSleepTime.equals("")) {
                 val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
                 finish()
             } else if (isProfileCompleted.equals("1") && isAssessmentCompleted.equals("1")) {
                 val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 intent.putExtra("IsFirst", "0")
                 startActivity(intent)
                 finish()

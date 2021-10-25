@@ -396,7 +396,7 @@ class AddPlaylistActivity : AppCompatActivity() {
                             rlCreate.setOnClickListener { //                                addToPlayList = true;
                                 //                                MyPlaylistId = PlaylistID;
                                 val intent = Intent(ctx, MyPlaylistListingActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 intent.putExtra("New", New)
                                 intent.putExtra("PlaylistID", PlaylistID)
                                 intent.putExtra("PlaylistName", name)

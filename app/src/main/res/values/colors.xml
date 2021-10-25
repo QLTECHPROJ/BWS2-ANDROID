@@ -50,4 +50,5 @@
     <color name="session_progress">#9A86BB</color>
     <color name="pink">#C44B6C</color>
     <color name="lighted_gray">#40DADADA</color>
+    <color name="sleeptime_color_bg">#f67866</color>
 </resources>

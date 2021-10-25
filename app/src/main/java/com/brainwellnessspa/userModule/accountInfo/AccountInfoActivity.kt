@@ -53,7 +53,7 @@ class AccountInfoActivity : AppCompatActivity() {
             } else  {
                 if (isNetworkConnected(this)) {
                     val i = Intent(this, EditProfileActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                     startActivity(i)
                     finish()
                 } else {
@@ -65,7 +65,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llDeleteAc.setOnClickListener {
             if (isNetworkConnected(this)) {
                 val i = Intent(this, IAPCancelMembershipActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 i.putExtra("screenView", "0")
                 startActivity(i)
                 finish()
@@ -77,7 +77,7 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.llChangePin.setOnClickListener {
             if (isNetworkConnected(this)) {
                 val i = Intent(this, ChangePinActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(i)
                 finish()
             } else {

@@ -37,6 +37,7 @@ class OrderSummaryActivity : AppCompatActivity() {
     var UserId: String? = null
 
     val gson = Gson()
+
     //    lateinit var params:SkuDetailsParams
     /* renewPlanFlag, renewPlanId, */
     var ComesTrue: String? = null
@@ -47,7 +48,7 @@ class OrderSummaryActivity : AppCompatActivity() {
     var position = 0
     private var mLastClickTime: Long = 0
     lateinit var ctx: Context
-    lateinit  var activity: Activity
+    lateinit var activity: Activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary)
@@ -127,16 +128,11 @@ class OrderSummaryActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        binding.llBack.setOnClickListener { view ->
-            if (!comeFrom.equals("", ignoreCase = true)) {
-                val i = Intent(ctx, MembershipChangeActivity::class.java)
-                i.putExtra("ComeFrom", ComesTrue)
-                startActivity(i)
-                finish()
-            } else {
-                finish()
-            }
+
+        binding.llBack.setOnClickListener {
+           onBackPressed()
         }
+
         binding.btnApply.setOnClickListener { v -> prepareCheckReferCode(binding.edtCode.text.toString()) }
         binding.btnCheckout.setOnClickListener { view ->
             try {

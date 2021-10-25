@@ -103,7 +103,7 @@ class UserDetailActivity : AppCompatActivity() {
                                         finish()
                                     } else {
                                         val intent = Intent(applicationContext, UserListActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     }

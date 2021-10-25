@@ -194,7 +194,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                     showToast(listModel.responseMessage, activity)
                                     if (mainAccountID == listModel.responseData?.userId) {
                                         val intent = Intent(applicationContext, WalkScreenActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ScreenView, "4")
                                         startActivity(intent)
                                         finish()
@@ -203,7 +203,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
                                             finish()
                                         } else {
                                             val intent = Intent(applicationContext, UserListActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
                                         }

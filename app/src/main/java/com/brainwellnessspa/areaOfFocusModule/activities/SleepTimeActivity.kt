@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ class SleepTimeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sleep_time)
+
         activity = this@SleepTimeActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -109,7 +111,7 @@ class SleepTimeActivity : AppCompatActivity() {
                 editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel[position].name)
                 editor.apply()
                 val i = Intent(ctx, AreaOfFocusActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 i.putExtra("SleepTime", listModel[position].name)
                 i.putExtra("BackClick", "0")
                 ctx.startActivity(i)

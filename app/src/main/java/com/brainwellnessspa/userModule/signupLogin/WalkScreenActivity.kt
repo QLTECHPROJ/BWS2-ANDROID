@@ -83,7 +83,7 @@ class WalkScreenActivity : AppCompatActivity() {
 
         binding.rlStepOne.setOnClickListener {
             val intent = Intent(applicationContext, DassAssSliderActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()
         }
@@ -92,21 +92,21 @@ class WalkScreenActivity : AppCompatActivity() {
             val p = Properties()
             BWSApplication.addToSegment("Profile Step Start Screen Viewed", p, CONSTANTS.screen)
             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()
         }
 
         binding.rlStepThree.setOnClickListener {
             val intent = Intent(applicationContext, DoingGoodActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()
         }
 
         binding.rlStepFour.setOnClickListener {
             val intent = Intent(applicationContext, UserDetailActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()
         }

@@ -146,28 +146,28 @@ class AddCouserActivity : AppCompatActivity() {
                             if (listModel.ResponseData.isPinSet.equals("1")) {
                                 if (listModel.ResponseData.MainAccountID == listModel.ResponseData.UserId) {
                                     val i = Intent(applicationContext, UserDetailActivity::class.java)
-                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(i)
                                 } /* else {
                                        if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, AssProcessActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.isProfileCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.AvgSleepTime.equals("", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, SleepTimeActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             startActivity(intent)
                                             finish()
                                         } else if (authOtpModel.ResponseData.isProfileCompleted.equals("1", ignoreCase = true) && authOtpModel.ResponseData.isAssessmentCompleted.equals("1", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                             intent.putExtra("IsFirst", "0")
                                             startActivity(intent)
                                             finish()
@@ -176,7 +176,7 @@ class AddCouserActivity : AppCompatActivity() {
                             } else if (listModel.ResponseData.isPinSet.equals("0", ignoreCase = true) || listModel.ResponseData.isPinSet.equals("", ignoreCase = true)) {
                                 comeHomeScreen = "0"
                                 val i = Intent(applicationContext, CouserSetupPinActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 i.putExtra("subUserId", listModel.ResponseData.UserId)
                                 startActivity(i)
                             }
@@ -212,7 +212,7 @@ class AddCouserActivity : AppCompatActivity() {
             mainLayout.setOnClickListener {
                 if (isNetworkConnected(this)) {
                     val i = Intent(applicationContext, ContactBookActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                     startActivity(i)
                     finish()
                     dialog.dismiss()

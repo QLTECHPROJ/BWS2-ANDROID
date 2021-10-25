@@ -211,7 +211,7 @@ class SessionDetailFragment : Fragment() {
                     holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
                     holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
                 }
-                catName[position].userSessionStatus.equals("InProgress") -> {
+                catName[position].userSessionStatus.equals("Inprogress") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     Glide.with(activity!!).load(R.drawable.session_idea_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))

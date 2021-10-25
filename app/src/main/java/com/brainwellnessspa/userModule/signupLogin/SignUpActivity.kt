@@ -413,7 +413,7 @@ class SignUpActivity : AppCompatActivity() {
                             p.putValue("isOtpReceived", "Yes")
                             showToast(listModel.ResponseMessage, activity)
                             val i = Intent(ctx, AuthOtpActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             i.putExtra(CONSTANTS.mobileNumber, binding.etNumber.text.toString())
                             i.putExtra(CONSTANTS.countryCode, countryCode)
                             i.putExtra(CONSTANTS.signupFlag, CONSTANTS.FLAG_ONE)
