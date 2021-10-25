@@ -1887,7 +1887,7 @@ public class BWSApplication extends Application {
         // add data
         setData(chart, ctx, indexData.getGraphIndexScore());
         Legend l = chart.getLegend();
-        l.setForm(LegendForm.CIRCLE);
+        l.setForm(LegendForm.LINE);
         l.setFormSize(0f);
         l.setFormToTextSpace(5f);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
