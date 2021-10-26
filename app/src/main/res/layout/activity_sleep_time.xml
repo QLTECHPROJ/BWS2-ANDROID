@@ -9,35 +9,29 @@
         android:background="@color/white"
         tools:context=".areaOfFocusModule.activities.SleepTimeActivity">
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/rlFirst"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-10dp"
+            android:contentDescription="@string/todo"
+            android:scaleType="fitXY"
+            android:src="@drawable/sleep_time_banner" />
+
+        <LinearLayout
+            android:id="@+id/llBack"
+            android:layout_width="42dp"
+            android:layout_height="@dimen/_56sdp"
+            android:gravity="center">
 
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-10dp"
                 android:contentDescription="@string/todo"
-                android:scaleType="fitXY"
-                android:src="@drawable/sleep_time_banner" />
+                android:src="@drawable/ic_left_arrow_icon"
+                app:tint="@color/white" />
 
-            <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="@dimen/_56sdp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/todo"
-                    android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/white" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -74,7 +68,8 @@
                     android:text="@string/when_we_recommend_a_playlist_we_ensure_that_it_matches_with_your_sleep_time_therefore_it_s_important_to_select_a_range_as_accurate_as_possible"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
-                    tools:ignore="SpUsage" />
+                    tools:ignore="SpUsage"
+                    tools:targetApi="o" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTimeSlot"

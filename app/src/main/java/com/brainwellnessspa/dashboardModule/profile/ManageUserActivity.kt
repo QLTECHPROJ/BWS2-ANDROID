@@ -122,6 +122,11 @@ class ManageUserActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val list = manageUserListModel.userList
 
+            if (manageUserListModel.userList?.size == 1){
+                binding.btnRemove.visibility = View.GONE
+            }else {
+                binding.btnRemove.visibility = View.VISIBLE
+            }
             list?.let {
                 holder.binding.tvName.text = list[position].name
 
@@ -315,6 +320,9 @@ class ManageUserActivity : AppCompatActivity() {
                                                     prepareEnhanceUserList(activity)
                                                     showToast(listModel.responseMessage, activity)
                                                     dialog!!.hide()
+                                                    binding.btnRemove.isEnabled = false
+                                                    binding.btnRemove.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                                                    binding.btnRemove.setBackgroundResource(R.drawable.gray_round_cornor)
                                                 }
                                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
                                                     callDelete403(activity, listModel.responseMessage)

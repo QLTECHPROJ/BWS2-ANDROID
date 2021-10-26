@@ -27,6 +27,7 @@ import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
+import com.brainwellnessspa.userModule.signupLogin.SignUpActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.CONSTANTS
@@ -44,7 +45,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
+class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
@@ -61,6 +62,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
     var image: String? = ""
     var directLogin: String? = ""
     var isMainAccount: String? = ""
+    var IsLoginFirstTime: String? = ""
     var isSetLoginPin: String? = ""
     var timezoneName: String? = ""
     var planId: String? = ""
@@ -127,6 +129,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
         isPinSet = shared.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
         planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+        IsLoginFirstTime = shared.getString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -173,6 +176,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                             editor.putString(CONSTANTS.PREFE_ACCESS_supportTitle, versionModel.ResponseData.supportTitle)
                             editor.putString(CONSTANTS.PREFE_ACCESS_supportText, versionModel.ResponseData.supportText)
                             editor.putString(CONSTANTS.PREFE_ACCESS_supportEmail, versionModel.ResponseData.supportEmail)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, versionModel.ResponseData.IsLoginFirstTime)
                             editor.apply()
                             when {
                                 versionModel.ResponseData.IsForce.equals("0") -> {
@@ -392,7 +396,16 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
 
     private fun callDashboard() {
         Handler(Looper.getMainLooper()).postDelayed({
-            if (userId.equals("")) {
+            if (IsLoginFirstTime.equals("1")) {
+                val i = Intent(activity, SignUpActivity::class.java)
+                i.putExtra("mobileNo", "")
+                i.putExtra("countryCode", "")
+                i.putExtra("name", "")
+                i.putExtra("email", "")
+                i.putExtra("countryShortName", "")
+                startActivity(i)
+                finish()
+            } else if (userId.equals("")) {
                 callSignActivity(activity)
             } else if (intent.hasExtra("flag")) {
                 val resultIntent: Intent?
@@ -446,6 +459,7 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                 isPinSet = shared.getString(CONSTANTS.PREFE_ACCESS_isPinSet, "")
                 planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
                 isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+                IsLoginFirstTime = shared.getString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, "")
                 val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                 avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
 
@@ -597,35 +611,50 @@ class  SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotification
                                 }
                             }
                         } else {
-                            if (coUserCount.toString() > "0") {
-                                val intent = Intent(activity, UserListActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                startActivity(intent)
-                                finish()
-                            } else {
-                                val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                intent.putExtra("IsFirst", "0")
-                                startActivity(intent)
-                                finish()
+                            when {
+                                coUserCount.toString() > "0" -> {
+                                    val intent = Intent(activity, UserListActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                isAssessmentCompleted.equals("0") -> {
+                                    val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                    intent.putExtra("Navigation", "Enhance")
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                isProfileCompleted.equals("0") -> {
+                                    val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                avgSleepTime.equals("") -> {
+                                    val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                else -> {
+                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    intent.putExtra("IsFirst", "0")
+                                    startActivity(intent)
+                                    finish()
+                                }
                             }
                         }
                     }
                 } else {
                     if (isAssessmentCompleted.equals("0")) {
-                        /*  val intent = Intent(applicationContext, AssProcessActivity::class.java)
+                        val intent = Intent(applicationContext, AssProcessActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                         intent.putExtra("Navigation", "Enhance")
                         startActivity(intent)
-                        finish()*/
-                        val i = Intent(activity, AssProcessActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        i.putExtra(CONSTANTS.ASSPROCESS, "1")
-                        i.putExtra("Navigation", "enhance")
-                        i.putExtra(CONSTANTS.IndexScore, "58")
-                        i.putExtra(CONSTANTS.ScoreLevel, "asdf")
-                        startActivity(i)
                         finish()
                     } else if (isPinSet.equals("1")) {
                         if (isSetLoginPin.equals("1")) {

@@ -47,8 +47,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_14sdp"
-                android:visibility="gone"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -89,6 +89,7 @@
             android:text="@string/Remove"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
+            android:visibility="gone"
             tools:ignore="SpUsage" />
 
 
