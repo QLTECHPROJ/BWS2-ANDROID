@@ -1739,179 +1739,164 @@ class HomeFragment : Fragment() {
             }
 
             holder.bind.llAddNewCard.setOnClickListener {
-                if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx, act)
-                } else {
-                    if (modelList[position].isPinSet.equals("1")) {
-                        if (userId!! == modelList[position].userID) {
-                            mBottomSheetDialog.hide()
-                        } else {
-                            selectedItem = position
-                            pos++
-                            notifyDataSetChanged()
-                            val dialog = Dialog(ctx)
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                            dialog.setContentView(R.layout.comfirm_pin_layout)
-                            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                            val btnDone = dialog.findViewById<Button>(R.id.btnDone)
-                            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
-                            val txtError = dialog.findViewById<TextView>(R.id.txtError)
-                            val tvForgotPin: TextView = dialog.findViewById(R.id.tvForgotPin)
-                            val edtOTP1 = dialog.findViewById<EditText>(R.id.edtOTP1)
-                            val edtOTP2 = dialog.findViewById<EditText>(R.id.edtOTP2)
-                            val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
-                            val edtOTP4 = dialog.findViewById<EditText>(R.id.edtOTP4)
-                            val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-                            tvTitle.text = "Unlock the app"
-                            editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
-                            edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                            edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                            edtOTP3.addTextChangedListener(PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                            edtOTP4.addTextChangedListener(PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
-                            edtOTP1.setOnKeyListener(PinOnKeyListener(0))
-                            edtOTP2.setOnKeyListener(PinOnKeyListener(1))
-                            edtOTP3.setOnKeyListener(PinOnKeyListener(2))
-                            edtOTP4.setOnKeyListener(PinOnKeyListener(3))
-                            dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    dialog.dismiss()
-                                    return@setOnKeyListener true
-                                }
-                                false
+                //                if (IsLock.equals("1")) {
+                //                    callEnhanceActivity(ctx, act)
+                //                } else {
+                if (modelList[position].isPinSet.equals("1")) {
+                    if (userId!! == modelList[position].userID) {
+                        mBottomSheetDialog.hide()
+                    } else {
+                        selectedItem = position
+                        pos++
+                        notifyDataSetChanged()
+                        val dialog = Dialog(ctx)
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialog.setContentView(R.layout.comfirm_pin_layout)
+                        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        val btnDone = dialog.findViewById<Button>(R.id.btnDone)
+                        val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+                        val txtError = dialog.findViewById<TextView>(R.id.txtError)
+                        val tvForgotPin: TextView = dialog.findViewById(R.id.tvForgotPin)
+                        val edtOTP1 = dialog.findViewById<EditText>(R.id.edtOTP1)
+                        val edtOTP2 = dialog.findViewById<EditText>(R.id.edtOTP2)
+                        val edtOTP3 = dialog.findViewById<EditText>(R.id.edtOTP3)
+                        val edtOTP4 = dialog.findViewById<EditText>(R.id.edtOTP4)
+                        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
+                        tvTitle.text = "Unlock the app"
+                        editTexts = arrayOf(edtOTP1, edtOTP2, edtOTP3, edtOTP4)
+                        edtOTP1.addTextChangedListener(PinTextWatcher(0, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP2.addTextChangedListener(PinTextWatcher(1, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP3.addTextChangedListener(PinTextWatcher(2, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP4.addTextChangedListener(PinTextWatcher(3, edtOTP1, edtOTP2, edtOTP3, edtOTP4, btnDone))
+                        edtOTP1.setOnKeyListener(PinOnKeyListener(0))
+                        edtOTP2.setOnKeyListener(PinOnKeyListener(1))
+                        edtOTP3.setOnKeyListener(PinOnKeyListener(2))
+                        edtOTP4.setOnKeyListener(PinOnKeyListener(3))
+                        dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss()
+                                return@setOnKeyListener true
                             }
+                            false
+                        }
 
-                            btnDone.setOnClickListener {
-                                if (edtOTP1.text.toString() == "" && edtOTP2.text.toString() == "" && edtOTP3.text.toString() == "" && edtOTP4.text.toString() == "") {
-                                    txtError.visibility = View.VISIBLE
-                                    txtError.text = "Please enter OTP"
-                                } else {
-                                    if (isNetworkConnected(ctx)) {
-                                        txtError.visibility = View.GONE
-                                        txtError.text = ""
-                                        progressBar.visibility = View.VISIBLE
-                                        progressBar.invalidate()
-                                        val listCall = APINewClient.client.getVerifyPin(modelList[selectedItem].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
-                                        listCall.enqueue(object : Callback<AuthOtpModel> {
-                                            @SuppressLint("HardwareIds")
-                                            override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
-                                                try {
-                                                    progressBar.visibility = View.GONE
-                                                    val listModel: AuthOtpModel = response.body()!!
-                                                    when (listModel.ResponseCode) {
-                                                        ctx.getString(R.string.ResponseCodesuccess) -> {
-                                                            mBottomSheetDialog.hide()
-                                                            dialog.dismiss()
-                                                            /*if (!listModel.responseData!!.userID.equals(userId) && !listModel.responseData!!.coUserId.equals(coUserId)) {
+                        btnDone.setOnClickListener {
+                            if (edtOTP1.text.toString() == "" && edtOTP2.text.toString() == "" && edtOTP3.text.toString() == "" && edtOTP4.text.toString() == "") {
+                                txtError.visibility = View.VISIBLE
+                                txtError.text = "Please enter OTP"
+                            } else {
+                                if (isNetworkConnected(ctx)) {
+                                    txtError.visibility = View.GONE
+                                    txtError.text = ""
+                                    progressBar.visibility = View.VISIBLE
+                                    progressBar.invalidate()
+                                    val listCall = APINewClient.client.getVerifyPin(modelList[selectedItem].userID, edtOTP1.text.toString() + "" + edtOTP2.text.toString() + "" + edtOTP3.text.toString() + "" + edtOTP4.text.toString())
+                                    listCall.enqueue(object : Callback<AuthOtpModel> {
+                                        @SuppressLint("HardwareIds")
+                                        override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                                            try {
+                                                progressBar.visibility = View.GONE
+                                                val listModel: AuthOtpModel = response.body()!!
+                                                when (listModel.ResponseCode) {
+                                                    ctx.getString(R.string.ResponseCodesuccess) -> {
+                                                        mBottomSheetDialog.hide()
+                                                        dialog.dismiss()
+                                                        /*if (!listModel.responseData!!.userID.equals(userId) && !listModel.responseData!!.coUserId.equals(coUserId)) {
                                                                                                             callObserve1(ctx)
                                                                                                         } else {
                                                                                                             callObserve2(ctx)
                                                                                                         }*/
-                                                            Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
-                                                            Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
-                                                            logout = false
-                                                            mainAccountId = listModel.ResponseData.MainAccountID
-                                                            userId = listModel.ResponseData.UserId
-                                                            IsLock = listModel.ResponseData.Islock
-                                                            val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                                            val editor = shared.edit()
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
-                                                            editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
-                                                            try {
-                                                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
-                                                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
-                                                                }
-                                                            } catch (e: Exception) {
-                                                                e.printStackTrace()
+                                                        Log.e("New UserId MobileNo", listModel.ResponseData.MainAccountID + "....." + listModel.ResponseData.UserId)
+                                                        Log.e("Old UserId MobileNo", "$mainAccountId.....$userId")
+                                                        logout = false
+                                                        mainAccountId = listModel.ResponseData.MainAccountID
+                                                        userId = listModel.ResponseData.UserId
+                                                        IsLock = listModel.ResponseData.Islock
+                                                        val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                        val editor = shared.edit()
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isSetLoginPin, "1")
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                                                        editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
+                                                        try {
+                                                            if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                                                editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
                                                             }
-                                                            editor.apply()
-                                                            val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
-                                                            val edited = sharded.edit()
-                                                            edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
-                                                            val selectedCategoriesTitle = arrayListOf<String>()
-                                                            val selectedCategoriesName = arrayListOf<String>()
-                                                            val gson = Gson()
-                                                            for (i in listModel.ResponseData.AreaOfFocus) {
-                                                                selectedCategoriesTitle.add(i.MainCat)
-                                                                selectedCategoriesName.add(i.RecommendedCat)
-                                                            }
-                                                            edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
-                                                            edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
-                                                            edited.apply()
-                                                            if (listModel.ResponseData.isPinSet == "1") {
-                                                                if (listModel.ResponseData.IsFirst == "1") {
-                                                                    val intent = Intent(ctx, EmailVerifyActivity::class.java)
-                                                                    act.startActivity(intent)
-                                                                    act.finish()
-                                                                } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
-                                                                    val intent = Intent(ctx, AssProcessActivity::class.java)
-                                                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                                                    intent.putExtra("Navigation", "Enhance")
-                                                                    act.startActivity(intent)
-                                                                    act.finish()
-                                                                } else if (listModel.ResponseData.isProfileCompleted == "0") {
-                                                                    val intent = Intent(ctx, ProfileProgressActivity::class.java)
-                                                                    act.startActivity(intent)
-                                                                    act.finish()
-                                                                } else if (listModel.ResponseData.AvgSleepTime == "") {
-                                                                    val intent = Intent(ctx, SleepTimeActivity::class.java)
-                                                                    act.startActivity(intent)
-                                                                    act.finish()
-                                                                } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
-                                                                    prepareHomeData()
-                                                                    val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                                                    mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
-                                                                    userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-                                                                    userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
-                                                                    userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
-                                                                    scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
-                                                                    indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
-                                                                    isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
-                                                                    isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
-                                                                    binding.tvName.text = userName
-                                                                    /* Condition for get user Image*/
-                                                                    if (isNetworkConnected(ctx)) {
-                                                                        if (userImage.equals("")) {
-                                                                            binding.ivUser.visibility = View.GONE
-                                                                            name = if (userName.equals("")) {
-                                                                                "Guest"
-                                                                            } else {
-                                                                                userName.toString()
-                                                                            }
-                                                                            val letter = name?.substring(0, 1)
-                                                                            binding.rlLetter.visibility = View.VISIBLE
-                                                                            binding.tvLetter.text = letter
-                                                                        } else {
-                                                                            binding.ivUser.visibility = View.VISIBLE
-                                                                            binding.rlLetter.visibility = View.GONE
-                                                                            Glide.with(ctx).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
-                                                                        }
-                                                                    } else {
+                                                        } catch (e: Exception) {
+                                                            e.printStackTrace()
+                                                        }
+                                                        editor.apply()
+                                                        val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                                                        val edited = sharded.edit()
+                                                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                                                        val selectedCategoriesTitle = arrayListOf<String>()
+                                                        val selectedCategoriesName = arrayListOf<String>()
+                                                        val gson = Gson()
+                                                        for (i in listModel.ResponseData.AreaOfFocus) {
+                                                            selectedCategoriesTitle.add(i.MainCat)
+                                                            selectedCategoriesName.add(i.RecommendedCat)
+                                                        }
+                                                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle)) //Friend
+                                                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName)) //Friend
+                                                        edited.apply()
+                                                        if (listModel.ResponseData.isPinSet == "1") {
+                                                            if (listModel.ResponseData.IsFirst == "1") {
+                                                                val intent = Intent(ctx, EmailVerifyActivity::class.java)
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.isAssessmentCompleted == "0") {
+                                                                val intent = Intent(ctx, AssProcessActivity::class.java)
+                                                                intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+                                                                intent.putExtra("Navigation", "Enhance")
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.isProfileCompleted == "0") {
+                                                                val intent = Intent(ctx, ProfileProgressActivity::class.java)
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.AvgSleepTime == "") {
+                                                                val intent = Intent(ctx, SleepTimeActivity::class.java)
+                                                                act.startActivity(intent)
+                                                                act.finish()
+                                                            } else if (listModel.ResponseData.isProfileCompleted == "1" && listModel.ResponseData.isAssessmentCompleted == "1") {
+                                                                prepareHomeData()
+                                                                val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                                mainAccountId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
+                                                                userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+                                                                userName = shared1.getString(CONSTANTS.PREFE_ACCESS_NAME, "")
+                                                                userImage = shared1.getString(CONSTANTS.PREFE_ACCESS_IMAGE, "")
+                                                                scoreLevel = shared1.getString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, "")
+                                                                indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
+                                                                isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
+                                                                isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+                                                                binding.tvName.text = userName
+                                                                /* Condition for get user Image*/
+                                                                if (isNetworkConnected(ctx)) {
+                                                                    if (userImage.equals("")) {
                                                                         binding.ivUser.visibility = View.GONE
                                                                         name = if (userName.equals("")) {
                                                                             "Guest"
@@ -1921,177 +1906,192 @@ class HomeFragment : Fragment() {
                                                                         val letter = name?.substring(0, 1)
                                                                         binding.rlLetter.visibility = View.VISIBLE
                                                                         binding.tvLetter.text = letter
-                                                                    }
-                                                                    val layoutManager = FlexboxLayoutManager(ctx)
-                                                                    layoutManager.flexWrap = FlexWrap.WRAP
-                                                                    layoutManager.alignItems = AlignItems.STRETCH
-                                                                    layoutManager.flexDirection = FlexDirection.ROW
-                                                                    layoutManager.justifyContent = JustifyContent.FLEX_START
-                                                                    binding.rvAreaOfFocusCategory.layoutManager = layoutManager
-                                                                    val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
-                                                                    binding.rvAreaOfFocusCategory.adapter = adapter
-
-                                                                    if (isInCouser.equals("1")) {
-                                                                        binding.ivClickDown.visibility = View.GONE
-                                                                        binding.llBottomView.isClickable = false
-                                                                        binding.llBottomView.isEnabled = false
                                                                     } else {
-                                                                        binding.ivClickDown.visibility = View.VISIBLE
-                                                                        binding.llBottomView.isClickable = true
-                                                                        binding.llBottomView.isEnabled = true
+                                                                        binding.ivUser.visibility = View.VISIBLE
+                                                                        binding.rlLetter.visibility = View.GONE
+                                                                        Glide.with(ctx).load(userImage).thumbnail(0.10f).apply(RequestOptions.bitmapTransform(RoundedCorners(126))).into(binding.ivUser)
                                                                     }
-                                                                    /*val intent = Intent(ctx, BottomNavigationActivity::class.java)
+                                                                } else {
+                                                                    binding.ivUser.visibility = View.GONE
+                                                                    name = if (userName.equals("")) {
+                                                                        "Guest"
+                                                                    } else {
+                                                                        userName.toString()
+                                                                    }
+                                                                    val letter = name?.substring(0, 1)
+                                                                    binding.rlLetter.visibility = View.VISIBLE
+                                                                    binding.tvLetter.text = letter
+                                                                }
+                                                                val layoutManager = FlexboxLayoutManager(ctx)
+                                                                layoutManager.flexWrap = FlexWrap.WRAP
+                                                                layoutManager.alignItems = AlignItems.STRETCH
+                                                                layoutManager.flexDirection = FlexDirection.ROW
+                                                                layoutManager.justifyContent = JustifyContent.FLEX_START
+                                                                binding.rvAreaOfFocusCategory.layoutManager = layoutManager
+                                                                val adapter = AreaOfFocusAdapter(binding, ctx, selectedCategoriesName)
+                                                                binding.rvAreaOfFocusCategory.adapter = adapter
+
+                                                                if (isInCouser.equals("1")) {
+                                                                    binding.ivClickDown.visibility = View.GONE
+                                                                    binding.llBottomView.isClickable = false
+                                                                    binding.llBottomView.isEnabled = false
+                                                                } else {
+                                                                    binding.ivClickDown.visibility = View.VISIBLE
+                                                                    binding.llBottomView.isClickable = true
+                                                                    binding.llBottomView.isEnabled = true
+                                                                }
+                                                                /*val intent = Intent(ctx, BottomNavigationActivity::class.java)
                                                                         intent.putExtra("IsFirst", "0")
                                                                         act.startActivity(intent)
                                                                         act.finish()*/
-                                                                }
-                                                            } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
-                                                                IsFirstClick = "0"
-                                                                val intent = Intent(ctx, AddCouserActivity::class.java)
-                                                                act.startActivity(intent)
-                                                                act.finish()
                                                             }
-
-                                                            prepareHomeData()
-                                                            callAllRemovePlayer(ctx, act)
-                                                            val activity = SplashActivity()
-                                                            activity.setAnalytics(ctx.getString(R.string.segment_key_real_2_staging), ctx)
-
-                                                            //    showToast(listModel.responseMessage,act)
-                                                            callIdentify(act)
-                                                            val p1 = Properties()
-                                                            p1.putValue("deviceId", Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID))
-                                                            p1.putValue("deviceType", "Android")
-                                                            p1.putValue("name", listModel.ResponseData.Name)
-                                                            p1.putValue("countryCode", "")
-                                                            p1.putValue("countryName", "")
-                                                            p1.putValue("phone", listModel.ResponseData.Mobile)
-                                                            p1.putValue("email", listModel.ResponseData.Email)
-                                                            p1.putValue("plan", "")
-                                                            p1.putValue("planStatus", "")
-                                                            p1.putValue("planStartDt", "")
-                                                            p1.putValue("planExpiryDt", "")
-                                                            p1.putValue("clinikoId", "")
-                                                            var isProf = false
-                                                            var isAss = false
-                                                            isProf = if (listModel.ResponseData.isProfileCompleted.equals("1")) true else false
-                                                            isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1")) true else false
-                                                            p1.putValue("isProfileCompleted", isProf)
-                                                            p1.putValue("isAssessmentCompleted", isAss)
-                                                            p1.putValue("WellnessScore", listModel.ResponseData.indexScore)
-                                                            p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
-                                                            p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
-                                                            p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
-                                                            addToSegment("CoUser Login", p1, CONSTANTS.track)
-                                                        }
-                                                        ctx.getString(R.string.ResponseCodeDeleted) -> {
-                                                            txtError.visibility = View.GONE
-                                                            txtError.text = ""
-                                                            deleteCall(ctx)
-                                                            val i = Intent(ctx, SignInActivity::class.java)
-                                                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                                            i.putExtra("mobileNo", "")
-                                                            i.putExtra("countryCode", "")
-                                                            i.putExtra("name", "")
-                                                            i.putExtra("email", "")
-                                                            i.putExtra("countryShortName", "")
-                                                            act.startActivity(i)
+                                                        } else if (listModel.ResponseData.isPinSet == "0" || listModel.ResponseData.isPinSet == "") {
+                                                            IsFirstClick = "0"
+                                                            val intent = Intent(ctx, AddCouserActivity::class.java)
+                                                            act.startActivity(intent)
                                                             act.finish()
                                                         }
-                                                        ctx.getString(R.string.ResponseCodefail) -> {
-                                                            txtError.visibility = View.VISIBLE
-                                                            txtError.text = listModel.ResponseMessage
-                                                        }
-                                                        else -> {
-                                                            txtError.visibility = View.VISIBLE
-                                                            txtError.text = listModel.ResponseMessage
-                                                        }
+
+                                                        prepareHomeData()
+                                                        callAllRemovePlayer(ctx, act)
+                                                        val activity = SplashActivity()
+                                                        activity.setAnalytics(ctx.getString(R.string.segment_key_real_2_staging), ctx)
+
+                                                        //    showToast(listModel.responseMessage,act)
+                                                        callIdentify(act)
+                                                        val p1 = Properties()
+                                                        p1.putValue("deviceId", Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID))
+                                                        p1.putValue("deviceType", "Android")
+                                                        p1.putValue("name", listModel.ResponseData.Name)
+                                                        p1.putValue("countryCode", "")
+                                                        p1.putValue("countryName", "")
+                                                        p1.putValue("phone", listModel.ResponseData.Mobile)
+                                                        p1.putValue("email", listModel.ResponseData.Email)
+                                                        p1.putValue("plan", "")
+                                                        p1.putValue("planStatus", "")
+                                                        p1.putValue("planStartDt", "")
+                                                        p1.putValue("planExpiryDt", "")
+                                                        p1.putValue("clinikoId", "")
+                                                        var isProf = false
+                                                        var isAss = false
+                                                        isProf = if (listModel.ResponseData.isProfileCompleted.equals("1")) true else false
+                                                        isAss = if (listModel.ResponseData.isAssessmentCompleted.equals("1")) true else false
+                                                        p1.putValue("isProfileCompleted", isProf)
+                                                        p1.putValue("isAssessmentCompleted", isAss)
+                                                        p1.putValue("WellnessScore", listModel.ResponseData.indexScore)
+                                                        p1.putValue("scoreLevel", listModel.ResponseData.ScoreLevel)
+                                                        p1.putValue("areaOfFocus", listModel.ResponseData.AreaOfFocus)
+                                                        p1.putValue("avgSleepTime", listModel.ResponseData.AvgSleepTime)
+                                                        addToSegment("CoUser Login", p1, CONSTANTS.track)
                                                     }
-                                                } catch (e: Exception) {
-                                                    e.printStackTrace()
-                                                }
-                                            }
-
-                                            override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                                                progressBar.visibility = View.GONE
-                                            }
-                                        })
-                                    }
-                                }
-                            }
-
-                            tvForgotPin.setOnClickListener {
-                                dialog.dismiss()
-                                val dialogs = Dialog(ctx)
-                                dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                dialogs.setContentView(R.layout.add_couser_continue_layout)
-                                dialogs.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                dialogs.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                val mainLayout = dialogs.findViewById<ConstraintLayout>(R.id.mainLayout)
-                                val ivIcon = dialogs.findViewById<ImageView>(R.id.ivIcon)
-                                val tvText = dialogs.findViewById<TextView>(R.id.tvText)
-                                ivIcon.setImageResource(R.drawable.ic_email_success_icon)
-                                val email: String = modelList[selectedItem].email.toString()
-                                tvText.text = "A new pin has been sent to \nyour mail id \n$email."
-
-                                dialogs.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialogs.dismiss()
-                                        return@setOnKeyListener true
-                                    }
-                                    false
-                                }
-
-                                if (isNetworkConnected(ctx)) {
-                                    val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(modelList[selectedItem].userID, modelList[selectedItem].email)
-                                    listCall.enqueue(object : Callback<ForgoPinModel> {
-                                        override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
-                                            val listModel: ForgoPinModel = response.body()!!
-                                            when {
-                                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
-                                                    if (listModel.responseData?.emailSend.equals("1")) {
-                                                    } else {
-//                                                        showToast(listModel.responseMessage, act)
+                                                    ctx.getString(R.string.ResponseCodeDeleted) -> {
+                                                        txtError.visibility = View.GONE
+                                                        txtError.text = ""
+                                                        deleteCall(ctx)
+                                                        val i = Intent(ctx, SignInActivity::class.java)
+                                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                                        i.putExtra("mobileNo", "")
+                                                        i.putExtra("countryCode", "")
+                                                        i.putExtra("name", "")
+                                                        i.putExtra("email", "")
+                                                        i.putExtra("countryShortName", "")
+                                                        act.startActivity(i)
+                                                        act.finish()
+                                                    }
+                                                    ctx.getString(R.string.ResponseCodefail) -> {
+                                                        txtError.visibility = View.VISIBLE
+                                                        txtError.text = listModel.ResponseMessage
+                                                    }
+                                                    else -> {
+                                                        txtError.visibility = View.VISIBLE
+                                                        txtError.text = listModel.ResponseMessage
                                                     }
                                                 }
-                                                listModel.responseCode.equals(ctx.getString(R.string.ResponseCodefail)) -> {
-                                                    showToast(listModel.responseMessage, act)
-                                                }
-                                                else -> {
-                                                    showToast(listModel.responseMessage, act)
-                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
                                             }
                                         }
 
-                                        override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
-                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                        override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+                                            progressBar.visibility = View.GONE
                                         }
                                     })
-                                } else {
-                                    showToast(ctx.getString(R.string.no_server_found), act)
                                 }
+                            }
+                        }
 
-                                mainLayout.setOnClickListener {
+                        tvForgotPin.setOnClickListener {
+                            dialog.dismiss()
+                            val dialogs = Dialog(ctx)
+                            dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialogs.setContentView(R.layout.add_couser_continue_layout)
+                            dialogs.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            dialogs.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                            val mainLayout = dialogs.findViewById<ConstraintLayout>(R.id.mainLayout)
+                            val ivIcon = dialogs.findViewById<ImageView>(R.id.ivIcon)
+                            val tvText = dialogs.findViewById<TextView>(R.id.tvText)
+                            ivIcon.setImageResource(R.drawable.ic_email_success_icon)
+                            val email: String = modelList[selectedItem].email.toString()
+                            tvText.text = "A new pin has been sent to \nyour mail id \n$email."
+
+                            dialogs.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
                                     dialogs.dismiss()
+                                    return@setOnKeyListener true
                                 }
-
-                                dialogs.show()
-                                dialogs.setCancelable(true)
+                                false
                             }
 
-                            dialog.show()
-                            dialog.setCanceledOnTouchOutside(true)
-                            dialog.setCancelable(true)
+                            if (isNetworkConnected(ctx)) {
+                                val listCall: Call<ForgoPinModel> = APINewClient.client.getForgotPin(modelList[selectedItem].userID, modelList[selectedItem].email)
+                                listCall.enqueue(object : Callback<ForgoPinModel> {
+                                    override fun onResponse(call: Call<ForgoPinModel>, response: Response<ForgoPinModel>) {
+                                        val listModel: ForgoPinModel = response.body()!!
+                                        when {
+                                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodesuccess)) -> {
+                                                if (listModel.responseData?.emailSend.equals("1")) {
+                                                } else {
+                                                    //                                                        showToast(listModel.responseMessage, act)
+                                                }
+                                            }
+                                            listModel.responseCode.equals(ctx.getString(R.string.ResponseCodefail)) -> {
+                                                showToast(listModel.responseMessage, act)
+                                            }
+                                            else -> {
+                                                showToast(listModel.responseMessage, act)
+                                            }
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<ForgoPinModel>, t: Throwable) {
+                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    }
+                                })
+                            } else {
+                                showToast(ctx.getString(R.string.no_server_found), act)
+                            }
+
+                            mainLayout.setOnClickListener {
+                                dialogs.dismiss()
+                            }
+
+                            dialogs.show()
+                            dialogs.setCancelable(true)
                         }
-                    } else if (modelList[position].isPinSet.equals("0") || modelList[position].isPinSet.equals("")) {
-                        comeHomeScreen = "1"
-                        val i = Intent(act, CouserSetupPinActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        i.putExtra("subUserId", modelList[position].userID)
-                        act.startActivity(i)
-                        mBottomSheetDialog?.hide()
+
+                        dialog.show()
+                        dialog.setCanceledOnTouchOutside(true)
+                        dialog.setCancelable(true)
                     }
+                } else if (modelList[position].isPinSet.equals("0") || modelList[position].isPinSet.equals("")) {
+                    comeHomeScreen = "1"
+                    val i = Intent(act, CouserSetupPinActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    i.putExtra("subUserId", modelList[position].userID)
+                    act.startActivity(i)
+                    mBottomSheetDialog?.hide()
                 }
+                //                }
             }
         }
 
