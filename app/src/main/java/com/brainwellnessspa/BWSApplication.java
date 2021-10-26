@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -60,6 +61,7 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -171,6 +173,7 @@ import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
+
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -697,7 +700,7 @@ public class BWSApplication extends Application {
                                                         pos = pos;
                                                     } else if (pos == position && position == mDataPlaylist.size() - 1) {
                                                         pos = 0;
-                                                    }  else if (pos == position && position == mDataPlaylist.size()) {
+                                                    } else if (pos == position && position == mDataPlaylist.size()) {
                                                         pos = 0;
                                                     } else if (pos < position && pos < mDataPlaylist.size() - 1) {
                                                         pos = pos;
@@ -1831,73 +1834,81 @@ public class BWSApplication extends Application {
             chart.setPinchZoom(false);
         }
         final ArrayList<String> xAxisValues = new ArrayList<>();
-        XAxis xAxis;
-        {
+        XAxis xAxis = null;
+        YAxis yAxis = null;
+        if (indexData.getGraphIndexScore().size() != 0) {
+            {
 //            xAxisValues.add("");
-            for (int i = 0; i < indexData.getGraphIndexScore().size(); i++) {
-                xAxisValues.add(indexData.getGraphIndexScore().get(i).getDisplayName());
-            }
-            xAxis = chart.getXAxis();
-            xAxis.setAxisMinimum(0);
-            xAxis.setAxisMaximum(xAxisValues.size() - 1);
-            xAxis.setLabelCount(xAxisValues.size(), true);
-//            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
-            xAxis.setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value) {
-                    return String.valueOf(xAxisValues.get((int) value));
+                for (int i = 0; i < indexData.getGraphIndexScore().size(); i++) {
+                    xAxisValues.add(indexData.getGraphIndexScore().get(i).getDisplayName());
                 }
-            });
-            xAxis.setGranularity(1f);
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xAxis.setLabelRotationAngle(20);
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
+                xAxis = chart.getXAxis();
+                xAxis.setAxisMinimum(0);
+                xAxis.setAxisMaximum(xAxisValues.size() - 1);
+                xAxis.setLabelCount(xAxisValues.size(), true);
+//            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+                try {
+                    xAxis.setValueFormatter(new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            return String.valueOf(xAxisValues.get((int) value));
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                xAxis.setGranularity(1f);
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setLabelRotationAngle(20);
+                xAxis.enableGridDashedLine(10f, 10f, 0f);
+            }
+
+            {
+                yAxis = chart.getAxisLeft();
+                chart.getAxisRight().setEnabled(false);
+                yAxis.enableGridDashedLine(10f, 10f, 0f);
+                yAxis.setAxisMaximum(100f);
+                yAxis.setAxisMinimum(0f);
+            }
+            {
+
+                LimitLine ll1 = new LimitLine(180f, "Upper Limit");
+                ll1.setLineWidth(4f);
+                ll1.enableDashedLine(10f, 10f, 0f);
+                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                ll1.setTextSize(9f);
+
+                LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+                ll2.setLineWidth(4f);
+                ll2.enableDashedLine(10f, 10f, 0f);
+                ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
+                ll2.setTextSize(9f);
+
+                // draw limit lines behind data instead of on top
+                yAxis.setDrawLimitLinesBehindData(true);
+                xAxis.setDrawLimitLinesBehindData(true);
+
+                // add limit lines
+                yAxis.addLimitLine(ll1);
+                yAxis.addLimitLine(ll2);
+                //xAxis.addLimitLine(llXAxis);
+            }
+
+            // add data
+            setData(chart, ctx, indexData.getGraphIndexScore());
+            Legend l = chart.getLegend();
+            l.setForm(LegendForm.LINE);
+            l.setFormSize(0f);
+            l.setFormToTextSpace(5f);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDrawInside(false);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
+            l.setXEntrySpace(4f);
+            l.setYEntrySpace(0f);
+            l.setWordWrapEnabled(true);
         }
-        YAxis yAxis;
-        {
-            yAxis = chart.getAxisLeft();
-            chart.getAxisRight().setEnabled(false);
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
-            yAxis.setAxisMaximum(100f);
-            yAxis.setAxisMinimum(0f);
-        }
-        {
-
-            LimitLine ll1 = new LimitLine(180f, "Upper Limit");
-            ll1.setLineWidth(4f);
-            ll1.enableDashedLine(10f, 10f, 0f);
-            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            ll1.setTextSize(9f);
-
-            LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-            ll2.setLineWidth(4f);
-            ll2.enableDashedLine(10f, 10f, 0f);
-            ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-            ll2.setTextSize(9f);
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true);
-            xAxis.setDrawLimitLinesBehindData(true);
-
-            // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
-        }
-        // add data
-        setData(chart, ctx, indexData.getGraphIndexScore());
-        Legend l = chart.getLegend();
-        l.setForm(LegendForm.LINE);
-        l.setFormSize(0f);
-        l.setFormToTextSpace(5f);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
-        l.setXEntrySpace(4f);
-        l.setYEntrySpace(0f);
-        l.setWordWrapEnabled(true);
 //        }
     }
 
@@ -2961,6 +2972,8 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportText);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail);
+        edit.remove(CONSTANTS.PREFE_ACCESS_checkReminder);
+        edit.remove(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime);
         edit.clear();
         edit.apply();
 
@@ -3096,8 +3109,12 @@ public class BWSApplication extends Application {
             if (RDay.contains(String.valueOf(position))) {
                 remiderDays.add(String.valueOf(position));
                 holder.binding.cbChecked.setChecked(true);
+                Typeface face = ResourcesCompat.getFont(ctx, R.font.montserrat_bold);
+                holder.binding.cbChecked.setTypeface(face);
             } else {
                 holder.binding.cbChecked.setChecked(false);
+                Typeface face = ResourcesCompat.getFont(ctx, R.font.montserrat_medium);
+                holder.binding.cbChecked.setTypeface(face);
             }
 
             if (position == 0) {
@@ -3117,8 +3134,12 @@ public class BWSApplication extends Application {
             holder.binding.cbChecked.setOnClickListener(v -> {
                 if (holder.binding.cbChecked.isChecked()) {
                     remiderDays.add(String.valueOf(position));
+                    Typeface face = ResourcesCompat.getFont(ctx, R.font.montserrat_bold);
+                    holder.binding.cbChecked.setTypeface(face);
                 } else {
                     remiderDays.remove(String.valueOf(position));
+                    Typeface face = ResourcesCompat.getFont(ctx, R.font.montserrat_medium);
+                    holder.binding.cbChecked.setTypeface(face);
                 }
                 RDay = "";
                 RDay = TextUtils.join(",", remiderDays);
@@ -3159,6 +3180,8 @@ public class BWSApplication extends Application {
                                         Time = tvTime.getText().toString();
                                         hideProgressBar(progressBar, progressBarHolder, act);
                                         showToast(listModel.getResponseMessage(), act);
+                                        localIntent.putExtra("MyReminder", "update");
+                                        localBroadcastManager.sendBroadcast(localIntent);
                                        /* Properties p = new Properties();
                                         p.putValue("reminderId ",reminderId);
                                         p.putValue("playlistId ", PlaylistID);
@@ -3178,8 +3201,6 @@ public class BWSApplication extends Application {
                                         p.putValue("reminderTime ", tvTime.getText().toString());
                                         p.putValue("reminderDay",TextUtils.join(",", remiderDays));
                                         addToSegment("Playlist Reminder Set", p, CONSTANTS.screen);*/
-                                        localIntent.putExtra("MyReminder", "update");
-                                        localBroadcastManager.sendBroadcast(localIntent);
                                     } else if (listModel.getResponseCode().equalsIgnoreCase(ctx.getString(R.string.ResponseCodeDeleted))) {
                                         callDelete403(act, listModel.getResponseMessage());
                                     }

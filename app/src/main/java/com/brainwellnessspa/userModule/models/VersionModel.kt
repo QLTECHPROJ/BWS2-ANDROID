@@ -8,4 +8,4 @@ data class VersionModel(val ResponseCode: String,
                         val ResponseMessage: String,
                         val ResponseStatus: String)
 
-data class VersionResponseData(val IsForce: String, val segmentKey: String, val supportTitle: String, val supportText: String, val supportEmail: String)
+data class VersionResponseData(val IsForce: String, val IsLoginFirstTime: String, val segmentKey: String, val supportTitle: String, val supportText: String, val supportEmail: String)

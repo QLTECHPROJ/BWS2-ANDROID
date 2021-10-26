@@ -103,7 +103,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         val registrationComplete = Intent(CONSTANTS.REGISTRATION_COMPLETE)
         registrationComplete.putExtra("token", token)
-        if(context == null){
+        if (context == null) {
             context = applicationContext
         }
         LocalBroadcastManager.getInstance(context).sendBroadcast(registrationComplete)
@@ -137,31 +137,31 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         try {
             if (flag != null && flag.equals("Playlist", ignoreCase = true)) {
-                 if (!IsLock.equals("0")) {
+                if (!IsLock.equals("0")) {
                     resultIntent = Intent(this, BottomNavigationActivity::class.java)
-                     resultIntent.putExtra("IsFirst", "0")
-                     taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
+                    resultIntent.putExtra("IsFirst", "0")
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent)
+                    taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
-                     resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
-                     resultIntent.putExtra("New", "0")
-                     resultIntent.putExtra("Goplaylist", "1")
-                     resultIntent.putExtra("PlaylistID", id)
-                     resultIntent.putExtra("PlaylistName", title)
-                     resultIntent.putExtra("notification", "0")
-                     resultIntent.putExtra("message", message)
-                     resultIntent.putExtra("PlaylistImage", "")
-                     resultIntent.putExtra("ScreenView", "Reminder Notification")
-                     taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
-                     taskStackBuilder.addNextIntentWithParentStack(resultIntent)
-                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
-                 }
+                    resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
+                    resultIntent.putExtra("New", "0")
+                    resultIntent.putExtra("Goplaylist", "1")
+                    resultIntent.putExtra("PlaylistID", id)
+                    resultIntent.putExtra("PlaylistName", title)
+                    resultIntent.putExtra("notification", "0")
+                    resultIntent.putExtra("message", message)
+                    resultIntent.putExtra("PlaylistImage", "")
+                    resultIntent.putExtra("ScreenView", "Reminder Notification")
+                    taskStackBuilder.addNextIntentWithParentStack(resultIntent)
+                    taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
+                }
             } else {
                 resultIntent = Intent(this, BottomNavigationActivity::class.java)
                 resultIntent.putExtra("IsFirst", "0")
-                taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent)
+                taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                 resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT)
             }
             val defaultSoundUri = Uri.parse("android.resource://" + applicationContext.packageName + "/" + R.raw.ringtone)
