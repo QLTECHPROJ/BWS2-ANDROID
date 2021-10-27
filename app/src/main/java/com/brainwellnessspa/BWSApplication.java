@@ -1844,18 +1844,20 @@ public class BWSApplication extends Application {
                 }
                 xAxis = chart.getXAxis();
                 xAxis.setAxisMinimum(0);
-                xAxis.setAxisMaximum(xAxisValues.size() - 1);
-                xAxis.setLabelCount(xAxisValues.size(), true);
+                if(xAxisValues.size()!= 0) {
+                    xAxis.setAxisMaximum(xAxisValues.size() - 1);
+                    xAxis.setLabelCount(xAxisValues.size(), true);
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
-                try {
-                    xAxis.setValueFormatter(new ValueFormatter() {
-                        @Override
-                        public String getFormattedValue(float value) {
-                            return String.valueOf(xAxisValues.get((int) value));
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    try {
+                        xAxis.setValueFormatter(new ValueFormatter() {
+                            @Override
+                            public String getFormattedValue(float value) {
+                                return String.valueOf(xAxisValues.get((int) value));
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 xAxis.setGranularity(1f);
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

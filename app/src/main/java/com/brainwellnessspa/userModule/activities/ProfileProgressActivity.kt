@@ -44,6 +44,7 @@ class ProfileProgressActivity : AppCompatActivity() {
     var gender: String = ""
     var genderX: String = ""
     var age: String = ""
+    var age2: String = ""
     var prevDrugUse: String = ""
     var medication: String = ""
     var userId: String? = ""
@@ -571,7 +572,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
                 binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
-                binding.btnOpn1.text = age
+                binding.btnOpn1.text = age2
             }
             else -> {
                 binding.btnNext.isClickable = false
@@ -580,7 +581,7 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
                 val calendar = Calendar.getInstance()
                 calendar.time = Date()
-                val outputFmt = SimpleDateFormat("yyyy-MM-dd")
+                val outputFmt = SimpleDateFormat(CONSTANTS.DATE_MONTH_YEAR_FORMAT)
                 val dateAsString = outputFmt.format(calendar.time)
                 binding.btnOpn1.text = dateAsString
             }
@@ -684,7 +685,12 @@ class ProfileProgressActivity : AppCompatActivity() {
                 binding.btnOpn1.setBackgroundResource(R.drawable.light_gray_rounded_unfilled)
             } else {
                 age = age1
-                callFourthNext()
+                age2 = userCalendar
+                binding.btnOpn1.setTextColor(ContextCompat.getColor(act, R.color.light_blue_theme))
+                binding.btnOpn1.setBackgroundResource(R.drawable.light_blue_rounded_unfilled)
+                binding.btnNext.isClickable = true
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+
             }
         }, mYear, mMonth, mDay)
         datePickerDialog.show()

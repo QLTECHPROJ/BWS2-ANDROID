@@ -17,6 +17,7 @@ import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.segment.analytics.AnalyticsContext
 import com.segment.analytics.Properties
 import java.util.*
 
@@ -83,13 +84,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }*/
         }
         val p = Properties()
-        /*    AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
-        campaign.putValue("id", id);
-        campaign.putName(title);
-        campaign.putContent(message);
-        campaign.putMedium("Push");
-        campaign.putSource("Admin");
-        p.putValue("campaign", campaign);*/
+        /*val  campaign =   AnalyticsContext.Campaign()
+        campaign.putValue("id", id)
+        campaign.putName(title)
+        campaign.putContent(message)
+        campaign.putMedium("Push")
+        campaign.putSource("Admin")
+        p.putValue("campaign", campaign)*/
         p.putValue("playlistId", id)
         p.putName(title)
         p.putValue("message", message)

@@ -96,7 +96,6 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         }
 
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
-        callFCMRegMethod(context)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         Log.e("token", fcmId.toString())
@@ -170,6 +169,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                     try {
                         val versionModel: VersionModel = response.body()!!
                         try {
+                            callFCMRegMethod(context)
                             setAnalytics(versionModel.ResponseData.segmentKey, context)
                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
