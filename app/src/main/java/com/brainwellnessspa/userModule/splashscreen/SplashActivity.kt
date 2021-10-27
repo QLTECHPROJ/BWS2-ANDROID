@@ -83,7 +83,6 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
         context = this@SplashActivity
         activity = this@SplashActivity
-        FirebaseMessaging.getInstance().isAutoInitEnabled = true
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
@@ -170,6 +169,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                         val versionModel: VersionModel = response.body()!!
                         try {
                             callFCMRegMethod(context)
+                            FirebaseMessaging.getInstance().isAutoInitEnabled = true
                             setAnalytics(versionModel.ResponseData.segmentKey, context)
                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
