@@ -8,6 +8,8 @@ import android.app.AppOpsManager;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.app.TimePickerDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -59,6 +61,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -199,13 +202,16 @@ public class BWSApplication extends Application {
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public static String PlayerAudioId = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsRefreshPlan = "0";
+    public static String PlayerAudioId = "",NotificationPlaylistCheck = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsRefreshPlan = "0";
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
     public static boolean serviceConected = false, PlayerINIT = false, serviceRemoved = false;
     public static MediaSessionCompat mediaSession;
-    public static String Name;
+    public static TaskStackBuilder taskStackBuilder;
+    public static PendingIntent resultPendingIntent;
+    public static Intent resultIntent;
+    public static NotificationCompat.Builder notificationBuilder;
     public static int isDisclaimer = 0;
     public static MediaSessionConnector mediaSessionConnector;
     public static int playlistDetailRefresh = 0;
@@ -2917,6 +2923,7 @@ public class BWSApplication extends Application {
         addCouserBackStatus = 0;
         PlayerAudioId = "";
         PlayerStatus = "";
+        NotificationPlaylistCheck = "";
         cancelId = "";
         deleteId = "";
         IsFirstClick = "0";
@@ -2974,7 +2981,6 @@ public class BWSApplication extends Application {
         edit.remove(CONSTANTS.PREFE_ACCESS_supportTitle);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportText);
         edit.remove(CONSTANTS.PREFE_ACCESS_supportEmail);
-        edit.remove(CONSTANTS.PREFE_ACCESS_checkReminder);
         edit.remove(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime);
         edit.clear();
         edit.apply();
@@ -3218,25 +3224,7 @@ public class BWSApplication extends Application {
                         });
 
                         if (isSuggested.equalsIgnoreCase("1")) {
-                            Call<ReminderProceedModel> listCall1 = APINewClient.getClient().getReminderProceed(userId);
-                            listCall1.enqueue(new Callback<ReminderProceedModel>() {
-                                @Override
-                                public void onResponse(Call<ReminderProceedModel> call, Response<ReminderProceedModel> response) {
-                                    ReminderProceedModel model = response.body();
-                                    if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodesuccess))) {
 
-                                    } else if (model.getResponseCode().equalsIgnoreCase(act.getString(R.string.ResponseCodeDeleted))) {
-                                        callDelete403(act, model.getResponseMessage());
-                                    } else {
-                                        showToast(model.getResponseMessage(), act);
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<ReminderProceedModel> call, Throwable t) {
-
-                                }
-                            });
                         }
 
                     } else {

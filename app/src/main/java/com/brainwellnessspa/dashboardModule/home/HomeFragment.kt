@@ -37,6 +37,7 @@ import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
 import com.brainwellnessspa.dashboardModule.models.MainPlayModel
 import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dashboardModule.models.ReminderProceedModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.roomDataBase.AudioDatabase
@@ -55,6 +56,7 @@ import com.brainwellnessspa.userModule.signupLogin.EmailVerifyActivity
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.APINewClient.client
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -73,6 +75,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var act: Activity
@@ -81,7 +84,6 @@ class HomeFragment : Fragment() {
     var userId: String? = ""
     var mainAccountId: String? = ""
     var timezoneName: String? = ""
-    var checkReminder: String? = ""
     var userName: String? = ""
     private var userImage: String? = ""
     var scoreLevel: String? = ""
@@ -135,7 +137,6 @@ class HomeFragment : Fragment() {
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
-        checkReminder = shared1.getString(CONSTANTS.PREFE_ACCESS_checkReminder, "")
         val json5 = shared1.getString(CONSTANTS.PREFE_ACCESS_AreaOfFocus, gson.toString())
         var areaOfFocus: String? = ""
 
@@ -473,7 +474,6 @@ class HomeFragment : Fragment() {
         indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
         isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
-        checkReminder = shared1.getString(CONSTANTS.PREFE_ACCESS_checkReminder, "")
         val shared = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         sleepTime = shared.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         val json = shared.getString(CONSTANTS.selectedCategoriesName, gson.toString())
@@ -562,16 +562,28 @@ class HomeFragment : Fragment() {
             false
         }
         btn.setOnClickListener {
+            val listCall1 = client.getReminderProceed(userId)
+            listCall1.enqueue(object : Callback<ReminderProceedModel?> {
+                override fun onResponse(call: Call<ReminderProceedModel?>, response: Response<ReminderProceedModel?>) {
+                    val model = response.body()
+                    when {
+                        model!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
 //            p.putValue("isReminderSet", "Yes")
-            addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
-            dialog.hide()
-            val shared = activity?.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-            val editor = shared?.edit()
-            if (editor != null) {
-                editor.putString(CONSTANTS.PREFE_ACCESS_checkReminder, "1")
-                editor.apply()
-            }
-            getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
+                            addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
+                            dialog.hide()
+                            getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
+                        }
+                        model.responseCode.equals(act.getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
+                            callDelete403(act, model.responseMessage)
+                        }
+                        else -> {
+                            showToast(model.responseMessage, act)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ReminderProceedModel?>, t: Throwable) {}
+            })
         }
         /* tvGoBack.setOnClickListener {
              p.putValue("isReminderSet", "Later")
@@ -802,14 +814,7 @@ class HomeFragment : Fragment() {
 
                                     Log.e("isFirst", response.isFirst.toString())
                                     try {
-                                        if (checkReminder.equals("1")) {
-                                            dialog = Dialog(ctx)
-                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                            dialog.setContentView(R.layout.reminder_popup_layout)
-                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
-                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                            dialog.dismiss()
-                                        } else if (response.isFirst.equals("1")) {
+                                        if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
                                             dialog = Dialog(ctx)
@@ -1000,14 +1005,7 @@ class HomeFragment : Fragment() {
                                     // askBatteryOptimizations()
                                     Log.e("isFirst", response.isFirst.toString())
                                     try {
-                                        if (checkReminder.equals("1")) {
-                                            dialog = Dialog(ctx)
-                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                                            dialog.setContentView(R.layout.reminder_popup_layout)
-                                            dialog.window!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(ctx, R.color.transparent_white)))
-                                            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                                            dialog.dismiss()
-                                        } else if (response.isFirst.equals("1")) {
+                                        if (response.isFirst.equals("1")) {
                                             getReminderPopup(response.suggestedPlaylist?.playlistID.toString(), response.suggestedPlaylist?.playlistName.toString(), response.suggestedPlaylist?.reminderTime.toString(), response.suggestedPlaylist?.reminderDay.toString(), response.suggestedPlaylist?.isReminder.toString(), response.suggestedPlaylist?.reminderId.toString())
                                         } else {
                                             dialog = Dialog(ctx)
@@ -1861,7 +1859,6 @@ class HomeFragment : Fragment() {
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                                                         editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
-                                                        editor.putString(CONSTANTS.PREFE_ACCESS_checkReminder, "")
                                                         try {
                                                             if (listModel.ResponseData.planDetails.isNotEmpty()) {
                                                                 editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
@@ -1920,7 +1917,6 @@ class HomeFragment : Fragment() {
                                                                 indexScore = shared1.getString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, "")
                                                                 isMainAccount = shared1.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
                                                                 isInCouser = shared1.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
-                                                                checkReminder = shared1.getString(CONSTANTS.PREFE_ACCESS_checkReminder, "")
                                                                 binding.tvName.text = userName
                                                                 /* Condition for get user Image*/
                                                                 if (isNetworkConnected(ctx)) {

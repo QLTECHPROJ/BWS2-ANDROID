@@ -283,11 +283,13 @@
             android:name=".dashboardModule.activities.MyPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".dashboardModule.enhance.MyPlaylistListingActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".addPaymentStripeModule.AddPaymentActivity"
@@ -396,10 +398,10 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".userModule.activities.ProfileProgressActivity"
             android:configChanges="orientation|screenSize"
@@ -640,7 +642,6 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
                 <category android:name="com.brainwellnessspa" />
             </intent-filter>
         </receiver>

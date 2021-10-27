@@ -83,7 +83,6 @@ class UpgradePlanActivity : AppCompatActivity(), PurchasesUpdatedListener {
             i.putExtra("plan", intentflag)
             i.putExtra("upgrade", "1")
             startActivity(i)
-            finish()
         }
         /* This is the listing view layout */
         binding.rvPlanList.layoutManager = LinearLayoutManager(act)

@@ -34,6 +34,7 @@ import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
 import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -181,6 +182,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist_listing)
+        Log.e("NotificationPlaylistCheck", NotificationPlaylistCheck)
         ctx = this@MyPlaylistListingActivity
         activity = this@MyPlaylistListingActivity
         if (intent != null) {
@@ -224,7 +226,16 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         binding.rvAreaOfFocusCategory.adapter = adapter
 
         binding.llBack.setOnClickListener {
-            finish()
+            if (NotificationPlaylistCheck.equals("1")) {
+                NotificationPlaylistCheck = ""
+                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                intent.putExtra("IsFirst", "0")
+                startActivity(intent)
+                finish()
+            } else {
+                finish()
+            }
         }
 
         binding.llSleepTime.setOnClickListener {
@@ -266,6 +277,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 showToast(getString(R.string.no_server_found), activity)
             }
         }
+
         binding.ivEditCategory.setOnClickListener {
             val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
             val edited = preferred.edit()
@@ -278,6 +290,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             i.putExtra("BackClick", "1")
             startActivity(i)
         }
+
         binding.llDownloads.setOnClickListener {
             callObserveMethodGetAllMedia(ctx, DB)
             callDownload("", "", "", listModelGlobal.responseData!!.playlistSongs!!, 0, binding.llDownloads, binding.ivDownloads, ctx, activity, DB)
@@ -344,6 +357,19 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         super.onDestroy()
     }
 
+    override fun onBackPressed() {
+        if (NotificationPlaylistCheck.equals("1")) {
+            NotificationPlaylistCheck = ""
+            val intent = Intent(activity, BottomNavigationActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            intent.putExtra("IsFirst", "0")
+            startActivity(intent)
+            finish()
+        } else {
+            finish()
+        }
+    }
+
     private fun prepareData() {
         DB.taskDao()?.geAllData1ForAllLive()?.observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
             downloadAudioDetailsListGlobal = audioList as ArrayList<DownloadAudioDetails>
@@ -362,7 +388,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             }
             try {
                 PlayerAudioId = mainPlayModelList[playerPositionx].id
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 PlayerAudioId = mainPlayModelList[0].id
             }
         }
@@ -472,7 +498,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             binding.tvReminder.text = ctx.getText(R.string.update_reminder)
                                             binding.llReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
                                         }
-                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0", listModel.responseData.reminderId, listModel.responseData.isReminder,listModel.responseData.created)
+                                        getReminderDay(ctx, activity, coUserId, listModel.responseData.playlistID, listModel.responseData.playlistName, activity as FragmentActivity?, listModel.responseData.reminderTime, listModel.responseData.reminderDay, "0", listModel.responseData.reminderId, listModel.responseData.isReminder, listModel.responseData.created)
                                     } else {
                                         showToast(getString(R.string.no_server_found), activity)
                                     }
@@ -689,7 +715,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     binding.llMore.visibility = View.GONE
                     binding.llDownloads.visibility = View.GONE
                     binding.rlSearch.visibility = View.VISIBLE
-                    adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads,listModel)
+                    adapter2 = PlayListsAdpater2(listModel.playlistSongs!!, ctx, coUserId, listModel.created, binding, activity, playlistId, playlistName, myDownloads, listModel)
                     binding.rvPlayLists2.adapter = adapter2
                     binding.rvPlayLists1.visibility = View.GONE
                     binding.rvPlayLists2.visibility = View.VISIBLE
@@ -1019,10 +1045,10 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(playerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                         }
                                     }
-                                }else if ((playerPosition == position) && (position == listModel.size)) {
+                                } else if ((playerPosition == position) && (position == listModel.size)) {
                                     playerPosition = 0
                                     if (isDisclaimer == 1) {
                                     } else {
@@ -1031,20 +1057,20 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                             player.playWhenReady = true
                                             saveToPref(playerPosition, listModel)
                                         } else {
-                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                            MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                         }
                                     }
                                 } else if (playerPosition < position && playerPosition < listModel.size - 1) {
                                     if (player != null) {
                                         saveToPref(playerPosition, listModel)
                                     } else {
-                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                     }
                                 } else if (playerPosition < position && playerPosition == listModel.size - 1) {
                                     if (player != null) {
                                         saveToPref(playerPosition, listModel)
                                     } else {
-                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                     }
                                 } else if (playerPosition > position && playerPosition == listModel.size) {
                                     playerPosition -= 1
@@ -1052,7 +1078,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                         player.playWhenReady = true
                                         saveToPref(playerPosition, listModel)
                                     } else {
-                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID  , PlaylistName!!, created, "0")
+                                        MyPlaylistListingActivity().callMainPlayer(playerPosition, "Created", listModel, ctx, activity, PlaylistID, PlaylistName!!, created, "0")
                                     }
                                 }
                             }
@@ -1088,6 +1114,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                         var gb = GlobalInitExoPlayer()
                         gb.UpdateNotificationAudioPLayer(ctx)
                     }
+
                     override fun onFailure(call: Call<SucessModel?>, t: Throwable) {
                         hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     }
@@ -1425,7 +1452,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                     coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
                     btn.setOnClickListener {
                         getDeleteDownloadData(ctx)
-                        GetPlaylistMedia(playlistId!!,coUserId,ctx)
+                        GetPlaylistMedia(playlistId!!, coUserId, ctx)
 
                         val p = Properties()
                         p.putValue("playlistId", listModel1.playlistID)
@@ -1671,26 +1698,26 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 mainPlayModel.audioSubCategory = arrayList.audioSubCategory!!
                 mainPlayModel.imageFile = arrayList.imageFile!!
                 mainPlayModel.audioDuration = arrayList.audioDuration!!*/
-              var audioc = true
-               /*   if (isDisclaimer == 1) {
-                    if (player != null) {
-                        player.playWhenReady = true
-                        audioc = false
-                        listModelList2.add(position, mainPlayModel)
-                    } else {
-                        isDisclaimer = 0
-                        if (isPlayDisclimer.equals("1", ignoreCase = true)) {
-                            audioc = true
-                            listModelList2.add(position, mainPlayModel)
-                        }
-                    }
-                } else {
-                    isDisclaimer = 0
-                    if (isPlayDisclimer.equals("1", ignoreCase = true)) {
-                        audioc = true
-                        listModelList2.add(position, mainPlayModel)
-                    }
-                }*/
+                var audioc = true
+                /*   if (isDisclaimer == 1) {
+                     if (player != null) {
+                         player.playWhenReady = true
+                         audioc = false
+                         listModelList2.add(position, mainPlayModel)
+                     } else {
+                         isDisclaimer = 0
+                         if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                             audioc = true
+                             listModelList2.add(position, mainPlayModel)
+                         }
+                     }
+                 } else {
+                     isDisclaimer = 0
+                     if (isPlayDisclimer.equals("1", ignoreCase = true)) {
+                         audioc = true
+                         listModelList2.add(position, mainPlayModel)
+                     }
+                 }*/
                 callPlayer(position, view, listModelList2, ctx, act, playlistId, playlistName, created, audioc, myDownloads)
             }
         }
@@ -1785,7 +1812,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, position)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId, playlistID)
         editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, playlistName)
-        if(created.equals("2"))
+        if (created.equals("2"))
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Suggested")
         else
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, view)
@@ -1939,7 +1966,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
         }
         DB.taskDao()?.geAllData1ForAllLive()?.observe(ctx as (LifecycleOwner), { audioList: List<DownloadAudioDetails> ->
             downloadAudioDetailsListGlobal = audioList as ArrayList<DownloadAudioDetails>
-             DB.taskDao()?.geAllData1ForAllLive()?.removeObserver {}
+            DB.taskDao()?.geAllData1ForAllLive()?.removeObserver {}
         })
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             val url = arrayListOf<String>()
@@ -2139,11 +2166,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     }
 
     private fun saveAllMedia(ctx: Context, playlistSongs: ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong>, DB: AudioDatabase) {
-           val p = Properties()
+        val p = Properties()
 
-           p.putValue("playlistId", downloadPlaylistDetails.PlaylistID)
-           p.putValue("playlistName", downloadPlaylistDetails.PlaylistName)
-           p.putValue("playlistDescription", downloadPlaylistDetails.PlaylistDesc)
+        p.putValue("playlistId", downloadPlaylistDetails.PlaylistID)
+        p.putValue("playlistName", downloadPlaylistDetails.PlaylistName)
+        p.putValue("playlistDescription", downloadPlaylistDetails.PlaylistDesc)
         when {
             downloadPlaylistDetails.Created.equals("1", ignoreCase = true) -> {
                 p.putValue("playlistType", "Created")
@@ -2166,11 +2193,11 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 p.putValue("playlistDuration", downloadPlaylistDetails.Totalhour + "h " + downloadPlaylistDetails.Totalminute + "m")
             }
         }
-           p.putValue("audioCount", downloadPlaylistDetails.TotalAudio)
-           p.putValue("source", screenView)
-           p.putValue("audioService", appStatus(ctx))
-           p.putValue("sound", hundredVolume.toString())
-            addToSegment("Playlist Download Started", p, CONSTANTS.track)
+        p.putValue("audioCount", downloadPlaylistDetails.TotalAudio)
+        p.putValue("source", screenView)
+        p.putValue("audioService", appStatus(ctx))
+        p.putValue("sound", hundredVolume.toString())
+        addToSegment("Playlist Download Started", p, CONSTANTS.track)
         for (i in playlistSongs) {
             val downloadAudioDetails = DownloadAudioDetails()
             downloadAudioDetails.UserID = coUserId!!
@@ -2361,39 +2388,39 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 var view = ""
                 val listModel = listModelGlobal.responseData
                 if (listModel != null) {
-                for (i in listModel.playlistSongs!!.indices) {
+                    for (i in listModel.playlistSongs!!.indices) {
                         if (downloadAudioDetailsList.contains(listModel.playlistSongs!![i].name)) {
                             listModelList2.add(listModel.playlistSongs!![i])
                         }
+                    }
                 }
-            }
                 if (position != positionSaved) {
                     val listmodel = listModelGlobal.responseData
                     if (listmodel != null) {
-                    if (downloadAudioDetailsList.contains(listmodel.playlistSongs!![position].name)) {
-                        for (i in listmodel.playlistSongs!!.indices) {
-                            if (listModelList2[i].name == listmodel.playlistSongs!![position].name) {
-                                pos = i
-                                break
+                        if (downloadAudioDetailsList.contains(listmodel.playlistSongs!![position].name)) {
+                            for (i in listmodel.playlistSongs!!.indices) {
+                                if (listModelList2[i].name == listmodel.playlistSongs!![position].name) {
+                                    pos = i
+                                    break
+                                }
                             }
-                        }
-                        PlayerAudioId = listmodel.playlistSongs!![position].id
-                        if (listModelList2.size != 0) {
-                            view = if (listmodel.created == "1") {
-                                "Created"
+                            PlayerAudioId = listmodel.playlistSongs!![position].id
+                            if (listModelList2.size != 0) {
+                                view = if (listmodel.created == "1") {
+                                    "Created"
+                                } else {
+                                    ""
+                                }
+
+                                callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listmodel.created, true, myDownloads)
+
                             } else {
-                                ""
+                                showToast(ctx.getString(R.string.no_server_found), activity)
                             }
-
-                            callPlayer(pos, view, listModelList2, ctx, activity, playlistID, playlistName, listmodel.created, true, myDownloads)
-
-                        } else {
+                        } else { //                                pos = 0;
                             showToast(ctx.getString(R.string.no_server_found), activity)
                         }
-                    } else { //                                pos = 0;
-                        showToast(ctx.getString(R.string.no_server_found), activity)
                     }
-                }
                 } else {
                     callMyPlayer(ctx, activity)
                 }

@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
@@ -24,16 +24,12 @@ import java.util.*
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     lateinit var notificationManager: NotificationManager
     private lateinit var notificationChannel: NotificationChannel
-    private lateinit var notificationBuilder: NotificationCompat.Builder
     var title: String? = ""
     var image: String? = ""
     var message: String? = ""
     var flag: String? = ""
     var id: String? = ""
     var isLock: String? = ""
-    private lateinit var taskStackBuilder: TaskStackBuilder
-    lateinit var resultPendingIntent: PendingIntent
-    lateinit var resultIntent: Intent
     lateinit var context: Context
     lateinit var activity: MyFirebaseMessagingService
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -94,7 +90,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         p.putValue("playlistId", id)
         p.putName(title)
         p.putValue("message", message)
-        BWSApplication.addToSegment("Push Notification Received", p, CONSTANTS.track)
+        addToSegment("Push Notification Received", p, CONSTANTS.track)
     }
 
     override fun onNewToken(token: String) {
@@ -139,12 +135,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         try {
             if (flag != null && flag.equals("Playlist", ignoreCase = true)) {
                 if (!IsLock.equals("0")) {
+                    NotificationPlaylistCheck = "1"
                     resultIntent = Intent(this, BottomNavigationActivity::class.java)
                     resultIntent.putExtra("IsFirst", "0")
                     taskStackBuilder.addNextIntentWithParentStack(resultIntent)
                     taskStackBuilder.addParentStack(BottomNavigationActivity::class.java)
                     resultPendingIntent = taskStackBuilder.getPendingIntent(requestID, PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
+                    NotificationPlaylistCheck = "1"
                     resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
                     resultIntent.putExtra("New", "0")
                     resultIntent.putExtra("Goplaylist", "1")

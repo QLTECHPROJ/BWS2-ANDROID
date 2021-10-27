@@ -245,12 +245,6 @@ class MembershipActivity : AppCompatActivity() {
             return listModelList.size
         }
 
-        inner class MyViewHolder(binding: SubscribeBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
-            var binding: SubscribeBoxLayoutBinding
-
-            init {
-                this.binding = binding
-            }
-        }
+        inner class MyViewHolder(var binding: SubscribeBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

@@ -475,6 +475,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
                 override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
                     hideProgressBar(binding.progressBar, null, activity)
+
                 }
             })
         } else {

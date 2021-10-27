@@ -69,6 +69,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
     SHA-256: 2C:B7:55:77:AC:97:75:10:90:1A:F4:B4:84:33:89:A6:24:56:CF:47:61:F1:D1:46:F7:87:38:71:E4:94:21:23
     code : - 4/eWdxD7b-YSQ5CNNb-c2iI83KQx19.wp6198ti5Zc7dJ3UXOl0T3aRLxQmbwI
 */
+
     val skuList = listOf("weekly_2_profile", "weekly_3_profile", "weekly_4_profile", "monthly_2_profile", "monthly_3_profile", "monthly_4_profile", "six_monthly_2_profile", "six_monthly_3_profile", "six_monthly_4_profile", "annual_2_profile", "annual_3_profile", "annual_4_profile")
     lateinit var activity: Activity
 
@@ -80,7 +81,6 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         ctx = this@IAPOrderSummaryActivity
         activity = this@IAPOrderSummaryActivity
-
 
         if (intent != null) {
             trialPeriod = intent.getStringExtra("TrialPeriod") //            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
@@ -190,6 +190,10 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
     }
 
     override fun onBackPressed() {
+        /*val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                        startActivity(intent)
+                                        finish()*/
         finish()
     }
 

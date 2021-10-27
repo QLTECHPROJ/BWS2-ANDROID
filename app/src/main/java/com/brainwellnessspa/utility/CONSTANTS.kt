@@ -117,7 +117,6 @@ object CONSTANTS {
     const val PREFE_ACCESS_PlanExpireDate = "PlanExpireDate"
     const val PREFE_ACCESS_TransactionId = "TransactionId"
     const val PREFE_ACCESS_TrialPeriodStart = "TrialPeriodStart"
-    const val PREFE_ACCESS_checkReminder = "checkReminder"
     const val PREFE_ACCESS_TrialPeriodEnd = "TrialPeriodEnd"
     const val PREFE_ACCESS_OrderTotal = "OrderTotal"
     const val PREFE_ACCESS_PlanStr = "PlanStr"

@@ -3,11 +3,13 @@ package com.brainwellnessspa.userModule.splashscreen
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -94,6 +96,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             key = getKey(this)
         }
 
+        Log.e("DeviceID", Settings.Secure.getString(getContext().contentResolver, Settings.Secure.ANDROID_ID))
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
@@ -412,15 +415,17 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 flag = intent.getStringExtra("flag");
                 id = intent.getStringExtra("id");
                 title = intent.getStringExtra("title");
-                message = intent.getStringExtra("message");
-                IsLockNoti = intent.getStringExtra("IsLock");
+                message = intent.getStringExtra("message")
+                IsLockNoti = intent.getStringExtra("IsLock")
+                val requestID = System.currentTimeMillis().toInt()
                 if (flag != null && flag.equals("Playlist")) {
                     if (!IsLockNoti.equals("0")) {
+                        NotificationPlaylistCheck = "1"
                         resultIntent = Intent(this, BottomNavigationActivity::class.java)
                         resultIntent.putExtra("IsFirst", "0")
                         startActivity(resultIntent)
-                        finish()
                     } else {
+                        NotificationPlaylistCheck = "1"
                         resultIntent = Intent(this, MyPlaylistListingActivity::class.java)
                         resultIntent.putExtra("New", "0")
                         resultIntent.putExtra("Goplaylist", "1")
@@ -430,7 +435,6 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                         resultIntent.putExtra("message", message)
                         resultIntent.putExtra("PlaylistImage", "")
                         startActivity(resultIntent)
-                        finish()
                     }
                 }
             } else {

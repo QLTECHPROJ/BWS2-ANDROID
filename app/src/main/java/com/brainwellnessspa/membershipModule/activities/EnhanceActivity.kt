@@ -84,15 +84,15 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         i = Intent(ctx, IAPOrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
 
+        binding.btnFreeJoin.setOnClickListener {
+            i.putExtra("plan", intentflag)
+            startActivity(i)
+        }
+
         binding.llBack.setOnClickListener {
             onBackPressed()
         }
 
-        binding.btnFreeJoin.setOnClickListener {
-            i.putExtra("plan", intentflag)
-            startActivity(i)
-            finish()
-        }
 
         binding.tvtncs.setOnClickListener {
             val i = Intent(this, TncActivity::class.java)
