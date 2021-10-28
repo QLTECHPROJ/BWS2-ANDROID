@@ -46,6 +46,7 @@ class AddCouserActivity : AppCompatActivity() {
         mainAccountID = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         val p = Properties()
         addToSegment("Add User Screen Viewed", p, CONSTANTS.screen)
+
         binding.ivInfo.setOnClickListener {
             val dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -143,11 +144,13 @@ class AddCouserActivity : AppCompatActivity() {
                                 }
                             }
                             editor.apply()
-                            if (listModel.ResponseData.isPinSet.equals("1")) {
+                            if (listModel.ResponseData.isPinSet == "1") {
                                 if (listModel.ResponseData.MainAccountID == listModel.ResponseData.UserId) {
+                                    isUserDetail = "1"
                                     val i = Intent(applicationContext, UserDetailActivity::class.java)
                                     i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(i)
+                                    finish()
                                 } /* else {
                                        if (authOtpModel.ResponseData.isAssessmentCompleted.equals("0", ignoreCase = true)) {
                                             val intent = Intent(applicationContext, AssProcessActivity::class.java)

@@ -91,9 +91,9 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
             val type = object : TypeToken<ArrayList<PlanlistInappModel.ResponseData.Plan?>?>() {}.type
             listModelList = gson.fromJson(json, type)
             intentflag = intent.getStringExtra("plan").toString()
-            if(intent.hasExtra("upgrade")){
+            if (intent.hasExtra("upgrade")) {
                 upgrade = intent.getStringExtra("upgrade")!!
-            }else{
+            } else {
                 upgrade = ""
             }
         }
@@ -107,11 +107,11 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
 
         setupBillingClient()
         p = Properties()
-        p.putValue("planId",listModelList!![position].planID)
-        p.putValue("plan",listModelList!![position].subName)
-        p.putValue("planAmount",displayPrice)
-        p.putValue("planInterval",listModelList!![position].planInterval)
-        p.putValue("totalProfile",listModelList!![position].profileCount)
+        p.putValue("planId", listModelList!![position].planID)
+        p.putValue("plan", listModelList!![position].subName)
+        p.putValue("planAmount", displayPrice)
+        p.putValue("planInterval", listModelList!![position].planInterval)
+        p.putValue("totalProfile", listModelList!![position].profileCount)
         addToSegment("Order Summary Viewed", p, CONSTANTS.screen)
         if (!oldPromocode.equals("")) {
             binding!!.edtCode.setText(oldPromocode)
@@ -144,7 +144,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
             e.printStackTrace()
         }
         binding!!.llBack.setOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
@@ -177,8 +177,8 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
                 for (skuDetails in skuDetailsList) {
                     if (skuDetails.sku == sku) binding!!.btnCheckout.setOnClickListener {
                         val billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails) //                                    .setOldSku(skuList[1],sku)
-                            //                                    .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
-                            .build()
+                                //                                    .setReplaceSkusProrationMode(IMMEDIATE_WITH_TIME_PRORATION)
+                                .build()
                         billingClient.launchBillingFlow(this, billingFlowParams)
                     }
                 }
@@ -190,11 +190,14 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
     }
 
     override fun onBackPressed() {
-        /*val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()*/
-        finish()
+        if (isEnhanceBack.equals("1")) {
+            val intent = Intent(applicationContext, EnhanceActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            startActivity(intent)
+            finish()
+        } else {
+            finish()
+        }
     }
 
     private val promoCodeTextWatcher: TextWatcher = object : TextWatcher {
@@ -212,6 +215,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
 
         override fun afterTextChanged(s: Editable) {}
     }
+
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -227,6 +231,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
             p.putValue("planInterval", listModelList!![position].planInterval)
             p.putValue("totalProfile", listModelList!![position].profileCount)
             addToSegment("Checkout Proceeded", p, CONSTANTS.track)
+            isEnhanceBack = ""
             callIAPApi(purchases[0].purchaseToken)
             for (purchase in purchases) {
                 acknowledgePurchase(purchase.purchaseToken, purchases)
@@ -275,7 +280,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
                                                 editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
-                                                if(listModel.ResponseData.paymentType == "0"){
+                                                if (listModel.ResponseData.paymentType == "0") {
                                                     // Stripe
                                                     try {
                                                         if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
@@ -294,7 +299,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
                                                     } catch (e: Exception) {
                                                         e.printStackTrace()
                                                     }
-                                                }else if(listModel.ResponseData.paymentType == "1"){
+                                                } else if (listModel.ResponseData.paymentType == "1") {
                                                     // IAP
                                                     try {
                                                         if (listModel.ResponseData.planDetails.isNotEmpty()) {
@@ -337,14 +342,14 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
                                     }
                                 })
                             }
-                            if(upgrade == "1") {
-                                IsRefreshPlan ="1"
+                            if (upgrade == "1") {
+                                IsRefreshPlan = "1"
                                 addToSegment("User Plan Upgraded", p, CONSTANTS.track)
                                 val i = Intent(ctx, IAPBillingOrderActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(i)
                                 finish()
-                            }else if(upgrade == "") {
+                            } else if (upgrade == "") {
                                 addToSegment("Checkout Completed", p, CONSTANTS.track)
                                 val i = Intent(ctx, EnhanceDoneActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
@@ -387,7 +392,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
         val client = BillingClient.newBuilder(application).enablePendingPurchases().setListener { _, _ -> }.build()
         client.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@NonNull
-            billingResult: BillingResult) {
+                                                billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     client.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS) { billingResult, list ->
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) { //                            loadAllSKUsUpdate(list!![0].skus.toString(), list!![0].purchaseToken)

@@ -287,6 +287,7 @@ class ProfileFragment : Fragment() {
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(ctx)) {
                 if (listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
+                    isEnhanceBack = "1"
                     val intent = Intent(ctx, EnhanceActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                     startActivity(intent)
@@ -345,6 +346,7 @@ class ProfileFragment : Fragment() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             if (isNetworkConnected(ctx)) {
+                isEnhanceBack = "1"
                 val i = Intent(ctx, EnhanceActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("plan", "0")
@@ -712,6 +714,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         mLastClickTime = SystemClock.elapsedRealtime()
                                         if (isNetworkConnected(ctx)) {
                                             if (listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
+                                                isEnhanceBack = "1"
                                                 val intent = Intent(ctx, EnhanceActivity::class.java)
                                                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                                 startActivity(intent)

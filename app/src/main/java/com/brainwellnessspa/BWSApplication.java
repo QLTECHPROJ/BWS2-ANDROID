@@ -204,7 +204,7 @@ public class BWSApplication extends Application {
     public static AudioManager audioManager;
     public static int hundredVolume = 0, currentVolume = 0, maxVolume = 0, percent;
     public static String PlayerCurrantAudioPostion = "0";
-    public static String PlayerAudioId = "",NotificationPlaylistCheck = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsRefreshPlan = "0";
+    public static String PlayerAudioId = "", isUserDetail = "", isEnhanceBack = "", NotificationPlaylistCheck = "", PlayerStatus = "", cancelId = "", deleteId = "", IsFirstClick = "0", IsRefreshPlan = "0";
     public static SimpleExoPlayer player;
     public static int notificationId = 1234;
     public static NotificationManager notificationManager;
@@ -1852,7 +1852,7 @@ public class BWSApplication extends Application {
                 }
                 xAxis = chart.getXAxis();
                 xAxis.setAxisMinimum(0);
-                if(xAxisValues.size()!= 0) {
+                if (xAxisValues.size() != 0) {
                     xAxis.setAxisMaximum(xAxisValues.size() - 1);
                     xAxis.setLabelCount(xAxisValues.size(), true);
 //            xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
@@ -2933,6 +2933,8 @@ public class BWSApplication extends Application {
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "");
         addCouserBackStatus = 0;
         PlayerAudioId = "";
+        isUserDetail = "";
+        isEnhanceBack = "";
         PlayerStatus = "";
         NotificationPlaylistCheck = "";
         cancelId = "";

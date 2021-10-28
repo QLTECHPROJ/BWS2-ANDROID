@@ -94,11 +94,7 @@ class CouserSetupPinActivity : AppCompatActivity() {
             subUserId = intent.getStringExtra("subUserId")
         }
         binding.llBack.setOnClickListener {
-            if (IsFirstClick.equals("1")) {
-                finishAffinity()
-            } else {
-                finish()
-            }
+            onBackPressed()
         }
 
         binding.etNewPIN.addTextChangedListener(userTextWatcher)
@@ -141,7 +137,11 @@ class CouserSetupPinActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (IsFirstClick.equals("1")) {
-            finishAffinity()
+            val i = Intent(activity, AddCouserActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            i.putExtra("IsFirstClick", "1")
+            startActivity(i)
+            finish()
         } else {
             finish()
         }

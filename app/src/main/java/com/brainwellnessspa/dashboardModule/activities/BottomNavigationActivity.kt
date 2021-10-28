@@ -97,6 +97,11 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         if (isFirst.equals("1")) {
             showToast("You're in, $userName!! \nLet's explore your path to inner peace!", act)
         }
+
+        if (isFirst.equals("2")){
+            binding.navView.selectedItemId = R.id.navigation_Manage
+        }
+
         uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
         if (uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_AUTO || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES || uiModeManager!!.nightMode == UiModeManager.MODE_NIGHT_CUSTOM) {
             uiModeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO

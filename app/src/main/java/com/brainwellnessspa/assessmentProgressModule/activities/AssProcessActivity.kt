@@ -474,6 +474,7 @@ class AssProcessActivity : AppCompatActivity() {
                         startActivity(i)
                         finish()
                     }else {
+                        isEnhanceBack = "1"
                         val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("plan", "0")

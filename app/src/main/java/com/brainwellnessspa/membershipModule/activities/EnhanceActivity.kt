@@ -87,6 +87,7 @@ class EnhanceActivity : AppCompatActivity(), PurchasesUpdatedListener {
         binding.btnFreeJoin.setOnClickListener {
             i.putExtra("plan", intentflag)
             startActivity(i)
+            finish()
         }
 
         binding.llBack.setOnClickListener {

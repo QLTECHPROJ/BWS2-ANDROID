@@ -431,12 +431,14 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         startActivity(intent)
                                         finish()
                                     } else if (paymentType == "1") {
+                                        isEnhanceBack = "1"
                                         //IAP
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     } else {
+                                        isEnhanceBack = "1"
                                         val intent = Intent(applicationContext, EnhanceActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)

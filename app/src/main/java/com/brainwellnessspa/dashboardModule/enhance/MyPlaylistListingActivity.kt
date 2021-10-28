@@ -230,7 +230,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                 NotificationPlaylistCheck = ""
                 val intent = Intent(activity, BottomNavigationActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                intent.putExtra("IsFirst", "0")
+                intent.putExtra("IsFirst", "2")
                 startActivity(intent)
                 finish()
             } else {
@@ -362,7 +362,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
             NotificationPlaylistCheck = ""
             val intent = Intent(activity, BottomNavigationActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-            intent.putExtra("IsFirst", "0")
+            intent.putExtra("IsFirst", "2")
             startActivity(intent)
             finish()
         } else {

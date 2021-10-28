@@ -16,7 +16,6 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.ActivityUserDetailBinding
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AddUserModel
-
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -56,7 +55,16 @@ class UserDetailActivity : AppCompatActivity() {
         activity = this@UserDetailActivity
 
         binding.llBack.setOnClickListener {
-            finish()
+            if (isUserDetail.equals("1")) {
+                isUserDetail = ""
+                val i = Intent(activity, AddCouserActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                i.putExtra("IsFirstClick", "1")
+                startActivity(i)
+                finish()
+            } else {
+                finish()
+            }
         }
 
         binding.etName.addTextChangedListener(userTextWatcher)
@@ -68,7 +76,16 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        if (isUserDetail.equals("1")) {
+            isUserDetail = ""
+            val i = Intent(activity, AddCouserActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            i.putExtra("IsFirstClick", "1")
+            startActivity(i)
+            finish()
+        } else {
+            finish()
+        }
     }
 
     private fun setupUserDetail(activity: Activity) {
