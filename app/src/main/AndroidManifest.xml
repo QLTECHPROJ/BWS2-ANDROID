@@ -576,10 +576,10 @@
             android:value="1" />
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="487-6W4-WK6Z" />
+            android:value="658-54Z-5K6Z" />
         <meta-data
             android:name="CLEVERTAP_TOKEN"
-            android:value="406-ab4" />
+            android:value="145-b56" />
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
             android:resource="@drawable/app_new_icon" />
