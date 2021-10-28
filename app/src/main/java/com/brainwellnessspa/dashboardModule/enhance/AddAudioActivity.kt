@@ -139,7 +139,7 @@ class AddAudioActivity : AppCompatActivity() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(search: String): Boolean {
                 binding.searchView.clearFocus()
-//                                showToast("onQueryTextSubmit", activity)
+                //                                showToast("onQueryTextSubmit", activity)
                 return false
             }
 
@@ -227,12 +227,12 @@ class AddAudioActivity : AppCompatActivity() {
                                     binding.tvFound.text = "Please try again with another search term."
                                     //                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
                                 } else {
-                                        /* set adapter data to search screen */
-                                        binding.llError.visibility = View.GONE
-                                        binding.rvSerachList.visibility = View.VISIBLE
-                                        serachListAdpater = SerachListAdpater(listModel.responseData, activity, binding.rvSerachList, coUserId)
-                                        binding.rvSerachList.adapter = serachListAdpater
-                                        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
+                                    /* set adapter data to search screen */
+                                    binding.llError.visibility = View.GONE
+                                    binding.rvSerachList.visibility = View.VISIBLE
+                                    serachListAdpater = SerachListAdpater(listModel.responseData, activity, binding.rvSerachList, coUserId)
+                                    binding.rvSerachList.adapter = serachListAdpater
+                                    LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, IntentFilter("play_pause_Action"))
                                 }
                             } else if (searchEditText.text.toString().equals("", ignoreCase = true)) {
                                 binding.rvSerachList.adapter = null
@@ -242,7 +242,7 @@ class AddAudioActivity : AppCompatActivity() {
                         } else if (listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true)) {
                             callDelete403(activity, listModel.responseMessage)
                         } else {
-//                            showToast(listModel.responseMessage, activity)
+                            //                            showToast(listModel.responseMessage, activity)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -767,7 +767,13 @@ class AddAudioActivity : AppCompatActivity() {
             listSize = listModel!!.size
             return listModel.size
         }
+        override fun getItemViewType(position: Int): Int {
+            return position
+        }
 
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
         inner class MyViewHolder(var binding: GlobalSearchLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
@@ -993,6 +999,14 @@ class AddAudioActivity : AppCompatActivity() {
             } else {
                 10
             }
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return position
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
         }
 
         inner class MyViewHolder(var binding: DownloadsLayoutBinding) : RecyclerView.ViewHolder(binding.root)
