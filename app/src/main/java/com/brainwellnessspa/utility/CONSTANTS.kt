@@ -94,6 +94,7 @@ object CONSTANTS {
     const val PREFE_ACCESS_USEREMAIL = "UserEmail"
     const val PREFE_ACCESS_DeviceType = "DeviceType"
     const val PREFE_ACCESS_supportTitle = "supportTitle"
+    const val PREFE_ACCESS_segmentKey = "segmentKey"
     const val PREFE_ACCESS_supportText = "supportText"
     const val PREFE_ACCESS_supportEmail = "supportEmail"
     const val PREFE_ACCESS_IsLoginFirstTime = "IsLoginFirstTime"

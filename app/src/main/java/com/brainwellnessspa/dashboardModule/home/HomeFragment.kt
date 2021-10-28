@@ -57,6 +57,7 @@ import com.brainwellnessspa.userModule.signupLogin.SignInActivity
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.APINewClient.client
+import com.brainwellnessspa.utility.AppUtils
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -1978,8 +1979,17 @@ class HomeFragment : Fragment() {
 
                                                         prepareHomeData()
                                                         callAllRemovePlayer(ctx, act)
-                                                        val activity = SplashActivity()
-                                                        activity.setAnalytics(ctx.getString(R.string.segment_key_real_2_staging), ctx)
+                                                        val splashActivity = SplashActivity()
+                                                        val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                                                        var segmentKey = shared1x.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
+                                                        if(segmentKey == ""){
+                                                            if(AppUtils.New_BASE_URL == "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                                                                segmentKey = ctx.getString(R.string.segment_key_real_2_staging)
+                                                            }else {
+                                                                segmentKey = ctx.getString(R.string.segment_key_real_2_live)
+                                                            }
+                                                        }
+                                                        splashActivity.setAnalytics(segmentKey!!, ctx)
 
                                                         //    showToast(listModel.responseMessage,act)
                                                         callIdentify(act)

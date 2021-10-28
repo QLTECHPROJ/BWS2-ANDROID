@@ -76,7 +76,7 @@ class CurrentPlanFragment : Fragment() {
         listCall.enqueue(object : Callback<CurrentPlanVieViewModel?> {
             override fun onResponse(call: Call<CurrentPlanVieViewModel?>, response: Response<CurrentPlanVieViewModel?>) {
                 val listModel: CurrentPlanVieViewModel? = response.body()
-                if (listModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
+                if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess))) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     try {
                         planVieViewModel = listModel

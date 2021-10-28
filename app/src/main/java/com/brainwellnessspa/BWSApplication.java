@@ -102,6 +102,7 @@ import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
 import com.brainwellnessspa.utility.AppSignatureHashHelper;
+import com.brainwellnessspa.utility.AppUtils;
 import com.brainwellnessspa.utility.CONSTANTS;
 import com.brainwellnessspa.utility.CryptLib;
 import com.brainwellnessspa.utility.MeasureRatio;
@@ -176,6 +177,7 @@ import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
+import static com.brainwellnessspa.utility.AppUtils.New_BASE_URL;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
@@ -2704,7 +2706,16 @@ public class BWSApplication extends Application {
         properties.putValue("deviceID", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
         if (analytics == null) {
             SplashActivity sp = new SplashActivity();
-            sp.setAnalytics(getContext().getString(R.string.segment_key_real_2_staging), getContext());
+            SharedPreferences shared1x = getContext().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
+            String segmentKey = shared1x.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "");
+            if(segmentKey == ""){
+                if(New_BASE_URL == "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                    segmentKey = getContext().getString(R.string.segment_key_real_2_staging);
+                }else {
+                    segmentKey = getContext().getString(R.string.segment_key_real_2_live);
+                }
+            }
+            sp.setAnalytics(segmentKey, getContext());
         }
         try {
             if (methodName.equalsIgnoreCase("track")) {

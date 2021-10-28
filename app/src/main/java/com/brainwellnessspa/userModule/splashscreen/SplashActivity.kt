@@ -32,6 +32,7 @@ import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.userModule.signupLogin.SignUpActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
+import com.brainwellnessspa.utility.AppUtils
 import com.brainwellnessspa.utility.CONSTANTS
 import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
@@ -95,21 +96,6 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         if (key.equals("")) {
             key = getKey(this)
         }
-
-        Log.e("DeviceID", Settings.Secure.getString(getContext().contentResolver, Settings.Secure.ANDROID_ID))
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
-        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
-        var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
-        Log.e("token", fcmId.toString())
-        clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
-        //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_HIGH, true)
-        }
-        clevertapDefaultInstance?.apply {
-            ctNotificationInboxListener = this@SplashActivity
-            initializeInbox()
-        }
     }
 
     override fun onResume() {/* TODO conditions for check user exist or not */
@@ -133,7 +119,20 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         IsLoginFirstTime = shared.getString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
-
+        Log.e("DeviceID", Settings.Secure.getString(getContext().contentResolver, Settings.Secure.ANDROID_ID))
+        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
+        val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
+        var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
+        Log.e("token", fcmId.toString())
+        clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
+        //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_HIGH, true)
+        }
+        clevertapDefaultInstance?.apply {
+            ctNotificationInboxListener = this@SplashActivity
+            initializeInbox()
+        }
         if (userId.equals("")) {
             checkAppVersion()
         } else {
@@ -173,6 +172,10 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                         try {
                             callFCMRegMethod(context)
                             FirebaseMessaging.getInstance().isAutoInitEnabled = true
+                            val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val editor1 = shared1.edit()
+                            editor1.putString(CONSTANTS.PREFE_ACCESS_segmentKey, versionModel.ResponseData.segmentKey)
+                            editor1.apply()
                             setAnalytics(versionModel.ResponseData.segmentKey, context)
                             val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
@@ -370,7 +373,16 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 }
             })
         } else {
-            setAnalytics(getString(R.string.segment_key_real_2_staging), context)
+            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+            var segmentKey = shared.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
+            if(segmentKey == ""){
+                if(AppUtils.New_BASE_URL == "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                    segmentKey = getString(R.string.segment_key_real_2_staging)
+                }else {
+                    segmentKey = getString(R.string.segment_key_real_2_live)
+                }
+            }
+            setAnalytics(segmentKey!!, context)
             //            askBattyPermission()
             callDashboard()
             showToast(getString(R.string.no_server_found), activity)
