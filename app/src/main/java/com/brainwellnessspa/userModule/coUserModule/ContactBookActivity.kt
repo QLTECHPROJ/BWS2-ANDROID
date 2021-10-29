@@ -82,12 +82,7 @@ class ContactBookActivity : AppCompatActivity() {
         withoutSearch()
 
         binding.llBack.setOnClickListener {
-            IsFirstClick = "0"
-            myBackPress = true
-            val i = Intent(applicationContext, AddCouserActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-            startActivity(i)
-            finish()
+            onBackPressed()
         }
 
         p = Properties()
@@ -140,7 +135,6 @@ class ContactBookActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        IsFirstClick = "0"
         myBackPress = true
         val i = Intent(applicationContext, AddCouserActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
