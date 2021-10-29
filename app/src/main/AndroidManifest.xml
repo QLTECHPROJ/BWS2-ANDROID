@@ -568,18 +568,16 @@
             android:value="true" />
         <meta-data
             android:name="firebase_analytics_collection_enabled"
-            android:value="true" /> <!-- <meta-data -->
-        <!-- android:name="FCM_SENDER_ID" -->
-        <!-- android:value="id:139951188296" /> -->
+            android:value="true" />
         <meta-data
             android:name="CLEVERTAP_BACKGROUND_SYNC"
             android:value="1" />
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="658-54Z-5K6Z" />
+            android:value="487-6W4-WK6Z" />
         <meta-data
             android:name="CLEVERTAP_TOKEN"
-            android:value="145-b56" />
+            android:value="406-ab4" />
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
             android:resource="@drawable/app_new_icon" />
