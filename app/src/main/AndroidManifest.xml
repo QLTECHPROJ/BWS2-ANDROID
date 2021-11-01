@@ -68,12 +68,12 @@
         android:name=".BWSApplication"
         android:fullBackupContent="false"
         android:hardwareAccelerated="false"
-        android:icon="@drawable/app_new_icon"
+        android:icon="@drawable/tranparent_round_app_icon"
         android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/round_app_new_icon"
+        android:roundIcon="@drawable/tranparent_round_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
@@ -580,10 +580,10 @@
             android:value="406-ab4" />
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:resource="@drawable/app_new_icon" />
+            android:resource="@drawable/app_new_latest_icon" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/app_new_icon" />
+            android:resource="@drawable/app_new_latest_icon" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />

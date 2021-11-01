@@ -112,7 +112,7 @@ class PdfActivity : AppCompatActivity() {
         y += (paint.descent() - paint.ascent()).toInt()
         canvas.drawText("", x.toFloat(), y.toFloat(), paint)
         val res = resources
-        val bitmap = BitmapFactory.decodeResource(res, R.drawable.app_new_icon)
+        val bitmap = BitmapFactory.decodeResource(res, R.drawable.app_new_latest_icon)
         val b = Bitmap.createScaledBitmap(bitmap, 100, 50, false)
         canvas.drawBitmap(b, x.toFloat(), y.toFloat(), paint)
         y += 25

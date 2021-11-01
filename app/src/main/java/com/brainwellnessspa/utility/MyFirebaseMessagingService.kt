@@ -183,7 +183,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 notificationManager.createNotificationChannel(notificationChannel)
             }
             notificationBuilder.priority = NotificationCompat.PRIORITY_HIGH
-            notificationBuilder.setSmallIcon(R.drawable.logo_notification)
+            notificationBuilder.setSmallIcon(R.drawable.app_new_transparent_icon)
             notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(message))
             notificationBuilder.setContentTitle(title)
             notificationBuilder.setDefaults(Notification.DEFAULT_ALL or Notification.FLAG_AUTO_CANCEL)
