@@ -380,7 +380,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             var segmentKey = shared.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
             if(segmentKey == ""){
-                if(AppUtils.New_BASE_URL == "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                if(AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
                     segmentKey = getString(R.string.segment_key_real_2_staging)
                 }else {
                     segmentKey = getString(R.string.segment_key_real_2_live)

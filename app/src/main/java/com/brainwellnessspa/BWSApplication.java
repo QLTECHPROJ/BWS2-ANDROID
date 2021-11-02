@@ -2709,7 +2709,7 @@ public class BWSApplication extends Application {
             SharedPreferences shared1x = getContext().getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE);
             String segmentKey = shared1x.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "");
             if(segmentKey == ""){
-                if(New_BASE_URL == "http://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                if(New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
                     segmentKey = getContext().getString(R.string.segment_key_real_2_staging);
                 }else {
                     segmentKey = getContext().getString(R.string.segment_key_real_2_live);
