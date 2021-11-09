@@ -317,7 +317,7 @@ class SignInActivity : AppCompatActivity() {
                             binding.txtNumberError.visibility = View.GONE
                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             val listModel: UserAccessModel = response.body()!!
-                            if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (listModel.ResponseCode == getString(R.string.ResponseCodesuccess)) {
                                 p.putValue("isOtpReceived", "Yes")
                                 val i = Intent(ctx, AuthOtpActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -330,6 +330,18 @@ class SignInActivity : AppCompatActivity() {
                                 i.putExtra(CONSTANTS.countryName, countryFullName)
                                 startActivity(i)
                                 finish()
+                            } else if (listModel.ResponseCode == getString(R.string.ResponseCodefail)) {
+                                p.putValue("isOtpReceived", "No")
+                                if (listModel.ResponseData.signup.equals("1", ignoreCase = true)) {
+                                    val i = Intent(activity, SignUpActivity::class.java)
+                                    i.putExtra("mobileNo", binding.etNumber.text.toString())
+                                    i.putExtra("countryCode", countryCode)
+                                    i.putExtra("name", "")
+                                    i.putExtra("email", "")
+                                    i.putExtra("countryShortName", binding.tvCountryShortName.text.toString())
+                                    startActivity(i)
+                                    finish()
+                                }
                             } else {
                                 p.putValue("isOtpReceived", "No")
                             }

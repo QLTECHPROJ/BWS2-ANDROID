@@ -8,4 +8,5 @@ data class UserAccessModel(val ResponseCode: String,
 data class UserResponseData(val MobileNo: String,
     val OTP: String,
     val SignupFlag: String,
-    val errormsg: String)
+    val errormsg: String,
+    val signup: String)

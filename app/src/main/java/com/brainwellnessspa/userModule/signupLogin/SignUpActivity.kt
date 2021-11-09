@@ -127,14 +127,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.llBack.setOnClickListener {
-            val i = Intent(activity, SignUpActivity::class.java)
-            i.putExtra("mobileNo", "")
-            i.putExtra("countryCode", "")
-            i.putExtra("name", "")
-            i.putExtra("email", "")
-            i.putExtra("countryShortName", "")
-            startActivity(i)
-            finish()
+            onBackPressed()
         }
 
         binding.etUser.addTextChangedListener(userTextWatcher)
@@ -164,7 +157,14 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.tvSignIn.setOnClickListener {
-            callSignActivity(activity)
+            val i = Intent(activity, SignInActivity::class.java)
+            i.putExtra("mobileNo", mobileNo)
+            i.putExtra("countryCode", countryCode)
+            i.putExtra("name", name)
+            i.putExtra("email", email)
+            i.putExtra("countryShortName", countryShortName)
+            startActivity(i)
+            finish()
         }
 
         binding.tvtncs.setOnClickListener {
@@ -348,7 +348,14 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        callSignActivity(activity)
+        val i = Intent(activity, SignInActivity::class.java)
+        i.putExtra("mobileNo", mobileNo)
+        i.putExtra("countryCode", countryCode)
+        i.putExtra("name", name)
+        i.putExtra("email", email)
+        i.putExtra("countryShortName", countryShortName)
+        startActivity(i)
+        finish()
     }
 
     fun prepareData(dialog: Dialog, rvCountryList: RecyclerView, tvFound: TextView, progressBar: ProgressBar, progressBarHolder: FrameLayout, searchView :SearchView) {
