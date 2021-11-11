@@ -306,7 +306,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         val paymentType = listModel.ResponseData.paymentType
                         if (signupFlag.equals("1", ignoreCase = true)) {
                             if(paymentType == ""){
-                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType,"1")
+                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType,"0")
                             }
                         }
                         var planId = ""

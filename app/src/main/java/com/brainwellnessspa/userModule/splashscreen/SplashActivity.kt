@@ -187,7 +187,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                             editor.putString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, versionModel.ResponseData.IsLoginFirstTime)
                             editor.apply()
                             when {
-                                versionModel.ResponseData.IsForce.equals("0") -> {
+                                versionModel.ResponseData.IsForce == "0" -> {
                                     val builder = AlertDialog.Builder(context)
                                     builder.setTitle("Update Brain Wellness App")
                                     builder.setCancelable(false)
@@ -201,7 +201,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                     }
                                     builder.create().show()
                                 }
-                                versionModel.ResponseData.IsForce.equals("1") -> {
+                                versionModel.ResponseData.IsForce == "1" -> {
                                     val builder = AlertDialog.Builder(context)
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
@@ -210,7 +210,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                     }
                                     builder.create().show()
                                 }
-                                versionModel.ResponseData.IsForce.equals("") -> {
+                                versionModel.ResponseData.IsForce == "" -> {
                                     //                                    askBattyPermission()
                                     callDashboard()
                                 }
