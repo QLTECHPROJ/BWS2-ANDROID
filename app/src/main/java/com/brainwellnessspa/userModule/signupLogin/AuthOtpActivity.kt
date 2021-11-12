@@ -24,10 +24,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.MembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -305,8 +304,8 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                         val paymentType = listModel.ResponseData.paymentType
                         if (signupFlag.equals("1", ignoreCase = true)) {
-                            if(paymentType == ""){
-                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType,"0")
+                            if (paymentType == "") {
+                                editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, "0")
                             }
                         }
                         var planId = ""
@@ -424,26 +423,26 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                     startActivity(intent)
                                     finish()
                                 } else if (planId == "") {
-                                    if (paymentType == "0") {
-                                        // stripe
-                                        val intent = Intent(applicationContext, MembershipChangeActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-                                    } else if (paymentType == "1") {
-                                        isEnhanceBack = "1"
-                                        //IAP
-                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-                                    } else {
-                                        isEnhanceBack = "1"
-                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-                                    }
+                                    //                                    if (paymentType == "0") {
+                                    // stripe
+                                    val intent = Intent(applicationContext, MembershipActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    startActivity(intent)
+                                    finish()
+                                    //                                    } else if (paymentType == "1") {
+                                    //                                        isEnhanceBack = "1"
+                                    //                                        //IAP
+                                    //                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                    //                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    //                                        startActivity(intent)
+                                    //                                        finish()
+                                    //                                    } else {
+                                    //                                        isEnhanceBack = "1"
+                                    //                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
+                                    //                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    //                                        startActivity(intent)
+                                    //                                        finish()
+                                    //                                    }
                                 } else {
                                     if (listModel.ResponseData.CoUserCount > "0") {
                                         val intent = Intent(activity, UserListActivity::class.java)

@@ -16,7 +16,6 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.MembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
@@ -450,10 +449,10 @@ class AssProcessActivity : AppCompatActivity() {
 
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
-            Log.e("navigation",navigation)
+            Log.e("navigation", navigation)
             val intent = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            intent.putExtra("Navigation",navigation)
+            intent.putExtra("Navigation", navigation)
             startActivity(intent)
             finish()
         }
@@ -461,26 +460,35 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the assessment done click */
         binding.btnDoneAss.setOnClickListener {
             if (mainAccountId.equals(userId)) {
-//                 TODO when add plan in user flow comment open
+                //                 TODO when add plan in user flow comment open
                 if (navigation == "Home") {
                     finish()
                 } else {
                     val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                     val paymentType = shared.getString(CONSTANTS.PREFE_ACCESS_paymentType, "")
-                    if(paymentType == "0"){
+                    val planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+                    //                    if(paymentType == "0"){
+                    if (planId == "") {
+                        val i = Intent(this@AssProcessActivity, MembershipActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        i.putExtra("plan", "0")
+                        startActivity(i)
+                        finish()
+                    } else {
                         val i = Intent(this@AssProcessActivity, ProfileProgressActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("plan", "0")
                         startActivity(i)
                         finish()
-                    }else {
-                        isEnhanceBack = "1"
-                        val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        i.putExtra("plan", "0")
-                        startActivity(i)
-                        finish()
                     }
+                    //                    }else {
+                    //                        isEnhanceBack = "1"
+                    //                        val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
+                    //                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    //                        i.putExtra("plan", "0")
+                    //                        startActivity(i)
+                    //                        finish()
+                    //                    }
 
                     /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
                     startActivity(i)
@@ -523,13 +531,13 @@ class AssProcessActivity : AppCompatActivity() {
                                     } else {
                                         binding.assesmentContent.text = Html.fromHtml(listModel.responseData?.assesmentContent);
                                     }
-//                                    binding.assesmentContent.text = listModel.responseData?.assesmentContent
+                                    //                                    binding.assesmentContent.text = listModel.responseData?.assesmentContent
                                     binding.tvScreenTitle.text = listModel.responseData?.mainTitle
                                     binding.tvWellnessTitle.text = listModel.responseData?.subTitle
                                     binding.tvWellnessTitle.setTextColor(Color.parseColor(listModel.responseData?.colorcode))
                                 }
                                 listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                    callDelete403(act,listModel.responseMessage)
+                                    callDelete403(act, listModel.responseMessage)
                                 }
                                 else -> {
                                     showToast(listModel.responseMessage, act)

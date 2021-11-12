@@ -3,7 +3,6 @@ package com.brainwellnessspa.userModule.splashscreen
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -19,12 +18,11 @@ import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
+import com.brainwellnessspa.membershipModule.activities.MembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -379,10 +377,10 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         } else {
             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             var segmentKey = shared.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
-            if(segmentKey == ""){
-                if(AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+            if (segmentKey == "") {
+                if (AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/") {
                     segmentKey = getString(R.string.segment_key_real_2_staging)
-                }else {
+                } else {
                     segmentKey = getString(R.string.segment_key_real_2_live)
                 }
             }
@@ -493,20 +491,20 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                         startActivity(intent)
                         finish()
                     } else if (planId.equals("")) {
-                        if (paymentType == "0") {
+//                        if (paymentType == "0") {
                             // stripe
-                            val intent = Intent(activity, MembershipChangeActivity::class.java)
+                            val intent = Intent(activity, MembershipActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(intent)
                             finish()
-                        } else if (paymentType == "1") {
+                        /*} else if (paymentType == "1") {
                             isEnhanceBack = "1"
                             //IAP
                             val intent = Intent(activity, EnhanceActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(intent)
                             finish()
-                        }
+                        }*/
                     } else if (isPinSet.equals("1")) {
                         if (isSetLoginPin.equals("1")) {
                             when {
@@ -519,18 +517,18 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                     finish()
                                 }
                                 planId.equals("") -> {
-                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, MembershipChangeActivity::class.java)
+//                                    if (paymentType == "0") {
+                                        val intent = Intent(activity, MembershipActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
-                                    } else if (paymentType == "1") {
-                                        isEnhanceBack = "1"
-                                        val intent = Intent(activity, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-                                    }
+//                                    } else if (paymentType == "1") {
+//                                        isEnhanceBack = "1"
+//                                        val intent = Intent(activity, EnhanceActivity::class.java)
+//                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+//                                        startActivity(intent)
+//                                        finish()
+//                                    }
                                 }
                                 isProfileCompleted.equals("0") -> {
                                     val intent = Intent(activity, ProfileProgressActivity::class.java)
@@ -569,18 +567,18 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                                     finish()
                                 }
                                 planId.equals("") -> {
-                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, MembershipChangeActivity::class.java)
+//                                    if (paymentType == "0") {
+                                        val intent = Intent(activity, MembershipActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
-                                    } else if (paymentType == "1") {
-                                        isEnhanceBack = "1"
-                                        val intent = Intent(activity, EnhanceActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-                                    }
+//                                    } else if (paymentType == "1") {
+//                                        isEnhanceBack = "1"
+//                                        val intent = Intent(activity, EnhanceActivity::class.java)
+//                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+//                                        startActivity(intent)
+//                                        finish()
+//                                    }
                                 }
                                 isProfileCompleted.equals("0") -> {
                                     val intent = Intent(activity, ProfileProgressActivity::class.java)

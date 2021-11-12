@@ -28,7 +28,7 @@ interface APINewInterface {
 
     @POST("appversion")
     @FormUrlEncoded
-    fun getAppVersions(@Field("UserId") userId: String?,@Field("Version") version: String?, @Field("AppType") appType: String?, @Field("localTimezone") localTimezone: String?): Call<VersionModel>
+    fun getAppVersions(@Field("UserId") userId: String?, @Field("Version") version: String?, @Field("AppType") appType: String?, @Field("localTimezone") localTimezone: String?): Call<VersionModel>
 
     @POST("loginsignup")
     @FormUrlEncoded
@@ -115,13 +115,11 @@ interface APINewInterface {
 
     @POST("steptypeone")
     @FormUrlEncoded
-    fun getEEPStepTypeOneSaveData(@Field("StepId") StepId: String?,
-                                  @Field("SessionId") SessionId: String?): Call<StepTypeOneSaveDataModel>
+    fun getEEPStepTypeOneSaveData(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeOneSaveDataModel>
 
     @POST("steptypetwo")
     @FormUrlEncoded
-    fun getEEPStepTypeTwoSaveData(@Field("StepId") StepId: String?,
-                                  @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
+    fun getEEPStepTypeTwoSaveData(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
 
     @POST("assesmentsaveans")
     @FormUrlEncoded
@@ -208,7 +206,7 @@ interface APINewInterface {
 
     @POST("homescreen")
     @FormUrlEncoded
-    fun getHomeScreenData(@Field("UserId") UserId: String?,@Field("localTimezone") localTimezone: String?): Call<HomeScreenModel>
+    fun getHomeScreenData(@Field("UserId") UserId: String?, @Field("localTimezone") localTimezone: String?): Call<HomeScreenModel>
 
     @POST("logout")
     @FormUrlEncoded
@@ -228,9 +226,7 @@ interface APINewInterface {
 
     @POST("sessionlist")
     @FormUrlEncoded
-    fun getSessionList(
-            @Field("UserId")
-            UserId: String?): Call<SessionListModel>
+    fun getSessionList(@Field("UserId") UserId: String?): Call<SessionListModel>
 
     @POST("sessionstepstatus")
     @FormUrlEncoded
@@ -242,9 +238,7 @@ interface APINewInterface {
 
     @POST("resourcecatlist")
     @FormUrlEncoded
-    fun getResourceCatList(
-            @Field("UserId")
-            UserId: String?): Call<ResourceFilterModel>
+    fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>
 
     @get:GET("faqlist")
     val faqLists: Call<FaqListModel>
@@ -255,7 +249,7 @@ interface APINewInterface {
     @POST("brainfeelingsavecat")
     @FormUrlEncoded
     fun getBrainFeelingSaveCat(
-            @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?,
+        @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?,
     ): Call<SucessModel>
 
     @POST("setreminder")
@@ -354,11 +348,16 @@ interface APINewInterface {
     fun getCurrentPlanView(@Field("UserID") userID: String?): Call<CurrentPlanVieViewModel>
 
     /* TODO Membership Plan List */
-    @GET("planlist")
+    @GET("stripeplanlist")
     fun getMembershipPlanList(): Call<MembershipPlanListModel>
 
     /* TODO OrderSummaryActivity */
     @POST("checkrefercode")
     @FormUrlEncoded
     fun CheckReferCode(@Field("ReferCode") referCode: String?): Call<CheckReferCodeModel>
+
+    /* TODO Membership Payment */
+    @POST("stripepayment")
+    @FormUrlEncoded
+    fun getMembershipPayment(@Field("UserId") userId: String?,@Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") CardId: String?): Call<SucessModel>
 }

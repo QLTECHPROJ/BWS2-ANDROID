@@ -37,7 +37,7 @@ import com.brainwellnessspa.databinding.FragmentProfileBinding
 import com.brainwellnessspa.downloadModule.activities.DownloadsActivity
 import com.brainwellnessspa.faqModule.activities.FaqActivity
 import com.brainwellnessspa.invoiceModule.activities.InvoiceActivity
-import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.MembershipActivity
 import com.brainwellnessspa.reminderModule.activities.ReminderListsActivity
 import com.brainwellnessspa.resourceModule.activities.ResourceActivity
 import com.brainwellnessspa.userModule.accountInfo.AccountInfoActivity
@@ -288,7 +288,7 @@ class ProfileFragment : Fragment() {
             if (isNetworkConnected(ctx)) {
                 if (listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
                     isEnhanceBack = "1"
-                    val intent = Intent(ctx, EnhanceActivity::class.java)
+                    val intent = Intent(ctx, MembershipActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                     startActivity(intent)
                 } else {
@@ -340,7 +340,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding.llPlan.setOnClickListener {
+        /*binding.llPlan.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -355,7 +355,7 @@ class ProfileFragment : Fragment() {
             } else {
                 showToast(ctx.getString(R.string.no_server_found), act)
             }
-        }
+        }*/
 
         /*
                 binding.llPlan1.setOnClickListener {
@@ -715,7 +715,7 @@ Tap Setting > permission, and turn "Files and media" on.""")
                                         if (isNetworkConnected(ctx)) {
                                             if (listModel1.ResponseData.oldPaymentDetails.isEmpty() && listModel1.ResponseData.planDetails.isEmpty()) {
                                                 isEnhanceBack = "1"
-                                                val intent = Intent(ctx, EnhanceActivity::class.java)
+                                                val intent = Intent(ctx, MembershipActivity::class.java)
                                                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                                 startActivity(intent)
                                             } else {

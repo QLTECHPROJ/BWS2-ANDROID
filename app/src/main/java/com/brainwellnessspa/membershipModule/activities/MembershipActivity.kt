@@ -1,5 +1,6 @@
 package com.brainwellnessspa.membershipModule.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -7,11 +8,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,11 +24,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.callSignActivity
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.databinding.ActivityMembershipBinding
 import com.brainwellnessspa.databinding.AudioFaqLayoutBinding
+import com.brainwellnessspa.databinding.MembershipPlanBinding
 import com.brainwellnessspa.databinding.SubscribeBoxLayoutBinding
 import com.brainwellnessspa.faqModule.models.FaqListModel
-import com.brainwellnessspa.membershipModule.adapters.MembershipPlanAdapter
 import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import com.brainwellnessspa.utility.APINewClient.client
 import com.brainwellnessspa.utility.CONSTANTS
@@ -34,6 +40,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
 import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,7 +55,9 @@ class MembershipActivity : AppCompatActivity() {
     var adapter: MembershipFaqAdapter? = null
     private val mLastClickTime: Long = 0
     lateinit var i: Intent
+    private var doubleBackToExitPressedOnce = false
     lateinit var act: Activity
+    var UserId :String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership)
@@ -58,6 +67,8 @@ class MembershipActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener { view ->
             callSignActivity(act)
         }
+        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        UserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         binding.rvList.layoutManager = mLayoutManager
         binding.rvList.itemAnimator = DefaultItemAnimator()
@@ -104,7 +115,16 @@ class MembershipActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        callSignActivity(act)
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        BWSApplication.showToast("Press again to exit", act)
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            doubleBackToExitPressedOnce = false
+        }, 2000)
     }
 
     private fun prepareMembershipData() {
@@ -247,4 +267,97 @@ class MembershipActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: SubscribeBoxLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
+
+    //import com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity;
+    class MembershipPlanAdapter(private val listModelList: ArrayList<MembershipPlanListModel.Plan>, var ctx: Context, var btnFreeJoin: Button, var TrialPeriod: String, var activity: Activity, var i: Intent) : RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder>() {
+        private var rowIndex = -1
+        private var pos = 0
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: MembershipPlanBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_plan, parent, false)
+            return MyViewHolder(v)
+        }
+
+        @SuppressLint("SetTextI18n") override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val listModel = listModelList[position] //        holder.binding.tvTitle.setText(listModel.getTitle());
+            holder.binding.tvPlanFeatures01.text = listModel.planFeatures?.get(0)?.feature
+            holder.binding.tvPlanFeatures02.text = listModel.planFeatures?.get(1)?.feature
+            holder.binding.tvPlanFeatures03.text = listModel.planFeatures?.get(2)?.feature
+            holder.binding.tvPlanFeatures04.text = listModel.planFeatures?.get(3)?.feature
+            holder.binding.tvPlanAmount.text = "$" + listModel.planAmount
+            holder.binding.tvSubName.text = listModel.subName
+            holder.binding.tvPlanInterval.text = listModel.planInterval
+            if (listModel.recommendedFlag.equals("1", ignoreCase = true)) {
+                holder.binding.tvRecommended.visibility = View.VISIBLE/*  if (pos == 0) {
+                holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+                holder.binding.llFeatures.setVisibility(View.VISIBLE);
+                holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+            }*/
+            } else {
+                holder.binding.tvRecommended.visibility = View.GONE
+            }
+            holder.binding.llPlanMain.setOnClickListener {
+                rowIndex = position
+                pos++
+                notifyDataSetChanged()
+            }
+            if (rowIndex == position) {
+                changeFunction(holder, listModel, position)
+            } else {
+                if (listModel.recommendedFlag.equals("1", ignoreCase = true) && pos == 0) {
+                    holder.binding.tvRecommended.visibility = View.VISIBLE
+                    changeFunction(holder, listModel, position)
+                } else {
+                    holder.binding.llPlanSub.background = ContextCompat.getDrawable(activity, R.drawable.rounded_light_gray)
+                    holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                    holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                    holder.binding.tvPlanInterval.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                    holder.binding.llFeatures.visibility = View.GONE
+                }
+            }
+            btnFreeJoin.setOnClickListener {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    activity.startActivity(i)
+                    activity.finish()
+                } else {
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), activity)
+                }
+            }
+        }
+
+        private fun changeFunction(holder: MyViewHolder, listModel: MembershipPlanListModel.Plan, position: Int) {
+            holder.binding.llPlanSub.setBackgroundResource(R.drawable.top_round_green_cornor)
+            holder.binding.llFeatures.visibility = View.VISIBLE
+            holder.binding.tvPlanAmount.setTextColor(ContextCompat.getColor(activity, R.color.white))
+            holder.binding.tvSubName.setTextColor(ContextCompat.getColor(activity, R.color.white))
+            holder.binding.tvPlanInterval.setTextColor(ContextCompat.getColor(activity, R.color.white))
+            holder.binding.llFeatures.setBackgroundColor(ContextCompat.getColor(activity, R.color.white))
+            planFlag = listModel.planFlag.toString()
+            price = listModel.planAmount.toString()
+            planId = listModel.planID.toString()
+            val gson = Gson();
+            i = Intent(ctx, OrderSummaryActivity::class.java)
+            i.putExtra("PlanData", gson.toJson(listModelList))
+            i.putExtra("TrialPeriod", "")
+            i.putExtra("position", position)
+            i.putExtra("Promocode", "")
+        }
+
+        override fun getItemCount(): Int {
+            return listModelList.size
+        }
+
+        inner class MyViewHolder(var binding: MembershipPlanBinding) : RecyclerView.ViewHolder(binding.root)
+
+        companion object {
+            @JvmField var planFlag = ""
+
+            @JvmField var planId = ""
+
+            @JvmField var price = ""
+        }
+    }
+
 }
