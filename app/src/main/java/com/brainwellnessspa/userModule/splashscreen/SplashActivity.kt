@@ -415,7 +415,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
 
     private fun callDashboard() {
         Handler(Looper.getMainLooper()).postDelayed({
-            if (IsLoginFirstTime.equals("1")) {
+            /*if (IsLoginFirstTime.equals("1")) {
                 val i = Intent(activity, SignUpActivity::class.java)
                 i.putExtra("mobileNo", "")
                 i.putExtra("countryCode", "")
@@ -424,7 +424,8 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
                 i.putExtra("countryShortName", "")
                 startActivity(i)
                 finish()
-            } else if (userId.equals("")) {
+            } else */
+            if (userId.equals("")) {
                 callSignActivity(activity)
             } else if (intent.hasExtra("flag")) {
                 val resultIntent: Intent?

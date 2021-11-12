@@ -343,17 +343,17 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun String.isEmailValid(): Boolean {
+    private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
     override fun onBackPressed() {
         val i = Intent(activity, SignInActivity::class.java)
-        i.putExtra("mobileNo", mobileNo)
-        i.putExtra("countryCode", countryCode)
-        i.putExtra("name", name)
-        i.putExtra("email", email)
-        i.putExtra("countryShortName", countryShortName)
+        i.putExtra("mobileNo", "")
+        i.putExtra("countryCode", "")
+        i.putExtra("name", "")
+        i.putExtra("email", "")
+        i.putExtra("countryShortName", "")
         startActivity(i)
         finish()
     }
@@ -430,6 +430,18 @@ class SignUpActivity : AppCompatActivity() {
                             i.putExtra(CONSTANTS.countryName, countryFullName)
                             startActivity(i)
                             finish()
+                        }else if (listModel.ResponseCode == "401") {
+                            p.putValue("isOtpReceived", "No")
+                           /* if (listModel.ResponseData.signup.equals("1", ignoreCase = true)) {
+                                val i = Intent(activity, SignInActivity::class.java)
+                            i.putExtra("mobileNo", binding.etNumber.text.toString())
+                            i.putExtra("countryCode", countryCode)
+                            i.putExtra("name", binding.etUser.text.toString())
+                            i.putExtra("email", binding.etEmail.text.toString())
+                            i.putExtra("countryShortName", binding.tvCountryShortName.text.toString())
+                            startActivity(i)
+                            finish()
+                            }*/
                         }else{
                             p.putValue("isOtpReceived", "No")
                         }
