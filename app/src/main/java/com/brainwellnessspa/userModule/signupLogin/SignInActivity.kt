@@ -93,7 +93,7 @@ class SignInActivity : AppCompatActivity() {
 
         if (!mobileNo.equals("", ignoreCase = true)) {
             binding.etNumber.setText(mobileNo)
-            binding.tvCountry.text = "+$countryCode"
+            binding.tvCountry.text = "$countryCode"
             binding.tvCountryShortName.text = "$countryShortName"
         } else {
             binding.tvCountry.text = getString(R.string.country_code_61)
@@ -433,7 +433,6 @@ class SignInActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var bindingAdapter: CountryPopupLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
     }
-
 }
 
 

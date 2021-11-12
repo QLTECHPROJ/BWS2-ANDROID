@@ -11,11 +11,10 @@
         tools:context=".userModule.splashscreen.SplashActivity">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="-4dp"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_300sdp"
             android:contentDescription="@string/todo"
             android:scaleType="fitXY"
-            android:src="@drawable/splash_new_screen" />
+            android:src="@drawable/tranparent_round_app_icon" />
     </RelativeLayout>
 </layout>
