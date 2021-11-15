@@ -81,7 +81,7 @@ class PaymentFragment : Fragment() {
                 override fun onResponse(call: Call<CardListModel?>, response: Response<CardListModel?>) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                     val cardListModel: CardListModel? = response.body()
-                    if (cardListModel!!.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
+                    if (cardListModel!!.responseCode.equals(context!!.getString(R.string.ResponseCodesuccess))) {
                         p = Properties()
                         p!!.putValue("UserID", userID)
                         if (cardListModel.responseData!!.isEmpty()) {
