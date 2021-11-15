@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -217,20 +218,25 @@ class MembershipActivity : AppCompatActivity() {
             holder.binding.tvTitle.text = modelList[position].title
             holder.binding.tvDesc.text = modelList[position].desc
             holder.binding.ivClickRight.setOnClickListener {
-                holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray)
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.white))
                 holder.binding.tvDesc.isFocusable = true
                 holder.binding.tvDesc.requestFocus()
                 holder.binding.tvDesc.visibility = View.VISIBLE
                 holder.binding.ivClickRight.visibility = View.GONE
                 holder.binding.ivClickDown.visibility = View.VISIBLE
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_down_arrow_icon)
+                holder.binding.llBgChange.setBackgroundResource(R.drawable.faq_not_clicked)
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_clicked)
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_white_arrow_down_icon)
             }
-            holder.binding.ivClickDown.setOnClickListener { view ->
-                holder.binding.llMainLayout.setBackgroundResource(R.color.white)
+
+            holder.binding.ivClickDown.setOnClickListener {
+                holder.binding.llBgChange.setBackgroundResource(R.color.transparent_white)
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked)
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.light_black))
                 holder.binding.tvDesc.visibility = View.GONE
                 holder.binding.ivClickRight.visibility = View.VISIBLE
                 holder.binding.ivClickDown.visibility = View.GONE
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_back_black_icon)
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_right_gray_arrow_icon)
             }
             if (modelList.isEmpty()) {
                 tvFound.visibility = View.GONE
