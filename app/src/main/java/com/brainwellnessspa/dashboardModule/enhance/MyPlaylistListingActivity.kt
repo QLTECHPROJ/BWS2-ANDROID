@@ -182,7 +182,7 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist_listing)
-        Log.e("NotificationPlaylistCheck", NotificationPlaylistCheck)
+        Log.e("NotificationPlaylist", NotificationPlaylistCheck)
         ctx = this@MyPlaylistListingActivity
         activity = this@MyPlaylistListingActivity
         if (intent != null) {
@@ -1082,8 +1082,14 @@ class MyPlaylistListingActivity : AppCompatActivity(), StartDragListener {
                                     }
                                 }
                             }
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(0, listModel.size);
+                            notifyItemRemoved(position)
+                            notifyItemRangeChanged(0, listModel.size)
+                            if(listModel.size == 0){
+                                binding.llDownloads.isClickable = false
+                                binding.llDownloads.isEnabled = false
+                                binding.ivDownloads.setImageResource(R.drawable.ic_download_bws)
+                                binding.ivDownloads.setColorFilter(ContextCompat.getColor(activity, R.color.light_gray), PorterDuff.Mode.SRC_IN)
+                            }
 
                             //                            localIntent = Intent("Reminder")
 //                            localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
