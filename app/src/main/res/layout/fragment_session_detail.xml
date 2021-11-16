@@ -14,7 +14,7 @@
             android:id="@+id/rlLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_56sdp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/llBack"
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rlLayout"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
