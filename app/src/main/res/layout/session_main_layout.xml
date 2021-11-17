@@ -218,7 +218,8 @@
                     android:id="@+id/llBeforeSession"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp">
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -247,7 +248,8 @@
                     android:id="@+id/llAfterSession"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp">
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -288,6 +290,7 @@
                     android:contentDescription="@string/todo"
                     android:padding="@dimen/_16sdp"
                     android:scaleType="fitXY"
+                    app:tint="@color/black"
                     android:src="@drawable/ic_right_gray_arrow_icon" />
 
             </RelativeLayout>

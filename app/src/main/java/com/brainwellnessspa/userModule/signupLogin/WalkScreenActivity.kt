@@ -10,6 +10,8 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
+import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.session.SessionWalkScreenActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.UserDetailActivity
@@ -50,6 +52,7 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepTwo.visibility = View.GONE
                 binding.rlStepThree.visibility = View.GONE
                 binding.rlStepFour.visibility = View.GONE
+                binding.rlStepSessionDesc.visibility = View.GONE
             }
             screenView.equals("2", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
@@ -57,6 +60,7 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepTwo.visibility = View.VISIBLE
                 binding.rlStepThree.visibility = View.GONE
                 binding.rlStepFour.visibility = View.GONE
+                binding.rlStepSessionDesc.visibility = View.GONE
             }
             screenView.equals("3", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
@@ -64,6 +68,7 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepTwo.visibility = View.GONE
                 binding.rlStepThree.visibility = View.VISIBLE
                 binding.rlStepFour.visibility = View.GONE
+                binding.rlStepSessionDesc.visibility = View.GONE
             }
             screenView.equals("4", ignoreCase = true) -> {
                 binding.rlWelcome.visibility = View.GONE
@@ -71,6 +76,15 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepTwo.visibility = View.GONE
                 binding.rlStepThree.visibility = View.GONE
                 binding.rlStepFour.visibility = View.VISIBLE
+                binding.rlStepSessionDesc.visibility = View.GONE
+            }
+            screenView.equals("5", ignoreCase = true) -> {
+                binding.rlWelcome.visibility = View.GONE
+                binding.rlStepOne.visibility = View.GONE
+                binding.rlStepTwo.visibility = View.GONE
+                binding.rlStepThree.visibility = View.GONE
+                binding.rlStepFour.visibility = View.GONE
+                binding.rlStepSessionDesc.visibility = View.VISIBLE
             }
         }
 
@@ -106,6 +120,13 @@ class WalkScreenActivity : AppCompatActivity() {
 
         binding.rlStepFour.setOnClickListener {
             val intent = Intent(applicationContext, UserDetailActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            startActivity(intent)
+            finish()
+        }
+
+        binding.btnStart.setOnClickListener {
+            val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()

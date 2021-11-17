@@ -3,6 +3,7 @@ package com.brainwellnessspa.dashboardModule.session
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -29,7 +30,6 @@ import com.bumptech.glide.request.RequestOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.collections.ArrayList
 
 class SessionDetailFragment : Fragment() {
     lateinit var binding: FragmentSessionDetailBinding
@@ -43,7 +43,7 @@ class SessionDetailFragment : Fragment() {
         ctx = requireActivity()
         act = requireActivity()
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-//        prepareData()
+        prepareData()
         networkCheck()
         return binding.root
     }
@@ -55,11 +55,11 @@ class SessionDetailFragment : Fragment() {
 
     private fun networkCheck() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llRemainDev.visibility = View.VISIBLE /* VISIBLE*/
+            binding.llRemainDev.visibility = View.GONE /* VISIBLE*/
             binding.llNoInternet.visibility = View.GONE
         } else {
             binding.llRemainDev.visibility = View.GONE
-            binding.llNoInternet.visibility = View.VISIBLE /* VISIBLE*/
+            binding.llNoInternet.visibility = View.GONE /* VISIBLE*/
         }
     }
 
@@ -202,26 +202,45 @@ class SessionDetailFragment : Fragment() {
 
             when {
                 catName[position].userSessionStatus.equals("Completed") -> {
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
-                    Glide.with(activity!!).load(R.drawable.session_done_icon).thumbnail(0.05f)
+                    Glide.with(activity).load(R.drawable.session_done_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
-                    holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
-                    holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
+                    if (catName[position].beforeSession!!.isEmpty()){
+                        holder.bindingAdapter.llBeforeSession.visibility = View.GONE
+                    }else {
+                        holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
+                    }
+                    if (catName[position].afterSession!!.isEmpty()){
+                        holder.bindingAdapter.llAfterSession.visibility = View.GONE
+                    }else {
+                        holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
+                    }
                 }
                 catName[position].userSessionStatus.equals("Inprogress") -> {
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     Glide.with(activity!!).load(R.drawable.session_idea_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
                     holder.bindingAdapter.ivBanner.visibility = View.VISIBLE
-                    holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
-                    holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
+                    if (catName[position].beforeSession!!.isEmpty()){
+                        holder.bindingAdapter.llBeforeSession.visibility = View.GONE
+                    }else {
+                        holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
+                    }
+                    if (catName[position].afterSession!!.isEmpty()){
+                        holder.bindingAdapter.llAfterSession.visibility = View.GONE
+                    }else {
+                        holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
+                    }
                 }
                 catName[position].userSessionStatus.equals("Lock") -> {
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
                     Glide.with(activity!!).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
@@ -239,7 +258,7 @@ class SessionDetailFragment : Fragment() {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         activity!!.startActivity(i)
                     }
-                    catName[position].userSessionStatus.equals("InProgress") -> {
+                    catName[position].userSessionStatus.equals("Inprogress") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         activity!!.startActivity(i)
                     }
@@ -258,6 +277,7 @@ class SessionDetailFragment : Fragment() {
             }
             val s = TextUtils.join(",", beforeText)
             val s1 = TextUtils.join(",", afterText)
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 holder.bindingAdapter.tvBeforeSession.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
                 holder.bindingAdapter.tvAfterSession.text = Html.fromHtml(s1, Html.FROM_HTML_MODE_COMPACT)

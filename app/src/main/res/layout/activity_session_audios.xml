@@ -54,6 +54,7 @@
 
 
             <TextView
+                android:id="@+id/tvSessionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
@@ -68,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_4sdp"
@@ -126,7 +128,7 @@
                                     android:layout_height="match_parent">
 
                                     <ImageView
-                                        android:id="@+id/ivRestaurantImage"
+                                        android:id="@+id/ivAudioImage"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:scaleType="fitXY"
@@ -152,6 +154,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvAudioName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_2sdp"
@@ -159,18 +162,17 @@
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
                             android:maxLines="1"
-                            android:text="Session Description"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
 
                         <TextView
+                            android:id="@+id/tvAudioTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:text="10:15"
                             android:textColor="@color/app_theme_color"
                             android:textSize="@dimen/_12sdp"
                             tools:ignore="SpUsage" />
@@ -200,6 +202,21 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+
+
         </LinearLayout>
 
         <Button
@@ -207,7 +224,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_30sdp"
-            android:layout_marginBottom="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_28sdp"
             android:background="@drawable/light_green_rounded_filled"
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
@@ -215,6 +232,32 @@
             android:text="@string/Done"
             android:textColor="@color/white"
             android:layout_alignParentBottom="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

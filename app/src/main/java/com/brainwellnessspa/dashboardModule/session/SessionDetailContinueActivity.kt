@@ -40,7 +40,9 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         prepareData()
 
         binding.btnContinue.setOnClickListener {
-            val i = Intent(activity, BrainStatusActivity::class.java)
+            val i = Intent(activity, SessionAudiosActivity::class.java)
+            i.putExtra("SessionId","1")
+            i.putExtra("StepId","1")
             startActivity(i)
         }
     }

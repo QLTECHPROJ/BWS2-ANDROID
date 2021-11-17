@@ -115,7 +115,7 @@ interface APINewInterface {
 
     @POST("steptypeone")
     @FormUrlEncoded
-    fun getEEPStepTypeOneSaveData(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeOneSaveDataModel>
+    fun getEEPStepTypeOneData(@Field("UserId") userId: String?, @Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepOneModel>
 
     @POST("steptypetwo")
     @FormUrlEncoded
