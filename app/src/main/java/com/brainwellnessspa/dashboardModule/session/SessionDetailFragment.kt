@@ -202,7 +202,7 @@ class SessionDetailFragment : Fragment() {
 
             when {
                 catName[position].userSessionStatus.equals("Completed") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
                     Glide.with(activity).load(R.drawable.session_done_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
@@ -221,9 +221,9 @@ class SessionDetailFragment : Fragment() {
                     }
                 }
                 catName[position].userSessionStatus.equals("Inprogress") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
-                    Glide.with(activity!!).load(R.drawable.session_idea_icon).thumbnail(0.05f)
+                    Glide.with(activity).load(R.drawable.session_idea_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
@@ -240,9 +240,9 @@ class SessionDetailFragment : Fragment() {
                     }
                 }
                 catName[position].userSessionStatus.equals("Lock") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
-                    Glide.with(activity!!).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
+                    Glide.with(activity).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
@@ -293,11 +293,11 @@ class SessionDetailFragment : Fragment() {
             }
 
             if (position == (catName.size - 1)) {
-                holder.bindingAdapter.viewDown.visibility = View.GONE;
+                holder.bindingAdapter.viewDown.visibility = View.GONE
             }
 
             if (position == 0) {
-                holder.bindingAdapter.viewUp.visibility = View.GONE;
+                holder.bindingAdapter.viewUp.visibility = View.GONE
             }
         }
 

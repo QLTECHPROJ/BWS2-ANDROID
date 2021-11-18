@@ -113,11 +113,11 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getEEPStepThreeProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("trauma_history") trauma_history: String?, @Field("phychotic_episode") phychotic_episode: String?, @Field("psychotic_emotions") psychotic_emotions: String?, @Field("suicidal_episode") suicidal_episode: String?, @Field("suicidal_emotions") suicidal_emotions: String?): Call<SessionsProfileSaveDataModel>
 
-    @POST("steptypeone")
+    @POST("sessionaudioswithdescription")
     @FormUrlEncoded
     fun getEEPStepTypeOneData(@Field("UserId") userId: String?, @Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepOneModel>
 
-    @POST("steptypetwo")
+    @POST("sessionprogressreport")
     @FormUrlEncoded
     fun getEEPStepTypeTwoSaveData(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
 
