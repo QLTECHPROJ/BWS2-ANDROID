@@ -34,6 +34,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
     lateinit var activity: Activity
     lateinit var adapter: SessionDetailAdapter
     var userId: String = ""
+    var sessionId: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,10 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         activity = this@SessionDetailContinueActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
+
+        if (intent.extras != null) {
+            sessionId = intent.getStringExtra("SessionId")
+        }
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         prepareData()
 
@@ -55,7 +60,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.client.getSessionStepList(userId, "1")
+            val listCall = APINewClient.client.getSessionStepList(userId, sessionId)
             listCall.enqueue(object : Callback<SessionStepListModel?> {
                 override fun onResponse(call: Call<SessionStepListModel?>, response: Response<SessionStepListModel?>) {
                     try {
