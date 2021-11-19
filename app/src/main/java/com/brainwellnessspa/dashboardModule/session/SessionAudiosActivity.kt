@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -30,11 +31,14 @@ class SessionAudiosActivity : AppCompatActivity() {
     lateinit var activity: Activity
     var sessionId: String? = ""
     var stepId: String? = ""
+    var userId: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_audios)
         activity = this@SessionAudiosActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
         if (intent.extras != null) {
             sessionId = intent.getStringExtra("SessionId")
             stepId = intent.getStringExtra("StepId")
@@ -55,7 +59,7 @@ class SessionAudiosActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.client.getEEPStepTypeOneData("1", stepId, sessionId)
+            val listCall = APINewClient.client.getEEPStepTypeOneData(userId, stepId, sessionId)
             listCall.enqueue(object : Callback<SessionStepOneModel?> {
                 override fun onResponse(call: Call<SessionStepOneModel?>, response: Response<SessionStepOneModel?>) {
                     try {

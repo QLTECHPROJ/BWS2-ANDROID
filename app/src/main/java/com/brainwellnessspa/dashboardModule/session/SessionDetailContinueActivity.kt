@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.brainwellnessspa.dashboardModule.models.SessionStepListModel
 import com.brainwellnessspa.databinding.ActivitySessionDetailContinueBinding
 import com.brainwellnessspa.databinding.SessionDetailLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,11 +33,14 @@ class SessionDetailContinueActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionDetailContinueBinding
     lateinit var activity: Activity
     lateinit var adapter: SessionDetailAdapter
+    var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_detail_continue)
         activity = this@SessionDetailContinueActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         prepareData()
 
@@ -50,7 +55,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(activity)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall = APINewClient.client.getSessionStepList("1", "1")
+            val listCall = APINewClient.client.getSessionStepList(userId, "1")
             listCall.enqueue(object : Callback<SessionStepListModel?> {
                 override fun onResponse(call: Call<SessionStepListModel?>, response: Response<SessionStepListModel?>) {
                     try {

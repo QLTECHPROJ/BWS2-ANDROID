@@ -22,6 +22,7 @@ import com.brainwellnessspa.dashboardModule.models.SessionStepStatusListModel
 import com.brainwellnessspa.databinding.FragmentSessionDetailBinding
 import com.brainwellnessspa.databinding.SessionMainLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -36,12 +37,15 @@ class SessionDetailFragment : Fragment() {
     lateinit var adapter: SessionMainAdapter
     lateinit var ctx: Context
     lateinit var act: Activity
+    var userId: String = ""
     var afterSession = arrayListOf<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_session_detail, container, false)
         ctx = requireActivity()
         act = requireActivity()
+        val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         prepareData()
         networkCheck()
@@ -66,7 +70,7 @@ class SessionDetailFragment : Fragment() {
     fun prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getSessionList("1")
+            val listCall = APINewClient.client.getSessionList(userId)
             listCall.enqueue(object : Callback<SessionListModel?> {
                 override fun onResponse(call: Call<SessionListModel?>, response: Response<SessionListModel?>) {
                     try {
@@ -99,7 +103,7 @@ class SessionDetailFragment : Fragment() {
     fun prepareSessionStepStatusListData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getSessionStepStatusList("1", "1", "1")
+            val listCall = APINewClient.client.getSessionStepStatusList(userId, "1", "1")
             listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
                 override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
                     try {
