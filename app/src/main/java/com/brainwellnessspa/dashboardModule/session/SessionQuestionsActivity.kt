@@ -63,5 +63,4 @@ class SessionQuestionsActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: PreceptionsMainLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
-
 }

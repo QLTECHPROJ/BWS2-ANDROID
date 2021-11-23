@@ -28,7 +28,6 @@ class SessionSelfScaleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_self_scale)
-
         ctx = this@SessionSelfScaleActivity
         val searchList: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvList.layoutManager = searchList
@@ -60,5 +59,4 @@ class SessionSelfScaleActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: PreceptionsAssessmentLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
-
 }

@@ -37,7 +37,6 @@ class SessionPerceptionsActivity : AppCompatActivity() {
     }
 
     inner class SessionPerceptionsAdapter(private val modelList: Array<SessionActivitiesModel>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<SessionPerceptionsAdapter.MyViewHolder>() {
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val v: PreceptionsMainLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.preceptions_main_layout, parent, false)
             return MyViewHolder(v)
@@ -55,5 +54,4 @@ class SessionPerceptionsActivity : AppCompatActivity() {
 
         inner class MyViewHolder(var binding: PreceptionsMainLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
-
 }

@@ -31,7 +31,7 @@ class BrainStatusActivity : AppCompatActivity() {
     lateinit var activity: Activity
     lateinit var ctx: Context
     var gson: Gson = Gson()
-    var coUserId: String? = ""
+    var userId: String? = ""
     var SessionId: String? = "1"
     var Type: String? = "before"
     var EEPCatId = arrayListOf<String>()
@@ -44,7 +44,7 @@ class BrainStatusActivity : AppCompatActivity() {
         activity = this@BrainStatusActivity
         ctx = this@BrainStatusActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-        coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
+        userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
         val preferred = ctx.getSharedPreferences(CONSTANTS.EEPCatMain, Context.MODE_PRIVATE)
         val edited = preferred.edit()
@@ -67,7 +67,7 @@ class BrainStatusActivity : AppCompatActivity() {
     private fun sendCategoryData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat("1", SessionId, Type, gson.toJson(EEPCatId))
+            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat(userId, SessionId, Type, gson.toJson(EEPCatId))
             listCall.enqueue(object : Callback<SucessModel> {
                 override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                     try {

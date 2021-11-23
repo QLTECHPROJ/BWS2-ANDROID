@@ -301,7 +301,7 @@
             android:layout_width="8dp"
             android:layout_height="@dimen/_50sdp"
             android:layout_marginStart="@dimen/_35sdp"
-            android:background="@drawable/session_viewer_line" />
+            android:background="@drawable/session_viewer_line_up" />
 
         <View
             android:id="@+id/viewDown"
@@ -309,7 +309,7 @@
             android:layout_height="@dimen/_102sdp"
             android:layout_marginStart="@dimen/_35sdp"
             android:layout_marginTop="@dimen/_96sdp"
-            android:background="@drawable/session_viewer_line"
+            android:background="@drawable/session_viewer_line_down"
             android:visibility="gone" />
             <!--android:background="@color/session_progress"-->
 

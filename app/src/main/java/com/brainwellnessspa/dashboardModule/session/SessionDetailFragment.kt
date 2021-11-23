@@ -260,6 +260,7 @@ class SessionDetailFragment : Fragment() {
                 when {
                     catName[position].userSessionStatus.equals("Completed") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
+                        i.putExtra("SessionId","1")
                         activity!!.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Inprogress") -> {
