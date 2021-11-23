@@ -22,6 +22,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +33,8 @@ class SessionAudiosActivity : AppCompatActivity() {
     var sessionId: String? = ""
     var stepId: String? = ""
     var userId: String? = ""
+    var gson= Gson()
+    var listModel = SessionStepOneModel.ResponseData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,17 @@ class SessionAudiosActivity : AppCompatActivity() {
         binding.btnDone.setOnClickListener {
             val i = Intent(activity, WalkScreenActivity::class.java)
             i.putExtra(CONSTANTS.ScreenView,"5")
+            i.putExtra("audioData",gson.toJson(listModel))
+            i.putExtra("sessionId",sessionId)
+            i.putExtra("stepId",stepId)
+            activity.startActivity(i)
+        }
+        binding.llRemoveAudio.setOnClickListener {
+            val i = Intent(activity, WalkScreenActivity::class.java)
+            i.putExtra(CONSTANTS.ScreenView,"5")
+            i.putExtra("audioData",gson.toJson(listModel))
+            i.putExtra("sessionId",sessionId)
+            i.putExtra("stepId",stepId)
             activity.startActivity(i)
         }
         prepareData()
@@ -63,9 +77,10 @@ class SessionAudiosActivity : AppCompatActivity() {
             listCall.enqueue(object : Callback<SessionStepOneModel?> {
                 override fun onResponse(call: Call<SessionStepOneModel?>, response: Response<SessionStepOneModel?>) {
                     try {
-                        val listModel = response.body()
-                        val response = listModel?.responseData
-                        if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        val listModel1 = response.body()
+                        val response = listModel1?.responseData
+                        listModel = listModel1?.responseData!!
+                        if (listModel1.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             if (response != null) {
                                 binding.tvTitle.text = response.sessionTitle

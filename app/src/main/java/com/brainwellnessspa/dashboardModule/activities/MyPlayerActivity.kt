@@ -432,6 +432,28 @@ class MyPlayerActivity : AppCompatActivity() {
                 editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
                 editor.apply()
             }
+            audioPlayerFlag.equals("SessionAudio", ignoreCase = true) -> {
+                val type = object : TypeToken<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>() {}.type
+                val arrayList = gson.fromJson<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>(json, type)
+                listSize = arrayList.size
+                for (i in 0 until listSize) {
+                    mainPlayModel = MainPlayModel()
+                    mainPlayModel.id = arrayList[i]!!.id!!
+                    mainPlayModel.name = arrayList[i]!!.name!!
+                    mainPlayModel.audioFile = arrayList[i]!!.audioFile!!
+                    mainPlayModel.playlistID = ""
+                    mainPlayModel.audioDirection = arrayList[i]!!.audioDirection!!
+                    mainPlayModel.audiomastercat = arrayList[i]!!.audiomastercat!!
+                    mainPlayModel.audioSubCategory = arrayList[i]!!.audioSubCategory!!
+                    mainPlayModel.imageFile = arrayList[i]!!.imageFile!!
+                    mainPlayModel.audioDuration = arrayList[i]!!.audioDuration!!
+                    mainPlayModelList.add(mainPlayModel)
+                }
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                val editor = sharedz.edit()
+                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
+                editor.apply()
+            }
             audioPlayerFlag.equals("playlist", ignoreCase = true) -> {
                 val type = object : TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
                 val arrayList = gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(json, type)
@@ -734,6 +756,24 @@ class MyPlayerActivity : AppCompatActivity() {
                 editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
                 editor.apply()
             }
+
+            audioPlayerFlag.equals("SessionAudio", ignoreCase = true) -> {
+                val type = object : TypeToken<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>() {}.type
+                val arrayList = gson.fromJson<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>(json, type)
+                val type1 = object : TypeToken<ArrayList<MainPlayModel?>>() {}.type
+                mainPlayModelList = gson.fromJson(json1, type1)
+                listSize = arrayList.size
+                if (arrayList[position]!!.id.equals("0", ignoreCase = true)) {
+                    arrayList.removeAt(position)
+                    mainPlayModelList.removeAt(position)
+                }
+                val sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                val editor = sharedz.edit()
+                editor.putString(CONSTANTS.PREF_KEY_PlayerAudioList, gson.toJson(mainPlayModelList))
+                editor.putString(CONSTANTS.PREF_KEY_MainAudioList, gson.toJson(arrayList))
+                editor.apply()
+            }
+
             audioPlayerFlag.equals("playlist", ignoreCase = true) -> {
                 val type = object : TypeToken<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>() {}.type
                 val arrayList = gson.fromJson<ArrayList<PlaylistDetailsModel.ResponseData.PlaylistSong?>>(json, type)
@@ -906,6 +946,13 @@ class MyPlayerActivity : AppCompatActivity() {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                         }
+                    } else if(audioPlayerFlag.equals("SessionAudio", ignoreCase = true)){
+                        val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                        val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                        val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+
+                        // call api
+
                     }
 
                     val p = Properties()
@@ -1121,6 +1168,13 @@ class MyPlayerActivity : AppCompatActivity() {
                                     val global = GlobalInitExoPlayer()
                                     global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                                 }
+                            }else if(audioPlayerFlag.equals("SessionAudio", ignoreCase = true)){
+                                val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
+                                val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
+                                val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
+
+                                // call api
+
                             }
 
                             val p = Properties()

@@ -10,13 +10,20 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
+import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
+import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
+import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
 import com.brainwellnessspa.dashboardModule.session.SessionWalkScreenActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
+import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.UserDetailActivity
 import com.brainwellnessspa.utility.CONSTANTS
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
+import java.util.ArrayList
 
 class WalkScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWalkScreenBinding
@@ -25,7 +32,11 @@ class WalkScreenActivity : AppCompatActivity() {
     var email: String? = ""
     var name: String? = ""
     var screenView: String? = ""
-
+    var sessionId : String? = ""
+    var stepId : String? = ""
+    var json : String? = ""
+    val gson = Gson()
+    var listModel = SessionStepOneModel.ResponseData()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_walk_screen)
@@ -79,6 +90,12 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepSessionDesc.visibility = View.GONE
             }
             screenView.equals("5", ignoreCase = true) -> {
+
+                sessionId = intent.getStringExtra("sessionId")
+                stepId = intent.getStringExtra("stepId")
+                json = intent.getStringExtra("audioData")
+                val type = object : TypeToken<SessionStepOneModel.ResponseData?>() {}.type
+                listModel = gson.fromJson(json, type)
                 binding.rlWelcome.visibility = View.GONE
                 binding.rlStepOne.visibility = View.GONE
                 binding.rlStepTwo.visibility = View.GONE
@@ -126,6 +143,33 @@ class WalkScreenActivity : AppCompatActivity() {
         }
 
         binding.btnStart.setOnClickListener {
+
+            GlobalInitExoPlayer.callNewPlayerRelease()
+            val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+            val editor = shared.edit()
+            val gson = Gson()
+            val downloadAudioDetails = ArrayList<SessionStepOneModel.ResponseData.StepAudio>()
+//            for (i in listModel.stepAudio) {
+                val mainPlayModel = SessionStepOneModel.ResponseData.StepAudio()
+                mainPlayModel.id = listModel.stepAudio!!.id!!
+                mainPlayModel.name = listModel.stepAudio!!.name!!
+                mainPlayModel.audioFile = listModel.stepAudio!!.audioFile!!
+                mainPlayModel.audioDirection = listModel.stepAudio!!.audioDirection!!
+                mainPlayModel.audiomastercat = listModel.stepAudio!!.audiomastercat!!
+                mainPlayModel.audioSubCategory = listModel.stepAudio!!.audioSubCategory!!
+                mainPlayModel.imageFile = listModel.stepAudio!!.imageFile!!
+                mainPlayModel.audioDuration = listModel.stepAudio!!.audioDuration!!
+                downloadAudioDetails.add(mainPlayModel)
+//            }
+            val json = gson.toJson(downloadAudioDetails)
+            editor.putString(CONSTANTS.PREF_KEY_MainAudioList, json)
+            editor.putInt(CONSTANTS.PREF_KEY_PlayerPosition, 0)
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistId,sessionId)
+            editor.putString(CONSTANTS.PREF_KEY_PlayerPlaylistName, stepId)
+            editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Session")
+            editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SessionAudio")
+            editor.apply()
+            BWSApplication.audioClick = true
             val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
