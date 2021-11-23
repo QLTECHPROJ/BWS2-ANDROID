@@ -365,7 +365,7 @@ class SessionsStepThreeActivity : AppCompatActivity() {
                                 p.putValue("dob", age)
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
-                                BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
+                                addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
                                 val i = Intent(ctx, EmpowerManageActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 startActivity(i)

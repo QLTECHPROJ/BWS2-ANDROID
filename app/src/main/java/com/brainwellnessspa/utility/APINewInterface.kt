@@ -249,7 +249,7 @@ interface APINewInterface {
     @POST("brainfeelingsavecat")
     @FormUrlEncoded
     fun getBrainFeelingSaveCat(
-        @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?,
+            @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?, @Field("StepId") stepId: String?,
     ): Call<SucessModel>
 
     @POST("setreminder")
@@ -359,5 +359,5 @@ interface APINewInterface {
     /* TODO Membership Payment */
     @POST("stripepayment")
     @FormUrlEncoded
-    fun getMembershipPayment(@Field("UserId") userId: String?,@Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") CardId: String?): Call<SucessModel>
+    fun getMembershipPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") CardId: String?): Call<SucessModel>
 }

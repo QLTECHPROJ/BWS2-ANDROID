@@ -6,15 +6,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
-import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
 import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
-import com.brainwellnessspa.dashboardModule.session.SessionWalkScreenActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
@@ -33,6 +30,7 @@ class WalkScreenActivity : AppCompatActivity() {
     var name: String? = ""
     var screenView: String? = ""
     var sessionId : String? = ""
+    var desc : String? = ""
     var stepId : String? = ""
     var json : String? = ""
     val gson = Gson()
@@ -90,9 +88,9 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepSessionDesc.visibility = View.GONE
             }
             screenView.equals("5", ignoreCase = true) -> {
-
                 sessionId = intent.getStringExtra("sessionId")
                 stepId = intent.getStringExtra("stepId")
+                desc = intent.getStringExtra("Desc")
                 json = intent.getStringExtra("audioData")
                 val type = object : TypeToken<SessionStepOneModel.ResponseData?>() {}.type
                 listModel = gson.fromJson(json, type)
@@ -102,6 +100,7 @@ class WalkScreenActivity : AppCompatActivity() {
                 binding.rlStepThree.visibility = View.GONE
                 binding.rlStepFour.visibility = View.GONE
                 binding.rlStepSessionDesc.visibility = View.VISIBLE
+                binding.tvTitleDesc.text = desc
             }
         }
 
@@ -121,7 +120,7 @@ class WalkScreenActivity : AppCompatActivity() {
 
         binding.rlStepTwo.setOnClickListener {
             val p = Properties()
-            BWSApplication.addToSegment("Profile Step Start Screen Viewed", p, CONSTANTS.screen)
+            addToSegment("Profile Step Start Screen Viewed", p, CONSTANTS.screen)
             val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
@@ -169,7 +168,7 @@ class WalkScreenActivity : AppCompatActivity() {
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Session")
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SessionAudio")
             editor.apply()
-            BWSApplication.audioClick = true
+            audioClick = true
             val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)

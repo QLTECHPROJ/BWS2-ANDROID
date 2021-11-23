@@ -25,7 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionPcDetailBinding
@@ -43,6 +43,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionPcDetailBinding
     lateinit var ctx: Context
     lateinit var act: Activity
+    var stepId: String = ""
     var titleF: String = ""
     var gender: String = ""
     var genderX: String = ""
@@ -245,20 +246,20 @@ class SessionPcDetailActivity : AppCompatActivity() {
     }
 
     private fun sendProfileData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall: Call<SessionsProfileSaveDataModel> = APINewClient.client.getEEPStepOneProfileSaveData("1", coUserId, age, titleF, gender, address, suburb, postcode, ethnicity, mentalHealthChallenges, mentalHealthTreatments)
+        if (isNetworkConnected(this)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall: Call<SessionsProfileSaveDataModel> = APINewClient.client.getEEPStepOneProfileSaveData(CONSTANTS.FLAG_ONE, coUserId, age, titleF, gender, address, suburb, postcode, ethnicity, mentalHealthChallenges, mentalHealthTreatments)
             listCall.enqueue(object : Callback<SessionsProfileSaveDataModel> {
                 override fun onResponse(call: Call<SessionsProfileSaveDataModel>, response: Response<SessionsProfileSaveDataModel>) {
                     try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: SessionsProfileSaveDataModel = response.body()!!
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_DOB, age)
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "1")
                         editor.apply()
-                        BWSApplication.callIdentify(ctx)
+                        callIdentify(ctx)
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
                                 /*  val p = Properties()
@@ -267,7 +268,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
                                 p.putValue("dob", age)
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
-                                BWSApplication.addToSegment("Profile Form Submitted", p, CONSTANTS.track)
+                                addToSegment("Profile Form Submitted", p, CONSTANTS.track)
                                 */
                                 val i = Intent(ctx, SessionsStepTwoActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -275,10 +276,10 @@ class SessionPcDetailActivity : AppCompatActivity() {
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
-                                BWSApplication.callDelete403(act, listModel.responseMessage)
+                                callDelete403(act, listModel.responseMessage)
                             }
                             else -> {
-                                BWSApplication.showToast(listModel.responseMessage, act)
+                                showToast(listModel.responseMessage, act)
                             }
                         }
 
@@ -288,11 +289,11 @@ class SessionPcDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SessionsProfileSaveDataModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), act)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -799,7 +800,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
                     return
                 }
                 this.doubleBackToExitPressedOnce = true
-                BWSApplication.showToast("Press again to exit", act)
+                showToast("Press again to exit", act)
 
                 Handler(Looper.myLooper()!!).postDelayed({
                     doubleBackToExitPressedOnce = false

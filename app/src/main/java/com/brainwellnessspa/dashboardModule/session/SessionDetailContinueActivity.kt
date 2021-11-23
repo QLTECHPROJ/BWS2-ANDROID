@@ -12,9 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.SessionListModel
 import com.brainwellnessspa.dashboardModule.models.SessionStepListModel
 import com.brainwellnessspa.databinding.ActivitySessionDetailContinueBinding
 import com.brainwellnessspa.databinding.SessionDetailLayoutBinding
@@ -48,18 +47,11 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         }
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         prepareData()
-
-        binding.btnContinue.setOnClickListener {
-            val i = Intent(activity, SessionAudiosActivity::class.java)
-            i.putExtra("SessionId","1")
-            i.putExtra("StepId","1")
-            startActivity(i)
-        }
     }
 
     fun prepareData() {
-        if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(activity)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getSessionStepList(userId, sessionId)
             listCall.enqueue(object : Callback<SessionStepListModel?> {
                 override fun onResponse(call: Call<SessionStepListModel?>, response: Response<SessionStepListModel?>) {
@@ -67,7 +59,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                         val listModel = response.body()
                         val response = listModel?.responseData
                         if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             if (response != null) {
                                 binding.tvTitle.text = response.sessionTitle
                                 binding.tvScreenTitle.text = response.sessionTitle
@@ -75,7 +67,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                 binding.tvDesc.text = response.sessionDesc
                                 binding.llBack.visibility = View.VISIBLE
                                 binding.ivDone.visibility = View.VISIBLE
-                                binding.btnContinue.visibility = View.VISIBLE
+                                binding.btnContinue.visibility = View.GONE
                                 Glide.with(activity).load(response.sessionImg).thumbnail(0.05f)
                                         .apply(RequestOptions.bitmapTransform(RoundedCorners(2)))
                                         .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner)
@@ -104,11 +96,11 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SessionStepListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+            showToast(activity.getString(R.string.no_server_found), activity)
         }
     }
 
@@ -145,7 +137,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                     holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(activity, R.color.lighted_gray))
                     holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
-                    holder.bindingAdapter.ivDownload.visibility = View.VISIBLE
+                    holder.bindingAdapter.ivDownload.visibility = View.GONE /* VISIBLE */
                 }
                 db.userStepStatus.equals("Lock") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
@@ -155,6 +147,51 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                     holder.bindingAdapter.tvTitle.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
                     holder.bindingAdapter.ivDownload.visibility = View.GONE
                 }
+            }
+
+            holder.bindingAdapter.llClicked.setOnClickListener {
+                when (db.stepId) {
+                    "1" -> {
+                        val i = Intent(activity, SessionAudiosActivity::class.java)
+                        i.putExtra("SessionId", db.sessionId)
+                        i.putExtra("StepId", db.stepId)
+                        activity.startActivity(i)
+                    }
+                    "2" -> {
+                        /*Progress report */
+                    }
+                    "3" -> {
+                        /*Session Activities not add in current flow */
+                    }
+                    "4" -> {
+                        /*Before Comparison */
+                        val i = Intent(activity, BrainStatusActivity::class.java)
+                        i.putExtra("SessionId", db.sessionId)
+                        i.putExtra("StepId", db.stepId)
+                        i.putExtra("Type", "before")
+                        activity.startActivity(i)
+                    }
+                    "5" -> {
+                        val i = Intent(activity, SessionAudiosActivity::class.java)
+                        i.putExtra("SessionId", db.sessionId)
+                        i.putExtra("StepId", db.stepId)
+                        activity.startActivity(i)
+                    }
+                    "6" -> {
+                        val i = Intent(activity, BrainStatusActivity::class.java)
+                        i.putExtra("SessionId", db.sessionId)
+                        i.putExtra("StepId", db.stepId)
+                        i.putExtra("Type", "after")
+                        activity.startActivity(i)
+                    }
+                    "7" -> {
+                        val i = Intent(activity, SessionAudiosActivity::class.java)
+                        i.putExtra("SessionId", db.sessionId)
+                        i.putExtra("StepId", db.stepId)
+                        activity.startActivity(i)
+                    }
+                }
+
             }
 
             if (catName!!.size == 1) {

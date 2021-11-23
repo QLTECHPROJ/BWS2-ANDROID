@@ -8,15 +8,13 @@ import android.text.Html
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.brainwellnessspa.BWSApplication
+import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.SessionStepListModel
 import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
 import com.brainwellnessspa.databinding.ActivitySessionAudiosBinding
 import com.brainwellnessspa.userModule.signupLogin.WalkScreenActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
-import com.brainwellnessspa.utility.CONSTANTS.position
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -32,6 +30,7 @@ class SessionAudiosActivity : AppCompatActivity() {
     lateinit var activity: Activity
     var sessionId: String? = ""
     var stepId: String? = ""
+    var desc: String? = ""
     var userId: String? = ""
     var gson= Gson()
     var listModel = SessionStepOneModel.ResponseData()
@@ -51,28 +50,31 @@ class SessionAudiosActivity : AppCompatActivity() {
             finish()
         }
 
+        prepareData()
+
         binding.btnDone.setOnClickListener {
             val i = Intent(activity, WalkScreenActivity::class.java)
             i.putExtra(CONSTANTS.ScreenView,"5")
             i.putExtra("audioData",gson.toJson(listModel))
             i.putExtra("sessionId",sessionId)
             i.putExtra("stepId",stepId)
+            i.putExtra("Desc",desc)
             activity.startActivity(i)
         }
-        binding.llRemoveAudio.setOnClickListener {
+        binding.llMainLayout.setOnClickListener {
             val i = Intent(activity, WalkScreenActivity::class.java)
             i.putExtra(CONSTANTS.ScreenView,"5")
             i.putExtra("audioData",gson.toJson(listModel))
             i.putExtra("sessionId",sessionId)
             i.putExtra("stepId",stepId)
+            i.putExtra("Desc",desc)
             activity.startActivity(i)
         }
-        prepareData()
     }
 
     fun prepareData() {
-        if (BWSApplication.isNetworkConnected(activity)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (isNetworkConnected(activity)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
             val listCall = APINewClient.client.getEEPStepTypeOneData(userId, stepId, sessionId)
             listCall.enqueue(object : Callback<SessionStepOneModel?> {
                 override fun onResponse(call: Call<SessionStepOneModel?>, response: Response<SessionStepOneModel?>) {
@@ -81,13 +83,14 @@ class SessionAudiosActivity : AppCompatActivity() {
                         val response = listModel1?.responseData
                         listModel = listModel1?.responseData!!
                         if (listModel1.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                             if (response != null) {
                                 binding.tvTitle.text = response.sessionTitle
                                 binding.tvSessionTitle.text = Html.fromHtml(response.stepShortDescription)
                                 binding.tvDesc.text = Html.fromHtml(response.stepLongDescription)
                                 binding.tvAudioName.text = response.stepAudio?.name
                                 binding.tvAudioTime.text = response.stepAudio?.audioDuration
+                                desc = Html.fromHtml(response.stepLongDescription).toString()
                                 Glide.with(activity).load(response.stepAudio?.imageFile).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(28))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivAudioImage)
                             }
                         }
@@ -97,11 +100,11 @@ class SessionAudiosActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SessionStepOneModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
         } else {
-            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+            showToast(activity.getString(R.string.no_server_found), activity)
         }
     }
 

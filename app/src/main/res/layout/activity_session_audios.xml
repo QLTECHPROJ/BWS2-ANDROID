@@ -84,7 +84,7 @@
                 android:layout_height="@dimen/_75sdp"
                 android:gravity="center_vertical"
                 android:background="@drawable/account_gray_bg"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_14sdp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -182,7 +182,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/llRemoveAudio"
+                    android:id="@+id/llPlayAudio"
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -229,7 +229,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="@string/Done"
+            android:text="@string/Continue"
             android:textColor="@color/white"
             android:layout_alignParentBottom="true"/>
 

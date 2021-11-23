@@ -32,8 +32,9 @@ class BrainStatusActivity : AppCompatActivity() {
     lateinit var ctx: Context
     var gson: Gson = Gson()
     var userId: String? = ""
-    var SessionId: String? = "1"
-    var Type: String? = "before"
+    var sessionId: String? = "1"
+    var stepId: String? = "1"
+    var Type: String? = ""
     var EEPCatId = arrayListOf<String>()
     var EEPCatName = arrayListOf<String>()
     lateinit var editor: SharedPreferences.Editor
@@ -46,6 +47,11 @@ class BrainStatusActivity : AppCompatActivity() {
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
 
+        if (intent.extras != null) {
+            sessionId = intent.getStringExtra("SessionId")
+            stepId = intent.getStringExtra("StepId")
+            Type = intent.getStringExtra("Type")
+        }
         val preferred = ctx.getSharedPreferences(CONSTANTS.EEPCatMain, Context.MODE_PRIVATE)
         val edited = preferred.edit()
         edited.remove(CONSTANTS.EEPCatName)
@@ -58,6 +64,7 @@ class BrainStatusActivity : AppCompatActivity() {
         layoutManager.justifyContent = JustifyContent.FLEX_START
         binding.rvList.layoutManager = layoutManager
         prepareData()
+
         binding.btnContinue.setOnClickListener {
             getCatSaveData()
             sendCategoryData()
@@ -67,7 +74,7 @@ class BrainStatusActivity : AppCompatActivity() {
     private fun sendCategoryData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat(userId, SessionId, Type, gson.toJson(EEPCatId))
+            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat(userId, sessionId, Type, gson.toJson(EEPCatId), stepId)
             listCall.enqueue(object : Callback<SucessModel> {
                 override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                     try {
@@ -160,7 +167,6 @@ class BrainStatusActivity : AppCompatActivity() {
     }
 
     class BrainFeelingStatusAdapter(var binding: ActivityBrainStatusBinding, var activity: Activity, var listModel: List<BrainCatListModel.ResponseData.Data>?, var ctx: Context, var binding1: ActivityBrainStatusBinding) : RecyclerView.Adapter<BrainFeelingStatusAdapter.MyViewHolder>() {
-
         var catList = BrainStatusActivity()
 
         inner class MyViewHolder(var bindingAdapter: BrainFeelingStatusLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)

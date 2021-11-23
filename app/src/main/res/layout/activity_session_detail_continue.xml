@@ -254,6 +254,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_16sdp"
+                    android:paddingBottom="@dimen/_20sdp"
                     android:nestedScrollingEnabled="true"
                     android:overScrollMode="never"
                     tools:listitem="@layout/session_detail_layout"

@@ -43,6 +43,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llClicked"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center"
@@ -77,12 +78,12 @@
 
                 <ImageView
                     android:id="@+id/ivDownload"
-                    android:layout_width="@dimen/_38sdp"
-                    android:layout_height="@dimen/_38sdp"
+                    android:layout_width="@dimen/_42sdp"
+                    android:layout_height="@dimen/_42sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/todo"
-                    android:padding="@dimen/_14sdp"
+                    android:padding="@dimen/_8sdp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_session_download_icon"
                     android:visibility="gone" />
@@ -98,8 +99,8 @@
 
                 <ImageView
                     android:id="@+id/ivAction"
-                    android:layout_width="@dimen/_38sdp"
-                    android:layout_height="@dimen/_38sdp"
+                    android:layout_width="@dimen/_42sdp"
+                    android:layout_height="@dimen/_42sdp"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_4sdp"
@@ -117,7 +118,7 @@
             android:layout_height="@dimen/_31sdp"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="@dimen/_35sdp"
-            android:layout_marginTop="@dimen/_80sdp"
+            android:layout_marginTop="@dimen/_64sdp"
             android:background="@color/session_progress"
             android:visibility="gone" />
 

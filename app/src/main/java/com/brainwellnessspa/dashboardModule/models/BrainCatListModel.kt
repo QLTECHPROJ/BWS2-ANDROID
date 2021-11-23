@@ -45,6 +45,10 @@ class BrainCatListModel {
             @SerializedName("status")
             @Expose
             var status: String? = null
+
+            @SerializedName("color")
+            @Expose
+            var color: String? = null
         }
     }
 }

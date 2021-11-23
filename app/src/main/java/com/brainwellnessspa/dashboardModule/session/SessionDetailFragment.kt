@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionListModel
-import com.brainwellnessspa.dashboardModule.models.SessionStepStatusListModel
 import com.brainwellnessspa.databinding.FragmentSessionDetailBinding
 import com.brainwellnessspa.databinding.SessionMainLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -100,34 +100,8 @@ class SessionDetailFragment : Fragment() {
         }
     }
 
-    fun prepareSessionStepStatusListData() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getSessionStepStatusList(userId, "1", "1")
-            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                    try {
-                        val listModel = response.body()
-                        val response = listModel?.responseData
-                        if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                }
-            })
-        } else {
-            BWSApplication.showToast(act.getString(R.string.no_server_found), act)
-        }
-    }
 
     class SessionMainAdapter(var binding: FragmentSessionDetailBinding, var catName: List<SessionListModel.ResponseData.Data>, val activity: FragmentActivity?, val afterSession: ArrayList<String>) : RecyclerView.Adapter<SessionMainAdapter.MyViewHolder>() {
-        var catList = SessionDetailFragment()
 
         inner class MyViewHolder(var bindingAdapter: SessionMainLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -137,6 +111,7 @@ class SessionDetailFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
             holder.bindingAdapter.tvTitle.text = catName[position].title
             holder.bindingAdapter.tvSentData.text = catName[position].desc
 
@@ -206,45 +181,45 @@ class SessionDetailFragment : Fragment() {
 
             when {
                 catName[position].userSessionStatus.equals("Completed") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
                     Glide.with(activity).load(R.drawable.session_done_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
-                    if (catName[position].beforeSession!!.isEmpty()){
+                    if (catName[position].beforeSession!!.isEmpty()) {
                         holder.bindingAdapter.llBeforeSession.visibility = View.GONE
-                    }else {
+                    } else {
                         holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
                     }
-                    if (catName[position].afterSession!!.isEmpty()){
+                    if (catName[position].afterSession!!.isEmpty()) {
                         holder.bindingAdapter.llAfterSession.visibility = View.GONE
-                    }else {
+                    } else {
                         holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
                     }
                 }
                 catName[position].userSessionStatus.equals("Inprogress") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     Glide.with(activity).load(R.drawable.session_idea_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
                             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
                     holder.bindingAdapter.ivBanner.visibility = View.VISIBLE
-                    if (catName[position].beforeSession!!.isEmpty()){
+                    if (catName[position].beforeSession!!.isEmpty()) {
                         holder.bindingAdapter.llBeforeSession.visibility = View.GONE
-                    }else {
+                    } else {
                         holder.bindingAdapter.llBeforeSession.visibility = View.VISIBLE
                     }
-                    if (catName[position].afterSession!!.isEmpty()){
+                    if (catName[position].afterSession!!.isEmpty()) {
                         holder.bindingAdapter.llAfterSession.visibility = View.GONE
-                    }else {
+                    } else {
                         holder.bindingAdapter.llAfterSession.visibility = View.VISIBLE
                     }
                 }
                 catName[position].userSessionStatus.equals("Lock") -> {
-                    holder.bindingAdapter.ivArrow.setColorFilter(activity!!.resources.getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN)
+                    holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.light_gray), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
                     Glide.with(activity).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
                             .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
@@ -260,11 +235,12 @@ class SessionDetailFragment : Fragment() {
                 when {
                     catName[position].userSessionStatus.equals("Completed") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
-                        i.putExtra("SessionId","1")
+                        i.putExtra("SessionId", catName[position].sessionId)
                         activity!!.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Inprogress") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
+                        i.putExtra("SessionId", catName[position].sessionId)
                         activity!!.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Lock") -> {

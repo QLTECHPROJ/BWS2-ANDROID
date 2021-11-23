@@ -80,6 +80,7 @@ class MyPlayerActivity : AppCompatActivity() {
     var oldSeekPosition: Long = 0
     private var downloadClick = false
     var downloadAudioDetailsList = arrayListOf<String>()
+
     //    var downloadAudioDetailsListGlobal = arrayListOf<String>()
 //    var filesDownloaded: List<File>? = null
     var fileNameList = arrayListOf<String>()
@@ -193,17 +194,17 @@ class MyPlayerActivity : AppCompatActivity() {
 
         /* info button click */
         binding.llInfo.setOnClickListener {
-             if (IsLock.equals("1")) {
-                    callEnhanceActivity(ctx, act)
-                } else  {
-                 if (isNetworkConnected(ctx)) {
-                     val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
-                     audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
-                     callAudioDetails(mainPlayModelList[position].id, ctx, act, coUserId, "audioPlayer", arrayListOf<DownloadAudioDetails>(), arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(), arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(), mainPlayModelList, position)
-                 } else {
-                     showToast(getString(R.string.no_server_found), act)
-                 }
-             }
+            if (IsLock.equals("1")) {
+                callEnhanceActivity(ctx, act)
+            } else {
+                if (isNetworkConnected(ctx)) {
+                    val shared = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+                    audioPlayerFlag = shared.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+                    callAudioDetails(mainPlayModelList[position].id, ctx, act, coUserId, "audioPlayer", arrayListOf<DownloadAudioDetails>(), arrayListOf<ViewAllAudioListModel.ResponseData.Detail>(), arrayListOf<PlaylistDetailsModel.ResponseData.PlaylistSong>(), mainPlayModelList, position)
+                } else {
+                    showToast(getString(R.string.no_server_found), act)
+                }
+            }
         }
 
         /* back button click */
@@ -483,6 +484,7 @@ class MyPlayerActivity : AppCompatActivity() {
         if (!audioClick) getPrepareShowData()
         else callButtonText(position)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requestCode == 15695) {
@@ -498,6 +500,7 @@ class MyPlayerActivity : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -511,6 +514,7 @@ class MyPlayerActivity : AppCompatActivity() {
             }
         }
     }
+
     /* initialize Player Disclaimer function when uset play disclaimer */
     private fun initializePlayerDisclaimer() {
         //        player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
@@ -849,8 +853,8 @@ class MyPlayerActivity : AppCompatActivity() {
         /*download button click*/
         binding.llDownload.setOnClickListener {
             if (IsLock.equals("1")) {
-                callEnhanceActivity(ctx,act)
-            } else  {
+                callEnhanceActivity(ctx, act)
+            } else {
                 if (isNetworkConnected(ctx)) {
                     if (mainPlayModelList[position].id != "0") callDownload()
                 } else {
@@ -938,7 +942,7 @@ class MyPlayerActivity : AppCompatActivity() {
                     oldSongPos = positionx
                     callHeartbeat()
                 }
-                if((String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx), TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx)))) == (String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.duration), TimeUnit.MILLISECONDS.toSeconds(player.duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.duration))))){
+                if ((String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(positionx), TimeUnit.MILLISECONDS.toSeconds(positionx) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionx)))) == (String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.duration), TimeUnit.MILLISECONDS.toSeconds(player.duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.duration))))) {
                     Log.e("STATE_ENDED ", "My Player onPlaybackStateChanged Done")
                     //                        try {
                     if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
@@ -946,13 +950,31 @@ class MyPlayerActivity : AppCompatActivity() {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                         }
-                    } else if(audioPlayerFlag.equals("SessionAudio", ignoreCase = true)){
+                    } else if (audioPlayerFlag.equals("SessionAudio", ignoreCase = true)) {
                         val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                         val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                         val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
 
-                        // call api
+                        if (isNetworkConnected(ctx)) {
+                            val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
+                            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                    try {
+                                        val listModel = response.body()
+                                        val response = listModel?.responseData
+                                        if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
 
+                                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                }
+                            })
+                        } else {
+                            showToast(act.getString(R.string.no_server_found), act)
+                        }
                     }
 
                     val p = Properties()
@@ -1168,13 +1190,31 @@ class MyPlayerActivity : AppCompatActivity() {
                                     val global = GlobalInitExoPlayer()
                                     global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                                 }
-                            }else if(audioPlayerFlag.equals("SessionAudio", ignoreCase = true)){
+                            } else if (audioPlayerFlag.equals("SessionAudio", ignoreCase = true)) {
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                 val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                                 val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
 
-                                // call api
+                                if (isNetworkConnected(ctx)) {
+                                    val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
+                                    listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                        override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                            try {
+                                                val listModel = response.body()
+                                                val response = listModel?.responseData
+                                                if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
 
+                                        override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                        }
+                                    })
+                                } else {
+                                    showToast(act.getString(R.string.no_server_found), act)
+                                }
                             }
 
                             val p = Properties()
