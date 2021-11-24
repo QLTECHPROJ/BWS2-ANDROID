@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.models.BeforeAfterComparisionFetchStatusModel
 import com.brainwellnessspa.dashboardModule.models.SessionStepListModel
+import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
 import com.brainwellnessspa.databinding.ActivitySessionDetailContinueBinding
 import com.brainwellnessspa.databinding.SessionDetailLayoutBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -86,7 +89,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                         binding.llSlowProgress.visibility = View.GONE
                                     }
                                 }
-                                adapter = SessionDetailAdapter(binding, response.data, activity)
+                                adapter = SessionDetailAdapter(binding, response.data, activity, userId, sessionId)
                                 binding.rvList.adapter = adapter
                             }
                         }
@@ -104,7 +107,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         }
     }
 
-    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val activity: Activity) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
+    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val activity: Activity, var userId: String?, var sessionId: String?) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
         inner class MyViewHolder(var bindingAdapter: SessionDetailLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -149,42 +152,131 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 }
             }
 
-            holder.bindingAdapter.llClicked.setOnClickListener {
+            holder.bindingAdapter.llBorder.setOnClickListener {
                 when (db.stepId) {
                     "1" -> {
+                        /* TODO Welcome & Session Description */
                         val i = Intent(activity, SessionAudiosActivity::class.java)
                         i.putExtra("SessionId", db.sessionId)
                         i.putExtra("StepId", db.stepId)
                         activity.startActivity(i)
                     }
                     "2" -> {
-                        /*Progress report */
+                        /* TODO Progress report */
                     }
                     "3" -> {
-                        /*Session Activities not add in current flow */
+                        /* TODO Session Activities not add in current flow */
                     }
                     "4" -> {
-                        /*Before Comparison */
-                        val i = Intent(activity, BrainStatusActivity::class.java)
-                        i.putExtra("SessionId", db.sessionId)
-                        i.putExtra("StepId", db.stepId)
-                        i.putExtra("Type", "before")
-                        activity.startActivity(i)
+                        /* TODO IMPORTANT FOR FORAM
+                        *   Before Comparison
+                        *   API call  getCheckBeforeAfterFeelingStatus
+                        *   key use purpose feeling_status = "0"(BrainStatusActivity) "1"(SessionAudiosActivity(Actual Session open))
+                        *   key use purpose question_status = "0"(SessionComparisonStatusActivity) "1"(SessionAudiosActivity(Actual Session open))
+                        *   key use purpose question_status = "1"() feeling_status = "1"()  (SessionAudiosActivity(Actual Session open)) */
+
+                        if (isNetworkConnected(activity)) {
+                            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            val listCall = APINewClient.client.getCheckBeforeAfterFeelingStatus(userId, db.sessionId, db.stepId)
+                            listCall.enqueue(object : Callback<BeforeAfterComparisionFetchStatusModel?> {
+                                override fun onResponse(call: Call<BeforeAfterComparisionFetchStatusModel?>, response: Response<BeforeAfterComparisionFetchStatusModel?>) {
+                                    try {
+                                        val listModel1 = response.body()
+                                        val response = listModel1?.responseData
+                                        if (listModel1?.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            if (response != null) {
+                                                if (response.feelingStatus.equals("0")) {
+                                                    val i = Intent(activity, BrainStatusActivity::class.java)
+                                                    i.putExtra("SessionId", db.sessionId)
+                                                    i.putExtra("StepId", db.stepId)
+                                                    i.putExtra("Type", "before")
+                                                    activity.startActivity(i)
+                                                } else if (response.feelingStatus.equals("1")) {
+                                                    if (response.questionStatus.equals("0")) {
+                                                        val i = Intent(activity, SessionComparisonStatusActivity::class.java)
+                                                        i.putExtra("SessionId", db.sessionId)
+                                                        i.putExtra("StepId", db.stepId)
+                                                        activity.startActivity(i)
+                                                    } else if (response.questionStatus.equals("1")) {
+                                                        activity.finish()
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<BeforeAfterComparisionFetchStatusModel?>, t: Throwable) {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                }
+                            })
+                        } else {
+                            showToast(activity.getString(R.string.no_server_found), activity)
+                        }
                     }
                     "5" -> {
+                        /* TODO Actual Session */
                         val i = Intent(activity, SessionAudiosActivity::class.java)
                         i.putExtra("SessionId", db.sessionId)
                         i.putExtra("StepId", db.stepId)
                         activity.startActivity(i)
                     }
                     "6" -> {
-                        val i = Intent(activity, BrainStatusActivity::class.java)
-                        i.putExtra("SessionId", db.sessionId)
-                        i.putExtra("StepId", db.stepId)
-                        i.putExtra("Type", "after")
-                        activity.startActivity(i)
+                        /* TODO IMPORTANT FOR FORAM
+                        *   After Comparison
+                        *   API call  getCheckBeforeAfterFeelingStatus
+                        *   key use purpose feeling_status = "0"(BrainStatusActivity) "1"(SessionAudiosActivity(Actual Session open))
+                        *   key use purpose question_status = "0"(SessionComparisonStatusActivity)  "1"(SessionAudiosActivity(Actual Session open))
+                        *   key use purpose question_status = "1" feeling_status = "1"  (SessionAudiosActivity(Actual Session open)) */
+                        if (isNetworkConnected(activity)) {
+                            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                            val listCall = APINewClient.client.getCheckBeforeAfterFeelingStatus(userId, db.sessionId, db.stepId)
+                            listCall.enqueue(object : Callback<BeforeAfterComparisionFetchStatusModel?> {
+                                override fun onResponse(call: Call<BeforeAfterComparisionFetchStatusModel?>, response: Response<BeforeAfterComparisionFetchStatusModel?>) {
+                                    try {
+                                        val listModel1 = response.body()
+                                        val response = listModel1?.responseData
+                                        if (listModel1?.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                            if (response != null) {
+                                                if (response.feelingStatus.equals("0")) {
+                                                    val i = Intent(activity, BrainStatusActivity::class.java)
+                                                    i.putExtra("SessionId", db.sessionId)
+                                                    i.putExtra("StepId", db.stepId)
+                                                    i.putExtra("Type", "after")
+                                                    activity.startActivity(i)
+                                                } else if (response.feelingStatus.equals("1")) {
+                                                    if (response.questionStatus.equals("0")) {
+                                                        val i = Intent(activity, SessionComparisonStatusActivity::class.java)
+                                                        i.putExtra("SessionId", db.sessionId)
+                                                        i.putExtra("StepId", db.stepId)
+                                                        activity.startActivity(i)
+                                                    } else if (response.questionStatus.equals("1")) {
+                                                        activity.finish()
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<BeforeAfterComparisionFetchStatusModel?>, t: Throwable) {
+                                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                }
+                            })
+                        } else {
+                            showToast(activity.getString(R.string.no_server_found), activity)
+                        }
                     }
                     "7" -> {
+                        /* TODO Pre Session Audio for session 2 */
                         val i = Intent(activity, SessionAudiosActivity::class.java)
                         i.putExtra("SessionId", db.sessionId)
                         i.putExtra("StepId", db.stepId)

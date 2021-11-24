@@ -101,26 +101,6 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getProfileSaveData(@Field("UserId") UserId: String?, @Field("gender") gender: String?, @Field("genderX") genderX: String?, @Field("dob") age: String?, @Field("prevDrugUse") prevDrugUse: String?, @Field("Medication") medication: String?): Call<ProfileSaveDataModel>
 
-    @POST("eepprofile")
-    @FormUrlEncoded
-    fun getEEPStepOneProfileSaveData(@Field("Step") Step: String?, @Field("UserId") UserId: String?, @Field("dob") dob: String?, @Field("title") title: String?, @Field("gender") gender: String?, @Field("home_address") home_address: String?, @Field("suburb") suburb: String?, @Field("postcode") postcode: String?, @Field("ethnicity") ethnicity: String?, @Field("mental_health_challenges") mental_health_challenges: String?, @Field("mental_health_treatments") mental_health_treatments: String?): Call<SessionsProfileSaveDataModel>
-
-    @POST("eepprofile")
-    @FormUrlEncoded
-    fun getEEPStepTwoProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("electric_shock_treatment") electric_shock_treatment: String?, @Field("electric_shock_last_treatment") electric_shock_last_treatment: String?, @Field("drug_prescription") drug_prescription: String?, @Field("types_of_drug") types_of_drug: String?, @Field("sense_of_terror") sense_of_terror: String?): Call<SessionsProfileSaveDataModel>
-
-    @POST("eepprofile")
-    @FormUrlEncoded
-    fun getEEPStepThreeProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("trauma_history") trauma_history: String?, @Field("phychotic_episode") phychotic_episode: String?, @Field("psychotic_emotions") psychotic_emotions: String?, @Field("suicidal_episode") suicidal_episode: String?, @Field("suicidal_emotions") suicidal_emotions: String?): Call<SessionsProfileSaveDataModel>
-
-    @POST("sessionaudioswithdescription")
-    @FormUrlEncoded
-    fun getEEPStepTypeOneData(@Field("UserId") userId: String?, @Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepOneModel>
-
-    @POST("sessionprogressreport")
-    @FormUrlEncoded
-    fun getEEPStepTypeTwoSaveData(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
-
     @POST("assesmentsaveans")
     @FormUrlEncoded
     fun getAssessmentSaveData(@Field("UserId") UserId: String?, @Field("ans") ans: String?): Call<AssessmentSaveDataModel>
@@ -224,24 +204,29 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getResourceList(@Field("UserId") UserId: String?, @Field("ResourceTypeId") ResourceTypeId: String?, @Field("Category") Category: String?): Call<ResourceListModel>
 
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStepOneProfileSaveData(@Field("Step") Step: String?, @Field("UserId") UserId: String?, @Field("dob") dob: String?, @Field("title") title: String?, @Field("gender") gender: String?, @Field("home_address") home_address: String?, @Field("suburb") suburb: String?, @Field("postcode") postcode: String?, @Field("ethnicity") ethnicity: String?, @Field("mental_health_challenges") mental_health_challenges: String?, @Field("mental_health_treatments") mental_health_treatments: String?): Call<SessionsProfileSaveDataModel>
+
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStepTwoProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("electric_shock_treatment") electric_shock_treatment: String?, @Field("electric_shock_last_treatment") electric_shock_last_treatment: String?, @Field("drug_prescription") drug_prescription: String?, @Field("types_of_drug") types_of_drug: String?, @Field("sense_of_terror") sense_of_terror: String?): Call<SessionsProfileSaveDataModel>
+
+    @POST("eepprofile")
+    @FormUrlEncoded
+    fun getEEPStepThreeProfileSaveData(@Field("Step") step: String?, @Field("UserId") userId: String?, @Field("trauma_history") trauma_history: String?, @Field("phychotic_episode") phychotic_episode: String?, @Field("psychotic_emotions") psychotic_emotions: String?, @Field("suicidal_episode") suicidal_episode: String?, @Field("suicidal_emotions") suicidal_emotions: String?): Call<SessionsProfileSaveDataModel>
+
     @POST("sessionlist")
     @FormUrlEncoded
     fun getSessionList(@Field("UserId") UserId: String?): Call<SessionListModel>
-
-    @POST("sessionstepstatus")
-    @FormUrlEncoded
-    fun getSessionStepStatusList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("StepId") StepId: String?): Call<SessionStepStatusListModel>
 
     @POST("sessionsteplist")
     @FormUrlEncoded
     fun getSessionStepList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepListModel>
 
-    @POST("resourcecatlist")
+    @POST("sessionstepstatus")
     @FormUrlEncoded
-    fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>
-
-    @get:GET("faqlist")
-    val faqLists: Call<FaqListModel>
+    fun getSessionStepStatusList(@Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("StepId") StepId: String?): Call<SessionStepStatusListModel>
 
     @get:GET("brainfeelingcat")
     val braincatLists: Call<BrainCatListModel>
@@ -251,6 +236,33 @@ interface APINewInterface {
     fun getBrainFeelingSaveCat(
             @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?, @Field("StepId") stepId: String?,
     ): Call<SucessModel>
+
+    @POST("sessionaudioswithdescription")
+    @FormUrlEncoded
+    fun getEEPStepTypeOneData(@Field("UserId") userId: String?, @Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<SessionStepOneModel>
+
+    @POST("sessionprogressreport")
+    @FormUrlEncoded
+    fun getSessionProgressReport(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
+
+    @POST("beforeafterquestionlisting")
+    @FormUrlEncoded
+    fun getBeforeAfterQuestionListing(@Field("StepId") stepId: String?, @Field("SessionId") sessionId: String?): Call<BeforeAfterComparisionQuestionListModel>
+
+    @POST("beforeandafteranswersave")
+    @FormUrlEncoded
+    fun getBeforeAndAfterAnswerSave(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?, @Field("question_answers") question_answers: String?): Call<SessionStepListModel>
+
+    @POST("checkbeforeafterfeelingstatus")
+    @FormUrlEncoded
+    fun getCheckBeforeAfterFeelingStatus(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?): Call<BeforeAfterComparisionFetchStatusModel>
+
+    @POST("resourcecatlist")
+    @FormUrlEncoded
+    fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>
+
+    @get:GET("faqlist")
+    val faqLists: Call<FaqListModel>
 
     @POST("setreminder")
     @FormUrlEncoded
