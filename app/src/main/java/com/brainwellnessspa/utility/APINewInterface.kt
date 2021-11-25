@@ -251,7 +251,7 @@ interface APINewInterface {
 
     @POST("beforeandafteranswersave")
     @FormUrlEncoded
-    fun getBeforeAndAfterAnswerSave(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?, @Field("question_answers") question_answers: String?): Call<SessionStepListModel>
+    fun getBeforeAndAfterAnswerSave(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?, @Field("question_answers") question_answers: String?): Call<BeforeAfterComparisionSaveStatusModel>
 
     @POST("checkbeforeafterfeelingstatus")
     @FormUrlEncoded
