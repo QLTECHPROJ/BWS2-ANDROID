@@ -104,6 +104,10 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        prepareData()
+        super.onResume()
+    }
     class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val activity: Activity, var userId: String?, var sessionId: String?) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
         inner class MyViewHolder(var bindingAdapter: SessionDetailLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 

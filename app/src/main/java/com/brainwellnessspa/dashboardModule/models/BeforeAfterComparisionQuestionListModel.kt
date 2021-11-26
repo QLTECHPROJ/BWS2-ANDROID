@@ -46,6 +46,10 @@ class BeforeAfterComparisionQuestionListModel {
             @Expose
             var question: String? = null
 
+            @SerializedName("id")
+            @Expose
+            var id: String? = null
+
             @SerializedName("step_short_description")
             @Expose
             var stepShortDescription: String? = null

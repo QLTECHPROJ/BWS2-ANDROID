@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:max="33"
+                android:max="11"
                 android:progress="0"
                 app:indicatorColor="#8C7386"
                 app:trackColor="#DDDDDD" />
