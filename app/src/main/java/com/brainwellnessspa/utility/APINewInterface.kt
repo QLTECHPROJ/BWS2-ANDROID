@@ -235,7 +235,7 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getBrainFeelingSaveCat(
             @Field("UserId") UserId: String?, @Field("SessionId") SessionId: String?, @Field("Type") Type: String?, @Field("feeling_cat_id") feeling_cat_id: String?, @Field("StepId") stepId: String?,
-    ): Call<SucessModel>
+    ): Call<BrainFeelingSaveCatModel>
 
     @POST("sessionaudioswithdescription")
     @FormUrlEncoded

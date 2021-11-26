@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.BrainCatListModel
+import com.brainwellnessspa.dashboardModule.models.BrainFeelingSaveCatModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
 import com.brainwellnessspa.databinding.BrainFeelingStatusLayoutBinding
@@ -74,12 +75,12 @@ class BrainStatusActivity : AppCompatActivity() {
     private fun sendCategoryData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SucessModel> = APINewClient.client.getBrainFeelingSaveCat(userId, sessionId, Type, gson.toJson(EEPCatId), stepId)
-            listCall.enqueue(object : Callback<SucessModel> {
-                override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+            val listCall: Call<BrainFeelingSaveCatModel> = APINewClient.client.getBrainFeelingSaveCat(userId, sessionId, Type, gson.toJson(EEPCatId), stepId)
+            listCall.enqueue(object : Callback<BrainFeelingSaveCatModel> {
+                override fun onResponse(call: Call<BrainFeelingSaveCatModel>, response: Response<BrainFeelingSaveCatModel>) {
                     try {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-                        val listModel: SucessModel = response.body()!!
+                        val listModel: BrainFeelingSaveCatModel = response.body()!!
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
@@ -107,7 +108,7 @@ class BrainStatusActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                override fun onFailure(call: Call<BrainFeelingSaveCatModel>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                 }
             })
