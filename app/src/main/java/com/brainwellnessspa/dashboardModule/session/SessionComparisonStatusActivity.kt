@@ -2,6 +2,7 @@ package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.models.BeforeAfterComparisionQuestionListModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
+import android.util.Log
+import com.brainwellnessspa.BWSApplication.*
+import com.brainwellnessspa.dashboardModule.models.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -30,13 +35,18 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
     lateinit var listModel: BeforeAfterComparisionQuestionListModel
     lateinit var firstListAdapter: OptionsFirstListAdapter
     var myPos = 0
+    val gson = Gson()
     var assAns = arrayListOf<String>()
-    var assqusId = arrayListOf<String>()
+    var assQus = arrayListOf<String>()
+    var assQusString = arrayListOf<String>()
+    lateinit var editor: SharedPreferences.Editor
+    val sendAnsArray = arrayListOf<sendQusData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_comparison_status)
         act = this@SessionComparisonStatusActivity
+        ctx = this@SessionComparisonStatusActivity
 
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
@@ -45,11 +55,13 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             stepId = intent.getStringExtra("StepId")
         }
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
-
+        getAssSaveData()
         binding.btnNext.setOnClickListener {
+            getAssSaveData()
             if (myPos < listModel.responseData!!.questions!!.size - 1) {
                 myPos += 1 //                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
+                binding.tvSection.text = (myPos+1).toString()
                 if (myPos == listModel.responseData!!.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnDone.visibility = View.VISIBLE
@@ -57,7 +69,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnDone.visibility = View.GONE
                 }
-                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 2, ctx, binding, act)
+                firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
                 binding.rvFirstList.adapter = firstListAdapter
             }
             if (myPos > 1) {
@@ -65,22 +77,96 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             } else {
                 binding.btnPrev.visibility = View.GONE
             }
+            Log.e("qus",gson.toJson(assQus))
+            Log.e("ans",gson.toJson(assAns))
         }
         binding.btnPrev.setOnClickListener {
             callBack()
         }
+        binding.btnDone.setOnClickListener{
+            for (i in 0 until assQus.size) {
+                val sendR = sendQusData()
+                sendR.question_id = (assQus[i])
+                sendR.answer = (assAns[i])
+                sendAnsArray.add(sendR)
+            }
+            sendCategoryData(gson.toJson(sendAnsArray))
+        }
         prepareData()
     }
 
+    private fun sendCategoryData(sendAnsArray: String?) {
+        if (isNetworkConnected(act)) {
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall = APINewClient.client.getBeforeAndAfterAnswerSave(userId, sessionId, stepId, sendAnsArray)
+            listCall.enqueue(object : Callback<BeforeAfterComparisionSaveStatusModel?> {
+                override fun onResponse(call: Call<BeforeAfterComparisionSaveStatusModel?>, response: Response<BeforeAfterComparisionSaveStatusModel?>) {
+                    try {
+                        val listModel1 = response.body()
+                        val response = listModel1?.responseData
+                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            if (response != null) {
+                                    val listCall = APINewClient.client.getSessionStepStatusList(userId,sessionId, stepId)
+                                    listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                        override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                            try {
+                                                val listModel = response.body()
+                                                val response = listModel?.responseData
+                                                if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                    act.finish()
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
+
+                                        override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                        }
+                                    })
+
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<BeforeAfterComparisionSaveStatusModel?>, t: Throwable) {
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                }
+            })
+        } else {
+            showToast(act.getString(R.string.no_server_found), act)
+        }
+    }
+
+    private fun getAssSaveData() {
+        val shared = ctx.getSharedPreferences(CONSTANTS.sessionMain, Context.MODE_PRIVATE)
+        val json2 = shared.getString(CONSTANTS.sessionQus, gson.toString())
+        val json3 = shared.getString(CONSTANTS.sessionAns, gson.toString())
+        if (!json2.equals(gson.toString(), ignoreCase = true)) {
+            val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+            assQus = gson.fromJson(json2, type1)
+            assAns = gson.fromJson(json3, type1)
+        }
+    }
     private fun callBack() {
-        if (myPos > 1) {
+        if (myPos > 0) {
             myPos -= 1
-            binding.lpIndicator.progress = myPos //            binding.tvNumberOfQus.text = myPos.toString()
+            binding.lpIndicator.progress = myPos
+            binding.tvSection.text = (myPos+1).toString()
             binding.btnNext.visibility = View.GONE
             binding.btnDone.visibility = View.VISIBLE
+            if (myPos == listModel.responseData!!.questions!!.size - 1) {
+                binding.btnNext.visibility = View.GONE
+                binding.btnDone.visibility = View.VISIBLE
+            } else {
+                binding.btnNext.visibility = View.VISIBLE
+                binding.btnDone.visibility = View.GONE
+            }
             firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
             binding.rvFirstList.adapter = firstListAdapter
-
         } else {
             //go to previous activity
         }
@@ -98,9 +184,24 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                         listModel = response.body()!!
                         val response = listModel1?.responseData
                         if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                            hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                             if (response != null) {
+                                binding.tvQus.text = response.questions!![0].sessionTitle
+//                                if(assQus.size == 0){
+//                                    for(i in 0..10){
+//
+//                                    }
+//                                }
+                                if (assQus.size != 0) {
+                                    myPos = assQus.size - 1
+                                    binding.lpIndicator.progress = myPos
+                                }
                                 binding.lpIndicator.progress = 0
+                                binding.tvSection.text = (myPos+1).toString()
+                                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+                                    binding.btnNext.visibility = View.GONE
+                                    binding.btnDone.visibility = View.VISIBLE
+                                }
                                 firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
                                 binding.rvFirstList.adapter = firstListAdapter
                             }
@@ -137,17 +238,24 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             } else {
                 binding.btnPrev.visibility = View.VISIBLE
             }
-            if (scsa.assqusId.size != 0) {
-                if (scsa.assqusId.contains(listModel!![position].question)) {
-                    for (i in 0 until scsa.assqusId.size) {
-                        if (scsa.assqusId[i] == listModel[position].question) {
-                            if (scsa.assAns[i] == "yes") {
+            val shared = ctx.getSharedPreferences(CONSTANTS.sessionMain, Context.MODE_PRIVATE)
+            val json2 = shared.getString(CONSTANTS.sessionQus, scsa.gson.toString())
+            val json3 = shared.getString(CONSTANTS.sessionAns, scsa.gson.toString())
+            if (!json2.equals(scsa.gson.toString(), ignoreCase = true)) {
+                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+                scsa.assQus = scsa.gson.fromJson(json2, type1)
+                scsa.assAns = scsa.gson.fromJson(json3, type1)
+            }
+            if (scsa.assQus.size != 0) {
+                if (scsa.assQus.contains(listModel!![position].question)) {
+                    for (i in 0 until scsa.assQus.size) {
+                        if (scsa.assQus[i] == listModel[position].question) {
+                            if (scsa.assAns[i].equals("Yes", ignoreCase = true)){
                                 holder.bindingAdapter.cbYes1.isSelected = true
                                 holder.bindingAdapter.cbNo1.isSelected = false
                                 holder.bindingAdapter.cbYes1.isChecked = true
                                 holder.bindingAdapter.cbNo1.isChecked = false
-                            } else if (scsa.assAns[i] == "NO") {
-
+                            } else if (scsa.assAns[i].equals("No", ignoreCase = true)) {
                                 holder.bindingAdapter.cbYes1.isSelected = false
                                 holder.bindingAdapter.cbNo1.isSelected = true
                                 holder.bindingAdapter.cbYes1.isChecked = false
@@ -156,38 +264,82 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                             break
                         }
                     }
-                }
-            }
-            if (listModel != null) {
-                holder.bindingAdapter.tvQus.text = listModel[position].question
-                holder.bindingAdapter.tvSubDec.text = listModel[position].stepShortDescription
-                holder.bindingAdapter.cbYes1.text = listModel[position].questionOptions!![0]
-                holder.bindingAdapter.cbNo1.text = listModel[position].questionOptions!![1]
-
-                holder.bindingAdapter.cbYes1.setOnClickListener {
-                    scsa.assqusId.add(position, (position + 1).toString())
-                    scsa.assAns.add(position, "Yes")
-                    holder.bindingAdapter.cbYes1.isSelected = true
-                    holder.bindingAdapter.cbNo1.isSelected = false
-                    holder.bindingAdapter.cbYes1.isChecked = true
-                    holder.bindingAdapter.cbNo1.isChecked = false
-                }
-                holder.bindingAdapter.cbNo1.setOnClickListener {
-                    scsa.assqusId.add(position, (position + 1).toString())
-                    scsa.assAns.add(position, "No")
+                }else{
                     holder.bindingAdapter.cbYes1.isSelected = false
                     holder.bindingAdapter.cbNo1.isSelected = true
                     holder.bindingAdapter.cbYes1.isChecked = false
                     holder.bindingAdapter.cbNo1.isChecked = true
                 }
+            }else{
+                holder.bindingAdapter.cbYes1.isSelected = false
+                holder.bindingAdapter.cbNo1.isSelected = true
+                holder.bindingAdapter.cbYes1.isChecked = false
+                holder.bindingAdapter.cbNo1.isChecked = true
+            }
+            holder.bindingAdapter.tvQus.text = listModel!![position].question
+            holder.bindingAdapter.tvSubDec.text = listModel[position].stepShortDescription
+            holder.bindingAdapter.cbYes1.text = listModel[position].questionOptions!![0]
+            holder.bindingAdapter.cbNo1.text = listModel[position].questionOptions!![1]
 
-                if (holder.bindingAdapter.cbYes1.isChecked) {
-                    scsa.assqusId.add(position, (position + 1).toString())
+            holder.bindingAdapter.cbYes1.setOnClickListener {
+                scsa.assQus.removeAt(position)
+                scsa.assAns.removeAt(position)
+                scsa.assQus.add(position, (position + 1).toString())
+                scsa.assAns.add(position, "Yes")
+                holder.bindingAdapter.cbYes1.isSelected = true
+                holder.bindingAdapter.cbNo1.isSelected = false
+                holder.bindingAdapter.cbYes1.isChecked = true
+                holder.bindingAdapter.cbNo1.isChecked = false
+                savedata()
+            }
+            holder.bindingAdapter.cbNo1.setOnClickListener {
+                scsa.assQus.removeAt(position)
+                scsa.assAns.removeAt(position)
+                scsa.assQus.add(position, (position + 1).toString())
+                scsa.assAns.add(position, "No")
+                holder.bindingAdapter.cbYes1.isSelected = false
+                holder.bindingAdapter.cbNo1.isSelected = true
+                holder.bindingAdapter.cbYes1.isChecked = false
+                holder.bindingAdapter.cbNo1.isChecked = true
+                savedata()
+            }
+
+            if (holder.bindingAdapter.cbYes1.isChecked || holder.bindingAdapter.cbYes1.isSelected) {
+                if (scsa.assQus.size == position) {
+                    scsa.assQus.add(position, (position + 1).toString())
                     scsa.assAns.add(position, "Yes")
-                } else if (holder.bindingAdapter.cbNo1.isChecked) {
-                    scsa.assqusId.add(position, (position + 1).toString())
+                }else{
+                    scsa.assQus.removeAt(position)
+                    scsa.assAns.removeAt(position)
+                    scsa.assQus.add(position, (position + 1).toString())
+                    scsa.assAns.add(position, "Yes")
+                }
+            } else if (holder.bindingAdapter.cbNo1.isChecked || holder.bindingAdapter.cbNo1.isSelected) {
+                if (scsa.assQus.size == position) {
+                    scsa.assAns.add(position, "No")
+                }else{
+                    scsa.assQus.removeAt(position)
+                    scsa.assAns.removeAt(position)
+                    scsa.assQus.add(position, (position + 1).toString())
                     scsa.assAns.add(position, "No")
                 }
+                savedata()
+            }
+        }
+
+        private fun savedata() {
+            scsa.editor = ctx.getSharedPreferences(CONSTANTS.sessionMain, Context.MODE_PRIVATE).edit()
+            scsa.editor.putString(CONSTANTS.sessionQus, scsa.gson.toJson(scsa.assQus)) //Friend
+            scsa.editor.putString(CONSTANTS.sessionAns, scsa.gson.toJson(scsa.assAns)) //Friend
+            scsa.editor.apply()
+            scsa.editor.commit()
+            val shared = ctx.getSharedPreferences(CONSTANTS.sessionMain, Context.MODE_PRIVATE)
+            val json2 = shared.getString(CONSTANTS.sessionQus, scsa.gson.toString())
+            val json3 = shared.getString(CONSTANTS.sessionAns, scsa.gson.toString())
+            if (!json2.equals(scsa.gson.toString(), ignoreCase = true)) {
+                val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
+                scsa.assQus = scsa.gson.fromJson(json2, type1)
+                scsa.assAns = scsa.gson.fromJson(json3, type1)
             }
         }
 

@@ -62,24 +62,48 @@
                     android:id="@+id/tvQus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.7"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
                     android:text="Lorem ipsum"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
-                <TextView
-                    android:id="@+id/tvSection"
+                <LinearLayout
                     android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                    android:layout_weight="0.3"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
-                    android:text="Section 1 / 11"
+                    android:text="Section "
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp"
                     tools:ignore="SpUsage" />
+                <TextView
+                    android:id="@+id/tvSection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:text="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="SpUsage" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:text=" / 11"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
             </LinearLayout>
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/lpIndicator"
@@ -127,7 +151,7 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_back_black_icon"
-            app:tint="@color/gray" />
+            app:tint="@color/black" />
         <Button
             android:id="@+id/btnDone"
             android:layout_width="match_parent"

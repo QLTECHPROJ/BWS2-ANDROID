@@ -188,6 +188,9 @@ object CONSTANTS {
     const val AssQus = "AssQus"
     const val AssAns = "AssAns"
     const val AssSort = "AssSort"
+    const val sessionQus = "sessionQus"
+    const val sessionMain = "sessionMain"
+    const val sessionAns = "sessionAns"
 
     const val name = "Name"
     const val email = "Email"
