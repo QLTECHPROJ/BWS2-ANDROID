@@ -257,6 +257,10 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getCheckBeforeAfterFeelingStatus(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?): Call<BeforeAfterComparisionFetchStatusModel>
 
+    @POST("checkprogressreportstatus")
+    @FormUrlEncoded
+    fun getCheckProgressReportStatus(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?): Call<CheckProgressReportStatusModel>
+
     @POST("resourcecatlist")
     @FormUrlEncoded
     fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>

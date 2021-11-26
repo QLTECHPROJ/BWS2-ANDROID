@@ -115,6 +115,10 @@ class SessionDetailFragment : Fragment() {
             holder.bindingAdapter.tvTitle.text = catName[position].title
             holder.bindingAdapter.tvSentData.text = catName[position].desc
 
+            Glide.with(activity!!).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+                    .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
+
             if (catName[position].sessionDate.equals("", ignoreCase = true)) {
                 holder.bindingAdapter.tvDate.visibility = View.GONE
                 holder.bindingAdapter.ivDate.visibility = View.GONE
@@ -174,18 +178,13 @@ class SessionDetailFragment : Fragment() {
                 holder.bindingAdapter.tvBooklet.text = catName[position].bookletTitle
             }
 
-/* session_unselected_bg
-* session_selected_bg
-* session_idea_icon
-* ic_session_lock_icon*/
-
             when {
                 catName[position].userSessionStatus.equals("Completed") -> {
                     holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
-                    Glide.with(activity).load(R.drawable.session_done_icon).thumbnail(0.05f)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
-                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
+//                    Glide.with(activity).load(R.drawable.session_done_icon).thumbnail(0.05f)
+//                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+//                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
                     if (catName[position].beforeSession!!.isEmpty()) {
@@ -202,9 +201,9 @@ class SessionDetailFragment : Fragment() {
                 catName[position].userSessionStatus.equals("Inprogress") -> {
                     holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.black), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
-                    Glide.with(activity).load(R.drawable.session_idea_icon).thumbnail(0.05f)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
-                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
+//                    Glide.with(activity).load(R.drawable.session_idea_icon).thumbnail(0.05f)
+//                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+//                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.VISIBLE
                     holder.bindingAdapter.ivBanner.visibility = View.VISIBLE
                     if (catName[position].beforeSession!!.isEmpty()) {
@@ -221,9 +220,9 @@ class SessionDetailFragment : Fragment() {
                 catName[position].userSessionStatus.equals("Lock") -> {
                     holder.bindingAdapter.ivArrow.setColorFilter(ContextCompat.getColor(activity!!,R.color.light_gray), PorterDuff.Mode.SRC_IN)
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
-                    Glide.with(activity).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
-                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
+//                    Glide.with(activity).load(R.drawable.session_inprogress_status_icon).thumbnail(0.05f)
+//                            .apply(RequestOptions.bitmapTransform(RoundedCorners(28)))
+//                            .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivIcon)
                     holder.bindingAdapter.tvLabel.visibility = View.GONE
                     holder.bindingAdapter.ivBanner.visibility = View.GONE
                     holder.bindingAdapter.llAfterSession.visibility = View.GONE
