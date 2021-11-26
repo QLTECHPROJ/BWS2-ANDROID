@@ -267,8 +267,8 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                         }
                     }
                 }else{
-                    scsa.assQus.add(position, listModel[position].id!!)
-                    scsa.assAns.add(position, "No")
+                    scsa.assQus.add(myPos, listModel[position].id!!)
+                    scsa.assAns.add(myPos, "No")
                     holder.bindingAdapter.cbYes1.isSelected = false
                     holder.bindingAdapter.cbNo1.isSelected = true
                     holder.bindingAdapter.cbYes1.isChecked = false
@@ -276,8 +276,8 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                     savedata()
                 }
             }else{
-                scsa.assQus.add(position, listModel!![position].id!!)
-                scsa.assAns.add(position, "No")
+                scsa.assQus.add(myPos, listModel!![position].id!!)
+                scsa.assAns.add(myPos, "No")
                 holder.bindingAdapter.cbYes1.isSelected = false
                 holder.bindingAdapter.cbNo1.isSelected = true
                 holder.bindingAdapter.cbYes1.isChecked = false
@@ -290,10 +290,10 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             holder.bindingAdapter.cbNo1.text = listModel[position].questionOptions!![1]
 
             holder.bindingAdapter.cbYes1.setOnClickListener {
-                scsa.assQus.removeAt(position)
-                scsa.assAns.removeAt(position)
-                scsa.assQus.add(position, listModel[position].id!!)
-                scsa.assAns.add(position, "Yes")
+                scsa.assQus.removeAt(myPos)
+                scsa.assAns.removeAt(myPos)
+                scsa.assQus.add(myPos, listModel[position].id!!)
+                scsa.assAns.add(myPos, "Yes")
                 holder.bindingAdapter.cbYes1.isSelected = true
                 holder.bindingAdapter.cbNo1.isSelected = false
                 holder.bindingAdapter.cbYes1.isChecked = true
@@ -304,8 +304,8 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             holder.bindingAdapter.cbNo1.setOnClickListener {
                 scsa.assQus.removeAt(position)
                 scsa.assAns.removeAt(position)
-                scsa.assQus.add(position,listModel[position].id!!)
-                scsa.assAns.add(position, "No")
+                scsa.assQus.add(myPos,listModel[position].id!!)
+                scsa.assAns.add(myPos, "No")
                 holder.bindingAdapter.cbYes1.isSelected = false
                 holder.bindingAdapter.cbNo1.isSelected = true
                 holder.bindingAdapter.cbYes1.isChecked = false
@@ -316,8 +316,8 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
            /* if (holder.bindingAdapter.cbYes1.isChecked || holder.bindingAdapter.cbYes1.isSelected) {
                 if (scsa.assQus.size != 0) {
                     if (!(scsa.assQus.contains(listModel[position].id))) {
-                        scsa.assQus.add(position, listModel[position].id!!)
-                        scsa.assAns.add(position, "Yes")
+                        scsa.assQus.add(myPos, listModel[position].id!!)
+                        scsa.assAns.add(myPos, "Yes")
                     }else{
 
                     }
@@ -329,15 +329,15 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                     if (scsa.assQus.contains(listModel[position].id)) {
                         scsa.assQus.removeAt(position)
                         scsa.assAns.removeAt(position)
-                        scsa.assQus.add(position, listModel[position].id!!)
-                        scsa.assAns.add(position, "No")
+                        scsa.assQus.add(myPos, listModel[position].id!!)
+                        scsa.assAns.add(myPos, "No")
                     }else{
-                        scsa.assQus.add(position, listModel[position].id!!)
-                        scsa.assAns.add(position, "No")
+                        scsa.assQus.add(myPos, listModel[position].id!!)
+                        scsa.assAns.add(myPos, "No")
                     }
                 }else{
-                    scsa.assQus.add(position, listModel[position].id!!)
-                    scsa.assAns.add(position, "No")
+                    scsa.assQus.add(myPos, listModel[position].id!!)
+                    scsa.assAns.add(myPos, "No")
                 }
                 savedata()
             }*/
