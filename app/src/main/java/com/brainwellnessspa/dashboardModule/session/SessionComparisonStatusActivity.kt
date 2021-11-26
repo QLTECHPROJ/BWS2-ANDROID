@@ -167,10 +167,18 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 holder.bindingAdapter.cbYes1.setOnClickListener {
                     scsa.assqusId.add(position, (position + 1).toString())
                     scsa.assAns.add(position, "Yes")
+                    holder.bindingAdapter.cbYes1.isSelected = true
+                    holder.bindingAdapter.cbNo1.isSelected = false
+                    holder.bindingAdapter.cbYes1.isChecked = true
+                    holder.bindingAdapter.cbNo1.isChecked = false
                 }
                 holder.bindingAdapter.cbNo1.setOnClickListener {
                     scsa.assqusId.add(position, (position + 1).toString())
                     scsa.assAns.add(position, "No")
+                    holder.bindingAdapter.cbYes1.isSelected = false
+                    holder.bindingAdapter.cbNo1.isSelected = true
+                    holder.bindingAdapter.cbYes1.isChecked = false
+                    holder.bindingAdapter.cbNo1.isChecked = true
                 }
 
                 if (holder.bindingAdapter.cbYes1.isChecked) {
