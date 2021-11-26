@@ -67,6 +67,7 @@ class MyPlayerActivity : AppCompatActivity() {
     var mainPlayModelList = arrayListOf<MainPlayModel>()
     var position = 0
     var listSize: Int = 0
+    var apicall = 0
     var coUserId: String? = ""
     lateinit var act: Activity
     var id: String? = ""
@@ -956,23 +957,28 @@ class MyPlayerActivity : AppCompatActivity() {
                         val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
 
                         if (isNetworkConnected(ctx)) {
-                            val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
-                            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                                    try {
-                                        val listModel = response.body()
-                                        val response = listModel?.responseData
-                                        if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (apicall == 0) {
+                                val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
+                                apicall = 1
+                                listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                    override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                        try {
+                                            val listModel = response.body()
+                                            val response = listModel?.responseData
+                                            if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                finish()
+                                                
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
                                         }
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
                                     }
-                                }
 
-                                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                                }
-                            })
-                        } else {
+                                    override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                    }
+                                })
+                            }
+                        }else {
                             showToast(act.getString(R.string.no_server_found), act)
                         }
                     }
@@ -1190,7 +1196,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                     val global = GlobalInitExoPlayer()
                                     global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                                 }
-                            } else if (audioPlayerFlag.equals("SessionAudio", ignoreCase = true)) {
+                            } /*else if (audioPlayerFlag.equals("SessionAudio", ignoreCase = true)) {
                                 val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
                                 val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
                                 val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
@@ -1215,7 +1221,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                 } else {
                                     showToast(act.getString(R.string.no_server_found), act)
                                 }
-                            }
+                            }*/
 
                             val p = Properties()
                             addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Completed", CONSTANTS.track, downloadAudioDetailsList, p)

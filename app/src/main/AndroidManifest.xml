@@ -406,6 +406,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="brainwellnessapp.com.au"
+                    android:scheme="https"/>
+                <data
+                    android:host="brainwellnessapp.com.au"
+                    android:scheme="http"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".userModule.activities.ProfileProgressActivity"
@@ -444,7 +455,7 @@
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".userModule.activities.UserListActivity"
             android:configChanges="orientation|screenSize"

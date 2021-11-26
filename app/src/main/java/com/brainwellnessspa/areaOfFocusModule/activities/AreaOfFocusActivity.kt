@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -29,6 +30,7 @@ import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.callAllRemove
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.flexbox.*
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
@@ -81,6 +83,21 @@ class AreaOfFocusActivity : AppCompatActivity() {
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.FLEX_START
         binding.rvSelectedCategory.layoutManager = layoutManager
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+                if(deepLink != null){
+                    var name = deepLink.getQueryParameter("hello")
+                    var f = deepLink.getQueryParameter("foo")
+                    Log.e("Deeep Link Successss","Hiiiiii " +deepLink.toString() + " " + name +" " + f)
+                    showToast("Hiiiiiii"+ deepLink.toString()+ " " + name +" " + f,act)
+                }
+            }
+            .addOnFailureListener(this) { e -> Log.e("DeeeeeeepLinkkkkk", "getDynamicLink:onFailure    " +  e.toString()) }
         getCatSaveData()
         prepareRecommnedData()
         binding.searchView.onActionViewExpanded()
@@ -113,8 +130,7 @@ class AreaOfFocusActivity : AppCompatActivity() {
                 return false
             }
         })
-
-        binding.btnContinue.setOnClickListener {
+          binding.btnContinue.setOnClickListener {
             getCatSaveData()
             val array = arrayListOf<sendRecommndedData>()
             for (i in 0 until selectedCategoriesTitle.size) {

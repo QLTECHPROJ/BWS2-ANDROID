@@ -65,6 +65,7 @@
                     android:layout_weight="0.8"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
+                    android:text="Lorem ipsum"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
@@ -80,7 +81,6 @@
                     android:textSize="@dimen/_12sdp"
                     tools:ignore="SpUsage" />
             </LinearLayout>
-
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/lpIndicator"
                 android:layout_width="match_parent"
@@ -90,67 +90,44 @@
                 android:progress="0"
                 app:indicatorColor="#8C7386"
                 app:trackColor="#DDDDDD" />
-            <TextView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFirstList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_29sdp"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                android:textColor="@color/light_black"
-                android:textSize="@dimen/_18sdp"
-                tools:ignore="SpUsage"
-                tools:targetApi="o" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/montserrat_medium"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/_4sdp"
-                 android:textColor="#707070"
-                android:textSize="@dimen/_15sdp"
-                tools:ignore="SpUsage"
-                tools:targetApi="o" />
-
-            <CheckBox
-                android:id="@+id/cbYes"
-                style="@android:style/Widget.CompoundButton.RadioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_4sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:button="@drawable/radio_btn_session_background"
-                android:checked="true"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center_vertical|start"
-                android:paddingStart="@dimen/_12sdp"
-                android:text="@string/yes"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
-                tools:ignore="SpUsage" />
-
-            <CheckBox
-                android:id="@+id/cbNo"
-                style="@android:style/Widget.CompoundButton.RadioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/_4sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:button="@drawable/radio_btn_session_background"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center_vertical|start"
-                android:paddingStart="@dimen/_12sdp"
-                android:text="@string/no"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
-                tools:ignore="SpUsage" />
+                android:layout_below="@id/lpIndicator"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                tools:listitem="@layout/session_comparison_qus_layout"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
+        <ImageView
+            android:id="@+id/btnPrev"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:clickable="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:contentDescription="@string/todo"
+            android:focusable="true"
+            android:rotation="180"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/black" />
 
+        <ImageView
+            android:id="@+id/btnNext"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:clickable="false"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/gray" />
         <Button
             android:id="@+id/btnDone"
             android:layout_width="match_parent"
@@ -164,6 +141,7 @@
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
             android:text="@string/done"
+            android:visibility="gone"
             android:textColor="@color/white" />
 
         <LinearLayout

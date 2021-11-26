@@ -1,6 +1,7 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.brainwellnessspa.databinding.PreceptionsMainLayoutBinding
 class SessionQuestionsActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionQuestionsBinding
     lateinit var ctx: Context
+    lateinit var activity: Activity
     var userID: String? = ""
     lateinit var adapter: SessionQuestionsAdapter
     var coUserId: String? = ""

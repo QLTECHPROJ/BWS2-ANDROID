@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <RelativeLayout
+            android:id="@+id/llFirst"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvQus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_29sdp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing."
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_18sdp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/tvSubDec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvQus"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="start"
+                android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:textColor="#707070"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvSubDec">
+
+                <RadioButton
+                    android:id="@+id/cbYes1"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/yes"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <RadioButton
+                    android:id="@+id/cbNo1"
+                    style="@android:style/Widget.CompoundButton.RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:button="@drawable/radio_btn_session_background"
+                    android:checked="false"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:text="@string/no"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+            </RadioGroup>
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

@@ -172,7 +172,6 @@ class WalkScreenActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
-            finish()
         }
     }
 

@@ -36,6 +36,7 @@ import com.clevertap.android.sdk.CTInboxListener
 import com.clevertap.android.sdk.CTInboxStyleConfig
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.segment.analytics.Analytics
@@ -77,7 +78,34 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
     var planContent: String? = ""
     lateinit var activity: Activity
     lateinit var context: Context
+    override fun onStart() {
+        super.onStart()
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+                if(deepLink != null){
+                    var screen = deepLink.getQueryParameter("screen")
+                    showToast("Hiiiiiii  "+ screen,activity)
+                    if(screen.equals("splash")){
 
+                    }else if(screen.equals("setreminder")){
+
+                    }else if(screen.equals("reassessment")){
+
+                    }else if(screen.equals("invite")){
+
+                    }else if(screen.equals("signup")){
+
+                    }else if(screen.equals("updatesubscription")){
+
+                    }
+                }
+            }
+            .addOnFailureListener(this) { e -> Log.e("DeeeeeeepLinkkkkk", "getDynamicLink:onFailure    " +  e.toString()) }
+    }
     /* TODO function for app started  */
     override fun onCreate(savedInstanceState: Bundle?) {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

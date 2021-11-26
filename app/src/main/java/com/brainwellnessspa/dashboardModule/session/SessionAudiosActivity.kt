@@ -72,6 +72,10 @@ class SessionAudiosActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        prepareData()
+        super.onResume()
+    }
     fun prepareData() {
         if (isNetworkConnected(activity)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)

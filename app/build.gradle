@@ -77,6 +77,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-dynamic-links:19.0.0'
     def room_version = "2.2.6"
     def billing_version = "4.0.0"
 // TODO  Default Dependency
