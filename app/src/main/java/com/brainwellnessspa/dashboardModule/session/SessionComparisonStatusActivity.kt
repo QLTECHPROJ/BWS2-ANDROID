@@ -2,7 +2,9 @@ package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.dashboardModule.models.*
 import com.google.gson.Gson
@@ -113,24 +115,11 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                             editor.clear()
                             editor.apply()
                             if (response != null) {
-                                    val listCall = APINewClient.client.getSessionStepStatusList(userId,sessionId, stepId)
-                                    listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                                        override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                                            try {
-                                                val listModel = response.body()
-                                                val response = listModel?.responseData
-                                                if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                    act.finish()
-                                                }
-                                            } catch (e: Exception) {
-                                                e.printStackTrace()
-                                            }
-                                        }
-
-                                        override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                                        }
-                                    })
-
+                                val i = Intent(act, BrainStatusActivity::class.java)
+                                i.putExtra("SessionId",sessionId)
+                                i.putExtra("StepId", stepId)
+                                i.putExtra("Type", "before")
+                                startActivity(i)
                             }
                         }
                     } catch (e: Exception) {
@@ -248,99 +237,92 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 scsa.assQus = scsa.gson.fromJson(json2, type1)
                 scsa.assAns = scsa.gson.fromJson(json3, type1)
             }
+            visibleGoneNext()
             if (scsa.assQus.size != 0) {
                 if (scsa.assQus.contains(listModel!![position].id)) {
                     for (i in 0 until scsa.assQus.size) {
                         if (scsa.assQus[i] == listModel[position].id) {
-                            if (scsa.assAns[i].equals("Yes", ignoreCase = true)){
+                            if (scsa.assAns[i].equals(listModel[position].questionOptions!![0], ignoreCase = true)){
                                 holder.bindingAdapter.cbYes1.isSelected = true
-                                holder.bindingAdapter.cbNo1.isSelected = false
                                 holder.bindingAdapter.cbYes1.isChecked = true
+                                holder.bindingAdapter.cbNo1.isSelected = false
                                 holder.bindingAdapter.cbNo1.isChecked = false
-                            } else if (scsa.assAns[i].equals("No", ignoreCase = true)) {
+                            } else if (scsa.assAns[i].equals(listModel[position].questionOptions!![1], ignoreCase = true)) {
                                 holder.bindingAdapter.cbYes1.isSelected = false
-                                holder.bindingAdapter.cbNo1.isSelected = true
                                 holder.bindingAdapter.cbYes1.isChecked = false
+                                holder.bindingAdapter.cbNo1.isSelected = true
                                 holder.bindingAdapter.cbNo1.isChecked = true
                             }
                             break
                         }
                     }
-                }else{
-                    scsa.assQus.add(myPos, listModel[position].id!!)
-                    scsa.assAns.add(myPos, "No")
-                    holder.bindingAdapter.cbYes1.isSelected = false
-                    holder.bindingAdapter.cbNo1.isSelected = true
-                    holder.bindingAdapter.cbYes1.isChecked = false
-                    holder.bindingAdapter.cbNo1.isChecked = true
-                    savedata()
                 }
-            }else{
-                scsa.assQus.add(myPos, listModel!![position].id!!)
-                scsa.assAns.add(myPos, "No")
-                holder.bindingAdapter.cbYes1.isSelected = false
-                holder.bindingAdapter.cbNo1.isSelected = true
-                holder.bindingAdapter.cbYes1.isChecked = false
-                holder.bindingAdapter.cbNo1.isChecked = true
-                savedata()
             }
-            holder.bindingAdapter.tvQus.text = listModel[position].question
+            holder.bindingAdapter.tvQus.text = listModel!![position].question
             holder.bindingAdapter.tvSubDec.text = listModel[position].stepShortDescription
             holder.bindingAdapter.cbYes1.text = listModel[position].questionOptions!![0]
             holder.bindingAdapter.cbNo1.text = listModel[position].questionOptions!![1]
 
             holder.bindingAdapter.cbYes1.setOnClickListener {
-                scsa.assQus.removeAt(myPos)
-                scsa.assAns.removeAt(myPos)
-                scsa.assQus.add(myPos, listModel[position].id!!)
-                scsa.assAns.add(myPos, "Yes")
+                if (scsa.assQus.size != 0) {
+                    if (scsa.assQus.contains(listModel[position].id)) {
+                        for (i in 0 until scsa.assQus.size) {
+                            if (scsa.assQus[i] == listModel[position].id) {
+                                if (scsa.assAns[i].equals(listModel[position].questionOptions!![1], ignoreCase = true)){
+                                    addRemoveData("0",0,position)
+                                } else{
+                                    addRemoveData("1",0,position)
+                                }
+                                break
+                            }
+                        }
+                    } else{
+                        addRemoveData("1",0,position)
+                    }
+                } else{
+                    addRemoveData("1",0,position)
+                }
                 holder.bindingAdapter.cbYes1.isSelected = true
-                holder.bindingAdapter.cbNo1.isSelected = false
                 holder.bindingAdapter.cbYes1.isChecked = true
+                holder.bindingAdapter.cbNo1.isSelected = false
                 holder.bindingAdapter.cbNo1.isChecked = false
                 savedata()
             }
 
             holder.bindingAdapter.cbNo1.setOnClickListener {
-                scsa.assQus.removeAt(position)
-                scsa.assAns.removeAt(position)
-                scsa.assQus.add(myPos,listModel[position].id!!)
-                scsa.assAns.add(myPos, "No")
+                if (scsa.assQus.size != 0) {
+                    if (scsa.assQus.contains(listModel[position].id)) {
+                        for (i in 0 until scsa.assQus.size) {
+                            if (scsa.assQus[i] == listModel[position].id) {
+                                if (scsa.assAns[i].equals(listModel[position].questionOptions!![0], ignoreCase = true)){
+                                    addRemoveData("0",1,position)
+                                } else{
+                                    addRemoveData("1",1,position)
+                                }
+                                break
+                            }
+                        }
+                    } else{
+                        addRemoveData("1",1,position)
+                    }
+                } else{
+                    addRemoveData("1",1,position)
+                }
                 holder.bindingAdapter.cbYes1.isSelected = false
-                holder.bindingAdapter.cbNo1.isSelected = true
                 holder.bindingAdapter.cbYes1.isChecked = false
+                holder.bindingAdapter.cbNo1.isSelected = true
                 holder.bindingAdapter.cbNo1.isChecked = true
                 savedata()
             }
+        }
 
-           /* if (holder.bindingAdapter.cbYes1.isChecked || holder.bindingAdapter.cbYes1.isSelected) {
-                if (scsa.assQus.size != 0) {
-                    if (!(scsa.assQus.contains(listModel[position].id))) {
-                        scsa.assQus.add(myPos, listModel[position].id!!)
-                        scsa.assAns.add(myPos, "Yes")
-                    }else{
-
-                    }
-                }else{
-
-                }
-            } else if (holder.bindingAdapter.cbNo1.isChecked || holder.bindingAdapter.cbNo1.isSelected) {
-                if (scsa.assQus.size != 0) {
-                    if (scsa.assQus.contains(listModel[position].id)) {
-                        scsa.assQus.removeAt(position)
-                        scsa.assAns.removeAt(position)
-                        scsa.assQus.add(myPos, listModel[position].id!!)
-                        scsa.assAns.add(myPos, "No")
-                    }else{
-                        scsa.assQus.add(myPos, listModel[position].id!!)
-                        scsa.assAns.add(myPos, "No")
-                    }
-                }else{
-                    scsa.assQus.add(myPos, listModel[position].id!!)
-                    scsa.assAns.add(myPos, "No")
-                }
-                savedata()
-            }*/
+        private fun addRemoveData(remove: String, ans: Int,position: Int) {
+            if(remove == "0"){
+                scsa.assQus.removeAt(position)
+                scsa.assAns.removeAt(position)
+            }
+            scsa.assQus.add(myPos, listModel!![position].id!!)
+            scsa.assAns.add(myPos, listModel[position].questionOptions!![ans])
         }
 
         private fun savedata() {
@@ -356,6 +338,24 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
                 scsa.assQus = scsa.gson.fromJson(json2, type1)
                 scsa.assAns = scsa.gson.fromJson(json3, type1)
+            }
+            visibleGoneNext()
+        }
+        private fun visibleGoneNext() {
+            if (scsa.assQus.size > mypos2) {
+                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
+                binding.btnDone.isClickable = true
+                binding.btnDone.isEnabled = true
+                binding.btnDone.setBackgroundResource(R.drawable.light_green_rounded_filled)
+            } else {
+                binding.btnNext.isEnabled = false
+                binding.btnNext.isClickable = false
+                binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                binding.btnDone.isEnabled = false
+                binding.btnDone.isClickable = false
+                binding.btnDone.setBackgroundResource(R.drawable.gray_round_cornor)
             }
         }
 

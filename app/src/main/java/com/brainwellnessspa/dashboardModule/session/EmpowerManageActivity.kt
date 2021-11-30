@@ -27,7 +27,17 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         ctx = this@EmpowerManageActivity
 
         binding.youtubeView.initialize(API_KEY, this)
+        binding.llBack.setOnClickListener{
+          finish()
+        }
+         binding.llSkip.setOnClickListener{
+            finish()
+        }
+    }
 
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
     }
 
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, wasRestored: Boolean) {

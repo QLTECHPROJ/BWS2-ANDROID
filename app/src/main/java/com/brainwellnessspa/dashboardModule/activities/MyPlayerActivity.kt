@@ -26,6 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
+import com.brainwellnessspa.dashboardModule.session.SessionDetailContinueActivity
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia
@@ -435,6 +436,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 editor.apply()
             }
             audioPlayerFlag.equals("SessionAudio", ignoreCase = true) -> {
+                binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
                 val type = object : TypeToken<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>() {}.type
                 val arrayList = gson.fromJson<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>(json, type)
                 listSize = arrayList.size
@@ -813,6 +815,11 @@ class MyPlayerActivity : AppCompatActivity() {
         localIntent = Intent("play_pause_Action")
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
         callButtonText(position)
+          if(audioPlayerFlag!!.equals("SessionAudio", ignoreCase = true)){
+            binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
+        }else{
+              binding.ivBgChange.setBackgroundResource(R.drawable.ic_conflower_blue_bg)
+        }
         if (mainPlayModelList[position].id.equals("0", ignoreCase = true)) {
             //            localIntent1 = Intent("descIssue")
             //            localBroadcastManager1 = LocalBroadcastManager.getInstance(ctx!!)
@@ -881,6 +888,11 @@ class MyPlayerActivity : AppCompatActivity() {
         getDownloadData()
         GetMediaPer()
         getMedia2()
+        if(audioPlayerFlag!!.equals("SessionAudio", ignoreCase = true)){
+            binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
+        }else{
+            binding.ivBgChange.setBackgroundResource(R.drawable.ic_conflower_blue_bg)
+        }
         /* play button click*/
         exoBinding.llPlay.setOnClickListener {
             if (player != null) {
@@ -966,8 +978,10 @@ class MyPlayerActivity : AppCompatActivity() {
                                             val listModel = response.body()
                                             val response = listModel?.responseData
                                             if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                val i = Intent(act, SessionDetailContinueActivity::class.java)
+                                                i.putExtra("SessionId", sessionId)
+                                                startActivity(i)
                                                 finish()
-                                                
                                             }
                                         } catch (e: Exception) {
                                             e.printStackTrace()

@@ -12,6 +12,7 @@ import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderAct
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
+import com.brainwellnessspa.dashboardModule.session.SessionAudiosActivity
 import com.brainwellnessspa.databinding.ActivityWalkScreenBinding
 import com.brainwellnessspa.services.GlobalInitExoPlayer
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
@@ -111,6 +112,9 @@ class WalkScreenActivity : AppCompatActivity() {
             binding.rlStepThree.visibility = View.GONE
         }
 
+        binding.llBack.setOnClickListener {
+            callback()
+        }
         binding.rlStepOne.setOnClickListener {
             val intent = Intent(applicationContext, DassAssSliderActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -168,14 +172,38 @@ class WalkScreenActivity : AppCompatActivity() {
             editor.putString(CONSTANTS.PREF_KEY_PlayFrom, "Session")
             editor.putString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "SessionAudio")
             editor.apply()
-            audioClick = true
+            val shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_PLAYER, Context.MODE_PRIVATE)
+            val audioPlayerFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioPlayerFlag, "0")
+            if (audioPlayerFlag.equals("SessionAudio")) {
+                if(player != null){
+                    if (!player.playWhenReady) {
+                        player.playWhenReady = true
+                    }
+                }else {
+                    audioClick = true
+                }
+            }else {
+                audioClick = true
+            }
             val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
         }
     }
 
+    private fun callback() {
+        if( screenView.equals("5", ignoreCase = true)){
+            val i = Intent(applicationContext, SessionAudiosActivity::class.java)
+            i.putExtra("SessionId", sessionId)
+            i.putExtra("StepId", stepId)
+            startActivity(i)
+            finish()
+        }else {
+            finish()
+        }
+    }
+
     override fun onBackPressed() {
-        finish()
+        callback()
     }
 }

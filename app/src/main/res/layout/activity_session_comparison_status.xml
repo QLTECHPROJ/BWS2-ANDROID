@@ -151,7 +151,7 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_back_black_icon"
-            app:tint="@color/black" />
+            app:tint="@color/gray" />
         <Button
             android:id="@+id/btnDone"
             android:layout_width="match_parent"

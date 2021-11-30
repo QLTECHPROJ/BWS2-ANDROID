@@ -119,7 +119,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val db = catName!![position]
 
-            holder.bindingAdapter.tvNumber.text = db.stepId
+            holder.bindingAdapter.tvNumber.text = (position+1).toString()
             holder.bindingAdapter.tvTitle.text = db.desc
 
             Glide.with(activity).load(db.statusImg).thumbnail(0.05f)
@@ -178,9 +178,28 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                         if (listModel1?.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                                             hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
                                             if (response != null) {
-                                                if (response.nextForm.equals("")) {
+                                                val listCall = APINewClient.client.getSessionProgressReport(db.sessionId, db.stepId,response.nextForm)
+                                                listCall.enqueue(object : Callback<StepTypeTwoSaveDataModel?> {
+                                                    override fun onResponse(call: Call<StepTypeTwoSaveDataModel?>, response: Response<StepTypeTwoSaveDataModel?>) {
+                                                        try {
+                                                            val listModel1 = response.body()
+                                                            val response1 = listModel1?.responseData
+                                                            if (listModel1?.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                                hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                                                if (response1 != null) {
+                                                                    
 
-                                                }
+                                                                }
+                                                            }
+                                                        } catch (e: Exception) {
+                                                            e.printStackTrace()
+                                                        }
+                                                    }
+
+                                                    override fun onFailure(call: Call<StepTypeTwoSaveDataModel?>, t: Throwable) {
+                                                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                                                    }
+                                                })
                                             }
                                         }
                                     } catch (e: Exception) {
@@ -224,38 +243,35 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                                     i.putExtra("SessionId", db.sessionId)
                                                     i.putExtra("StepId", db.stepId)
                                                     activity.startActivity(i)
-                                                } else if (response.questionStatus.equals("1")) {
-                                                    if (response.feelingStatus.equals("0")) {
-                                                        val i = Intent(activity, BrainStatusActivity::class.java)
-                                                        i.putExtra("SessionId", db.sessionId)
-                                                        i.putExtra("StepId", db.stepId)
-                                                        i.putExtra("Type", "before")
-                                                        activity.startActivity(i)
-                                                    } else if (response.feelingStatus.equals("1")) {
-                                                        if (isNetworkConnected(activity)) {
-                                                            val listCall = APINewClient.client.getSessionStepStatusList(userId, db.sessionId, db.stepId)
-                                                            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                                                                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                                                                    try {
-                                                                        val listModel = response.body()
-                                                                        val response = listModel?.responseData
-                                                                        if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                                            activity.finish()
-                                                                        }
-                                                                    } catch (e: Exception) {
-                                                                        e.printStackTrace()
+                                                } else if (response.feelingStatus.equals("0")) {
+                                                    val i = Intent(activity, BrainStatusActivity::class.java)
+                                                    i.putExtra("SessionId", db.sessionId)
+                                                    i.putExtra("StepId", db.stepId)
+                                                    i.putExtra("Type", "before")
+                                                    activity.startActivity(i)
+                                                } else if (db.userStepStatus.equals("Inprogress")) {
+                                                    if (isNetworkConnected(activity)) {
+                                                        val listCall = APINewClient.client.getSessionStepStatusList(userId, db.sessionId, db.stepId)
+                                                        listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                                            override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                                                try {
+                                                                    val listModel = response.body()
+                                                                    val response = listModel?.responseData
+                                                                    if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                                        activity.finish()
                                                                     }
+                                                                } catch (e: Exception) {
+                                                                    e.printStackTrace()
                                                                 }
+                                                            }
 
-                                                                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                                                                }
-                                                            })
-                                                        } else {
-                                                            showToast(activity.getString(R.string.no_server_found), activity)
-                                                        }
+                                                            override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                                            }
+                                                        })
+                                                    } else {
+                                                        showToast(activity.getString(R.string.no_server_found), activity)
                                                     }
                                                 }
-
                                             }
                                         }
                                     } catch (e: Exception) {
@@ -301,35 +317,32 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                                     i.putExtra("SessionId", db.sessionId)
                                                     i.putExtra("StepId", db.stepId)
                                                     activity.startActivity(i)
-                                                } else if (response.questionStatus.equals("1")) {
-                                                    if (response.feelingStatus.equals("0")) {
-                                                        val i = Intent(activity, BrainStatusActivity::class.java)
-                                                        i.putExtra("SessionId", db.sessionId)
-                                                        i.putExtra("StepId", db.stepId)
-                                                        i.putExtra("Type", "after")
-                                                        activity.startActivity(i)
-                                                    } else if (response.feelingStatus.equals("1")) {
-                                                        if (isNetworkConnected(activity)) {
-                                                            val listCall = APINewClient.client.getSessionStepStatusList(userId, db.sessionId, db.stepId)
-                                                            listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                                                                override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                                                                    try {
-                                                                        val listModel = response.body()
-                                                                        val response = listModel?.responseData
-                                                                        if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                                            activity.finish()
-                                                                        }
-                                                                    } catch (e: Exception) {
-                                                                        e.printStackTrace()
+                                                } else if (response.feelingStatus.equals("0")) {
+                                                    val i = Intent(activity, BrainStatusActivity::class.java)
+                                                    i.putExtra("SessionId", db.sessionId)
+                                                    i.putExtra("StepId", db.stepId)
+                                                    i.putExtra("Type", "before")
+                                                    activity.startActivity(i)
+                                                } else if (db.userStepStatus.equals("Inprogress")) {
+                                                    if (isNetworkConnected(activity)) {
+                                                        val listCall = APINewClient.client.getSessionStepStatusList(userId, db.sessionId, db.stepId)
+                                                        listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                                            override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                                                try {
+                                                                    val listModel = response.body()
+                                                                    val response = listModel?.responseData
+                                                                    if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                                        activity.finish()
                                                                     }
+                                                                } catch (e: Exception) {
+                                                                    e.printStackTrace()
                                                                 }
-
-                                                                override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                                                                }
-                                                            })
-                                                        } else {
-                                                            showToast(activity.getString(R.string.no_server_found), activity)
-                                                        }
+                                                            }
+                                                            override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                                            }
+                                                        })
+                                                    } else {
+                                                        showToast(activity.getString(R.string.no_server_found), activity)
                                                     }
                                                 }
                                             }

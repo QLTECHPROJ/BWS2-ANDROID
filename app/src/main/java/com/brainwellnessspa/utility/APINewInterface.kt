@@ -243,7 +243,7 @@ interface APINewInterface {
 
     @POST("sessionprogressreport")
     @FormUrlEncoded
-    fun getSessionProgressReport(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?): Call<StepTypeTwoSaveDataModel>
+    fun getSessionProgressReport(@Field("StepId") StepId: String?, @Field("SessionId") SessionId: String?, @Field("FormType") FormType: String?): Call<StepTypeTwoSaveDataModel>
 
     @POST("beforeafterquestionlisting")
     @FormUrlEncoded
