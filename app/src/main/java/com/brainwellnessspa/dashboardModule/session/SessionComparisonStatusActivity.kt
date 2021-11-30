@@ -120,6 +120,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                                 i.putExtra("StepId", stepId)
                                 i.putExtra("Type", "before")
                                 startActivity(i)
+                                finish()
                             }
                         }
                     } catch (e: Exception) {
@@ -211,7 +212,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
         }
     }
 
-    class OptionsFirstListAdapter(private val listModel: List<BeforeAfterComparisionQuestionListModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionComparisonStatusBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<BeforeAfterComparisionQuestionListModel.ResponseData.Question>?, private val myPos: Int, private val myPos2: Int, private val ctx: Context, var binding: ActivitySessionComparisonStatusBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var scsa = SessionComparisonStatusActivity()
 
         inner class MyViewHolder(var bindingAdapter: SessionComparisonQusLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -243,15 +244,15 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                     for (i in 0 until scsa.assQus.size) {
                         if (scsa.assQus[i] == listModel[position].id) {
                             if (scsa.assAns[i].equals(listModel[position].questionOptions!![0], ignoreCase = true)){
-                                holder.bindingAdapter.cbYes1.isSelected = true
-                                holder.bindingAdapter.cbYes1.isChecked = true
-                                holder.bindingAdapter.cbNo1.isSelected = false
-                                holder.bindingAdapter.cbNo1.isChecked = false
+                                holder.bindingAdapter.rbYes.isSelected = true
+                                holder.bindingAdapter.rbYes.isChecked = true
+                                holder.bindingAdapter.rbNo.isSelected = false
+                                holder.bindingAdapter.rbNo.isChecked = false
                             } else if (scsa.assAns[i].equals(listModel[position].questionOptions!![1], ignoreCase = true)) {
-                                holder.bindingAdapter.cbYes1.isSelected = false
-                                holder.bindingAdapter.cbYes1.isChecked = false
-                                holder.bindingAdapter.cbNo1.isSelected = true
-                                holder.bindingAdapter.cbNo1.isChecked = true
+                                holder.bindingAdapter.rbYes.isSelected = false
+                                holder.bindingAdapter.rbYes.isChecked = false
+                                holder.bindingAdapter.rbNo.isSelected = true
+                                holder.bindingAdapter.rbNo.isChecked = true
                             }
                             break
                         }
@@ -260,10 +261,10 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             }
             holder.bindingAdapter.tvQus.text = listModel!![position].question
             holder.bindingAdapter.tvSubDec.text = listModel[position].stepShortDescription
-            holder.bindingAdapter.cbYes1.text = listModel[position].questionOptions!![0]
-            holder.bindingAdapter.cbNo1.text = listModel[position].questionOptions!![1]
+            holder.bindingAdapter.rbYes.text = listModel[position].questionOptions!![0]
+            holder.bindingAdapter.rbNo.text = listModel[position].questionOptions!![1]
 
-            holder.bindingAdapter.cbYes1.setOnClickListener {
+            holder.bindingAdapter.rbYes.setOnClickListener {
                 if (scsa.assQus.size != 0) {
                     if (scsa.assQus.contains(listModel[position].id)) {
                         for (i in 0 until scsa.assQus.size) {
@@ -282,14 +283,14 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 } else{
                     addRemoveData("1",0,position)
                 }
-                holder.bindingAdapter.cbYes1.isSelected = true
-                holder.bindingAdapter.cbYes1.isChecked = true
-                holder.bindingAdapter.cbNo1.isSelected = false
-                holder.bindingAdapter.cbNo1.isChecked = false
+                holder.bindingAdapter.rbYes.isSelected = true
+                holder.bindingAdapter.rbYes.isChecked = true
+                holder.bindingAdapter.rbNo.isSelected = false
+                holder.bindingAdapter.rbNo.isChecked = false
                 savedata()
             }
 
-            holder.bindingAdapter.cbNo1.setOnClickListener {
+            holder.bindingAdapter.rbNo.setOnClickListener {
                 if (scsa.assQus.size != 0) {
                     if (scsa.assQus.contains(listModel[position].id)) {
                         for (i in 0 until scsa.assQus.size) {
@@ -308,10 +309,10 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 } else{
                     addRemoveData("1",1,position)
                 }
-                holder.bindingAdapter.cbYes1.isSelected = false
-                holder.bindingAdapter.cbYes1.isChecked = false
-                holder.bindingAdapter.cbNo1.isSelected = true
-                holder.bindingAdapter.cbNo1.isChecked = true
+                holder.bindingAdapter.rbYes.isSelected = false
+                holder.bindingAdapter.rbYes.isChecked = false
+                holder.bindingAdapter.rbNo.isSelected = true
+                holder.bindingAdapter.rbNo.isChecked = true
                 savedata()
             }
         }
@@ -339,10 +340,11 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
                 scsa.assQus = scsa.gson.fromJson(json2, type1)
                 scsa.assAns = scsa.gson.fromJson(json3, type1)
             }
+            binding.lpIndicator.progress = myPos2
             visibleGoneNext()
         }
         private fun visibleGoneNext() {
-            if (scsa.assQus.size > mypos2) {
+            if (scsa.assQus.size > myPos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)

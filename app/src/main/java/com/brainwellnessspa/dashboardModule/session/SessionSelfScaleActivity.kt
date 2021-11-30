@@ -15,7 +15,6 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionActivitiesModel
 import com.brainwellnessspa.databinding.ActivitySessionSelfScaleBinding
 import com.brainwellnessspa.databinding.PreceptionsAssessmentLayoutBinding
-import com.brainwellnessspa.databinding.PreceptionsMainLayoutBinding
 
 class SessionSelfScaleActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionSelfScaleBinding

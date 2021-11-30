@@ -6,8 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".dashboardModule.session.SessionQuestionsActivity">
+        android:background="@color/white">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -113,18 +112,6 @@
                         android:textSize="@dimen/_18sdp"
                         tools:ignore="SpUsage" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvTitle"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_60sdp"
-                        android:nestedScrollingEnabled="true"
-                        android:overScrollMode="never"
-                        tools:listitem="@layout/preceptions_main_layout"
-                        tools:targetApi="lollipop" />
 
                 </RelativeLayout>
             </LinearLayout>

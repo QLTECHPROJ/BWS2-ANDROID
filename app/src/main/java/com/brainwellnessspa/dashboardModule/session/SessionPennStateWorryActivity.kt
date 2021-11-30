@@ -2,11 +2,11 @@ package com.brainwellnessspa.dashboardModule.session
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +16,7 @@ import com.brainwellnessspa.dashboardModule.models.SessionActivitiesModel
 import com.brainwellnessspa.databinding.ActivitySessionPerceptionsBinding
 import com.brainwellnessspa.databinding.PerceptionsMainLayoutBinding
 
-class SessionPerceptionsActivity : AppCompatActivity() {
+class SessionPennStateWorryActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionPerceptionsBinding
     lateinit var ctx: Context
     var userID: String? = ""
@@ -26,9 +26,9 @@ class SessionPerceptionsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_perceptions)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_penn_state_worry)
 
-        ctx = this@SessionPerceptionsActivity
+        ctx = this@SessionPennStateWorryActivity
         val searchList: RecyclerView.LayoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         binding.rvList.layoutManager = searchList
         binding.rvList.itemAnimator = DefaultItemAnimator()

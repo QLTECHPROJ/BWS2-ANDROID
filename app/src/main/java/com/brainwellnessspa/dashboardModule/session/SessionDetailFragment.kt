@@ -258,12 +258,12 @@ class SessionDetailFragment : Fragment() {
                     catName[position].userSessionStatus.equals("Completed") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         i.putExtra("SessionId", catName[position].sessionId)
-                        activity!!.startActivity(i)
+                        activity.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Inprogress") -> {
                         val i = Intent(activity, SessionDetailContinueActivity::class.java)
                         i.putExtra("SessionId", catName[position].sessionId)
-                        activity!!.startActivity(i)
+                        activity.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Lock") -> {
                         BWSApplication.showToast("Please complete above session first", activity)

@@ -261,6 +261,10 @@ interface APINewInterface {
     @FormUrlEncoded
     fun getCheckProgressReportStatus(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?): Call<CheckProgressReportStatusModel>
 
+    @POST("progressreportanswersave")
+    @FormUrlEncoded
+    fun getSaveProgressReport(@Field("UserId") userId: String?, @Field("SessionId") sessionId: String?, @Field("StepId") stepId: String?, @Field("Form_Type") form_Type: String?, @Field("question_answers") question_answers: String?): Call<SucessModel>
+
     @POST("resourcecatlist")
     @FormUrlEncoded
     fun getResourceCatList(@Field("UserId") UserId: String?): Call<ResourceFilterModel>

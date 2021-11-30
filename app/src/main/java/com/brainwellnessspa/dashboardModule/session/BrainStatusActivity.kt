@@ -84,14 +84,7 @@ class BrainStatusActivity : AppCompatActivity() {
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
-
-                                val i = Intent(activity, SessionPcDetailActivity::class.java)
-                                startActivity(i)
                                 finish()
-                                //                                BWSApplication.localIntent = Intent("Reminder")
-//                                BWSApplication.localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
-//                                BWSApplication.localIntent.putExtra("MyReminder", "update")
-//                                BWSApplication.localBroadcastManager.sendBroadcast(BWSApplication.localIntent)
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 BWSApplication.callDelete403(activity, listModel.responseMessage)

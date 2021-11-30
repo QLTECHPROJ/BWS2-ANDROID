@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionActivitiesModel
 import com.brainwellnessspa.databinding.ActivityAggressionQuestionsBinding
-import com.brainwellnessspa.databinding.PreceptionsMainLayoutBinding
+import com.brainwellnessspa.databinding.PerceptionsMainLayoutBinding
 
 class AggressionQuestionsActivity : AppCompatActivity() {
     lateinit var binding: ActivityAggressionQuestionsBinding
@@ -38,7 +38,7 @@ class AggressionQuestionsActivity : AppCompatActivity() {
     inner class AggressionQuestionsAdapter(private val modelList: Array<SessionActivitiesModel>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<AggressionQuestionsAdapter.MyViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val v: PreceptionsMainLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.preceptions_main_layout, parent, false)
+            val v: PerceptionsMainLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.perceptions_main_layout, parent, false)
             return MyViewHolder(v)
         }
 
@@ -57,7 +57,7 @@ class AggressionQuestionsActivity : AppCompatActivity() {
             return modelList.size
         }
 
-        inner class MyViewHolder(var binding: PreceptionsMainLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class MyViewHolder(var binding: PerceptionsMainLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
 }

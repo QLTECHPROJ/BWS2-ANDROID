@@ -123,7 +123,7 @@
                         android:layout_marginBottom="@dimen/_60sdp"
                         android:nestedScrollingEnabled="true"
                         android:overScrollMode="never"
-                        tools:listitem="@layout/preceptions_main_layout"
+                        tools:listitem="@layout/perceptions_main_layout"
                         tools:targetApi="lollipop" />
 
                 </RelativeLayout>

@@ -48,7 +48,7 @@
                 android:layout_below="@id/tvSubDec">
 
                 <RadioButton
-                    android:id="@+id/cbYes1"
+                    android:id="@+id/rbYes"
                     style="@android:style/Widget.CompoundButton.RadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     tools:ignore="RtlSymmetry,SpUsage" />
 
                 <RadioButton
-                    android:id="@+id/cbNo1"
+                    android:id="@+id/rbNo"
                     style="@android:style/Widget.CompoundButton.RadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

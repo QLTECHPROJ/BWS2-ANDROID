@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+    <LinearLayout
+        android:id="@+id/llMainFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sdp"
+            android:text="@string/have_you_received_electric_shock_treatment"
+            tools:ignore="SpUsage" />
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSubDec">
+
+            <RadioButton
+                android:id="@+id/rbYes"
+                style="@android:style/Widget.CompoundButton.RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:button="@drawable/radio_btn_session_background"
+                android:checked="true"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical|start"
+                android:paddingStart="@dimen/_12sdp"
+                android:text="@string/yes"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="RtlSymmetry,SpUsage" />
+
+            <RadioButton
+                android:id="@+id/rbNo"
+                style="@android:style/Widget.CompoundButton.RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:button="@drawable/radio_btn_session_background"
+                android:checked="false"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical|start"
+                android:paddingStart="@dimen/_12sdp"
+                android:text="@string/no"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                tools:ignore="RtlSymmetry,SpUsage" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:text="@string/if_so_when_was_the_last_treatment"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sdp"
+            tools:ignore="SpUsage" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_18sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@drawable/light_gray_rounded_unfilled">
+
+            <LinearLayout
+                android:id="@+id/llDatePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_48sdp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginVertical="@dimen/_24sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="dd-mm-yyyy"
+                    android:textColor="@color/dim_light_gray"
+                    android:textSize="@dimen/_14sdp"
+                    tools:ignore="SpUsage" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivDatePicker"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_toStartOf="@id/llDatePicker"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_date_icon"
+                android:visibility="visible" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvdesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:text="@string/we_also_need_to_know_the_age_illicit_substances_were_consumed_how_regular_the_use_was_or_is_e_g_daily_weekly_monthly_and_the_period_of_time_it_the_drug_was_taken_e_g_one_month_five_years_etc"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp"
+            tools:ignore="SpUsage" />
+
+        <EditText
+            android:id="@+id/edtCancelBoxAc"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_140sdp"
+            android:layout_marginHorizontal="@dimen/_18sdp"
+            android:layout_marginTop="@dimen/_22sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:background="@drawable/edittext_background"
+            android:cursorVisible="true"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="top"
+            android:hint="@string/your_answer"
+            android:inputType="textMultiLine|textVisiblePassword"
+            android:overScrollMode="always"
+            android:paddingLeft="@dimen/_8sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingRight="@dimen/_8sdp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:textColor="@color/gray"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_14sdp"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+    </LinearLayout>
+</LinearLayout>

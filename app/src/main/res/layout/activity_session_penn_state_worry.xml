@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".dashboardModule.session.SessionPerceptionsActivity">
+        tools:context=".dashboardModule.session.SessionPennStateWorryActivity">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -90,8 +90,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="SpUsage" />
-
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvList"
                     android:layout_width="match_parent"
@@ -103,22 +101,8 @@
                     tools:listitem="@layout/perceptions_main_layout"
                     android:visibility="visible"
                     tools:targetApi="lollipop" />
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvList2"
-                    android:layout_width="match_parent"
-                    android:layout_height=  "wrap_content"
-                    android:layout_marginBottom="@dimen/_60sdp"
-                    android:nestedScrollingEnabled="true"
-                    android:overScrollMode="never"
-                    tools:listitem="@layout/perceptions_sub_layout"
-                    android:visibility="gone"
-                    tools:targetApi="lollipop" />
-
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-
-
         <TextView
             android:id="@+id/tvFound"
             android:layout_width="match_parent"

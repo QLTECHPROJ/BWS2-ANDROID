@@ -12,5 +12,7 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_session_personal_history)
+
+		// mixed qus 2 textBox ,2 radio
 	}
 }
