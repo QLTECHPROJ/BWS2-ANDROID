@@ -261,7 +261,7 @@ class SessionDetailFragment : Fragment() {
                         activity.startActivity(i)
                     }
                     catName[position].userSessionStatus.equals("Inprogress") -> {
-                        val i = Intent(activity, SessionDetailContinueActivity::class.java)
+                        val i = Intent(activity, SimilarContinueActivity::class.java)
                         i.putExtra("SessionId", catName[position].sessionId)
                         activity.startActivity(i)
                     }

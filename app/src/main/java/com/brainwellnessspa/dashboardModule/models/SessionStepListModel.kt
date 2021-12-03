@@ -49,6 +49,14 @@ class SessionStepListModel {
         @Expose
         var sessionProgress: String? = null
 
+        @SerializedName("session_progress_color")
+        @Expose
+        var sessionProgressColor: String? = null
+
+        @SerializedName("session_progress_img")
+        @Expose
+        var sessionProgressImg: String? = null
+
         @SerializedName("session_progress_text")
         @Expose
         var sessionProgressText: String? = null

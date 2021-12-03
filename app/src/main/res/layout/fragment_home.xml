@@ -690,6 +690,7 @@
                             app:trackColor="#DDDDDD" />
 
                         <TextView
+                            android:id="@+id/tvIndexScoreDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="@dimen/_33sdp"

@@ -21,6 +21,9 @@ class HomeScreenModel {
     var responseStatus: String? = null
 
     class ResponseData {
+        @SerializedName("indexScoreDescription")
+        @Expose
+        var indexScoreDescription: String? = null
         @SerializedName("IndexScore")
         @Expose
         var indexScore: String? = null

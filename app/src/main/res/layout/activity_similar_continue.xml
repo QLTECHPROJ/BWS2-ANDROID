@@ -26,6 +26,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/ivIntroImg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/todo"
@@ -33,6 +34,7 @@
                     android:src="@drawable/session_bg_banner" />
 
                 <ImageView
+                    android:id="@+id/ivIntroImg1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/todo"

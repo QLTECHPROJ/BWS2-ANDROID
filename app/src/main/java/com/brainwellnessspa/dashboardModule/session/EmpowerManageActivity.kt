@@ -3,29 +3,42 @@ package com.brainwellnessspa.dashboardModule.session
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
+import com.brainwellnessspa.dashboardModule.models.EEPPlanListModel
+import com.brainwellnessspa.dashboardModule.models.SaveProgressReportModel
 import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
 import com.brainwellnessspa.databinding.ActivityEmpowerManageBinding
+import com.brainwellnessspa.utility.APINewClient
+import com.brainwellnessspa.utility.CONSTANTS
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener  {
     lateinit var binding: ActivityEmpowerManageBinding
-    lateinit var activity: Activity
+    lateinit var act: Activity
     lateinit var ctx: Context
+    var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_empower_manage)
-        activity = this@EmpowerManageActivity
+        act = this@EmpowerManageActivity
         ctx = this@EmpowerManageActivity
+        val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+        userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
 
+        prepareData()
         binding.youtubeView.initialize(API_KEY, this)
         binding.llBack.setOnClickListener{
           finish()
@@ -35,6 +48,39 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         }
     }
 
+    override fun onResume() {
+        prepareData()
+        super.onResume()
+    }
+    fun prepareData() {
+        if (BWSApplication.isNetworkConnected(act)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall = APINewClient.client.getEEPPlanList(userId)
+            listCall.enqueue(object : Callback<EEPPlanListModel?> {
+                override fun onResponse(call: Call<EEPPlanListModel?>, response: Response<EEPPlanListModel?>) {
+                    try {
+                        val listModel1 = response.body()
+                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+
+                            // do plan Code
+                        } else if (listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                            BWSApplication.callDelete403(act, listModel1.responseMessage)
+                        } else {
+                            BWSApplication.showToast(listModel1.responseMessage, act)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<EEPPlanListModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                }
+            })
+        } else {
+            BWSApplication.showToast(act.getString(R.string.no_server_found), act)
+        }
+    }
     override fun onBackPressed() {
         finish()
         super.onBackPressed()

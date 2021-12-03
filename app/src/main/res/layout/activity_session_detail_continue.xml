@@ -76,7 +76,7 @@
                     android:backgroundTint="#65C993"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:weightSum="10"
                     tools:targetApi="lollipop">
 
@@ -90,6 +90,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvSessionProgress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
@@ -101,6 +102,7 @@
                             tools:ignore="SpUsage" />
 
                         <TextView
+                            android:id="@+id/tvSessionProgressText"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:fontFamily="@font/montserrat_regular"
@@ -121,6 +123,7 @@
                         android:orientation="vertical">
                         <!-- graph-->
                         <ImageView
+                            android:id="@+id/ivSessionImg"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_90sdp"
                             android:layout_marginVertical="@dimen/_10sdp"

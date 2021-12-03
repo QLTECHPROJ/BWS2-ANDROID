@@ -715,6 +715,7 @@ class HomeFragment : Fragment() {
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
+                                    binding.tvIndexScoreDescription.text = response.indexScoreDescription
                                     try {
                                         binding.llIndicate.progress = response.indexScore!!.toInt()
                                     } catch (e: Exception) {
@@ -923,6 +924,7 @@ class HomeFragment : Fragment() {
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
+                                    binding.tvIndexScoreDescription.text = response.indexScoreDescription
                                     binding.llIndicate.progress = response.indexScore!!.toInt()
 
                                     binding.tvPlaylistName.text = response.suggestedPlaylist?.playlistName

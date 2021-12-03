@@ -267,7 +267,10 @@ interface APINewInterface {
 
     @POST("eepplanlist")
     @FormUrlEncoded
-    fun getEEPPlanList(@Field("UserId") userId: String?): Call<SucessModel>
+    fun getEEPPlanList(@Field("UserId") userId: String?): Call<EEPPlanListModel>
+
+    @get:GET("introsessioncontent")
+    val introSessionContent: Call<IntroSessionModel>
 
     @POST("resourcecatlist")
     @FormUrlEncoded

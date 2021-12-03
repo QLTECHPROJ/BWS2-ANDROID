@@ -3,6 +3,8 @@ package com.brainwellnessspa.dashboardModule.session
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,9 +33,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class SessionDetailContinueActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionDetailContinueBinding
     lateinit var act: Activity
+    lateinit var ctx: Context
     lateinit var adapter: SessionDetailAdapter
     var userId: String = ""
     var sessionId: String? = ""
@@ -42,6 +46,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_detail_continue)
         act = this@SessionDetailContinueActivity
+        ctx = this@SessionDetailContinueActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
 
@@ -75,25 +80,20 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                 binding.tvTitle.text = response.sessionTitle
                                 binding.tvScreenTitle.text = response.sessionTitle
                                 binding.tvshortDesc.text = response.sessionShortDesc
+                                binding.tvSessionProgress.text = response.sessionProgress
+                                binding.tvSessionProgressText.text = response.sessionProgressText
                                 binding.tvDesc.text = response.sessionDesc
                                 binding.llBack.visibility = View.VISIBLE
                                 binding.ivDone.visibility = View.VISIBLE
                                 binding.btnContinue.visibility = View.GONE
                                 Glide.with(act).load(response.sessionImg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner)
-
-                                when {
-                                    response.sessionProgress.equals("Great") -> {
-                                        binding.llGreatProgress.visibility = View.VISIBLE
-                                        binding.llSlowProgress.visibility = View.GONE
-                                    }
-                                    response.sessionProgress.equals("Slow") -> {
-                                        binding.llGreatProgress.visibility = View.GONE
-                                        binding.llSlowProgress.visibility = View.VISIBLE
-                                    }
-                                    else -> {
-                                        binding.llGreatProgress.visibility = View.GONE
-                                        binding.llSlowProgress.visibility = View.GONE
-                                    }
+                                Glide.with(act).load(response.sessionProgressImg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivSessionImg)
+                                binding.llSlowProgress.visibility = View.GONE
+                                binding.llGreatProgress.visibility = View.VISIBLE
+                                binding.llGreatProgress.background.setColorFilter(Color.parseColor(response.sessionProgressColor), PorterDuff.Mode.SRC_ATOP)
+                                if (response.sessionProgress.equals("")) {
+                                    binding.llGreatProgress.visibility = View.GONE
+                                    binding.llSlowProgress.visibility = View.GONE
                                 }
                                 adapter = SessionDetailAdapter(binding, response.data, act, userId, sessionId)
                                 binding.rvList.adapter = adapter

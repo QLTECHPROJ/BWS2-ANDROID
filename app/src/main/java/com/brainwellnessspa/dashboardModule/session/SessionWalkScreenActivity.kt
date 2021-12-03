@@ -75,8 +75,9 @@ class SessionWalkScreenActivity : AppCompatActivity() {
                 finish()
             }
         }
-        val linecount: Int = binding.tvSessionDesc.lineCount
-        if (linecount >= 4) {
+        val lineCount: Int = binding.tvSessionDesc.lineCount
+//        val charCount: Int = binding.tvSessionDesc.latt
+        if (lineCount >= 4) {
             binding.tvReadMore.visibility = View.VISIBLE
         } else {
             binding.tvReadMore.visibility = View.GONE
