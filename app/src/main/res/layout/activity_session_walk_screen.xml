@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/session_bg"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,6 +25,7 @@
                 android:paddingHorizontal="@dimen/_20sdp">
 
                 <TextView
+                    android:id="@+id/tvSection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
@@ -35,13 +36,14 @@
                     tools:ignore="SpUsage" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/sessionImg"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
                     android:layout_marginTop="@dimen/_40sdp"
-                    android:contentDescription="@string/todo"
-                    android:src="@drawable/ic_session_sec_one_icon" />
+                    android:contentDescription="@string/todo" />
 
                 <TextView
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
@@ -54,17 +56,34 @@
                     tools:ignore="SpUsage" />
 
                 <TextView
+                    android:id="@+id/tvSessionDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/session_one_quotes"
+                    android:text="zvs"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    android:maxLines="2"
+                    android:maxLength="280"
+                    android:ellipsize="end"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvReadMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="right"
+                    android:layout_gravity="right"
+                    android:lineSpacingExtra="@dimen/_4sdp"
+                    android:text="Read More"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_14sdp"
                     tools:ignore="SpUsage" />
-
 
             </LinearLayout>
 

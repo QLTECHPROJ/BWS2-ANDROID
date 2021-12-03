@@ -8,7 +8,7 @@ class StepTypeTwoSaveDataModel {
 
     @SerializedName("ResponseData")
     @Expose
-    var responseData: com.brainwellnessspa.dashboardModule.models.ResponseData? = null
+    var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose
@@ -35,9 +35,21 @@ class StepTypeTwoSaveDataModel {
         @Expose
         var sectionSubtitle: String? = null
 
+        @SerializedName("current_section")
+        @Expose
+        var currentSection: String? = null
+
         @SerializedName("section_description")
         @Expose
         var sectionDescription: String? = null
+
+        @SerializedName("total_section")
+        @Expose
+        var totalSection: String? = null
+
+        @SerializedName("formType")
+        @Expose
+        var formType: String? = null
 
         @SerializedName("question_title")
         @Expose
@@ -64,6 +76,11 @@ class StepTypeTwoSaveDataModel {
         var questions: List<Question>? = null
 
         class Question {
+
+            @SerializedName("question_id")
+            @Expose
+            var questionId: String? = null
+
             @SerializedName("question")
             @Expose
             var question: String? = null

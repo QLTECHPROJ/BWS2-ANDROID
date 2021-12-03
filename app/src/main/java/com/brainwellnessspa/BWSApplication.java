@@ -113,7 +113,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.downloader.PRDownloader;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -236,7 +236,7 @@ public class BWSApplication extends Application {
     public static int isSetLoginPin = 0;
     public static LocalBroadcastManager localBroadcastManager;
     public static Intent localIntent;
-    public static CleverTapAPI clevertapDefaultInstance;
+//    public static CleverTapAPI clevertapDefaultInstance;
     public static String countryShortName = "", countryCode = "", countryFullName = "";
 
     public static Context getContext() {
@@ -344,12 +344,12 @@ public class BWSApplication extends Application {
         i.putExtra("countryShortName", "");
         act.startActivity(i);
         act.finish();
-        HashMap<String, Object> profileUpdate = new HashMap<>();
+       /* HashMap<String, Object> profileUpdate = new HashMap<>();
         profileUpdate.put("MSG-push", true);
         profileUpdate.put("MSG-email", true);
         profileUpdate.put("MSG-sms", true);
         profileUpdate.put("MSG-whatsapp", true);
-        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
+        clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);*/
     }
 
     private static void GetPlaylistDetail(Activity act, Context ctx, String PlaylistID, LinearLayout llDownload, ImageView ivDownloads, int songSize) {
@@ -2599,7 +2599,7 @@ public class BWSApplication extends Application {
 
         if (isAdmin.equalsIgnoreCase("1")) isadm = true;
         else isadm = false;
-        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+        /*HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
         profileUpdate.put("Identity", userId);
         profileUpdate.put("Name", name);
         profileUpdate.put("Phone", "+" + countryCode + mobile);
@@ -2631,7 +2631,7 @@ public class BWSApplication extends Application {
         profileUpdate.put("Mobile", mobile);
         CleverTapAPI cleverTapDefaultInstance = CleverTapAPI.getDefaultInstance(ctx);
         cleverTapDefaultInstance.onUserLogin(profileUpdate);
-        cleverTapDefaultInstance.pushProfile(profileUpdate);
+        cleverTapDefaultInstance.pushProfile(profileUpdate);*/
 
         analytics.identify(new Traits().putValue("userGroupId", mainAccountId).putValue("userId", userId).putValue("mobileNo", mobile).putValue("countryCode", countryCode).putValue("id", userId).putValue("isAdmin", isadm).putValue("deviceId", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID)).putValue("deviceType", "Android").putName(name).putEmail(email).putPhone("+" + countryCode + mobile).putValue("DOB", dob).putValue("profileImage", image).putValue("isProfileCompleted", isProf).putValue("isAssessmentCompleted", isAss).putValue("wellnessScore", indexScore).putValue("scoreLevel", scoreLevel).putValue("areaOfFocus", areaOfFocus).putValue("avgSleepTime", sleepTime).putValue("plan", planId).putValue("planStatus", planStatus).putValue("planStartDt", planPurchaseDate).putValue("planExpiryDt", planExpDate));
     }
@@ -2912,7 +2912,7 @@ public class BWSApplication extends Application {
         super.onCreate();
         mContext = this;
         BWSApplication = this;
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        /*clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         HashMap<String, Object> profileUpdate = new HashMap<>();
         profileUpdate.put("MSG-push", true);
         profileUpdate.put("MSG-email", true);
@@ -2921,7 +2921,7 @@ public class BWSApplication extends Application {
         clevertapDefaultInstance.pushEvent("CleverTap SDK Integrated", profileUpdate);
         FirebaseAnalytics mFirebaseAnalytics;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mFirebaseAnalytics.setUserProperty("ct_objectId", Objects.requireNonNull(CleverTapAPI.getDefaultInstance(this)).getCleverTapID());
+        mFirebaseAnalytics.setUserProperty("ct_objectId", Objects.requireNonNull(CleverTapAPI.getDefaultInstance(this)).getCleverTapID());*/
         callFCMRegMethod(getContext());
 
     }

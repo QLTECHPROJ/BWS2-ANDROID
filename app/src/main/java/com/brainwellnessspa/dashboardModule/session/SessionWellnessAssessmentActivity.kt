@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -17,13 +17,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
-import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
+import com.brainwellnessspa.dashboardModule.models.*
+import com.brainwellnessspa.databinding.ActivitySessionWellnessAssessmentBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
-import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -35,22 +33,26 @@ import retrofit2.Response
 
 /* This act is assessment form act */
 class  SessionWellnessAssessmentActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDassAssSliderBinding
+    private lateinit var binding: ActivitySessionWellnessAssessmentBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
     lateinit var secondListAdapter: OptionsSecondListAdapter
     lateinit var ctx: Context
     var navigation: String = ""
-    var assQus = arrayListOf<String>()
-    var assAns = arrayListOf<String>()
-    var assSort = arrayListOf<String>()
-    lateinit var listModel1: AssessmentQusModel
+    var progressReportQus = arrayListOf<String>()
+    var progressReportAns = arrayListOf<String>()
     lateinit var act: Activity
     var myPos: Int = 0
     private var doubleBackToExitPressedOnce = false
     var mainAccountID: String? = ""
     var userId: String? = ""
     var email: String? = ""
+    var listModel = StepTypeTwoSaveDataModel.ResponseData()
+    var sessionId: String? = ""
+    var stepId:String? = ""
+    var nextForm:String? = ""
     var gson: Gson = Gson()
+    var mod = 0
+    val sendAnsArray = arrayListOf<sendQusData>()
     lateinit var editor: SharedPreferences.Editor
 
     /* This is the first lunched function */
@@ -58,7 +60,7 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         /* This is the layout showing */
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_wellness_assessment)
 
         /* This is the get string mainAccountID, UserId & email */
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
@@ -71,38 +73,70 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
         if (intent.extras != null) {
-            navigation = intent.getStringExtra("Navigation").toString()
+            nextForm = intent.getStringExtra("nextForm").toString()
+            sessionId = intent.getStringExtra("SessionId").toString()
+            stepId = intent.getStringExtra("StepId").toString()
+            val json = intent.getStringExtra("Data").toString()
+            val type1 = object : TypeToken<StepTypeTwoSaveDataModel.ResponseData>() {}.type
+            listModel = gson.fromJson(json, type1)
         }
+        mod = listModel.questions!!.size % 2
 
         /* This is the next button click */
         binding.btnNext.setOnClickListener {
             getAssSaveData()
-            if (myPos < listModel1.responseData!!.questions!!.size - 1) {
-                myPos += 2 //                binding.tvNumberOfQus.text = myPos.toString()
+            if (myPos < listModel.questions!!.size - 1) {
+                myPos += Integer.parseInt(listModel.chunkSize!!)
+
+                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
-                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+              /*  if (myPos == listModel.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnContinue.visibility = View.VISIBLE
                 } else {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnContinue.visibility = View.GONE
-                }
-                val p = Properties()
-                p.putValue("screen", myPos)
-                addInSegment(p)
-                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
+                }*/ /*6 000 akta
+                5 000 pote rakhya
+                15 masi ne aapya */
+                var s = myPos + Integer.parseInt(listModel.chunkSize!!)
+                if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
+                    binding.btnNext.visibility = View.GONE
+                    binding.btnContinue.visibility = View.VISIBLE
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
                     binding.rvFirstList.adapter = firstListAdapter
+                } else if (s > listModel.questions!!.size) {
+                    binding.btnNext.visibility = View.GONE
+                    binding.btnContinue.visibility = View.VISIBLE
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+                    binding.rvFirstList.adapter = firstListAdapter
+                }else if(myPos < listModel.questions!!.size) {
+                    binding.btnNext.visibility = View.VISIBLE
+                    binding.btnContinue.visibility = View.GONE
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
+                    binding.rvFirstList.adapter = firstListAdapter
+                }
+                /*if (mod == 0) {
+                    if (myPos < listModel.questions!!.size) {
+                        firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + 2, ctx, binding, act, listModel)
+                        binding.rvFirstList.adapter = firstListAdapter
+                    }
                 } else {
-                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
-                    binding.rvFirstList.adapter = firstListAdapter
-                }
+                    if (myPos == listModel.questions!!.size - 1) {
+                        firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act, listModel)
+                        binding.rvFirstList.adapter = firstListAdapter
+                    } else {
+                        firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + 2, ctx, binding, act, listModel)
+                        binding.rvFirstList.adapter = firstListAdapter
+                    }
+                }*/
             }
-            if (myPos > 2) {
+            if (myPos > Integer.parseInt(listModel.chunkSize!!)) {
                 binding.btnPrev.visibility = View.VISIBLE
             } else {
                 binding.btnPrev.visibility = View.GONE
             }
+            Log.e("Ass Post Data", gson.toJson(progressReportAns))
         }
 
         /* This is the previous button click */
@@ -112,11 +146,118 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
 
         /* This is the continue button click when form is complete */
         binding.btnContinue.setOnClickListener {
-            binding.lpIndicator.progress = listModel1.responseData!!.questions!!.size
-            sendAssessmentData()
-            Log.e("Ass Post Data", gson.toJson(assAns))
+            binding.lpIndicator.progress = listModel.questions!!.size
+
+            binding.tvNumberOfQus.text = listModel.questions!!.size.toString()
+            for (i in 0 until progressReportQus.size) {
+                val sendR = sendQusData()
+                sendR.question_id = (progressReportQus[i])
+                sendR.answer = (progressReportAns[i])
+                sendAnsArray.add(sendR)
+            }
+             callSaveProgressReport(gson.toJson(sendAnsArray) )
+            Log.e("Ass Post Data", gson.toJson(sendAnsArray))
         }
         prepareData()
+    }
+    private fun callSaveProgressReport(answerJson:String ) {
+        if (BWSApplication.isNetworkConnected(act)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall = APINewClient.client.getSaveProgressReport(userId, sessionId, stepId,nextForm,answerJson)
+            listCall.enqueue(object : Callback<SaveProgressReportModel?> {
+                override fun onResponse(call: Call<SaveProgressReportModel?>, response: Response<SaveProgressReportModel?>) {
+                    try {
+                        val listModel1 = response.body()
+                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            Log.e("sussess","true")
+                            val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.ProgressReportMain, Context.MODE_PRIVATE)
+                            val edited1 = preferencesd1.edit()
+                            edited1.remove(CONSTANTS.ProgressReportQus)
+                            edited1.remove(CONSTANTS.ProgressReportAns)
+                            edited1.clear()
+                            edited1.apply()
+                            callCheckProgressReport()
+                        } else if(listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                            BWSApplication.callDelete403(act, listModel1.responseMessage)
+                        } else{
+                            BWSApplication.showToast(listModel1.responseMessage, act)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                override fun onFailure(call: Call<SaveProgressReportModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                }
+            })
+        } else {
+            BWSApplication.showToast(act.getString(R.string.no_server_found), act)
+        }
+    }
+    fun callCheckProgressReport() {
+        if (BWSApplication.isNetworkConnected(act)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
+            val listCall = APINewClient.client.getCheckProgressReportStatus(userId, sessionId, stepId)
+            listCall.enqueue(object : Callback<CheckProgressReportStatusModel?> {
+                override fun onResponse(call: Call<CheckProgressReportStatusModel?>, response: Response<CheckProgressReportStatusModel?>) {
+//                    try {
+                        Log.e("sussess chk","true")
+                        val listModel1 = response.body()
+                        val response = listModel1?.responseData
+                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            if (response != null) {
+                                val listCall = APINewClient.client.getSessionProgressReport(sessionId, stepId,response.nextForm)
+                                listCall.enqueue(object : Callback<StepTypeTwoSaveDataModel?> {
+                                    override fun onResponse(call: Call<StepTypeTwoSaveDataModel?>, response2: Response<StepTypeTwoSaveDataModel?>) {
+                                        try {
+                                            val listModel2 = response2.body()
+                                            val response1 = listModel2?.responseData
+                                            Log.e("sussess chk x x","true")
+
+                                            if (listModel2?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                                if (response1 != null) {
+                                                    val gson = Gson()
+                                                    val i = Intent(act, SessionWalkScreenActivity::class.java)
+                                                    i.putExtra("Data",gson.toJson(response1))
+                                                    i.putExtra("nextForm",response.nextForm)
+                                                    i.putExtra("SessionId",sessionId)
+                                                    i.putExtra("StepId", stepId)
+                                                    act.startActivity(i)
+                                                    act.finish()
+                                                }
+                                            }else if(listModel2!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                                                BWSApplication.callDelete403(act, listModel2.responseMessage)
+                                            } else{
+                                                BWSApplication.showToast(listModel2.responseMessage, act)
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<StepTypeTwoSaveDataModel?>, t: Throwable) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                    }
+                                })
+                            }
+                        }else if(listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                            BWSApplication.callDelete403(act, listModel1.responseMessage)
+                        } else{
+                            BWSApplication.showToast(listModel1.responseMessage, act)
+                        }
+                   /*} catch (e: Exception) {
+                        e.printStackTrace()
+                    }*/
+                }
+
+                override fun onFailure(call: Call<CheckProgressReportStatusModel?>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                }
+            })
+        } else {
+            BWSApplication.showToast(act.getString(R.string.no_server_found), act)
+        }
     }
 
     private fun addInSegment(p: Properties) {
@@ -131,122 +272,117 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
     /* This is the back click event function */
     private fun callBack() {
         if (myPos > 1) {
-            myPos -= 2
+            myPos -= Integer.parseInt(listModel.chunkSize!!)
             val p = Properties()
             p.putValue("screen", myPos)
             addInSegment(p)
-            binding.lpIndicator.progress = myPos //            binding.tvNumberOfQus.text = myPos.toString()
-            if (myPos == listModel1.responseData!!.questions!!.size - 1) {
+            binding.lpIndicator.progress = myPos
+            binding.tvNumberOfQus.text = myPos.toString()
+            var s = myPos + Integer.parseInt(listModel.chunkSize!!)
+            if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
                 binding.btnNext.visibility = View.GONE
                 binding.btnContinue.visibility = View.VISIBLE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
+                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
                 binding.rvFirstList.adapter = firstListAdapter
-            } else {
+            } else if (s > listModel.questions!!.size) {
+                binding.btnNext.visibility = View.GONE
+                binding.btnContinue.visibility = View.VISIBLE
+                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+                binding.rvFirstList.adapter = firstListAdapter
+            }else if(myPos < listModel.questions!!.size) {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
-                firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
+                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
                 binding.rvFirstList.adapter = firstListAdapter
             }
+            /*if (mod == 0) {
+                if (myPos < listModel.questions!!.size) {
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + 2, ctx, binding, act, listModel)
+                    binding.rvFirstList.adapter = firstListAdapter
+                }
+            } else {
+                if (myPos == listModel.questions!!.size - 1) {
+                    binding.btnNext.visibility = View.GONE
+                    binding.btnContinue.visibility = View.VISIBLE
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act, listModel)
+                    binding.rvFirstList.adapter = firstListAdapter
+                } else {
+                    binding.btnNext.visibility = View.VISIBLE
+                    binding.btnContinue.visibility = View.GONE
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + 2, ctx, binding, act, listModel)
+                    binding.rvFirstList.adapter = firstListAdapter
+                }
+            }*/
         } else {
-            if (doubleBackToExitPressedOnce) {
-                finishAffinity()
-                return
-            }
-            this.doubleBackToExitPressedOnce = true
-            BWSApplication.showToast("Press again to exit", act)
-
-            Handler(Looper.myLooper()!!).postDelayed({
-                doubleBackToExitPressedOnce = false
-            }, 2000)
+            finish()
         }
     }
 
     /* This function is save assessment result */
     private fun getAssSaveData() {
-        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-        val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
-        val json3 = shared.getString(CONSTANTS.AssAns, gson.toString())
-        val json4 = shared.getString(CONSTANTS.AssSort, gson.toString())
+        val shared = ctx.getSharedPreferences(CONSTANTS.ProgressReportMain, Context.MODE_PRIVATE)
+        val json2 = shared.getString(CONSTANTS.ProgressReportQus, gson.toString())
+        val json3 = shared.getString(CONSTANTS.ProgressReportAns, gson.toString())
         if (!json2.equals(gson.toString(), ignoreCase = true)) {
             val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-            assQus = gson.fromJson(json2, type1)
-            assAns = gson.fromJson(json3, type1)
-            assSort = gson.fromJson(json4, type1)
+            progressReportQus = gson.fromJson(json2, type1)
+            progressReportAns = gson.fromJson(json3, type1)
         }
     }
 
     /* This function is get assessment questions */
     private fun prepareData() {
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall: Call<AssessmentQusModel> = APINewClient.client.assessmentQus
-            listCall.enqueue(object : Callback<AssessmentQusModel> {
-                override fun onResponse(call: Call<AssessmentQusModel>, response: Response<AssessmentQusModel>) {
-                    try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listModel: AssessmentQusModel = response.body()!!
-                        listModel1 = response.body()!!
-                        when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
-                                var condition: String? = ""
-                                for (i in 0 until listModel.responseData!!.content?.size!!) {
-                                    condition += listModel.responseData!!.content!![i].condition + "\n"
-                                }
-                                binding.tvQus.text = listModel.responseData!!.toptitle
-                                binding.tvText1.text = listModel.responseData!!.subtitle
-                                binding.tvText.text = condition
-                                binding.lpIndicator.max = listModel.responseData!!.questions!!.size
-                                binding.lpIndicator.progress = 0 //                            binding.tvNumberOfQus.text = myPos.toString()
-                                //                            binding.tvTotalQus.text = listModel.responseData!!.questions!!.size.toString
-                                if (assQus.size != 0) {
-                                    val mod = assQus.size % 2
-                                    myPos = if (mod == 0) {
-                                        assQus.size
-                                    } else {
-                                        assQus.size - 1
-                                    }
-                                    binding.lpIndicator.progress = myPos
-                                    Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + assQus.size.toString())
-                                }
-                                val p = Properties()
-                                p.putValue("screen", myPos)
-                                addInSegment(p)
-                                if (myPos == listModel1.responseData!!.questions!!.size - 1) {
-                                    binding.btnNext.visibility = View.GONE
-                                    binding.btnContinue.visibility = View.VISIBLE
-                                    firstListAdapter = OptionsFirstListAdapter(listModel1.responseData!!.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act)
-                                    binding.rvFirstList.adapter = firstListAdapter
-                                } else if (myPos < listModel.responseData!!.questions!!.size) { //                                if(myPos ==)
-                                    firstListAdapter = OptionsFirstListAdapter(listModel.responseData!!.questions!!.subList(myPos, myPos + 2), myPos, myPos + 2, ctx, binding, act)
-                                    binding.rvFirstList.adapter = firstListAdapter
-                                }
-                                BWSApplication.showToast(listModel.responseMessage, act)
-                            }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                BWSApplication.callDelete403(act, listModel.responseMessage)
-                            }
-                            else -> {
-                                BWSApplication.showToast(listModel.responseMessage, act)
-                            }
-                        }
+        binding.tvQus.text = listModel.questionTitle
+        binding.tvText1.text = listModel.questionDescription
+        binding.lpIndicator.max = listModel.questions!!.size
+        binding.lpIndicator.progress = 0
 
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<AssessmentQusModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                }
-            })
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this)
+        binding.tvTitle.text = listModel.sectionSubtitle
+        binding.tvNumberOfQus.text = myPos.toString()
+        binding.tvTotalQus.text = listModel.questions!!.size.toString()
+        /*if (progressReportQus.size != 0) {
+            val mod1 = progressReportQus.size % 2
+            myPos = if (mod1 == 0) {
+                progressReportQus.size
+            } else {
+                progressReportQus.size - 1
+            }
+            binding.lpIndicator.progress = myPos
+            Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + progressReportQus.size.toString())
+        }*/
+//        if(mod == 0){
+        var s = myPos + Integer.parseInt(listModel.chunkSize!!)
+        if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
+            binding.btnNext.visibility = View.GONE
+            binding.btnContinue.visibility = View.VISIBLE
+            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+            binding.rvFirstList.adapter = firstListAdapter
+        } else if (s > listModel.questions!!.size) {
+            binding.btnNext.visibility = View.GONE
+            binding.btnContinue.visibility = View.VISIBLE
+            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+            binding.rvFirstList.adapter = firstListAdapter
+        }else if(myPos < listModel.questions!!.size) {
+            binding.btnNext.visibility = View.VISIBLE
+            binding.btnContinue.visibility = View.GONE
+            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
+            binding.rvFirstList.adapter = firstListAdapter
         }
-
+//        }else {
+//            if (myPos == listModel.questions!!.size - 1) {
+//                binding.btnNext.visibility = View.GONE
+//                binding.btnContinue.visibility = View.VISIBLE
+//                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + 1), myPos, myPos + 1, ctx, binding, act, listModel)
+//                binding.rvFirstList.adapter = firstListAdapter
+//            } else if (myPos < listModel.questions!!.size) {
+//                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + 2, ctx, binding, act, listModel)
+//                binding.rvFirstList.adapter = firstListAdapter
+//            }
+//        }
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<StepTypeTwoSaveDataModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionWellnessAssessmentBinding, val act: Activity,val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = SessionWellnessAssessmentActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -266,12 +402,23 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             }
             if (listModel != null) {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
-                holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
-                if (position == 0) {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act)
-                } else {
-                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, act)
+                if(listModelMain.optionType.equals("tenoptions")) {
+                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
+                    holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
+                }else if(listModelMain.optionType.equals("fiveoptions")){
+                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,listModel[position].questionOptions!!.size)
+//                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,1,  GridLayoutManager.HORIZONTAL,false)
+//                    holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+                    holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.light_white))
+                }else if(listModelMain.optionType.equals("twooptions")){
+                    holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+                    holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }
+//                if (position == 0) {
+                dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act,listModelMain)
+//                } else {
+//                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, act, listModelMain)
+//                }
                 holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
             }
         }
@@ -282,7 +429,7 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
     }
 
     /* This is the second options box input layout */
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: StepTypeTwoSaveDataModel.ResponseData.Question, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivitySessionWellnessAssessmentBinding, val act: Activity, val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
@@ -291,51 +438,51 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
                 bindingAdapter.cbChecked.setOnClickListener {
-                    setData()
-                    mSelectedItem = absoluteAdapterPosition
-                    if (posItem != -1) notifyItemChanged(posItem)
-                    notifyItemChanged(mSelectedItem)
-                    posItem = mSelectedItem
-                    if (dass.assQus.size == 0) {
-                        dass.assQus.add(listModel.question.toString())
-                        dass.assAns.add(0, absoluteAdapterPosition.toString())
-                        dass.assSort.add(0, pos.toString())
-
-                    } else {
-                        if (dass.assQus.contains(listModel.question)) {
-                            for (i in 0 until dass.assQus.size) {
-                                if (dass.assQus[i] == listModel.question) {
-                                    dass.assAns.removeAt(i)
-                                    dass.assSort.removeAt(i)
-                                    dass.assAns.add(i, absoluteAdapterPosition.toString())
-                                    dass.assSort.add(i, pos.toString())
-                                }
-                            }
-                        } else {
-                            if (pos > dass.assQus.size) {
-                                dass.assQus.add(pos - 1, listModel.question.toString())
-                                dass.assAns.add(pos - 1, absoluteAdapterPosition.toString())
-                                dass.assSort.add(pos - 1, pos.toString())
-                            } else {
-                                dass.assQus.add(pos, listModel.question.toString())
-                                dass.assAns.add(pos, absoluteAdapterPosition.toString())
-                                dass.assSort.add(pos, pos.toString())
-                            }
-                        }
-                    }
-
-                    Log.e("Qus", dass.assQus.toString())
-                    Log.e("Ans", dass.assAns.toString())
-                    Log.e("Sort Pos", dass.assSort.toString())
-                    visibleGoneNext()
-                    dass.editor = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE).edit()
-                    dass.editor.putString(CONSTANTS.AssQus, dass.gson.toJson(dass.assQus)) //Friend
-                    dass.editor.putString(CONSTANTS.AssAns, dass.gson.toJson(dass.assAns)) //Friend
-                    dass.editor.putString(CONSTANTS.AssSort, dass.gson.toJson(dass.assSort)) //Friend
-                    dass.editor.apply()
-                    dass.editor.commit()
+                    callCheckedBox(absoluteAdapterPosition)
+                }
+                bindingAdapter.rbOne.setOnClickListener {
+                    callCheckedBox(absoluteAdapterPosition)
                 }
             }
+        }
+
+        private fun callCheckedBox(absoluteAdapterPosition: Int) {
+            setData()
+            mSelectedItem = absoluteAdapterPosition
+            if (posItem != -1) notifyItemChanged(posItem)
+            notifyItemChanged(mSelectedItem)
+            posItem = mSelectedItem
+            if (dass.progressReportQus.size == 0) {
+                dass.progressReportQus.add(listModel.questionId.toString())
+                dass.progressReportAns.add(0, absoluteAdapterPosition.toString())
+
+            } else {
+                if (dass.progressReportQus.contains(listModel.questionId)) {
+                    for (i in 0 until dass.progressReportQus.size) {
+                        if (dass.progressReportQus[i] == listModel.questionId) {
+                            dass.progressReportAns.removeAt(i)
+                            dass.progressReportAns.add(i, absoluteAdapterPosition.toString())
+                        }
+                    }
+                } else {
+                    if (pos > dass.progressReportQus.size) {
+                        dass.progressReportQus.add(pos - 1, listModel.questionId.toString())
+                        dass.progressReportAns.add(pos - 1, absoluteAdapterPosition.toString())
+                    } else {
+                        dass.progressReportQus.add(pos, listModel.questionId.toString())
+                        dass.progressReportAns.add(pos, absoluteAdapterPosition.toString())
+                    }
+                }
+            }
+
+            Log.e("Qus", dass.progressReportQus.toString())
+            Log.e("Ans", dass.progressReportAns.toString())
+            visibleGoneNext()
+            dass.editor = ctx.getSharedPreferences(CONSTANTS.ProgressReportMain, Context.MODE_PRIVATE).edit()
+            dass.editor.putString(CONSTANTS.ProgressReportQus, dass.gson.toJson(dass.progressReportQus))
+            dass.editor.putString(CONSTANTS.ProgressReportAns, dass.gson.toJson(dass.progressReportAns))
+            dass.editor.apply()
+            dass.editor.commit()
         }
 
         /* This is the second options box input layout create */
@@ -347,10 +494,26 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         /* This is the second options set box input layout */
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             setData()
-            if (dass.assQus.contains(listModel.question)) {
-                for (i in 0 until dass.assQus.size) {
-                    if (dass.assQus[i] == listModel.question) {
-                        posItem = Integer.parseInt(dass.assAns[i])
+            when {
+                listModelMain.optionType.equals("tenoptions") -> {
+                    holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
+                    holder.bindingAdapter.llTopRadio.visibility = View.GONE
+                }
+                listModelMain.optionType.equals("fiveoptions") -> {
+                    holder.bindingAdapter.llOldRadio.visibility = View.GONE
+                    holder.bindingAdapter.llTopRadio.visibility = View.VISIBLE
+                }
+                listModelMain.optionType.equals("twooptions") -> {
+                    holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
+                    holder.bindingAdapter.llTopRadio.visibility = View.GONE
+                }
+            }
+            holder.bindingAdapter.tvOne.text =listModel.questionOptions!![position].replace(" ","\n")
+            holder.bindingAdapter.cbChecked.text = listModel.questionOptions!![position]
+            if (dass.progressReportQus.contains(listModel.questionId)) {
+                for (i in 0 until dass.progressReportQus.size) {
+                    if (dass.progressReportQus[i] == listModel.questionId) {
+                        posItem = Integer.parseInt(dass.progressReportAns[i])
                         mSelectedItem = posItem
                         break
                     }
@@ -358,30 +521,29 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             }
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.isChecked = position == posItem
+                holder.bindingAdapter.rbOne.isChecked = position == posItem
             } else {
                 holder.bindingAdapter.cbChecked.isChecked = false
+                holder.bindingAdapter.rbOne.isChecked = false
             }
-            holder.bindingAdapter.cbChecked.text = position.toString()
         }
 
         /* This function is set que, ans & arranging assessment data */
         private fun setData() {
-            val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-            val json2 = shared.getString(CONSTANTS.AssQus, dass.gson.toString())
-            val json3 = shared.getString(CONSTANTS.AssAns, dass.gson.toString())
-            val json4 = shared.getString(CONSTANTS.AssSort, dass.gson.toString())
+            val shared = ctx.getSharedPreferences(CONSTANTS.ProgressReportMain, Context.MODE_PRIVATE)
+            val json2 = shared.getString(CONSTANTS.ProgressReportQus, dass.gson.toString())
+            val json3 = shared.getString(CONSTANTS.ProgressReportAns, dass.gson.toString())
             if (!json2.equals(dass.gson.toString(), ignoreCase = true)) {
                 val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-                dass.assQus = dass.gson.fromJson(json2, type1)
-                dass.assAns = dass.gson.fromJson(json3, type1)
-                dass.assSort = dass.gson.fromJson(json4, type1)
+                dass.progressReportQus = dass.gson.fromJson(json2, type1)
+                dass.progressReportAns = dass.gson.fromJson(json3, type1)
             }
             visibleGoneNext()
         }
 
         /* This function is visible & gone next button */
         private fun visibleGoneNext() {
-            if (dass.assQus.size >= mmypos2) {
+            if (dass.progressReportQus.size >= mmypos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)
@@ -399,67 +561,7 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            val countx = listModel.answer!!.split("| ").toTypedArray()
-            return Integer.parseInt(countx[countx.size - 1]) + 1
-        }
-    }
-
-    /* This function is send assessment data */
-    private fun sendAssessmentData() {
-        val shared = ctx.getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-        val json2 = shared.getString(CONSTANTS.AssQus, gson.toString())
-        val json3 = shared.getString(CONSTANTS.AssAns, gson.toString())
-        val json4 = shared.getString(CONSTANTS.AssSort, gson.toString())
-        if (!json2.equals(gson.toString(), ignoreCase = true)) {
-            val type1 = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-            assQus = gson.fromJson(json2, type1)
-            assAns = gson.fromJson(json3, type1)
-            assSort = gson.fromJson(json4, type1)
-        }
-
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall: Call<AssessmentSaveDataModel> = APINewClient.client.getAssessmentSaveData(userId, gson.toJson(assAns).toString())
-            listCall.enqueue(object : Callback<AssessmentSaveDataModel> {
-                override fun onResponse(call: Call<AssessmentSaveDataModel>, response: Response<AssessmentSaveDataModel>) {
-                    try {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                        val listModel: AssessmentSaveDataModel = response.body()!!
-                        when {
-                            listModel.responseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-                                val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.AssMain, Context.MODE_PRIVATE)
-                                val edited1 = preferencesd1.edit()
-                                edited1.remove(CONSTANTS.AssQus)
-                                edited1.remove(CONSTANTS.AssAns)
-                                edited1.remove(CONSTANTS.AssSort)
-                                edited1.clear()
-                                edited1.apply()
-                                val shareded = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                                val editor = shareded.edit()
-                                editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.responseData?.indexScore)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.responseData?.scoreLevel)
-                                editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, CONSTANTS.FLAG_ONE)
-                                editor.apply()
-                                Log.e("navigation assess", navigation)
-                            }
-                            listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
-                                BWSApplication.callDelete403(act, listModel.responseMessage)
-                            }
-                            else -> {
-                                BWSApplication.showToast(listModel.responseMessage, act)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailure(call: Call<AssessmentSaveDataModel>, t: Throwable) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                }
-            })
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), act)
+            return listModelMain.questions!![0].questionOptions!!.size
         }
     }
 }

@@ -8,7 +8,6 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_10sdp"
         android:background="@color/white"
-        style="@style/AppTheme2"
         android:orientation="vertical">
 
         <TextView

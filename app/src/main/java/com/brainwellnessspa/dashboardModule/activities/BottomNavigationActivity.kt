@@ -22,10 +22,10 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MyBatteryReceiver
 import com.brainwellnessspa.utility.MyNetworkReceiver
 import com.brainwellnessspa.utility.UserActivityTrackModel
-import com.clevertap.android.sdk.CTInboxListener
-import com.clevertap.android.sdk.CTInboxStyleConfig
-import com.clevertap.android.sdk.CleverTapAPI
-import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+//import com.clevertap.android.sdk.CTInboxListener
+//import com.clevertap.android.sdk.CTInboxStyleConfig
+//import com.clevertap.android.sdk.CleverTapAPI
+//import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -33,7 +33,7 @@ import ir.drax.netwatch.NetWatch
 import ir.drax.netwatch.cb.NetworkChangeReceiver_navigator
 import java.util.*
 
-class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator, CTInboxListener, CTPushNotificationListener {
+class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navigator/*, CTInboxListener, CTPushNotificationListener*/ {
     /* main dashboard bottom activity for all menu */
     lateinit var binding: ActivityBottomNavigationBinding
     var doubleBackToExitPressedOnce = false
@@ -72,15 +72,15 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         callFCMRegMethod(ctx)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, Context.MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
-        clevertapDefaultInstance!!.pushFcmRegistrationId(fcmId, true)
-        //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
+  /*      clevertapDefaultInstance!!.pushFcmRegistrationId(fcmId, true)
+                CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_MAX, true)
         }
         clevertapDefaultInstance.apply {
             this!!.ctNotificationInboxListener = this@BottomNavigationActivity
             initializeInbox()
-        }
+        }*/
         /* get user id and main account id*/
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
@@ -193,7 +193,7 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
         }
     }
 
-    override fun inboxDidInitialize() {
+   /* override fun inboxDidInitialize() {
         var cleverTapAPI: CleverTapAPI? = null
         cleverTapAPI = CleverTapAPI.getDefaultInstance(this@BottomNavigationActivity)
         val inboxTabs = arrayListOf("Promotions", "Offers", "Others") //Anything after the first 2 will be ignored
@@ -222,5 +222,5 @@ class BottomNavigationActivity : AppCompatActivity(), NetworkChangeReceiver_navi
 
     override fun onNotificationClickedPayloadReceived(payload: HashMap<String, Any>?) {
 
-    }
+    }*/
 }

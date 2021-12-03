@@ -32,10 +32,10 @@ import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.AppUtils
 import com.brainwellnessspa.utility.CONSTANTS
-import com.clevertap.android.sdk.CTInboxListener
-import com.clevertap.android.sdk.CTInboxStyleConfig
-import com.clevertap.android.sdk.CleverTapAPI
-import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
+//import com.clevertap.android.sdk.CTInboxListener
+//import com.clevertap.android.sdk.CTInboxStyleConfig
+//import com.clevertap.android.sdk.CleverTapAPI
+//import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
@@ -47,7 +47,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationListener {
+class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificationListener */{
     lateinit var binding: ActivitySplashBinding
     var userId: String? = ""
     var coUserId: String? = ""
@@ -148,19 +148,19 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
         Log.e("DeviceID", Settings.Secure.getString(getContext().contentResolver, Settings.Secure.ANDROID_ID))
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
         var fcmId = sharedPreferences2.getString(CONSTANTS.Token, "")
         Log.e("token", fcmId.toString())
-        clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
+//        clevertapDefaultInstance?.pushFcmRegistrationId(fcmId, true)
         //        CleverTapAPI.getDefaultInstance(this@SplashActivity)?.pushNotificationViewedEvent(extras)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CleverTapAPI.createNotificationChannel(applicationContext, getString(R.string.default_notification_channel_id), "Brain Wellness App", "BWS Notification", NotificationManager.IMPORTANCE_HIGH, true)
         }
         clevertapDefaultInstance?.apply {
             ctNotificationInboxListener = this@SplashActivity
             initializeInbox()
-        }
+        }*/
         if (userId.equals("")) {
             checkAppVersion()
         } else {
@@ -827,7 +827,7 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
         }
     }
 
-    override fun inboxDidInitialize() {
+   /* override fun inboxDidInitialize() {
         var cleverTapAPI: CleverTapAPI? = null
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
         val inboxTabs = arrayListOf("Promotions", "Offers", "Others") //Anything after the first 2 will be ignored
@@ -856,5 +856,5 @@ class SplashActivity : AppCompatActivity(), CTInboxListener, CTPushNotificationL
 
     override fun onNotificationClickedPayloadReceived(payload: HashMap<String, Any>?) {
 
-    }
+    }*/
 }

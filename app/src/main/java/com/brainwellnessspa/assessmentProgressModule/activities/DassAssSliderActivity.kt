@@ -356,6 +356,9 @@ class  DassAssSliderActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
+            holder.bindingAdapter.llTopRadio.visibility = View.GONE
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.isChecked = position == posItem
             } else {

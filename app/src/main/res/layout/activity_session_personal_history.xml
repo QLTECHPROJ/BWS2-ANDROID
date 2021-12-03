@@ -29,28 +29,57 @@
                     android:weightSum="1">
 
                     <TextView
-                        android:id="@+id/tvQus"
+                        android:id="@+id/tvTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.75"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="0.65"
                         android:fontFamily="@font/montserrat_regular"
-                        android:gravity="start"
-                        android:text="@string/personal_history"
+                        android:gravity="left"
+                        android:text="Dass 21 Assessment"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp"
-                        tools:ignore="SpUsage" />
+                        android:textSize="@dimen/_18sdp" />
 
-                    <TextView
-                        android:id="@+id/tvSection"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="start"
-                        android:text="Section 8 / 8"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
-                        tools:ignore="SpUsage" />
+                        android:layout_weight="0.35"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvNumberOfQus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="right"
+                            android:text="10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="right"
+                            android:text="/"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalQus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="right"
+                            android:text="33"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -63,200 +92,43 @@
                     android:progress="0"
                     app:indicatorColor="#8C7386"
                     app:trackColor="#DDDDDD" />
-
                 <TextView
+                    android:id="@+id/tvQus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_weight="1"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
-                    android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/_1_have_you_ever_experienced_a_sense_of_terror_in_your_mind_and_or_any_traumas_psychological_or_physical_if_so_do_you_recall_the_exact_moment_when_it_happened"
+                    android:text="asdfgh"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="start"
-                    android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/for_example_being_terrified_of_the_boogeyman_as_a_child_bullying_in_school_relationship_breakdown_loss_of_a_loved_one_red_more"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp"
-                    tools:ignore="SpUsage" />
-
-                <EditText
-                    android:id="@+id/edtFirstAnswer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_140sdp"
-                    android:layout_marginHorizontal="@dimen/_18sdp"
-                    android:layout_marginTop="@dimen/_22sdp"
-                    android:layout_marginBottom="@dimen/_16sdp"
-                    android:background="@drawable/edittext_background"
-                    android:cursorVisible="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="top"
-                    android:hint="@string/your_answer"
-                    android:inputType="textMultiLine|textVisiblePassword"
-                    android:overScrollMode="always"
-                    android:paddingLeft="@dimen/_8sdp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingRight="@dimen/_8sdp"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"
-                    android:singleLine="false"
-                    android:textColor="@color/gray"
-                    android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_15sdp"
-                    android:visibility="visible"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:gravity="start"
-                    android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/_2_are_you_aware_of_your_parents_grandparents_or_great_grandparents_ever_experiencing_a_trauma_psychological_or_physical_this_could_include_any_of_the_above_listed_examples_and_or_being_a_survivor_of_the_war"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
-                    tools:ignore="SpUsage" />
-
-                <EditText
-                    android:id="@+id/edtSecondAnswer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_140sdp"
-                    android:layout_marginHorizontal="@dimen/_18sdp"
-                    android:layout_marginTop="@dimen/_22sdp"
-                    android:layout_marginBottom="@dimen/_16sdp"
-                    android:background="@drawable/edittext_background"
-                    android:cursorVisible="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="top"
-                    android:hint="@string/your_answer"
-                    android:inputType="textMultiLine|textVisiblePassword"
-                    android:overScrollMode="always"
-                    android:paddingLeft="@dimen/_8sdp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingRight="@dimen/_8sdp"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"
-                    android:singleLine="false"
-                    android:textColor="@color/gray"
-                    android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_15sdp"
-                    android:visibility="visible"
                     tools:ignore="SpUsage" />
 
                 <TextView
                     android:id="@+id/tvText1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
-                    android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/_3_have_you_ever_experienced_psychotic_episodes_in_the_past_and_been_hospitalised_for_them"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
-                    tools:ignore="SpUsage" />
-
-                <CheckBox
-                    android:id="@+id/cbYes"
-                    style="@android:style/Widget.CompoundButton.RadioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginStart="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginEnd="@dimen/_16sdp"
-                    android:button="@drawable/radio_btn_session_background"
-                    android:checked="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:text="@string/yes"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
-
-                <CheckBox
-                    android:id="@+id/cbNo"
-                    style="@android:style/Widget.CompoundButton.RadioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginStart="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginEnd="@dimen/_16sdp"
-                    android:button="@drawable/radio_btn_session_background"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:text="@string/no"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQus"
                     android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:gravity="start"
                     android:lineSpacingExtra="@dimen/_4sdp"
-                    android:text="@string/_4_are_you_suffering_from_suicidal_thoughts_and_emotions"
+                    android:text="vzdczs"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
+                    android:textSize="@dimen/_10sdp"
                     tools:ignore="SpUsage" />
-
-                <CheckBox
-                    android:id="@+id/cbDrugYes"
-                    style="@android:style/Widget.CompoundButton.RadioButton"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvFirstList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginStart="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginEnd="@dimen/_16sdp"
-                    android:button="@drawable/radio_btn_session_background"
-                    android:checked="true"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:text="@string/yes"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
-
-                <CheckBox
-                    android:id="@+id/cbDrugNo"
-                    style="@android:style/Widget.CompoundButton.RadioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginStart="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginEnd="@dimen/_16sdp"
-                    android:button="@drawable/radio_btn_session_background"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:text="@string/no"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
-
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_60sdp"
+                    android:overScrollMode="never"
+                    android:background="@color/white"
+                    android:layout_gravity="center"
+                    tools:listitem="@layout/session_personal_history" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -272,6 +144,73 @@
             android:textSize="@dimen/_16sdp"
             android:visibility="gone"
             tools:ignore="SpUsage" />
+        <ImageView
+            android:id="@+id/btnPrev"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:clickable="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:contentDescription="@string/todo"
+            android:focusable="true"
+            android:rotation="180"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/black" />
 
+        <ImageView
+            android:id="@+id/btnNext"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:clickable="false"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_back_black_icon"
+            app:tint="@color/gray" />
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/_18sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:background="@drawable/light_green_rounded_filled"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/Continue"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/_60sdp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:indeterminateTint="@color/blue"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
     </RelativeLayout>
 </layout>

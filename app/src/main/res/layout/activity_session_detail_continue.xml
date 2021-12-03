@@ -231,6 +231,7 @@
                     android:layout_marginHorizontal="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
+                    android:maxLines="2"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp"
                     tools:ignore="SpUsage" />
