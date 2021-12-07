@@ -368,7 +368,9 @@ class HomeFragment : Fragment() {
                 intent.putExtra("Navigation", "Home")
                 act.startActivity(intent)
             }
-        }
+        }//Menstrual Pain
+
+//Morning Sickness in Pregnancy
         /* network check function */
         networkCheck()
 

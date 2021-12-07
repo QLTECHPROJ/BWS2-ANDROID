@@ -7,7 +7,7 @@ class EEPPlanListModel {
 
     @SerializedName("ResponseData")
     @Expose
-    var responseData: com.brainwellnessspa.dashboardModule.models.ResponseData? = null
+    var responseData: ResponseData? = null
 
     @SerializedName("ResponseCode")
     @Expose

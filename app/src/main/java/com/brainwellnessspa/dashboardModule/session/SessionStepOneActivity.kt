@@ -4,29 +4,20 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
 import android.widget.DatePicker
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionPcDetailBinding
 
@@ -39,7 +30,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SessionPcDetailActivity : AppCompatActivity() {
+class SessionStepOneActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionPcDetailBinding
     lateinit var ctx: Context
     lateinit var act: Activity
@@ -116,8 +107,8 @@ class SessionPcDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_pc_detail)
-        ctx = this@SessionPcDetailActivity
-        act = this@SessionPcDetailActivity
+        ctx = this@SessionStepOneActivity
+        act = this@SessionStepOneActivity
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
@@ -132,6 +123,9 @@ class SessionPcDetailActivity : AppCompatActivity() {
         binding.edtCancelBoxAc1.addTextChangedListener(userTextWatcher)
         binding.edtCancelBoxAc2.addTextChangedListener(userTextWatcher)
 
+        binding.llBack.setOnClickListener {
+            finish()
+        }
         binding.btnMr.setOnClickListener {
             callFirstCondition("Mr")
         }
@@ -270,9 +264,10 @@ class SessionPcDetailActivity : AppCompatActivity() {
                                 p.putValue("medication", medication)
                                 addToSegment("Profile Form Submitted", p, CONSTANTS.track)
                                 */
-                                val i = Intent(ctx, SessionsStepTwoActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                startActivity(i)
+                                val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                intent.putExtra("IsFirst", "1")
+                                startActivity(intent)
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
@@ -795,7 +790,8 @@ class SessionPcDetailActivity : AppCompatActivity() {
             binding.llFirst.visibility == View.VISIBLE -> {
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                if (doubleBackToExitPressedOnce) {
+                finish()
+                /*if (doubleBackToExitPressedOnce) {
                     finishAffinity()
                     return
                 }
@@ -804,7 +800,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
 
                 Handler(Looper.myLooper()!!).postDelayed({
                     doubleBackToExitPressedOnce = false
-                }, 2000)
+                }, 2000)*/
             }
             binding.llAddress.visibility == View.VISIBLE -> {
                 binding.btnContinue.visibility = View.GONE
@@ -837,7 +833,8 @@ class SessionPcDetailActivity : AppCompatActivity() {
                 callFourthNext()
             }
             else -> {
-                exitDialog = Dialog(act)
+                finish()
+                /*exitDialog = Dialog(act)
                 exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 exitDialog.setContentView(R.layout.logout_layout)
                 exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -863,7 +860,7 @@ class SessionPcDetailActivity : AppCompatActivity() {
 
                 tvGoBack.setOnClickListener { exitDialog.hide() }
                 exitDialog.show()
-                exitDialog.setCancelable(true)
+                exitDialog.setCancelable(true)*/
             }
         }
     }

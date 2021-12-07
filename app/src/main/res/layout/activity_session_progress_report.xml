@@ -7,76 +7,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".assessmentProgressModule.activities.DassAssSliderActivity">
+        tools:context=".dashboardModule.session.SessionProgressReportActivity">
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp">
 
-        <!--<LinearLayout
-                    android:id="@+id/llMainFirst"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:visibility="visible"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="left"
-                        android:text="Dass 21 Assessment"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
+            </LinearLayout>
 
-              <LinearLayout
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight=".25"
-                  android:gravity="right"
-                  android:orientation="horizontal">
-
-                  <TextView
-                      android:id="@+id/tvNumberOfQus"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_centerVertical="true"
-                      android:fontFamily="@font/montserrat_regular"
-                      android:gravity="right"
-                      android:text="0"
-                      android:textColor="@color/black"
-                      android:textSize="@dimen/_18sdp" />
-
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_centerVertical="true"
-                      android:fontFamily="@font/montserrat_regular"
-                      android:gravity="right"
-                      android:text="/"
-                      android:textColor="@color/black"
-                      android:textSize="@dimen/_18sdp" />
-
-                  <TextView
-                      android:id="@+id/tvTotalQus"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_centerVertical="true"
-                      android:fontFamily="@font/montserrat_regular"
-                      android:gravity="right"
-                      android:text="33"
-                      android:textColor="@color/black"
-                      android:textSize="@dimen/_18sdp" />
-
-              </LinearLayout>
-                </LinearLayout>-->
-
+        </RelativeLayout>
         <LinearLayout
+            android:id="@+id/llOne"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_below="@+id/rlLayout"
             android:orientation="vertical">
 
             <LinearLayout
@@ -90,17 +50,68 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:id="@+id/tvQus"
+                    android:id="@+id/tvTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="0.65"
                     android:fontFamily="@font/montserrat_regular"
-                    android:gravity="start"
-                    android:text=""
+                    android:gravity="left"
+                    android:text="Dass 21 Assessment"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
-                    tools:ignore="SpUsage" />
+                    android:textSize="@dimen/_18sdp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tvNumberOfQus1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="right"
+                        android:text="Section "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+                    <TextView
+                        android:id="@+id/tvNumberOfQus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="right"
+                        android:text="10"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="right"
+                        android:text="/"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalQus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="right"
+                        android:text="33"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
             </LinearLayout>
+
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/lpIndicator"
@@ -113,6 +124,14 @@
                 android:progress="0"
                 app:indicatorColor="#F1646A"
                 app:trackColor="#DDDDDD" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_below="@+id/llOne"
+            android:orientation="vertical">
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -125,9 +144,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:orientation="vertical"
                     android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvQus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="asdfgh"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/tvText1"
@@ -135,45 +166,22 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
+                        android:layout_below="@+id/tvQus"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text=""
+                        android:text="vzdczs"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="@dimen/_10sdp"
                         tools:ignore="SpUsage" />
-
-                    <TextView
-                        android:id="@+id/tvText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvText1"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="start"
-                        android:lineSpacingExtra="@dimen/_4sdp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
-                        tools:ignore="SpUsage" />
-                    <!--            <Button-->
-                    <!--                android:id="@+id/btnPrev"-->
-                    <!--                android:layout_width="@dimen/_100sdp"-->
-                    <!--                android:layout_height="@dimen/_50sdp"-->
-                    <!--                android:layout_alignParentLeft="true"-->
-                    <!--                android:layout_alignParentBottom="true"-->
-                    <!--                android:background="@drawable/light_blue_rounded_filled"-->
-                    <!--                android:fontFamily="@font/montserrat_medium"-->
-                    <!--                android:text="Next"-->
-                    <!--                android:textAllCaps="false"-->
-                    <!--                android:textColor="@color/white" />-->
-
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvFirstList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tvText"
+                        android:layout_below="@id/tvText1"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginBottom="@dimen/_60sdp"
                         android:nestedScrollingEnabled="true"
                         android:overScrollMode="never"
+                        tools:itemCount="3"
                         tools:listitem="@layout/form_fill_sub"
                         tools:targetApi="lollipop" />
 

@@ -95,7 +95,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                     binding.llGreatProgress.visibility = View.GONE
                                     binding.llSlowProgress.visibility = View.GONE
                                 }
-                                adapter = SessionDetailAdapter(binding, response.data, act, userId, sessionId)
+                                adapter = SessionDetailAdapter(binding, response.data, act, userId, sessionId,response,ctx)
                                 binding.rvList.adapter = adapter
                             }
                         } else if (listModel.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
@@ -159,7 +159,6 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                                         i.putExtra("SessionId", sessionId)
                                                         i.putExtra("StepId", stepId)
                                                         act.startActivity(i)
-                                                        act.finish()
                                                         /*else if(response.nextForm.equals("wellness_assessment")){
                                                         val i = Intent(act, SessionWellnessAssessmentActivity::class.java)
                                                         i.putExtra("Data",gson.toJson(response1))
@@ -222,7 +221,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                                     val listModel = response.body()
                                                     val response = listModel?.responseData
                                                     if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                        act.finish()
+//                                                        act.finish()
                                                     }
                                                 } catch (e: Exception) {
                                                     e.printStackTrace()
@@ -262,7 +261,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val act: Activity, var userId: String?, var sessionId: String?) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
+    class SessionDetailAdapter(var binding: ActivitySessionDetailContinueBinding, var catName: List<SessionStepListModel.ResponseData.Data>?, val act: Activity, var userId: String?, var sessionId: String?, val response: SessionStepListModel.ResponseData, val ctx: Context) : RecyclerView.Adapter<SessionDetailAdapter.MyViewHolder>() {
         inner class MyViewHolder(var bindingAdapter: SessionDetailLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -306,34 +305,48 @@ class SessionDetailContinueActivity : AppCompatActivity() {
             }
 
             holder.bindingAdapter.llBorder.setOnClickListener {
-                when (db.stepId) {
-                    "1" -> {
-                        /* TODO Welcome & Session Description */
-                        callAudioActivity(db.sessionId, db.stepId)
+                when {
+                    response.shouldFillProfileFormTwo.equals("1") -> {
+                        val i = Intent(ctx, SessionsStepTwoActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        act.startActivity(i)
                     }
-                    "2" -> {
-                        /* TODO IMPORTANT FOR FORAM
-                        *  TODO Progress report
-                        *   nextForm key use open next screen */
-                        val sd = SessionDetailContinueActivity()
-                        sd.callCheckProgressReport(act, db.sessionId, db.stepId, binding.progressBar, binding.progressBarHolder)
+                    response.shouldFillProfileFormThree.equals("1") -> {
+                        val i = Intent(ctx, SessionsStepThreeActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        act.startActivity(i)
                     }
-                    "3" -> {
-                        /* TODO Session Activities not add in current flow */
-                    }
-                    "4" -> {
-                        BeforeAfterQuestionnaires(db.sessionId, db.stepId, db.userStepStatus)
-                    }
-                    "5" -> {
-                        /* TODO Actual Session */
-                        callAudioActivity(db.sessionId, db.stepId)
-                    }
-                    "6" -> {
-                        BeforeAfterQuestionnaires(db.sessionId, db.stepId, db.userStepStatus)
-                    }
-                    "7" -> {
-                        /* TODO Pre Session Audio for session 2 */
-                        callAudioActivity(db.sessionId, db.stepId)
+                    else -> {
+                        when (db.stepId) {
+                            "1" -> {
+                                /* TODO Welcome & Session Description */
+                                callAudioActivity(db.sessionId, db.stepId)
+                            }
+                            "2" -> {
+                                /* TODO IMPORTANT FOR FORAM
+                                        *  TODO Progress report
+                                        *   nextForm key use open next screen */
+                                val sd = SessionDetailContinueActivity()
+                                sd.callCheckProgressReport(act, db.sessionId, db.stepId, binding.progressBar, binding.progressBarHolder)
+                            }
+                            "3" -> {
+                                /* TODO Session Activities not add in current flow */
+                            }
+                            "4" -> {
+                                BeforeAfterQuestionnaires(db.sessionId, db.stepId, db.userStepStatus,db.desc)
+                            }
+                            "5" -> {
+                                /* TODO Actual Session */
+                                callAudioActivity(db.sessionId, db.stepId)
+                            }
+                            "6" -> {
+                                BeforeAfterQuestionnaires(db.sessionId, db.stepId, db.userStepStatus, db.desc)
+                            }
+                            "7" -> {
+                                /* TODO Pre Session Audio for session 2 */
+                                callAudioActivity(db.sessionId, db.stepId)
+                            }
+                        }
                     }
                 }
             }
@@ -358,7 +371,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
 
         }
 
-        private fun BeforeAfterQuestionnaires(sessionId: String?, stepId: String?, userStepStatus: String?) {
+        private fun BeforeAfterQuestionnaires(sessionId: String?, stepId: String?, userStepStatus: String?, desc: String?) {
             /* TODO IMPORTANT FOR FORAM
             *   Before Comparison
             *   API call  getCheckBeforeAfterFeelingStatus
@@ -386,6 +399,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                     if (response.questionStatus.equals("0")) {
                                         val i = Intent(act, SessionComparisonStatusActivity::class.java)
                                         i.putExtra("SessionId", sessionId)
+                                        i.putExtra("desc", desc)
                                         i.putExtra("StepId", stepId)
                                         act.startActivity(i)
                                     } else if (response.feelingStatus.equals("0")) {

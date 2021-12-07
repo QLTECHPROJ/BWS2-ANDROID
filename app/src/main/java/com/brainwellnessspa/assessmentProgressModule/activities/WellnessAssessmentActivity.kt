@@ -20,7 +20,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.BWSApplication.callIdentify
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssessmentQusModel
-import com.brainwellnessspa.databinding.ActivityDassAssSliderBinding
+import com.brainwellnessspa.databinding.ActivityWellnessAssessmentBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.brainwellnessspa.userModule.models.AssessmentSaveDataModel
@@ -34,8 +34,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /* This act is assessment form act */
-class  DassAssSliderActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDassAssSliderBinding
+class  WellnessAssessmentActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityWellnessAssessmentBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
     lateinit var secondListAdapter: OptionsSecondListAdapter
     lateinit var ctx: Context
@@ -58,15 +58,15 @@ class  DassAssSliderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         /* This is the layout showing */
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_dass_ass_slider)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_wellness_assessment)
 
         /* This is the get string mainAccountID, UserId & email */
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        ctx = this@DassAssSliderActivity
-        act = this@DassAssSliderActivity
+        ctx = this@WellnessAssessmentActivity
+        act = this@WellnessAssessmentActivity
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
 
@@ -246,8 +246,8 @@ class  DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
-        private var dass = DassAssSliderActivity()
+    class OptionsFirstListAdapter(private val listModel: List<AssessmentQusModel.ResponseData.Questions>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivityWellnessAssessmentBinding, val act: Activity) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+        private var dass = WellnessAssessmentActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -282,11 +282,11 @@ class  DassAssSliderActivity : AppCompatActivity() {
     }
 
     /* This is the second options box input layout */
-    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityDassAssSliderBinding, val act: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: AssessmentQusModel.ResponseData.Questions, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivityWellnessAssessmentBinding, val act: Activity) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
-        var dass = DassAssSliderActivity()
+        var dass = WellnessAssessmentActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
@@ -357,8 +357,10 @@ class  DassAssSliderActivity : AppCompatActivity() {
                 }
             }
 
-            holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
-            holder.bindingAdapter.llTopRadio.visibility = View.GONE
+            holder.bindingAdapter.cbChecked.visibility = View.VISIBLE
+            holder.bindingAdapter.cbChecked2.visibility = View.GONE
+            holder.bindingAdapter.tvOne.visibility = View.GONE
+            holder.bindingAdapter.rbOne.visibility = View.GONE
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.isChecked = position == posItem
             } else {

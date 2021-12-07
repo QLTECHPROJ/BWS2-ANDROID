@@ -4,11 +4,9 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +19,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -28,7 +27,6 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.SessionsProfileSaveDataModel
 import com.brainwellnessspa.databinding.ActivitySessionsStepThreeBinding
-
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import retrofit2.Call
@@ -40,8 +38,8 @@ class SessionsStepThreeActivity : AppCompatActivity() {
     lateinit var activity: Activity
     lateinit var ctx: Context
     private var traumaHistory: String = ""
-    private var suicidalEpisodeStatus: String = ""
-    private var pychoticEpisodeStatus: String = ""
+    private var suicidalEpisodeStatus: String = "0"
+    private var pychoticEpisodeStatus: String = "0"
     private var suicidalStatus: String = ""
     private var pychoticEpisode: String = ""
     private var doubleBackToExitPressedOnce = false
@@ -97,11 +95,16 @@ class SessionsStepThreeActivity : AppCompatActivity() {
         binding.edtTraumaHistory.text.clear()
         binding.llFirst.visibility = View.VISIBLE
         binding.btnNext.visibility = View.VISIBLE
+        binding.btnPrev.visibility = View.GONE
         binding.btnContinue.visibility = View.GONE
         checkNextVisibleGone("0")
         traumaHistory = ""
         suicidalEpisodeStatus = "0"
         pychoticEpisodeStatus = "0"
+
+        binding.llBack.setOnClickListener {
+            finish()
+        }
 
         binding.cbPsychoticYes.setOnClickListener {
             binding.cbPsychoticYes.isChecked = true
@@ -179,7 +182,8 @@ class SessionsStepThreeActivity : AppCompatActivity() {
                 binding.llIndicate.progress = 0
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                if (doubleBackToExitPressedOnce) {
+                finish()
+                /*if (doubleBackToExitPressedOnce) {
                     finishAffinity()
                     return
                 }
@@ -188,11 +192,12 @@ class SessionsStepThreeActivity : AppCompatActivity() {
 
                 Handler(Looper.myLooper()!!).postDelayed({
                     doubleBackToExitPressedOnce = false
-                }, 2000)
+                }, 2000)*/
             }
 
             binding.llSecond.visibility == View.VISIBLE -> {
                 binding.llIndicate.progress = 0
+                binding.btnPrev.visibility = View.GONE
                 binding.llFirst.visibility = View.VISIBLE
                 binding.llSecond.visibility = View.GONE
                 binding.llThird.visibility = View.GONE
@@ -217,7 +222,8 @@ class SessionsStepThreeActivity : AppCompatActivity() {
             }
 
             else -> {
-                exitDialog = Dialog(activity)
+                finish()
+                /*exitDialog = Dialog(activity)
                 exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 exitDialog.setContentView(R.layout.logout_layout)
                 exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -243,7 +249,7 @@ class SessionsStepThreeActivity : AppCompatActivity() {
 
                 tvGoBack.setOnClickListener { exitDialog.hide() }
                 exitDialog.show()
-                exitDialog.setCancelable(true)
+                exitDialog.setCancelable(true)*/
             }
         }
 
@@ -253,6 +259,7 @@ class SessionsStepThreeActivity : AppCompatActivity() {
         when {
             binding.llFirst.visibility == View.VISIBLE -> {
                 binding.btnContinue.visibility = View.GONE
+                binding.btnPrev.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
                 stepFirstMainCheck("1")
                 if (!binding.edtTraumaHistory.text.toString().equals("", ignoreCase = true)) {
@@ -287,11 +294,13 @@ class SessionsStepThreeActivity : AppCompatActivity() {
     private fun stepTwoMainCheck(check: String) {
         if (check == "2") {
             binding.llIndicate.progress = 1
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.VISIBLE
             binding.llThird.visibility = View.GONE
         } else if (check == "3") {
             binding.llIndicate.progress = 2
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.GONE
             binding.llThird.visibility = View.VISIBLE
@@ -319,12 +328,14 @@ class SessionsStepThreeActivity : AppCompatActivity() {
     private fun stepFirstMainCheck(check: String) {
         if (check == "0") {
             binding.llIndicate.progress = 0
+            binding.btnPrev.visibility = View.GONE
             binding.llFirst.visibility = View.VISIBLE
             binding.llSecond.visibility = View.GONE
             binding.llThird.visibility = View.GONE
 
         } else if (check == "1") {
             binding.llIndicate.progress = 1
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.VISIBLE
             binding.llThird.visibility = View.GONE
@@ -366,9 +377,6 @@ class SessionsStepThreeActivity : AppCompatActivity() {
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
                                 addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
-                                val i = Intent(ctx, EmpowerManageActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                startActivity(i)
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {

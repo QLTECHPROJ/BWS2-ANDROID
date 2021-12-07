@@ -4,25 +4,14 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
 import android.widget.DatePicker
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -46,9 +35,9 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     private var doubleBackToExitPressedOnce = false
     private var drugsChallenges: String = ""
     private var fearAnswer: String = ""
-    var age: String = ""
-    var electricShockTreatment: String = ""
-    var drugPrescription: String = ""
+    var electric_shock_last_treatment: String = ""
+    var electricShockTreatment: String = "0"
+    var drugPrescription: String = "0"
     var userId: String? = ""
     var coUserId: String? = ""
     private var mYear: Int = 0
@@ -111,8 +100,13 @@ class SessionsStepTwoActivity : AppCompatActivity() {
 
         binding.llFirst.visibility = View.VISIBLE
         binding.btnNext.visibility = View.VISIBLE
+        binding.btnPrev.visibility = View.GONE
         binding.btnContinue.visibility = View.GONE
         checkNextVisibleGone("1")
+
+        binding.llBack.setOnClickListener {
+            finish()
+        }
 
         binding.cbElectricYes.setOnClickListener {
             binding.cbElectricYes.isChecked = true
@@ -126,7 +120,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
             binding.cbElectricYes.isChecked = false
             binding.cbElectricNo.isChecked = true
             binding.llElectricYes.visibility = View.GONE
-            age = ""
+            electric_shock_last_treatment = ""
             electricShockTreatment = "0"
             stepFirstMainCheck("0")
         }
@@ -170,11 +164,13 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     private fun stepTwoMainCheck(check: String) {
         if (check == "2") {
             binding.llIndicate.progress = 1
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.VISIBLE
             binding.llThird.visibility = View.GONE
         } else if (check == "3") {
             binding.llIndicate.progress = 2
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.GONE
             binding.llThird.visibility = View.VISIBLE
@@ -202,26 +198,28 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     private fun stepFirstMainCheck(check: String) {
         if (check == "0") {
             binding.llIndicate.progress = 0
+            binding.btnPrev.visibility = View.GONE
             binding.llFirst.visibility = View.VISIBLE
             binding.llSecond.visibility = View.GONE
             binding.llThird.visibility = View.GONE
 
         } else if (check == "1") {
             binding.llIndicate.progress = 1
+            binding.btnPrev.visibility = View.VISIBLE
             binding.llFirst.visibility = View.GONE
             binding.llSecond.visibility = View.VISIBLE
             binding.llThird.visibility = View.GONE
         }
 
         when {
-            binding.cbElectricYes.isChecked && !age.equals("", true) -> {
+            binding.cbElectricYes.isChecked && !electric_shock_last_treatment.equals("", true) -> {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
                 checkNextVisibleGone("1")
-                binding.tvElectricDate.text = age
+                binding.tvElectricDate.text = electric_shock_last_treatment
                 binding.tvElectricDate.setTextColor(ContextCompat.getColor(activity, R.color.light_black))
             }
-            binding.cbElectricYes.isChecked && age.equals("", true) -> {
+            binding.cbElectricYes.isChecked && electric_shock_last_treatment.equals("", true) -> {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
                 checkNextVisibleGone("0")
@@ -245,7 +243,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     private fun sendSessionsFeelingsData() {
         if (isNetworkConnected(this)) {
             showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
-            val listCall: Call<SessionsProfileSaveDataModel> = APINewClient.client.getEEPStepTwoProfileSaveData(CONSTANTS.FLAG_TWO, coUserId, electricShockTreatment, age, drugPrescription, binding.edtDrugsBox.text.toString(), binding.edtFearAnswer.text.toString())
+            val listCall: Call<SessionsProfileSaveDataModel> = APINewClient.client.getEEPStepTwoProfileSaveData(CONSTANTS.FLAG_TWO, coUserId, electricShockTreatment,electric_shock_last_treatment, drugPrescription,drugsChallenges, binding.edtFearAnswer.text.toString())
             listCall.enqueue(object : Callback<SessionsProfileSaveDataModel> {
                 override fun onResponse(call: Call<SessionsProfileSaveDataModel>, response: Response<SessionsProfileSaveDataModel>) {
                     try {
@@ -253,7 +251,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
                         val listModel: SessionsProfileSaveDataModel = response.body()!!
                         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
-                        editor.putString(CONSTANTS.PREFE_ACCESS_DOB, age)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_DOB, electric_shock_last_treatment)
                         editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, "1")
                         editor.apply()
                         callIdentify(ctx)
@@ -266,9 +264,6 @@ class SessionsStepTwoActivity : AppCompatActivity() {
                                 p.putValue("prevDrugUse", prevDrugUse)
                                 p.putValue("medication", medication)
                                 addToSegment("Profile Form Submitted", p, CONSTANTS.track)*/
-                                val i = Intent(ctx, SessionsStepThreeActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                startActivity(i)
                                 finish()
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted), ignoreCase = true) -> {
@@ -297,9 +292,11 @@ class SessionsStepTwoActivity : AppCompatActivity() {
         when {
             binding.llFirst.visibility == View.VISIBLE -> {
                 binding.llIndicate.progress = 0
+                binding.btnPrev.visibility = View.GONE
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                if (doubleBackToExitPressedOnce) {
+                finish()
+               /* if (doubleBackToExitPressedOnce) {
                     finishAffinity()
                     return
                 }
@@ -308,17 +305,18 @@ class SessionsStepTwoActivity : AppCompatActivity() {
 
                 Handler(Looper.myLooper()!!).postDelayed({
                     doubleBackToExitPressedOnce = false
-                }, 2000)
+                }, 2000)*/
             }
 
             binding.llSecond.visibility == View.VISIBLE -> {
                 binding.llIndicate.progress = 0
                 binding.llFirst.visibility = View.VISIBLE
+                binding.btnPrev.visibility = View.GONE
                 binding.llSecond.visibility = View.GONE
                 binding.llThird.visibility = View.GONE
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                if (binding.cbElectricYes.isChecked && age.equals("", ignoreCase = true)) {
+                if (binding.cbElectricYes.isChecked && electric_shock_last_treatment.equals("", ignoreCase = true)) {
                     checkNextVisibleGone("0")
                 } else {
                     checkNextVisibleGone("1")
@@ -337,7 +335,8 @@ class SessionsStepTwoActivity : AppCompatActivity() {
             }
 
             else -> {
-                exitDialog = Dialog(activity)
+                finish()
+             /*   exitDialog = Dialog(activity)
                 exitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 exitDialog.setContentView(R.layout.logout_layout)
                 exitDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -363,7 +362,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
 
                 tvGoBack.setOnClickListener { exitDialog.hide() }
                 exitDialog.show()
-                exitDialog.setCancelable(true)
+                exitDialog.setCancelable(true)*/
             }
         }
     }
@@ -404,13 +403,13 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     }
 
     private fun setDate() {
-        if (age == "") {
+        if (electric_shock_last_treatment == "") {
             val c = Calendar.getInstance()
             mYear = c[Calendar.YEAR]
             mMonth = c[Calendar.MONTH]
             mDay = c[Calendar.DAY_OF_MONTH]
         } else {
-            val ageArray = age.split("-")
+            val ageArray = electric_shock_last_treatment.split("-")
             mYear = Integer.parseInt(ageArray[0])
             mMonth = Integer.parseInt(ageArray[1]) - 1
             mDay = Integer.parseInt(ageArray[2])
@@ -437,7 +436,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
                 binding.btnNext.visibility = View.VISIBLE
                 checkNextVisibleGone("0")
             } else {
-                age = age1
+                electric_shock_last_treatment = age1
                 binding.btnContinue.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
                 checkNextVisibleGone("1")
@@ -465,7 +464,7 @@ class SessionsStepTwoActivity : AppCompatActivity() {
     fun checkNextVisibleGone(check: String) {
         Log.e("electricShockTreatment", electricShockTreatment)
         Log.e("drugPrescription", drugPrescription)
-        Log.e("age", age)
+        Log.e("age", electric_shock_last_treatment)
         Log.e("drugsChallenges", drugsChallenges)
         Log.e("fearAnswer", fearAnswer)
         if (check == "0") {

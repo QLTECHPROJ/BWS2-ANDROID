@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.activities.DassAssSliderActivity
+import com.brainwellnessspa.assessmentProgressModule.activities.WellnessAssessmentActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.DoingGoodActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.models.SessionStepOneModel
@@ -116,7 +116,7 @@ class WalkScreenActivity : AppCompatActivity() {
             callback()
         }
         binding.rlStepOne.setOnClickListener {
-            val intent = Intent(applicationContext, DassAssSliderActivity::class.java)
+            val intent = Intent(applicationContext, WellnessAssessmentActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()
@@ -188,6 +188,7 @@ class WalkScreenActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, MyPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
+            finish()
         }
     }
 

@@ -54,11 +54,11 @@ class SessionWalkScreenActivity : AppCompatActivity() {
             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.sessionImg)
 
         binding.tvTitle.text = listModel.sectionSubtitle
-        binding.tvSessionDesc.text = listModel.sectionDescription
+        binding.tvSessionDesc.text = listModel.sectionDescription +   listModel.sectionDescription +   listModel.sectionDescription
 
         binding.rlSectionOne.setOnClickListener {
             if(!nextForm.equals("personal_query")){
-                val i = Intent(activity, SessionWellnessAssessmentActivity::class.java)
+                val i = Intent(activity, SessionProgressReportActivity::class.java)
                 i.putExtra("Data",gson.toJson(listModel))
                 i.putExtra("nextForm",nextForm)
                 i.putExtra("SessionId",sessionId)
@@ -76,8 +76,7 @@ class SessionWalkScreenActivity : AppCompatActivity() {
             }
         }
         val lineCount: Int = binding.tvSessionDesc.lineCount
-//        val charCount: Int = binding.tvSessionDesc.latt
-        if (lineCount >= 4) {
+        if (lineCount >= 2) {
             binding.tvReadMore.visibility = View.VISIBLE
         } else {
             binding.tvReadMore.visibility = View.GONE

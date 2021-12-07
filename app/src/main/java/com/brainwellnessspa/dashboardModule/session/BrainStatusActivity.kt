@@ -14,6 +14,7 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.BrainCatListModel
 import com.brainwellnessspa.dashboardModule.models.BrainFeelingSaveCatModel
+import com.brainwellnessspa.dashboardModule.models.SessionStepStatusListModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
 import com.brainwellnessspa.databinding.BrainFeelingStatusLayoutBinding
@@ -66,10 +67,18 @@ class BrainStatusActivity : AppCompatActivity() {
         binding.rvList.layoutManager = layoutManager
         prepareData()
 
+        binding.llBack.setOnClickListener {
+           finish()
+        }
         binding.btnContinue.setOnClickListener {
             getCatSaveData()
             sendCategoryData()
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
     }
 
     private fun sendCategoryData() {
@@ -84,7 +93,32 @@ class BrainStatusActivity : AppCompatActivity() {
                         when {
                             listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {
                                 BWSApplication.showToast(listModel.responseMessage, activity)
-                                finish()
+                                if (BWSApplication.isNetworkConnected(activity)) {
+                                    val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
+                                    listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
+                                        override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
+                                            try {
+                                                val listModel = response.body()
+                                                val response = listModel?.responseData
+                                                if (listModel!!.responseCode.equals(activity.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                                    val preferred = ctx.getSharedPreferences(CONSTANTS.EEPCatMain, Context.MODE_PRIVATE)
+                                                    val edited = preferred.edit()
+                                                    edited.remove(CONSTANTS.EEPCatName)
+                                                    edited.clear()
+                                                    edited.apply()
+                                                    activity.finish()
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
+                                        }
+
+                                        override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
+                                        }
+                                    })
+                                } else {
+                                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity)
+                                }
                             }
                             listModel.responseCode.equals(getString(R.string.ResponseCodeDeleted)) -> {
                                 BWSApplication.callDelete403(activity, listModel.responseMessage)

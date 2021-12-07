@@ -60,6 +60,7 @@ class SessionAudiosActivity : AppCompatActivity() {
             i.putExtra("stepId",stepId)
             i.putExtra("Desc",desc)
             activity.startActivity(i)
+            activity.finish()
         }
         binding.llMainLayout.setOnClickListener {
             val i = Intent(activity, WalkScreenActivity::class.java)
@@ -69,6 +70,7 @@ class SessionAudiosActivity : AppCompatActivity() {
             i.putExtra("stepId",stepId)
             i.putExtra("Desc",desc)
             activity.startActivity(i)
+            activity.finish()
         }
     }
 

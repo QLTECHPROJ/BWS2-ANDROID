@@ -86,7 +86,6 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 			if (myPos < listModel.questions!!.size - 1) {
 				myPos += Integer.parseInt(listModel.chunkSize!!)
 
-				binding.tvNumberOfQus.text = myPos.toString()
 				binding.lpIndicator.progress = myPos
 
 				var s = myPos + Integer.parseInt(listModel.chunkSize!!)
@@ -124,7 +123,6 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 		binding.btnContinue.setOnClickListener {
 			binding.lpIndicator.progress = listModel.questions!!.size
 
-			binding.tvNumberOfQus.text = listModel.questions!!.size.toString()
 			for (i in 0 until progressReportQus.size) {
 				val sendR = sendQusData()
 				sendR.question_id = (progressReportQus[i])
@@ -277,7 +275,6 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 			p.putValue("screen", myPos)
 			addInSegment(p)
 			binding.lpIndicator.progress = myPos
-			binding.tvNumberOfQus.text = myPos.toString()
 			var s = myPos + Integer.parseInt(listModel.chunkSize!!)
 			if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
 				binding.btnNext.visibility = View.GONE
@@ -320,8 +317,8 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 		binding.lpIndicator.progress = 0
 
 		binding.tvTitle.text = listModel.sectionSubtitle
-		binding.tvNumberOfQus.text = myPos.toString()
-		binding.tvTotalQus.text = listModel.questions!!.size.toString()
+		binding.tvNumberOfQus.text =  listModel.currentSection
+		binding.tvTotalQus.text = listModel.totalSection
 
 		var s = myPos + Integer.parseInt(listModel.chunkSize!!)
 		if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
@@ -576,16 +573,22 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 			setData()
 			when {
 				listModelMain.optionType.equals("tenoptions") -> {
-					holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
-					holder.bindingAdapter.llTopRadio.visibility = View.GONE
+					holder.bindingAdapter.cbChecked2.visibility = View.VISIBLE
+					holder.bindingAdapter.cbChecked.visibility = View.GONE
+					holder.bindingAdapter.tvOne.visibility = View.GONE
+					holder.bindingAdapter.rbOne.visibility = View.GONE
 				}
 				listModelMain.optionType.equals("fiveoptions") -> {
-					holder.bindingAdapter.llOldRadio.visibility = View.GONE
-					holder.bindingAdapter.llTopRadio.visibility = View.VISIBLE
+					holder.bindingAdapter.cbChecked.visibility = View.GONE
+					holder.bindingAdapter.cbChecked2.visibility = View.GONE
+					holder.bindingAdapter.tvOne.visibility = View.VISIBLE
+					holder.bindingAdapter.rbOne.visibility = View.VISIBLE
 				}
 				listModelMain.optionType.equals("twooptions") -> {
-					holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
-					holder.bindingAdapter.llTopRadio.visibility = View.GONE
+					holder.bindingAdapter.cbChecked2.visibility = View.VISIBLE
+					holder.bindingAdapter.cbChecked.visibility = View.GONE
+					holder.bindingAdapter.tvOne.visibility = View.GONE
+					holder.bindingAdapter.rbOne.visibility = View.GONE
 				}
 			}
 			holder.bindingAdapter.tvOne.text =listModel.questionOptions!![position].replace(" ","\n")

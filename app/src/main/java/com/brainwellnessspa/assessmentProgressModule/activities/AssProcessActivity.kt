@@ -450,7 +450,7 @@ class AssProcessActivity : AppCompatActivity() {
         /* This is the do the asessement click */
         binding.btnDoAss.setOnClickListener {
             Log.e("navigation", navigation)
-            val intent = Intent(this@AssProcessActivity, DassAssSliderActivity::class.java)
+            val intent = Intent(this@AssProcessActivity, WellnessAssessmentActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             intent.putExtra("Navigation", navigation)
             startActivity(intent)

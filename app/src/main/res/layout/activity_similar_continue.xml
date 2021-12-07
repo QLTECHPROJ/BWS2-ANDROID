@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
                 android:layout_gravity="center"
-                android:layout_weight="0.6"
+                android:layout_weight="0.55"
                 android:gravity="center">
 
                 <ImageView
@@ -30,8 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/todo"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/session_bg_banner" />
+                    android:scaleType="fitXY"/>
 
                 <ImageView
                     android:id="@+id/ivIntroImg1"
@@ -44,14 +43,14 @@
                     android:paddingTop="@dimen/_18sdp"
                     android:paddingBottom="@dimen/_49sdp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_session_one_icon" />
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.45"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_16sdp">
 
@@ -68,7 +67,7 @@
                         android:layout_marginTop="@dimen/_40sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="@string/genetic_brain_amp_the_conditioned_brain"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sdp" />
 
@@ -82,7 +81,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="@string/long_lorem"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sdp" />
 

@@ -66,6 +66,7 @@
         </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rlLayout"
@@ -121,141 +122,16 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvFeatures"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:layout_marginTop="@dimen/_13sdp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
+                            android:nestedScrollingEnabled="true"
+                            android:overScrollMode="never"
+                            tools:listitem="@layout/plan_feature_layout"
+                            tools:itemCount="4"
+                            tools:targetApi="lollipop" />
 
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:contentDescription="@string/todo"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvPlanFeatures01"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:text="@string/_100_natural_and_drug_free"
-                                android:textColor="@color/light_black"
-                                android:textSize="@dimen/_13sdp"
-                                tools:ignore="SpUsage" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:contentDescription="@string/todo"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvPlanFeatures02"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:text="@string/programs_tailored_to_your_needs"
-                                android:textColor="@color/light_black"
-                                android:textSize="@dimen/_13sdp"
-                                tools:ignore="SpUsage" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:contentDescription="@string/todo"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvPlanFeatures03"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:text="@string/compassionate_supportive_facilitators"
-                                android:textColor="@color/light_black"
-                                android:textSize="@dimen/_13sdp"
-                                tools:ignore="SpUsage" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:contentDescription="@string/todo"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvPlanFeatures04"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:text="@string/continually_measured_progress"
-                                android:textColor="@color/light_black"
-                                android:textSize="@dimen/_13sdp"
-                                tools:ignore="SpUsage" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:contentDescription="@string/todo"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvPlanFeatures05"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:text="@string/easy_sessions_and_atmospheres"
-                                android:textColor="@color/light_black"
-                                android:textSize="@dimen/_13sdp"
-                                tools:ignore="SpUsage" />
-                        </LinearLayout>
                     </LinearLayout>
 
                     <RelativeLayout
@@ -354,185 +230,15 @@
                         android:textSize="@dimen/_17sdp"
                         tools:ignore="SpUsage" />
 
-                    <LinearLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPlanList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_22sdp"
-                        android:background="@drawable/account_gray_bg"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="@dimen/_30sdp"
-                            android:paddingStart="@dimen/_16sdp"
-                            android:weightSum="1"
-                            tools:ignore="RtlSymmetry">
-
-                            <LinearLayout
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.75"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="start"
-                                    android:text="@string/weekly"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp"
-                                    tools:ignore="SpUsage" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/_14sdp"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:gravity="start"
-                                    android:lineSpacingExtra="@dimen/_4sdp"
-                                    android:text="@string/lorem_ipsum_dolor_sit"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp"
-                                    tools:ignore="SpUsage" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="@dimen/_16sdp"
-                                android:layout_weight="0.25"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="center"
-                                android:text="$99.99"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp"
-                                tools:ignore="SpUsage" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1.5dp"
-                            android:background="@color/dim_light_gray" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="@dimen/_30sdp"
-                            android:paddingStart="@dimen/_16sdp"
-                            android:weightSum="1">
-
-                            <LinearLayout
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.75"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="start"
-                                    android:text="Monthly"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp"
-                                    tools:ignore="SpUsage" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/_14sdp"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:gravity="start"
-                                    android:lineSpacingExtra="@dimen/_4sdp"
-                                    android:text="@string/lorem_ipsum_dolor_sit"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp"
-                                    tools:ignore="SpUsage" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="@dimen/_16sdp"
-                                android:layout_weight="0.25"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="center"
-                                android:text="$299.99"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp"
-                                tools:ignore="SpUsage" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1.5dp"
-                            android:background="@color/dim_light_gray" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="@dimen/_30sdp"
-                            android:paddingStart="@dimen/_16sdp"
-                            android:weightSum="1"
-                            tools:ignore="RtlSymmetry">
-
-                            <LinearLayout
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.75"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/montserrat_bold"
-                                    android:gravity="start"
-                                    android:text="One-Time"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_16sdp"
-                                    tools:ignore="SpUsage" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/_14sdp"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:gravity="start"
-                                    android:lineSpacingExtra="@dimen/_4sdp"
-                                    android:text="@string/lorem_ipsum_dolor_sit"
-                                    android:textColor="@color/dark_blue_gray"
-                                    android:textSize="@dimen/_12sdp"
-                                    tools:ignore="SpUsage" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="@dimen/_0sdp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="@dimen/_16sdp"
-                                android:layout_weight="0.25"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="center"
-                                android:text="$999.99"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_18sdp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/plan_list_filtered_layout"
+                        tools:itemCount="3"
+                        tools:targetApi="lollipop" />
 
                     <TextView
                         android:id="@+id/tvTitleTag"
@@ -604,7 +310,17 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:overScrollMode="never"
                         android:paddingBottom="@dimen/_8sdp" />
-
+                    <TextView
+                        android:id="@+id/tvFound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:text="@string/no_result_found"
+                        android:textSize="@dimen/_16sdp"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
                     <TextView
                         android:id="@+id/tvText"
                         android:layout_width="match_parent"

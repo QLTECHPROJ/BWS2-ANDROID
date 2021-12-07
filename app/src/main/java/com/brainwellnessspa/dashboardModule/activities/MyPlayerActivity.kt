@@ -978,9 +978,6 @@ class MyPlayerActivity : AppCompatActivity() {
                                             val listModel = response.body()
                                             val response = listModel?.responseData
                                             if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                val i = Intent(act, SessionDetailContinueActivity::class.java)
-                                                i.putExtra("SessionId", sessionId)
-                                                startActivity(i)
                                                 finish()
                                             }
                                         } catch (e: Exception) {

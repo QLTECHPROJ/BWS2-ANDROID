@@ -8,8 +8,6 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -19,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.databinding.ActivitySessionWellnessAssessmentBinding
+import com.brainwellnessspa.databinding.ActivitySessionProgressReportBinding
 import com.brainwellnessspa.databinding.FormFillLayoutBinding
 import com.brainwellnessspa.databinding.FormFillSubBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -32,8 +30,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /* This act is assessment form act */
-class  SessionWellnessAssessmentActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySessionWellnessAssessmentBinding
+class  SessionProgressReportActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySessionProgressReportBinding
     lateinit var firstListAdapter: OptionsFirstListAdapter
     lateinit var secondListAdapter: OptionsSecondListAdapter
     lateinit var ctx: Context
@@ -60,17 +58,21 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         /* This is the layout showing */
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_wellness_assessment)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_session_progress_report)
 
         /* This is the get string mainAccountID, UserId & email */
         val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         mainAccountID = shared.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         userId = shared.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
         email = shared.getString(CONSTANTS.PREFE_ACCESS_EMAIL, "")
-        ctx = this@SessionWellnessAssessmentActivity
-        act = this@SessionWellnessAssessmentActivity
+        ctx = this@SessionProgressReportActivity
+        act = this@SessionProgressReportActivity
         getAssSaveData()
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
+
+        binding.llBack.setOnClickListener {
+            finish()
+        }
 
         if (intent.extras != null) {
             nextForm = intent.getStringExtra("nextForm").toString()
@@ -88,7 +90,6 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             if (myPos < listModel.questions!!.size - 1) {
                 myPos += Integer.parseInt(listModel.chunkSize!!)
 
-                binding.tvNumberOfQus.text = myPos.toString()
                 binding.lpIndicator.progress = myPos
               /*  if (myPos == listModel.questions!!.size - 1) {
                     binding.btnNext.visibility = View.GONE
@@ -147,8 +148,6 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         /* This is the continue button click when form is complete */
         binding.btnContinue.setOnClickListener {
             binding.lpIndicator.progress = listModel.questions!!.size
-
-            binding.tvNumberOfQus.text = listModel.questions!!.size.toString()
             for (i in 0 until progressReportQus.size) {
                 val sendR = sendQusData()
                 sendR.question_id = (progressReportQus[i])
@@ -275,9 +274,8 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             myPos -= Integer.parseInt(listModel.chunkSize!!)
             val p = Properties()
             p.putValue("screen", myPos)
-            addInSegment(p)
+//            addInSegment(p)
             binding.lpIndicator.progress = myPos
-            binding.tvNumberOfQus.text = myPos.toString()
             var s = myPos + Integer.parseInt(listModel.chunkSize!!)
             if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
                 binding.btnNext.visibility = View.GONE
@@ -338,8 +336,8 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
         binding.lpIndicator.progress = 0
 
         binding.tvTitle.text = listModel.sectionSubtitle
-        binding.tvNumberOfQus.text = myPos.toString()
-        binding.tvTotalQus.text = listModel.questions!!.size.toString()
+        binding.tvNumberOfQus.text =  listModel.currentSection
+        binding.tvTotalQus.text = listModel.totalSection
         /*if (progressReportQus.size != 0) {
             val mod1 = progressReportQus.size % 2
             myPos = if (mod1 == 0) {
@@ -382,8 +380,8 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<StepTypeTwoSaveDataModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionWellnessAssessmentBinding, val act: Activity,val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
-        private var dass = SessionWellnessAssessmentActivity()
+    class OptionsFirstListAdapter(private val listModel: List<StepTypeTwoSaveDataModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionProgressReportBinding, val act: Activity,val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+        private var dass = SessionProgressReportActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
 
@@ -429,15 +427,18 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
     }
 
     /* This is the second options box input layout */
-    class OptionsSecondListAdapter(val listModel: StepTypeTwoSaveDataModel.ResponseData.Question, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivitySessionWellnessAssessmentBinding, val act: Activity, val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
+    class OptionsSecondListAdapter(val listModel: StepTypeTwoSaveDataModel.ResponseData.Question, val pos: Int, private val mmypos2: Int, val ctx: Context, var binding: ActivitySessionProgressReportBinding, val act: Activity, val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsSecondListAdapter.MyViewHolder>() {
         var mSelectedItem = -1
         var posItem: Int = -1
 
-        var dass = SessionWellnessAssessmentActivity()
+        var dass = SessionProgressReportActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillLayoutBinding) : RecyclerView.ViewHolder(bindingAdapter.root) {
             init {
                 bindingAdapter.cbChecked.setOnClickListener {
+                    callCheckedBox(absoluteAdapterPosition)
+                }
+                bindingAdapter.cbChecked2.setOnClickListener {
                     callCheckedBox(absoluteAdapterPosition)
                 }
                 bindingAdapter.rbOne.setOnClickListener {
@@ -496,20 +497,30 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             setData()
             when {
                 listModelMain.optionType.equals("tenoptions") -> {
-                    holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
-                    holder.bindingAdapter.llTopRadio.visibility = View.GONE
+                    holder.bindingAdapter.cbChecked2.visibility = View.VISIBLE
+                    holder.bindingAdapter.cbChecked.visibility = View.GONE
+                    holder.bindingAdapter.tvOne.visibility = View.GONE
+                    holder.bindingAdapter.llMainLayout.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
+                    holder.bindingAdapter.rbOne.visibility = View.GONE
                 }
                 listModelMain.optionType.equals("fiveoptions") -> {
-                    holder.bindingAdapter.llOldRadio.visibility = View.GONE
-                    holder.bindingAdapter.llTopRadio.visibility = View.VISIBLE
+                    holder.bindingAdapter.cbChecked.visibility = View.GONE
+                    holder.bindingAdapter.cbChecked2.visibility = View.GONE
+                    holder.bindingAdapter.tvOne.visibility = View.VISIBLE
+                    holder.bindingAdapter.rbOne.visibility = View.VISIBLE
+                    holder.bindingAdapter.llMainLayout.setBackgroundColor(ContextCompat.getColor(act, R.color.light_white))
                 }
                 listModelMain.optionType.equals("twooptions") -> {
-                    holder.bindingAdapter.llOldRadio.visibility = View.VISIBLE
-                    holder.bindingAdapter.llTopRadio.visibility = View.GONE
+                    holder.bindingAdapter.cbChecked2.visibility = View.VISIBLE
+                    holder.bindingAdapter.cbChecked.visibility = View.GONE
+                    holder.bindingAdapter.tvOne.visibility = View.GONE
+                    holder.bindingAdapter.rbOne.visibility = View.GONE
+                    holder.bindingAdapter.llMainLayout.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }
             }
             holder.bindingAdapter.tvOne.text =listModel.questionOptions!![position].replace(" ","\n")
             holder.bindingAdapter.cbChecked.text = listModel.questionOptions!![position]
+            holder.bindingAdapter.cbChecked2.text = listModel.questionOptions!![position]
             if (dass.progressReportQus.contains(listModel.questionId)) {
                 for (i in 0 until dass.progressReportQus.size) {
                     if (dass.progressReportQus[i] == listModel.questionId) {
@@ -521,9 +532,11 @@ class  SessionWellnessAssessmentActivity : AppCompatActivity() {
             }
             if (position == posItem) {
                 holder.bindingAdapter.cbChecked.isChecked = position == posItem
+                holder.bindingAdapter.cbChecked2.isChecked = position == posItem
                 holder.bindingAdapter.rbOne.isChecked = position == posItem
             } else {
                 holder.bindingAdapter.cbChecked.isChecked = false
+                holder.bindingAdapter.cbChecked2.isChecked = false
                 holder.bindingAdapter.rbOne.isChecked = false
             }
         }

@@ -1,34 +1,64 @@
 package com.brainwellnessspa.dashboardModule.session
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.billingclient.api.SkuDetails
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
 import com.brainwellnessspa.dashboardModule.models.EEPPlanListModel
+import com.brainwellnessspa.dashboardModule.models.PlanlistInappModel
 import com.brainwellnessspa.dashboardModule.models.SaveProgressReportModel
-import com.brainwellnessspa.databinding.ActivityBrainStatusBinding
-import com.brainwellnessspa.databinding.ActivityEmpowerManageBinding
+import com.brainwellnessspa.databinding.*
+import com.brainwellnessspa.membershipModule.activities.EnhanceActivity
+import com.brainwellnessspa.membershipModule.activities.IAPOrderSummaryActivity
+import com.brainwellnessspa.membershipModule.adapters.SubscriptionAdapter
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
+import com.brainwellnessspa.webView.TncActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener  {
     lateinit var binding: ActivityEmpowerManageBinding
     lateinit var act: Activity
     lateinit var ctx: Context
     var userId: String = ""
+    var intentflag: String = ""
+    lateinit var i: Intent
+    lateinit var adapter: MembershipFaqAdapter
+    lateinit var planFeatureAdapter: PlanFeatureAdapter
+    lateinit var planListAdapter: PlanListAdapter
+    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +69,31 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
 
         prepareData()
+
+        binding.tvtncs.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            i.putExtra(CONSTANTS.Web, "Tnc")
+            startActivity(i)
+        }
+
+        binding.tvPrivacyPolicys.setOnClickListener {
+            val i = Intent(this, TncActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            i.putExtra(CONSTANTS.Web, "PrivacyPolicy")
+            startActivity(i)
+        }
+
+        binding.rvPlanList.layoutManager = LinearLayoutManager(act)
+        i = Intent(ctx, IAPOrderSummaryActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+
+        binding.btnFreeJoin.setOnClickListener {
+            i.putExtra("plan", intentflag)
+            startActivity(i)
+            finish()
+        }
+
         binding.youtubeView.initialize(API_KEY, this)
         binding.llBack.setOnClickListener{
           finish()
@@ -59,14 +114,35 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
             listCall.enqueue(object : Callback<EEPPlanListModel?> {
                 override fun onResponse(call: Call<EEPPlanListModel?>, response: Response<EEPPlanListModel?>) {
                     try {
-                        val listModel1 = response.body()
-                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                        val listModel = response.body()
+                        if (listModel?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                            binding.nestedScroll.isSmoothScrollingEnabled = true
+
+                            planListAdapter = PlanListAdapter(listModel!!.responseData!!.plan!!, ctx, i, binding)
+                            binding.rvPlanList.adapter = planListAdapter
+                            binding.tvTitle.text = listModel.responseData!!.title
+                            binding.tvDesc.text = listModel.responseData!!.desc
+
+                            binding.tvFreeTrial.text = listModel.responseData!!.plan!![0].freeTrial
+
+                            binding.rvFeatures.layoutManager = LinearLayoutManager(act, LinearLayoutManager.VERTICAL, false)
+                            planFeatureAdapter = PlanFeatureAdapter(listModel.responseData!!.planFeatures!!, ctx)
+                            binding.rvFeatures.adapter = planFeatureAdapter
+
+                       /*     binding.rvVideoList.layoutManager = LinearLayoutManager(act, LinearLayoutManager.HORIZONTAL, false)
+                            val videoListAdapter = VideoSeriesListAdapter(listModel.responseData!!.testminialVideo!!, ctx)
+                            binding.rvVideoList.adapter = videoListAdapter*/
+
+                            binding.rvFaqList.layoutManager = LinearLayoutManager(ctx)
+                            adapter = MembershipFaqAdapter(listModel.responseData!!.fAQs!!, ctx, binding.rvFaqList, binding.tvFound)
+                            binding.rvFaqList.adapter = adapter
 
                             // do plan Code
-                        } else if (listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
-                            BWSApplication.callDelete403(act, listModel1.responseMessage)
+                        } else if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                            BWSApplication.callDelete403(act, listModel.responseMessage)
                         } else {
-                            BWSApplication.showToast(listModel1.responseMessage, act)
+                            BWSApplication.showToast(listModel.responseMessage, act)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -81,9 +157,149 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
             BWSApplication.showToast(act.getString(R.string.no_server_found), act)
         }
     }
+
     override fun onBackPressed() {
+       /* if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        BWSApplication.showToast("Press again to exit", act)
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            doubleBackToExitPressedOnce = false
+        }, 2000)*/
         finish()
         super.onBackPressed()
+    }
+
+    class PlanListAdapter(var listModelList: List<EEPPlanListModel.ResponseData.Plan>, var ctx: Context, var i: Intent, var binding1: ActivityEmpowerManageBinding) : RecyclerView.Adapter<PlanListAdapter.MyViewHolder>()/*, Filterable */ {
+        private var rowIndex: Int = -1
+        private var pos: Int = 0
+        var ip = -1
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: PlanListFilteredLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.plan_list_filtered_layout, parent, false)
+            return MyViewHolder(v)
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+            holder.binding.tvTilte.text = listModelList[position].planInterval
+            holder.binding.tvContent.text = listModelList[position].subName
+
+            holder.binding.tvAmount.text = "$" + listModelList[position].planAmount
+
+            if (listModelList[position].recommendedFlag.equals("1")) {
+                holder.binding.rlMostPopular.visibility = View.VISIBLE
+            } else {
+                holder.binding.rlMostPopular.visibility = View.INVISIBLE
+            }
+            holder.binding.llPlanMain.setOnClickListener {
+                rowIndex = position
+                pos++
+                notifyDataSetChanged()
+            }
+            if (rowIndex == position) {
+                changeFunction(holder, listModelList, position)
+            } else {
+                if (listModelList[position].recommendedFlag.equals("1") && pos == 0) {
+                    holder.binding.rlMostPopular.visibility = View.VISIBLE
+                    changeFunction(holder, listModelList, position)
+                } else {
+                    holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_gray_round_cornors)
+                    holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+                    holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+                    holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.black))
+                }
+            }
+
+        }
+
+        private fun changeFunction(holder: MyViewHolder, listModelList: List<EEPPlanListModel.ResponseData.Plan>, position: Int) {
+            holder.binding.llPlanMain.background = ContextCompat.getDrawable(ctx, R.drawable.light_sky_round_cornors)
+            holder.binding.tvTilte.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvContent.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            holder.binding.tvAmount.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            val gson = Gson()
+//            binding1.btnFreeJoin.text = "START AT " + holder.binding.tvAmount.text.toString() + " / " + listModelList[position].subName.toString().split("/")[1]
+            i.putExtra("PlanData", gson.toJson(listModelList))
+            i.putExtra("TrialPeriod", "")
+            i.putExtra("position", position)
+            i.putExtra("Promocode", "")
+            i.putExtra("displayPrice", holder.binding.tvAmount.text.toString())
+        }
+
+        override fun getItemCount(): Int {
+            return listModelList.size
+        }
+
+        inner class MyViewHolder(var binding: PlanListFilteredLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    }
+
+    class PlanFeatureAdapter(private val listModelList: List<EEPPlanListModel.ResponseData.PlanFeature>, var ctx: Context) : RecyclerView.Adapter<PlanFeatureAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: PlanFeatureLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.plan_feature_layout, parent, false)
+            return MyViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.binding.tvPlanFeatures01.text = listModelList[position].feature
+          }
+
+        override fun getItemCount(): Int {
+            return listModelList.size
+        }
+
+        inner class MyViewHolder(var binding: PlanFeatureLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    }
+    class MembershipFaqAdapter(private val modelList: List<EEPPlanListModel.ResponseData.Faq>, var ctx: Context, var rvFaqList: RecyclerView, var tvFound: TextView) : RecyclerView.Adapter<MembershipFaqAdapter.MyViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: MembershipFaqLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.membership_faq_layout, parent, false)
+            return MyViewHolder(v)
+        }
+
+        @SuppressLint("ResourceType")
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.binding.tvTitle.text = modelList[position].title
+            holder.binding.tvDesc.text = modelList[position].desc
+
+            holder.binding.ivClickRight.setOnClickListener {
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.white))
+                holder.binding.tvDesc.isFocusable = true
+                holder.binding.tvDesc.requestFocus()
+                holder.binding.tvDesc.visibility = View.VISIBLE
+                holder.binding.ivClickRight.visibility = View.GONE
+                holder.binding.ivClickDown.visibility = View.VISIBLE
+                holder.binding.llBgChange.setBackgroundResource(R.drawable.faq_not_clicked)
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_clicked)
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_white_arrow_down_icon)
+            }
+
+            holder.binding.ivClickDown.setOnClickListener {
+                holder.binding.llBgChange.setBackgroundResource(Color.TRANSPARENT)
+                holder.binding.llMainLayout.setBackgroundResource(R.drawable.faq_not_clicked)
+                holder.binding.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.light_black))
+                holder.binding.tvDesc.visibility = View.GONE
+                holder.binding.ivClickRight.visibility = View.VISIBLE
+                holder.binding.ivClickDown.visibility = View.GONE
+                holder.binding.ivClickDown.setImageResource(R.drawable.ic_right_gray_arrow_icon)
+            }
+
+            if (modelList.isEmpty()) {
+                tvFound.visibility = View.GONE
+                rvFaqList.visibility = View.GONE
+            } else {
+                tvFound.visibility = View.GONE
+                rvFaqList.visibility = View.VISIBLE
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return modelList.size
+        }
+
+        inner class MyViewHolder(var binding: MembershipFaqLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     }
 
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, wasRestored: Boolean) {

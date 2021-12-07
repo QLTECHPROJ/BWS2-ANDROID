@@ -53,6 +53,7 @@ class SessionDetailFragment : Fragment() {
     }
 
     override fun onResume() {
+        prepareData()
         networkCheck()
         super.onResume()
     }
@@ -254,9 +255,16 @@ class SessionDetailFragment : Fragment() {
             }
 
             holder.bindingAdapter.rlNext.setOnClickListener {
-                when {
+                if(catName[position].userSessionStatus.equals("Lock",ignoreCase = true)){
+                    BWSApplication.showToast("Please complete above session first", activity)
+                }else{
+                    val i = Intent(activity, SessionDetailContinueActivity::class.java)
+                    i.putExtra("SessionId", catName[position].sessionId)
+                    activity.startActivity(i)
+                }
+             /*   when {
                     catName[position].userSessionStatus.equals("Completed") -> {
-                        val i = Intent(activity, SessionDetailContinueActivity::class.java)
+                        val i = Intent(activity, EmpowerManageActivity::class.java)
                         i.putExtra("SessionId", catName[position].sessionId)
                         activity.startActivity(i)
                     }
@@ -268,7 +276,7 @@ class SessionDetailFragment : Fragment() {
                     catName[position].userSessionStatus.equals("Lock") -> {
                         BWSApplication.showToast("Please complete above session first", activity)
                     }
-                }
+                }*/
             }
             val beforeText = arrayListOf<String>()
             for (i in catName[position].beforeSession!!.indices) {

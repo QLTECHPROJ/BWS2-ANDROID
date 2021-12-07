@@ -33,6 +33,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
     lateinit var act: Activity
     var sessionId: String? = ""
     var stepId: String? = ""
+    var desc: String? = ""
     var userId: String? = ""
     lateinit var listModel: BeforeAfterComparisionQuestionListModel
     lateinit var firstListAdapter: OptionsFirstListAdapter
@@ -55,7 +56,9 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
         if (intent.extras != null) {
             sessionId = intent.getStringExtra("SessionId")
             stepId = intent.getStringExtra("StepId")
+            desc = intent.getStringExtra("desc")
         }
+        binding.tvTitleBar.text = desc
         binding.rvFirstList.layoutManager = LinearLayoutManager(ctx)
         getAssSaveData()
         binding.btnNext.setOnClickListener {
@@ -165,6 +168,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             binding.rvFirstList.adapter = firstListAdapter
         } else {
             //go to previous activity
+            finish()
         }
     }
 
@@ -344,7 +348,7 @@ class SessionComparisonStatusActivity : AppCompatActivity() {
             visibleGoneNext()
         }
         private fun visibleGoneNext() {
-            if (scsa.assQus.size > myPos2) {
+            if (scsa.assQus.size >= myPos2) {
                 binding.btnNext.isClickable = true
                 binding.btnNext.isEnabled = true
                 binding.btnNext.setColorFilter(ContextCompat.getColor(act, R.color.black), PorterDuff.Mode.SRC_ATOP)

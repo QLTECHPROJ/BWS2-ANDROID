@@ -2,7 +2,6 @@ package com.brainwellnessspa.dashboardModule.wellness
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
-import com.brainwellnessspa.dashboardModule.session.SessionDetailFragment
-import com.brainwellnessspa.dashboardModule.session.SessionPcDetailActivity
-import com.brainwellnessspa.dashboardModule.session.SessionsStepThreeActivity
-import com.brainwellnessspa.dashboardModule.session.SessionsStepTwoActivity
 import com.brainwellnessspa.databinding.FragmentWellnessBinding
 
 class WellnessFragment : Fragment() {
@@ -29,8 +24,8 @@ class WellnessFragment : Fragment() {
         act = requireActivity()
 
         binding.llRemainDev.setOnClickListener {
-           /* val i = Intent(requireActivity(), SessionPcDetailActivity::class.java)
-            startActivity(i)*/
+            /* val i = Intent(requireActivity(), SessionPcDetailActivity::class.java)
+             startActivity(i)*/
             /*val fragment: Fragment = SessionDetailFragment()
             val fragmentManager1 = requireActivity().supportFragmentManager
             fragmentManager1.beginTransaction().replace(R.id.flContainer, fragment).commit()
