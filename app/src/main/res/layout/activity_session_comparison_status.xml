@@ -153,21 +153,23 @@
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_back_black_icon"
             app:tint="@color/gray" />
+
         <Button
             android:id="@+id/btnDone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/_48sdp"
+            android:layout_marginEnd="@dimen/_18sdp"
             android:layout_marginBottom="@dimen/_26sdp"
             android:background="@drawable/light_green_rounded_filled"
-            android:fontFamily="@font/montserrat_bold"
-            android:paddingHorizontal="@dimen/_55sdp"
-            android:paddingVertical="@dimen/_4sdp"
+            android:clickable="false"
+            android:enabled="false"
+            android:fontFamily="@font/montserrat_medium"
             android:text="@string/done"
-            android:visibility="gone"
-            android:textColor="@color/white" />
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -29,7 +30,7 @@ import com.google.gson.reflect.TypeToken
 class SessionWalkScreenActivity : AppCompatActivity() {
     lateinit var binding: ActivitySessionWalkScreenBinding
     lateinit var activity: Activity
-
+    lateinit var ctx: Context
     var listModel = StepTypeTwoSaveDataModel.ResponseData()
     var sessionId: String? = ""
     var stepId:String? = ""
@@ -40,6 +41,7 @@ class SessionWalkScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_session_walk_screen)
         activity = this@SessionWalkScreenActivity
+        ctx = this@SessionWalkScreenActivity
         if (intent.extras != null) {
             nextForm = intent.getStringExtra("nextForm").toString()
             sessionId = intent.getStringExtra("SessionId").toString()
@@ -54,37 +56,37 @@ class SessionWalkScreenActivity : AppCompatActivity() {
             .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.sessionImg)
 
         binding.tvTitle.text = listModel.sectionSubtitle
-        binding.tvSessionDesc.text = listModel.sectionDescription +   listModel.sectionDescription +   listModel.sectionDescription
+        binding.tvSessionDesc.text = listModel.sectionDescription
 
         binding.rlSectionOne.setOnClickListener {
             if(!nextForm.equals("personal_query")){
                 val i = Intent(activity, SessionProgressReportActivity::class.java)
-                i.putExtra("Data",gson.toJson(listModel))
-                i.putExtra("nextForm",nextForm)
-                i.putExtra("SessionId",sessionId)
+                i.putExtra("Data", gson.toJson(listModel))
+                i.putExtra("nextForm", nextForm)
+                i.putExtra("SessionId", sessionId)
                 i.putExtra("StepId", stepId)
                 activity.startActivity(i)
                 finish()
             }else if(nextForm.equals("personal_query")){
                 val i = Intent(activity, SessionPersonalHistoryActivity::class.java)
-                i.putExtra("Data",gson.toJson(listModel))
-                i.putExtra("nextForm",nextForm)
-                i.putExtra("SessionId",sessionId)
+                i.putExtra("Data", gson.toJson(listModel))
+                i.putExtra("nextForm", nextForm)
+                i.putExtra("SessionId", sessionId)
                 i.putExtra("StepId", stepId)
                 activity.startActivity(i)
                 finish()
             }
         }
-        val lineCount: Int = binding.tvSessionDesc.lineCount
-        if (lineCount >= 2) {
+        val lineCount: Int = binding.tvSessionDesc.length()
+        if (lineCount > 280) {
             binding.tvReadMore.visibility = View.VISIBLE
         } else {
             binding.tvReadMore.visibility = View.GONE
         }
         binding.tvReadMore.setOnClickListener {
-            val dialog = Dialog(activity)
+            val dialog = Dialog(ctx)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.dass_desc_layout)
+            dialog.setContentView(R.layout.full_desc_layout)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)

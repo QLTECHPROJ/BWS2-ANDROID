@@ -114,7 +114,6 @@
                             android:textSize="@dimen/_20sdp"
                             tools:ignore="SpUsage" />
 
-
                         <TextView
                             android:id="@+id/tvStatus"
                             android:layout_width="match_parent"

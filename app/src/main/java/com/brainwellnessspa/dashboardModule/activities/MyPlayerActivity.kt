@@ -436,7 +436,7 @@ class MyPlayerActivity : AppCompatActivity() {
                 editor.apply()
             }
             audioPlayerFlag.equals("SessionAudio", ignoreCase = true) -> {
-                binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
+                binding.ivBgChange.setBackgroundResource(R.drawable.playerbg)
                 val type = object : TypeToken<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>() {}.type
                 val arrayList = gson.fromJson<ArrayList<SessionStepOneModel.ResponseData.StepAudio?>>(json, type)
                 listSize = arrayList.size
@@ -816,7 +816,7 @@ class MyPlayerActivity : AppCompatActivity() {
         localBroadcastManager = LocalBroadcastManager.getInstance(ctx)
         callButtonText(position)
           if(audioPlayerFlag!!.equals("SessionAudio", ignoreCase = true)){
-            binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
+            binding.ivBgChange.setBackgroundResource(R.drawable.playerbg)
         }else{
               binding.ivBgChange.setBackgroundResource(R.drawable.ic_conflower_blue_bg)
         }
@@ -889,7 +889,7 @@ class MyPlayerActivity : AppCompatActivity() {
         GetMediaPer()
         getMedia2()
         if(audioPlayerFlag!!.equals("SessionAudio", ignoreCase = true)){
-            binding.ivBgChange.setBackgroundResource(R.drawable.ic_session_player_bg)
+            binding.ivBgChange.setBackgroundResource(R.drawable.playerbg)
         }else{
             binding.ivBgChange.setBackgroundResource(R.drawable.ic_conflower_blue_bg)
         }

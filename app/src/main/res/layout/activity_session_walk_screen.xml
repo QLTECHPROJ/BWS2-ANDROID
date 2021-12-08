@@ -13,7 +13,7 @@
             android:id="@+id/rlSectionOne"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/session_bg"
+            android:background="@drawable/playerbg"
             android:visibility="visible">
 
             <LinearLayout
@@ -65,10 +65,8 @@
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:text="zvs"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_14sdp"
                     android:maxLines="2"
-                    android:maxLength="280"
-                    android:ellipsize="end"
+                    android:textSize="@dimen/_14sdp"
                     tools:ignore="SpUsage" />
 
                 <TextView

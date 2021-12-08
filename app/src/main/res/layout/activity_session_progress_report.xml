@@ -122,7 +122,7 @@
                 android:layout_marginRight="@dimen/_20sdp"
                 android:max="33"
                 android:progress="0"
-                app:indicatorColor="#F1646A"
+                app:indicatorColor="#8C7386"
                 app:trackColor="#DDDDDD" />
         </LinearLayout>
         <LinearLayout

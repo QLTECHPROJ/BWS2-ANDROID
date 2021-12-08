@@ -62,8 +62,8 @@
 
                 <ImageView
                     android:id="@+id/ivIcon"
-                    android:layout_width="@dimen/_52sdp"
-                    android:layout_height="@dimen/_52sdp"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:contentDescription="@string/todo"
@@ -298,19 +298,20 @@
 
         <View
             android:id="@+id/viewUp"
-            android:layout_width="8dp"
+            android:layout_width="7dp"
             android:layout_height="@dimen/_50sdp"
             android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/session_viewer_line_up" />
 
         <View
             android:id="@+id/viewDown"
-            android:layout_width="8dp"
+            android:layout_width="7dp"
             android:layout_height="@dimen/_102sdp"
             android:layout_marginStart="@dimen/_35sdp"
-            android:layout_marginTop="@dimen/_96sdp"
+            android:layout_marginTop="@dimen/_104sdp"
             android:background="@drawable/session_viewer_line_down"
-            android:visibility="gone" />
+            android:visibility="visible" />
             <!--android:background="@color/session_progress"-->
 
     </RelativeLayout>

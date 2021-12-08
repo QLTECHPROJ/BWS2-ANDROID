@@ -1,5 +1,6 @@
 package com.brainwellnessspa.dashboardModule.session
 
+import android.R.attr.button
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -28,6 +30,7 @@ import com.segment.analytics.Properties
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /* This act is assessment form act */
 class  SessionProgressReportActivity : AppCompatActivity() {
@@ -109,12 +112,12 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                 } else if (s > listModel.questions!!.size) {
                     binding.btnNext.visibility = View.GONE
                     binding.btnContinue.visibility = View.VISIBLE
-                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
                     binding.rvFirstList.adapter = firstListAdapter
                 }else if(myPos < listModel.questions!!.size) {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnContinue.visibility = View.GONE
-                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
+                    firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
                     binding.rvFirstList.adapter = firstListAdapter
                 }
                 /*if (mod == 0) {
@@ -154,21 +157,21 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                 sendR.answer = (progressReportAns[i])
                 sendAnsArray.add(sendR)
             }
-             callSaveProgressReport(gson.toJson(sendAnsArray) )
+             callSaveProgressReport(gson.toJson(sendAnsArray))
             Log.e("Ass Post Data", gson.toJson(sendAnsArray))
         }
         prepareData()
     }
-    private fun callSaveProgressReport(answerJson:String ) {
+    private fun callSaveProgressReport(answerJson: String) {
         if (BWSApplication.isNetworkConnected(act)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, act)
-            val listCall = APINewClient.client.getSaveProgressReport(userId, sessionId, stepId,nextForm,answerJson)
+            val listCall = APINewClient.client.getSaveProgressReport(userId, sessionId, stepId, nextForm, answerJson)
             listCall.enqueue(object : Callback<SaveProgressReportModel?> {
                 override fun onResponse(call: Call<SaveProgressReportModel?>, response: Response<SaveProgressReportModel?>) {
                     try {
                         val listModel1 = response.body()
                         if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            Log.e("sussess","true")
+                            Log.e("sussess", "true")
                             val preferencesd1: SharedPreferences = getSharedPreferences(CONSTANTS.ProgressReportMain, Context.MODE_PRIVATE)
                             val edited1 = preferencesd1.edit()
                             edited1.remove(CONSTANTS.ProgressReportQus)
@@ -176,15 +179,16 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                             edited1.clear()
                             edited1.apply()
                             callCheckProgressReport()
-                        } else if(listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                        } else if (listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
                             BWSApplication.callDelete403(act, listModel1.responseMessage)
-                        } else{
+                        } else {
                             BWSApplication.showToast(listModel1.responseMessage, act)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
+
                 override fun onFailure(call: Call<SaveProgressReportModel?>, t: Throwable) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
@@ -199,53 +203,53 @@ class  SessionProgressReportActivity : AppCompatActivity() {
             val listCall = APINewClient.client.getCheckProgressReportStatus(userId, sessionId, stepId)
             listCall.enqueue(object : Callback<CheckProgressReportStatusModel?> {
                 override fun onResponse(call: Call<CheckProgressReportStatusModel?>, response: Response<CheckProgressReportStatusModel?>) {
-//                    try {
-                        Log.e("sussess chk","true")
-                        val listModel1 = response.body()
-                        val response = listModel1?.responseData
-                        if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                            if (response != null) {
-                                val listCall = APINewClient.client.getSessionProgressReport(sessionId, stepId,response.nextForm)
-                                listCall.enqueue(object : Callback<StepTypeTwoSaveDataModel?> {
-                                    override fun onResponse(call: Call<StepTypeTwoSaveDataModel?>, response2: Response<StepTypeTwoSaveDataModel?>) {
-                                        try {
-                                            val listModel2 = response2.body()
-                                            val response1 = listModel2?.responseData
-                                            Log.e("sussess chk x x","true")
+                    //                    try {
+                    Log.e("sussess chk", "true")
+                    val listModel1 = response.body()
+                    val response = listModel1?.responseData
+                    if (listModel1?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                        if (response != null) {
+                            val listCall = APINewClient.client.getSessionProgressReport(sessionId, stepId, response.nextForm)
+                            listCall.enqueue(object : Callback<StepTypeTwoSaveDataModel?> {
+                                override fun onResponse(call: Call<StepTypeTwoSaveDataModel?>, response2: Response<StepTypeTwoSaveDataModel?>) {
+                                    try {
+                                        val listModel2 = response2.body()
+                                        val response1 = listModel2?.responseData
+                                        Log.e("sussess chk x x", "true")
 
-                                            if (listModel2?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                                if (response1 != null) {
-                                                    val gson = Gson()
-                                                    val i = Intent(act, SessionWalkScreenActivity::class.java)
-                                                    i.putExtra("Data",gson.toJson(response1))
-                                                    i.putExtra("nextForm",response.nextForm)
-                                                    i.putExtra("SessionId",sessionId)
-                                                    i.putExtra("StepId", stepId)
-                                                    act.startActivity(i)
-                                                    act.finish()
-                                                }
-                                            }else if(listModel2!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
-                                                BWSApplication.callDelete403(act, listModel2.responseMessage)
-                                            } else{
-                                                BWSApplication.showToast(listModel2.responseMessage, act)
+                                        if (listModel2?.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                            if (response1 != null) {
+                                                val gson = Gson()
+                                                val i = Intent(act, SessionWalkScreenActivity::class.java)
+                                                i.putExtra("Data", gson.toJson(response1))
+                                                i.putExtra("nextForm", response.nextForm)
+                                                i.putExtra("SessionId", sessionId)
+                                                i.putExtra("StepId", stepId)
+                                                act.startActivity(i)
+                                                act.finish()
                                             }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
+                                        } else if (listModel2!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                                            BWSApplication.callDelete403(act, listModel2.responseMessage)
+                                        } else {
+                                            BWSApplication.showToast(listModel2.responseMessage, act)
                                         }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
+                                }
 
-                                    override fun onFailure(call: Call<StepTypeTwoSaveDataModel?>, t: Throwable) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
-                                    }
-                                })
-                            }
-                        }else if(listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
-                            BWSApplication.callDelete403(act, listModel1.responseMessage)
-                        } else{
-                            BWSApplication.showToast(listModel1.responseMessage, act)
+                                override fun onFailure(call: Call<StepTypeTwoSaveDataModel?>, t: Throwable) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
+                                }
+                            })
                         }
-                   /*} catch (e: Exception) {
+                    } else if (listModel1!!.responseCode.equals(act.getString(R.string.ResponseCodeDeleted))) {
+                        BWSApplication.callDelete403(act, listModel1.responseMessage)
+                    } else {
+                        BWSApplication.showToast(listModel1.responseMessage, act)
+                    }
+                    /*} catch (e: Exception) {
                         e.printStackTrace()
                     }*/
                 }
@@ -285,12 +289,12 @@ class  SessionProgressReportActivity : AppCompatActivity() {
             } else if (s > listModel.questions!!.size) {
                 binding.btnNext.visibility = View.GONE
                 binding.btnContinue.visibility = View.VISIBLE
-                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
                 binding.rvFirstList.adapter = firstListAdapter
             }else if(myPos < listModel.questions!!.size) {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnContinue.visibility = View.GONE
-                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
+                firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
                 binding.rvFirstList.adapter = firstListAdapter
             }
             /*if (mod == 0) {
@@ -349,6 +353,17 @@ class  SessionProgressReportActivity : AppCompatActivity() {
             Log.e("My Pos...", myPos.toString() + "MOD..." + mod.toString() + "Ass Size..." + progressReportQus.size.toString())
         }*/
 //        if(mod == 0){
+
+        /*if(listModel.optionType.equals("fiveoptions")) {
+            val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            params.gravity = Gravity.CENTER_HORIZONTAL
+            binding.rvFirstList.layoutParams = params
+        }else {
+            val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            params.gravity = Gravity.START
+            binding.rvFirstList.layoutParams = params
+        }*/
+
         var s = myPos + Integer.parseInt(listModel.chunkSize!!)
         if (myPos == listModel.questions!!.size - Integer.parseInt(listModel.chunkSize!!)) {
             binding.btnNext.visibility = View.GONE
@@ -358,12 +373,12 @@ class  SessionProgressReportActivity : AppCompatActivity() {
         } else if (s > listModel.questions!!.size) {
             binding.btnNext.visibility = View.GONE
             binding.btnContinue.visibility = View.VISIBLE
-            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos,listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
+            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, listModel.questions!!.size), myPos, listModel.questions!!.size, ctx, binding, act, listModel)
             binding.rvFirstList.adapter = firstListAdapter
         }else if(myPos < listModel.questions!!.size) {
             binding.btnNext.visibility = View.VISIBLE
             binding.btnContinue.visibility = View.GONE
-            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos,  myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
+            firstListAdapter = OptionsFirstListAdapter(listModel.questions!!.subList(myPos, myPos + Integer.parseInt(listModel.chunkSize!!)), myPos, myPos + Integer.parseInt(listModel.chunkSize!!), ctx, binding, act, listModel)
             binding.rvFirstList.adapter = firstListAdapter
         }
 //        }else {
@@ -380,7 +395,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
     }
 
     /* This is the first options box input layout */
-    class OptionsFirstListAdapter(private val listModel: List<StepTypeTwoSaveDataModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionProgressReportBinding, val act: Activity,val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
+    class OptionsFirstListAdapter(private val listModel: List<StepTypeTwoSaveDataModel.ResponseData.Question>?, private val myPos: Int, private val mypos2: Int, private val ctx: Context, var binding: ActivitySessionProgressReportBinding, val act: Activity, val listModelMain: StepTypeTwoSaveDataModel.ResponseData) : RecyclerView.Adapter<OptionsFirstListAdapter.MyViewHolder>() {
         private var dass = SessionProgressReportActivity()
 
         inner class MyViewHolder(var bindingAdapter: FormFillSubBinding) : RecyclerView.ViewHolder(bindingAdapter.root)
@@ -405,7 +420,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                     holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }else if(listModelMain.optionType.equals("fiveoptions")){
                     holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,listModel[position].questionOptions!!.size)
-//                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,1,  GridLayoutManager.HORIZONTAL,false)
+//                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 1, GridLayoutManager.HORIZONTAL, false)
 //                    holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.light_white))
                 }else if(listModelMain.optionType.equals("twooptions")){
@@ -413,7 +428,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                     holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }
 //                if (position == 0) {
-                dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act,listModelMain)
+                dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act, listModelMain)
 //                } else {
 //                    dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos + 1, mypos2, ctx, binding, act, listModelMain)
 //                }
@@ -441,7 +456,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                 bindingAdapter.cbChecked2.setOnClickListener {
                     callCheckedBox(absoluteAdapterPosition)
                 }
-                bindingAdapter.rbOne.setOnClickListener {
+                bindingAdapter.llMainLayout.setOnClickListener {
                     callCheckedBox(absoluteAdapterPosition)
                 }
             }
@@ -518,7 +533,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                     holder.bindingAdapter.llMainLayout.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }
             }
-            holder.bindingAdapter.tvOne.text =listModel.questionOptions!![position].replace(" ","\n")
+            holder.bindingAdapter.tvOne.text =listModel.questionOptions!![position].replace(" ", "\n")
             holder.bindingAdapter.cbChecked.text = listModel.questionOptions!![position]
             holder.bindingAdapter.cbChecked2.text = listModel.questionOptions!![position]
             if (dass.progressReportQus.contains(listModel.questionId)) {

@@ -40,7 +40,7 @@
                             android:layout_width="42dp"
                             android:layout_height="match_parent"
                             android:layout_centerVertical="true"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:gravity="center">
 
                             <ImageView
@@ -271,7 +271,7 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_30sdp"
                     android:layout_marginTop="@dimen/_30sdp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_marginBottom="@dimen/_31sdp"
                     android:background="@drawable/light_green_rounded_filled"
                     android:fontFamily="@font/montserrat_medium"

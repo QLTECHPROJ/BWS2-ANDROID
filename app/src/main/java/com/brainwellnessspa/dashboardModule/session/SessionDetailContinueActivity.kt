@@ -53,6 +53,11 @@ class SessionDetailContinueActivity : AppCompatActivity() {
         binding.llBack.setOnClickListener {
             finish()
         }
+
+        binding.btnContinue.setOnClickListener {
+            finish()
+        }
+
         if (intent.extras != null) {
             sessionId = intent.getStringExtra("SessionId")
         }
@@ -85,7 +90,7 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                                 binding.tvDesc.text = response.sessionDesc
                                 binding.llBack.visibility = View.VISIBLE
                                 binding.ivDone.visibility = View.VISIBLE
-                                binding.btnContinue.visibility = View.GONE
+                                binding.btnContinue.visibility = View.VISIBLE
                                 Glide.with(act).load(response.sessionImg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner)
                                 Glide.with(act).load(response.sessionProgressImg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivSessionImg)
                                 binding.llSlowProgress.visibility = View.GONE
@@ -275,10 +280,12 @@ class SessionDetailContinueActivity : AppCompatActivity() {
             holder.bindingAdapter.tvNumber.text = (position + 1).toString()
             holder.bindingAdapter.tvTitle.text = db.desc
 
-            Glide.with(act).load(db.statusImg).thumbnail(0.05f).apply(RequestOptions.bitmapTransform(RoundedCorners(2))).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivAction)
+            Glide.with(act).load(db.statusImg).thumbnail(1f).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.bindingAdapter.ivAction)
 
             when {
                 db.userStepStatus.equals("Completed") -> {
+                    holder.bindingAdapter.llBorder.isClickable = true
+                    holder.bindingAdapter.llBorder.isEnabled = true
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_complete_selected_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_dark_bg)
                     holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(act, R.color.session_progress))
@@ -287,6 +294,8 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                     holder.bindingAdapter.ivDownload.visibility = View.GONE
                 }
                 db.userStepStatus.equals("Inprogress") -> {
+                    holder.bindingAdapter.llBorder.isClickable = true
+                    holder.bindingAdapter.llBorder.isEnabled = true
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_selected_bg)
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
                     holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(act, R.color.lighted_gray))
@@ -296,6 +305,8 @@ class SessionDetailContinueActivity : AppCompatActivity() {
                 }
                 db.userStepStatus.equals("Lock") -> {
                     holder.bindingAdapter.llBorder.setBackgroundResource(R.drawable.session_unselected_bg)
+                    holder.bindingAdapter.llBorder.isClickable = false
+                    holder.bindingAdapter.llBorder.isEnabled = false
                     holder.bindingAdapter.llNumber.setBackgroundResource(R.drawable.session_gray_bg)
                     holder.bindingAdapter.viewDown.setBackgroundColor(ContextCompat.getColor(act, R.color.lighted_gray))
                     holder.bindingAdapter.tvNumber.setTextColor(ContextCompat.getColor(act, R.color.light_black))
