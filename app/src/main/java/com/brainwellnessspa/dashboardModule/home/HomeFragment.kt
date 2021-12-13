@@ -34,10 +34,7 @@ import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.MyPlayerActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
-import com.brainwellnessspa.dashboardModule.models.HomeScreenModel
-import com.brainwellnessspa.dashboardModule.models.MainPlayModel
-import com.brainwellnessspa.dashboardModule.models.PlaylistDetailsModel
-import com.brainwellnessspa.dashboardModule.models.ReminderProceedModel
+import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
 import com.brainwellnessspa.roomDataBase.AudioDatabase
@@ -67,8 +64,10 @@ import com.google.android.flexbox.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -571,7 +570,7 @@ class HomeFragment : Fragment() {
                     val model = response.body()
                     when {
                         model!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true) -> {
-//            p.putValue("isReminderSet", "Yes")
+                            //            p.putValue("isReminderSet", "Yes")
                             addToSegment("Set Reminder Pop Up Clicked", p, CONSTANTS.screen)
                             dialog.hide()
                             getReminderDay(ctx, act, userId, playlistID, playlistName, requireActivity(), reminderTime, reminderDay, "1", reminderId, isReminder, "2")
@@ -712,8 +711,13 @@ class HomeFragment : Fragment() {
                                     editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
                                     editor.apply()
+                                    if(listModel.responseData!!.eepSessiondata?.title.equals("")){
 
-
+                                    }
+                                    val js = JSONObject(gson.toJson(response))
+                                    if(js.has("eepSessiondata")){
+                                        Log.e("js", js.getString("eepSessiondata"))
+                                    }
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
                                     binding.tvSevereTxt.text = scoreLevel
@@ -1986,10 +1990,10 @@ class HomeFragment : Fragment() {
                                                         val splashActivity = SplashActivity()
                                                         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                                         var segmentKey = shared1x.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
-                                                        if(segmentKey == ""){
-                                                            if(AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                                                        if (segmentKey == "") {
+                                                            if (AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/") {
                                                                 segmentKey = ctx.getString(R.string.segment_key_real_2_staging)
-                                                            }else {
+                                                            } else {
                                                                 segmentKey = ctx.getString(R.string.segment_key_real_2_live)
                                                             }
                                                         }

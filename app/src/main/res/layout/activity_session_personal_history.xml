@@ -129,6 +129,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="SpUsage" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvFirstList"
                     android:layout_width="match_parent"
@@ -138,6 +139,7 @@
                     android:overScrollMode="never"
                     android:background="@color/white"
                     android:layout_gravity="center"
+                    tools:itemCount="1"
                     tools:listitem="@layout/session_personal_history" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

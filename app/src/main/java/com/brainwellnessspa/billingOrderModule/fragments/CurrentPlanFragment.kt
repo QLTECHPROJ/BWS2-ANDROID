@@ -19,9 +19,10 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity
 import com.brainwellnessspa.billingOrderModule.activities.BillingOrderActivity.Companion.myBackPressbill
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipUpdateActivity
 import com.brainwellnessspa.billingOrderModule.models.CurrentPlanVieViewModel
 import com.brainwellnessspa.billingOrderModule.models.PayNowDetailsModel
+import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.FeaturedLayoutBinding
 import com.brainwellnessspa.databinding.FragmentCurrentPlanBinding
 import com.brainwellnessspa.utility.APINewClient
@@ -128,7 +129,7 @@ class CurrentPlanFragment : Fragment() {
                                     return@setOnClickListener
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime()
-                                val i = Intent(activity, MembershipChangeActivity::class.java)
+                                val i = Intent(activity, StripeEnhanceMembershipUpdateActivity::class.java)
                                 i.putExtra("ComeFrom", "")
                                 startActivity(i)
                             }

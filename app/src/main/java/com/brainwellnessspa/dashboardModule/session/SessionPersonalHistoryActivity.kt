@@ -1,17 +1,21 @@
 package com.brainwellnessspa.dashboardModule.session
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -410,10 +414,42 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 			if (myPos == 0) {
 				binding.btnPrev.visibility = View.GONE
 				holder.bindingAdapter.tvQusDesc.visibility = View.VISIBLE
+				holder.bindingAdapter.tvQusDesc.text = listModelMain.questionDescription
+				/*val lineCount: Int = holder.bindingAdapter.tvQusDesc.length()
+				if (lineCount > 280) {
+					holder.bindingAdapter.tvReadMore.visibility = View.VISIBLE
+				} else {
+					holder.bindingAdapter.tvReadMore.visibility = View.GONE
+				}*/
 			} else {
 				binding.btnPrev.visibility = View.VISIBLE
 				holder.bindingAdapter.tvQusDesc.visibility = View.GONE
+//				holder.bindingAdapter.tvReadMore.visibility = View.GONE
 			}
+
+			/*holder.bindingAdapter.tvReadMore.setOnClickListener {
+				val dialog = Dialog(ctx)
+				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+				dialog.setContentView(R.layout.full_desc_layout)
+				dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+				dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+				val tvDesc = dialog.findViewById<TextView>(R.id.tvDesc)
+				val tvClose = dialog.findViewById<RelativeLayout>(R.id.tvClose)
+				tvDesc.text = ctx.getString(R.string.for_example_being_terrified_of_the_boogeyman_as_a_child_bullying_in_school_relationship_breakdown_loss_of_a_loved_one_red_more)
+
+				dialog.setOnKeyListener { _: DialogInterface?, keyCode: Int, event: KeyEvent? ->
+					if (keyCode == KeyEvent.KEYCODE_BACK) {
+						dialog.dismiss()
+						return@setOnKeyListener true
+					}
+					false
+				}
+
+				tvClose.setOnClickListener { dialog.dismiss() }
+				dialog.show()
+				dialog.setCancelable(false)
+			}*/
+
 			if (listModel != null) {
 				holder.bindingAdapter.tvSecond.text = listModel[position].question
 				holder.bindingAdapter.tvQusTitle.text = listModel[position].question
@@ -423,16 +459,16 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 						holder.bindingAdapter.llMainLayoutTwo.visibility = View.GONE
 						holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
 						holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
-						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act,listModelMain)
+						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act, listModelMain)
 						holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
 					}
 					listModelMain.optionType.equals("fiveoptions") -> {
 						holder.bindingAdapter.llMainLayoutOne.visibility = View.VISIBLE
 						holder.bindingAdapter.llMainLayoutTwo.visibility = View.GONE
-						holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,1,  GridLayoutManager.HORIZONTAL,false)
+						holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 1, GridLayoutManager.HORIZONTAL, false)
 						//                    holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
 						holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.light_white))
-						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act,listModelMain)
+						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act, listModelMain)
 						holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
 					}
 					listModelMain.optionType.equals("twooptions") -> {
@@ -440,7 +476,7 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 						holder.bindingAdapter.llMainLayoutTwo.visibility = View.GONE
 						holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
 						holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
-						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act,listModelMain)
+						dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act, listModelMain)
 						holder.bindingAdapter.rvSecondList.adapter = dass.secondListAdapter
 					}
 					listModelMain.optionType.equals("textfield") -> {
@@ -448,7 +484,7 @@ class SessionPersonalHistoryActivity : AppCompatActivity() {
 						holder.bindingAdapter.llMainLayoutTwo.visibility = View.VISIBLE
 					}
 				}
-				if(listModelMain.optionType.equals("textfield")){
+				if (listModelMain.optionType.equals("textfield")) {
 					if (dass.progressReportQus.contains(listModel[position].questionId)) {
 						for (i in 0 until dass.progressReportQus.size) {
 							if (dass.progressReportQus[i] == listModel[position].questionId) {

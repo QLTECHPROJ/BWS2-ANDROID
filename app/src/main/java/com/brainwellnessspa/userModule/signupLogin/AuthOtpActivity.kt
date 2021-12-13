@@ -26,7 +26,7 @@ import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
-import com.brainwellnessspa.membershipModule.activities.MembershipActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
@@ -425,7 +425,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 } else if (planId == "") {
                                     //                                    if (paymentType == "0") {
                                     // stripe
-                                    val intent = Intent(applicationContext, MembershipActivity::class.java)
+                                    val intent = Intent(applicationContext, StripeEnhanceMembershipActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()

@@ -33,13 +33,13 @@ import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
 import com.brainwellnessspa.billingOrderModule.models.SegmentPayment
 import com.brainwellnessspa.R
 import com.brainwellnessspa.addPaymentStripeModule.AddPaymentActivity
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity.Companion.renewPlanFlag
-import com.brainwellnessspa.billingOrderModule.activities.MembershipChangeActivity.Companion.renewPlanId
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipUpdateActivity.Companion.renewPlanFlag
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipUpdateActivity.Companion.renewPlanId
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment.Companion.PlanStatus
 import com.brainwellnessspa.billingOrderModule.fragments.CurrentPlanFragment.Companion.invoicePayId
 import com.brainwellnessspa.databinding.ActivityPaymentBinding
 import com.brainwellnessspa.databinding.CardsListLayoutBinding
-import com.brainwellnessspa.membershipModule.activities.OrderSummaryActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceOrderSummaryActivity
 import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import com.brainwellnessspa.services.GlobalInitExoPlayer.Companion.relesePlayer
 import com.brainwellnessspa.utility.APINewClient
@@ -101,7 +101,7 @@ class PaymentActivity : AppCompatActivity() {
         }
         binding.llBack.setOnClickListener {
             myBackPress = true
-            val i = Intent(context, OrderSummaryActivity::class.java)
+            val i = Intent(context, StripeEnhanceOrderSummaryActivity::class.java)
             if (intent.hasExtra("comeFrom")) {
                 i.putExtra("PlanData", gson.toJson(listModelList2))
             }else{
@@ -376,7 +376,7 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         myBackPress = true
-        val i = Intent(context, OrderSummaryActivity::class.java)
+        val i = Intent(context, StripeEnhanceOrderSummaryActivity::class.java)
         i.putExtra("comeFrom", "membership")
         i.putExtra("ComesTrue", comesTrue)
         if (intent.hasExtra("comeFrom")) {

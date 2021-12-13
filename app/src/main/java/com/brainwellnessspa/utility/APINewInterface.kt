@@ -387,4 +387,8 @@ interface APINewInterface {
     @POST("stripepayment")
     @FormUrlEncoded
     fun getMembershipPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") CardId: String?): Call<SucessModel>
+
+    @POST("eepstripepayment")
+    @FormUrlEncoded
+    fun getEEPStripePayment(@Field("UserID") userId: String?, @Field("PlanId") planId: String? , @Field("PlanType") planFlag: String?,   @Field("CardId") CardId: String?): Call<SucessModel>
 }

@@ -182,6 +182,10 @@
                         android:nestedScrollingEnabled="true"
                         android:overScrollMode="never"
                         tools:itemCount="3"
+                        android:foregroundGravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         tools:listitem="@layout/form_fill_sub"
                         tools:targetApi="lollipop" />
 

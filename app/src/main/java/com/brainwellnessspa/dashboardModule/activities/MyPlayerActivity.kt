@@ -1,6 +1,5 @@
 package com.brainwellnessspa.dashboardModule.activities
 
-import android.Manifest
 import android.app.Activity
 import android.app.UiModeManager
 import android.content.*
@@ -19,14 +18,12 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.dashboardModule.models.*
-import com.brainwellnessspa.dashboardModule.session.SessionDetailContinueActivity
 import com.brainwellnessspa.databinding.ActivityViewPlayerBinding
 import com.brainwellnessspa.databinding.AudioPlayerNewLayoutBinding
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia

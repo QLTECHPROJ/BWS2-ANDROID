@@ -1,6 +1,5 @@
 package com.brainwellnessspa.dashboardModule.session
 
-import android.R.attr.button
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,11 +8,11 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
@@ -419,8 +418,10 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                     holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
                     holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 }else if(listModelMain.optionType.equals("fiveoptions")){
-                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx,listModel[position].questionOptions!!.size)
-//                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 1, GridLayoutManager.HORIZONTAL, false)
+                    holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, listModel[position].questionOptions!!.size)
+                    val layoutManager = GridLayoutManager(ctx, listModel[position].questionOptions!!.size)
+                    val totalSize: Int = listModel[position].questionOptions!!.size
+                    holder.bindingAdapter.rvSecondList.setHasFixedSize(false)
 //                    holder.bindingAdapter.rvSecondList.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
                     holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.light_white))
                 }else if(listModelMain.optionType.equals("twooptions")){
@@ -456,7 +457,7 @@ class  SessionProgressReportActivity : AppCompatActivity() {
                 bindingAdapter.cbChecked2.setOnClickListener {
                     callCheckedBox(absoluteAdapterPosition)
                 }
-                bindingAdapter.llMainLayout.setOnClickListener {
+                bindingAdapter.rbOne.setOnClickListener {
                     callCheckedBox(absoluteAdapterPosition)
                 }
             }

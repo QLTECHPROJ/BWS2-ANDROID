@@ -61,6 +61,10 @@ class SessionStepListModel {
         @Expose
         var sessionProgressText: String? = null
 
+        @SerializedName("shouldFillProfileFormOne")
+        @Expose
+        var shouldFillProfileFormOne: String? = null
+
         @SerializedName("shouldFillProfileFormTwo")
         @Expose
         var shouldFillProfileFormTwo: String? = null

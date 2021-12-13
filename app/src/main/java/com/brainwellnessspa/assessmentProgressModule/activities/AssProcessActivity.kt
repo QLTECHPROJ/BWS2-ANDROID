@@ -16,7 +16,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
-import com.brainwellnessspa.membershipModule.activities.MembershipActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
 import com.brainwellnessspa.utility.APINewClient
@@ -39,6 +39,7 @@ class AssProcessActivity : AppCompatActivity() {
     var isAssessmentCompleted: String? = ""
     var avgSleepTime: String? = ""
     private var assesmentContent: String? = ""
+    var listModelGloble = AssesmentGetDetailsModel.ResponseData()
     lateinit var act: Activity
 
     /* This is the first lunched function */
@@ -464,12 +465,14 @@ class AssProcessActivity : AppCompatActivity() {
                 if (navigation == "Home") {
                     finish()
                 } else {
+                    if(listModelGloble.suggestedMembership.equals("empower")){
+
+                    }
                     val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
-                    val paymentType = shared.getString(CONSTANTS.PREFE_ACCESS_paymentType, "")
                     val planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
                     //                    if(paymentType == "0"){
                     if (planId == "") {
-                        val i = Intent(this@AssProcessActivity, MembershipActivity::class.java)
+                        val i = Intent(this@AssProcessActivity, StripeEnhanceMembershipActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         i.putExtra("plan", "0")
                         startActivity(i)
@@ -521,6 +524,7 @@ class AssProcessActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<AssesmentGetDetailsModel?>, response: Response<AssesmentGetDetailsModel?>) {
                     try {
                         val listModel = response.body()
+                        listModelGloble = listModel!!.responseData!!
                         if (listModel != null) {
                             when {
                                 listModel.responseCode.equals(getString(R.string.ResponseCodesuccess)) -> {

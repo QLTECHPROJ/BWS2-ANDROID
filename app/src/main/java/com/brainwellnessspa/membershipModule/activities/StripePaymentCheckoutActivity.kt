@@ -7,12 +7,8 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings
 import android.text.Editable
 import android.text.Spannable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.style.ReplacementSpan
 import android.util.Log
@@ -33,9 +29,6 @@ import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.brainwellnessspa.utility.MeasureRatio
-import com.google.android.gms.tasks.Task
-import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.InstallationTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
@@ -348,7 +341,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
     }
 
     private fun callBack() {
-        val i = Intent(context, OrderSummaryActivity::class.java)
+        val i = Intent(context, StripeEnhanceOrderSummaryActivity::class.java)
         i.putExtra("PlanData", gson.toJson(listModelList))
         i.putExtra("TrialPeriod", "")
         i.putExtra("position", position)

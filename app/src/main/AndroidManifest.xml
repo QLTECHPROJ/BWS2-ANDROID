@@ -9,10 +9,11 @@
         android:protectionLevel="dangerous" />
     -->
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-   <!-- <permission
+    <!--
+ <permission
         android:name="com.clevertap.starter.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />-->
-
+        android:protectionLevel="signature" />
+    -->
     <queries>
         <intent>
             <action android:name="com.google.android.youtube.api.service.START" />
@@ -58,8 +59,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-<!--    <uses-permission android:name="com.clevertap.starter.permission.C2D_MESSAGE" />-->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- <uses-permission android:name="com.clevertap.starter.permission.C2D_MESSAGE" /> -->
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="true" />
@@ -77,8 +77,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".dashboardModule.session.SessionMentalHealthActivity"></activity>
-        <activity android:name=".dashboardModule.session.SessionPennStateWorryActivity" />
+        <activity android:name=".membershipModule.activities.EmpowerOrderSummaryActivity"></activity>
+        <activity android:name=".dashboardModule.session.notUsed.SessionMentalHealthActivity" />
+        <activity android:name=".dashboardModule.session.notUsed.SessionPennStateWorryActivity" />
         <activity
             android:name=".membershipModule.activities.StripePaymentCheckoutActivity"
             android:configChanges="orientation|screenSize"
@@ -86,27 +87,27 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SimilarContinueActivity"
+            android:name=".dashboardModule.session.SessionFreeIntroScreenActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.EmpowerManageActivity"
+            android:name=".membershipModule.activities.EmpowerManageActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionsStepThreeActivity"
+            android:name=".dashboardModule.session.EEPProfileStepThreeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionsStepTwoActivity"
+            android:name=".dashboardModule.session.EEPProfileStepTwoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionSelfScaleActivity"
+            android:name=".dashboardModule.session.notUsed.SessionSelfScaleActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -118,31 +119,31 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.AggressionQuestionsActivity"
+            android:name=".dashboardModule.session.notUsed.AggressionQuestionsActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionPerceptionsActivity"
+            android:name=".dashboardModule.session.notUsed.SessionPerceptionsActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionComparisonStatusActivity"
+            android:name=".dashboardModule.session.SessionBeforeAfterQustionActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionAssessmentActivity"
+            android:name=".dashboardModule.session.notUsed.SessionAssessmentActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionStepOneActivity"
+            android:name=".dashboardModule.session.EEPProfileStepOneActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -154,25 +155,25 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionDetailContinueActivity"
+            android:name=".dashboardModule.session.SessionStepListActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.BrainStatusActivity"
+            android:name=".dashboardModule.session.BrainFillingsStatusActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionBookletContinueActivity"
+            android:name=".dashboardModule.session.notUsed.SessionBookletContinueActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionBookletActivity"
+            android:name=".dashboardModule.session.notUsed.SessionBookletActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -196,25 +197,25 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionDoneActivity"
+            android:name=".dashboardModule.session.notUsed.SessionDoneActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionActivitiesDetailActivity"
+            android:name=".dashboardModule.session.notUsed.SessionActivitiesDetailActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionActivitiesActivity"
+            android:name=".dashboardModule.session.notUsed.SessionActivitiesActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionExpContinueActivity"
+            android:name=".dashboardModule.session.notUsed.SimilarContinueActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -282,7 +283,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".dashboardModule.session.SessionExpActivity"
+            android:name=".dashboardModule.session.notUsed.SessionExpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -322,19 +323,19 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".billingOrderModule.activities.MembershipChangeActivity"
+            android:name=".membershipModule.activities.StripeEnhanceMembershipUpdateActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".membershipModule.activities.MembershipActivity"
+            android:name=".membershipModule.activities.StripeEnhanceMembershipActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".membershipModule.activities.OrderSummaryActivity"
+            android:name=".membershipModule.activities.StripeEnhanceOrderSummaryActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -390,7 +391,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".membershipModule.activities.EnhanceActivity"
+            android:name=".membershipModule.activities.IAPEnhanceManageActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -589,7 +590,8 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="true" />
-       <!-- <meta-data
+        <!--
+ <meta-data
             android:name="CLEVERTAP_BACKGROUND_SYNC"
             android:value="1" />
         <meta-data
@@ -600,7 +602,8 @@
             android:value="XXXXXX" />
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:resource="@drawable/app_new_latest_icon" />-->
+            android:resource="@drawable/app_new_latest_icon" />
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_new_latest_icon" />
@@ -649,10 +652,12 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-       <!-- <receiver
+        <!--
+ <receiver
             android:name="com.clevertap.android.sdk.pushnotification.CTPushNotificationReceiver"
             android:enabled="true"
-            android:exported="false" /> -->
+            android:exported="false" />
+        -->
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
             android:exported="true"
@@ -673,18 +678,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!--<service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService">
+        <!--
+<service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>-->
-        <!--<service
+        </service>
+        -->
+        <!--
+<service
             android:name="com.clevertap.android.sdk.pushnotification.CTNotificationIntentService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.clevertap.PUSH_EVENT" />
             </intent-filter>
-        </service>-->
+        </service>
+        -->
         <service
             android:name=".services.GlobalInitExoPlayer"
             android:process=":process2">

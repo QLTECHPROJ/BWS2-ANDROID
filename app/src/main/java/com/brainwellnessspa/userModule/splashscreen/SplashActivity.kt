@@ -2,7 +2,6 @@ package com.brainwellnessspa.userModule.splashscreen
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,12 +21,11 @@ import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
-import com.brainwellnessspa.membershipModule.activities.MembershipActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
-import com.brainwellnessspa.userModule.signupLogin.SignUpActivity
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.AppSignatureHashHelper
 import com.brainwellnessspa.utility.AppUtils
@@ -522,7 +520,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                     } else if (planId.equals("")) {
 //                        if (paymentType == "0") {
                             // stripe
-                            val intent = Intent(activity, MembershipActivity::class.java)
+                            val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             startActivity(intent)
                             finish()
@@ -547,7 +545,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                 }
                                 planId.equals("") -> {
 //                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, MembershipActivity::class.java)
+                                        val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
@@ -597,7 +595,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                 }
                                 planId.equals("") -> {
 //                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, MembershipActivity::class.java)
+                                        val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()

@@ -21,6 +21,10 @@ class AssesmentGetDetailsModel {
     var responseStatus: String? = null
 
     class ResponseData {
+        @SerializedName("suggested_membership")
+        @Expose
+        var suggestedMembership: String? = null
+
         @SerializedName("indexScore")
         @Expose
         var indexScore: String? = null

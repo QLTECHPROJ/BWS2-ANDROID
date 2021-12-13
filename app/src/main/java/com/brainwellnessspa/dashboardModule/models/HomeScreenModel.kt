@@ -32,6 +32,10 @@ class HomeScreenModel {
         @Expose
         var IsLock: String? = null
 
+        @SerializedName("eepSessiondata")
+        @Expose
+        var eepSessiondata: EepSessiondata? = null
+
         @SerializedName("IsFirst")
         @Expose
         var isFirst: String? = null
@@ -111,6 +115,28 @@ class HomeScreenModel {
         @SerializedName("SessionProgress")
         @Expose
         var sessionProgress: List<Any>? = null
+
+        class EepSessiondata {
+            @SerializedName("title")
+            @Expose
+            var title: String? = null
+
+            @SerializedName("desc")
+            @Expose
+            var desc: String? = null
+
+            @SerializedName("color")
+            @Expose
+            var color: String? = null
+
+            @SerializedName("image")
+            @Expose
+            var image: String? = null
+
+            @SerializedName("sessionkey")
+            @Expose
+            var sessionkey: String? = null
+        }
 
         class DisclaimerAudio {
             @SerializedName("ID")
