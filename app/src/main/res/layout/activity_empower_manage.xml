@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".membershipModule.activities.EmpowerManageActivity">
+        tools:context=".membershipModule.activities.EmpowerPanListActivity">
 
         <RelativeLayout
             android:id="@+id/rlLayout"
@@ -76,14 +76,19 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <com.google.android.youtube.player.YouTubePlayerView
-                    android:id="@+id/youtubeView"
+                <LinearLayout
+                    android:id="@+id/llPlay"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
 
+                    <com.google.android.youtube.player.YouTubePlayerView
+                        android:id="@+id/youtubeView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#000" />
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

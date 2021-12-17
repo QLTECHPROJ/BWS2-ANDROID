@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.CancelMembershipActivity
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.models.EEPPlanListModel
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.utility.APINewClient
@@ -30,7 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener  {
+class EmpowerPanListActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener  {
     lateinit var binding: ActivityEmpowerManageBinding
     lateinit var act: Activity
     lateinit var ctx: Context
@@ -45,11 +47,11 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_empower_manage)
-        act = this@EmpowerManageActivity
-        ctx = this@EmpowerManageActivity
+        act = this@EmpowerPanListActivity
+        ctx = this@EmpowerPanListActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
-
+        window.addFlags(WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW)
         prepareData()
 
         binding.tvtncs.setOnClickListener {
@@ -67,7 +69,7 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         }
 
         binding.rvPlanList.layoutManager = LinearLayoutManager(act)
-        i = Intent(ctx, IAPOrderSummaryActivity::class.java)
+        i = Intent(ctx, EmpowerOrderSummaryActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
 
         binding.btnFreeJoin.setOnClickListener {
@@ -81,7 +83,21 @@ class EmpowerManageActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
           finish()
         }
          binding.llSkip.setOnClickListener{
-            finish()
+             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+             val planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
+             if(planId == ""){
+                 val i = Intent(ctx, StripeEnhanceMembershipActivity::class.java)
+                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                 i.putExtra("plan", "0")
+                 startActivity(i)
+                 finish()
+             }else {
+                 val intent = Intent(act, BottomNavigationActivity::class.java)
+                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                 intent.putExtra("IsFirst", "1")
+                 startActivity(intent)
+                 finish()
+             }
         }
     }
 

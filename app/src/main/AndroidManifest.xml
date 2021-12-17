@@ -77,7 +77,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".membershipModule.activities.EmpowerOrderSummaryActivity"></activity>
+        <activity android:name=".membershipModule.activities.EmpowerPaymentCheckoutActivity"></activity>
+        <activity android:name=".membershipModule.activities.EmpowerOrderSummaryActivity" />
         <activity android:name=".dashboardModule.session.notUsed.SessionMentalHealthActivity" />
         <activity android:name=".dashboardModule.session.notUsed.SessionPennStateWorryActivity" />
         <activity
@@ -92,7 +93,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".membershipModule.activities.EmpowerManageActivity"
+            android:name=".membershipModule.activities.EmpowerPanListActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -391,7 +392,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".membershipModule.activities.IAPEnhanceManageActivity"
+            android:name=".membershipModule.activities.IAPEnhancePanListActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"

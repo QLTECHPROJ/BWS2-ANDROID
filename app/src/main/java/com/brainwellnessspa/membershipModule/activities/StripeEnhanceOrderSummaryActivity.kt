@@ -14,9 +14,11 @@ import com.brainwellnessspa.BWSApplication
 import com.brainwellnessspa.R
 import com.brainwellnessspa.billingOrderModule.activities.PaymentActivity
 import com.brainwellnessspa.billingOrderModule.models.PlanListBillingModel
+import com.brainwellnessspa.dashboardModule.models.SucessModel
 import com.brainwellnessspa.databinding.ActivityOrderSummaryBinding
 import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import com.brainwellnessspa.referralModule.models.CheckReferCodeModel
+import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
 import com.google.gson.Gson
@@ -33,6 +35,7 @@ class StripeEnhanceOrderSummaryActivity : AppCompatActivity() {
     var TrialPeriod: String? = null
     var comeFrom: String? = ""
     var UserId: String? = null
+    var CardId: String? = null
 
     val gson = Gson()
 
@@ -168,13 +171,20 @@ class StripeEnhanceOrderSummaryActivity : AppCompatActivity() {
                         p1.putValue("planExpiryDt", listModelList!![position].planNextRenewal)
                         p1.putValue("planRenewalDt", listModelList!![position].planNextRenewal)
                         p1.putValue("planAmount", listModelList!![position].planAmount)
-                        val i = Intent(ctx, StripePaymentCheckoutActivity::class.java)
-                        i.putExtra("PlanData", gson.toJson(listModelList))
-                        i.putExtra("TrialPeriod", TrialPeriod)
-                        i.putExtra("position", position)
-                        i.putExtra("Promocode", Promocode)
-                        startActivity(i)
-                        finish()
+
+                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                        CardId = shared.getString(CONSTANTS.PREFE_ACCESS_CardId, "").toString()
+                        if(CardId!=""){
+                            callMembershipPurchaseAPi()
+                        }else {
+                            val i = Intent(ctx, StripePaymentCheckoutActivity::class.java)
+                            i.putExtra("PlanData", gson.toJson(listModelList))
+                            i.putExtra("TrialPeriod", TrialPeriod)
+                            i.putExtra("position", position)
+                            i.putExtra("Promocode", Promocode)
+                            startActivity(i)
+                            finish()
+                        }
                     }
                     BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track)
                 } else {
@@ -220,13 +230,19 @@ class StripeEnhanceOrderSummaryActivity : AppCompatActivity() {
                                             p1.putValue("planExpiryDt", listModelList!![position].planNextRenewal)
                                             p1.putValue("planRenewalDt", listModelList!![position].planNextRenewal)
                                             p1.putValue("planAmount", listModelList!![position].planAmount)
-                                            val i = Intent(ctx, StripePaymentCheckoutActivity::class.java)
-                                            i.putExtra("PlanData", gson.toJson(listModelList))
-                                            i.putExtra("TrialPeriod", TrialPeriod)
-                                            i.putExtra("position", position)
-                                            i.putExtra("Promocode", Promocode)
-                                            startActivity(i)
-                                            finish()
+                                            val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
+                                            CardId = shared.getString(CONSTANTS.PREFE_ACCESS_CardId, "").toString()
+                                            if(CardId!=""){
+                                                callMembershipPurchaseAPi()
+                                            }else {
+                                                val i = Intent(ctx, StripePaymentCheckoutActivity::class.java)
+                                                i.putExtra("PlanData", gson.toJson(listModelList))
+                                                i.putExtra("TrialPeriod", TrialPeriod)
+                                                i.putExtra("position", position)
+                                                i.putExtra("Promocode", Promocode)
+                                                startActivity(i)
+                                                finish()
+                                            }
                                         }
                                         BWSApplication.addToSegment("Checkout Proceeded", p1, CONSTANTS.track)
                                     } else {
@@ -246,6 +262,29 @@ class StripeEnhanceOrderSummaryActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun callMembershipPurchaseAPi() {
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            val listCall: Call<SucessModel> = APINewClient.client.getMembershipPayment(UserId, listModelList!![position].planID, listModelList!![position].planFlag, "",CardId,"1")
+            listCall.enqueue(object : Callback<SucessModel> {
+                override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    val listModel: SucessModel = response.body()!!
+                    if (listModel.responseCode.equals(getString(R.string.ResponseCodesuccess))) {
+                        callGetCoUserDetails()
+                    }
+                }
+
+                override fun onFailure(call: Call<SucessModel>, t: Throwable) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                }
+            })
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity)
+            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
         }
     }
 
@@ -276,6 +315,117 @@ class StripeEnhanceOrderSummaryActivity : AppCompatActivity() {
         }
 
         override fun afterTextChanged(s: Editable) {}
+    }
+    private fun callGetCoUserDetails() {
+
+        val listCall: Call<AuthOtpModel> = APINewClient.client.getCoUserDetails(UserId)
+        listCall.enqueue(object : Callback<AuthOtpModel> {
+            override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) {
+                try {
+                    val listModel: AuthOtpModel = response.body()!!
+                    if (listModel.ResponseCode == getString(R.string.ResponseCodesuccess)) {
+                        val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                        val editor = shared.edit()
+                        editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_EMAIL, listModel.ResponseData.Email)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_NAME, listModel.ResponseData.Name)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_MOBILE, listModel.ResponseData.Mobile)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_CountryCode, listModel.ResponseData.CountryCode)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_INDEXSCORE, listModel.ResponseData.indexScore)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_SCORELEVEL, listModel.ResponseData.ScoreLevel)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_IMAGE, listModel.ResponseData.Image)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_ISPROFILECOMPLETED, listModel.ResponseData.isProfileCompleted)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_ISAssCOMPLETED, listModel.ResponseData.isAssessmentCompleted)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_directLogin, listModel.ResponseData.directLogin)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isPinSet, listModel.ResponseData.isPinSet)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isEmailVerified, listModel.ResponseData.isEmailVerified)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                        editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
+                        if (listModel.ResponseData.paymentType == "0") {
+                            // Stripe
+                            try {
+                                if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, "")
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, "")
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, "")
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStr, listModel.ResponseData.oldPaymentDetails[0].PlanStr)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_OrderTotal, listModel.ResponseData.oldPaymentDetails[0].OrderTotal)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.oldPaymentDetails[0].PlanStatus)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.oldPaymentDetails[0].CardId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.oldPaymentDetails[0].PlanContent)
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        } else if (listModel.ResponseData.paymentType == "1") {
+                            // IAP
+                            try {
+                                if (listModel.ResponseData.planDetails.isNotEmpty()) {
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.planDetails[0].PlanId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.planDetails[0].PlanPurchaseDate)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.planDetails[0].PlanExpireDate)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TransactionId, listModel.ResponseData.planDetails[0].TransactionId)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodStart, listModel.ResponseData.planDetails[0].TrialPeriodStart)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_TrialPeriodEnd, listModel.ResponseData.planDetails[0].TrialPeriodEnd)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanStatus, listModel.ResponseData.planDetails[0].PlanStatus)
+                                    editor.putString(CONSTANTS.PREFE_ACCESS_PlanContent, listModel.ResponseData.planDetails[0].PlanContent)
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                        editor.apply()
+                        val shred = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val edited = shred.edit()
+                        edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
+                        val selectedCategoriesTitle = arrayListOf<String>()
+                        val selectedCategoriesName = arrayListOf<String>()
+                        val gson = Gson()
+                        for (i in listModel.ResponseData.AreaOfFocus) {
+                            selectedCategoriesTitle.add(i.MainCat)
+                            selectedCategoriesName.add(i.RecommendedCat)
+                        }
+                        edited.putString(CONSTANTS.selectedCategoriesTitle, gson.toJson(selectedCategoriesTitle))
+                        edited.putString(CONSTANTS.selectedCategoriesName, gson.toJson(selectedCategoriesName))
+                        edited.apply()
+
+                        var p = Properties()
+                        p.putValue("planId", listModelList!![position].planID)
+                        p.putValue("plan", listModelList!![position].subName)
+                        p.putValue("planAmount", listModelList!![position].planAmount)
+                        p.putValue("planInterval", listModelList!![position].planInterval)
+                        p.putValue("totalProfile", "2")
+                        BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
+                        val i = Intent(ctx, EnhanceDoneActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
+                        i.putExtra("Name", "")
+                        i.putExtra("Code", "")
+                        i.putExtra("MobileNo", "")
+                        i.putExtra("PlanData", gson.toJson(listModelList))
+                        i.putExtra("TrialPeriod", "")
+                        i.putExtra("position", position)
+                        i.putExtra("Promocode", "")
+                        startActivity(i)
+                        finish()
+
+                    } else if (listModel.ResponseCode == getString(R.string.ResponseCodeDeleted)) {
+                        BWSApplication.callDelete403(activity, listModel.ResponseMessage)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
+            }
+        })
     }
 
     fun prepareCheckReferCode(promoCode: String?) {

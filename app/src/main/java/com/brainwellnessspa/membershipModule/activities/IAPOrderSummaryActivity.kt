@@ -191,7 +191,7 @@ class IAPOrderSummaryActivity : AppCompatActivity(), PurchasesUpdatedListener, P
 
     override fun onBackPressed() {
         if (isEnhanceBack.equals("1")) {
-            val intent = Intent(applicationContext, IAPEnhanceManageActivity::class.java)
+            val intent = Intent(applicationContext, IAPEnhancePanListActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)
             finish()

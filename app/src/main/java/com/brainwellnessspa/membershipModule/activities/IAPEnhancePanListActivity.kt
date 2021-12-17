@@ -43,7 +43,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class IAPEnhanceManageActivity : AppCompatActivity(), PurchasesUpdatedListener {
+class IAPEnhancePanListActivity : AppCompatActivity(), PurchasesUpdatedListener {
     lateinit var binding: ActivityEnhanceBinding
     lateinit var adapter: MembershipFaqAdapter
     lateinit var subscriptionAdapter: SubscriptionAdapter
@@ -67,11 +67,11 @@ class IAPEnhanceManageActivity : AppCompatActivity(), PurchasesUpdatedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_enhance)
-        activity = this@IAPEnhanceManageActivity
+        activity = this@IAPEnhancePanListActivity
         val shared1: SharedPreferences = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_mainAccountID, "")
         coUserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")
-        ctx = this@IAPEnhanceManageActivity
+        ctx = this@IAPEnhancePanListActivity
 
         if (intent != null) {
             intentflag = intent.getStringExtra("plan").toString()
@@ -250,7 +250,7 @@ class IAPEnhanceManageActivity : AppCompatActivity(), PurchasesUpdatedListener {
                             val videoListAdapter = VideoSeriesListAdapter(listModel.responseData!!.testminialVideo!!, ctx)
                             binding.rvVideoList.adapter = videoListAdapter
 
-                            binding.rvFaqList.layoutManager = LinearLayoutManager(this@IAPEnhanceManageActivity)
+                            binding.rvFaqList.layoutManager = LinearLayoutManager(this@IAPEnhancePanListActivity)
                             adapter = MembershipFaqAdapter(listModel.responseData!!.fAQs!!, ctx, binding.rvFaqList, binding.tvFound)
                             binding.rvFaqList.adapter = adapter //                            planListAdapter.filter.filter(value.toString())
                         }

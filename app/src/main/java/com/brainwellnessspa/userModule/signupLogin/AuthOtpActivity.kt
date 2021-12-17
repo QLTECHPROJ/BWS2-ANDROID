@@ -393,56 +393,28 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         finish()
                                     }
                                     listModel.ResponseData.isAssessmentCompleted == "0" -> {
-                                        val intent = Intent(activity, AssProcessActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                        intent.putExtra("Navigation", "Enhance")
-                                        startActivity(intent)
-                                        finish()
+                                        callAssProcessActivity(ctx,activity,"0","Enhance","","")
                                     }
-                                    listModel.ResponseData.isProfileCompleted == "0" -> {
-                                        val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
+                                    listModel.ResponseData.isEnhancePurchased == "1" -> {
+                                        if (listModel.ResponseData.isProfileCompleted == "0") {
+                                            callProfileProgressActivity(ctx,activity)
+                                        } else {
+                                            callHomeActivity(ctx,activity)
+                                        }
+                                    }
+                                    listModel.ResponseData.isEEPPurchased == "1" -> {
+                                        callHomeActivity(ctx,activity)
+
                                     }
                                     else -> {
-                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        intent.putExtra("IsFirst", "1")
-                                        startActivity(intent)
-                                        finish()
+                                        callHomeActivity(ctx,activity)
                                     }
                                 }
                             } else {
                                 if (listModel.ResponseData.isAssessmentCompleted == "0") {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                    intent.putExtra("Navigation", "Enhance")
-                                    startActivity(intent)
-                                    finish()
-                                } else if (planId == "") {
-                                    //                                    if (paymentType == "0") {
-                                    // stripe
-                                    val intent = Intent(applicationContext, StripeEnhanceMembershipActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    startActivity(intent)
-                                    finish()
-                                    //                                    } else if (paymentType == "1") {
-                                    //                                        isEnhanceBack = "1"
-                                    //                                        //IAP
-                                    //                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                    //                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    //                                        startActivity(intent)
-                                    //                                        finish()
-                                    //                                    } else {
-                                    //                                        isEnhanceBack = "1"
-                                    //                                        val intent = Intent(applicationContext, EnhanceActivity::class.java)
-                                    //                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    //                                        startActivity(intent)
-                                    //                                        finish()
-                                    //                                    }
+                                    callAssProcessActivity(ctx,activity,"0","Enhance","","")
+                                } else if (listModel.ResponseData.isEEPPurchased == "0" && listModel.ResponseData.isEnhancePurchased == "0") {
+                                    callAssProcessActivity(ctx,activity,"0","Enhance",listModel.ResponseData.indexScore,listModel.ResponseData.ScoreLevel)
                                 } else {
                                     if (listModel.ResponseData.CoUserCount > "0") {
                                         val intent = Intent(activity, UserListActivity::class.java)
@@ -450,17 +422,14 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        if (listModel.ResponseData.isProfileCompleted == "0") {
-                                            val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                            startActivity(intent)
-                                            finish()
+                                        if (listModel.ResponseData.isEnhancePurchased == "1") {
+                                            if (listModel.ResponseData.isProfileCompleted == "0") {
+                                                callProfileProgressActivity(ctx,activity)
+                                            } else {
+                                                callHomeActivity(ctx,activity)
+                                            }
                                         } else {
-                                            val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                            intent.putExtra("IsFirst", "1")
-                                            startActivity(intent)
-                                            finish()
+                                            callHomeActivity(ctx,activity)
                                         }
                                     }
                                 }

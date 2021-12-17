@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -16,15 +17,14 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication
-import com.brainwellnessspa.BWSApplication.measureRatio
 import com.brainwellnessspa.R
+import com.brainwellnessspa.dashboardModule.models.EEPPlanListModel
 import com.brainwellnessspa.dashboardModule.models.SucessModel
-import com.brainwellnessspa.databinding.ActivityStripePaymentCheckoutBinding
+import com.brainwellnessspa.dashboardModule.session.SessionFreeIntroScreenActivity
+import com.brainwellnessspa.databinding.ActivityEmpowerPaymentCheckoutBinding
 import com.brainwellnessspa.databinding.YeardialogBinding
-import com.brainwellnessspa.membershipModule.models.MembershipPlanListModel
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.utility.APINewClient
 import com.brainwellnessspa.utility.CONSTANTS
@@ -41,9 +41,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class StripePaymentCheckoutActivity : AppCompatActivity() {
+class EmpowerPaymentCheckoutActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityStripePaymentCheckoutBinding
+    lateinit var binding: ActivityEmpowerPaymentCheckoutBinding
     var MobileNo: String? = ""
     var Code: String? = ""
     var Name: String? = ""
@@ -63,7 +63,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
     val gson = Gson()
     lateinit var binding1: YeardialogBinding
     var strToken: String? = null
-    private var listModelList: ArrayList<MembershipPlanListModel.Plan>? = null
+    private var listModelList: ArrayList<EEPPlanListModel.ResponseData.Plan>? = null
     private val mLastClickTime: Long = 0
     private var doubleBackToExitPressedOnce = false
     private val addCardTextWatcher: TextWatcher = object : TextWatcher {
@@ -86,23 +86,23 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
         }
 
         override fun afterTextChanged(s: Editable) {}
-    } 
-    
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState) 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_stripe_payment_checkout)
-        context = this@StripePaymentCheckoutActivity
-        activity = this@StripePaymentCheckoutActivity
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_empower_payment_checkout)
+        context = this@EmpowerPaymentCheckoutActivity
+        activity = this@EmpowerPaymentCheckoutActivity
         val shared1 = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, MODE_PRIVATE)
         UserId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "").toString()
         if (intent.extras != null) {
-           /* MobileNo = intent.getStringExtra("MobileNo")
-            Code = intent.getStringExtra("Code")
-            Name = intent.getStringExtra(CONSTANTS.Name)
-            Promocode = intent.getStringExtra(CONSTANTS.Promocode)*/
+            /* MobileNo = intent.getStringExtra("MobileNo")
+             Code = intent.getStringExtra("Code")
+             Name = intent.getStringExtra(CONSTANTS.Name)
+             Promocode = intent.getStringExtra(CONSTANTS.Promocode)*/
             TrialPeriod = intent.getStringExtra("TrialPeriod")
             val json4 = intent.getStringExtra("PlanData")
-            val type1 = object : TypeToken<ArrayList<MembershipPlanListModel.Plan>?>() {}.type
+            val type1 = object : TypeToken<ArrayList<EEPPlanListModel.ResponseData.Plan>?>() {}.type
             listModelList = gson.fromJson(json4, type1)
             position = intent.getIntExtra("position", 0)
         }
@@ -125,7 +125,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
         //        DecimalFormat precision = new DecimalFormat("#.##");
         planFlag = listModelList!![position].planFlag!!
         price = listModelList!![position].planAmount!!
-        planId = listModelList!![position].planID!!
+        planId = listModelList!![position].stripePlanId!!
         binding.tvDoller.text = "$$price"
         //        binding.tvDoller.setText("$" + precision.format(price));
         binding.etNumber.addTextChangedListener(object : TextWatcher {
@@ -138,7 +138,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable) {}
         })
-        val measureRatio: MeasureRatio = measureRatio(this@StripePaymentCheckoutActivity, 0f, 5f, 3f, 1f, 0f)
+        val measureRatio: MeasureRatio = BWSApplication.measureRatio(this@EmpowerPaymentCheckoutActivity, 0f, 5f, 3f, 1f, 0f)
         binding.ivRestaurantImage.layoutParams.height = (measureRatio.height * measureRatio.ratio).toInt()
         binding.ivRestaurantImage.layoutParams.width = (measureRatio.widthImg * measureRatio.ratio).toInt()
         binding.ivRestaurantImage.scaleType = ImageView.ScaleType.FIT_XY
@@ -203,7 +203,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
                         Log.e("strToken.............", "" + strToken)
                         if (!strToken.equals("", ignoreCase = true)) {
                             if (BWSApplication.isNetworkConnected(context)) {
-                                val listCall: Call<SucessModel> = APINewClient.client.getMembershipPayment(UserId, planId, planFlag, strToken,"","0")
+                                val listCall: Call<SucessModel> = APINewClient.client.getEepStripeNewCustPayment(UserId, planId, planFlag, strToken)
                                 listCall.enqueue(object : Callback<SucessModel> {
                                     override fun onResponse(call: Call<SucessModel>, response: Response<SucessModel>) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
@@ -315,7 +315,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
                         p.putValue("planInterval", listModelList!![position].planInterval)
                         p.putValue("totalProfile", "2")
                         BWSApplication.addToSegment("Checkout Completed", p, CONSTANTS.track)
-                        val i = Intent(context, EnhanceDoneActivity::class.java)
+                        val i = Intent(context, SessionFreeIntroScreenActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
                         i.putExtra("Name", "")
                         i.putExtra("Code", "")
@@ -341,7 +341,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
     }
 
     private fun callBack() {
-        val i = Intent(context, StripeEnhanceOrderSummaryActivity::class.java)
+        val i = Intent(context, EmpowerOrderSummaryActivity::class.java)
         i.putExtra("PlanData", gson.toJson(listModelList))
         i.putExtra("TrialPeriod", "")
         i.putExtra("position", position)
@@ -351,7 +351,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-       callBack()
+        callBack()
     }
 
     fun showYearDialog() {

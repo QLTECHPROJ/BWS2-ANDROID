@@ -267,6 +267,7 @@ class  WellnessAssessmentActivity : AppCompatActivity() {
             if (listModel != null) {
                 holder.bindingAdapter.tvSecond.text = listModel[position].question
                 holder.bindingAdapter.rvSecondList.layoutManager = GridLayoutManager(ctx, 3)
+                holder.bindingAdapter.rvSecondList.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
                 if (position == 0) {
                     dass.secondListAdapter = OptionsSecondListAdapter(listModel[position], myPos, mypos2, ctx, binding, act)
                 } else {
@@ -357,6 +358,7 @@ class  WellnessAssessmentActivity : AppCompatActivity() {
                 }
             }
 
+            holder.bindingAdapter.llMainLayout.setBackgroundColor(ContextCompat.getColor(act, R.color.white))
             holder.bindingAdapter.cbChecked.visibility = View.VISIBLE
             holder.bindingAdapter.cbChecked2.visibility = View.GONE
             holder.bindingAdapter.tvOne.visibility = View.GONE

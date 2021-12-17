@@ -15,15 +15,18 @@ import androidx.databinding.DataBindingUtil
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.BuildConfig
 import com.brainwellnessspa.R
+import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity
 import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
+import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
+import com.brainwellnessspa.userModule.models.AreaOfFocus
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.utility.APINewClient
@@ -37,6 +40,7 @@ import com.brainwellnessspa.utility.CONSTANTS
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Analytics
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration
 import retrofit2.Call
@@ -44,6 +48,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificationListener */{
     lateinit var binding: ActivitySplashBinding
@@ -65,6 +70,9 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
     var IsLoginFirstTime: String? = ""
     var isSetLoginPin: String? = ""
     var isInCouser: String? = ""
+    var isEEPPurchased: String? = ""
+    var isEnhancePurchased: String? = ""
+    var areaOfFocus= arrayListOf<String>()
     var timezoneName: String? = ""
     var planId: String? = ""
     var paymentType: String? = ""
@@ -143,8 +151,17 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
         isMainAccount = shared.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
         IsLoginFirstTime = shared.getString(CONSTANTS.PREFE_ACCESS_IsLoginFirstTime, "")
         isInCouser = shared.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+        isEEPPurchased = shared.getString(CONSTANTS.PREFE_ACCESS_isEEPPurchased, "")
+        isEnhancePurchased = shared.getString(CONSTANTS.PREFE_ACCESS_isEnhancePurchased, "")
         val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
         avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+        val gson = Gson()
+        val json = sharpened.getString(CONSTANTS.selectedCategoriesName,gson.toString())
+        if (!json.equals(gson.toString())) {
+            val type = object : TypeToken<ArrayList<String>>() {}.type
+            areaOfFocus = gson.fromJson(json, type)
+        }
+
         Log.e("DeviceID", Settings.Secure.getString(getContext().contentResolver, Settings.Secure.ANDROID_ID))
 //        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(context)
         val sharedPreferences2 = getSharedPreferences(CONSTANTS.FCMToken, MODE_PRIVATE)
@@ -159,6 +176,11 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
             ctNotificationInboxListener = this@SplashActivity
             initializeInbox()
         }*/
+       /* val intent = Intent(activity, BottomNavigationActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        intent.putExtra("IsFirst", "0")
+        startActivity(intent)
+        finish()*/
         if (userId.equals("")) {
             checkAppVersion()
         } else {
@@ -273,6 +295,8 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             directLogin = listModel.ResponseData.directLogin
                             isMainAccount = listModel.ResponseData.isMainAccount
                             isInCouser = listModel.ResponseData.IsInCouser
+                            isEEPPurchased = listModel.ResponseData.isEEPPurchased
+                            isEnhancePurchased = listModel.ResponseData.isEnhancePurchased
                             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
@@ -293,6 +317,9 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             editor.putString(CONSTANTS.PREFE_ACCESS_isMainAccount, listModel.ResponseData.isMainAccount)
                             editor.putString(CONSTANTS.PREFE_ACCESS_coUserCount, listModel.ResponseData.CoUserCount)
                             editor.putString(CONSTANTS.PREFE_ACCESS_isInCouser, listModel.ResponseData.IsInCouser)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isEEPPurchased, listModel.ResponseData.isEEPPurchased)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_CardId, listModel.ResponseData.cardId)
+                            editor.putString(CONSTANTS.PREFE_ACCESS_isEnhancePurchased, listModel.ResponseData.isEnhancePurchased)
                             editor.putString(CONSTANTS.PREFE_ACCESS_paymentType, listModel.ResponseData.paymentType)
                             paymentType = listModel.ResponseData.paymentType
                             if (listModel.ResponseData.planDetails.isEmpty() && listModel.ResponseData.oldPaymentDetails.isEmpty()) {
@@ -385,8 +412,15 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             planId = sharedded.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
                             isMainAccount = sharedded.getString(CONSTANTS.PREFE_ACCESS_isMainAccount, "")
                             isInCouser = sharedded.getString(CONSTANTS.PREFE_ACCESS_isInCouser, "")
+                            isEEPPurchased = shared.getString(CONSTANTS.PREFE_ACCESS_isEEPPurchased, "")
+                            isEnhancePurchased = shared.getString(CONSTANTS.PREFE_ACCESS_isEnhancePurchased, "")
                             val sharpened = getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                             avgSleepTime = sharpened.getString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, "")
+                            val json = sharpened.getString(CONSTANTS.selectedCategoriesName,"")
+                            if (!json.equals(gson.toString())) {
+                                val type = object : TypeToken<ArrayList<String>>() {}.type
+                                areaOfFocus = gson.fromJson(json, type)
+                            }
 
                             checkAppVersion()
                         } else if (listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
@@ -814,6 +848,68 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                 }
             }
         }, (2 * 600).toLong())
+    }
+
+    private fun callHandleUser() {
+        if (isAssessmentCompleted.equals("0")) {
+            val intent = Intent(activity, AssProcessActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            intent.putExtra(CONSTANTS.ASSPROCESS, "0")
+            intent.putExtra("Navigation", "Enhance")
+            startActivity(intent)
+            finish()
+        }else if(isEEPPurchased.equals("0") && isEnhancePurchased.equals("0")){
+            val i = Intent(activity, AssProcessActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            i.putExtra(CONSTANTS.ASSPROCESS, "1")
+            i.putExtra("Navigation", "")
+            i.putExtra(CONSTANTS.IndexScore, indexScore)
+            i.putExtra(CONSTANTS.ScoreLevel, scoreLevel)
+            startActivity(i)
+            finish()
+        }else if(isEnhancePurchased.equals("1")) {
+            if (isProfileCompleted.equals("0", ignoreCase = true)) {
+                val intent = Intent(applicationContext, ProfileProgressActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                startActivity(intent)
+                finish()
+            } else if (avgSleepTime.equals("", ignoreCase = true)) {
+                val intent = Intent(applicationContext, SleepTimeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                startActivity(intent)
+                finish()
+            } else if (areaOfFocus.isEmpty()) {
+                val preferred = context.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                val edited = preferred.edit()
+                edited.remove(CONSTANTS.selectedCategoriesTitle)
+                edited.remove(CONSTANTS.selectedCategoriesName)
+                edited.clear()
+                edited.apply()
+                val i = Intent(context, AreaOfFocusActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                i.putExtra("BackClick", "1")
+                context.startActivity(i)
+            } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
+                if (coUserCount.toString() > "1") {
+                    val intent = Intent(applicationContext, UserListActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    intent.putExtra("IsFirst", "1")
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }else if(isEEPPurchased.equals("1")) {
+            val intent = Intent(applicationContext, BottomNavigationActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            intent.putExtra("IsFirst", "1")
+            startActivity(intent)
+            finish()
+        }
     }
 
     /* TODO function for segment analytics  */

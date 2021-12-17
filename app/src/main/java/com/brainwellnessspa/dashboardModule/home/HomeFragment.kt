@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.*
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -37,6 +38,8 @@ import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
 import com.brainwellnessspa.dashboardModule.models.*
 import com.brainwellnessspa.databinding.*
 import com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading
+import com.brainwellnessspa.membershipModule.activities.EmpowerPanListActivity
+import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.roomDataBase.AudioDatabase
 import com.brainwellnessspa.roomDataBase.DownloadAudioDetails
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails
@@ -57,6 +60,8 @@ import com.brainwellnessspa.utility.APINewClient.client
 import com.brainwellnessspa.utility.AppUtils
 import com.brainwellnessspa.utility.CONSTANTS
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.mikephil.charting.utils.*
@@ -64,7 +69,6 @@ import com.google.android.flexbox.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.segment.analytics.Properties
 import org.json.JSONObject
@@ -374,6 +378,19 @@ class HomeFragment : Fragment() {
         networkCheck()
 
         prepareHomeData()
+
+        binding.llJoinNowBanner.setOnClickListener {
+             if (homelistModel.responseData!!.joinNowBanner!!.bannerType.equals("empower")) {
+                 val i = Intent(ctx, EmpowerPanListActivity::class.java)
+                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                 ctx.startActivity(i)
+             } else {
+                 val i = Intent(ctx, StripeEnhanceMembershipActivity::class.java)
+                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                 i.putExtra("plan", "0")
+                 startActivity(i)
+             }
+        }
 
         binding.llTodayClicked.setOnClickListener {
             binding.tvToday.setTextColor(ContextCompat.getColor(ctx, R.color.black))
@@ -711,12 +728,48 @@ class HomeFragment : Fragment() {
                                     editor.putString(CONSTANTS.PREF_KEY_IsDisclimer, "0")
                                     editor.putString(CONSTANTS.PREF_KEY_Disclimer, gson.toJson(response.disclaimerAudio))
                                     editor.apply()
-                                    if(listModel.responseData!!.eepSessiondata?.title.equals("")){
-
-                                    }
                                     val js = JSONObject(gson.toJson(response))
-                                    if(js.has("eepSessiondata")){
+                                    if (js.has("eepSessiondata")) {
                                         Log.e("js", js.getString("eepSessiondata"))
+                                        if(listModel.responseData!!.eepSessiondata!!.title.equals("")){
+                                            binding.llEEPPlayer.visibility = View.GONE
+                                        }else {
+                                            binding.llEEPPlayer.visibility = View.VISIBLE
+                                            binding.tvEepSessionTitle.text = listModel.responseData!!.eepSessiondata!!.title
+                                            binding.tvEepSessionTime.text = listModel.responseData!!.eepSessiondata!!.sessionkey
+                                            binding.llEEpBg.background.setColorFilter(Color.parseColor(listModel.responseData!!.eepSessiondata!!.color), PorterDuff.Mode.SRC_ATOP)
+                                            binding.llEEPPlayer.background.setColorFilter(Color.parseColor(listModel.responseData!!.eepSessiondata!!.color), PorterDuff.Mode.SRC_ATOP)
+                                        }
+                                    }else{
+                                        binding.llEEPPlayer.visibility = View.GONE
+                                    }
+                                    if(js.has("SuggestedPlaylist")){
+                                        binding.llPlayer.visibility = View.VISIBLE
+                                        binding.llAreaOfFocus.visibility = View.VISIBLE
+                                        binding.llActivities.visibility = View.VISIBLE
+                                    }else{
+                                        binding.llPlayer.visibility = View.GONE
+                                        binding.llAreaOfFocus.visibility = View.GONE
+                                        binding.llActivities.visibility = View.GONE
+                                    }
+                                    if(listModel.responseData!!.isEEPPurchased.equals("1") && listModel.responseData!!.isEnhancePurchased.equals("1")) {
+                                        binding.llJoinNowBanner.visibility = View.GONE
+                                    }else {
+                                        binding.llJoinNowBanner.visibility = View.VISIBLE
+                                    }
+                                    if (js.has("joinNowBanner")) {
+                                        if(listModel.responseData!!.joinNowBanner!!.title.equals("")){
+                                            binding.llJoinNowBanner.visibility = View.GONE
+                                        }else {
+                                            binding.llJoinNowBanner.visibility = View.VISIBLE
+                                            binding.tvJoinNowTitle.text = listModel.responseData!!.joinNowBanner!!.title
+                                            binding.tvJoinNowSubTitle.text = listModel.responseData!!.joinNowBanner!!.subtitle
+                                            binding.llJoinNowBg.background.setColorFilter(Color.parseColor(listModel.responseData!!.joinNowBanner!!.backgroundColor), PorterDuff.Mode.SRC_ATOP)
+                                            binding.btnJoinNow.background.setColorFilter(Color.parseColor(listModel.responseData!!.joinNowBanner!!.buttonColor), PorterDuff.Mode.SRC_ATOP)
+                                            Glide.with(ctx).load(listModel.responseData!!.joinNowBanner!!.image).thumbnail(1f).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivJoinNow)
+                                        }
+                                    } else{
+                                        binding.llJoinNowBanner.visibility = View.GONE
                                     }
                                     binding.tvPercent.text = response.indexScoreDiff!!.split(".")[0] + "%"
                                     binding.tvSevere.text = response.indexScore.toString()
@@ -752,6 +805,10 @@ class HomeFragment : Fragment() {
                                     } else if (response.suggestedPlaylist?.isReminder.equals("2")) {
                                         binding.tvReminder.text = ctx.getString(R.string.update_reminder)
                                         binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                    }else{
+                                        binding.llSetReminder.setBackgroundResource(R.drawable.rounded_extra_theme_corner)
+                                        binding.llSetReminder.isClickable = false
+                                        binding.llSetReminder.isEnabled = false
                                     }
 
 

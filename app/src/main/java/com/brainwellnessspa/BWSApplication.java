@@ -78,6 +78,8 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity;
+import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity;
 import com.brainwellnessspa.dashboardModule.adapters.DirectionAdapter;
 import com.brainwellnessspa.dashboardModule.enhance.AddPlaylistActivity;
 import com.brainwellnessspa.dashboardModule.models.AudioDetailModel;
@@ -98,6 +100,7 @@ import com.brainwellnessspa.roomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.services.PlayerJobService;
+import com.brainwellnessspa.userModule.activities.ProfileProgressActivity;
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
@@ -172,12 +175,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.utility.AppUtils.New_BASE_URL;
+import static com.brainwellnessspa.utility.CONSTANTS.ASSPROCESS;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
@@ -3423,6 +3428,33 @@ public class BWSApplication extends Application {
                 GetSingleMedia(audioList.get(0).getAudioFile(), ctx, audioList, 0, CoUserID);
             }
         });
+    }
+
+    public static void callHomeActivity(Context ctx,Activity act) {
+        Intent intent =new Intent(ctx, BottomNavigationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("IsFirst", "1");
+        act.startActivity(intent);
+        act.finish();
+    }
+    public static void callProfileProgressActivity(Context ctx,Activity act) {
+        Intent intent =new Intent(ctx, ProfileProgressActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("IsFirst", "1");
+        act.startActivity(intent);
+        act.finish();
+    }
+    public static void callAssProcessActivity(Context ctx,Activity act,String assProcess, String nav,String indexScore,String ScoreLavel) {
+        Intent intent =new Intent(ctx, AssProcessActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("Navigation", nav);
+        intent.putExtra("ASSPROCESS", assProcess);
+        if(assProcess == "1") {
+            intent.putExtra("IndexScore", indexScore);
+            intent.putExtra("ScoreLevel", ScoreLavel);
+        }
+        act.startActivity(intent);
+        act.finish();
     }
 
     public static void deleteDownloadFile(String PlaylistId, String CoUserID) {

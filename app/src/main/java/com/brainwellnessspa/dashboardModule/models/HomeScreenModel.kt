@@ -3,6 +3,7 @@ package com.brainwellnessspa.dashboardModule.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+
 class HomeScreenModel {
     @SerializedName("ResponseData")
     @Expose
@@ -35,6 +36,18 @@ class HomeScreenModel {
         @SerializedName("eepSessiondata")
         @Expose
         var eepSessiondata: EepSessiondata? = null
+
+        @SerializedName("isEnhancePurchased")
+        @Expose
+        var isEnhancePurchased: String? = null
+
+        @SerializedName("isEEPPurchased ")
+        @Expose
+        var isEEPPurchased: String? = null
+
+        @SerializedName("joinNowBanner")
+        @Expose
+        var joinNowBanner: JoinNowBanner? = null
 
         @SerializedName("IsFirst")
         @Expose
@@ -136,6 +149,32 @@ class HomeScreenModel {
             @SerializedName("sessionkey")
             @Expose
             var sessionkey: String? = null
+        }
+
+        class JoinNowBanner {
+            @SerializedName("title")
+            @Expose
+            var title: String? = null
+
+            @SerializedName("subtitle")
+            @Expose
+            var subtitle: String? = null
+
+            @SerializedName("image")
+            @Expose
+            var image: String? = null
+
+            @SerializedName("buttonColor")
+            @Expose
+            var buttonColor: String? = null
+
+            @SerializedName("backgroundColor")
+            @Expose
+            var backgroundColor: String? = null
+
+            @SerializedName("bannerType")
+            @Expose
+            var bannerType: String? = null
         }
 
         class DisclaimerAudio {

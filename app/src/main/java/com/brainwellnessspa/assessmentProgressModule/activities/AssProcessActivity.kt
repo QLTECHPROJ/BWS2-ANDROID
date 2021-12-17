@@ -16,6 +16,7 @@ import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
 import com.brainwellnessspa.assessmentProgressModule.models.AssesmentGetDetailsModel
 import com.brainwellnessspa.databinding.ActivityAssProcessBinding
+import com.brainwellnessspa.membershipModule.activities.EmpowerPanListActivity
 import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.coUserModule.ThankYouActivity
@@ -465,37 +466,31 @@ class AssProcessActivity : AppCompatActivity() {
                 if (navigation == "Home") {
                     finish()
                 } else {
-                    if(listModelGloble.suggestedMembership.equals("empower")){
-
-                    }
                     val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                     val planId = shared.getString(CONSTANTS.PREFE_ACCESS_PlanId, "")
                     //                    if(paymentType == "0"){
-                    if (planId == "") {
-                        val i = Intent(this@AssProcessActivity, StripeEnhanceMembershipActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        i.putExtra("plan", "0")
-                        startActivity(i)
-                        finish()
-                    } else {
-                        val i = Intent(this@AssProcessActivity, ProfileProgressActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        i.putExtra("plan", "0")
-                        startActivity(i)
-                        finish()
+                    when {
+                        listModelGloble.suggestedMembership.equals("empower") -> {
+                            val i = Intent(this@AssProcessActivity, EmpowerPanListActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            startActivity(i)
+                            finish()
+                        }
+                        listModelGloble.suggestedMembership.equals("enhance") -> {
+                            val i = Intent(this@AssProcessActivity, StripeEnhanceMembershipActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            i.putExtra("plan", "0")
+                            startActivity(i)
+                            finish()
+                        }
+                        else -> {
+                            val i = Intent(this@AssProcessActivity, ProfileProgressActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            i.putExtra("plan", "0")
+                            startActivity(i)
+                            finish()
+                        }
                     }
-                    //                    }else {
-                    //                        isEnhanceBack = "1"
-                    //                        val i = Intent(this@AssProcessActivity, EnhanceActivity::class.java)
-                    //                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    //                        i.putExtra("plan", "0")
-                    //                        startActivity(i)
-                    //                        finish()
-                    //                    }
-
-                    /*val i = Intent(this@AssProcessActivity, EnhanceDoneActivity::class.java)
-                    startActivity(i)
-                    finish()*/
                 }
             } else {
                 if (navigation == "Home") {

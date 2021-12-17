@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".membershipModule.activities.IAPEnhanceManageActivity">
+        tools:context=".membershipModule.activities.IAPEnhancePanListActivity">
 
         <RelativeLayout
             android:id="@+id/rlLayout"

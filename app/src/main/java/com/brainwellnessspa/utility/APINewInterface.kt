@@ -386,9 +386,13 @@ interface APINewInterface {
     /* TODO Membership Payment */
     @POST("stripepayment")
     @FormUrlEncoded
-    fun getMembershipPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") CardId: String?): Call<SucessModel>
+    fun getMembershipPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String?, @Field("PlanFlag") planFlag: String?, @Field("TokenId") TokenId: String?, @Field("CardId") CardId: String?, @Field("Type") Type: String?): Call<SucessModel>
 
-    @POST("eepstripepayment")
+    @POST("eepstripeexistingcuspayment")
     @FormUrlEncoded
-    fun getEEPStripePayment(@Field("UserID") userId: String?, @Field("PlanId") planId: String? , @Field("PlanType") planFlag: String?,   @Field("CardId") CardId: String?): Call<SucessModel>
+    fun getEepStripeExistingCusPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String? , @Field("PlanFlag") planFlag: String?,   @Field("CardId") CardId: String?): Call<SucessModel>
+
+    @POST("eepstripenewcustpayment")
+    @FormUrlEncoded
+    fun getEepStripeNewCustPayment(@Field("UserId") userId: String?, @Field("PlanId") planId: String? , @Field("PlanFlag") planFlag: String?,   @Field("TokenId") TokenId: String?): Call<SucessModel>
 }
