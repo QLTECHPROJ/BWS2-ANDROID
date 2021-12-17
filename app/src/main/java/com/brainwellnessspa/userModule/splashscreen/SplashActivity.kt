@@ -20,13 +20,11 @@ import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.dashboardModule.enhance.MyPlaylistListingActivity
-import com.brainwellnessspa.dashboardModule.models.HomeDataModel
 import com.brainwellnessspa.databinding.ActivitySplashBinding
 import com.brainwellnessspa.membershipModule.activities.EnhanceDoneActivity
 import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
 import com.brainwellnessspa.userModule.activities.UserListActivity
-import com.brainwellnessspa.userModule.models.AreaOfFocus
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.VersionModel
 import com.brainwellnessspa.utility.APINewClient
@@ -82,8 +80,8 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
     var message: String? = ""
     var IsLockNoti: String? = ""
     var planContent: String? = ""
-    lateinit var activity: Activity
-    lateinit var context: Context
+    lateinit var act: Activity
+    lateinit var ctx: Context
     override fun onStart() {
         super.onStart()
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
@@ -94,7 +92,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                 }
                 if(deepLink != null){
                     var screen = deepLink.getQueryParameter("screen")
-                    showToast("Hiiiiiii  "+ screen,activity)
+                    showToast("Hiiiiiii  "+ screen,act)
                     if(screen.equals("splash")){
 
                     }else if(screen.equals("setreminder")){
@@ -116,8 +114,8 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
     override fun onCreate(savedInstanceState: Bundle?) {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-        context = this@SplashActivity
-        activity = this@SplashActivity
+        ctx = this@SplashActivity
+        act = this@SplashActivity
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         key = appSignatureHashHelper.appSignatures[0]
         val sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE)
@@ -218,14 +216,14 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                     try {
                         val versionModel: VersionModel = response.body()!!
                         try {
-                            callFCMRegMethod(context)
+                            callFCMRegMethod(ctx)
                             FirebaseMessaging.getInstance().isAutoInitEnabled = true
-                            val shared1 = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            val shared1 = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor1 = shared1.edit()
                             editor1.putString(CONSTANTS.PREFE_ACCESS_segmentKey, versionModel.ResponseData.segmentKey)
                             editor1.apply()
-                            setAnalytics(versionModel.ResponseData.segmentKey, context)
-                            val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                            setAnalytics(versionModel.ResponseData.segmentKey, ctx)
+                            val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                             val editor = shared.edit()
                             editor.putString(CONSTANTS.PREFE_ACCESS_supportTitle, versionModel.ResponseData.supportTitle)
                             editor.putString(CONSTANTS.PREFE_ACCESS_supportText, versionModel.ResponseData.supportText)
@@ -234,11 +232,11 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             editor.apply()
                             when {
                                 versionModel.ResponseData.IsForce == "0" -> {
-                                    val builder = AlertDialog.Builder(context)
+                                    val builder = AlertDialog.Builder(ctx)
                                     builder.setTitle("Update Brain Wellness App")
                                     builder.setCancelable(false)
                                     builder.setMessage("Brain Wellness App recommends that you update to the latest version").setPositiveButton("UPDATE") { dialog: DialogInterface, _: Int ->
-                                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                        act.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                         dialog.cancel()
                                     }.setNegativeButton("NOT NOW") { dialog: DialogInterface, _: Int ->
                                         //                                        askBattyPermission()
@@ -248,11 +246,11 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                     builder.create().show()
                                 }
                                 versionModel.ResponseData.IsForce == "1" -> {
-                                    val builder = AlertDialog.Builder(context)
+                                    val builder = AlertDialog.Builder(ctx)
                                     builder.setTitle("Update Required")
                                     builder.setCancelable(false)
                                     builder.setMessage("To keep using Brain Wellness App, download the latest version").setCancelable(false).setPositiveButton("UPDATE") { _: DialogInterface?, _: Int ->
-                                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
+                                        act.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appURI)))
                                     }
                                     builder.create().show()
                                 }
@@ -424,7 +422,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
 
                             checkAppVersion()
                         } else if (listModel.ResponseCode.equals(getString(R.string.ResponseCodeDeleted))) {
-                            callDelete403(activity, listModel.ResponseMessage)
+                            callDelete403(act, listModel.ResponseMessage)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -444,10 +442,10 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                     segmentKey = getString(R.string.segment_key_real_2_live)
                 }
             }
-            setAnalytics(segmentKey!!, context)
+            setAnalytics(segmentKey!!, ctx)
             //            askBattyPermission()
             callDashboard()
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), act)
         }
     }
 
@@ -484,7 +482,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                 finish()
             } else */
             if (userId.equals("")) {
-                callSignActivity(activity)
+                callSignActivity(act)
             } else if (intent.hasExtra("flag")) {
                 val resultIntent: Intent?
                 flag = intent.getStringExtra("flag");
@@ -545,82 +543,35 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
 
                 if (isMainAccount.equals("1")) {
                     if (isAssessmentCompleted.equals("0")) {
-                        val intent = Intent(activity, AssProcessActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                        intent.putExtra("Navigation", "Enhance")
-                        startActivity(intent)
-                        finish()
-                    } else if (planId.equals("")) {
-//                        if (paymentType == "0") {
-                            // stripe
-                            val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            startActivity(intent)
-                            finish()
-                        /*} else if (paymentType == "1") {
-                            isEnhanceBack = "1"
-                            //IAP
-                            val intent = Intent(activity, EnhanceActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            startActivity(intent)
-                            finish()
-                        }*/
-                    } else if (isPinSet.equals("1")) {
+                        callAssProcessActivity(ctx,act,"0","Enhance","","")
+                    }  else if (isEEPPurchased == "0" && isEnhancePurchased == "0") {
+                        callAssProcessActivity(ctx,act,"1","",indexScore,scoreLevel)
+                    }  else if (isPinSet.equals("1")) {
                         if (isSetLoginPin.equals("1")) {
                             when {
                                 isAssessmentCompleted.equals("0") -> {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    intent.putExtra(CONSTANTS.ASSPROCESS, "0")
-                                    intent.putExtra("Navigation", "Enhance")
-                                    startActivity(intent)
-                                    finish()
+                                    callAssProcessActivity(ctx, act, "0", "Enhance", "", "")
                                 }
-                                planId.equals("") -> {
-//                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
-//                                    } else if (paymentType == "1") {
-//                                        isEnhanceBack = "1"
-//                                        val intent = Intent(activity, EnhanceActivity::class.java)
-//                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-//                                        startActivity(intent)
-//                                        finish()
-//                                    }
+                                isEEPPurchased == "0" && isEnhancePurchased == "0" ->{
+                                    callAssProcessActivity(ctx, act, "1", "",indexScore, scoreLevel)
                                 }
-                                isProfileCompleted.equals("0") -> {
-                                    val intent = Intent(activity, ProfileProgressActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                avgSleepTime.equals("") -> {
-                                    val intent = Intent(activity, SleepTimeActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    startActivity(intent)
-                                    finish()
+                                isEnhancePurchased== "1" ->{
+                                    callEnhanceCondition(isProfileCompleted,avgSleepTime, areaOfFocus.size, ctx, act)
                                 }
                                 else -> {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    intent.putExtra("IsFirst", "0")
-                                    startActivity(intent)
-                                    finish()
+                                    callHomeActivity(ctx, act)
                                 }
                             }
                         } else {
                             when {
                                 coUserCount.toString() > "0" -> {
-                                    val intent = Intent(activity, UserListActivity::class.java)
+                                    val intent = Intent(act, UserListActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 isAssessmentCompleted.equals("0") -> {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    val intent = Intent(act, AssProcessActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     intent.putExtra("Navigation", "Enhance")
@@ -629,7 +580,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                 }
                                 planId.equals("") -> {
 //                                    if (paymentType == "0") {
-                                        val intent = Intent(activity, StripeEnhanceMembershipActivity::class.java)
+                                        val intent = Intent(act, StripeEnhanceMembershipActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
@@ -642,19 +593,19 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
 //                                    }
                                 }
                                 isProfileCompleted.equals("0") -> {
-                                    val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                    val intent = Intent(act, ProfileProgressActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 avgSleepTime.equals("") -> {
-                                    val intent = Intent(activity, SleepTimeActivity::class.java)
+                                    val intent = Intent(act, SleepTimeActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 else -> {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    val intent = Intent(act, BottomNavigationActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
@@ -666,7 +617,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                         if (isSetLoginPin.equals("1")) {
                             when {
                                 isAssessmentCompleted.equals("0") -> {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    val intent = Intent(act, AssProcessActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     intent.putExtra("Navigation", "Enhance")
@@ -674,19 +625,19 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                     finish()
                                 }
                                 isProfileCompleted.equals("0") -> {
-                                    val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                    val intent = Intent(act, ProfileProgressActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 avgSleepTime.equals("") -> {
-                                    val intent = Intent(activity, SleepTimeActivity::class.java)
+                                    val intent = Intent(act, SleepTimeActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 else -> {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    val intent = Intent(act, BottomNavigationActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
@@ -696,13 +647,13 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                         } else {
                             when {
                                 coUserCount.toString() > "0" -> {
-                                    val intent = Intent(activity, UserListActivity::class.java)
+                                    val intent = Intent(act, UserListActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 isAssessmentCompleted.equals("0") -> {
-                                    val intent = Intent(activity, AssProcessActivity::class.java)
+                                    val intent = Intent(act, AssProcessActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                     intent.putExtra("Navigation", "Enhance")
@@ -710,19 +661,19 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                     finish()
                                 }
                                 isProfileCompleted.equals("0") -> {
-                                    val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                    val intent = Intent(act, ProfileProgressActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 avgSleepTime.equals("") -> {
-                                    val intent = Intent(activity, SleepTimeActivity::class.java)
+                                    val intent = Intent(act, SleepTimeActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     startActivity(intent)
                                     finish()
                                 }
                                 else -> {
-                                    val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                    val intent = Intent(act, BottomNavigationActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     intent.putExtra("IsFirst", "0")
                                     startActivity(intent)
@@ -734,7 +685,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                 } else {
                     if (isInCouser.equals("0")) {
                         if (isAssessmentCompleted.equals("0")) {
-                            val intent = Intent(activity, AssProcessActivity::class.java)
+                            val intent = Intent(act, AssProcessActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                             intent.putExtra("Navigation", "Enhance")
@@ -744,7 +695,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             if (isSetLoginPin.equals("1")) {
                                 when {
                                     isAssessmentCompleted.equals("0") -> {
-                                        val intent = Intent(activity, AssProcessActivity::class.java)
+                                        val intent = Intent(act, AssProcessActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra(CONSTANTS.ASSPROCESS, "0")
                                         intent.putExtra("Navigation", "Enhance")
@@ -752,19 +703,19 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                         finish()
                                     }
                                     isProfileCompleted.equals("0") -> {
-                                        val intent = Intent(activity, ProfileProgressActivity::class.java)
+                                        val intent = Intent(act, ProfileProgressActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     }
                                     avgSleepTime.equals("") -> {
-                                        val intent = Intent(activity, SleepTimeActivity::class.java)
+                                        val intent = Intent(act, SleepTimeActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
                                     }
                                     else -> {
-                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        val intent = Intent(act, BottomNavigationActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
@@ -774,7 +725,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                             } else {
                                 when {
                                     coUserCount.toString() > "0" -> {
-                                        val intent = Intent(activity, UserListActivity::class.java)
+                                        val intent = Intent(act, UserListActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         startActivity(intent)
                                         finish()
@@ -800,7 +751,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                         finish()
                                     }
                                     else -> {
-                                        val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                        val intent = Intent(act, BottomNavigationActivity::class.java)
                                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                         intent.putExtra("IsFirst", "0")
                                         startActivity(intent)
@@ -809,7 +760,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                 }
                             }
                         } else if (isPinSet.equals("0") || isPinSet.equals("")) {
-                            val intent = Intent(activity, EnhanceDoneActivity::class.java)
+                            val intent = Intent(act, EnhanceDoneActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_NO_HISTORY
                             startActivity(intent)
                             finish()
@@ -837,7 +788,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                 finish()
                             }
                             else -> {
-                                val intent = Intent(activity, BottomNavigationActivity::class.java)
+                                val intent = Intent(act, BottomNavigationActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 intent.putExtra("IsFirst", "0")
                                 startActivity(intent)
@@ -852,14 +803,14 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
 
     private fun callHandleUser() {
         if (isAssessmentCompleted.equals("0")) {
-            val intent = Intent(activity, AssProcessActivity::class.java)
+            val intent = Intent(act, AssProcessActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
             intent.putExtra(CONSTANTS.ASSPROCESS, "0")
             intent.putExtra("Navigation", "Enhance")
             startActivity(intent)
             finish()
         }else if(isEEPPurchased.equals("0") && isEnhancePurchased.equals("0")){
-            val i = Intent(activity, AssProcessActivity::class.java)
+            val i = Intent(act, AssProcessActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             i.putExtra(CONSTANTS.ASSPROCESS, "1")
             i.putExtra("Navigation", "")
@@ -879,16 +830,16 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                 startActivity(intent)
                 finish()
             } else if (areaOfFocus.isEmpty()) {
-                val preferred = context.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                val preferred = ctx.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                 val edited = preferred.edit()
                 edited.remove(CONSTANTS.selectedCategoriesTitle)
                 edited.remove(CONSTANTS.selectedCategoriesName)
                 edited.clear()
                 edited.apply()
-                val i = Intent(context, AreaOfFocusActivity::class.java)
+                val i = Intent(ctx, AreaOfFocusActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 i.putExtra("BackClick", "1")
-                context.startActivity(i)
+                ctx.startActivity(i)
             } else if (isProfileCompleted.equals("1", ignoreCase = true) && isAssessmentCompleted.equals("1", ignoreCase = true)) {
                 if (coUserCount.toString() > "1") {
                     val intent = Intent(applicationContext, UserListActivity::class.java)

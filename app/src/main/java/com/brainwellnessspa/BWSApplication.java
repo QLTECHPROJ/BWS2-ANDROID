@@ -78,6 +78,8 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.areaOfFocusModule.activities.AreaOfFocusActivity;
+import com.brainwellnessspa.areaOfFocusModule.activities.SleepTimeActivity;
 import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity;
 import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity;
 import com.brainwellnessspa.dashboardModule.adapters.DirectionAdapter;
@@ -101,6 +103,7 @@ import com.brainwellnessspa.roomDataBase.DownloadPlaylistDetails;
 import com.brainwellnessspa.services.GlobalInitExoPlayer;
 import com.brainwellnessspa.services.PlayerJobService;
 import com.brainwellnessspa.userModule.activities.ProfileProgressActivity;
+import com.brainwellnessspa.userModule.activities.UserListActivity;
 import com.brainwellnessspa.userModule.signupLogin.SignInActivity;
 import com.brainwellnessspa.userModule.splashscreen.SplashActivity;
 import com.brainwellnessspa.utility.APINewClient;
@@ -3440,7 +3443,26 @@ public class BWSApplication extends Application {
     public static void callProfileProgressActivity(Context ctx,Activity act) {
         Intent intent =new Intent(ctx, ProfileProgressActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intent.putExtra("IsFirst", "1");
+        act.startActivity(intent);
+        act.finish();
+    }
+    public static void callSleepTimeActivity(Context ctx,Activity act) {
+        Intent intent =new Intent(ctx, SleepTimeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        act.startActivity(intent);
+        act.finish();
+    }
+    public static void callAreaOfFocus(Context ctx,Activity act,String sleepTime) {
+        Intent intent =new Intent(ctx, AreaOfFocusActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("SleepTime", sleepTime);
+        intent.putExtra("BackClick", "0");
+        act.startActivity(intent);
+        act.finish();
+    }
+    public static void callUserListActivity(Context ctx,Activity act) {
+        Intent intent =new Intent(ctx, UserListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         act.startActivity(intent);
         act.finish();
     }
@@ -3455,6 +3477,18 @@ public class BWSApplication extends Application {
         }
         act.startActivity(intent);
         act.finish();
+    }
+
+    public static void callEnhanceCondition(String isProfileCompleted,String avgSleepTime,int areaOfFocus,Context ctx ,Activity act) {
+        if (isProfileCompleted == "0") {
+            callProfileProgressActivity(ctx, act);
+        } else if (avgSleepTime.equalsIgnoreCase("") || avgSleepTime.isEmpty()) {
+            callSleepTimeActivity(ctx, act);
+        } else if (areaOfFocus == 0) {
+            callAreaOfFocus(ctx, act, avgSleepTime);
+        } else {
+            callHomeActivity(ctx, act);
+        }
     }
 
     public static void deleteDownloadFile(String PlaylistId, String CoUserID) {

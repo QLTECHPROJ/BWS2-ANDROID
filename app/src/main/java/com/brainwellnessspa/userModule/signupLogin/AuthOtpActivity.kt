@@ -23,12 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.brainwellnessspa.BWSApplication.*
 import com.brainwellnessspa.R
-import com.brainwellnessspa.assessmentProgressModule.activities.AssProcessActivity
-import com.brainwellnessspa.dashboardModule.activities.BottomNavigationActivity
 import com.brainwellnessspa.databinding.ActivityAuthOtpBinding
-import com.brainwellnessspa.membershipModule.activities.StripeEnhanceMembershipActivity
-import com.brainwellnessspa.userModule.activities.ProfileProgressActivity
-import com.brainwellnessspa.userModule.activities.UserListActivity
 import com.brainwellnessspa.userModule.models.AuthOtpModel
 import com.brainwellnessspa.userModule.models.UserAccessModel
 import com.brainwellnessspa.utility.APINewClient
@@ -44,7 +39,7 @@ import retrofit2.Response
 
 class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     lateinit var binding: ActivityAuthOtpBinding
-    lateinit var activity: Activity
+    lateinit var act: Activity
     lateinit var ctx: Context
     private var smsReceiver: SmsReceiver? = null
     private lateinit var editTexts: Array<EditText>
@@ -61,7 +56,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_otp)
-        activity = this@AuthOtpActivity
+        act = this@AuthOtpActivity
         ctx = this@AuthOtpActivity
         receiver?.let {
             LocalBroadcastManager.getInstance(ctx).registerReceiver(it, IntentFilter("otp"))
@@ -84,7 +79,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
         binding.llBack.setOnClickListener {
             if (signupFlag.equals("1", ignoreCase = true)) {
-                val i = Intent(activity, SignUpActivity::class.java)
+                val i = Intent(act, SignUpActivity::class.java)
                 i.putExtra("mobileNo", mobileNo)
                 i.putExtra("countryCode", countryCode)
                 i.putExtra("name", name)
@@ -93,7 +88,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 startActivity(i)
                 finish()
             } else {
-                val i = Intent(activity, SignInActivity::class.java)
+                val i = Intent(act, SignInActivity::class.java)
                 i.putExtra("mobileNo", mobileNo)
                 i.putExtra("countryCode", countryCode)
                 i.putExtra("name", name)
@@ -107,10 +102,10 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
         binding.tvSendCodeText.text = "We've sent an SMS with a 4-digit code to \n+$countryCode $mobileNo."
 
         editTexts = arrayOf(binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4)
-        binding.edtOTP1.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 0, tvSendOTPbool))
-        binding.edtOTP2.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 1, tvSendOTPbool))
-        binding.edtOTP3.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 2, tvSendOTPbool))
-        binding.edtOTP4.addTextChangedListener(PinTextWatcher(activity, binding, editTexts, 3, tvSendOTPbool))
+        binding.edtOTP1.addTextChangedListener(PinTextWatcher(act, binding, editTexts, 0, tvSendOTPbool))
+        binding.edtOTP2.addTextChangedListener(PinTextWatcher(act, binding, editTexts, 1, tvSendOTPbool))
+        binding.edtOTP3.addTextChangedListener(PinTextWatcher(act, binding, editTexts, 2, tvSendOTPbool))
+        binding.edtOTP4.addTextChangedListener(PinTextWatcher(act, binding, editTexts, 3, tvSendOTPbool))
         binding.edtOTP1.setOnKeyListener(PinOnKeyListener(0, editTexts))
         binding.edtOTP2.setOnKeyListener(PinOnKeyListener(1, editTexts))
         binding.edtOTP3.setOnKeyListener(PinOnKeyListener(2, editTexts))
@@ -130,7 +125,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
         binding.llEditNumber.setOnClickListener {
             if (signupFlag.equals("1", ignoreCase = true)) {
-                val i = Intent(activity, SignUpActivity::class.java)
+                val i = Intent(act, SignUpActivity::class.java)
                 i.putExtra("mobileNo", mobileNo)
                 i.putExtra("countryCode", countryCode)
                 i.putExtra("name", name)
@@ -139,7 +134,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 startActivity(i)
                 finish()
             } else {
-                val i = Intent(activity, SignInActivity::class.java)
+                val i = Intent(act, SignInActivity::class.java)
                 i.putExtra("mobileNo", mobileNo)
                 i.putExtra("countryCode", countryCode)
                 i.putExtra("name", name)
@@ -172,16 +167,16 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 p.putValue("source", "Login")
             }
             addToSegment(CONSTANTS.Resend_OTP_Clicked, p, CONSTANTS.track)
-            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
             val listCall: Call<UserAccessModel> = APINewClient.client.getUserAccess(mobileNo, countryCode, CONSTANTS.FLAG_ONE, signupFlag, email, key)
             listCall.enqueue(object : Callback<UserAccessModel> {
                 override fun onResponse(call: Call<UserAccessModel>, response: Response<UserAccessModel>) {
                     try {
-                        hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                        hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                         val listModel: UserAccessModel = response.body()!!
                         if (listModel.ResponseCode.equals(getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
                             p.putValue("isOtpReceived", "Yes")
-                            showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, act)
                             logout = false
                             countDownTimer = object : CountDownTimer(30000, 1000) {
                                 override fun onTick(millisUntilFinished: Long) {
@@ -192,7 +187,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                                 override fun onFinish() {
                                     binding.llResendSms.isEnabled = true
                                     binding.tvResendOTP.text = getString(R.string.resent_sms)
-                                    binding.tvResendOTP.setTextColor(ContextCompat.getColor(activity, R.color.black))
+                                    binding.tvResendOTP.setTextColor(ContextCompat.getColor(act, R.color.black))
                                     binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                                     binding.tvResendOTP.paint.maskFilter = null
                                 }
@@ -202,7 +197,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             binding.edtOTP3.setText("")
                             binding.edtOTP4.setText("")
                             tvSendOTPbool = true
-                            showToast(listModel.ResponseMessage, activity)
+                            showToast(listModel.ResponseMessage, act)
                             startSMSListener()
                             binding.edtOTP1.requestFocus()
                             p.putValue("isOtpReceived", "Yes")
@@ -221,7 +216,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 override fun onFailure(call: Call<UserAccessModel>, t: Throwable) {
                     p.putValue("isOtpReceived", "No")
                     addToSegment("OTP Resent", p, CONSTANTS.track)
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                 }
             })
         }
@@ -267,13 +262,13 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 p.putValue("source", "Login")
             }
             addToSegment("OTP Entered", p, CONSTANTS.track)
-            showProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+            showProgressBar(binding.progressBar, binding.progressBarHolder, act)
 
             val otp = binding.edtOTP1.text.toString() + "" + binding.edtOTP2.text.toString() + "" + binding.edtOTP3.text.toString() + "" + binding.edtOTP4.text.toString()
             val listCall: Call<AuthOtpModel> = APINewClient.client.getAuthOtpAccess(otp, CONSTANTS.FLAG_ONE, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID), countryCode, mobileNo, signupFlag, name, email, fcmId)
             listCall.enqueue(object : Callback<AuthOtpModel> {
                 override fun onResponse(call: Call<AuthOtpModel>, response: Response<AuthOtpModel>) = try {
-                    hideProgressBar(binding.progressBar, binding.progressBarHolder, activity)
+                    hideProgressBar(binding.progressBar, binding.progressBarHolder, act)
                     binding.txtError.visibility = View.GONE
                     binding.txtError.text = ""
 
@@ -281,7 +276,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                     if (listModel.ResponseCode == "200") {
 
                         IsLock = listModel.ResponseData.Islock
-                        val shared = activity.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
+                        val shared = act.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                         val editor = shared.edit()
                         editor.putString(CONSTANTS.PREFE_ACCESS_mainAccountID, listModel.ResponseData.MainAccountID)
                         editor.putString(CONSTANTS.PREFE_ACCESS_UserId, listModel.ResponseData.UserId)
@@ -352,7 +347,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                             }
                         }
                         editor.apply()
-                        val sharded = activity.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
+                        val sharded = act.getSharedPreferences(CONSTANTS.RecommendedCatMain, Context.MODE_PRIVATE)
                         val edited = sharded.edit()
                         edited.putString(CONSTANTS.PREFE_ACCESS_SLEEPTIME, listModel.ResponseData.AvgSleepTime)
                         val selectedCategoriesTitle = arrayListOf<String>()
@@ -379,58 +374,38 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                         }
                         callIdentify(ctx)
                         if (signupFlag.equals("1")) {
-                            val i = Intent(activity, EmailVerifyActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            startActivity(i)
-                            finish()
+                            callEmailVerifyActivity()
                         } else {
                             if (listModel.ResponseData.isMainAccount == "0") {
                                 when {
                                     listModel.ResponseData.IsFirst == "1" -> {
-                                        val i = Intent(activity, EmailVerifyActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(i)
-                                        finish()
+                                        callEmailVerifyActivity()
                                     }
                                     listModel.ResponseData.isAssessmentCompleted == "0" -> {
-                                        callAssProcessActivity(ctx,activity,"0","Enhance","","")
+                                        callAssProcessActivity(ctx, act, "0", "Enhance", "", "")
                                     }
                                     listModel.ResponseData.isEnhancePurchased == "1" -> {
-                                        if (listModel.ResponseData.isProfileCompleted == "0") {
-                                            callProfileProgressActivity(ctx,activity)
-                                        } else {
-                                            callHomeActivity(ctx,activity)
-                                        }
+                                        callEnhanceCondition( listModel.ResponseData.isProfileCompleted, listModel.ResponseData.AvgSleepTime, listModel.ResponseData.AreaOfFocus.size, ctx, act)
                                     }
                                     listModel.ResponseData.isEEPPurchased == "1" -> {
-                                        callHomeActivity(ctx,activity)
-
+                                        callHomeActivity(ctx, act)
                                     }
                                     else -> {
-                                        callHomeActivity(ctx,activity)
+                                        callHomeActivity(ctx, act)
                                     }
                                 }
                             } else {
                                 if (listModel.ResponseData.isAssessmentCompleted == "0") {
-                                    callAssProcessActivity(ctx,activity,"0","Enhance","","")
+                                    callAssProcessActivity(ctx, act, "0", "Enhance", "", "")
                                 } else if (listModel.ResponseData.isEEPPurchased == "0" && listModel.ResponseData.isEnhancePurchased == "0") {
-                                    callAssProcessActivity(ctx,activity,"0","Enhance",listModel.ResponseData.indexScore,listModel.ResponseData.ScoreLevel)
+                                    callAssProcessActivity(ctx, act, "1", "", listModel.ResponseData.indexScore, listModel.ResponseData.ScoreLevel)
                                 } else {
                                     if (listModel.ResponseData.CoUserCount > "0") {
-                                        val intent = Intent(activity, UserListActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                        startActivity(intent)
-                                        finish()
+                                        callUserListActivity(ctx, act)
+                                    } else if (listModel.ResponseData.isEnhancePurchased == "1") {
+                                        callEnhanceCondition(listModel.ResponseData.isProfileCompleted, listModel.ResponseData.AvgSleepTime, listModel.ResponseData.AreaOfFocus.size, ctx, act)
                                     } else {
-                                        if (listModel.ResponseData.isEnhancePurchased == "1") {
-                                            if (listModel.ResponseData.isProfileCompleted == "0") {
-                                                callProfileProgressActivity(ctx,activity)
-                                            } else {
-                                                callHomeActivity(ctx,activity)
-                                            }
-                                        } else {
-                                            callHomeActivity(ctx,activity)
-                                        }
+                                        callHomeActivity(ctx, act)
                                     }
                                 }
                             }
@@ -444,13 +419,20 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
                 }
 
                 override fun onFailure(call: Call<AuthOtpModel>, t: Throwable) {
-                    hideProgressBar(binding.progressBar, null, activity)
+                    hideProgressBar(binding.progressBar, null, act)
 
                 }
             })
         } else {
-            showToast(getString(R.string.no_server_found), activity)
+            showToast(getString(R.string.no_server_found), act)
         }
+    }
+
+    private fun callEmailVerifyActivity() {
+        val i = Intent(act, EmailVerifyActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        startActivity(i)
+        finish()
     }
 
     override fun onResume() {
@@ -555,7 +537,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
 
     override fun onBackPressed() {
         if (signupFlag.equals("1", ignoreCase = true)) {
-            val i = Intent(activity, SignUpActivity::class.java)
+            val i = Intent(act, SignUpActivity::class.java)
             i.putExtra("mobileNo", mobileNo)
             i.putExtra("countryCode", countryCode)
             i.putExtra("name", name)
@@ -564,7 +546,7 @@ class AuthOtpActivity : AppCompatActivity(), SmsReceiver.OTPReceiveListener {
             startActivity(i)
             finish()
         } else {
-            val i = Intent(activity, SignInActivity::class.java)
+            val i = Intent(act, SignInActivity::class.java)
             i.putExtra("mobileNo", mobileNo)
             i.putExtra("countryCode", countryCode)
             i.putExtra("name", name)
