@@ -177,16 +177,12 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
 import static com.brainwellnessspa.utility.AppUtils.New_BASE_URL;
-import static com.brainwellnessspa.utility.CONSTANTS.ASSPROCESS;
-
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
