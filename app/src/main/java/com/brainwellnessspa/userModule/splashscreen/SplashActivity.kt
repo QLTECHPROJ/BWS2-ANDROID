@@ -1,4 +1,4 @@
-package com.brainwellnessspa.userModule.splashscreen
+ package com.brainwellnessspa.userModule.splashscreen
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -316,7 +316,7 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
                                     try {
                                         if (listModel.ResponseData.oldPaymentDetails.isNotEmpty()) {
                                             planId = listModel.ResponseData.oldPaymentDetails[0].PlanId
-                                            planContent = listModel.ResponseData.planDetails[0].PlanContent
+                                            planContent = listModel.ResponseData.oldPaymentDetails[0].PlanContent
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanId, listModel.ResponseData.oldPaymentDetails[0].PlanId)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanPurchaseDate, listModel.ResponseData.oldPaymentDetails[0].purchaseDate)
                                             editor.putString(CONSTANTS.PREFE_ACCESS_PlanExpireDate, listModel.ResponseData.oldPaymentDetails[0].expireDate)

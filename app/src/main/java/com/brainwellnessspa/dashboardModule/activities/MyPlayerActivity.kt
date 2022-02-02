@@ -74,6 +74,7 @@ class MyPlayerActivity : AppCompatActivity() {
     var id: String? = ""
     var name: String? = ""
     var url: String? = ""
+    var complete = 0
     var userId: String? = ""
     lateinit var exoBinding: AudioPlayerNewLayoutBinding
     var gson = Gson()
@@ -963,38 +964,6 @@ class MyPlayerActivity : AppCompatActivity() {
                             val global = GlobalInitExoPlayer()
                             global.getUserActivityCall(ctx, mainPlayModelList[position].id, mainPlayModelList[position].playlistID, "complete")
                         }
-                    } else if (audioPlayerFlag.equals("SessionAudio", ignoreCase = true)) {
-                        val playFrom = sharedsa.getString(CONSTANTS.PREF_KEY_PlayFrom, "")
-                        val sessionId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistId, "")
-                        val stepId = sharedsa.getString(CONSTANTS.PREF_KEY_PlayerPlaylistName, "")
-
-                        if (isNetworkConnected(ctx)) {
-                            if (apicall == 0) {
-                                val listCall = APINewClient.client.getSessionStepStatusList(userId, sessionId, stepId)
-                                apicall = 1
-                                listCall.enqueue(object : Callback<SessionStepStatusListModel?> {
-                                    override fun onResponse(call: Call<SessionStepStatusListModel?>, response: Response<SessionStepStatusListModel?>) {
-                                        try {
-                                            val listModel = response.body()
-                                            val response = listModel?.responseData
-                                            if (listModel!!.responseCode.equals(act.getString(R.string.ResponseCodesuccess), ignoreCase = true)) {
-                                                val i = Intent(act, SessionDetailContinueActivity::class.java)
-                                                i.putExtra("SessionId", sessionId)
-                                                startActivity(i)
-                                                finish()
-                                            }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-
-                                    override fun onFailure(call: Call<SessionStepStatusListModel?>, t: Throwable) {
-                                    }
-                                })
-                            }
-                        }else {
-                            showToast(act.getString(R.string.no_server_found), act)
-                        }
                     }
 
                     val p = Properties()
@@ -1011,6 +980,7 @@ class MyPlayerActivity : AppCompatActivity() {
                         val source = GetSourceName(ctx)
                         if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
                             addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
+                            finish()
                         }
                         if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
                             val shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_SEGMENT_PLAYLIST, Context.MODE_PRIVATE)
@@ -1051,6 +1021,7 @@ class MyPlayerActivity : AppCompatActivity() {
                             p.putValue("playerType", "Mini")
                             p.putValue("audioService", appStatus(ctx))
                             p.putValue("sound", hundredVolume.toString())
+                            finish()
                             addToSegment("Playlist Completed", p, CONSTANTS.track)
                             Log.e("Last audio End", mainPlayModelList[position].name)
                         } else {
@@ -1250,6 +1221,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                 val p = Properties()
                                 val source = GetSourceName(ctx)
                                 if (!source.equals("Playlist", ignoreCase = true) && !source.equals("Downloaded Playlists", ignoreCase = true)) {
+                                    finish()
                                     addAudioSegmentEvent(ctx, position, mainPlayModelList, "Audio Playback Completed", CONSTANTS.track, downloadAudioDetailsList, p)
                                 }
                                 if (audioPlayerFlag.equals("playlist", ignoreCase = true) || audioPlayerFlag.equals("Downloadlist", ignoreCase = true)) {
@@ -1291,6 +1263,7 @@ class MyPlayerActivity : AppCompatActivity() {
                                     p.putValue("playerType", "Mini")
                                     p.putValue("audioService", appStatus(ctx))
                                     p.putValue("sound", hundredVolume.toString())
+                                    finish()
                                     addToSegment("Playlist Completed", p, CONSTANTS.track)
                                     Log.e("Last audio End", mainPlayModelList[position].name)
                                 } else {
