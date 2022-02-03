@@ -1985,7 +1985,7 @@ class HomeFragment : Fragment() {
                                                         val shared1x = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
                                                         var segmentKey = shared1x.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
                                                         if(segmentKey == ""){
-                                                            if(AppUtils.New_BASE_URL == "https://brainwellnessapp.com.au/bwsapi/api/staging/v2/"){
+                                                            if(AppUtils.New_BASE_URL == AppUtils.STAGING_MAIN_URL){
                                                                 segmentKey = ctx.getString(R.string.segment_key_real_2_staging)
                                                             }else {
                                                                 segmentKey = ctx.getString(R.string.segment_key_real_2_live)

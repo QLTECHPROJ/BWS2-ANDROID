@@ -406,10 +406,10 @@ class SplashActivity : AppCompatActivity()/*, CTInboxListener, CTPushNotificatio
             val shared = getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
             var segmentKey = shared.getString(CONSTANTS.PREFE_ACCESS_segmentKey, "")
             if (segmentKey == "") {
-                if (AppUtils.New_BASE_URL == STAGING_MAIN_URL) {
-                    segmentKey = getString(R.string.segment_key_real_2_staging)
+                segmentKey = if (AppUtils.New_BASE_URL == AppUtils.STAGING_MAIN_URL) {
+                    getString(R.string.segment_key_real_2_staging)
                 } else {
-                    segmentKey = getString(R.string.segment_key_real_2_live)
+                    getString(R.string.segment_key_real_2_live)
                 }
             }
             setAnalytics(segmentKey!!, context)

@@ -177,7 +177,7 @@ import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.encryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetCurrentAudioPosition;
 import static com.brainwellnessspa.services.GlobalInitExoPlayer.GetSourceName;
-import static com.brainwellnessspa.utility.AppUtils.New_BASE_URL;
+import static com.brainwellnessspa.utility.AppUtils.*;
 
 /* TODO BWS App Common function */
 public class BWSApplication extends Application {
