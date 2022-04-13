@@ -61,7 +61,7 @@ class AddProfileActivity : AppCompatActivity() {
 
             if (mobileNumber.equals("", ignoreCase = true)) {
                 binding.ivCheckNumber.visibility = View.GONE
-            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 || binding.etMobileNumber.text.toString().length > 10) {
+            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 4 || binding.etMobileNumber.text.toString().length > 15) {
                 binding.ivCheckNumber.visibility = View.GONE
             } else {
                 binding.ivCheckNumber.visibility = View.VISIBLE
@@ -166,7 +166,7 @@ class AddProfileActivity : AppCompatActivity() {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = getString(R.string.pls_provide_mobileno)
                 binding.txtEmailError.visibility = View.GONE
-            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 8 || binding.etMobileNumber.text.toString().length > 10) {
+            } else if (binding.etMobileNumber.text.toString().length == 1 || binding.etMobileNumber.text.toString().length < 4 || binding.etMobileNumber.text.toString().length > 15) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = getString(R.string.pls_provide_valid_mobileno)

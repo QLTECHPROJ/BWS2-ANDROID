@@ -290,7 +290,7 @@ class SignInActivity : AppCompatActivity() {
             if (binding.etNumber.text.toString().equals("", ignoreCase = true)) {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = "Please provide a mobile number"
-            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 || binding.etNumber.text.toString().length > 10) {
+            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 4 || binding.etNumber.text.toString().length > 15) {
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = getString(R.string.valid_mobile_number)
             } else {

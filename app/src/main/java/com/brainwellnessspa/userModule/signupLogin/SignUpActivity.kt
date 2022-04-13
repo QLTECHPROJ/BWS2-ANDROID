@@ -215,7 +215,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.txtNumberError.text = getString(R.string.pls_provide_mobileno)
                 binding.txtEmailError.visibility = View.GONE
                 binding.txtPassowrdError.visibility = View.GONE
-            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 8 || binding.etNumber.text.toString().length > 10) {
+            } else if (binding.etNumber.text.toString().length == 1 || binding.etNumber.text.toString().length < 4 || binding.etNumber.text.toString().length > 15) {
                 binding.txtNameError.visibility = View.GONE
                 binding.txtNumberError.visibility = View.VISIBLE
                 binding.txtNumberError.text = getString(R.string.pls_provide_valid_mobileno)
