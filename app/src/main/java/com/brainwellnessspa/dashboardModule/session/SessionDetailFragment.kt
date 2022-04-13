@@ -47,7 +47,7 @@ class SessionDetailFragment : Fragment() {
         val shared1 = ctx.getSharedPreferences(CONSTANTS.PREFE_ACCESS_SIGNIN_COUSER, Context.MODE_PRIVATE)
         userId = shared1.getString(CONSTANTS.PREFE_ACCESS_UserId, "")!!
         binding.rvList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        prepareData()
+//        prepareData()
         networkCheck()
         return binding.root
     }
@@ -59,11 +59,11 @@ class SessionDetailFragment : Fragment() {
 
     private fun networkCheck() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llRemainDev.visibility = View.GONE /* VISIBLE*/
+            binding.llRemainDev.visibility = View.VISIBLE /* VISIBLE*/
             binding.llNoInternet.visibility = View.GONE
         } else {
             binding.llRemainDev.visibility = View.GONE
-            binding.llNoInternet.visibility = View.GONE /* VISIBLE*/
+            binding.llNoInternet.visibility = View.VISIBLE /* VISIBLE*/
         }
     }
 

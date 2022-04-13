@@ -198,7 +198,7 @@ class StripePaymentCheckoutActivity : AppCompatActivity() {
                 val months: Int = binding1.MonthPicker.value
                 val Years: Int = binding1.YearPicker.value
                 val card = Card(strCardNo, months, Years, binding.etCvv.text.toString())
-                Stripe().createToken(card, getString(R.string.stripe_test_key), object : TokenCallback {
+                Stripe().createToken(card, getString(R.string.stripe_live_key), object : TokenCallback {
                     override fun onError(error: Exception) {
                         Log.e("error.........", "" + error.toString())
                         BWSApplication.showToast("Please enter valid card details", activity)
