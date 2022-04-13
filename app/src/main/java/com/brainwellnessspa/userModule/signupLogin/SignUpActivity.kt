@@ -234,6 +234,10 @@ class SignUpActivity : AppCompatActivity() {
                 binding.txtEmailError.text = getString(R.string.pls_provide_valid_email)
                 binding.txtPassowrdError.visibility = View.GONE
             } else {
+                binding.txtNameError.visibility = View.GONE
+                binding.txtNumberError.visibility = View.GONE
+                binding.txtEmailError.visibility = View.GONE
+                binding.txtPassowrdError.visibility = View.GONE
                 signUpUser()
             }
         }
